@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Villa {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  location    String
+  description String
+  price       Float
+  guests      Int
+  bedrooms    Int
+  bathrooms   Int
+  images      String[]
+  amenities   String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bookings    Booking[]
+  reviews     Review[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  villaId   String
+  villa     Villa    @relation(fields: [villaId], references: [id])
+  userId    String   // Clerk User ID
+  userName  String
+  rating    Int      @default(5)
+  comment   String
+  createdAt DateTime @default(now())
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  villaId   String
+  villa     Villa    @relation(fields: [villaId], references: [id])
+  userId    String   // Clerk User ID
+  checkIn   DateTime
+  checkOut  DateTime
+  totalPrice Float
+  status    String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  message   String
+  villaId   String?
+  type      String   @default("GUEST") // GUEST or OWNER
+  createdAt DateTime @default(now())
+}
