@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Navigation } from "swiper/modules";
@@ -86,10 +87,10 @@ const Hero = () => {
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                    <Button size="lg" className="bg-gold hover:bg-gold/80 text-charcoal rounded-full px-10 py-8 text-lg font-bold tracking-widest h-auto group shadow-2xl shadow-gold/20">
+                    <Link href="/villas" className="btn-glow-gold rounded-full px-10 py-5 text-lg font-bold tracking-widest h-auto group flex items-center justify-center">
                       EXPLORE COLLECTION
                       <ChevronRight className="ml-2 transition-transform group-hover:translate-x-1" />
-                    </Button>
+                    </Link>
                   </div>
                 </motion.div>
               </div>

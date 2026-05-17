@@ -72,24 +72,20 @@ const VillaCard = ({
             
             <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-4 text-white/60 text-xs">
-                <div className="flex items-center gap-1">
-                  <Users size={14} />
-                  <span>{guests}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Bed size={14} />
-                  <span>{bedrooms}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Bath size={14} />
-                  <span>{bathrooms}</span>
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1"><Users size={14} />{guests} guests</span>
+                  <span className="flex items-center gap-1"><Bed size={14} />{bedrooms} rooms</span>
                 </div>
               </div>
               
               <div className="text-right">
-                <span className="text-[10px] text-white/40 block uppercase tracking-wider">Starts from</span>
-                <span className="text-white font-semibold">₹{price} <span className="text-[10px] font-normal text-white/60">/ Night</span></span>
+                <span className="text-[10px] text-gold/60 block uppercase tracking-wider font-bold">Starts from</span>
+                <span className="text-white font-semibold">₹{price} <span className="text-[10px] font-normal text-white/60">/ night</span></span>
               </div>
+            </div>
+
+            <div className="mt-6 w-full btn-glow-gold py-4 rounded-xl text-center text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg">
+              VIEW DETAILED HOUSE & BOOK NOW
             </div>
           </div>
         </div>

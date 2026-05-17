@@ -98,9 +98,9 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
       <Button 
         onClick={handleBooking}
         disabled={isLoading || nights <= 0}
-        className="w-full bg-gold hover:bg-gold/80 text-charcoal rounded-full py-7 text-lg font-bold tracking-wider mb-4 shadow-[0_10px_20px_-10px_rgba(197,160,89,0.5)] flex items-center justify-center gap-2"
+        className="w-full btn-glow-gold rounded-full py-7 text-lg font-bold tracking-wider mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(197,160,89,0.4)]"
       >
-        {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW"}
+        {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
       </Button>
       
       <p className="text-center text-white/40 text-[10px] uppercase tracking-widest mb-6">

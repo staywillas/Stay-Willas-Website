@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { 
   Waves, Mountain, Palmtree, 
   Wine, Home, Trees, 
@@ -22,8 +23,17 @@ const categories = [
 ];
 
 const CategoryBar = () => {
-  const [active, setActive] = useState("Infinity Pools");
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const scrollRef = useRef<HTMLDivElement>(null);
+  
+  const active = searchParams.get("category") || "Infinity Pools";
+
+  const handleCategorySelect = (name: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("category", name);
+    router.push(`/villas?${params.toString()}`, { scroll: false });
+  };
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -51,7 +61,7 @@ const CategoryBar = () => {
           {categories.map((cat) => (
             <button
               key={cat.name}
-              onClick={() => setActive(cat.name)}
+              onClick={() => handleCategorySelect(cat.name)}
               className={cn(
                 "flex flex-col items-center gap-2 min-w-fit transition-all duration-300 relative pb-2",
                 active === cat.name ? "opacity-100" : "opacity-40 hover:opacity-70"
