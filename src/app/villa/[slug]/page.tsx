@@ -14,6 +14,8 @@ import BookingCard from "@/components/villa/booking-card";
 import ReviewSection from "@/components/villa/review-section";
 import { getReviews } from "@/app/actions/review";
 
+export const dynamic = "force-dynamic";
+
 // Get the SEO meta tags right so search engines don't hate us
 export async function generateMetadata(): Promise<Metadata> {
   const villa = {
