@@ -77,9 +77,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
   
-  const villa = await prisma.villa.findUnique({
+  let villa = await prisma.villa.findUnique({
     where: { slug },
   });
+
+  if (!villa) {
+    villa = await prisma.villa.findUnique({
+      where: { id: slug },
+    });
+  }
   
   if (!villa) {
     return {
@@ -97,9 +103,15 @@ export default async function VillaDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
 
-  const villa = await prisma.villa.findUnique({
+  let villa = await prisma.villa.findUnique({
     where: { slug },
   });
+
+  if (!villa) {
+    villa = await prisma.villa.findUnique({
+      where: { id: slug },
+    });
+  }
 
   if (!villa) {
     notFound();

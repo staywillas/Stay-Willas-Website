@@ -29,8 +29,33 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined') {
+                const originalError = console.error;
+                console.error = (...args) => {
+                  if (
+                    args[0] &&
+                    typeof args[0] === 'string' &&
+                    (args[0].includes('Hydration') || 
+                     args[0].includes('hydration') ||
+                     args[0].includes('bis_skin_checked') ||
+                     args[0].includes('Extra attributes from the server'))
+                  ) {
+                    return;
+                  }
+                  originalError(...args);
+                };
+              }
+            `
+          }}
+        />
+      </head>
       <body
         className={`${outfit.variable} ${cormorant.variable} antialiased font-sans`}
+        suppressHydrationWarning
       >
         <ClerkProvider>
           <SmoothScrollProvider>
