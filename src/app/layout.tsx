@@ -28,18 +28,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="dark" suppressHydrationWarning>
-        <body
-          className={`${outfit.variable} ${cormorant.variable} antialiased font-sans`}
-        >
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body
+        className={`${outfit.variable} ${cormorant.variable} antialiased font-sans`}
+      >
+        <ClerkProvider>
           <SmoothScrollProvider>
             {children}
             <MobileNav />
             <AiConcierge />
           </SmoothScrollProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
