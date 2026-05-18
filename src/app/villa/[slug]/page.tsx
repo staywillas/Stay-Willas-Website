@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { 
   Wifi, Waves, Car, Coffee, 
   Wind, MapPin, Award, ChevronLeft,
@@ -13,62 +14,122 @@ import Footer from "@/components/layout/footer";
 import BookingCard from "@/components/villa/booking-card";
 import ReviewSection from "@/components/villa/review-section";
 import { getReviews } from "@/app/actions/review";
+import { prisma } from "@/lib/db";
+import {
+  AnimatedPoolIcon,
+  AnimatedBonfireIcon,
+  AnimatedChefIcon,
+  AnimatedMountainIcon
+} from "@/components/ui/animated-amenity-icons";
 
 export const dynamic = "force-dynamic";
 
-// Get the SEO meta tags right so search engines don't hate us
-export async function generateMetadata(): Promise<Metadata> {
-  const villa = {
-    name: "Misty Mornings Cliffhouse",
-    location: "Lonavala",
-  };
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+const amenityIconMap: { [key: string]: React.ComponentType<any> } = {
+  "Super-fast Wi-Fi": Wifi,
+  "Heated Infinity Pool": AnimatedPoolIcon,
+  "Infinity Swimming Pool": AnimatedPoolIcon,
+  "Private Swimming Pool": AnimatedPoolIcon,
+  "Massive Swimming Pool": AnimatedPoolIcon,
+  "Plunge Pool": AnimatedPoolIcon,
+  "Heated Pool": AnimatedPoolIcon,
+  "Private Parking": Car,
+  "Kailash (Private Chef)": AnimatedChefIcon,
+  "Private Chef Included": AnimatedChefIcon,
+  "Chilled Air Conditioning": Wind,
+  "Daily Housekeeping": CheckCircle2,
+  "Beachfront Access": AnimatedMountainIcon,
+  "Beach Bonfire Pit": AnimatedBonfireIcon,
+  "Vineyard Tours": Award,
+  "Lake Access & Views": AnimatedMountainIcon,
+  "Private Wine Tasting Cellar": AnimatedChefIcon,
+  "Spacious Stone Deck": Award,
+  "Billiards Table": Award,
+  "Mountain & Valley Views": AnimatedMountainIcon,
+  "Mountain & Ghat Views": AnimatedMountainIcon,
+  "Panoramic Lake Views": AnimatedMountainIcon,
+  "Lawn & Garden Area": CheckCircle2,
+  "Riverside Deck": AnimatedMountainIcon,
+  "Organic Vegetable Garden": CheckCircle2,
+  "Open-air BBQ Grill": AnimatedChefIcon,
+  "BBQ Grill Station": AnimatedChefIcon,
+  "Outdoor Fireplace": AnimatedBonfireIcon,
+  "Kayaking Equipment": Waves,
+  "Private Jacuzzi": AnimatedPoolIcon,
+  "Spacious Balcony": MapPin,
+  "Tropical Courtyard": CheckCircle2,
+  "Open-air Lounge Pavilions": CheckCircle2,
+  "Beach Volley Net": Award,
+};
+
+const defaultRules = [
+  "Check-in starts at 2:00 PM",
+  "Check-out by 11:00 AM (so we can clean up for the next family!)",
+  "Please don't smoke inside (but feel free to use the deck!)",
+  "Your furry friends are more than welcome!",
+  "Keep the music low after 10:00 PM so we stay friends with the neighbors",
+];
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
+  
+  const villa = await prisma.villa.findUnique({
+    where: { slug },
+  });
+  
+  if (!villa) {
+    return {
+      title: "Villa Not Found | Stay Willas",
+    };
+  }
   
   return {
-    title: `${villa.name} | Beautiful Cliffside Villa in ${villa.location} | Stay Willas`,
-    description: `Spend a magical weekend at ${villa.name}, a cozy 5-bedroom cliffside estate in ${villa.location}.`,
+    title: `${villa.name} | Premium Luxury Retreat in ${villa.location} | Stay Willas`,
+    description: `Spend a magical, luxurious staycation at ${villa.name}, a curated premium property in ${villa.location}. Featuring ${villa.bedrooms} bedrooms, top-tier amenities, and gorgeous views.`,
   };
 }
 
-// Static data for the Lonavala house (we'll fetch from the database later, but this works perfectly for now!)
-const villaData = {
-  id: "lonavala-estate",
-  name: "Misty Mornings Cliffhouse",
-  location: "Lonavala, Maharashtra",
-  rating: 4.9,
-  reviews: 124,
-  price: "45,000",
-  images: [
-    "/images/villa-lonavala.png",
-    "/images/villa-alibaug.png",
-    "/images/villa-mahabaleshwar.png",
-    "/images/hero-villa.png",
-    "/images/exp-pool.png"
-  ],
-  description: `Misty Mornings Cliffhouse is our absolute favorite family getaway, and we’re so excited to share it with you. We built this 5-bedroom house right on the edge of the valley in Lonavala. On early mornings, the mist literally rolls right over the deck and through the glass doors of the living room—it feels like you're sitting inside a cloud.
+export default async function VillaDetailPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
 
-It features cozy wooden ceilings, a stunning infinity pool that looks like it drops off into the valley, and a private chef (Kailash) who will pamper you with piping hot batata wadas, local Konkani fish curries, and incredible fresh-brewed filter coffee. It’s the perfect place to disconnect from the city noise and just breathe.`,
-  amenities: [
-    { icon: Wifi, name: "Super-fast Wi-Fi" },
-    { icon: Waves, name: "Heated Infinity Pool" },
-    { icon: Car, name: "Private Parking" },
-    { icon: Coffee, name: "Kailash (Private Chef)" },
-    { icon: Wind, name: "Chilled Air Conditioning" },
-    { icon: CheckCircle2, name: "Daily Housekeeping" },
-  ],
-  rules: [
-    "Check-in starts at 2:00 PM",
-    "Check-out by 11:00 AM (so we can clean up for the next family!)",
-    "Please don't smoke inside (but feel free to use the deck!)",
-    "Your furry friends are more than welcome!",
-    "Keep the music low after 10:00 PM so we stay friends with the neighbors",
-  ]
-};
+  const villa = await prisma.villa.findUnique({
+    where: { slug },
+  });
 
-export default async function VillaDetailPage() {
-  const reviews = await getReviews(villaData.id);
+  if (!villa) {
+    notFound();
+  }
+
+  const reviews = await getReviews(villa.id);
+  const reviewCount = reviews.length;
+  const avgRating = reviewCount > 0 
+    ? Number((reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount).toFixed(1))
+    : 4.9;
+  const totalReviewsCount = reviewCount > 0 ? reviewCount : 124;
+
+  const villaData = {
+    id: villa.id,
+    name: villa.name,
+    location: villa.location,
+    rating: avgRating,
+    reviews: totalReviewsCount,
+    price: villa.price.toLocaleString("en-IN"),
+    images: villa.images,
+    description: villa.description,
+    amenities: villa.amenities.map((name) => ({
+      name,
+      icon: amenityIconMap[name] || CheckCircle2,
+    })),
+    rules: defaultRules,
+  };
 
   return (
-    <main className="min-h-screen bg-charcoal text-white">
+    <main className="min-h-screen bg-charcoal text-white pb-28 lg:pb-0">
       <Navbar />
       
       <section className="pt-32 pb-12 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
@@ -145,7 +206,7 @@ export default async function VillaDetailPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-4 relative">
+          <div className="lg:col-span-4 relative" id="booking-card-section">
             <BookingCard 
               villaId={villaData.id} 
               villaName={villaData.name} 
@@ -156,6 +217,20 @@ export default async function VillaDetailPage() {
 
         <ReviewSection villaId={villaData.id} initialReviews={reviews} />
       </section>
+
+      {/* Mobile Sticky CTA */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0d0d0d]/80 backdrop-blur-xl border-t border-white/10 px-6 py-4 flex items-center justify-between shadow-[0_-8px_30px_rgba(0,0,0,0.5)]">
+        <div>
+          <span className="text-[10px] text-gold/80 block uppercase tracking-wider font-bold">Starts from</span>
+          <span className="text-white font-semibold text-lg">₹{villaData.price} <span className="text-[10px] font-normal text-white/60">/ night</span></span>
+        </div>
+        <a 
+          href="#booking-card-section"
+          className="bg-[#FFCC00] hover:bg-[#FFD700] text-black font-extrabold px-8 py-3 rounded-xl text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(255,204,0,0.3)] flex items-center justify-center"
+        >
+          BOOK NOW
+        </a>
+      </div>
 
       <Footer />
     </main>

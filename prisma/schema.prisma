@@ -21,6 +21,7 @@ model Villa {
   bathrooms   Int
   images      String[]
   amenities   String[]
+  category    String   @default("Mountain View")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   bookings    Booking[]

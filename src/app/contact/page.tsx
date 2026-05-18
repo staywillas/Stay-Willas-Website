@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, MessageSquare, ArrowRight } from "lucide-react";
+import ContactForm from "@/components/contact/contact-form";
 
 export const metadata: Metadata = {
   title: "Contact Us | Stay Willas | Concierge & Inquiries",
@@ -83,37 +84,7 @@ export default function ContactPage() {
 
           {/* Form */}
           <div className="lg:col-span-7">
-            <div className="glass-dark border border-white/10 rounded-[40px] p-12 shadow-2xl">
-              <h3 className="text-3xl font-heading mb-10">Send A Message</h3>
-              <form className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-widest text-white/40 ml-2">Your Name</label>
-                    <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-gold outline-none transition-all" placeholder="John Doe" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-widest text-white/40 ml-2">Email Address</label>
-                    <input type="email" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-gold outline-none transition-all" placeholder="john@example.com" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-white/40 ml-2">What are you looking for?</label>
-                  <select className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-gold outline-none transition-all appearance-none">
-                    <option className="bg-charcoal">Villa Booking Inquiry</option>
-                    <option className="bg-charcoal">Partner with Us</option>
-                    <option className="bg-charcoal">Corporate Offsite</option>
-                    <option className="bg-charcoal">Other Inquiry</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-white/40 ml-2">Your Message</label>
-                  <textarea rows={5} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-gold outline-none transition-all resize-none" placeholder="How can we help you today?"></textarea>
-                </div>
-                <Button className="w-full bg-gold hover:bg-gold/80 text-charcoal rounded-full py-7 text-lg font-bold tracking-wider flex items-center justify-center gap-3">
-                  SUBMIT INQUIRY <ArrowRight size={20} />
-                </Button>
-              </form>
-            </div>
+            <ContactForm />
           </div>
 
         </div>

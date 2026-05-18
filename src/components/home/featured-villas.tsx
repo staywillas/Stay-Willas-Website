@@ -3,43 +3,29 @@
 import React from "react";
 import { motion } from "framer-motion";
 import VillaCard from "./villa-card";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
 
-// Static list of our top favorite properties we recommend to friends
-const villas = [
-  {
-    id: "lonavala-estate",
-    name: "Misty Mornings Cliffhouse",
-    location: "Lonavala",
-    image: "/images/villa-lonavala.png",
-    price: "45,000",
-    guests: 12,
-    bedrooms: 5,
-    bathrooms: 6,
-  },
-  {
-    id: "alibaug-retreat",
-    name: "Alibaug Palms Beachhouse",
-    location: "Alibaug",
-    image: "/images/villa-alibaug.png",
-    price: "60,000",
-    guests: 10,
-    bedrooms: 4,
-    bathrooms: 5,
-  },
-  {
-    id: "mahabaleshwar-heritage",
-    name: "Panchgani Whispering Pines",
-    location: "Panchgani",
-    image: "/images/villa-mahabaleshwar.png",
-    price: "35,000",
-    guests: 8,
-    bedrooms: 3,
-    bathrooms: 4,
-  },
-];
+interface Villa {
+  id: string;
+  name: string;
+  location: string;
+  image: string;
+  price: string;
+  guests: number;
+  bedrooms: number;
+  bathrooms: number;
+}
 
-const FeaturedVillas = () => {
+interface FeaturedVillasProps {
+  villas: Villa[];
+}
+
+const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
   return (
     <section className="py-24 px-6 md:px-12 lg:px-24 bg-charcoal relative overflow-hidden">
       {/* Some smooth glowing ambient gradients to frame the cards nicely */}
@@ -73,13 +59,14 @@ const FeaturedVillas = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <Button variant="outline" className="border-gold/30 text-gold hover:bg-gold hover:text-charcoal rounded-full px-8 py-6">
+            <Link href="/villas" className="bg-[#FFCC00] hover:bg-[#FFD700] text-black font-extrabold rounded-full px-8 py-4 text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(255,204,0,0.2)] hover:shadow-[0_0_25px_rgba(255,204,0,0.4)] inline-block">
               VIEW ALL PROPERTIES
-            </Button>
+            </Link>
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Desktop Grid Layout */}
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-8">
           {villas.map((villa, index) => (
             <motion.div
               key={villa.id}
@@ -92,7 +79,47 @@ const FeaturedVillas = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Mobile 3D Coverflow Slider Layout */}
+        <div className="block md:hidden">
+          <Swiper
+            modules={[EffectCoverflow, Pagination]}
+            effect={"coverflow"}
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView={"auto"}
+            coverflowEffect={{
+              rotate: 15,
+              stretch: -15,
+              depth: 120,
+              modifier: 1.1,
+              slideShadows: true,
+            }}
+            pagination={{ clickable: true, dynamicBullets: true }}
+            className="villas-mobile-swiper py-10"
+          >
+            {villas.map((villa) => (
+              <SwiperSlide key={villa.id} className="max-w-[310px] px-3">
+                <VillaCard {...villa} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
+
+      <style jsx global>{`
+        .villas-mobile-swiper .swiper-pagination-bullet {
+          background: rgba(255, 255, 255, 0.2);
+          width: 8px;
+          height: 8px;
+          transition: all 0.3s ease;
+        }
+        .villas-mobile-swiper .swiper-pagination-bullet-active {
+          background: #c5a059;
+          width: 24px;
+          border-radius: 4px;
+        }
+      `}</style>
     </section>
   );
 };

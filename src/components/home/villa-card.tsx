@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import Tilt from "react-parallax-tilt";
+import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { Users, Bed, Bath, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -32,16 +32,14 @@ const VillaCard = ({
   className,
 }: VillaCardProps) => {
   return (
-    <Tilt
-      tiltMaxAngleX={5}
-      tiltMaxAngleY={5}
-      perspective={1000}
-      transitionSpeed={1500}
-      scale={1.02}
-      className={cn("w-full", className)}
+    <ThreeDHoverCard
+      maxTilt={6}
+      scale={1.03}
+      lift={-10}
+      className={cn("w-full rounded-2xl", className)}
     >
-      <Link href={`/villa/${id}`} className="block group">
-        <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl bg-charcoal">
+      <Link href={`/villa/${id}`} className="block group w-full h-full">
+        <div className="relative aspect-[3/2] w-full overflow-hidden bg-charcoal rounded-2xl">
           {/* Image */}
           <Image
             src={image}
@@ -84,13 +82,13 @@ const VillaCard = ({
               </div>
             </div>
 
-            <div className="mt-6 w-full btn-glow-gold py-4 rounded-xl text-center text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg">
+            <div className="mt-6 w-full bg-[#FFCC00] hover:bg-[#FFD700] text-black py-4 rounded-xl text-center text-[10px] font-extrabold tracking-[0.2em] uppercase transition-all duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(255,204,0,0.3)]">
               VIEW DETAILED HOUSE & BOOK NOW
             </div>
           </div>
         </div>
       </Link>
-    </Tilt>
+    </ThreeDHoverCard>
   );
 };
 

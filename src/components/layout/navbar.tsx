@@ -97,9 +97,9 @@ const Navbar = () => {
               </SignInButton>
             )}
             
-            <Button className="bg-gold hover:bg-gold/80 text-charcoal rounded-full px-6 py-5 h-auto text-[10px] font-black tracking-[0.2em] shadow-lg shadow-gold/20">
+            <Link href="/villas" className="bg-[#FFCC00] hover:bg-[#FFD700] text-black rounded-full px-6 py-3.5 text-[10px] font-black tracking-[0.2em] shadow-[0_0_15px_rgba(255,204,0,0.3)] transition-all duration-300 flex items-center justify-center">
               BOOK NOW
-            </Button>
+            </Link>
           </div>
         </div>
 
@@ -148,9 +148,9 @@ const Navbar = () => {
                 <span>+91 98765 43210</span>
               </Link>
               
-              <Button className="bg-gold hover:bg-gold/80 text-charcoal rounded-full w-full py-8 text-xl font-black tracking-widest mt-8">
+              <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-[#FFCC00] hover:bg-[#FFD700] text-black text-center rounded-full w-full py-5 text-base font-black tracking-widest mt-8 shadow-[0_0_15px_rgba(255,204,0,0.3)] transition-all duration-300 block">
                 RESERVE NOW
-              </Button>
+              </Link>
             </div>
           </motion.div>
         )}

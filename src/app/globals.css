@@ -115,6 +115,9 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white/40;
   }
+  .text-gradient-yellow {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#FFCC00] via-[#FFE259] to-[#FFA751];
+  }
   .btn-glow-gold {
     background-color: #c5a059 !important;
     color: #0a0a0a !important;

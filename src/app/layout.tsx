@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
 import MobileNav from "@/components/layout/mobile-nav";
+import AiConcierge from "@/components/chatbot/ai-concierge";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -35,6 +36,7 @@ export default function RootLayout({
           <SmoothScrollProvider>
             {children}
             <MobileNav />
+            <AiConcierge />
           </SmoothScrollProvider>
         </body>
       </html>

@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 
 export const metadata: Metadata = {
   title: "Top Luxury Destinations in Maharashtra | Stay Willas",
@@ -64,15 +65,22 @@ export default function DestinationsPage() {
       <section className="pb-32 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto space-y-32">
         {destinations.map((dest, i) => (
           <div key={dest.name} className={`flex flex-col ${i % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-16 items-center group`}>
-            <div className="w-full md:w-3/5 aspect-[3/2] relative overflow-hidden rounded-3xl">
-              <Image 
-                src={dest.image} 
-                alt={dest.name} 
-                fill 
-                className="object-cover transition-transform duration-1000 group-hover:scale-110" 
-              />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-700" />
-            </div>
+            <ThreeDHoverCard
+              maxTilt={6}
+              scale={1.02}
+              lift={-8}
+              className="w-full md:w-3/5 aspect-[3/2] rounded-3xl"
+            >
+              <div className="relative w-full h-full overflow-hidden rounded-3xl">
+                <Image 
+                  src={dest.image} 
+                  alt={dest.name} 
+                  fill 
+                  className="object-cover transition-transform duration-1000 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-700" />
+              </div>
+            </ThreeDHoverCard>
             
             <div className="w-full md:w-1/2">
               <div className="text-gold font-medium tracking-widest uppercase text-sm mb-6 flex items-center gap-4">

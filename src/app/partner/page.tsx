@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 import Footer from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, TrendingUp, BarChart3, Globe2, ShieldCheck, Zap } from "lucide-react";
+import PartnerForm from "@/components/partner/partner-form";
 
 export default function PartnerPage() {
   const steps = [
@@ -36,9 +37,9 @@ export default function PartnerPage() {
           Let us handle the hard work of running, managing, and promoting your villa 
           so you can sit back and watch it thrive.
         </p>
-        <Button className="bg-gold hover:bg-gold/80 text-charcoal rounded-full px-12 py-8 text-xl font-bold h-auto shadow-2xl">
+        <a href="#partner-form" className="btn-glow-gold px-12 py-6 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 shadow-2xl inline-block">
           INQUIRE NOW
-        </Button>
+        </a>
       </section>
 
       {/* Benefits Grid */}
@@ -80,6 +81,11 @@ export default function PartnerPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Partnership Form Section */}
+      <section className="py-12 px-6 md:px-12 lg:px-24">
+        <PartnerForm />
       </section>
 
       <Footer />

@@ -4,14 +4,15 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Navigation, Pagination, Scrollbar } from "swiper/modules";
+import { Navigation, Pagination, Scrollbar, EffectCoverflow } from "swiper/modules";
 import { ArrowUpRight, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 
 import "swiper/css";
-import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import "swiper/css/effect-coverflow";
+import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 
 const destinations = [
   {
@@ -30,7 +31,7 @@ const destinations = [
   },
   {
     name: "Nashik",
-    image: "/images/exp-chef.png",
+    image: "/images/villa-mahabaleshwar.png",
     count: "5 Villas",
     tag: "Vineyards & Hills",
     desc: "Stunning lakefront stays, wine tasting, and perfect weather."
@@ -65,9 +66,14 @@ const DestinationShowcase = () => {
             <span className="text-white/40 font-bold tracking-[0.5em] uppercase text-[9px] mb-4 block">
               Where Do You Want To Go?
             </span>
-            <h2 className="text-5xl md:text-7xl font-heading text-white italic text-shadow">
-              Find Your <span className="text-white/20 not-italic font-bold">Spot</span>
+            <h2 className="text-5xl md:text-7xl font-heading text-white leading-tight">
+              Find Your <span className="text-gradient-yellow font-heading font-medium italic">Spot</span>
             </h2>
+            {/* Elegant, glowing scroll guideline instruction */}
+            <div className="flex items-center gap-3 mt-6 text-[10px] uppercase tracking-[0.3em] text-gold font-bold">
+              <span className="w-2 h-2 rounded-full bg-gold animate-ping"></span>
+              <span>Scroll or drag to see destinations</span>
+            </div>
           </div>
           
           <div className="flex items-center gap-4">
@@ -81,17 +87,17 @@ const DestinationShowcase = () => {
         </div>
 
         <Swiper
-          modules={[EffectCoverflow, Navigation, Pagination, Scrollbar]}
-          effect="coverflow"
-          grabCursor={true}
+          modules={[Navigation, Pagination, Scrollbar, EffectCoverflow]}
+          effect={"coverflow"}
           centeredSlides={true}
+          grabCursor={true}
           slidesPerView={"auto"}
           coverflowEffect={{
-            rotate: 20,
-            stretch: 0,
-            depth: 200,
-            modifier: 1.5,
-            slideShadows: true,
+            rotate: 15,
+            stretch: -20,
+            depth: 150,
+            modifier: 1.1,
+            slideShadows: false,
           }}
           navigation={{
             prevEl: ".dest-prev",
@@ -102,44 +108,63 @@ const DestinationShowcase = () => {
           className="dest-swiper py-20"
         >
           {destinations.map((dest) => (
-            <SwiperSlide key={dest.name} className="max-w-[320px] md:max-w-[400px]">
-              <div className="relative aspect-[3/4] rounded-[32px] overflow-hidden group shadow-2xl border border-white/5">
-                <Image
-                  src={dest.image}
-                  alt={dest.name}
-                  fill
-                  className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent opacity-90" />
-                
-                <div className="absolute inset-0 p-10 flex flex-col justify-end">
-                  <div className="flex items-center gap-2 text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
-                    <MapPin size={12} />
-                    {dest.tag}
-                  </div>
-                  <h3 className="text-4xl md:text-5xl font-heading text-white mb-4 italic pr-4">{dest.name}</h3>
-                  <p className="text-white/60 text-sm mb-8 max-w-[250px] leading-relaxed">
-                    {dest.desc}
-                  </p>
+            <SwiperSlide key={dest.name} className="max-w-[320px] md:max-w-[400px] px-4">
+              <ThreeDHoverCard
+                maxTilt={8}
+                scale={1.04}
+                lift={-12}
+                className="rounded-[32px]"
+              >
+                <Link
+                  href={`/villas?region=${dest.name.toLowerCase()}`}
+                  className="block relative aspect-[3/4] w-full h-full rounded-[32px] overflow-hidden group border border-white/5 cursor-pointer"
+                >
+                  <Image
+                    src={dest.image}
+                    alt={dest.name}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent opacity-90" />
                   
-                  <Link 
-                    href={`/villas?region=${dest.name.toLowerCase()}`}
-                    className="flex items-center gap-4 group/btn"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-gold text-charcoal flex items-center justify-center group-hover/btn:scale-110 transition-transform">
-                      <ArrowUpRight size={20} />
+                  <div className="absolute inset-0 p-10 flex flex-col justify-end">
+                    <div className="flex items-center gap-2 text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">
+                      <MapPin size={12} />
+                      {dest.tag}
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-white">{dest.count}</span>
-                  </Link>
-                </div>
-              </div>
+                    <h3 className="text-4xl md:text-5xl font-heading text-white mb-4 italic pr-4">{dest.name}</h3>
+                    <p className="text-white/60 text-sm mb-8 max-w-[250px] leading-relaxed">
+                      {dest.desc}
+                    </p>
+                    
+                    <div className="flex items-center gap-4 group/btn">
+                      <div className="w-12 h-12 rounded-full bg-[#FFCC00] group-hover:bg-[#FFD700] text-charcoal flex items-center justify-center group-hover/btn:scale-110 transition-all duration-300">
+                        <ArrowUpRight size={20} />
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-white">{dest.count}</span>
+                    </div>
+                  </div>
+                </Link>
+              </ThreeDHoverCard>
             </SwiperSlide>
           ))}
         </Swiper>
 
-        {/* Custom Scrollbar Bar */}
-        <div className="max-w-xl mx-auto mt-12 px-12">
-          <div className="dest-scrollbar h-1 bg-white/10 rounded-full overflow-hidden" />
+        {/* Floating Side Arrow Buttons - Cinematic Desktop Overlay */}
+        <div className="hidden xl:block absolute top-[58%] left-8 -translate-y-1/2 z-30 pointer-events-none">
+          <button className="dest-prev pointer-events-auto w-16 h-16 rounded-full bg-charcoal/85 backdrop-blur-md border border-white/10 hover:border-gold/50 flex items-center justify-center text-white hover:text-gold hover:scale-105 shadow-2xl transition-all duration-300">
+            <ChevronLeft size={28} />
+          </button>
+        </div>
+        <div className="hidden xl:block absolute top-[58%] right-8 -translate-y-1/2 z-30 pointer-events-none">
+          <button className="dest-next pointer-events-auto w-16 h-16 rounded-full bg-charcoal/85 backdrop-blur-md border border-white/10 hover:border-gold/50 flex items-center justify-center text-white hover:text-gold hover:scale-105 shadow-2xl transition-all duration-300">
+            <ChevronRight size={28} />
+          </button>
+        </div>
+
+        {/* Custom Enhanced Scrollbar Bar */}
+        <div className="max-w-2xl mx-auto mt-16 px-12">
+          <div className="dest-scrollbar h-2.5 bg-white/5 border border-white/5 rounded-full overflow-hidden relative cursor-pointer" />
         </div>
       </div>
 
@@ -155,10 +180,22 @@ const DestinationShowcase = () => {
           width: 24px;
           border-radius: 4px;
         }
+        .dest-scrollbar {
+          height: 10px !important;
+          background: rgba(255, 255, 255, 0.05) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          border-radius: 9999px !important;
+        }
         .dest-scrollbar .swiper-scrollbar-drag {
-          background: #c5a059 !important;
+          background: linear-gradient(90deg, #c5a059, #e5c07b) !important;
           height: 100% !important;
-          border-radius: 4px !important;
+          border-radius: 9999px !important;
+          box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
+          transition: all 0.3s ease;
+        }
+        .dest-scrollbar:hover .swiper-scrollbar-drag {
+          background: linear-gradient(90deg, #e5c07b, #f5d08b) !important;
+          box-shadow: 0 0 15px rgba(197, 160, 89, 0.6);
         }
       `}</style>
     </section>

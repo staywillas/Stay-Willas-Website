@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import VillaCard from "@/components/home/villa-card";
+import BookingBar from "@/components/home/booking-bar";
 
 export const metadata: Metadata = {
   title: "Our Villa Collection | Stay Willas | Luxury Stays in Maharashtra",
@@ -10,113 +11,7 @@ export const metadata: Metadata = {
   keywords: ["luxury villa collection", "private villas maharashtra", "premium staycations", "Stay Willas properties"],
 };
 
-const villas = [
-  {
-    id: "lonavala-estate",
-    slug: "the-mist-estate",
-    name: "Misty Mornings Cliffhouse",
-    location: "Lonavala, Maharashtra",
-    price: "45,000",
-    rating: 4.9,
-    image: "/images/villa-lonavala.png",
-    bedrooms: 5,
-    bathrooms: 6,
-    guests: 12,
-    category: "Mountain View"
-  },
-  {
-    id: "alibaug-shores",
-    slug: "azure-beach-house",
-    name: "Alibaug Palms Beachhouse",
-    location: "Alibaug, Maharashtra",
-    price: "38,000",
-    rating: 4.8,
-    image: "/images/villa-alibaug.png",
-    bedrooms: 4,
-    bathrooms: 4,
-    guests: 10,
-    category: "Beachfront"
-  },
-  {
-    id: "nashik-vineyard",
-    slug: "vignette-manor",
-    name: "Lake-View Vineyard Villa",
-    location: "Nashik, Maharashtra",
-    price: "28,000",
-    rating: 4.7,
-    image: "/images/exp-chef.png",
-    bedrooms: 3,
-    bathrooms: 3,
-    guests: 6,
-    category: "Vineyards"
-  },
-  {
-    id: "panchgani-heights",
-    slug: "sahyardi-manor",
-    name: "Panchgani Whispering Pines",
-    location: "Panchgani, Maharashtra",
-    price: "55,000",
-    rating: 5.0,
-    image: "/images/villa-mahabaleshwar.png",
-    bedrooms: 6,
-    bathrooms: 7,
-    guests: 15,
-    category: "Mountain View"
-  },
-  {
-    id: "karjat-riverside",
-    slug: "river-echoes",
-    name: "Karjat River House",
-    location: "Karjat, Maharashtra",
-    price: "32,000",
-    rating: 4.7,
-    image: "/images/hero-villa.png",
-    bedrooms: 3,
-    bathrooms: 3,
-    guests: 8,
-    category: "Private Estates"
-  },
-  {
-    id: "mulshi-lakefront",
-    slug: "serene-waters-estate",
-    name: "Mulshi Lakehouse",
-    location: "Mulshi, Maharashtra",
-    price: "42,000",
-    rating: 4.9,
-    image: "/images/exp-pool.png",
-    bedrooms: 4,
-    bathrooms: 5,
-    guests: 10,
-    category: "Infinity Pools"
-  },
-  {
-    id: "igatpuri-peaks",
-    slug: "cloud-nine-villa",
-    name: "Igatpuri Clouds Villa",
-    location: "Igatpuri, Maharashtra",
-    price: "35,000",
-    rating: 4.8,
-    image: "/images/villa-lonavala.png",
-    bedrooms: 4,
-    bathrooms: 4,
-    guests: 10,
-    category: "Mountain View"
-  },
-  {
-    id: "kashid-beach",
-    slug: "palm-grove-sanctuary",
-    name: "Kashid Palms Villa",
-    location: "Kashid, Maharashtra",
-    price: "50,000",
-    rating: 4.9,
-    image: "/images/villa-alibaug.png",
-    bedrooms: 5,
-    bathrooms: 5,
-    guests: 12,
-    category: "Beachfront"
-  }
-];
-
+import { prisma } from "@/lib/db";
 import CategoryBar from "@/components/layout/category-bar";
 import Link from "next/link";
 
@@ -128,6 +23,25 @@ export default async function VillasPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
   const regionParam = resolvedParams.region;
   const categoryParam = resolvedParams.category;
+
+  // Query all villas dynamically from the live Supabase PostgreSQL database
+  const dbVillas = await prisma.villa.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  // Map the database format to the UI model structure
+  const villas = dbVillas.map((villa) => ({
+    id: villa.id,
+    slug: villa.slug,
+    name: villa.name,
+    location: villa.location,
+    price: villa.price.toLocaleString("en-IN"),
+    image: villa.images[0] || "/images/hero-villa.png",
+    bedrooms: villa.bedrooms,
+    bathrooms: villa.bathrooms,
+    guests: villa.guests,
+    category: villa.category,
+  }));
 
   const region = typeof regionParam === "string" ? regionParam.trim().toLowerCase() : undefined;
   const category = typeof categoryParam === "string" ? categoryParam.trim() : undefined;
@@ -152,13 +66,18 @@ export default async function VillasPage({ searchParams }: PageProps) {
         </span>
         <h1 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
           Find Your <br />
-          <span className="italic text-gold text-gradient">Perfect Stay</span>
+          <span className="italic text-gradient-yellow pr-4 font-heading font-medium">Perfect Stay</span>
         </h1>
-        <p className="text-white/60 text-xl max-w-2xl mx-auto leading-relaxed">
+        <p className="text-white/60 text-xl max-w-2xl mx-auto leading-relaxed mb-12">
           Whether you want a quiet home in the hills or a beautiful place by the beach, 
           we have something for you.
         </p>
       </section>
+
+      {/* Booking Date & Destination Selection Widget */}
+      <div className="mb-24 relative z-30 -mt-10">
+        <BookingBar />
+      </div>
 
       {/* Airbnb Style Category Bar */}
       <CategoryBar />
