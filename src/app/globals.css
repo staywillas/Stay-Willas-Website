@@ -110,7 +110,7 @@
     @apply bg-background/60 backdrop-blur-md border border-white/10;
   }
   .glass-dark {
-    @apply bg-black/40 backdrop-blur-xl border border-white/5;
+    @apply bg-black/80 backdrop-blur-2xl border border-white/10;
   }
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white/40;
@@ -134,7 +134,7 @@
 }
 
 /* ---------------------------------------------------- */
-/* Premium Layout Performance & Hardware Acceleration  */
+/* Premium Layout Performance & Hardware Acceleration    */
 /* ---------------------------------------------------- */
 html {
   scroll-behavior: smooth;
@@ -143,23 +143,44 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Force hardware accelerated layers for animations */
-.hardware-accelerated {
+/* GPU-accelerated compositing for animated elements */
+.hardware-accelerated,
+[class*="animate-"],
+.group:hover img {
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
-  perspective: 1000px;
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
-/* Optimize lazy page layout painting */
-.lazy-paint {
+/* content-visibility: auto for off-screen sections - huge paint saving */
+.lazy-paint,
+section {
   content-visibility: auto;
-  contain-intrinsic-size: 1px 500px;
+  contain-intrinsic-size: auto 600px;
 }
 
-/* Reduce layout shifts in images and smooth rendering */
+/* Reduce layout shifts and optimize image rendering */
 img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
   content-visibility: auto;
+}
+
+/* No-scrollbar utility for thumbnail strips */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

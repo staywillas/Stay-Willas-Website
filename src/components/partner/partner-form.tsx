@@ -115,7 +115,7 @@ const PartnerForm = () => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-gold outline-none transition-all text-white text-sm" 
-              placeholder="+91 98765 43210" 
+              placeholder="+91 96190 42310" 
             />
           </div>
           <div className="space-y-2">

@@ -26,7 +26,7 @@ const BookingBar = () => {
   };
 
   return (
-    <div className="relative z-30 max-w-6xl mx-auto px-6 -mt-16 md:-mt-20">
+    <div className="relative z-30 max-w-6xl mx-auto px-6 -mt-6 md:-mt-8">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

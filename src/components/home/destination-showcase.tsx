@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar, EffectCoverflow } from "swiper/modules";
+import { Navigation, Pagination, Scrollbar, EffectCoverflow, Mousewheel } from "swiper/modules";
 import { ArrowUpRight, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 
 import "swiper/css";
@@ -17,35 +17,35 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 const destinations = [
   {
     name: "Lonavala",
-    image: "/images/villa-lonavala.png",
+    image: "/assets/villas/misty-mornings-cliffhouse/main.png",
     count: "12 Villas",
     tag: "Mountain Escapes",
     desc: "Cool breeze, misty green hills, and quiet retreats."
   },
   {
     name: "Alibaug",
-    image: "/images/villa-alibaug.png",
+    image: "/assets/villas/alibaug-palms-beachhouse/main.png",
     count: "8 Villas",
     tag: "Beachside Stays",
     desc: "Golden sand beaches, pools, and beautiful sunsets."
   },
   {
     name: "Nashik",
-    image: "/images/villa-mahabaleshwar.png",
+    image: "/assets/villas/lakeview-vineyard-villa/main.png",
     count: "5 Villas",
     tag: "Vineyards & Hills",
     desc: "Stunning lakefront stays, wine tasting, and perfect weather."
   },
   {
     name: "Karjat",
-    image: "/images/hero-villa.png",
+    image: "/assets/villas/karjat-river-house/main.png",
     count: "7 Villas",
     tag: "Riverside Views",
     desc: "Green valleys, quiet rivers, and pure relaxation."
   },
   {
     name: "Mulshi",
-    image: "/images/exp-pool.png",
+    image: "/assets/villas/mulshi-lakehouse/main.png",
     count: "4 Villas",
     tag: "By the Lake",
     desc: "Gorgeous views of the blue water right outside your room."
@@ -53,6 +53,39 @@ const destinations = [
 ];
 
 const DestinationShowcase = () => {
+  const swiperRef = useRef<any>(null);
+
+  useEffect(() => {
+    const swiperInstance = swiperRef.current?.swiper;
+    if (!swiperInstance) return;
+
+    const swiperEl = swiperInstance.el;
+    if (!swiperEl) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      const swiper = swiperInstance;
+      const { deltaY, deltaX } = e;
+
+      // Only intercept if vertical scrolling is the primary intent
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+        const isAtBeginning = swiper.isBeginning;
+        const isAtEnd = swiper.isEnd;
+
+        // If scrolling down and not at the end, or scrolling up and not at the beginning,
+        // intercept the wheel event so it doesn't propagate to Lenis or trigger native vertical scrolling.
+        if ((deltaY > 0 && !isAtEnd) || (deltaY < 0 && !isAtBeginning)) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    };
+
+    swiperEl.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      swiperEl.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
   return (
     <section className="py-32 bg-charcoal relative overflow-hidden">
       {/* Background Decorative Text */}
@@ -87,7 +120,8 @@ const DestinationShowcase = () => {
         </div>
 
         <Swiper
-          modules={[Navigation, Pagination, Scrollbar, EffectCoverflow]}
+          ref={swiperRef}
+          modules={[Navigation, Pagination, Scrollbar, EffectCoverflow, Mousewheel]}
           effect={"coverflow"}
           centeredSlides={true}
           grabCursor={true}
@@ -105,6 +139,9 @@ const DestinationShowcase = () => {
           }}
           pagination={{ clickable: true, dynamicBullets: true }}
           scrollbar={{ draggable: true, el: ".dest-scrollbar" }}
+          mousewheel={{
+            releaseOnEdges: true,
+          }}
           className="dest-swiper py-20"
         >
           {destinations.map((dest) => (
@@ -123,6 +160,9 @@ const DestinationShowcase = () => {
                     src={dest.image}
                     alt={dest.name}
                     fill
+                    sizes="(max-width: 768px) 90vw, 400px"
+                    loading="lazy"
+                    quality={75}
                     className="object-cover transition-transform duration-1000 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent opacity-90" />

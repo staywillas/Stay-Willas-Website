@@ -8,6 +8,18 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
 
+const WhatsAppIcon = ({ size = 16, className = "" }: { size?: number; className?: string }) => (
+  <svg 
+    viewBox="0 0 24 24" 
+    width={size} 
+    height={size} 
+    fill="currentColor" 
+    className={className}
+  >
+    <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
+  </svg>
+);
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -40,7 +52,7 @@ const Navbar = () => {
         )}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/" className="flex items-center gap-3 group shrink-0">
           <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center transition-transform duration-700 group-hover:rotate-[360deg]">
             <span className="font-heading text-charcoal font-bold text-xl leading-none">W</span>
           </div>
@@ -51,7 +63,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-10">
+        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -80,11 +92,16 @@ const Navbar = () => {
         </div>
 
         {/* Actions */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="tel:+919876543210" className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors duration-300">
-            <Phone size={14} />
-            <span className="text-[10px] font-bold tracking-widest uppercase">+91 98765 43210</span>
-          </Link>
+        <div className="hidden md:flex items-center gap-4 xl:gap-6 shrink-0">
+          <a href="tel:+919619042310" className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors duration-300" title="+91 96190 42310">
+            <Phone size={14} className="shrink-0" />
+            <span className="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap hidden xl:inline">+91 96190 42310</span>
+          </a>
+          
+          <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/40 hover:text-[#25D366] transition-colors duration-300" title="WhatsApp Chat">
+            <WhatsAppIcon size={14} className="shrink-0" />
+            <span className="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap hidden xl:inline">WhatsApp</span>
+          </a>
           
           <div className="flex items-center gap-4">
             {isSignedIn ? (
@@ -143,10 +160,17 @@ const Navbar = () => {
               
               <div className="h-px w-full bg-white/5 my-8" />
               
-              <Link href="tel:+919876543210" className="flex items-center gap-4 text-gold text-xl font-medium">
-                <Phone size={24} />
-                <span>+91 98765 43210</span>
-              </Link>
+              <div className="flex flex-col gap-4">
+                <a href="tel:+919619042310" className="flex items-center gap-4 text-gold text-xl font-medium">
+                  <Phone size={24} className="text-gold" />
+                  <span>+91 96190 42310</span>
+                </a>
+                
+                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-white hover:text-[#25D366] text-xl font-medium transition-colors">
+                  <WhatsAppIcon size={24} className="text-[#25D366]" />
+                  <span>WhatsApp Chat</span>
+                </a>
+              </div>
               
               <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-[#FFCC00] hover:bg-[#FFD700] text-black text-center rounded-full w-full py-5 text-base font-black tracking-widest mt-8 shadow-[0_0_15px_rgba(255,204,0,0.3)] transition-all duration-300 block">
                 RESERVE NOW

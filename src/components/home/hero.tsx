@@ -20,11 +20,11 @@ const slides = [
     desc: "We've found the most beautiful homes in Maharashtra so you don't have to. Come in, relax, and make yourself at home."
   },
   {
-    image: "/images/villa-lonavala.png",
-    tag: "Mountain Escapes",
-    title: "Wake Up in the",
-    titleItalic: "Clouds",
-    desc: "Breathe in the fresh mountain air at our beautiful cliffside homes in Lonavala."
+    image: "/assets/villas/angled-house/main.webp",
+    tag: "Infinity Pools & Modern Design",
+    title: "The Iconic",
+    titleItalic: "Angled House",
+    desc: "Where modern architecture meets slow luxury — our stunning designer villa in Lonavala, crafted for unforgettable escapes."
   },
   {
     image: "/images/villa-alibaug.png",
@@ -62,7 +62,9 @@ const Hero = () => {
                   src={slide.image}
                   alt={slide.title}
                   fill
-                  priority
+                  priority={index === 0}
+                  sizes="100vw"
+                  quality={75}
                   className="object-cover animate-ken-burns"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/20 to-charcoal" />
@@ -70,7 +72,7 @@ const Hero = () => {
               </div>
 
               {/* Slide title and description content */}
-              <div className="relative z-10 h-full flex flex-col justify-center pt-32 pb-24 md:pb-36 px-6 md:px-12 lg:px-24">
+              <div className="relative z-10 h-full flex flex-col justify-start pt-32 md:pt-36 lg:pt-40 pb-16 px-6 md:px-12 lg:px-24">
                 <div className="max-w-4xl">
                   <AnimatePresence mode="wait">
                     {isActive && (
@@ -81,21 +83,21 @@ const Hero = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                       >
-                        <span className="inline-block text-[#FFCC00] font-bold tracking-[0.5em] uppercase text-xs mb-6 block drop-shadow-[0_0_10px_rgba(255,204,0,0.1)]">
+                        <span className="inline-block text-[#FFCC00] font-bold tracking-[0.5em] uppercase text-xs mb-4 block drop-shadow-[0_0_10px_rgba(255,204,0,0.1)]">
                           {slide.tag}
                         </span>
-                        <h1 className="text-5xl md:text-7xl lg:text-9xl font-heading text-white leading-[1.1] mb-6 pb-2">
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-heading text-white leading-[1.1] mb-4 pb-1">
                           {slide.title} <br /> 
                           <span className="italic text-gradient-yellow pr-4 font-heading font-medium">{slide.titleItalic}</span>
                         </h1>
-                        <p className="text-lg md:text-xl text-white/80 font-sans max-w-2xl mb-12 leading-relaxed tracking-wide">
+                        <p className="text-base md:text-lg text-white/80 font-sans max-w-2xl mb-8 leading-relaxed tracking-wide">
                           {slide.desc}
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                          <Link href="/villas" className="bg-[#FFCC00] hover:bg-[#FFD700] text-black font-extrabold rounded-full px-10 py-5 text-lg tracking-widest h-auto group flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.3)] hover:shadow-[0_0_30px_rgba(255,204,0,0.5)] transition-all duration-300">
+                          <Link href="/villas" className="bg-[#FFCC00] hover:bg-[#FFD700] text-black font-extrabold rounded-full px-8 py-4 text-sm md:text-base tracking-widest h-auto group flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.3)] hover:shadow-[0_0_30px_rgba(255,204,0,0.5)] transition-all duration-300">
                             EXPLORE COLLECTION
-                            <ChevronRight className="ml-2 transition-transform group-hover:translate-x-1" />
+                            <ChevronRight className="ml-2 transition-transform group-hover:translate-x-1" size={16} />
                           </Link>
                         </div>
                       </motion.div>
@@ -107,8 +109,8 @@ const Hero = () => {
           );
         })}
 
-        {/* The custom Swiper navigation arrows in the bottom right corner */}
-        <div className="absolute bottom-12 right-12 z-20 hidden md:flex items-center gap-4">
+        {/* The custom Swiper navigation arrows in the bottom right corner - shifted left to prevent chatbot collision */}
+        <div className="absolute bottom-12 right-32 z-20 hidden md:flex items-center gap-4">
           <button className="hero-prev w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-[#FFCC00] hover:border-[#FFCC00] hover:text-charcoal transition-all cursor-pointer">
             <ChevronLeft size={20} />
           </button>

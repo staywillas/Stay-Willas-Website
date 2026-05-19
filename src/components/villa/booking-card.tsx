@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon, Users, Info, Loader2 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
@@ -20,11 +20,34 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
   const [guests, setGuests] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
 
+  const checkInRef = useRef<HTMLInputElement>(null);
+  const checkOutRef = useRef<HTMLInputElement>(null);
+
   // Simple check on how many nights they are booking for
   const nights = differenceInDays(checkOut, checkIn);
   const subtotal = numericPrice * (nights > 0 ? nights : 0);
   const serviceFee = 5000; // Flat fee for our on-site team, private chef, and keeping everything clean
   const total = subtotal + serviceFee;
+
+  const handleCheckInClick = () => {
+    if (checkInRef.current) {
+      try {
+        checkInRef.current.showPicker();
+      } catch (err) {
+        checkInRef.current.click();
+      }
+    }
+  };
+
+  const handleCheckOutClick = () => {
+    if (checkOutRef.current) {
+      try {
+        checkOutRef.current.showPicker();
+      } catch (err) {
+        checkOutRef.current.click();
+      }
+    }
+  };
 
   // Let's create checkout session on Stripe so they can pay securely
   const handleBooking = async () => {
@@ -65,20 +88,55 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
 
       <div className="space-y-4 mb-8">
         {/* Double-date picker box. Separated with a thin border. */}
-        <div className="grid grid-cols-2 gap-px bg-white/10 border border-white/10 rounded-2xl overflow-hidden">
-          <div className="bg-charcoal p-4 text-left">
+        <div className="grid grid-cols-2 gap-px bg-white/10 border border-white/10 rounded-2xl overflow-hidden relative">
+          <div 
+            onClick={handleCheckInClick}
+            className="relative bg-charcoal p-4 text-left cursor-pointer hover:bg-[#1a1a1a] transition-colors"
+          >
             <span className="text-[10px] text-white/40 uppercase tracking-widest block mb-1">Check-in</span>
             <div className="flex items-center justify-between text-white text-sm">
               <span>{format(checkIn, "MMM dd, yyyy")}</span>
               <CalendarIcon size={14} className="text-gold" />
             </div>
+            <input 
+              ref={checkInRef}
+              type="date"
+              className="absolute bottom-0 right-0 w-0 h-0 opacity-0 pointer-events-none"
+              min={format(new Date(), "yyyy-MM-dd")}
+              value={format(checkIn, "yyyy-MM-dd")}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const newDate = new Date(e.target.value);
+                  setCheckIn(newDate);
+                  if (newDate >= checkOut) {
+                    setCheckOut(addDays(newDate, 3));
+                  }
+                }
+              }}
+            />
           </div>
-          <div className="bg-charcoal p-4 text-left border-l border-white/10">
+          <div 
+            onClick={handleCheckOutClick}
+            className="relative bg-charcoal p-4 text-left border-l border-white/10 cursor-pointer hover:bg-[#1a1a1a] transition-colors"
+          >
             <span className="text-[10px] text-white/40 uppercase tracking-widest block mb-1">Check-out</span>
             <div className="flex items-center justify-between text-white text-sm">
               <span>{format(checkOut, "MMM dd, yyyy")}</span>
               <CalendarIcon size={14} className="text-gold" />
             </div>
+            <input 
+              ref={checkOutRef}
+              type="date"
+              className="absolute bottom-0 right-0 w-0 h-0 opacity-0 pointer-events-none"
+              min={format(addDays(checkIn, 1), "yyyy-MM-dd")}
+              value={format(checkOut, "yyyy-MM-dd")}
+              onChange={(e) => {
+                if (e.target.value) {
+                  const newDate = new Date(e.target.value);
+                  setCheckOut(newDate);
+                }
+              }}
+            />
           </div>
         </div>
 
@@ -98,7 +156,7 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
       <Button 
         onClick={handleBooking}
         disabled={isLoading || nights <= 0}
-        className="w-full btn-glow-gold rounded-full py-7 text-lg font-bold tracking-wider mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(197,160,89,0.4)]"
+        className="w-full btn-glow-gold rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(197,160,89,0.4)] whitespace-nowrap"
       >
         {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
       </Button>

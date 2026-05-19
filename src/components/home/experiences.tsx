@@ -62,6 +62,9 @@ const Experiences = () => {
               src={categories[0].image}
               alt={categories[0].title}
               fill
+              sizes="(max-width: 768px) 100vw, 66vw"
+              loading="lazy"
+              quality={75}
               className="object-cover transition-transform duration-1000 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
@@ -89,6 +92,9 @@ const Experiences = () => {
                   src={cat.image}
                   alt={cat.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  loading="lazy"
+                  quality={75}
                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />

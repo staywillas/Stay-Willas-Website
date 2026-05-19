@@ -45,7 +45,7 @@ export default function AiConcierge() {
           {
             id: "msg-1",
             role: "bot",
-            content: "Welcome to Stay Willas. I am your personal AI concierge. Let's find your perfect escape. Where are you looking to travel?",
+            content: "Welcome to Stay Willas. I am your Willa Assistant. Let's find your perfect escape. Where are you looking to travel?",
             options: ["Lonavala", "Alibaug", "Karjat", "Anywhere"],
           },
         ]);
@@ -147,9 +147,13 @@ export default function AiConcierge() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 w-16 h-16 bg-[#FFCC00] hover:bg-[#FFD700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.4)] transition-colors duration-300 group"
+            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 w-16 h-16 bg-[#FFCC00] hover:bg-[#FFD700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.4)] transition-all duration-300 group overflow-hidden border-2 border-white/20"
           >
-            <Sparkles className="text-black group-hover:scale-110 transition-transform duration-300" size={28} />
+            <img 
+              src="/images/chatbot.png" 
+              alt="Willa Assistant" 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            />
           </motion.button>
         )}
       </AnimatePresence>
@@ -158,6 +162,7 @@ export default function AiConcierge() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            data-lenis-prevent
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -167,11 +172,11 @@ export default function AiConcierge() {
             {/* Header */}
             <div className="px-6 py-4 border-b border-white/10 bg-black/40 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center border border-gold/30">
-                  <Sparkles size={16} className="text-gold" />
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-gold/40 bg-white/5 flex items-center justify-center shrink-0">
+                  <img src="/images/chatbot.png" alt="Willa Assistant" className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <h3 className="text-white font-heading text-lg leading-tight">AI Concierge</h3>
+                  <h3 className="text-white font-heading text-lg leading-tight">Willa Assistant</h3>
                   <p className="text-[10px] text-gold tracking-widest uppercase font-bold">Online</p>
                 </div>
               </div>
@@ -194,8 +199,8 @@ export default function AiConcierge() {
                 >
                   <div className="flex items-end gap-2 max-w-[85%]">
                     {msg.role === "bot" && (
-                      <div className="w-6 h-6 rounded-full bg-white/5 flex-shrink-0 flex items-center justify-center mb-1">
-                        <Bot size={12} className="text-gold" />
+                      <div className="w-6 h-6 rounded-full overflow-hidden border border-white/10 bg-white/5 flex-shrink-0 flex items-center justify-center mb-1">
+                        <img src="/images/chatbot.png" alt="Willa Assistant" className="w-full h-full object-cover" />
                       </div>
                     )}
                     

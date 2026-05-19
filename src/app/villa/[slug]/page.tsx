@@ -13,6 +13,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import BookingCard from "@/components/villa/booking-card";
 import ReviewSection from "@/components/villa/review-section";
+import PropertyGallery from "@/components/villa/property-gallery";
 import { getReviews } from "@/app/actions/review";
 import { prisma } from "@/lib/db";
 import {
@@ -121,15 +122,14 @@ export default async function VillaDetailPage({ params }: PageProps) {
   const reviewCount = reviews.length;
   const avgRating = reviewCount > 0 
     ? Number((reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount).toFixed(1))
-    : 4.9;
-  const totalReviewsCount = reviewCount > 0 ? reviewCount : 124;
+    : 0;
 
   const villaData = {
     id: villa.id,
     name: villa.name,
     location: villa.location,
     rating: avgRating,
-    reviews: totalReviewsCount,
+    reviews: reviewCount,
     price: villa.price.toLocaleString("en-IN"),
     images: villa.images,
     description: villa.description,
@@ -168,31 +168,22 @@ export default async function VillaDetailPage({ params }: PageProps) {
             <span>{villaData.location}</span>
           </div>
           <div className="w-1 h-1 rounded-full bg-white/20" />
-          <div className="flex items-center gap-1">
-            <Award size={14} className="text-gold fill-gold" />
-            <span className="text-white font-medium">{villaData.rating}</span>
-            <span>({villaData.reviews} reviews)</span>
-          </div>
+          {villaData.reviews > 0 ? (
+            <div className="flex items-center gap-1">
+              <Award size={14} className="text-[#FFCC00] fill-[#FFCC00]" />
+              <span className="text-white font-medium">{villaData.rating}</span>
+              <span>({villaData.reviews} {villaData.reviews === 1 ? "review" : "reviews"})</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1">
+              <Award size={14} className="text-white/20" />
+              <span className="text-white/40 italic">No reviews yet</span>
+            </div>
+          )}
         </div>
 
-        {/* The 5-image grid. One huge hero image, and 4 small ones on the right. Classic Airbnb-style layout. */}
-        <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 aspect-video md:aspect-[21/9] w-full mb-16 overflow-hidden rounded-3xl">
-          <div className="md:col-span-2 md:row-span-2 relative group overflow-hidden">
-            <Image src={villaData.images[0]} alt="Villa Image 1" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-          </div>
-          <div className="relative group overflow-hidden">
-            <Image src={villaData.images[1]} alt="Villa Image 2" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-          </div>
-          <div className="relative group overflow-hidden">
-            <Image src={villaData.images[2]} alt="Villa Image 3" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-          </div>
-          <div className="relative group overflow-hidden">
-            <Image src={villaData.images[3]} alt="Villa Image 4" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-          </div>
-          <div className="relative group overflow-hidden">
-            <Image src={villaData.images[4]} alt="Villa Image 5" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-          </div>
-        </div>
+        {/* Cinematic, Interactive Property Gallery & Lightbox */}
+        <PropertyGallery images={villaData.images} propertyName={villaData.name} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
           <div className="lg:col-span-8">

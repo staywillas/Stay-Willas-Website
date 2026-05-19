@@ -91,27 +91,31 @@ export default function InfiniteMarquee() {
       <style jsx global>{`
         @keyframes marquee-left-anim {
           0% {
-            transform: translateX(0);
+            transform: translate3d(0, 0, 0);
           }
           100% {
-            transform: translateX(-33.33%);
+            transform: translate3d(-33.33%, 0, 0);
           }
         }
         @keyframes marquee-right-anim {
           0% {
-            transform: translateX(-33.33%);
+            transform: translate3d(-33.33%, 0, 0);
           }
           100% {
-            transform: translateX(0);
+            transform: translate3d(0, 0, 0);
           }
         }
         .animate-marquee-left {
           display: flex;
           animation: marquee-left-anim 35s linear infinite;
+          will-change: transform;
+          backface-visibility: hidden;
         }
         .animate-marquee-right {
           display: flex;
           animation: marquee-right-anim 35s linear infinite;
+          will-change: transform;
+          backface-visibility: hidden;
         }
         .animate-marquee-left:hover,
         .animate-marquee-right:hover {

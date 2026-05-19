@@ -41,15 +41,32 @@ export default function ContactPage() {
                 Direct Contact
               </h3>
               <div className="space-y-8">
-                <div className="flex gap-6 items-start">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold">
+                <a href="tel:+919619042310" className="flex gap-6 items-start group">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-charcoal transition-all">
                     <Phone size={20} />
                   </div>
                   <div>
                     <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Give Us a Call</p>
-                    <p className="text-xl">+91 98765 43210</p>
+                    <p className="text-xl group-hover:text-gold transition-colors">+91 96190 42310</p>
                   </div>
-                </div>
+                </a>
+
+                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex gap-6 items-start group">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold group-hover:bg-[#25D366] group-hover:text-white transition-all">
+                    <svg 
+                      viewBox="0 0 24 24" 
+                      width="20" 
+                      height="20" 
+                      fill="currentColor"
+                    >
+                      <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">WhatsApp Chat</p>
+                    <p className="text-xl group-hover:text-[#25D366] transition-colors">+91 96190 42310</p>
+                  </div>
+                </a>
                 <div className="flex gap-6 items-start">
                   <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold">
                     <Mail size={20} />

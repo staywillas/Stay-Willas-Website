@@ -4,31 +4,47 @@ import { prisma } from "../src/lib/db";
 const villasData = [
   {
     id: "lonavala-estate",
-    slug: "the-mist-estate",
-    name: "Misty Mornings Cliffhouse",
+    slug: "angled-house",
+    name: "The Angled House",
     location: "Lonavala, Maharashtra",
-    category: "Mountain View",
-    description: `Misty Mornings Cliffhouse is our absolute favorite family getaway, and we’re so excited to share it with you. We built this 5-bedroom house right on the edge of the valley in Lonavala. On early mornings, the mist literally rolls right over the deck and through the glass doors of the living room—it feels like you're sitting inside a cloud.
+    category: "Infinity Pools",
+    description: `Where modern architecture meets slow luxury — this stunning designer villa is crafted for unforgettable escapes. With its striking angular façade, floor-to-ceiling glass windows, warm ambient lighting, and private pool, the space blends tropical serenity with contemporary elegance.
 
-It features cozy wooden ceilings, a stunning infinity pool that looks like it drops off into the valley, and a private chef (Kailash) who will pamper you with piping hot batata wadas, local Konkani fish curries, and incredible fresh-brewed filter coffee. It’s the perfect place to disconnect from the city noise and just breathe.`,
-    price: 45000,
+Wake up to soft natural light, spend your afternoons by the pool, and unwind in a space designed for comfort, conversations, and curated experiences. Whether it’s a weekend staycation, a celebration with friends, or a peaceful retreat away from the city, this villa offers the perfect balance of luxury and relaxation.`,
+    price: 48000,
     guests: 12,
     bedrooms: 5,
     bathrooms: 6,
     images: [
-      "/images/villa-lonavala.png",
-      "/images/villa-alibaug.png",
-      "/images/villa-mahabaleshwar.png",
-      "/images/hero-villa.png",
-      "/images/exp-pool.png"
+      "/assets/villas/angled-house/gallery-2.webp", // IMG_8544 (Main Thumbnail)
+      "/assets/villas/angled-house/gallery-3.webp", // IMG_8547
+      "/assets/villas/angled-house/gallery-11.webp", // IMG_8638
+      "/assets/villas/angled-house/gallery-13.webp", // IMG_8641
+      "/assets/villas/angled-house/gallery-19.webp", // IMG_8651
+      "/assets/villas/angled-house/main.webp", // IMG_8532
+      "/assets/villas/angled-house/gallery-1.webp", // IMG_8541
+      "/assets/villas/angled-house/gallery-4.webp", // IMG_8550
+      "/assets/villas/angled-house/gallery-5.webp", // IMG_8554
+      "/assets/villas/angled-house/gallery-6.webp", // IMG_8555
+      "/assets/villas/angled-house/gallery-7.webp", // IMG_8559
+      "/assets/villas/angled-house/gallery-8.webp", // IMG_8563
+      "/assets/villas/angled-house/gallery-9.webp", // IMG_8564
+      "/assets/villas/angled-house/gallery-10.webp", // IMG_8565
+      "/assets/villas/angled-house/gallery-12.webp", // IMG_8640
+      "/assets/villas/angled-house/gallery-14.webp", // IMG_8642
+      "/assets/villas/angled-house/gallery-15.webp", // IMG_8646
+      "/assets/villas/angled-house/gallery-16.webp", // IMG_8647
+      "/assets/villas/angled-house/gallery-17.webp", // IMG_8648
+      "/assets/villas/angled-house/gallery-18.webp"  // IMG_8649
     ],
     amenities: [
-      "Super-fast Wi-Fi",
-      "Heated Infinity Pool",
-      "Private Parking",
-      "Kailash (Private Chef)",
+      "Private Swimming Pool",
+      "Waterfall Feature",
+      "Panoramic Glass Frontage",
+      "Modern warm lighting",
+      "Outdoor lounging spaces",
       "Chilled Air Conditioning",
-      "Daily Housekeeping"
+      "Super-fast Wi-Fi"
     ]
   },
   {
@@ -45,10 +61,10 @@ Enjoy long lazy walks on the private beach access, a sparkling swimming pool, an
     bedrooms: 4,
     bathrooms: 4,
     images: [
-      "/images/villa-alibaug.png",
-      "/images/villa-lonavala.png",
-      "/images/villa-mahabaleshwar.png",
-      "/images/hero-villa.png"
+      "/assets/villas/alibaug-palms-beachhouse/main.png",
+      "/assets/villas/alibaug-palms-beachhouse/gallery-1.png",
+      "/assets/villas/alibaug-palms-beachhouse/gallery-2.png",
+      "/assets/villas/alibaug-palms-beachhouse/gallery-3.png"
     ],
     amenities: [
       "Super-fast Wi-Fi",
@@ -73,10 +89,10 @@ Perfect for wine enthusiasts and couples, the villa features an elegant stone de
     bedrooms: 3,
     bathrooms: 3,
     images: [
-      "/images/exp-chef.png",
-      "/images/hero-villa.png",
-      "/images/exp-pool.png",
-      "/images/villa-lonavala.png"
+      "/assets/villas/lakeview-vineyard-villa/main.png",
+      "/assets/villas/lakeview-vineyard-villa/gallery-1.png",
+      "/assets/villas/lakeview-vineyard-villa/gallery-2.png",
+      "/assets/villas/lakeview-vineyard-villa/gallery-3.png"
     ],
     amenities: [
       "Super-fast Wi-Fi",
@@ -101,10 +117,10 @@ With high wood-beamed ceilings, charming colonial furniture, and a heated infini
     bedrooms: 6,
     bathrooms: 7,
     images: [
-      "/images/villa-mahabaleshwar.png",
-      "/images/villa-lonavala.png",
-      "/images/villa-alibaug.png",
-      "/images/exp-pool.png"
+      "/assets/villas/panchgani-whispering-pines/main.png",
+      "/assets/villas/panchgani-whispering-pines/gallery-1.png",
+      "/assets/villas/panchgani-whispering-pines/gallery-2.png",
+      "/assets/villas/panchgani-whispering-pines/gallery-3.png"
     ],
     amenities: [
       "Super-fast Wi-Fi",
@@ -129,10 +145,10 @@ This 3-bedroom escape is built with natural stone and massive glass walls, letti
     bedrooms: 3,
     bathrooms: 3,
     images: [
-      "/images/hero-villa.png",
-      "/images/exp-pool.png",
-      "/images/villa-alibaug.png",
-      "/images/villa-lonavala.png"
+      "/assets/villas/karjat-river-house/main.png",
+      "/assets/villas/karjat-river-house/gallery-1.png",
+      "/assets/villas/karjat-river-house/gallery-2.png",
+      "/assets/villas/karjat-river-house/gallery-3.png"
     ],
     amenities: [
       "Super-fast Wi-Fi",
@@ -157,10 +173,10 @@ Complete with a pristine infinity pool that merges seamlessly with the lake, exp
     bedrooms: 4,
     bathrooms: 5,
     images: [
-      "/images/exp-pool.png",
-      "/images/hero-villa.png",
-      "/images/villa-lonavala.png",
-      "/images/villa-alibaug.png"
+      "/assets/villas/mulshi-lakehouse/main.png",
+      "/assets/villas/mulshi-lakehouse/gallery-1.png",
+      "/assets/villas/mulshi-lakehouse/gallery-2.png",
+      "/assets/villas/mulshi-lakehouse/gallery-3.png"
     ],
     amenities: [
       "Super-fast Wi-Fi",
@@ -185,10 +201,10 @@ Watch the clouds glide past your balcony, relax in the private jacuzzi, or host 
     bedrooms: 4,
     bathrooms: 4,
     images: [
-      "/images/villa-lonavala.png",
-      "/images/villa-mahabaleshwar.png",
-      "/images/hero-villa.png",
-      "/images/exp-pool.png"
+      "/assets/villas/igatpuri-clouds-villa/main.png",
+      "/assets/villas/igatpuri-clouds-villa/gallery-1.png",
+      "/assets/villas/igatpuri-clouds-villa/gallery-2.png",
+      "/assets/villas/igatpuri-clouds-villa/gallery-3.png"
     ],
     amenities: [
       "Super-fast Wi-Fi",
@@ -213,10 +229,10 @@ Blending beachside bohemian design with high-end luxury, it features tropical co
     bedrooms: 5,
     bathrooms: 5,
     images: [
-      "/images/villa-alibaug.png",
-      "/images/villa-lonavala.png",
-      "/images/exp-pool.png",
-      "/images/hero-villa.png"
+      "/assets/villas/kashid-palms-villa/main.png",
+      "/assets/villas/kashid-palms-villa/gallery-1.png",
+      "/assets/villas/kashid-palms-villa/gallery-2.png",
+      "/assets/villas/kashid-palms-villa/gallery-3.png"
     ],
     amenities: [
       "Super-fast Wi-Fi",
