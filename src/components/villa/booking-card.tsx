@@ -4,7 +4,6 @@ import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon, Users, Info, Loader2 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
-import { createCheckoutSession } from "@/app/actions/booking";
 
 interface BookingCardProps {
   villaId: string;
@@ -49,25 +48,34 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
     }
   };
 
-  // Let's create checkout session on Stripe so they can pay securely
-  const handleBooking = async () => {
+  // Construct booking details and bill to redirect directly to WhatsApp Concierge
+  const handleBooking = () => {
     setIsLoading(true);
     try {
-      const response = await createCheckoutSession({
-        villaId,
-        villaName,
-        checkIn,
-        checkOut,
-        guests,
-        pricePerNight: numericPrice,
-      });
+      const checkInStr = format(checkIn, "MMM dd, yyyy");
+      const checkOutStr = format(checkOut, "MMM dd, yyyy");
+      
+      const message = `🏰 *STAY WILLAS - RESERVATION REQUEST* 🏰\n` +
+        `------------------------------------------\n` +
+        `✨ *Villa:* ${villaName}\n` +
+        `📅 *Check-In:* ${checkInStr}\n` +
+        `📅 *Check-Out:* ${checkOutStr}\n` +
+        `🌙 *Nights:* ${nights}\n` +
+        `👥 *Guests:* ${guests} Guests\n\n` +
+        `💳 *BILLING SUMMARY:*\n` +
+        `• Rate per Night: ₹${price}\n` +
+        `• Subtotal: ₹${subtotal.toLocaleString("en-IN")}\n` +
+        `• Luxury Service & Culinary Fee: ₹${serviceFee.toLocaleString("en-IN")}\n` +
+        `------------------------------------------\n` +
+        `🌟 *TOTAL BILL: ₹${total.toLocaleString("en-IN")}*\n` +
+        `------------------------------------------\n` +
+        `✨ *Status:* Booking Inquiry Pending. Please verify calendar availability!`;
 
-      if (response.url) {
-        window.location.href = response.url;
-      }
+      const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     } catch (error) {
       console.error("Booking Error:", error);
-      alert("Something went wrong on our end. Please try again or drop us a line!");
+      alert("Something went wrong. Please try again!");
     } finally {
       setIsLoading(false);
     }
