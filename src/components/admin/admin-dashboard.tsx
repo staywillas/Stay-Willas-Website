@@ -20,6 +20,7 @@ import {
   Plus
 } from "lucide-react";
 import Image from "next/image";
+import AvailabilityCalendar from "@/components/admin/availability-calendar";
 
 interface Villa {
   id: string;
@@ -68,7 +69,7 @@ const AdminDashboard = ({
   initialInquiries,
   userEmail 
 }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "inquiries">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "inquiries" | "calendar">("overview");
   const [inquiryFilter, setInquiryFilter] = useState<"ALL" | "GUEST" | "OWNER">("ALL");
 
   // Calculate metrics
@@ -185,6 +186,16 @@ const AdminDashboard = ({
           Overview
         </button>
         <button
+          onClick={() => setActiveTab("calendar")}
+          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
+            activeTab === "calendar" 
+              ? "border-gold text-gold" 
+              : "border-transparent text-white/40 hover:text-white"
+          }`}
+        >
+          Availability Scheduler
+        </button>
+        <button
           onClick={() => setActiveTab("stays")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
             activeTab === "stays" 
@@ -217,6 +228,13 @@ const AdminDashboard = ({
       </div>
 
       {/* Tab Contents */}
+      {activeTab === "calendar" && (
+        <AvailabilityCalendar 
+          villas={initialVillas} 
+          bookings={initialBookings} 
+        />
+      )}
+
       {activeTab === "overview" && (
         <div className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

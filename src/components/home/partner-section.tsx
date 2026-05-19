@@ -63,7 +63,7 @@ const PartnerSection = () => {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 font-sans">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={benefit.title}
@@ -76,9 +76,9 @@ const PartnerSection = () => {
                 <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-4 text-gold">
                   <benefit.icon size={24} />
                 </div>
-                <div className="text-3xl font-heading text-white mb-1">{benefit.value}</div>
-                <div className="text-[10px] text-gold uppercase tracking-widest mb-4">{benefit.suffix}</div>
-                <div className="text-sm text-white/50">{benefit.title}</div>
+                <div className="text-4xl font-black text-white tracking-tight mb-1">{benefit.value}</div>
+                <div className="text-[10px] text-gold uppercase tracking-[0.2em] font-extrabold mb-3">{benefit.suffix}</div>
+                <div className="text-xs text-white/50 font-medium">{benefit.title}</div>
               </motion.div>
             ))}
             
@@ -94,11 +94,11 @@ const PartnerSection = () => {
                   <Shield className="text-gold" size={24} />
                 </div>
                 <div>
-                  <h4 className="text-white font-medium">Trusted by 50+ Villa Owners</h4>
-                  <p className="text-white/40 text-sm">Join the most premium hospitality network.</p>
+                  <h4 className="text-white font-bold tracking-wide">Trusted by 50+ Villa Owners</h4>
+                  <p className="text-white/40 text-xs mt-0.5">Join the most premium hospitality network.</p>
                 </div>
               </div>
-              <div className="hidden sm:block text-gold font-semibold text-2xl font-heading">
+              <div className="hidden sm:block text-gold font-black text-2xl tracking-tight">
                 4.9/5
               </div>
             </motion.div>

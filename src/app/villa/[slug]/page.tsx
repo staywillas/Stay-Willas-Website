@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { 
-  Wifi, Waves, Car, Coffee, 
+import {
+  Wifi, Waves, Car, Coffee,
   Wind, MapPin, Award, ChevronLeft,
   Share2, Heart, CheckCircle2,
   Users, Bed, Bath
@@ -15,6 +15,8 @@ import Footer from "@/components/layout/footer";
 import BookingCard from "@/components/villa/booking-card";
 import ReviewSection from "@/components/villa/review-section";
 import PropertyGallery from "@/components/villa/property-gallery";
+import ShareButton from "@/components/villa/share-button";
+import SaveButton from "@/components/villa/save-button";
 import { getReviews } from "@/app/actions/review";
 import { prisma } from "@/lib/db";
 import {
@@ -65,6 +67,7 @@ const amenityIconMap: { [key: string]: React.ComponentType<any> } = {
   "Tropical Courtyard": CheckCircle2,
   "Open-air Lounge Pavilions": CheckCircle2,
   "Beach Volley Net": Award,
+  "Jacuzzi in Master Bedroom": AnimatedPoolIcon,
 };
 
 const defaultRules = [
@@ -78,7 +81,7 @@ const defaultRules = [
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  
+
   let villa = await prisma.villa.findUnique({
     where: { slug },
   });
@@ -88,13 +91,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       where: { id: slug },
     });
   }
-  
+
   if (!villa) {
     return {
       title: "Villa Not Found | Stay Willas",
     };
   }
-  
+
   return {
     title: `${villa.name} | Premium Luxury Retreat in ${villa.location} | Stay Willas`,
     description: `Spend a magical, luxurious staycation at ${villa.name}, a curated premium property in ${villa.location}. Featuring ${villa.bedrooms} bedrooms, top-tier amenities, and gorgeous views.`,
@@ -121,7 +124,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
 
   const reviews = await getReviews(villa.id);
   const reviewCount = reviews.length;
-  const avgRating = reviewCount > 0 
+  const avgRating = reviewCount > 0
     ? Number((reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount).toFixed(1))
     : 0;
 
@@ -147,7 +150,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
   return (
     <main className="min-h-screen bg-charcoal text-white pb-28 lg:pb-0">
       <Navbar />
-      
+
       <section className="pt-32 pb-12 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <Link href="/" className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors text-xs uppercase tracking-widest">
@@ -156,12 +159,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
           </Link>
           {/* Nice little share/save bar at the top right of the page */}
           <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 text-white/40 hover:text-white transition-colors text-xs uppercase tracking-widest border border-white/10 px-4 py-2 rounded-full">
-              <Share2 size={14} /> Share
-            </button>
-            <button className="flex items-center gap-2 text-white/40 hover:text-red-400 transition-colors text-xs uppercase tracking-widest border border-white/10 px-4 py-2 rounded-full">
-              <Heart size={14} /> Save
-            </button>
+            <ShareButton />
+            <SaveButton villaId={villaData.id} villaName={villaData.name} />
           </div>
         </div>
 
@@ -223,10 +222,10 @@ export default async function VillaDetailPage({ params }: PageProps) {
           </div>
 
           <div className="lg:col-span-4 relative" id="booking-card-section">
-            <BookingCard 
-              villaId={villaData.id} 
-              villaName={villaData.name} 
-              price={villaData.price} 
+            <BookingCard
+              villaId={villaData.id}
+              villaName={villaData.name}
+              price={villaData.price}
             />
           </div>
         </div>
@@ -240,7 +239,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
           <span className="text-[10px] text-gold/80 block uppercase tracking-wider font-bold">Starts from</span>
           <span className="text-white font-semibold text-lg">₹{villaData.price} <span className="text-[10px] font-normal text-white/60">/ night</span></span>
         </div>
-        <a 
+        <a
           href="#booking-card-section"
           className="bg-[#FFCC00] hover:bg-[#FFD700] text-black font-extrabold px-8 py-3 rounded-xl text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(255,204,0,0.3)] flex items-center justify-center"
         >

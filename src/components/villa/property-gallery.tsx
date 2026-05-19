@@ -100,13 +100,52 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
 
   return (
     <>
-      {/* Cinematic 5-Image Grid */}
-      <div className="relative w-full mb-16 overflow-hidden rounded-3xl aspect-video md:aspect-[21/9] border border-white/10 shadow-2xl">
-        <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-3 h-full w-full">
+      {/* Mobile-Only Swipeable Carousel (Hidden on Desktop) */}
+      <div className="md:hidden relative w-full mb-8 overflow-hidden rounded-3xl aspect-[4/3] border border-white/10 shadow-2xl">
+        <div className="flex h-full w-full overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth">
+          {visibleImages.slice(0, 5).map((img, idx) => (
+            <div 
+              key={idx}
+              onClick={openGridOverlay}
+              className="w-full h-full flex-shrink-0 snap-start snap-always relative cursor-pointer bg-charcoal"
+            >
+              <Image 
+                src={img} 
+                alt={`${propertyName} Mobile Photo ${idx + 1}`} 
+                fill 
+                priority={idx === 0}
+                className="object-cover" 
+              />
+              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[9px] uppercase tracking-widest font-black text-white/80 border border-white/10">
+                {idx + 1} / 5
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Mobile signature view badge */}
+        <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-[9px] uppercase tracking-widest font-black text-[#FFCC00] shadow-lg">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#FFCC00] animate-pulse"></span>
+          Signature View
+        </div>
+
+        {/* Show All Photos floating button on Mobile */}
+        <button 
+          onClick={openGridOverlay}
+          className="absolute bottom-4 left-4 bg-black/80 hover:bg-black/95 text-white backdrop-blur-md border border-white/10 hover:border-gold/30 px-5 py-3 rounded-xl flex items-center gap-2 text-[9px] font-black tracking-[0.15em] uppercase transition-all duration-300 shadow-xl cursor-pointer"
+        >
+          <Grid size={11} className="text-[#FFCC00]" />
+          View all {images.length} photos
+        </button>
+      </div>
+
+      {/* Cinematic 5-Image Grid (Hidden on Mobile, Visible on Desktop) */}
+      <div className="hidden md:block relative w-full mb-16 overflow-hidden rounded-3xl md:aspect-[21/9] border border-white/10 shadow-2xl">
+        <div className="grid grid-cols-4 grid-rows-2 gap-3 h-full w-full">
           {/* Main Hero Shot (Left) */}
           <div 
             onClick={openGridOverlay}
-            className="md:col-span-2 md:row-span-2 relative group overflow-hidden cursor-pointer bg-charcoal"
+            className="col-span-2 row-span-2 relative group overflow-hidden cursor-pointer bg-charcoal"
           >
             <Image 
               src={visibleImages[0]} 
@@ -225,6 +264,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
               exit={{ opacity: 0, y: 30 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
               className="fixed inset-0 z-[9000] bg-charcoal overflow-y-auto flex flex-col justify-start"
+              data-lenis-prevent
             >
               {/* Sticky grid header control */}
               <div className="sticky top-0 bg-charcoal/95 backdrop-blur-xl border-b border-white/5 py-5 px-6 md:px-12 flex items-center justify-between z-[9100]">
@@ -368,6 +408,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
               <div 
                 className="w-full h-28 bg-black/60 border-t border-white/5 py-4 px-12 overflow-x-auto flex gap-3.5 items-center justify-start md:justify-center relative z-50 no-scrollbar scroll-smooth"
                 onClick={(e) => e.stopPropagation()}
+                data-lenis-prevent
               >
                 {images.map((img, idx) => (
                   <button

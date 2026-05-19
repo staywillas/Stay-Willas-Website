@@ -45,13 +45,7 @@ export default function InfiniteMarquee() {
                   {item}
                 </span>
               ) : (
-                <span
-                  style={{
-                    WebkitTextStroke: "1px rgba(197, 160, 89, 0.4)",
-                    color: "transparent",
-                  }}
-                  className="font-outline hover:text-gold/20 transition-all duration-500"
-                >
+                <span className="text-gold/60 hover:text-gold transition-colors duration-500 font-medium">
                   {item}
                 </span>
               )}
@@ -71,13 +65,7 @@ export default function InfiniteMarquee() {
                   {item}
                 </span>
               ) : (
-                <span
-                  style={{
-                    WebkitTextStroke: "1px rgba(197, 160, 89, 0.4)",
-                    color: "transparent",
-                  }}
-                  className="font-outline hover:text-gold/20 transition-all duration-500"
-                >
+                <span className="text-gold/60 hover:text-gold transition-colors duration-500 font-medium">
                   {item}
                 </span>
               )}

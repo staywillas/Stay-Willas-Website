@@ -8,11 +8,11 @@ const villasData = [
     name: "The Angled House",
     location: "Lonavala, Maharashtra",
     category: "Infinity Pools",
-    description: `Where modern architecture meets slow luxury — this stunning designer villa is crafted for unforgettable escapes. With its striking angular façade, floor-to-ceiling glass windows, warm ambient lighting, and private pool, the space blends tropical serenity with contemporary elegance.
+    description: `Where modern architecture meets slow luxury — this stunning designer villa is crafted for unforgettable escapes. With its striking angular façade, floor-to-ceiling glass windows, warm ambient lighting, private pool, and a private Jacuzzi integrated right inside one of the master bedrooms, the space blends tropical serenity with contemporary elegance.
 
-Wake up to soft natural light, spend your afternoons by the pool, and unwind in a space designed for comfort, conversations, and curated experiences. Whether it’s a weekend staycation, a celebration with friends, or a peaceful retreat away from the city, this villa offers the perfect balance of luxury and relaxation.`,
+Wake up to soft natural light, spend your afternoons by the pool, enjoy a relaxing soak in the master bedroom's private Jacuzzi, and unwind in a space designed for comfort, conversations, and curated experiences. Whether it’s a weekend staycation, a celebration with friends, or a peaceful retreat away from the city, this villa offers the perfect balance of luxury and relaxation.`,
     price: 48000,
-    guests: 12,
+    guests: 16,
     bedrooms: 3,
     bathrooms: 3,
     images: [
@@ -47,7 +47,8 @@ Wake up to soft natural light, spend your afternoons by the pool, and unwind in 
       "Super-fast Wi-Fi",
       "3 Beds",
       "2 Balconies",
-      "Living Hall"
+      "Living Hall",
+      "Jacuzzi in Master Bedroom"
     ]
   },
   {

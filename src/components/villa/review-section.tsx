@@ -25,18 +25,27 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
   const [reviews, setReviews] = useState(initialReviews);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [guestName, setGuestName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!comment || !user) return;
+    if (!comment) return;
+
+    const activeUserName = isSignedIn && user 
+      ? (user.fullName || "Anonymous Guest") 
+      : (guestName.trim() || "Guest Traveler");
+      
+    const activeUserId = isSignedIn && user 
+      ? user.id 
+      : "guest-" + Math.random().toString(36).substring(2, 9);
 
     setIsSubmitting(true);
     try {
       await submitReview({
         villaId,
-        userId: user.id,
-        userName: user.fullName || "Anonymous Guest",
+        userId: activeUserId,
+        userName: activeUserName,
         rating,
         comment,
       });
@@ -44,13 +53,14 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
       // Update UI instantly before DB finishes saving, makes the site feel super snappy!
       const newReview = {
         id: Math.random().toString(),
-        userName: user.fullName || "Anonymous Guest",
+        userName: activeUserName,
         rating,
         comment,
         createdAt: new Date(),
       };
       setReviews([newReview, ...reviews]);
       setComment("");
+      setGuestName("");
       setRating(5);
     } catch (error) {
       console.error(error);
@@ -110,56 +120,66 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
           <div className="glass-dark border border-white/10 rounded-[32px] p-10 sticky top-32">
             <h3 className="text-2xl font-heading mb-8">Share Your <span className="italic text-gold">Story</span></h3>
             
-            {isSignedIn ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-4">Your Rating</label>
-                  <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRating(star)}
-                        className="transition-transform hover:scale-125"
-                      >
-                        <Star 
-                          size={24} 
-                          className={star <= rating ? "fill-gold text-gold" : "text-white/10"} 
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {!isSignedIn && (
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-white/40 block">Your Experience</label>
-                  <textarea
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    rows={4}
-                    placeholder="Describe your stay..."
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-gold/50 transition-all text-sm resize-none"
+                  <label className="text-[10px] uppercase tracking-widest text-white/40 block">Your Name</label>
+                  <input
+                    type="text"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    placeholder="Enter your name..."
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-gold/50 transition-all text-sm"
+                    required
                   />
                 </div>
+              )}
 
-                <Button 
-                  disabled={isSubmitting || !comment}
-                  className="w-full bg-gold hover:bg-gold/80 text-charcoal rounded-full py-6 font-bold tracking-widest flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? <Loader2 className="animate-spin" /> : <><Send size={16} /> SUBMIT REVIEW</>}
-                </Button>
-              </form>
-            ) : (
-              <div className="text-center py-8">
-                <MessageSquare className="mx-auto text-white/10 mb-4" size={48} />
-                <p className="text-white/40 text-sm mb-8 italic">Please sign in to leave a review of your stay.</p>
-                <SignInButton mode="modal">
-                  <Button className="w-full bg-white/10 hover:bg-white/20 text-white rounded-full py-6 font-bold tracking-widest">
-                    SIGN IN TO REVIEW
-                  </Button>
-                </SignInButton>
+              {isSignedIn && user && (
+                <div className="text-[10px] text-white/40 uppercase tracking-widest block">
+                  Posting as <span className="text-gold font-bold">{user.fullName || "Anonymous Guest"}</span>
+                </div>
+              )}
+
+              <div>
+                <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-4">Your Rating</label>
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      className="transition-transform hover:scale-125 cursor-pointer"
+                    >
+                      <Star 
+                        size={Star.name === "Star" ? 24 : 24} 
+                        className={star <= rating ? "fill-gold text-gold" : "text-white/10"} 
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
-            )}
+
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase tracking-widest text-white/40 block">Your Experience</label>
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  rows={4}
+                  placeholder="Describe your stay..."
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-gold/50 transition-all text-sm resize-none"
+                  required
+                />
+              </div>
+
+              <Button 
+                type="submit"
+                disabled={isSubmitting || !comment || (!isSignedIn && !guestName.trim())}
+                className="w-full bg-gold hover:bg-gold/80 text-charcoal rounded-full py-6 font-bold tracking-widest flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {isSubmitting ? <Loader2 className="animate-spin" /> : <><Send size={16} /> SUBMIT REVIEW</>}
+              </Button>
+            </form>
           </div>
         </div>
 
