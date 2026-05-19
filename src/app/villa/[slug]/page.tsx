@@ -6,7 +6,8 @@ import { notFound } from "next/navigation";
 import { 
   Wifi, Waves, Car, Coffee, 
   Wind, MapPin, Award, ChevronLeft,
-  Share2, Heart, CheckCircle2
+  Share2, Heart, CheckCircle2,
+  Users, Bed, Bath
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
@@ -133,6 +134,9 @@ export default async function VillaDetailPage({ params }: PageProps) {
     price: villa.price.toLocaleString("en-IN"),
     images: villa.images,
     description: villa.description,
+    guests: villa.guests,
+    bedrooms: villa.bedrooms,
+    bathrooms: villa.bathrooms,
     amenities: villa.amenities.map((name) => ({
       name,
       icon: amenityIconMap[name] || CheckCircle2,
@@ -162,7 +166,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
         </div>
 
         <h1 className="text-4xl md:text-6xl font-heading mb-4">{villaData.name}</h1>
-        <div className="flex items-center gap-4 text-white/60 text-sm mb-10">
+        <div className="flex items-center gap-4 text-white/60 text-sm mb-6">
           <div className="flex items-center gap-1">
             <MapPin size={14} className="text-gold" />
             <span>{villaData.location}</span>
@@ -180,6 +184,15 @@ export default async function VillaDetailPage({ params }: PageProps) {
               <span className="text-white/40 italic">No reviews yet</span>
             </div>
           )}
+        </div>
+
+        {/* Specs / Features Grid */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-white/70 text-xs uppercase tracking-widest mb-10 bg-white/[0.02] border border-white/5 px-6 py-4 rounded-2xl max-w-fit">
+          <span className="flex items-center gap-2 font-bold"><Users size={14} className="text-gold" />{villaData.guests} Guests</span>
+          <span className="hidden sm:inline w-1 h-1 rounded-full bg-white/10" />
+          <span className="flex items-center gap-2 font-bold"><Bed size={14} className="text-gold" />{villaData.bedrooms} Bedrooms</span>
+          <span className="hidden sm:inline w-1 h-1 rounded-full bg-white/10" />
+          <span className="flex items-center gap-2 font-bold"><Bath size={14} className="text-gold" />{villaData.bathrooms} Bathrooms</span>
         </div>
 
         {/* Cinematic, Interactive Property Gallery & Lightbox */}

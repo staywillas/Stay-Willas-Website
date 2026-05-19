@@ -13,8 +13,8 @@ const villasData = [
 Wake up to soft natural light, spend your afternoons by the pool, and unwind in a space designed for comfort, conversations, and curated experiences. Whether it’s a weekend staycation, a celebration with friends, or a peaceful retreat away from the city, this villa offers the perfect balance of luxury and relaxation.`,
     price: 48000,
     guests: 12,
-    bedrooms: 5,
-    bathrooms: 6,
+    bedrooms: 3,
+    bathrooms: 3,
     images: [
       "/assets/villas/angled-house/gallery-2.webp", // IMG_8544 (Main Thumbnail)
       "/assets/villas/angled-house/gallery-3.webp", // IMG_8547
@@ -44,7 +44,10 @@ Wake up to soft natural light, spend your afternoons by the pool, and unwind in 
       "Modern warm lighting",
       "Outdoor lounging spaces",
       "Chilled Air Conditioning",
-      "Super-fast Wi-Fi"
+      "Super-fast Wi-Fi",
+      "3 Beds",
+      "2 Balconies",
+      "Living Hall"
     ]
   },
   {
