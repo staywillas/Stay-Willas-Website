@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Grid, ZoomIn } from "lucide-react";
+import { useLenis } from "lenis/react";
 
 interface PropertyGalleryProps {
   images: string[];
@@ -16,27 +17,39 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const lenis = useLenis();
 
   // Set mounted state to safely run React Portals on the client side
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Lock background scroll fully when either overlays are active
+  // Lock background scroll fully and pause/resume Lenis smooth scrolling
   useEffect(() => {
     if (!mounted) return;
+    
     if (isGridOpen || isLightboxOpen) {
       document.body.style.overflow = "hidden";
       document.body.style.height = "100vh";
+      if (lenis) {
+        lenis.stop();
+      }
     } else {
       document.body.style.overflow = "";
       document.body.style.height = "";
+      if (lenis) {
+        lenis.start();
+      }
     }
+    
     return () => {
       document.body.style.overflow = "";
       document.body.style.height = "";
+      if (lenis) {
+        lenis.start();
+      }
     };
-  }, [mounted, isGridOpen, isLightboxOpen]);
+  }, [mounted, isGridOpen, isLightboxOpen, lenis]);
 
   // Keyboard navigation for the lightbox stage
   useEffect(() => {
