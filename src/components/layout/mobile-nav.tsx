@@ -12,7 +12,7 @@ const MobileNav = () => {
   const navItems = [
     { name: "Explore", icon: Search, href: "/villas" },
     { name: "Wishlist", icon: Heart, href: "#" },
-    { name: "Trips", icon: Briefcase, href: "#" },
+    { name: "Admin", icon: Briefcase, href: "/admin" },
     { name: "Profile", icon: User, href: "/profile" },
   ];
 
