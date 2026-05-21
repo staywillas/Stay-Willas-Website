@@ -16,9 +16,8 @@ Wake up to soft natural light, spend your afternoons by the pool, enjoy a relaxi
     bedrooms: 3,
     bathrooms: 3,
     images: [
-      "/assets/villas/angled-house/gallery-2.webp", // IMG_8544 (Main Thumbnail)
+      "/assets/villas/angled-house/gallery-11.webp", // IMG_8638 (Main Thumbnail)
       "/assets/villas/angled-house/gallery-3.webp", // IMG_8547
-      "/assets/villas/angled-house/gallery-11.webp", // IMG_8638
       "/assets/villas/angled-house/gallery-13.webp", // IMG_8641
       "/assets/villas/angled-house/gallery-19.webp", // IMG_8651
       "/assets/villas/angled-house/main.webp", // IMG_8532

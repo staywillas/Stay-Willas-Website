@@ -30,6 +30,9 @@ export default function AiConcierge() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [stage, setStage] = useState<"greeting" | "budget" | "guests" | "recommendation">("greeting");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedBudget, setSelectedBudget] = useState("");
+  const [selectedGuests, setSelectedGuests] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom
@@ -68,6 +71,7 @@ export default function AiConcierge() {
     // Bot response logic
     setTimeout(() => {
       if (stage === "greeting") {
+        setSelectedLocation(option);
         setStage("budget");
         setMessages((prev) => [
           ...prev,
@@ -79,6 +83,7 @@ export default function AiConcierge() {
           },
         ]);
       } else if (stage === "budget") {
+        setSelectedBudget(option);
         setStage("guests");
         setMessages((prev) => [
           ...prev,
@@ -90,7 +95,20 @@ export default function AiConcierge() {
           },
         ]);
       } else if (stage === "guests") {
+        setSelectedGuests(option);
         setStage("recommendation");
+
+        // Construct pre-filled WhatsApp message based on collected guest inputs
+        const whatsappMsg = `🏰 *STAY WILLAS - AI CONCIERGE MATCH* 🏰\n` +
+          `------------------------------------------\n` +
+          `✨ *Suggested Stay:* ${recommendedVilla.name}\n` +
+          `📍 *Travel Location:* ${selectedLocation || "Anywhere"}\n` +
+          `👥 *Guest Count:* ${option || "Flexible"}\n` +
+          `💰 *Nightly Budget:* ${selectedBudget || "Flexible"}\n` +
+          `------------------------------------------\n` +
+          `🌟 *Concierge Request:* I would like to check availability and book this stay via the Stay Willas Concierge!`;
+        const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMsg)}`;
+
         setMessages((prev) => [
           ...prev,
           {
@@ -110,11 +128,29 @@ export default function AiConcierge() {
           {
             id: (Date.now() + 2).toString(),
             role: "bot",
-            content: "Would you like me to check availability for your dates?",
+            content: (
+              <div className="flex flex-col gap-3">
+                <p>Would you like me to check availability for your dates? Or chat directly with us on WhatsApp:</p>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full mt-1 px-4 py-3 bg-[#25D366] hover:bg-[#20BA5A] text-white font-bold text-[11px] tracking-wider rounded-xl shadow-[0_4px_12px_rgba(37,211,102,0.3)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] uppercase"
+                >
+                  <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.01 14.069.987 11.48.987 6.045.987 1.62 5.357 1.617 10.787c-.001 1.706.46 3.376 1.336 4.851l-.97 3.545 3.639-.949zM15.93 11.66c-.237-.117-1.4-.689-1.617-.768-.217-.078-.375-.117-.533.117-.158.234-.61.768-.748.922-.138.154-.276.176-.513.058-.237-.117-.999-.368-1.902-1.173-.703-.627-1.177-1.4-1.315-1.634-.138-.234-.015-.36.103-.476.106-.105.237-.276.355-.414.118-.138.158-.234.237-.39.079-.156.039-.293-.02-.41-.059-.117-.533-1.282-.73-1.758-.192-.464-.388-.4-.533-.408-.138-.006-.296-.007-.454-.007-.158 0-.414.059-.63.293-.217.234-.827.809-.827 1.97 0 1.161.847 2.282.965 2.44.118.156 1.666 2.544 4.037 3.565.564.243 1.004.388 1.347.497.567.18 1.082.155 1.49.094.454-.068 1.4-.57 1.597-1.12.197-.55.197-1.021.138-1.12-.059-.098-.217-.156-.454-.273z" />
+                  </svg>
+                  Chat on WhatsApp
+                </a>
+              </div>
+            ),
             options: ["Yes, please", "Start over"],
           },
         ]);
       } else if (stage === "recommendation" && option === "Start over") {
+        setSelectedLocation("");
+        setSelectedBudget("");
+        setSelectedGuests("");
         setStage("greeting");
         setMessages([
           {
@@ -130,9 +166,25 @@ export default function AiConcierge() {
           {
             id: Date.now().toString(),
             role: "bot",
-            content: "I am connecting you with our booking specialists. They will reach out to you shortly.",
+            content: "Connecting you with our Luxury Concierge on WhatsApp to secure your stay at The Glasshouse Estate...",
           }
         ]);
+
+        // Construct pre-filled WhatsApp message based on collected guest inputs
+        const whatsappMsg = `🏰 *STAY WILLAS - AI CONCIERGE MATCH* 🏰\n` +
+          `------------------------------------------\n` +
+          `✨ *Suggested Stay:* ${recommendedVilla.name}\n` +
+          `📍 *Travel Location:* ${selectedLocation || "Anywhere"}\n` +
+          `👥 *Guest Count:* ${selectedGuests || "Flexible"}\n` +
+          `💰 *Nightly Budget:* ${selectedBudget || "Flexible"}\n` +
+          `------------------------------------------\n` +
+          `🌟 *Concierge Request:* I would like to check availability and book this stay via the Stay Willas Concierge!`;
+
+        // Redirect after a premium short transition delay
+        setTimeout(() => {
+          const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMsg)}`;
+          window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+        }, 1500);
       }
     }, 800);
   };
@@ -147,7 +199,7 @@ export default function AiConcierge() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 w-12 h-12 md:w-16 md:h-16 bg-[#FFCC00] hover:bg-[#FFD700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.4)] transition-all duration-300 group overflow-hidden border-2 border-white/20"
+            className="fixed bottom-28 right-6 md:bottom-10 md:right-10 z-50 w-12 h-12 md:w-16 md:h-16 bg-[#FFCC00] hover:bg-[#FFD700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.4)] transition-all duration-300 group overflow-hidden border-2 border-white/20"
           >
             <img 
               src="/images/chatbot.png" 
@@ -167,22 +219,22 @@ export default function AiConcierge() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 w-[360px] max-w-[calc(100vw-3rem)] h-[550px] max-h-[calc(100vh-6rem)] bg-charcoal/90 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-28 right-6 md:bottom-10 md:right-10 z-50 w-[360px] max-w-[calc(100vw-3rem)] h-[550px] max-h-[calc(100vh-10rem)] md:max-h-[calc(100vh-6rem)] bg-bg-primary border border-border-subtle rounded-3xl shadow-[0_20px_60px_rgba(44,31,14,0.15)] flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="px-6 py-4 border-b border-white/10 bg-black/40 flex items-center justify-between">
+            <div className="px-6 py-4 border-b border-border-subtle bg-accent-primary flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-gold/40 bg-white/5 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-white/10 flex items-center justify-center shrink-0">
                   <img src="/images/chatbot.png" alt="Willa Assistant" className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="text-white font-heading text-lg leading-tight">Willa Assistant</h3>
-                  <p className="text-[10px] text-gold tracking-widest uppercase font-bold">Online</p>
+                  <p className="text-[10px] text-accent-primary tracking-widest uppercase font-bold">Online</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-white/50 hover:text-white transition-colors"
+                className="text-white/60 hover:text-white transition-colors"
               >
                 <X size={20} />
               </button>
@@ -199,7 +251,7 @@ export default function AiConcierge() {
                 >
                   <div className="flex items-end gap-2 max-w-[85%]">
                     {msg.role === "bot" && (
-                      <div className="w-6 h-6 rounded-full overflow-hidden border border-white/10 bg-white/5 flex-shrink-0 flex items-center justify-center mb-1">
+                      <div className="w-6 h-6 rounded-full overflow-hidden border border-border-subtle bg-bg-secondary flex-shrink-0 flex items-center justify-center mb-1">
                         <img src="/images/chatbot.png" alt="Willa Assistant" className="w-full h-full object-cover" />
                       </div>
                     )}
@@ -208,8 +260,8 @@ export default function AiConcierge() {
                       <div
                         className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                           msg.role === "user"
-                            ? "bg-gold text-black rounded-br-sm font-medium"
-                            : "bg-white/10 text-white rounded-bl-sm"
+                            ? "bg-accent-primary text-white rounded-br-sm font-medium"
+                            : "bg-bg-secondary text-text-primary rounded-bl-sm border border-border-subtle"
                         }`}
                       >
                         {msg.content}
@@ -222,7 +274,7 @@ export default function AiConcierge() {
                             <button
                               key={idx}
                               onClick={() => handleOptionClick(opt, msg.id)}
-                              className="text-left px-4 py-2 rounded-xl border border-gold/30 text-gold hover:bg-gold hover:text-black transition-colors text-xs font-semibold uppercase tracking-wider"
+                              className="text-left px-4 py-2 rounded-xl border border-accent-primary/30 text-accent-primary hover:bg-accent-primary hover:text-white transition-colors text-xs font-semibold uppercase tracking-wider"
                             >
                               {opt}
                             </button>
@@ -232,8 +284,8 @@ export default function AiConcierge() {
                     </div>
 
                     {msg.role === "user" && (
-                      <div className="w-6 h-6 rounded-full bg-gold/20 flex-shrink-0 flex items-center justify-center mb-1">
-                        <User size={12} className="text-gold" />
+                      <div className="w-6 h-6 rounded-full bg-accent-primary/20 flex-shrink-0 flex items-center justify-center mb-1">
+                        <User size={12} className="text-accent-primary" />
                       </div>
                     )}
                   </div>
@@ -242,18 +294,18 @@ export default function AiConcierge() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area (Mocked for now since it's a guided flow) */}
-            <div className="p-4 border-t border-white/10 bg-black/20">
+            {/* Input Area */}
+            <div className="p-4 border-t border-border-subtle bg-bg-secondary/50">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Select an option above..."
                   disabled
-                  className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-4 pr-12 text-sm text-white placeholder:text-white/30 focus:outline-none cursor-not-allowed"
+                  className="w-full bg-white border border-border-subtle rounded-full py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-primary/30 focus:outline-none cursor-not-allowed"
                 />
                 <button
                   disabled
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/30 cursor-not-allowed"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#E2E8F0]/40 flex items-center justify-center text-text-primary/30 cursor-not-allowed"
                 >
                   <Send size={14} />
                 </button>
@@ -271,7 +323,7 @@ export default function AiConcierge() {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.1);
+          background: rgba(27, 53, 100, 0.2);
           border-radius: 4px;
         }
       `}</style>

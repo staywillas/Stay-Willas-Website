@@ -38,25 +38,38 @@ const categories = [
 
 const Experiences = () => {
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 bg-black text-white">
+    <section className="py-32 px-6 md:px-12 lg:px-24 bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-16">
-          <span className="text-gold font-medium tracking-[0.3em] uppercase text-xs mb-4 block text-center">
-            What Are You Looking For?
-          </span>
-          <h2 className="text-4xl md:text-6xl font-heading text-center mb-6">
-            Find Your <span className="italic text-gold">Perfect Trip</span>
-          </h2>
+        {/* Header */}
+        <div className="mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <span className="inline-block text-blue-600 font-bold tracking-[0.3em] uppercase text-xs mb-4 bg-blue-50 px-4 py-2 rounded-full">
+              Curated Experiences
+            </span>
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-text-primary mt-6">
+              Find Your <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">Perfect Trip</span>
+            </h2>
+            <p className="text-lg text-text-primary/60 mt-6 max-w-2xl mx-auto">
+              From poolside relaxation to mountain adventures, we have the perfect villa for every mood.
+            </p>
+          </motion.div>
         </div>
 
+        {/* Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[800px] md:h-[600px]">
-          {/* Large Card */}
+          {/* Large Featured Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="md:col-span-8 relative overflow-hidden rounded-3xl group cursor-pointer"
+            className="md:col-span-8 relative overflow-hidden rounded-3xl group cursor-pointer shadow-lg hover:shadow-elevated transition-all duration-500"
           >
             <Image
               src={categories[0].image}
@@ -65,14 +78,15 @@ const Experiences = () => {
               sizes="(max-width: 768px) 100vw, 66vw"
               loading="lazy"
               quality={75}
-              className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              className="object-cover transition-transform duration-1000 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+            {/* Premium gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <div className="absolute inset-0 p-10 flex flex-col justify-end">
-              <h3 className="text-4xl font-heading mb-2">{categories[0].title}</h3>
-              <p className="text-white/70 max-w-md mb-6">{categories[0].description}</p>
-              <div className="flex items-center gap-2 text-gold font-medium uppercase tracking-widest text-sm group-hover:gap-4 transition-all">
-                Explore <ArrowRight size={16} />
+              <h3 className="text-4xl lg:text-5xl font-heading text-white mb-3 tracking-tight">{categories[0].title}</h3>
+              <p className="text-white/85 max-w-md mb-8 text-lg leading-relaxed">{categories[0].description}</p>
+              <div className="flex items-center gap-3 text-blue-300 font-bold uppercase tracking-widest text-sm group-hover:gap-5 transition-all">
+                Explore Collection <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
               </div>
             </div>
           </motion.div>
@@ -86,7 +100,7 @@ const Experiences = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="relative flex-1 overflow-hidden rounded-3xl group cursor-pointer"
+                className="relative flex-1 overflow-hidden rounded-3xl group cursor-pointer shadow-md hover:shadow-lg transition-all duration-500"
               >
                 <Image
                   src={cat.image}
@@ -95,13 +109,13 @@ const Experiences = () => {
                   sizes="(max-width: 768px) 100vw, 33vw"
                   loading="lazy"
                   quality={75}
-                  className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                  <h3 className="text-2xl font-heading mb-1">{cat.title}</h3>
-                  <div className="flex items-center gap-2 text-gold font-medium uppercase tracking-widest text-[10px] group-hover:gap-3 transition-all">
-                    Explore <ArrowRight size={12} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <h3 className="text-2xl font-heading text-white mb-2">{cat.title}</h3>
+                  <div className="flex items-center gap-2 text-blue-300 font-bold uppercase tracking-widest text-xs group-hover:gap-4 transition-all">
+                    Explore <ArrowRight size={14} />
                   </div>
                 </div>
               </motion.div>

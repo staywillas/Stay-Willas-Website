@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
-import { ChevronRight, Play, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -56,7 +56,7 @@ const Hero = () => {
           const isActive = activeIndex === index;
           return (
             <SwiperSlide key={index} className="relative h-full w-full">
-              {/* Ken Burns background effect - keep the zoom slow so it feels nice and dreamy */}
+              {/* Ken Burns background */}
               <div className="absolute inset-0 z-0">
                 <Image
                   src={slide.image}
@@ -67,13 +67,14 @@ const Hero = () => {
                   quality={75}
                   className="object-cover animate-ken-burns"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/20 to-charcoal" />
-                <div className="absolute inset-0 bg-black/30" />
+                {/* Premium overlay with multiple layers */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/60" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/20" />
               </div>
 
-              {/* Slide title and description content */}
-              <div className="relative z-10 h-full flex flex-col justify-start pt-32 md:pt-36 lg:pt-40 pb-16 px-6 md:px-12 lg:px-24">
-                <div className="max-w-4xl">
+              {/* Slide content */}
+              <div className="relative z-10 h-full flex flex-col justify-start pt-28 md:pt-32 lg:pt-40 pb-16 px-6 md:px-12 lg:px-24">
+                <div className="max-w-5xl">
                   <AnimatePresence mode="wait">
                     {isActive && (
                       <motion.div
@@ -83,21 +84,33 @@ const Hero = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                       >
-                        <span className="inline-block text-[#FFCC00] font-bold tracking-[0.5em] uppercase text-xs mb-4 block drop-shadow-[0_0_10px_rgba(255,204,0,0.1)]">
-                          {slide.tag}
+                        {/* Tag — Premium Badge */}
+                        <span className="inline-block text-[#3B82F6] bg-white/10 backdrop-blur-xl border border-white/20 font-bold tracking-[0.4em] uppercase text-xs mb-8 px-6 py-3 rounded-full block w-fit shadow-lg shadow-blue-500/20 hover:bg-white/15 transition-all duration-300">
+                          ✨ {slide.tag}
                         </span>
-                        <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-heading text-white leading-[1.1] mb-4 pb-1">
+                        
+                        {/* Main Heading - Premium Typography */}
+                        <h1 className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-heading text-white leading-[0.95] mb-6 font-bold tracking-tighter">
                           {slide.title} <br /> 
-                          <span className="italic text-gradient-yellow pr-4 font-heading font-medium">{slide.titleItalic}</span>
+                          <span className="italic text-gradient-yellow pr-4 font-heading font-medium bg-gradient-to-r from-blue-300 via-blue-200 to-cyan-300 bg-clip-text text-transparent">{slide.titleItalic}</span>
                         </h1>
-                        <p className="text-base md:text-lg text-white/80 font-sans max-w-2xl mb-8 leading-relaxed tracking-wide">
+                        
+                        {/* Subtitle - Refined */}
+                        <p className="text-lg md:text-xl text-white/90 font-light max-w-2xl mb-10 leading-relaxed tracking-wide">
                           {slide.desc}
                         </p>
 
+                        {/* CTA Section - Enhanced */}
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                          <Link href="/villas" className="bg-[#FFCC00] hover:bg-[#FFD700] text-black font-extrabold rounded-full px-8 py-4 text-sm md:text-base tracking-widest h-auto group flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.3)] hover:shadow-[0_0_30px_rgba(255,204,0,0.5)] transition-all duration-300">
-                            EXPLORE COLLECTION
-                            <ChevronRight className="ml-2 transition-transform group-hover:translate-x-1" size={16} />
+                          <Link href="/villas" className="group relative bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-full px-8 py-4 text-sm md:text-base tracking-widest uppercase h-auto flex items-center justify-center shadow-2xl shadow-blue-500/40 hover:shadow-2xl hover:shadow-blue-600/50 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                            <span className="relative z-10 flex items-center gap-2">
+                              EXPLORE COLLECTION
+                              <ChevronRight className="transition-transform group-hover:translate-x-1" size={16} />
+                            </span>
+                          </Link>
+                          <Link href="/contact" className="flex items-center gap-3 text-white/80 hover:text-white font-medium tracking-widest uppercase text-sm transition-all duration-300 border-b border-white/40 hover:border-white pb-1 hover:gap-4">
+                            Talk to Concierge
+                            <ChevronRight size={14} />
                           </Link>
                         </div>
                       </motion.div>
@@ -109,22 +122,22 @@ const Hero = () => {
           );
         })}
 
-        {/* The custom Swiper navigation arrows in the bottom right corner - shifted left to prevent chatbot collision */}
+        {/* Swiper navigation arrows */}
         <div className="absolute bottom-12 right-32 z-20 hidden md:flex items-center gap-4">
-          <button className="hero-prev w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-[#FFCC00] hover:border-[#FFCC00] hover:text-charcoal transition-all cursor-pointer">
-            <ChevronLeft size={20} />
+          <button className="hero-prev w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-blue-500 hover:border-blue-500 transition-all cursor-pointer backdrop-blur-md hover:shadow-lg hover:shadow-blue-500/40 group">
+            <ChevronLeft size={20} className="group-hover:scale-110 transition-transform" />
           </button>
-          <button className="hero-next w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-[#FFCC00] hover:border-[#FFCC00] hover:text-charcoal transition-all cursor-pointer">
-            <ChevronRight size={20} />
+          <button className="hero-next w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-blue-500 hover:border-blue-500 transition-all cursor-pointer backdrop-blur-md hover:shadow-lg hover:shadow-blue-500/40 group">
+            <ChevronRight size={20} className="group-hover:scale-110 transition-transform" />
           </button>
         </div>
       </Swiper>
       
-      {/* Small rotated branding line on the right side */}
+      {/* Rotated branding line */}
       <div className="absolute top-1/2 right-0 -translate-y-1/2 hidden lg:flex flex-col gap-10 pr-10 items-center z-20">
-        <div className="w-px h-24 bg-white/10" />
-        <span className="rotate-90 text-white/20 text-[10px] tracking-[0.5em] uppercase whitespace-nowrap">STAY WILLAS</span>
-        <div className="w-px h-24 bg-white/10" />
+        <div className="w-px h-24 bg-white/20" />
+        <span className="rotate-90 text-white/30 text-[10px] tracking-[0.5em] uppercase whitespace-nowrap font-light">Luxury Escapes</span>
+        <div className="w-px h-24 bg-white/20" />
       </div>
     </section>
   );

@@ -34,7 +34,7 @@ const experiences = [
 
 export default function ExperiencesPage() {
   return (
-    <main className="min-h-screen bg-charcoal text-white">
+    <main className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
       
       {/* Hero */}
@@ -45,16 +45,16 @@ export default function ExperiencesPage() {
           fill 
           className="object-cover opacity-40" 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-charcoal/80 via-transparent to-charcoal" />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/80 via-transparent to-[#FFFFFF]" />
         
         <div className="relative z-10 text-center px-6">
-          <span className="text-gold font-medium tracking-[0.4em] uppercase text-xs mb-6 block">
+          <span className="text-accent-secondary font-medium tracking-[0.4em] uppercase text-xs mb-6 block">
             The Stay Willas Experience
           </span>
           <h1 className="text-6xl md:text-9xl font-heading mb-8">
-            Beyond <span className="italic text-gold">The House</span>
+            Beyond <span className="italic text-accent-primary">The House</span>
           </h1>
-          <p className="text-white/60 text-xl max-w-xl mx-auto leading-relaxed">
+          <p className="text-text-primary/55 text-xl max-w-xl mx-auto leading-relaxed">
             We don&apos;t just rent out homes. We want to help you make memories that stay with 
             you long after you&apos;ve checked out.
           </p>
@@ -75,11 +75,11 @@ export default function ExperiencesPage() {
                 />
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
                 <div className="absolute bottom-8 left-8">
-                  <exp.icon className="text-gold mb-4" size={32} />
+                  <exp.icon className="text-accent-primary mb-4" size={32} />
                   <h3 className="text-3xl font-heading text-white">{exp.title}</h3>
                 </div>
               </div>
-              <p className="text-white/40 leading-relaxed text-sm px-2">
+              <p className="text-text-primary/40 leading-relaxed text-sm px-2">
                 {exp.desc}
               </p>
             </div>
@@ -88,16 +88,16 @@ export default function ExperiencesPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-32 px-6 md:px-12 lg:px-24 text-center border-t border-white/5">
-        <h2 className="text-4xl md:text-6xl font-heading mb-12">Ready for an <span className="italic text-gold">Unforgettable</span> Stay?</h2>
+      <section className="py-32 px-6 md:px-12 lg:px-24 text-center border-t border-border-subtle">
+        <h2 className="text-4xl md:text-6xl font-heading mb-12">Ready for an <span className="italic text-accent-primary">Unforgettable</span> Stay?</h2>
         <div className="flex flex-col md:flex-row gap-8 justify-center">
           {[
             { icon: Heart, text: "Personalized Concierge" },
             { icon: Zap, text: "Seamless Service" },
             { icon: Camera, text: "Picture Perfect Moments" }
           ].map((item) => (
-            <div key={item.text} className="flex items-center gap-3 text-white/40 uppercase tracking-widest text-xs">
-              <item.icon className="text-gold" size={16} />
+            <div key={item.text} className="flex items-center gap-3 text-text-primary/40 uppercase tracking-widest text-xs">
+              <item.icon className="text-accent-secondary" size={16} />
               {item.text}
             </div>
           ))}

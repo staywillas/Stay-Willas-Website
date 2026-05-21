@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, Phone, ChevronDown, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,10 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
   const { isSignedIn } = useUser();
+  const pathname = usePathname();
+
+  const isHomePage = pathname === "/";
+  const isDarkTheme = isScrolled || !isHomePage;
 
   const updateCount = () => {
     try {
@@ -41,7 +46,8 @@ const Navbar = () => {
     window.addEventListener("storage", updateCount);
     
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const scrollPos = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      setIsScrolled(scrollPos > 30);
     };
     window.addEventListener("scroll", handleScroll);
     
@@ -61,49 +67,79 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6">
+    <nav className={cn(
+      "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out w-full",
+      isScrolled ? "px-0 py-0" : "px-4 md:px-8 lg:px-12 py-4 md:py-6"
+    )}>
       <div
         className={cn(
-          "max-w-7xl mx-auto rounded-full transition-all duration-700 ease-in-out flex items-center justify-between gap-4 px-8 py-3",
+          "mx-auto transition-all duration-500 ease-in-out flex items-center justify-between gap-6 md:gap-8 w-full",
           isScrolled
-            ? "glass-dark shadow-2xl backdrop-blur-2xl border-white/10 py-3"
-            : "bg-transparent border-transparent py-4"
+            ? "rounded-none glass shadow-md shadow-charcoal/5 border-b border-cream-border/50 px-6 md:px-8 lg:px-12 py-3 md:py-4"
+            : "max-w-7xl rounded-full px-6 md:px-8 lg:px-12 py-3 md:py-4 " + (
+                isDarkTheme
+                  ? "glass shadow-lg shadow-charcoal/10 border border-cream-border/60"
+                  : "bg-transparent border-transparent"
+              )
         )}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group shrink-0 mr-8 lg:mr-12">
-          <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center transition-transform duration-700 group-hover:rotate-[360deg]">
-            <span className="font-heading text-charcoal font-bold text-xl leading-none">W</span>
+        <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
+          <div className="relative w-10 md:w-11 h-10 md:h-11 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
+            <img 
+              src="/images/stay villa brand logo.png" 
+              alt="Stay Willas Logo" 
+              className="w-full h-full object-cover scale-110" 
+            />
           </div>
           <div className="flex flex-col">
-            <span className="font-heading text-xl tracking-[0.1em] text-white leading-tight">STAY WILLAS</span>
-            <span className="font-sans text-[8px] tracking-[0.4em] text-white/40 uppercase font-bold">The Gold Standard</span>
+            <span className={cn(
+              "font-heading text-lg md:text-xl tracking-[0.1em] leading-tight transition-colors duration-500 whitespace-nowrap",
+              isDarkTheme ? "text-text-primary" : "text-white"
+            )}>STAY WILLAS</span>
+            <span className={cn(
+              "font-sans text-[9px] md:text-[10px] tracking-[0.4em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
+              isDarkTheme ? "text-text-primary/50" : "text-white/50"
+            )}>The Gold Standard</span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+        <div className="hidden lg:flex items-center justify-center gap-4 xl:gap-8 flex-1">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className="text-[11px] font-bold text-white/60 hover:text-gold transition-all duration-300 tracking-[0.2em] uppercase relative group/link"
+              className={cn(
+                "text-[12px] xl:text-[13px] font-bold transition-all duration-300 tracking-[0.2em] uppercase relative group/link whitespace-nowrap",
+                isDarkTheme
+                  ? "text-text-primary/70 hover:text-accent-primary"
+                  : "text-white/70 hover:text-white"
+              )}
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover/link:w-full" />
+              <span className={cn(
+                "absolute -bottom-1 left-0 w-0 h-px transition-all duration-300 group-hover/link:w-full",
+                isDarkTheme ? "bg-accent-primary" : "bg-white"
+              )} />
             </Link>
           ))}
 
           <div className="relative group cursor-pointer">
-            <div className="flex items-center gap-1 text-[11px] font-bold text-white/60 hover:text-gold tracking-[0.2em] uppercase transition-all">
+            <div className={cn(
+              "flex items-center gap-1 text-[12px] xl:text-[13px] font-bold tracking-[0.2em] uppercase transition-all whitespace-nowrap",
+              isDarkTheme
+                ? "text-text-primary/70 hover:text-accent-primary"
+                : "text-white/70 hover:text-white"
+            )}>
               More <ChevronDown size={12} />
             </div>
             <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 hidden group-hover:block">
-              <div className="glass-dark border border-white/10 rounded-2xl p-6 min-w-[180px] shadow-2xl">
+              <div className="glass border border-border-subtle/60 rounded-2xl p-6 min-w-[180px] shadow-xl shadow-[#2C1F0E]/10">
                 <div className="flex flex-col gap-4">
-                  <Link href="/about" className="text-[10px] font-bold text-white/60 hover:text-gold tracking-widest uppercase">About</Link>
-                  <Link href="/partner" className="text-[10px] font-bold text-white/60 hover:text-gold tracking-widest uppercase">Partner</Link>
-                  <Link href="/contact" className="text-[10px] font-bold text-white/60 hover:text-gold tracking-widest uppercase">Contact</Link>
+                  <Link href="/about" className="text-[12px] font-bold text-text-primary/70 hover:text-accent-primary tracking-widest uppercase transition-colors">About</Link>
+                  <Link href="/partner" className="text-[12px] font-bold text-text-primary/70 hover:text-accent-primary tracking-widest uppercase transition-colors">Partner</Link>
+                  <Link href="/contact" className="text-[12px] font-bold text-text-primary/70 hover:text-accent-primary tracking-widest uppercase transition-colors">Contact</Link>
                 </div>
               </div>
             </div>
@@ -111,26 +147,35 @@ const Navbar = () => {
         </div>
 
         {/* Actions */}
-        <div className="hidden md:flex items-center gap-4 xl:gap-6 shrink-0">
-          <a href="tel:+919619042310" className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors duration-300" title="+91 96190 42310">
+        <div className="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-6 shrink-0">
+          <a href="tel:+919619042310" className={cn(
+            "flex items-center gap-2 transition-colors duration-300 p-1",
+            isDarkTheme ? "text-text-primary/50 hover:text-accent-primary" : "text-white/50 hover:text-white"
+          )} title="+91 96190 42310">
             <Phone size={14} className="shrink-0" />
-            <span className="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap hidden 2xl:inline">+91 96190 42310</span>
+            <span className="text-[11px] xl:text-[12px] font-bold tracking-widest uppercase whitespace-nowrap hidden 2xl:inline">+91 96190 42310</span>
           </a>
 
-          <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/40 hover:text-[#25D366] transition-colors duration-300" title="WhatsApp Chat">
+          <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className={cn(
+            "flex items-center gap-2 transition-colors duration-300 p-1",
+            isDarkTheme ? "text-text-primary/50 hover:text-[#25D366]" : "text-white/50 hover:text-[#25D366]"
+          )} title="WhatsApp Chat">
             <WhatsAppIcon size={14} className="shrink-0" />
-            <span className="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap hidden 2xl:inline">WhatsApp</span>
+            <span className="text-[11px] xl:text-[12px] font-bold tracking-widest uppercase whitespace-nowrap hidden 2xl:inline">WhatsApp</span>
           </a>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 lg:gap-3 xl:gap-4">
             <Link 
               href="/wishlist" 
-              className="text-white/40 hover:text-red-400 transition-colors relative group/wish flex items-center justify-center p-2"
+              className={cn(
+                "transition-colors relative group/wish flex items-center justify-center p-2",
+                isDarkTheme ? "text-text-primary/50 hover:text-red-500" : "text-white/50 hover:text-red-400"
+              )}
               title="View Wishlist"
             >
               <Heart size={18} className="group-hover/wish:scale-110 transition-transform duration-300" />
               {wishlistCount > 0 && (
-                <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-red-500 text-[8px] font-black text-white flex items-center justify-center border border-charcoal">
+                <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-red-500 text-[10px] font-black text-white flex items-center justify-center border border-bg-primary">
                   {wishlistCount}
                 </span>
               )}
@@ -140,35 +185,44 @@ const Navbar = () => {
               <UserButton />
             ) : (
               <SignInButton mode="modal">
-                <Button variant="ghost" className="text-white/60 hover:text-gold hover:bg-transparent px-2">
+                <Button variant="ghost" className={cn(
+                  "hover:bg-transparent p-2 h-auto",
+                  isDarkTheme ? "text-text-primary/60 hover:text-accent-primary" : "text-white/60 hover:text-white"
+                )}>
                   <User size={18} />
                 </Button>
               </SignInButton>
             )}
 
-            <Link href="/villas" className="bg-[#FFCC00] hover:bg-[#FFD700] text-black rounded-full px-6 py-3.5 text-[10px] font-black tracking-[0.2em] shadow-[0_0_15px_rgba(255,204,0,0.3)] transition-all duration-300 flex items-center justify-center">
+            <Link href="/villas" className="bg-accent-primary hover:bg-[#1E7A8C] text-bg-primary rounded-full px-4 lg:px-5 py-2.5 lg:py-3 text-[10px] xl:text-[11px] font-black tracking-[0.2em] shadow-[0_0_15px_rgba(27,53,100,0.3)] hover:shadow-[0_0_20px_rgba(30,122,140,0.4)] transition-all duration-300 flex items-center justify-center whitespace-nowrap">
               BOOK NOW
             </Link>
           </div>
         </div>
 
         {/* Mobile Menu Toggle & Wishlist */}
-        <div className="lg:hidden flex items-center gap-3">
+        <div className="lg:hidden flex items-center gap-2 md:gap-3 shrink-0">
           <Link 
             href="/wishlist" 
-            className="text-white/40 hover:text-red-400 transition-colors relative group/wish flex items-center justify-center p-2"
+            className={cn(
+              "transition-colors relative group/wish flex items-center justify-center p-2",
+              isDarkTheme ? "text-text-primary/50 hover:text-red-500" : "text-white/50 hover:text-red-400"
+            )}
             title="View Wishlist"
           >
             <Heart size={18} className="group-hover/wish:scale-110 transition-transform duration-300" />
             {wishlistCount > 0 && (
-              <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-red-500 text-[8px] font-black text-white flex items-center justify-center border border-charcoal">
+              <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-red-500 text-[8px] font-black text-white flex items-center justify-center border border-bg-primary">
                 {wishlistCount}
               </span>
             )}
           </Link>
           
           <button
-            className="text-white p-2"
+            className={cn(
+              "p-2 transition-colors",
+              isDarkTheme ? "text-text-primary" : "text-white"
+            )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -184,12 +238,17 @@ const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 lg:hidden bg-charcoal flex flex-col p-12"
+            className="fixed inset-0 z-40 lg:hidden bg-cream flex flex-col p-12"
           >
             <div className="flex justify-between items-center mb-16">
-              <span className="font-heading text-2xl tracking-widest">MENU</span>
+              <div className="flex items-center gap-3">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-cream-border">
+                  <img src="/images/stay villa brand logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-110" />
+                </div>
+                <span className="font-heading text-2xl tracking-widest text-charcoal">MENU</span>
+              </div>
               <button onClick={() => setIsMobileMenuOpen(false)}>
-                <X size={32} className="text-gold" />
+                <X size={32} className="text-navy" />
               </button>
             </div>
 
@@ -198,28 +257,28 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-4xl font-heading text-white hover:text-gold transition-colors"
+                  className="text-4xl font-heading text-charcoal hover:text-navy transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
                 </Link>
               ))}
 
-              <div className="h-px w-full bg-white/5 my-8" />
+              <div className="h-px w-full bg-cream-border my-8" />
 
               <div className="flex flex-col gap-4">
-                <a href="tel:+919619042310" className="flex items-center gap-4 text-gold text-xl font-medium">
-                  <Phone size={24} className="text-gold" />
+                <a href="tel:+919619042310" className="flex items-center gap-4 text-navy text-xl font-medium">
+                  <Phone size={24} className="text-navy" />
                   <span>+91 96190 42310</span>
                 </a>
 
-                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-white hover:text-[#25D366] text-xl font-medium transition-colors">
+                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-charcoal hover:text-[#25D366] text-xl font-medium transition-colors">
                   <WhatsAppIcon size={24} className="text-[#25D366]" />
                   <span>WhatsApp Chat</span>
                 </a>
               </div>
 
-              <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-[#FFCC00] hover:bg-[#FFD700] text-black text-center rounded-full w-full py-5 text-base font-black tracking-widest mt-8 shadow-[0_0_15px_rgba(255,204,0,0.3)] transition-all duration-300 block">
+              <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-navy hover:bg-teal text-cream text-center rounded-full w-full py-5 text-base font-black tracking-widest mt-8 shadow-[0_0_15px_rgba(27,53,100,0.3)] transition-all duration-300 block">
                 RESERVE NOW
               </Link>
             </div>

@@ -46,9 +46,9 @@ export const AnimatedPoolIcon = ({ className = "w-5 h-5" }: { className?: string
       <path d="M18 8h4" />
       
       {/* Dynamic Wave Lines */}
-      <path className="pool-wave-1" d="M2 14c2-1 4-1 6 0s4 1 6 0 4-1 6 0" stroke="#c5a059" />
+      <path className="pool-wave-1" d="M2 14c2-1 4-1 6 0s4 1 6 0 4-1 6 0" stroke="#2563EB" />
       <path className="pool-wave-2" d="M2 17c2-1 4-1 6 0s4 1 6 0 4-1 6 0" />
-      <path className="pool-wave-3" d="M2 20c2-1 4-1 6 0s4 1 6 0 4-1 6 0" stroke="#c5a059" />
+      <path className="pool-wave-3" d="M2 20c2-1 4-1 6 0s4 1 6 0 4-1 6 0" stroke="#2563EB" />
     </svg>
   );
 };
@@ -103,7 +103,7 @@ export const AnimatedBonfireIcon = ({ className = "w-5 h-5" }: { className?: str
         className="fire-flame-main"
         d="M12 2C8.5 7 7.5 10.5 7.5 14a4.5 4.5 0 0 0 9 0C16.5 10.5 15.5 7 12 2z"
         fill="rgba(197, 160, 89, 0.15)"
-        stroke="#c5a059"
+        stroke="#2563EB"
       />
       
       {/* Side spurts */}
@@ -172,9 +172,9 @@ export const AnimatedChefIcon = ({ className = "w-5 h-5" }: { className?: string
       <path d="M12 3v3" strokeWidth="3" />
       
       {/* Steam Trails */}
-      <path className="chef-steam-1" d="M9 2a1.5 1.5 0 0 1 0-3" stroke="#c5a059" strokeWidth="1.5" />
-      <path className="chef-steam-2" d="M12 1.5a1.5 1.5 0 0 1 0-3" stroke="#c5a059" strokeWidth="1.5" />
-      <path className="chef-steam-3" d="M15 2a1.5 1.5 0 0 1 0-3" stroke="#c5a059" strokeWidth="1.5" />
+      <path className="chef-steam-1" d="M9 2a1.5 1.5 0 0 1 0-3" stroke="#2563EB" strokeWidth="1.5" />
+      <path className="chef-steam-2" d="M12 1.5a1.5 1.5 0 0 1 0-3" stroke="#2563EB" strokeWidth="1.5" />
+      <path className="chef-steam-3" d="M15 2a1.5 1.5 0 0 1 0-3" stroke="#2563EB" strokeWidth="1.5" />
     </svg>
   );
 };
@@ -219,15 +219,15 @@ export const AnimatedMountainIcon = ({ className = "w-5 h-5" }: { className?: st
       `}</style>
       
       {/* Sun rising behind peak */}
-      <circle className="mtn-peak-sun" cx="8" cy="11" r="3" fill="rgba(197, 160, 89, 0.2)" stroke="#c5a059" strokeWidth="1" />
+      <circle className="mtn-peak-sun" cx="8" cy="11" r="3" fill="rgba(197, 160, 89, 0.2)" stroke="#2563EB" strokeWidth="1" />
       
       {/* Mountains */}
       <path d="M2 20L10 6l9 14" fill="rgba(255, 255, 255, 0.02)" />
       <path d="M12 20l4-6.5L22 20" fill="rgba(255, 255, 255, 0.01)" />
       
       {/* Mountain Ridge Highlights */}
-      <path d="M10 6l-3 6M10 6v14" stroke="#c5a059" strokeWidth="1" />
-      <path d="M16 13.5l-1.5 2.5" stroke="#c5a059" strokeWidth="1" />
+      <path d="M10 6l-3 6M10 6v14" stroke="#2563EB" strokeWidth="1" />
+      <path d="M16 13.5l-1.5 2.5" stroke="#2563EB" strokeWidth="1" />
       
       {/* Drifting Clouds */}
       <path

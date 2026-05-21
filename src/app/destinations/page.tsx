@@ -39,26 +39,32 @@ const destinations = [
 
 export default function DestinationsPage() {
   return (
-    <main className="min-h-screen bg-charcoal text-white">
+    <main className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
       
       {/* Header */}
-      <section className="pt-48 pb-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end">
-          <div>
-            <span className="text-gold font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
-              Our Footprint
-            </span>
-            <h1 className="text-5xl md:text-8xl font-heading leading-tight">
-              Curated <br />
-              <span className="italic text-gold">Landscapes</span>
-            </h1>
-          </div>
-          <p className="text-white/40 text-xl leading-relaxed lg:pb-4">
-            We don&apos;t just pick villas; we pick settings. Each of our destinations 
-            offers a unique soul, carefully vetted to provide a complete sense of escape.
-          </p>
+      <section className="relative pt-48 pb-24 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto text-center flex flex-col items-center overflow-hidden">
+        {/* Background Soft Glow for Premium Aesthetic */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-[#1B3564]/5 to-[#2563EB]/8 rounded-full blur-[80px] pointer-events-none -z-10 animate-pulse-slow" />
+        
+        <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-xs md:text-sm mb-4 block">
+          Our Footprint
+        </span>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading leading-tight mb-2 tracking-tight">
+          Curated <span className="italic text-accent-primary font-serif">Landscapes</span>
+        </h1>
+        
+        {/* Custom Luxury Elegant Divider */}
+        <div className="flex items-center gap-4 my-8 w-full max-w-[240px]">
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#2563EB]/40" />
+          <div className="w-2 h-2 rounded-sm border border-accent-primary bg-bg-primary rotate-45 flex-shrink-0" />
+          <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#2563EB]/40" />
         </div>
+        
+        <p className="text-text-primary/70 text-lg md:text-xl leading-relaxed max-w-2xl font-light">
+          We don&apos;t just pick villas; we pick settings. Each of our destinations 
+          offers a unique soul, carefully vetted to provide a complete sense of escape.
+        </p>
       </section>
 
       {/* Destinations List */}
@@ -83,12 +89,12 @@ export default function DestinationsPage() {
             </ThreeDHoverCard>
             
             <div className="w-full md:w-1/2">
-              <div className="text-gold font-medium tracking-widest uppercase text-sm mb-6 flex items-center gap-4">
-                <span className="h-px w-8 bg-gold" />
+              <div className="text-accent-secondary font-medium tracking-widest uppercase text-sm mb-6 flex items-center gap-4">
+                <span className="h-px w-8 bg-accent-secondary" />
                 {dest.tagline}
               </div>
               <h2 className="text-5xl md:text-7xl font-heading mb-8">{dest.name}</h2>
-              <p className="text-white/60 text-lg leading-relaxed mb-10 max-w-md">
+              <p className="text-text-primary/55 text-lg leading-relaxed mb-10 max-w-md">
                 {dest.desc}
               </p>
               
@@ -96,7 +102,7 @@ export default function DestinationsPage() {
                 href={`/villas?region=${dest.name.toLowerCase()}`}
                 className="inline-flex items-center gap-4 group/link"
               >
-                <span className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center group-hover/link:bg-gold group-hover/link:border-gold group-hover/link:text-charcoal transition-all">
+                <span className="w-16 h-16 rounded-full border border-[#0F172A]/20 flex items-center justify-center group-hover/link:bg-accent-primary group-hover/link:border-accent-primary group-hover/link:text-white transition-all">
                   <ArrowUpRight size={24} />
                 </span>
                 <span className="uppercase tracking-[0.2em] text-xs font-bold">Explore {dest.count} Villas</span>

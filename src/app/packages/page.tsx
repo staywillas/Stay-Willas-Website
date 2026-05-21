@@ -41,19 +41,19 @@ const packages = [
 
 export default function PackagesPage() {
   return (
-    <main className="min-h-screen bg-charcoal text-white">
+    <main className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
       
       {/* Header */}
       <section className="pt-48 pb-20 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto text-center">
-        <span className="text-gold font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
+        <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
           Our Offers
         </span>
         <h1 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
           Special <br />
-          <span className="italic text-gold text-gradient">Offers</span>
+          <span className="italic text-accent-primary">Offers</span>
         </h1>
-        <p className="text-white/60 text-xl max-w-2xl mx-auto leading-relaxed">
+        <p className="text-text-primary/55 text-xl max-w-2xl mx-auto leading-relaxed">
           Get the most out of your holiday with these special stay packages, 
           created for families, couples, and groups.
         </p>
@@ -63,7 +63,7 @@ export default function PackagesPage() {
       <section className="py-20 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {packages.map((pkg) => (
-            <div key={pkg.title} className="glass-dark border border-white/5 rounded-[32px] overflow-hidden group hover:border-gold/30 transition-all flex flex-col">
+            <div key={pkg.title} className="bg-bg-primary border border-border-subtle rounded-[32px] overflow-hidden group hover:border-accent-primary/30 transition-all flex flex-col">
               <div className="relative h-64 overflow-hidden">
                 <Image 
                   src={pkg.image} 
@@ -71,29 +71,29 @@ export default function PackagesPage() {
                   fill 
                   className="object-cover transition-transform duration-700 group-hover:scale-110" 
                 />
-                <div className="absolute top-6 left-6 px-4 py-1 bg-gold text-charcoal text-[10px] font-bold uppercase tracking-widest rounded-full">
+                <div className="absolute top-6 left-6 px-4 py-1 bg-accent-primary text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
                   Limited Offer
                 </div>
               </div>
               <div className="p-8 flex flex-col flex-grow">
-                <span className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold mb-2 block">{pkg.tagline}</span>
+                <span className="text-accent-secondary text-[10px] uppercase tracking-[0.2em] font-bold mb-2 block">{pkg.tagline}</span>
                 <h3 className="text-3xl font-heading mb-4">{pkg.title}</h3>
-                <p className="text-white/40 text-sm leading-relaxed mb-8 flex-grow">
+                <p className="text-text-primary/40 text-sm leading-relaxed mb-8 flex-grow">
                   {pkg.desc}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-8">
                   {pkg.perks.map(perk => (
-                    <span key={perk} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] uppercase tracking-wider text-white/60">
+                    <span key={perk} className="px-3 py-1 bg-white border border-border-subtle rounded-full text-[10px] uppercase tracking-wider text-text-primary/55">
                       {perk}
                     </span>
                   ))}
                 </div>
-                <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+                <div className="pt-6 border-t border-border-subtle flex items-center justify-between">
                   <div>
-                    <span className="text-white/40 text-[10px] uppercase tracking-widest block">Price</span>
-                    <span className="text-2xl font-heading text-white">{pkg.price}</span>
+                    <span className="text-text-primary/40 text-[10px] uppercase tracking-widest block">Price</span>
+                    <span className="text-2xl font-heading text-text-primary">{pkg.price}</span>
                   </div>
-                  <Button className="bg-gold hover:bg-gold/80 text-charcoal rounded-full px-6 font-bold">
+                  <Button className="bg-accent-primary hover:bg-accent-secondary text-white rounded-full px-6 font-bold">
                     INQUIRE
                   </Button>
                 </div>
@@ -104,7 +104,7 @@ export default function PackagesPage() {
       </section>
 
       {/* Trust Badges */}
-      <section className="py-20 border-y border-white/5">
+      <section className="py-20 border-y border-border-subtle">
         <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-center gap-16">
           {[
             { icon: Gift, text: "Complimentary Welcome" },
@@ -112,8 +112,8 @@ export default function PackagesPage() {
             { icon: Star, text: "Premium Guest Support" },
             { icon: Zap, text: "Instant Confirmation" }
           ].map((badge) => (
-            <div key={badge.text} className="flex items-center gap-3 text-white/40 text-[10px] uppercase tracking-widest">
-              <badge.icon size={16} className="text-gold" />
+            <div key={badge.text} className="flex items-center gap-3 text-text-primary/40 text-[10px] uppercase tracking-widest">
+              <badge.icon size={16} className="text-accent-secondary" />
               {badge.text}
             </div>
           ))}

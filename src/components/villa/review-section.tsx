@@ -71,42 +71,44 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
   };
 
   return (
-    <section className="py-20 border-t border-white/5">
-      <div className="flex flex-col lg:flex-row gap-20">
+    <section className="py-20 border-t border-border-subtle/60">
+      <div className="flex flex-col lg:flex-row gap-16">
         
         {/* The list of guest reviews, grouped on the left side of the screen */}
-        <div className="lg:col-span-7 flex-grow">
+        <div className="lg:w-2/3 flex-grow">
           <div className="flex items-center gap-4 mb-12">
-            <h2 className="text-4xl font-heading italic">Guest <span className="text-gold not-italic font-bold">Reviews</span></h2>
-            <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold tracking-widest uppercase text-white/40">
+            <h2 className="text-4xl font-heading text-text-primary">
+              Guest <span className="text-accent-primary italic">Reviews</span>
+            </h2>
+            <div className="px-3 py-1 bg-white border border-border-subtle rounded-full text-[10px] font-bold tracking-widest uppercase text-accent-primary/70 shadow-sm">
               {reviews.length} Feedbacks
             </div>
           </div>
 
-          <div className="space-y-12">
+          <div className="space-y-8">
             {reviews.length === 0 ? (
-              <p className="text-white/40 italic">No reviews yet. Be the first to share your experience!</p>
+              <p className="text-text-primary/50 italic text-sm">No reviews yet. Be the first to share your experience!</p>
             ) : (
               reviews.map((review) => (
-                <div key={review.id} className="group">
+                <div key={review.id} className="group border-b border-border-subtle/40 pb-8 last:border-0 last:pb-0">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h4 className="font-bold text-white tracking-wide">{review.userName}</h4>
-                      <p className="text-[10px] text-white/20 uppercase tracking-[0.2em]">
+                      <h4 className="font-bold text-text-primary tracking-wide">{review.userName}</h4>
+                      <p className="text-[10px] text-text-primary/40 uppercase tracking-[0.2em] mt-0.5">
                         {format(new Date(review.createdAt), "MMMM dd, yyyy")}
                       </p>
                     </div>
-                    <div className="flex gap-0.5">
+                    <div className="flex gap-0.5 bg-white/40 border border-border-subtle/30 px-2.5 py-1.5 rounded-full shadow-sm">
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
                           size={12} 
-                          className={i < review.rating ? "fill-gold text-gold" : "text-white/10"} 
+                          className={i < review.rating ? "fill-[#2563EB] text-accent-primary" : "text-[#E2E8F0]"} 
                         />
                       ))}
                     </div>
                   </div>
-                  <p className="text-white/60 leading-relaxed text-sm italic pr-12">
+                  <p className="text-text-primary/75 leading-relaxed text-sm italic pr-6 md:pr-12">
                     &quot;{review.comment}&quot;
                   </p>
                 </div>
@@ -116,33 +118,35 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
         </div>
 
         {/* The form to submit a review - sticky on scroll so it stays in view while reading */}
-        <div className="lg:w-1/3">
-          <div className="glass-dark border border-white/10 rounded-[32px] p-10 sticky top-32">
-            <h3 className="text-2xl font-heading mb-8">Share Your <span className="italic text-gold">Story</span></h3>
+        <div className="lg:w-1/3 w-full">
+          <div className="glass-dark border border-white/10 rounded-[32px] p-6 sm:p-8 text-white sticky top-32 shadow-xl shadow-[#1B3564]/10">
+            <h3 className="text-2xl font-heading mb-8 text-white">
+              Share Your <span className="italic text-accent-primary">Story</span>
+            </h3>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               {!isSignedIn && (
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-white/40 block">Your Name</label>
+                  <label className="text-[10px] uppercase tracking-widest text-white/50 block font-bold">Your Name</label>
                   <input
                     type="text"
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
                     placeholder="Enter your name..."
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-gold/50 transition-all text-sm"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-accent-primary/50 transition-all text-sm text-white placeholder:text-white/30"
                     required
                   />
                 </div>
               )}
 
               {isSignedIn && user && (
-                <div className="text-[10px] text-white/40 uppercase tracking-widest block">
-                  Posting as <span className="text-gold font-bold">{user.fullName || "Anonymous Guest"}</span>
+                <div className="text-[10px] text-white/50 uppercase tracking-widest block font-bold">
+                  Posting as <span className="text-accent-primary font-black">{user.fullName || "Anonymous Guest"}</span>
                 </div>
               )}
 
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-white/40 block mb-4">Your Rating</label>
+                <label className="text-[10px] uppercase tracking-widest text-white/50 block mb-3 font-bold">Your Rating</label>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -152,8 +156,8 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
                       className="transition-transform hover:scale-125 cursor-pointer"
                     >
                       <Star 
-                        size={Star.name === "Star" ? 24 : 24} 
-                        className={star <= rating ? "fill-gold text-gold" : "text-white/10"} 
+                        size={24} 
+                        className={star <= rating ? "fill-[#2563EB] text-accent-primary" : "text-white/20 hover:text-white/40"} 
                       />
                     </button>
                   ))}
@@ -161,24 +165,31 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-white/40 block">Your Experience</label>
+                <label className="text-[10px] uppercase tracking-widest text-white/50 block font-bold">Your Experience</label>
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   rows={4}
                   placeholder="Describe your stay..."
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-gold/50 transition-all text-sm resize-none"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-accent-primary/50 transition-all text-sm text-white placeholder:text-white/30 resize-none"
                   required
                 />
               </div>
 
-              <Button 
+              <button 
                 type="submit"
                 disabled={isSubmitting || !comment || (!isSignedIn && !guestName.trim())}
-                className="w-full bg-gold hover:bg-gold/80 text-charcoal rounded-full py-6 font-bold tracking-widest flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-accent-primary hover:bg-accent-primary/90 disabled:bg-accent-primary/40 disabled:text-text-primary/40 text-text-primary rounded-full py-4 font-bold tracking-widest flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 shadow-md shadow-[#2563EB]/10"
               >
-                {isSubmitting ? <Loader2 className="animate-spin" /> : <><Send size={16} /> SUBMIT REVIEW</>}
-              </Button>
+                {isSubmitting ? (
+                  <Loader2 className="animate-spin" size={16} />
+                ) : (
+                  <>
+                    <Send size={14} /> 
+                    SUBMIT REVIEW
+                  </>
+                )}
+              </button>
             </form>
           </div>
         </div>

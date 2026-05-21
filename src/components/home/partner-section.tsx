@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { TrendingUp, Users, Shield, Globe } from "lucide-react";
 
 const benefits = [
@@ -28,42 +28,45 @@ const benefits = [
 
 const PartnerSection = () => {
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 bg-black overflow-hidden relative">
-      {/* Decorative Gradient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/10 rounded-full blur-[120px] pointer-events-none" />
+    <section className="py-32 px-6 md:px-12 lg:px-24 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 overflow-hidden relative">
+      {/* Ambient glow effects */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
           >
-            <span className="text-gold font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
-              Got a beautiful home?
+            <span className="inline-block text-blue-200 font-bold tracking-[0.3em] uppercase text-xs mb-6 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+              🏠 Partnership Opportunity
             </span>
-            <h2 className="text-4xl md:text-6xl font-heading text-white mb-8 leading-tight">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-white mb-10 leading-tight">
               Own a Villa? <br />
-              <span className="italic text-gold">Let&apos;s Share It</span> <br />
+              <span className="italic bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 bg-clip-text text-transparent">Let's Share It</span> <br />
               With The World.
             </h2>
-            <p className="text-white/60 text-lg mb-10 max-w-xl leading-relaxed">
-              We treat your home like our own. From finding great guests to taking care 
-              of maintenance and operations, we handle everything for you.
+            <p className="text-white/80 text-lg mb-12 max-w-xl leading-relaxed font-light">
+              We treat your home like our own. From curating exceptional guests to handling 
+              maintenance and operations, we manage everything so you can enjoy the rewards.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6">
-              <Button size="lg" className="bg-gold hover:bg-gold/80 text-charcoal rounded-full px-10 py-7 text-lg font-semibold h-auto">
+            <div className="flex flex-col sm:flex-row gap-5">
+              <Link href="/partner" className="inline-flex items-center justify-center bg-white text-blue-700 hover:bg-blue-50 rounded-full px-8 py-4 text-sm font-bold tracking-widest h-auto shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 LIST YOUR PROPERTY
-              </Button>
-              <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 rounded-full px-10 py-7 text-lg font-semibold h-auto">
-                DOWNLOAD BROCHURE
-              </Button>
+              </Link>
+              <Link href="/contact" className="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-blue-700 rounded-full px-8 py-4 text-sm font-bold tracking-widest h-auto transition-all duration-300 hover:-translate-y-1">
+                CONTACT SALES
+              </Link>
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 font-sans">
+          {/* Right Benefits Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={benefit.title}
@@ -71,14 +74,14 @@ const PartnerSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="glass-dark p-8 rounded-3xl border border-white/5 text-center flex flex-col items-center justify-center aspect-square sm:aspect-auto sm:h-64"
+                className="glass-premium backdrop-blur-xl p-8 rounded-2xl border-blue-200/30 text-center flex flex-col items-center justify-center aspect-square sm:aspect-auto sm:h-56 hover:border-blue-200/50 hover:bg-white/15 transition-all duration-300"
               >
-                <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-4 text-gold">
-                  <benefit.icon size={24} />
+                <div className="w-14 h-14 rounded-full bg-blue-400/20 flex items-center justify-center mb-5 text-blue-200 group-hover:bg-blue-300/30 transition-colors">
+                  <benefit.icon size={26} className="group-hover:scale-110 transition-transform" />
                 </div>
                 <div className="text-4xl font-black text-white tracking-tight mb-1">{benefit.value}</div>
-                <div className="text-[10px] text-gold uppercase tracking-[0.2em] font-extrabold mb-3">{benefit.suffix}</div>
-                <div className="text-xs text-white/50 font-medium">{benefit.title}</div>
+                <div className="text-xs text-blue-200 uppercase tracking-widest font-bold mb-3">{benefit.suffix}</div>
+                <div className="text-sm text-white/70 font-medium">{benefit.title}</div>
               </motion.div>
             ))}
             
@@ -87,19 +90,19 @@ const PartnerSection = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1, delay: 0.6 }}
-              className="sm:col-span-3 glass-dark p-8 rounded-3xl border border-gold/20 flex items-center justify-between"
+              className="sm:col-span-3 glass-premium backdrop-blur-xl p-8 rounded-2xl border-blue-200/30 flex items-center justify-between hover:border-blue-200/50 transition-all"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                  <Shield className="text-gold" size={24} />
+                <div className="w-12 h-12 rounded-full bg-blue-400/20 flex items-center justify-center">
+                  <Shield className="text-blue-200" size={24} />
                 </div>
                 <div>
                   <h4 className="text-white font-bold tracking-wide">Trusted by 50+ Villa Owners</h4>
-                  <p className="text-white/40 text-xs mt-0.5">Join the most premium hospitality network.</p>
+                  <p className="text-blue-100/60 text-xs mt-1">Join the most premium hospitality network.</p>
                 </div>
               </div>
-              <div className="hidden sm:block text-gold font-black text-2xl tracking-tight">
-                4.9/5
+              <div className="hidden sm:block text-blue-200 font-bold text-2xl tracking-tight">
+                4.9/5 ⭐
               </div>
             </motion.div>
           </div>

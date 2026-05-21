@@ -32,18 +32,18 @@ export default async function WishlistPage() {
   }));
 
   return (
-    <main className="min-h-screen bg-charcoal text-white">
+    <main className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
       
       {/* Header Section */}
       <section className="pt-48 pb-12 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto text-center">
-        <span className="text-gold font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
+        <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
           Your Saved Sanctuary
         </span>
         <h1 className="text-5xl md:text-8xl font-heading mb-6 leading-tight">
-          My <span className="italic text-gradient-yellow pr-4 font-heading font-medium">Wishlist</span>
+          My <span className="italic text-accent-primary pr-4 font-heading font-medium">Wishlist</span>
         </h1>
-        <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+        <p className="text-text-primary/55 text-lg max-w-2xl mx-auto leading-relaxed">
           Your private collection of premium getaways and modern architecture estates across Maharashtra.
         </p>
       </section>

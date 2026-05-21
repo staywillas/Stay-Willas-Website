@@ -21,19 +21,19 @@ export default function PartnerPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-charcoal text-white">
+    <main className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
       
       {/* Hero Section */}
       <section className="pt-48 pb-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto text-center">
-        <span className="text-gold font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
+        <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
           List Your Property
         </span>
         <h1 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
           Let&apos;s Share Your <br />
-          <span className="italic text-gold">Home With Guests.</span>
+          <span className="italic text-accent-primary">Home With Guests.</span>
         </h1>
-        <p className="text-white/60 text-xl max-w-2xl mx-auto leading-relaxed mb-12">
+        <p className="text-text-primary/55 text-xl max-w-2xl mx-auto leading-relaxed mb-12">
           Let us handle the hard work of running, managing, and promoting your villa 
           so you can sit back and watch it thrive.
         </p>
@@ -43,7 +43,7 @@ export default function PartnerPage() {
       </section>
 
       {/* Benefits Grid */}
-      <section className="py-24 px-6 md:px-12 lg:px-24 bg-black/50">
+      <section className="py-24 px-6 md:px-12 lg:px-24 bg-bg-secondary">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -54,12 +54,12 @@ export default function PartnerPage() {
               { icon: Zap, title: "Easy Reservations", desc: "Real-time updates and seamless booking systems mean no double-bookings." },
               { icon: CheckCircle2, title: "Professional Care", desc: "Our trained staff keeps your home clean, fresh, and perfectly looked after." },
             ].map((benefit) => (
-              <div key={benefit.title} className="glass-dark p-10 rounded-3xl border border-white/5 hover:border-gold/30 transition-all group">
-                <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center mb-6 text-gold group-hover:bg-gold group-hover:text-charcoal transition-all">
+              <div key={benefit.title} className="bg-bg-primary p-10 rounded-3xl border border-border-subtle hover:border-accent-primary/30 transition-all group">
+                <div className="w-14 h-14 rounded-2xl bg-accent-primary/10 flex items-center justify-center mb-6 text-accent-primary group-hover:bg-accent-primary group-hover:text-white transition-all">
                   <benefit.icon size={28} />
                 </div>
                 <h3 className="text-2xl font-heading mb-4">{benefit.title}</h3>
-                <p className="text-white/40 leading-relaxed text-sm">{benefit.desc}</p>
+                <p className="text-text-primary/40 leading-relaxed text-sm">{benefit.desc}</p>
               </div>
             ))}
           </div>
@@ -68,16 +68,36 @@ export default function PartnerPage() {
 
       {/* Process Section */}
       <section className="py-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-6xl font-heading text-center mb-20 italic">The Journey to Partnership</h2>
+        <h2 className="text-4xl md:text-6xl font-heading text-center mb-16 italic text-accent-primary">The Journey to Partnership</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {steps.map((step, i) => (
-            <div key={step.title} className="relative">
-              <div className="text-8xl font-heading text-white/5 absolute -top-10 -left-4">0{i+1}</div>
-              <div className="relative z-10 pt-4">
-                <h3 className="text-2xl font-heading text-gold mb-4 uppercase tracking-widest">{step.title}</h3>
-                <p className="text-white/60 leading-relaxed text-sm">{step.desc}</p>
+            <div 
+              key={step.title} 
+              className="relative bg-bg-primary border border-border-subtle rounded-3xl p-8 hover:shadow-xl hover:border-accent-secondary/30 transition-all duration-300 group flex flex-col justify-between min-h-[220px]"
+            >
+              {/* Number Badge */}
+              <div className="flex justify-between items-start mb-6">
+                <span className="text-4xl font-heading font-bold text-accent-primary/40 group-hover:text-accent-secondary/50 transition-colors">
+                  0{i+1}
+                </span>
+                <span className="w-8 h-8 rounded-full bg-accent-primary/5 group-hover:bg-accent-secondary/10 flex items-center justify-center text-accent-primary group-hover:text-accent-secondary transition-all text-xs font-bold font-mono">
+                  ✓
+                </span>
               </div>
-              {i < 3 && <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-px bg-gold/20" />}
+              
+              <div>
+                <h3 className="text-xl font-heading text-accent-primary mb-3 uppercase tracking-wider group-hover:text-accent-secondary transition-colors">
+                  {step.title}
+                </h3>
+                <p className="text-text-primary/70 leading-relaxed text-sm">
+                  {step.desc}
+                </p>
+              </div>
+              
+              {/* Connecting Line Accent */}
+              {i < 3 && (
+                <div className="hidden lg:block absolute top-1/2 -right-6 w-4 h-[1px] bg-[#E2E8F0]/80 z-20 pointer-events-none" />
+              )}
             </div>
           ))}
         </div>

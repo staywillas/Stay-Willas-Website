@@ -14,18 +14,18 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-charcoal text-white">
+    <main className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
       
       {/* Hero */}
       <section className="pt-48 pb-20 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
         <div className="max-w-3xl">
-          <span className="text-gold font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
+          <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
             Get In Touch
           </span>
           <h1 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
             We&apos;re Here <br />
-            <span className="italic text-gold text-gradient">To Help.</span>
+            <span className="italic text-accent-primary">To Help.</span>
           </h1>
         </div>
       </section>
@@ -37,22 +37,22 @@ export default function ContactPage() {
           {/* Contact Details */}
           <div className="lg:col-span-5 space-y-16">
             <div>
-              <h3 className="text-2xl font-heading mb-8 flex items-center gap-4 italic text-gold">
+              <h3 className="text-2xl font-heading mb-8 flex items-center gap-4 italic text-accent-primary">
                 Direct Contact
               </h3>
               <div className="space-y-8">
                 <a href="tel:+919619042310" className="flex gap-6 items-start group">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-charcoal transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary group-hover:bg-accent-primary group-hover:text-white transition-all">
                     <Phone size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Give Us a Call</p>
-                    <p className="text-xl group-hover:text-gold transition-colors">+91 96190 42310</p>
+                    <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">Give Us a Call</p>
+                    <p className="text-xl group-hover:text-accent-secondary transition-colors">+91 96190 42310</p>
                   </div>
                 </a>
 
                 <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex gap-6 items-start group">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold group-hover:bg-[#25D366] group-hover:text-white transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary group-hover:bg-[#25D366] group-hover:text-white transition-all">
                     <svg 
                       viewBox="0 0 24 24" 
                       width="20" 
@@ -63,37 +63,37 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">WhatsApp Chat</p>
+                    <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">WhatsApp Chat</p>
                     <p className="text-xl group-hover:text-[#25D366] transition-colors">+91 96190 42310</p>
                   </div>
                 </a>
                 <div className="flex gap-6 items-start">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold">
+                  <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary">
                     <Mail size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Email Us</p>
+                    <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">Email Us</p>
                     <p className="text-xl">concierge@staywillas.com</p>
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gold">
+                  <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary">
                     <MapPin size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Visit Us</p>
+                    <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">Visit Us</p>
                     <p className="text-xl">101, Luxury Plaza, Bandra West, Mumbai</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="p-10 rounded-[32px] bg-gold/5 border border-gold/10">
-              <h4 className="text-xl font-heading mb-4 text-gold italic underline underline-offset-8">Property Owners</h4>
-              <p className="text-white/60 text-sm leading-relaxed mb-6">
+            <div className="p-10 rounded-[32px] bg-accent-primary/5 border border-accent-primary/10">
+              <h4 className="text-xl font-heading mb-4 text-accent-primary italic underline underline-offset-8">Property Owners</h4>
+              <p className="text-text-primary/55 text-sm leading-relaxed mb-6">
                 Want to list your home with us? We&apos;d love to share it with our guests.
               </p>
-              <Button className="w-full bg-gold text-charcoal hover:bg-gold/80 rounded-full font-bold">
+              <Button className="w-full bg-accent-primary text-white hover:bg-accent-secondary rounded-full font-bold">
                 PARTNER WITH US
               </Button>
             </div>
