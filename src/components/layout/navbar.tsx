@@ -29,7 +29,7 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const isHomePage = pathname === "/";
-  const isDarkTheme = isScrolled || !isHomePage;
+  const isDarkTheme = true;
 
   const updateCount = () => {
     try {
@@ -59,7 +59,6 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "/" },
     { name: "Villas", href: "/villas" },
     { name: "Destinations", href: "/destinations" },
     { name: "Experiences", href: "/experiences" },
@@ -75,17 +74,13 @@ const Navbar = () => {
         className={cn(
           "mx-auto transition-all duration-500 ease-in-out flex items-center justify-between gap-6 md:gap-8 w-full",
           isScrolled
-            ? "rounded-none glass shadow-md shadow-charcoal/5 border-b border-cream-border/50 px-6 md:px-8 lg:px-12 py-3 md:py-4"
-            : "max-w-7xl rounded-full px-6 md:px-8 lg:px-12 py-3 md:py-4 " + (
-                isDarkTheme
-                  ? "glass shadow-lg shadow-charcoal/10 border border-cream-border/60"
-                  : "bg-transparent border-transparent"
-              )
+            ? "rounded-none bg-[#F5F2EA]/95 backdrop-blur-md shadow-md border-b border-[#DAA520]/15 px-6 md:px-8 lg:px-12 py-3 md:py-4"
+            : "max-w-[1400px] rounded-full px-6 md:px-8 lg:px-12 py-3 md:py-4 bg-[#F5F2EA]/90 backdrop-blur-md border border-[#DAA520]/20 shadow-xl"
         )}
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
-          <div className="relative w-10 md:w-11 h-10 md:h-11 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
+          <div className="relative w-12 md:w-14 h-12 md:h-14 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
             <img 
               src="/images/stay villa brand logo.png" 
               alt="Stay Willas Logo" 
@@ -94,52 +89,52 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col">
             <span className={cn(
-              "font-heading text-lg md:text-xl tracking-[0.1em] leading-tight transition-colors duration-500 whitespace-nowrap",
-              isDarkTheme ? "text-text-primary" : "text-white"
+              "font-heading text-xl md:text-2xl tracking-widest leading-tight transition-colors duration-500 whitespace-nowrap",
+              isDarkTheme ? "text-brand-navy" : "text-white"
             )}>STAY WILLAS</span>
             <span className={cn(
-              "font-sans text-[9px] md:text-[10px] tracking-[0.4em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
-              isDarkTheme ? "text-text-primary/50" : "text-white/50"
+              "font-sans text-[11px] md:text-[12px] tracking-[0.3em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
+              isDarkTheme ? "text-brand-navy/70" : "text-white/70"
             )}>The Gold Standard</span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center justify-center gap-4 xl:gap-8 flex-1">
+        <div className="hidden lg:flex items-center justify-center gap-3 xl:gap-6 flex-initial min-w-max px-2">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               className={cn(
-                "text-[12px] xl:text-[13px] font-bold transition-all duration-300 tracking-[0.2em] uppercase relative group/link whitespace-nowrap",
+                "text-sm font-semibold transition-all duration-300 tracking-wider relative group/link whitespace-nowrap",
                 isDarkTheme
-                  ? "text-text-primary/70 hover:text-accent-primary"
-                  : "text-white/70 hover:text-white"
+                  ? "text-brand-navy hover:text-brand-gold"
+                  : "text-white hover:text-brand-gold"
               )}
             >
               {link.name}
               <span className={cn(
-                "absolute -bottom-1 left-0 w-0 h-px transition-all duration-300 group-hover/link:w-full",
-                isDarkTheme ? "bg-accent-primary" : "bg-white"
+                "absolute -bottom-1.5 left-0 w-0 h-[2px] transition-all duration-300 group-hover/link:w-full",
+                isDarkTheme ? "bg-brand-gold" : "bg-brand-gold"
               )} />
             </Link>
           ))}
 
           <div className="relative group cursor-pointer">
             <div className={cn(
-              "flex items-center gap-1 text-[12px] xl:text-[13px] font-bold tracking-[0.2em] uppercase transition-all whitespace-nowrap",
+              "flex items-center gap-1 text-sm font-semibold tracking-wider transition-all whitespace-nowrap",
               isDarkTheme
-                ? "text-text-primary/70 hover:text-accent-primary"
-                : "text-white/70 hover:text-white"
+                ? "text-brand-navy hover:text-brand-gold"
+                : "text-white hover:text-brand-gold"
             )}>
-              More <ChevronDown size={12} />
+              More <ChevronDown size={14} />
             </div>
             <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 hidden group-hover:block">
-              <div className="glass border border-border-subtle/60 rounded-2xl p-6 min-w-[180px] shadow-xl shadow-[#2C1F0E]/10">
+              <div className="glass-premium border border-yellow-200/50 rounded-2xl p-6 min-w-[200px] shadow-xl shadow-yellow-900/5">
                 <div className="flex flex-col gap-4">
-                  <Link href="/about" className="text-[12px] font-bold text-text-primary/70 hover:text-accent-primary tracking-widest uppercase transition-colors">About</Link>
-                  <Link href="/partner" className="text-[12px] font-bold text-text-primary/70 hover:text-accent-primary tracking-widest uppercase transition-colors">Partner</Link>
-                  <Link href="/contact" className="text-[12px] font-bold text-text-primary/70 hover:text-accent-primary tracking-widest uppercase transition-colors">Contact</Link>
+                  <Link href="/about" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">About</Link>
+                  <Link href="/partner" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Partner</Link>
+                  <Link href="/contact" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Contact</Link>
                 </div>
               </div>
             </div>
@@ -147,35 +142,35 @@ const Navbar = () => {
         </div>
 
         {/* Actions */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-6 shrink-0">
+        <div className="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-5 shrink-0">
           <a href="tel:+919619042310" className={cn(
             "flex items-center gap-2 transition-colors duration-300 p-1",
-            isDarkTheme ? "text-text-primary/50 hover:text-accent-primary" : "text-white/50 hover:text-white"
+            isDarkTheme ? "text-brand-navy hover:text-brand-gold" : "text-white hover:text-brand-gold"
           )} title="+91 96190 42310">
-            <Phone size={14} className="shrink-0" />
-            <span className="text-[11px] xl:text-[12px] font-bold tracking-widest uppercase whitespace-nowrap hidden 2xl:inline">+91 96190 42310</span>
+            <Phone size={16} className="shrink-0" />
+            <span className="text-[13px] xl:text-[14px] font-semibold tracking-wide whitespace-nowrap hidden 2xl:inline">+91 96190 42310</span>
           </a>
 
           <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className={cn(
             "flex items-center gap-2 transition-colors duration-300 p-1",
-            isDarkTheme ? "text-text-primary/50 hover:text-[#25D366]" : "text-white/50 hover:text-[#25D366]"
+            isDarkTheme ? "text-brand-navy hover:text-[#25D366]" : "text-white hover:text-[#25D366]"
           )} title="WhatsApp Chat">
-            <WhatsAppIcon size={14} className="shrink-0" />
-            <span className="text-[11px] xl:text-[12px] font-bold tracking-widest uppercase whitespace-nowrap hidden 2xl:inline">WhatsApp</span>
+            <WhatsAppIcon size={16} className="shrink-0" />
+            <span className="text-[13px] xl:text-[14px] font-semibold tracking-wide whitespace-nowrap hidden 2xl:inline">WhatsApp</span>
           </a>
 
-          <div className="flex items-center gap-2 lg:gap-3 xl:gap-4">
+          <div className="flex items-center gap-3 lg:gap-4 xl:gap-5">
             <Link 
               href="/wishlist" 
               className={cn(
                 "transition-colors relative group/wish flex items-center justify-center p-2",
-                isDarkTheme ? "text-text-primary/50 hover:text-red-500" : "text-white/50 hover:text-red-400"
+                isDarkTheme ? "text-brand-navy hover:text-red-500" : "text-white hover:text-red-400"
               )}
               title="View Wishlist"
             >
-              <Heart size={18} className="group-hover/wish:scale-110 transition-transform duration-300" />
+              <Heart size={20} className="group-hover/wish:scale-110 transition-transform duration-300" />
               {wishlistCount > 0 && (
-                <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-red-500 text-[10px] font-black text-white flex items-center justify-center border border-bg-primary">
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-[10px] font-black text-white flex items-center justify-center border border-bg-primary">
                   {wishlistCount}
                 </span>
               )}
@@ -186,15 +181,15 @@ const Navbar = () => {
             ) : (
               <SignInButton mode="modal">
                 <Button variant="ghost" className={cn(
-                  "hover:bg-transparent p-2 h-auto",
-                  isDarkTheme ? "text-text-primary/60 hover:text-accent-primary" : "text-white/60 hover:text-white"
+                  "hover:bg-transparent p-2 h-auto text-[14px]",
+                  isDarkTheme ? "text-brand-navy hover:text-brand-gold" : "text-white hover:text-brand-gold"
                 )}>
-                  <User size={18} />
+                  <User size={20} />
                 </Button>
               </SignInButton>
             )}
 
-            <Link href="/villas" className="bg-accent-primary hover:bg-[#1E7A8C] text-bg-primary rounded-full px-4 lg:px-5 py-2.5 lg:py-3 text-[10px] xl:text-[11px] font-black tracking-[0.2em] shadow-[0_0_15px_rgba(27,53,100,0.3)] hover:shadow-[0_0_20px_rgba(30,122,140,0.4)] transition-all duration-300 flex items-center justify-center whitespace-nowrap">
+            <Link href="/villas" className="bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] rounded-full px-4 lg:px-6 py-2.5 lg:py-3 text-[11px] xl:text-[12px] font-black tracking-widest transition-all duration-300 flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg">
               BOOK NOW
             </Link>
           </div>
@@ -206,7 +201,7 @@ const Navbar = () => {
             href="/wishlist" 
             className={cn(
               "transition-colors relative group/wish flex items-center justify-center p-2",
-              isDarkTheme ? "text-text-primary/50 hover:text-red-500" : "text-white/50 hover:text-red-400"
+              isDarkTheme ? "text-brand-navy/50 hover:text-red-500" : "text-white/50 hover:text-red-400"
             )}
             title="View Wishlist"
           >
@@ -221,7 +216,7 @@ const Navbar = () => {
           <button
             className={cn(
               "p-2 transition-colors",
-              isDarkTheme ? "text-text-primary" : "text-white"
+              isDarkTheme ? "text-brand-navy" : "text-white"
             )}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
@@ -245,10 +240,10 @@ const Navbar = () => {
                 <div className="relative w-10 h-10 rounded-full overflow-hidden border border-cream-border">
                   <img src="/images/stay villa brand logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-110" />
                 </div>
-                <span className="font-heading text-2xl tracking-widest text-charcoal">MENU</span>
+                <span className="font-heading text-2xl tracking-widest text-brand-navy">MENU</span>
               </div>
               <button onClick={() => setIsMobileMenuOpen(false)}>
-                <X size={32} className="text-navy" />
+                <X size={32} className="text-brand-navy" />
               </button>
             </div>
 
@@ -257,7 +252,7 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-4xl font-heading text-charcoal hover:text-navy transition-colors"
+                  className="text-4xl font-heading text-brand-navy hover:text-brand-gold transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
@@ -267,18 +262,18 @@ const Navbar = () => {
               <div className="h-px w-full bg-cream-border my-8" />
 
               <div className="flex flex-col gap-4">
-                <a href="tel:+919619042310" className="flex items-center gap-4 text-navy text-xl font-medium">
-                  <Phone size={24} className="text-navy" />
+                <a href="tel:+919619042310" className="flex items-center gap-4 text-brand-navy text-xl font-medium">
+                  <Phone size={24} className="text-brand-navy" />
                   <span>+91 96190 42310</span>
                 </a>
 
-                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-charcoal hover:text-[#25D366] text-xl font-medium transition-colors">
+                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-brand-navy hover:text-[#25D366] text-xl font-medium transition-colors">
                   <WhatsAppIcon size={24} className="text-[#25D366]" />
                   <span>WhatsApp Chat</span>
                 </a>
               </div>
 
-              <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-navy hover:bg-teal text-cream text-center rounded-full w-full py-5 text-base font-black tracking-widest mt-8 shadow-[0_0_15px_rgba(27,53,100,0.3)] transition-all duration-300 block">
+              <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] text-center rounded-full w-full py-5 text-base font-black tracking-widest mt-8 shadow-md hover:shadow-lg transition-all duration-300 block">
                 RESERVE NOW
               </Link>
             </div>

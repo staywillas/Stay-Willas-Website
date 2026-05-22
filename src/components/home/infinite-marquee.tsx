@@ -3,21 +3,23 @@
 import React from "react";
 
 const row1 = [
-  "CRACKLING BONFIRES",
-  "PRIVATE INFINITY POOLS",
-  "CURATED WINE TASTINGS",
-  "MAJESTIC MOUNTAIN ESCAPES",
+  "LUXURY VILLA STAYS",
+  "HEATED IN-VILLA POOLS",
+  "HEATED PLUNGE JACUZZIS",
   "FLOATING BREAKFASTS",
-  "CINEMATIC SUNSETS",
+  "PRIVATE SANDY BEACHES",
+  "GAMES & ENTERTAINMENT ROOMS",
+  "MOONLIT BONFIRES",
 ];
 
 const row2 = [
-  "THE GOLD STANDARD",
-  "UNCOMPROMISING LUXURY",
-  "PRIVATE CHEF SERVICES",
-  "BESPOKE EXPERIENCE CONCIERGE",
-  "HEATED PLUNGE JACUZZIS",
-  "AN UNFORGETTABLE ESCAPE",
+  "PRIVATE CHEF CULINARY SERVICES",
+  "24/7 ULTRA-PREMIUM CONCIERGE",
+  "LUSH GREEN MANICURED LAWNS",
+  "PANORAMIC SUNSET SUITES",
+  "AL FRESCO LUXURY DINING",
+  "WELLNESS & SPA SESSIONS",
+  "MAJESTIC MOUNTAIN ESCAPES",
 ];
 
 export default function InfiniteMarquee() {
@@ -39,17 +41,17 @@ export default function InfiniteMarquee() {
       <div className="relative flex overflow-x-hidden border-y border-white/10 bg-white/5 py-5 backdrop-blur-sm mb-4">
         <div className="flex whitespace-nowrap gap-12 animate-marquee-left">
           {[...row1, ...row1, ...row1].map((item, idx) => (
-            <div key={idx} className="flex items-center gap-12 text-lg md:text-xl lg:text-2xl font-heading tracking-tight font-bold uppercase">
+            <div key={idx} className="flex items-center gap-12 text-lg md:text-xl lg:text-2xl font-heading tracking-wider font-extrabold uppercase">
               {idx % 2 === 0 ? (
-                <span className="text-white hover:text-blue-300 transition-colors duration-500 cursor-default">
+                <span className="text-white hover:text-[#FFB800] transition-colors duration-500 cursor-default">
                   {item}
                 </span>
               ) : (
-                <span className="text-blue-400/60 hover:text-blue-300 transition-colors duration-500 font-medium">
+                <span className="text-[#FFB800] hover:text-white transition-colors duration-500 font-extrabold">
                   {item}
                 </span>
               )}
-              <span className="text-blue-400/80 text-sm md:text-base font-light">✦</span>
+              <span className="text-[#FFB800]/80 text-sm md:text-base font-light">✦</span>
             </div>
           ))}
         </div>
@@ -59,17 +61,17 @@ export default function InfiniteMarquee() {
       <div className="relative flex overflow-x-hidden border-y border-white/10 bg-white/5 py-5 backdrop-blur-sm">
         <div className="flex whitespace-nowrap gap-12 animate-marquee-right">
           {[...row2, ...row2, ...row2].map((item, idx) => (
-            <div key={idx} className="flex items-center gap-12 text-lg md:text-xl lg:text-2xl font-heading tracking-tight font-bold uppercase">
+            <div key={idx} className="flex items-center gap-12 text-lg md:text-xl lg:text-2xl font-heading tracking-wider font-extrabold uppercase">
               {idx % 2 !== 0 ? (
-                <span className="text-white hover:text-blue-300 transition-colors duration-500 cursor-default">
+                <span className="text-white hover:text-[#FFB800] transition-colors duration-500 cursor-default">
                   {item}
                 </span>
               ) : (
-                <span className="text-blue-400/60 hover:text-blue-300 transition-colors duration-500 font-medium">
+                <span className="text-[#FFB800] hover:text-white transition-colors duration-500 font-extrabold">
                   {item}
                 </span>
               )}
-              <span className="text-blue-400/80 text-sm md:text-base font-light">✦</span>
+              <span className="text-[#FFB800]/80 text-sm md:text-base font-light">✦</span>
             </div>
           ))}
         </div>

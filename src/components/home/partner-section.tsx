@@ -74,14 +74,14 @@ const PartnerSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="glass-premium backdrop-blur-xl p-8 rounded-2xl border-blue-200/30 text-center flex flex-col items-center justify-center aspect-square sm:aspect-auto sm:h-56 hover:border-blue-200/50 hover:bg-white/15 transition-all duration-300"
+                className="bg-white/95 backdrop-blur-md p-8 rounded-2xl border border-white/80 shadow-xl text-center flex flex-col items-center justify-center aspect-square sm:aspect-auto sm:h-56 hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1"
               >
-                <div className="w-14 h-14 rounded-full bg-blue-400/20 flex items-center justify-center mb-5 text-blue-200 group-hover:bg-blue-300/30 transition-colors">
+                <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center mb-5 text-blue-600 transition-colors">
                   <benefit.icon size={26} className="group-hover:scale-110 transition-transform" />
                 </div>
-                <div className="text-4xl font-black text-white tracking-tight mb-1">{benefit.value}</div>
-                <div className="text-xs text-blue-200 uppercase tracking-widest font-bold mb-3">{benefit.suffix}</div>
-                <div className="text-sm text-white/70 font-medium">{benefit.title}</div>
+                <div className="text-4xl font-black text-[#1B3564] tracking-tight mb-1">{benefit.value}</div>
+                <div className="text-xs text-blue-600 uppercase tracking-widest font-extrabold mb-3">{benefit.suffix}</div>
+                <div className="text-sm text-[#1B3564]/80 font-bold">{benefit.title}</div>
               </motion.div>
             ))}
             
@@ -90,18 +90,18 @@ const PartnerSection = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1, delay: 0.6 }}
-              className="sm:col-span-3 glass-premium backdrop-blur-xl p-8 rounded-2xl border-blue-200/30 flex items-center justify-between hover:border-blue-200/50 transition-all"
+              className="sm:col-span-3 bg-white/95 backdrop-blur-md p-8 rounded-2xl border border-white/80 shadow-xl flex items-center justify-between hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-blue-400/20 flex items-center justify-center">
-                  <Shield className="text-blue-200" size={24} />
+                <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                  <Shield className="text-blue-600" size={24} />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold tracking-wide">Trusted by 50+ Villa Owners</h4>
-                  <p className="text-blue-100/60 text-xs mt-1">Join the most premium hospitality network.</p>
+                  <h4 className="text-[#1B3564] font-black tracking-wide">Trusted by 50+ Villa Owners</h4>
+                  <p className="text-[#1B3564]/70 text-xs font-semibold mt-1">Join the most premium hospitality network.</p>
                 </div>
               </div>
-              <div className="hidden sm:block text-blue-200 font-bold text-2xl tracking-tight">
+              <div className="hidden sm:block text-blue-600 font-black text-2xl tracking-tight">
                 4.9/5 ⭐
               </div>
             </motion.div>

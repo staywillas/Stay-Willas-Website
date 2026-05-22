@@ -53,3 +53,56 @@ export async function createCheckoutSession(formData: {
     throw new Error("Failed to create checkout session");
   }
 }
+
+export async function getDestinationAvailability(region: string) {
+  try {
+    // 1. Fetch all villas in this region
+    const villas = await prisma.villa.findMany({
+      where: {
+        location: {
+          contains: region,
+          mode: "insensitive",
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const totalVillas = villas.length;
+    if (totalVillas === 0) {
+      return { success: true, bookings: [], totalVillas: 0 };
+    }
+
+    // 2. Fetch all active bookings in this region
+    const bookings = await prisma.booking.findMany({
+      where: {
+        status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
+        villa: {
+          location: {
+            contains: region,
+            mode: "insensitive",
+          },
+        },
+      },
+      select: {
+        checkIn: true,
+        checkOut: true,
+        villaId: true,
+      },
+    });
+
+    return { 
+      success: true, 
+      bookings: bookings.map(b => ({
+        checkIn: b.checkIn.toISOString(),
+        checkOut: b.checkOut.toISOString(),
+        villaId: b.villaId
+      })), 
+      totalVillas 
+    };
+  } catch (error: any) {
+    console.error("Failed to fetch destination availability:", error);
+    return { success: false, error: error.message || "Failed to fetch availability data." };
+  }
+}

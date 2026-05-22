@@ -11,20 +11,20 @@
   --font-heading: var(--font-cormorant);
 
   /* ── Brand Palette (from logo) ─────────────────────── */
-  --color-brand-beige:  #F0E6D0;   /* Warm logo background */
+  --color-brand-beige:  #F5F2EA;   /* Ultra premium beige */
   --color-brand-navy:   #1B3564;   /* Dark navy text/ring */
-  --color-brand-gold:   #E8A817;   /* Amber gold key */
+  --color-brand-gold:   #DAA520;   /* Premium Gold/Yellow */
   --color-brand-sky:    #5CADE2;   /* Sky blue pool */
-  --color-brand-olive:  #6B8E23;   /* Olive garden */
-  --color-brand-charcoal: #2C2C2C; /* Deep text */
+  --color-brand-olive:  #4A5D23;   /* Premium Olive Green */
+  --color-brand-charcoal: #1A1A1A; /* Deep text */
 
   /* Semantic Theme Mappings */
   --color-bg-primary:   var(--color-brand-beige);
-  --color-bg-secondary: #E8DECA;
+  --color-bg-secondary: #EBE5D6;
   --color-border-subtle: #D1C7B3;
   --color-text-primary: var(--color-brand-charcoal);
   --color-text-secondary: #4A4A4A;
-  --color-accent-primary: var(--color-brand-navy);
+  --color-accent-primary: var(--color-brand-olive);
   --color-accent-secondary: var(--color-brand-gold);
   --color-accent-tertiary: var(--color-brand-sky);
   
@@ -76,19 +76,19 @@
 }
 
 :root {
-  --background: #FFFFFF;
-  --foreground: #0F172A;
-  --card: #FFFFFF;
-  --card-foreground: #0F172A;
-  --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
-  --primary: #1B3564;
+  --background: #F5F2EA;
+  --foreground: #1A1A1A;
+  --card: #FDFBF7;
+  --card-foreground: #1A1A1A;
+  --popover: #FDFBF7;
+  --popover-foreground: #1A1A1A;
+  --primary: #4A5D23;
   --primary-foreground: #FFFFFF;
-  --secondary: #F8FAFC;
-  --secondary-foreground: #0F172A;
-  --muted: #F8FAFC;
-  --muted-foreground: #64748B;
-  --accent: #2563EB;
+  --secondary: #EBE5D6;
+  --secondary-foreground: #1A1A1A;
+  --muted: #EBE5D6;
+  --muted-foreground: #4A4A4A;
+  --accent: #DAA520;
   --accent-foreground: #FFFFFF;
   --destructive: oklch(0.6 0.2 25);
   --border: #E2E8F0;
@@ -337,6 +337,18 @@ img {
 @keyframes rotate-slow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+@keyframes ken-burns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.08) translate(-1%, -0.5%);
+  }
+}
+
+.animate-ken-burns {
+  animation: ken-burns 16s ease-out infinite alternate;
 }
 
 .animate-float {

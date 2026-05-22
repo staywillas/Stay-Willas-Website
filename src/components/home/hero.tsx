@@ -1,45 +1,173 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { 
+  ChevronRight, 
+  ChevronLeft, 
+  Shield, 
+  CheckCircle, 
+  Heart, 
+  BellRing,
+  Calendar as CalendarIcon
+} from "lucide-react";
+import { 
+  format, 
+  isBefore, 
+  isAfter, 
+  isSameDay, 
+  startOfDay, 
+  startOfMonth, 
+  endOfMonth, 
+  eachDayOfInterval, 
+  getDay, 
+  addMonths, 
+  subMonths, 
+  parseISO 
+} from "date-fns";
+import { getDestinationAvailability } from "@/app/actions/booking";
 
 import "swiper/css";
 import "swiper/css/navigation";
 
 const slides = [
   {
-    image: "/images/hero-villa.png",
-    tag: "Our Handpicked Homes",
-    title: "Your Perfect",
-    titleItalic: "Getaway",
-    desc: "We've found the most beautiful homes in Maharashtra so you don't have to. Come in, relax, and make yourself at home."
+    image: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&q=80&w=2000",
+    tag: "BEACHSIDE STAYS",
+    title: "Memories made",
+    titleItalic: "by the sea",
+    desc: "From sun-kissed days to cozy nights,\nexperience the best of beachside living."
   },
   {
-    image: "/assets/villas/angled-house/main.webp",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000",
+    tag: "Our Handpicked Stays",
+    title: "Your Perfect",
+    titleItalic: "Getaway",
+    desc: "From sun-kissed days to cozy nights,\nexperience the best of beachside living in our private estates."
+  },
+  {
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000",
     tag: "Infinity Pools & Modern Design",
     title: "The Iconic",
     titleItalic: "Angled House",
-    desc: "Where modern architecture meets slow luxury — our stunning designer villa in Lonavala, crafted for unforgettable escapes."
-  },
-  {
-    image: "/images/villa-alibaug.png",
-    tag: "Beachside Stays",
-    title: "Steps from the",
-    titleItalic: "Sand",
-    desc: "Slow down and listen to the waves at our gorgeous beachfront houses in Alibaug."
+    desc: "Where modern architecture meets slow luxury —\nour stunning designer villa in Lonavala, crafted for unforgettable escapes."
   }
 ];
 
 const Hero = () => {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [destination, setDestination] = useState("Alibaug");
+  const [checkIn, setCheckIn] = useState<Date | null>(null);
+  const [checkOut, setCheckOut] = useState<Date | null>(null);
+  const [guests, setGuests] = useState("2");
+  
+  // Custom Calendar Popover state
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [calendarViewMonth, setCalendarViewMonth] = useState<Date>(new Date());
+  const [bookingsData, setBookingsData] = useState<any[]>([]);
+  const [totalVillas, setTotalVillas] = useState<number>(0);
+  const [isLoadingBookings, setIsLoadingBookings] = useState(false);
+
+  // Sync destination with live Prisma database availability
+  useEffect(() => {
+    let active = true;
+    const fetchAvailability = async () => {
+      if (!destination) return;
+      setIsLoadingBookings(true);
+      try {
+        const res = await getDestinationAvailability(destination);
+        if (active && res.success && res.bookings) {
+          setBookingsData(res.bookings);
+          setTotalVillas(res.totalVillas);
+        }
+      } catch (err) {
+        console.error("Failed to load availability:", err);
+      } finally {
+        if (active) setIsLoadingBookings(false);
+      }
+    };
+    fetchAvailability();
+    
+    // Clear dates when destination changes to prevent illegal/cross-region reservations
+    setCheckIn(null);
+    setCheckOut(null);
+    
+    return () => {
+      active = false;
+    };
+  }, [destination]);
+
+  // Helper: check if a calendar date is fully booked across all villas in the region
+  const isDateFullyBooked = (date: Date) => {
+    if (totalVillas === 0) return false;
+    const targetDay = startOfDay(date);
+    
+    const activeBookingsCount = bookingsData.filter(booking => {
+      const checkInDate = startOfDay(parseISO(booking.checkIn));
+      const checkOutDate = startOfDay(parseISO(booking.checkOut));
+      // Overlap condition: booking.checkIn <= targetDay < booking.checkOut
+      return (
+        (checkInDate.getTime() <= targetDay.getTime()) && 
+        (targetDay.getTime() < checkOutDate.getTime())
+      );
+    }).length;
+    
+    return activeBookingsCount >= totalVillas;
+  };
+
+  // Select Date handler with premium validation rules
+  const handleDateSelect = (day: Date) => {
+    if (!checkIn || (checkIn && checkOut)) {
+      setCheckIn(day);
+      setCheckOut(null);
+    } else {
+      if (isBefore(day, checkIn)) {
+        setCheckIn(day);
+        setCheckOut(null);
+      } else if (isSameDay(day, checkIn)) {
+        setCheckIn(null);
+      } else {
+        // Enforce range safety: No fully booked night between checkIn and checkOut
+        let hasBookedDayInRange = false;
+        let temp = new Date(checkIn);
+        while (isBefore(temp, day)) {
+          if (isDateFullyBooked(temp)) {
+            hasBookedDayInRange = true;
+            break;
+          }
+          temp = new Date(temp.setDate(temp.getDate() + 1));
+        }
+
+        if (hasBookedDayInRange) {
+          setCheckIn(day);
+          setCheckOut(null);
+        } else {
+          setCheckOut(day);
+          // Smooth closing delay for premium user feedback
+          setTimeout(() => setIsCalendarOpen(false), 200);
+        }
+      }
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (destination) params.set("region", destination.toLowerCase());
+    if (checkIn) params.set("checkIn", format(checkIn, "yyyy-MM-dd"));
+    if (checkOut) params.set("checkOut", format(checkOut, "yyyy-MM-dd"));
+    if (guests) params.set("guests", guests);
+    router.push(`/villas?${params.toString()}`);
+  };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="relative h-screen w-full overflow-hidden bg-[#F5F2EA]">
       <Swiper
         modules={[Autoplay, Navigation]}
         speed={1200}
@@ -67,50 +195,58 @@ const Hero = () => {
                   quality={75}
                   className="object-cover animate-ken-burns"
                 />
-                {/* Premium overlay with multiple layers */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/60" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/20" />
+                {/* Premium soft off-white vignetted overlay (left side only behind text) */}
+                <div className="absolute inset-y-0 left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-r from-[#F5F2EA] via-[#F5F2EA]/95 to-transparent z-1" />
               </div>
 
               {/* Slide content */}
-              <div className="relative z-10 h-full flex flex-col justify-start pt-28 md:pt-32 lg:pt-40 pb-16 px-6 md:px-12 lg:px-24">
-                <div className="max-w-5xl">
+              <div className="relative z-10 h-full flex flex-col justify-center pt-16 pb-36 px-6 md:px-12 lg:px-24">
+                <div className="max-w-2xl">
                   <AnimatePresence mode="wait">
                     {isActive && (
                       <motion.div
                         key={index}
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 30 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="flex flex-col items-start"
                       >
-                        {/* Tag — Premium Badge */}
-                        <span className="inline-block text-[#3B82F6] bg-white/10 backdrop-blur-xl border border-white/20 font-bold tracking-[0.4em] uppercase text-xs mb-8 px-6 py-3 rounded-full block w-fit shadow-lg shadow-blue-500/20 hover:bg-white/15 transition-all duration-300">
-                          ✨ {slide.tag}
+                        {/* Tag — Premium White Badge */}
+                        <span className="inline-flex items-center gap-1.5 bg-white/95 border border-slate-200/50 text-[#2563EB] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-6 px-5 py-2.5 rounded-full shadow-sm w-fit">
+                          <span className="text-[#FF9F0A] text-xs">★</span> {slide.tag}
                         </span>
                         
-                        {/* Main Heading - Premium Typography */}
-                        <h1 className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-heading text-white leading-[0.95] mb-6 font-bold tracking-tighter">
+                        {/* Main Heading - Refined Serif Typography */}
+                        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.1] mb-6 font-normal tracking-wide">
                           {slide.title} <br /> 
-                          <span className="italic text-gradient-yellow pr-4 font-heading font-medium bg-gradient-to-r from-blue-300 via-blue-200 to-cyan-300 bg-clip-text text-transparent">{slide.titleItalic}</span>
+                          <span className="relative inline-block pb-1">
+                            <span className="italic text-[#2563EB] font-heading font-light tracking-wide">{slide.titleItalic}</span>
+                            {/* Beautiful gold horizontal line accent directly under the first half of the text (like "by the") */}
+                            <span className="absolute left-0 bottom-0 w-[45%] h-[3px] bg-[#FFB800] rounded-full" />
+                          </span>
                         </h1>
                         
-                        {/* Subtitle - Refined */}
-                        <p className="text-lg md:text-xl text-white/90 font-light max-w-2xl mb-10 leading-relaxed tracking-wide">
+                        {/* Subtitle - Refined dark gray */}
+                        <p className="text-sm md:text-base text-slate-600/90 font-light max-w-md mb-8 leading-relaxed whitespace-pre-line">
                           {slide.desc}
                         </p>
 
-                        {/* CTA Section - Enhanced */}
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                          <Link href="/villas" className="group relative bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-full px-8 py-4 text-sm md:text-base tracking-widest uppercase h-auto flex items-center justify-center shadow-2xl shadow-blue-500/40 hover:shadow-2xl hover:shadow-blue-600/50 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                            <span className="relative z-10 flex items-center gap-2">
-                              EXPLORE COLLECTION
-                              <ChevronRight className="transition-transform group-hover:translate-x-1" size={16} />
-                            </span>
+                        {/* CTA Section - Aligned with screenshot 3 */}
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8 w-full sm:w-auto mt-2">
+                          <Link 
+                            href="/villas" 
+                            className="group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-8 py-4 text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 hover:-translate-y-0.5 text-center justify-center"
+                          >
+                            EXPLORE VILLAS
+                            <ChevronRight className="transition-transform group-hover:translate-x-1 stroke-[3]" size={13} />
                           </Link>
-                          <Link href="/contact" className="flex items-center gap-3 text-white/80 hover:text-white font-medium tracking-widest uppercase text-sm transition-all duration-300 border-b border-white/40 hover:border-white pb-1 hover:gap-4">
-                            Talk to Concierge
-                            <ChevronRight size={14} />
+                          <Link 
+                            href="/contact" 
+                            className="group flex items-center justify-center sm:justify-start gap-1.5 text-[#1B3564] font-bold tracking-widest uppercase text-xs transition-all duration-300 border-b-2 border-[#FFB800] pb-1 hover:border-[#FFB800]/70 w-fit mx-auto sm:mx-0"
+                          >
+                            TALK TO CONCIERGE
+                            <ChevronRight size={13} className="text-[#FFB800] transition-transform group-hover:translate-x-0.5 stroke-[3]" />
                           </Link>
                         </div>
                       </motion.div>
@@ -121,23 +257,253 @@ const Hero = () => {
             </SwiperSlide>
           );
         })}
-
-        {/* Swiper navigation arrows */}
-        <div className="absolute bottom-12 right-32 z-20 hidden md:flex items-center gap-4">
-          <button className="hero-prev w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-blue-500 hover:border-blue-500 transition-all cursor-pointer backdrop-blur-md hover:shadow-lg hover:shadow-blue-500/40 group">
-            <ChevronLeft size={20} className="group-hover:scale-110 transition-transform" />
-          </button>
-          <button className="hero-next w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-blue-500 hover:border-blue-500 transition-all cursor-pointer backdrop-blur-md hover:shadow-lg hover:shadow-blue-500/40 group">
-            <ChevronRight size={20} className="group-hover:scale-110 transition-transform" />
-          </button>
-        </div>
       </Swiper>
-      
-      {/* Rotated branding line */}
-      <div className="absolute top-1/2 right-0 -translate-y-1/2 hidden lg:flex flex-col gap-10 pr-10 items-center z-20">
-        <div className="w-px h-24 bg-white/20" />
-        <span className="rotate-90 text-white/30 text-[10px] tracking-[0.5em] uppercase whitespace-nowrap font-light">Luxury Escapes</span>
-        <div className="w-px h-24 bg-white/20" />
+
+      {/* Floating Side Arrow Buttons - Premium Navy */}
+      <button className="hero-prev absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
+        <ChevronLeft size={24} className="group-hover:scale-110 transition-transform" />
+      </button>
+      <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
+        <ChevronRight size={24} className="group-hover:scale-110 transition-transform" />
+      </button>
+
+      {/* Booking Form Capsule & Highlights Row */}
+      <div className="absolute bottom-6 left-4 right-4 md:left-8 md:right-8 lg:left-16 lg:right-16 z-30 mx-auto max-w-6xl">
+        <form onSubmit={handleSearch} className="bg-white border border-slate-100 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_15px_50px_rgba(0,0,0,0.06)] p-6 md:p-4 lg:pl-10 lg:pr-3 lg:py-3 flex flex-col lg:flex-row items-center justify-between gap-6 relative">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 w-full lg:w-[80%] items-center">
+            {/* Where to? */}
+            <div className="col-span-2 md:col-span-1 flex flex-col gap-1.5 px-4 md:border-r md:border-slate-200/60">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Where to?</label>
+              <select
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                className="bg-transparent text-sm font-bold text-slate-700 outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
+              >
+                <option value="Alibaug">Alibaug</option>
+                <option value="Lonavala">Lonavala</option>
+                <option value="Nashik">Nashik</option>
+                <option value="Karjat">Karjat</option>
+              </select>
+            </div>
+
+            {/* Check-in */}
+            <div 
+              onClick={() => setIsCalendarOpen(true)}
+              className="col-span-1 md:col-span-1 flex flex-col gap-1.5 px-4 pt-2 md:pt-0 cursor-pointer select-none group md:border-r md:border-slate-200/60"
+            >
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-[#2563EB] transition-colors flex items-center gap-1.5">
+                <CalendarIcon size={10} className="text-slate-400 group-hover:text-[#2563EB] transition-colors" />
+                Check-in
+              </label>
+              <div className="text-sm font-bold text-slate-700 h-5 flex items-center">
+                {checkIn ? format(checkIn, "MMM dd, yyyy") : <span className="text-slate-400 font-normal">Add dates</span>}
+              </div>
+            </div>
+
+            {/* Check-out */}
+            <div 
+              onClick={() => setIsCalendarOpen(true)}
+              className="col-span-1 md:col-span-1 flex flex-col gap-1.5 px-4 pt-2 md:pt-0 cursor-pointer select-none group md:border-r md:border-slate-200/60"
+            >
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-[#2563EB] transition-colors flex items-center gap-1.5">
+                <CalendarIcon size={10} className="text-slate-400 group-hover:text-[#2563EB] transition-colors" />
+                Check-out
+              </label>
+              <div className="text-sm font-bold text-slate-700 h-5 flex items-center">
+                {checkOut ? format(checkOut, "MMM dd, yyyy") : <span className="text-slate-400 font-normal">Add dates</span>}
+              </div>
+            </div>
+
+            {/* Guests */}
+            <div className="col-span-2 md:col-span-1 flex flex-col gap-1.5 px-4 pt-2 md:pt-0">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Guests</label>
+              <select
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+                className="bg-transparent text-sm font-bold text-slate-700 outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
+              >
+                <option value="1">1 Guest</option>
+                <option value="2">2 Guests</option>
+                <option value="3">3 Guests</option>
+                <option value="4">4 Guests</option>
+                <option value="5+">5+ Guests</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Gold button on the right */}
+          <button
+            type="submit"
+            className="w-full lg:w-auto bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] font-black text-xs tracking-widest uppercase rounded-full px-10 py-4.5 shadow-md shadow-yellow-500/10 hover:shadow-lg transition-all duration-300 cursor-pointer border-none"
+          >
+            CHECK AVAILABILITY
+          </button>
+
+          {/* Custom Premium React Calendar Popover */}
+          <AnimatePresence>
+            {isCalendarOpen && (
+              <>
+                {/* Backdrop overlay: dark blurred on mobile, transparent on desktop */}
+                <div 
+                  className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none"
+                  onClick={() => setIsCalendarOpen(false)}
+                />
+                
+                <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 md:absolute md:top-auto md:bottom-full md:left-[20%] md:translate-y-0 md:mb-4 z-50 w-[calc(100vw-2rem)] sm:w-[380px] md:w-[400px] bg-[#F5F2EA] border border-[#1B3564]/10 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.18)] p-6 backdrop-blur-md">
+                  {/* Calendar Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <button
+                      type="button"
+                      onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))}
+                      className="w-8 h-8 rounded-full border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 transition-colors cursor-pointer"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    
+                    <span className="text-[#1B3564] font-heading font-bold text-sm md:text-base tracking-wide select-none">
+                      {format(calendarViewMonth, "MMMM yyyy")}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))}
+                      className="w-8 h-8 rounded-full border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 transition-colors cursor-pointer"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+
+                  {/* Weekdays Row */}
+                  <div className="grid grid-cols-7 text-center mb-2">
+                    {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
+                      <span 
+                        key={idx} 
+                        className="text-[10px] font-extrabold text-[#FFB800] uppercase tracking-widest select-none"
+                      >
+                        {day}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Days Grid */}
+                  <div className="grid grid-cols-7 gap-1 md:gap-1.5">
+                    {/* Padding blank spaces */}
+                    {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => (
+                      <div key={`empty-${i}`} />
+                    ))}
+                    
+                    {/* Actual Days */}
+                    {eachDayOfInterval({
+                      start: startOfMonth(calendarViewMonth),
+                      end: endOfMonth(calendarViewMonth)
+                    }).map((day) => {
+                      const isPast = isBefore(day, startOfDay(new Date()));
+                      const isBooked = isDateFullyBooked(day);
+                      const isSelectedCheckIn = checkIn && isSameDay(day, checkIn);
+                      const isSelectedCheckOut = checkOut && isSameDay(day, checkOut);
+                      const isInRange = checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
+                      
+                      const isDisabled = isPast || isBooked;
+
+                      return (
+                        <button
+                          key={day.toString()}
+                          type="button"
+                          disabled={isDisabled}
+                          onClick={() => handleDateSelect(day)}
+                          className={`
+                            w-8 h-8 md:w-9 md:h-9 rounded-full text-xs font-bold flex flex-col items-center justify-center transition-all relative
+                            ${isDisabled ? 'text-slate-400/40 line-through cursor-not-allowed pointer-events-none' : ''}
+                            ${isBooked ? 'bg-[#FFB800]/5' : ''}
+                            ${isSelectedCheckIn || isSelectedCheckOut 
+                              ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 scale-105 z-10 hover:bg-[#1D4ED8]' 
+                              : ''}
+                            ${isInRange 
+                              ? 'bg-[#2563EB]/10 text-[#2563EB]' 
+                              : ''}
+                            ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange 
+                              ? 'text-[#1B3564] hover:bg-[#1B3564]/10 cursor-pointer' 
+                              : ''}
+                          `}
+                        >
+                          <span>{format(day, "d")}</span>
+                          {/* Booked dot */}
+                          {isBooked && !isPast && (
+                            <span className="w-1 h-1 rounded-full bg-[#FFB800] mt-0.5" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Gold Separator */}
+                  <div className="h-px bg-[#FFB800]/20 my-4" />
+
+                  {/* Legend & Buttons */}
+                  <div className="flex flex-col gap-3">
+                    {/* Legend */}
+                    <div className="flex items-center justify-between text-[9px] text-slate-500 font-bold select-none px-1">
+                      <div className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
+                        <span>Selected</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-[#FFB800]" />
+                        <span>Fully Booked</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-slate-300 line-through" />
+                        <span>Unavailable</span>
+                      </div>
+                    </div>
+
+                    {/* Bottom Action Buttons */}
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#1B3564]/5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCheckIn(null);
+                          setCheckOut(null);
+                        }}
+                        className="text-xs text-[#1B3564]/70 hover:text-[#1B3564] underline font-extrabold tracking-wider transition-colors cursor-pointer"
+                      >
+                        CLEAR DATES
+                      </button>
+                      
+                      <button
+                        type="button"
+                        onClick={() => setIsCalendarOpen(false)}
+                        className="px-5 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-full text-xs font-black tracking-widest transition-all shadow-md shadow-blue-500/10 cursor-pointer hover:shadow-lg"
+                      >
+                        DONE
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </AnimatePresence>
+        </form>
+
+        {/* Highlights Row below the capsule */}
+        <div className="flex flex-wrap justify-center sm:justify-between items-center gap-4 w-full mt-4 px-6 md:px-10">
+          <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
+            <Shield size={14} className="text-[#FFB800]" />
+            Best Price Guarantee
+          </span>
+          <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
+            <CheckCircle size={14} className="text-[#FFB800]" />
+            Flexible Cancellation
+          </span>
+          <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
+            <Heart size={14} className="text-[#FFB800]" />
+            Trusted by Guests
+          </span>
+          <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
+            <BellRing size={14} className="text-[#FFB800]" />
+            24/7 Concierge
+          </span>
+        </div>
       </div>
     </section>
   );
