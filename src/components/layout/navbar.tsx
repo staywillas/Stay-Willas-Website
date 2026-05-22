@@ -245,47 +245,47 @@ const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 xl:hidden bg-cream flex flex-col p-12"
+            className="fixed inset-0 z-40 xl:hidden bg-cream flex flex-col p-6 sm:p-10"
           >
-            <div className="flex justify-between items-center mb-16">
+            <div className="flex justify-between items-center mb-10">
               <div className="flex items-center gap-3">
                 <div className="relative w-10 h-10 rounded-full overflow-hidden border border-cream-border">
                   <img src="/images/stay villa brand logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-110" />
                 </div>
-                <span className="font-heading text-2xl tracking-widest text-brand-navy">MENU</span>
+                <span className="font-heading text-xl tracking-widest text-brand-navy font-bold">MENU</span>
               </div>
-              <button onClick={() => setIsMobileMenuOpen(false)}>
-                <X size={32} className="text-brand-navy" />
+              <button onClick={() => setIsMobileMenuOpen(false)} className="cursor-pointer">
+                <X size={26} className="text-brand-navy" />
               </button>
             </div>
 
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-5">
               {[...navLinks, { name: "About", href: "/about" }, { name: "Contact", href: "/contact" }].map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-4xl font-heading text-brand-navy hover:text-brand-gold transition-colors"
+                  className="text-2xl font-heading text-brand-navy hover:text-brand-gold transition-colors font-bold tracking-wide"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
                 </Link>
               ))}
 
-              <div className="h-px w-full bg-cream-border my-8" />
+              <div className="h-px w-full bg-slate-200/60 my-6" />
 
-              <div className="flex flex-col gap-4">
-                <a href="tel:+919619042310" className="flex items-center gap-4 text-brand-navy text-xl font-medium">
-                  <Phone size={24} className="text-brand-navy" />
+              <div className="flex flex-col gap-3.5">
+                <a href="tel:+919619042310" className="flex items-center gap-3 text-brand-navy/90 text-base font-bold tracking-wide hover:text-brand-gold transition-colors">
+                  <Phone size={18} className="text-brand-navy" />
                   <span>+91 96190 42310</span>
                 </a>
 
-                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-brand-navy hover:text-[#25D366] text-xl font-medium transition-colors">
-                  <WhatsAppIcon size={24} className="text-[#25D366]" />
+                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-brand-navy hover:text-[#25D366] text-base font-bold tracking-wide transition-colors">
+                  <WhatsAppIcon size={18} className="text-[#25D366]" />
                   <span>WhatsApp Chat</span>
                 </a>
               </div>
 
-              <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] text-center rounded-full w-full py-5 text-base font-black tracking-widest mt-8 shadow-md hover:shadow-lg transition-all duration-300 block">
+              <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] text-center rounded-full w-full py-3.5 text-xs font-black tracking-widest mt-6 shadow-md hover:shadow-lg transition-all duration-300 block">
                 RESERVE NOW
               </Link>
             </div>
