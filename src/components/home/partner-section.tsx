@@ -47,7 +47,7 @@ const PartnerSection = () => {
             </span>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-white mb-10 leading-tight">
               Own a Villa? <br />
-              <span className="italic bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 bg-clip-text text-transparent">Let's Share It</span> <br />
+              <span className="italic bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 bg-clip-text text-transparent pr-2 inline-block">Let's Share It</span> <br />
               With The World.
             </h2>
             <p className="text-white/80 text-lg mb-12 max-w-xl leading-relaxed font-light">

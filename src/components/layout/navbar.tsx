@@ -8,6 +8,8 @@ import { Menu, X, User, Phone, ChevronDown, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
+import { useLenis } from "lenis/react";
+
 
 const WhatsAppIcon = ({ size = 16, className = "" }: { size?: number; className?: string }) => (
   <svg
@@ -28,7 +30,14 @@ const Navbar = () => {
   const { isSignedIn } = useUser();
   const pathname = usePathname();
 
+  useLenis((lenis) => {
+    if (lenis) {
+      setIsScrolled(lenis.scroll > 30);
+    }
+  });
+
   const isHomePage = pathname === "/";
+
   const isDarkTheme = true;
 
   const updateCount = () => {
@@ -59,17 +68,20 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
+    { name: "Home", href: "/" },
     { name: "Villas", href: "/villas" },
     { name: "Destinations", href: "/destinations" },
     { name: "Experiences", href: "/experiences" },
-    { name: "Packages", href: "/packages" },
   ];
 
   return (
-    <nav className={cn(
-      "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out w-full",
-      isScrolled ? "px-0 py-0" : "px-4 md:px-8 lg:px-12 py-4 md:py-6"
-    )}>
+    <nav 
+      className={cn(
+        "fixed top-0 left-0 right-0 transition-all duration-500 ease-in-out w-full",
+        isScrolled ? "px-0 py-0" : "px-4 md:px-8 lg:px-12 py-4 md:py-6"
+      )}
+      style={{ zIndex: 99999 }}
+    >
       <div
         className={cn(
           "mx-auto transition-all duration-500 ease-in-out flex items-center justify-between gap-6 md:gap-8 w-full",
@@ -93,14 +105,14 @@ const Navbar = () => {
               isDarkTheme ? "text-brand-navy" : "text-white"
             )}>STAY WILLAS</span>
             <span className={cn(
-              "font-sans text-[11px] md:text-[12px] tracking-[0.3em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
+              "font-sans text-[11px] md:text-[12px] tracking-[0.14em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
               isDarkTheme ? "text-brand-navy/70" : "text-white/70"
-            )}>The Gold Standard</span>
+            )}>stay ! Relax ! Repeat !</span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center justify-center gap-3 xl:gap-6 flex-initial min-w-max px-2">
+        <div className="hidden xl:flex items-center justify-center gap-2.5 xl:gap-4.5 flex-initial min-w-max px-2">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -142,7 +154,7 @@ const Navbar = () => {
         </div>
 
         {/* Actions */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-5 shrink-0">
+        <div className="hidden md:flex items-center gap-1.5 lg:gap-3 xl:gap-4 shrink-0">
           <a href="tel:+919619042310" className={cn(
             "flex items-center gap-2 transition-colors duration-300 p-1",
             isDarkTheme ? "text-brand-navy hover:text-brand-gold" : "text-white hover:text-brand-gold"
@@ -159,7 +171,7 @@ const Navbar = () => {
             <span className="text-[13px] xl:text-[14px] font-semibold tracking-wide whitespace-nowrap hidden 2xl:inline">WhatsApp</span>
           </a>
 
-          <div className="flex items-center gap-3 lg:gap-4 xl:gap-5">
+          <div className="flex items-center gap-2.5 lg:gap-3 xl:gap-4">
             <Link 
               href="/wishlist" 
               className={cn(
@@ -196,7 +208,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Toggle & Wishlist */}
-        <div className="lg:hidden flex items-center gap-2 md:gap-3 shrink-0">
+        <div className="xl:hidden flex items-center gap-2 md:gap-3 shrink-0">
           <Link 
             href="/wishlist" 
             className={cn(
@@ -233,7 +245,7 @@ const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 lg:hidden bg-cream flex flex-col p-12"
+            className="fixed inset-0 z-40 xl:hidden bg-cream flex flex-col p-12"
           >
             <div className="flex justify-between items-center mb-16">
               <div className="flex items-center gap-3">

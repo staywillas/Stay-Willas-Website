@@ -53,7 +53,7 @@ const Experiences = () => {
               Curated Experiences
             </span>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-text-primary mt-6">
-              Find Your <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">Perfect Trip</span>
+              Find Your <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent pr-2 inline-block">Perfect Trip</span>
             </h2>
             <p className="text-lg text-text-primary/60 mt-6 max-w-2xl mx-auto">
               From poolside relaxation to mountain adventures, we have the perfect villa for every mood.
@@ -62,14 +62,14 @@ const Experiences = () => {
         </div>
 
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[800px] md:h-[600px]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:h-[600px]">
           {/* Large Featured Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="md:col-span-8 relative overflow-hidden rounded-3xl group cursor-pointer shadow-lg hover:shadow-elevated transition-all duration-500"
+            className="h-[350px] md:h-auto md:col-span-8 relative overflow-hidden rounded-3xl group cursor-pointer shadow-lg hover:shadow-elevated transition-all duration-500"
           >
             <Image
               src={categories[0].image}
@@ -100,7 +100,7 @@ const Experiences = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="relative flex-1 overflow-hidden rounded-3xl group cursor-pointer shadow-md hover:shadow-lg transition-all duration-500"
+                className="h-[350px] md:h-auto relative flex-1 overflow-hidden rounded-3xl group cursor-pointer shadow-md hover:shadow-lg transition-all duration-500"
               >
                 <Image
                   src={cat.image}

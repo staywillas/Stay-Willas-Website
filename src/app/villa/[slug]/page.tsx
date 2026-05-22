@@ -23,7 +23,13 @@ import {
   AnimatedPoolIcon,
   AnimatedBonfireIcon,
   AnimatedChefIcon,
-  AnimatedMountainIcon
+  AnimatedMountainIcon,
+  AnimatedWaterfallIcon,
+  AnimatedGlassFrontageIcon,
+  AnimatedLightingIcon,
+  AnimatedLoungingIcon,
+  AnimatedBalconyIcon,
+  AnimatedLivingHallIcon
 } from "@/components/ui/animated-amenity-icons";
 
 export const dynamic = "force-dynamic";
@@ -86,6 +92,13 @@ const amenityIconMap: { [key: string]: React.ComponentType<any> } = {
   "Open-air Lounge Pavilions": CheckCircle2,
   "Beach Volley Net": Award,
   "Jacuzzi in Master Bedroom": AnimatedPoolIcon,
+  "Waterfall Feature": AnimatedWaterfallIcon,
+  "Panoramic Glass Frontage": AnimatedGlassFrontageIcon,
+  "Modern warm lighting": AnimatedLightingIcon,
+  "Outdoor lounging spaces": AnimatedLoungingIcon,
+  "Living Hall": AnimatedLivingHallIcon,
+  "3 Beds": Bed,
+  "2 Balconies": AnimatedBalconyIcon,
 };
 
 const defaultRules = [
@@ -142,10 +155,27 @@ export default async function VillaDetailPage({ params }: PageProps) {
     guests: villa.guests,
     bedrooms: villa.bedrooms,
     bathrooms: villa.bathrooms,
-    amenities: villa.amenities.map((name) => ({
-      name,
-      icon: amenityIconMap[name] || CheckCircle2,
-    })),
+    amenities: villa.amenities.map((name) => {
+      let icon = amenityIconMap[name];
+      if (!icon) {
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes("bed")) icon = Bed;
+        else if (lowerName.includes("balcon")) icon = AnimatedBalconyIcon;
+        else if (lowerName.includes("pool")) icon = AnimatedPoolIcon;
+        else if (lowerName.includes("chef") || lowerName.includes("grill")) icon = AnimatedChefIcon;
+        else if (lowerName.includes("light")) icon = AnimatedLightingIcon;
+        else if (lowerName.includes("wifi") || lowerName.includes("wi-fi")) icon = Wifi;
+        else if (lowerName.includes("ac ") || lowerName.includes("air cond")) icon = Wind;
+        else if (lowerName.includes("lounge") || lowerName.includes("outdoor")) icon = AnimatedLoungingIcon;
+        else if (lowerName.includes("hall") || lowerName.includes("living")) icon = AnimatedLivingHallIcon;
+        else if (lowerName.includes("waterfall")) icon = AnimatedWaterfallIcon;
+        else if (lowerName.includes("glass") || lowerName.includes("panoramic")) icon = AnimatedGlassFrontageIcon;
+      }
+      return {
+        name,
+        icon: icon || CheckCircle2,
+      };
+    }),
     rules: defaultRules,
   };
 

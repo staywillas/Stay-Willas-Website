@@ -103,7 +103,7 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
                         <Star 
                           key={i} 
                           size={12} 
-                          className={i < review.rating ? "fill-[#2563EB] text-accent-primary" : "text-[#E2E8F0]"} 
+                          className={i < review.rating ? "fill-accent-secondary text-accent-secondary" : "text-[#E2E8F0]"} 
                         />
                       ))}
                     </div>
@@ -119,34 +119,34 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
 
         {/* The form to submit a review - sticky on scroll so it stays in view while reading */}
         <div className="lg:w-1/3 w-full">
-          <div className="glass-dark border border-white/10 rounded-[32px] p-6 sm:p-8 text-white sticky top-32 shadow-xl shadow-[#1B3564]/10">
-            <h3 className="text-2xl font-heading mb-8 text-white">
+          <div className="glass-dark border border-border-subtle/50 rounded-[32px] p-6 sm:p-8 text-brand-navy sticky top-32 shadow-xl shadow-[#1B3564]/5">
+            <h3 className="text-2xl font-heading mb-8 text-brand-navy">
               Share Your <span className="italic text-accent-primary">Story</span>
             </h3>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               {!isSignedIn && (
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-white/50 block font-bold">Your Name</label>
+                  <label className="text-[10px] uppercase tracking-widest text-brand-navy/60 block font-bold">Your Name</label>
                   <input
                     type="text"
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
                     placeholder="Enter your name..."
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-accent-primary/50 transition-all text-sm text-white placeholder:text-white/30"
+                    className="w-full bg-white/60 border border-border-subtle rounded-2xl px-5 py-3 outline-none focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/10 transition-all text-sm text-brand-navy placeholder:text-brand-navy/35"
                     required
                   />
                 </div>
               )}
 
               {isSignedIn && user && (
-                <div className="text-[10px] text-white/50 uppercase tracking-widest block font-bold">
+                <div className="text-[10px] text-brand-navy/60 uppercase tracking-widest block font-bold">
                   Posting as <span className="text-accent-primary font-black">{user.fullName || "Anonymous Guest"}</span>
                 </div>
               )}
 
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-white/50 block mb-3 font-bold">Your Rating</label>
+                <label className="text-[10px] uppercase tracking-widest text-brand-navy/60 block mb-3 font-bold">Your Rating</label>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -157,7 +157,7 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
                     >
                       <Star 
                         size={24} 
-                        className={star <= rating ? "fill-[#2563EB] text-accent-primary" : "text-white/20 hover:text-white/40"} 
+                        className={star <= rating ? "fill-accent-secondary text-accent-secondary" : "text-brand-navy/20 hover:text-brand-navy/40"} 
                       />
                     </button>
                   ))}
@@ -165,13 +165,13 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-white/50 block font-bold">Your Experience</label>
+                <label className="text-[10px] uppercase tracking-widest text-brand-navy/60 block font-bold">Your Experience</label>
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   rows={4}
                   placeholder="Describe your stay..."
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-accent-primary/50 transition-all text-sm text-white placeholder:text-white/30 resize-none"
+                  className="w-full bg-white/60 border border-border-subtle rounded-2xl px-5 py-3 outline-none focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/10 transition-all text-sm text-brand-navy placeholder:text-brand-navy/35 resize-none"
                   required
                 />
               </div>
@@ -179,7 +179,7 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
               <button 
                 type="submit"
                 disabled={isSubmitting || !comment || (!isSignedIn && !guestName.trim())}
-                className="w-full bg-accent-primary hover:bg-accent-primary/90 disabled:bg-accent-primary/40 disabled:text-text-primary/40 text-text-primary rounded-full py-4 font-bold tracking-widest flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 shadow-md shadow-[#2563EB]/10"
+                className="w-full bg-accent-primary hover:bg-accent-primary/95 disabled:bg-accent-primary/40 disabled:text-white/40 text-white rounded-full py-4 font-bold tracking-widest flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 shadow-md shadow-accent-primary/20"
               >
                 {isSubmitting ? (
                   <Loader2 className="animate-spin" size={16} />

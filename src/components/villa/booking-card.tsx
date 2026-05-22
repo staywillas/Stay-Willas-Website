@@ -71,7 +71,7 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
   };
 
   return (
-    <div className="bg-bg-primary border border-border-subtle rounded-3xl p-8 sticky top-32 shadow-[0_10px_40px_rgba(44,31,14,0.1)]">
+    <div className="bg-bg-primary border border-border-subtle rounded-3xl p-6 md:p-8 sticky top-32 shadow-[0_10px_40px_rgba(44,31,14,0.1)]">
       <div className="flex items-end justify-between mb-8">
         <div>
           <span className="text-3xl font-heading text-text-primary">₹{price}</span>

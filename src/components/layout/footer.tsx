@@ -59,8 +59,7 @@ const Footer = () => {
               {[
                 { name: "All Villas", href: "/villas" },
                 { name: "Destinations", href: "/destinations" },
-                { name: "Experiences", href: "/experiences" },
-                { name: "Special Packages", href: "/packages" }
+                { name: "Experiences", href: "/experiences" }
               ].map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-white/60 hover:text-blue-300 transition-colors duration-300 text-sm font-medium">
@@ -120,7 +119,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-3.5 group">
                 <Mail className="text-blue-300 shrink-0 group-hover:scale-110 transition-transform" size={18} />
-                <a href="mailto:concierge@staywillas.com" className="text-white/70 hover:text-blue-300 transition-colors text-sm font-medium">concierge@staywillas.com</a>
+                <a href="mailto:staywillas@gmail.com" className="text-white/70 hover:text-blue-300 transition-colors text-sm font-medium">staywillas@gmail.com</a>
               </div>
             </div>
           </div>

@@ -87,7 +87,7 @@ const DestinationShowcase = () => {
   }, []);
 
   return (
-    <section className="py-32 bg-gradient-to-b from-[#4A5D23] via-[#2D3D16] to-[#16210A] relative overflow-hidden">
+    <section className="py-32 bg-gradient-to-b from-[#1B3564] via-[#0F1E36] to-[#070F1B] relative overflow-hidden">
       {/* Elegant Gold Wave Lines - Left Boundary Overlay */}
       <div className="absolute left-0 top-0 bottom-0 w-64 opacity-20 pointer-events-none select-none z-0">
         <svg className="w-full h-full text-[#DAA520]" viewBox="0 0 200 800" fill="none" xmlns="http://www.w3.org/2000/svg">

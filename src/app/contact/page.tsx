@@ -73,7 +73,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">Email Us</p>
-                    <p className="text-xl">concierge@staywillas.com</p>
+                    <a href="mailto:staywillas@gmail.com" className="text-xl hover:text-accent-secondary transition-colors">staywillas@gmail.com</a>
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">

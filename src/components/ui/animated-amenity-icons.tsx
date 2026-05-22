@@ -245,3 +245,195 @@ export const AnimatedMountainIcon = ({ className = "w-5 h-5" }: { className?: st
     </svg>
   );
 };
+
+// 5. Animated Waterfall Icon
+export const AnimatedWaterfallIcon = ({ className = "w-5 h-5" }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <style>{`
+        .waterflow-1 { animation: flow-down 1.2s infinite linear; }
+        .waterflow-2 { animation: flow-down 1.2s infinite linear 0.4s; }
+        .waterflow-3 { animation: flow-down 1.2s infinite linear 0.8s; }
+        @keyframes flow-down {
+          0% { stroke-dashoffset: 12; }
+          100% { stroke-dashoffset: 0; }
+        }
+      `}</style>
+      {/* Cliff */}
+      <path d="M2 6h6v14" stroke="#444" />
+      {/* Waterfall lines */}
+      <path className="waterflow-1" d="M8 7v10" stroke="#2563EB" strokeDasharray="4 4" />
+      <path className="waterflow-2" d="M10 6v11" stroke="#3b82f6" strokeDasharray="4 4" />
+      <path className="waterflow-3" d="M12 8v9" stroke="#60a5fa" strokeDasharray="4 4" />
+      {/* Splash waves */}
+      <path d="M6 18c2-0.5 4-0.5 6 0s4 0.5 6 0" stroke="#3b82f6" />
+      <path d="M5 21c3-0.5 6-0.5 9 0s6 0.5 8 0" />
+    </svg>
+  );
+};
+
+// 6. Animated Panoramic Glass Frontage Icon
+export const AnimatedGlassFrontageIcon = ({ className = "w-5 h-5" }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <style>{`
+        .glass-shine { animation: shine-sweep 3s ease-in-out infinite; }
+        @keyframes shine-sweep {
+          0%, 100% { opacity: 0.2; transform: translateX(-4px); }
+          50% { opacity: 0.8; transform: translateX(4px); }
+        }
+      `}</style>
+      {/* Window frame */}
+      <rect x="3" y="3" width="18" height="18" rx="2" fill="rgba(197, 160, 89, 0.02)" />
+      <path d="M9 3v18M15 3v18M3 11h18" />
+      {/* Diagonal shine line */}
+      <path className="glass-shine" d="M5 5l4 4M11 5l3 3M17 13l3 3" stroke="#2563EB" strokeWidth="1.5" />
+    </svg>
+  );
+};
+
+// 7. Animated Modern Warm Lighting Icon
+export const AnimatedLightingIcon = ({ className = "w-5 h-5" }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <style>{`
+        .warm-glow { animation: pulse-glow 2s ease-in-out infinite alternate; }
+        @keyframes pulse-glow {
+          0% { transform: scale(0.9); opacity: 0.4; stroke: #eab308; }
+          100% { transform: scale(1.1); opacity: 1; stroke: #FFCC00; filter: drop-shadow(0 0 2px #FFCC00); }
+        }
+      `}</style>
+      {/* Lightbulb shape */}
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .4 2.2 1.5 3.1.7.7 1.3 1.5 1.5 2.5" />
+      <path d="M9 18h6M10 22h4" />
+      {/* Glow Rays */}
+      <line className="warm-glow" x1="12" y1="2" x2="12" y2="4" />
+      <line className="warm-glow" x1="5" y1="5" x2="6.5" y2="6.5" />
+      <line className="warm-glow" x1="2" y1="12" x2="4" y2="12" />
+      <line className="warm-glow" x1="20" y1="12" x2="22" y2="12" />
+      <line className="warm-glow" x1="19" y1="5" x2="17.5" y2="6.5" />
+    </svg>
+  );
+};
+
+// 8. Animated Outdoor Lounging Icon
+export const AnimatedLoungingIcon = ({ className = "w-5 h-5" }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <style>{`
+        .breeze-sway { animation: sway 3s ease-in-out infinite alternate; transform-origin: bottom left; }
+        @keyframes sway {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(3deg); }
+        }
+      `}</style>
+      {/* Palm tree sway */}
+      <path className="breeze-sway" d="M17 18c-1-3-1.5-6.5-1-10 1-0.2 2-0.5 2.5-1M16 8c0.5-2 1.5-3 3-3M16 8c-1.5-2-3-2-4.5-1.5" stroke="#2563EB" />
+      {/* Lounge Chair */}
+      <path d="M3 16h6l4-5h7l2 5" />
+      <path d="M9 16l2-6" />
+      <path d="M16 11l-2 5" stroke="#2563EB" />
+    </svg>
+  );
+};
+
+// 9. Animated Balcony Icon
+export const AnimatedBalconyIcon = ({ className = "w-5 h-5" }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <style>{`
+        .balcony-door { animation: door-swing 4s ease-in-out infinite alternate; transform-origin: left center; }
+        @keyframes door-swing {
+          0% { transform: rotateY(0deg); }
+          100% { transform: rotateY(-30deg); }
+        }
+      `}</style>
+      {/* Balcony Railings */}
+      <path d="M3 14h18v6H3z" fill="rgba(197,160,89,0.03)" />
+      <path d="M6 14v6M10 14v6M14 14v6M18 14v6" />
+      {/* Balcony Door Frame */}
+      <rect x="6" y="2" width="12" height="12" rx="1" stroke="#444" />
+      {/* Open Door glass */}
+      <path className="balcony-door" d="M12 3v10" stroke="#2563EB" />
+    </svg>
+  );
+};
+
+// 10. Animated Living Hall Icon
+export const AnimatedLivingHallIcon = ({ className = "w-5 h-5" }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <style>{`
+        .lamp-light { animation: light-flicker 4s infinite alternate; }
+        @keyframes light-flicker {
+          0%, 100% { opacity: 0.15; }
+          50% { opacity: 0.35; }
+        }
+      `}</style>
+      {/* Sofa / Couch */}
+      <path d="M3 13v5a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-5" />
+      <path d="M3 15h18" />
+      <path d="M6 13h12v-2a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2z" fill="rgba(197, 160, 89, 0.02)" />
+      {/* Cozy floor lamp next to it */}
+      <path d="M18 5v14" stroke="#444" />
+      <path d="M16 5h4l-1-2h-2z" fill="#FFCC00" />
+      {/* Light cone */}
+      <path className="lamp-light" d="M14 13l4-8 4 8z" fill="rgba(255,204,0,0.2)" stroke="none" />
+    </svg>
+  );
+};
+

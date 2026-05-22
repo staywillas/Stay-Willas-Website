@@ -46,7 +46,7 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
               Handpicked Properties
             </span>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-text-primary mt-6">
-              Places We <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">Love</span>
+              Places We <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent pr-2 inline-block">Love</span>
             </h2>
             <p className="text-lg text-text-primary/65 mt-8">
               Every villa in our collection has been carefully selected for its unique charm, 

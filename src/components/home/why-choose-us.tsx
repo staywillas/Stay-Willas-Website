@@ -43,7 +43,7 @@ const WhyChooseUs = () => {
               Why Choose Us
             </span>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-text-primary mt-6">
-              We Care About <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">Your Stay</span>
+              We Care About <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent pr-2 inline-block">Your Stay</span>
             </h2>
             <p className="text-lg text-text-primary/65 mt-6 max-w-2xl mx-auto">
               Experience uncompromising luxury with genuine hospitality and attention to every detail.
