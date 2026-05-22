@@ -173,8 +173,10 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#F5F2EA]">
-      <Swiper
+    <section className="relative h-auto lg:h-screen w-full lg:overflow-hidden bg-[#F5F2EA]">
+      {/* Swiper & Controls Container */}
+      <div className="relative h-[65vh] lg:h-full w-full overflow-hidden">
+        <Swiper
         modules={[Autoplay, Navigation]}
         speed={1200}
         autoplay={{ delay: 5000, disableOnInteraction: false }}
@@ -206,7 +208,7 @@ const Hero = () => {
               </div>
 
               {/* Slide content */}
-              <div className="relative z-10 h-full flex flex-col justify-center pt-16 pb-36 px-6 md:px-12 lg:px-24">
+              <div className="relative z-10 h-full flex flex-col justify-center pt-16 pb-12 lg:pb-36 px-6 md:px-12 lg:px-24">
                 <div className="max-w-2xl">
                   <AnimatePresence mode="wait">
                     {isActive && (
@@ -272,10 +274,11 @@ const Hero = () => {
       <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
         <ChevronRight size={24} className="group-hover:scale-110 transition-transform" />
       </button>
+    </div>
 
-      {/* Booking Form Capsule & Highlights Row */}
-      <div className="absolute bottom-24 sm:bottom-28 md:bottom-8 lg:bottom-6 left-4 right-4 md:left-8 md:right-8 lg:left-16 lg:right-16 z-30 mx-auto max-w-6xl">
-        <form onSubmit={handleSearch} className="bg-white border border-slate-100 rounded-[1.8rem] md:rounded-[2.5rem] shadow-[0_15px_50px_rgba(0,0,0,0.08)] p-5 md:p-4 lg:pl-10 lg:pr-3 lg:py-3 flex flex-col lg:flex-row items-center justify-between gap-4 md:gap-6 relative">
+    {/* Booking Form Capsule & Highlights Row */}
+    <div className="relative lg:absolute lg:bottom-6 lg:left-16 lg:right-16 z-30 mx-auto max-w-6xl w-full px-4 lg:px-0 py-6 lg:py-0 bg-[#F5F2EA] lg:bg-transparent">
+      <form onSubmit={handleSearch} className="bg-white border border-slate-100 rounded-[1.8rem] md:rounded-[2.5rem] shadow-[0_15px_50px_rgba(0,0,0,0.08)] p-5 md:p-4 lg:pl-10 lg:pr-3 lg:py-3 flex flex-col lg:flex-row items-center justify-between gap-4 md:gap-6 relative">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-0 w-full lg:w-[80%] items-center">
             {/* WHERE TO? */}
             <div className="col-span-2 lg:col-span-1 flex items-center justify-between w-full pb-3 border-b border-slate-100 lg:border-none lg:pb-0 lg:px-4 lg:border-r lg:border-slate-200/60">
