@@ -66,7 +66,7 @@ const PartnerSection = () => {
           </motion.div>
 
           {/* Right Benefits Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-2.5 sm:gap-6">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={benefit.title}
@@ -74,14 +74,15 @@ const PartnerSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="bg-white/95 backdrop-blur-md p-8 rounded-2xl border border-white/80 shadow-xl text-center flex flex-col items-center justify-center aspect-square sm:aspect-auto sm:h-56 hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1"
+                className="bg-white/95 backdrop-blur-md p-3 sm:p-8 rounded-xl sm:rounded-2xl border border-white/80 shadow-lg sm:shadow-xl text-center flex flex-col items-center justify-center aspect-square sm:aspect-auto sm:h-56 hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1"
               >
-                <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center mb-5 text-blue-600 transition-colors">
-                  <benefit.icon size={26} className="group-hover:scale-110 transition-transform" />
+                <div className="w-9 h-9 sm:w-14 sm:h-14 rounded-full bg-blue-50 flex items-center justify-center mb-2.5 sm:mb-5 text-blue-600 transition-colors shrink-0">
+                  <benefit.icon size={18} className="group-hover:scale-110 transition-transform sm:hidden" />
+                  <benefit.icon size={26} className="group-hover:scale-110 transition-transform hidden sm:block" />
                 </div>
-                <div className="text-4xl font-black text-[#1B3564] tracking-tight mb-1">{benefit.value}</div>
-                <div className="text-xs text-blue-600 uppercase tracking-widest font-extrabold mb-3">{benefit.suffix}</div>
-                <div className="text-sm text-[#1B3564]/80 font-bold">{benefit.title}</div>
+                <div className="text-lg sm:text-4xl font-black text-[#1B3564] tracking-tight mb-0.5 sm:mb-1">{benefit.value}</div>
+                <div className="text-[7px] sm:text-xs text-blue-600 uppercase tracking-widest font-extrabold mb-1.5 sm:mb-3 leading-none">{benefit.suffix}</div>
+                <div className="text-[9px] sm:text-sm text-[#1B3564]/80 font-bold leading-tight">{benefit.title}</div>
               </motion.div>
             ))}
             
@@ -90,18 +91,19 @@ const PartnerSection = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1, delay: 0.6 }}
-              className="sm:col-span-3 bg-white/95 backdrop-blur-md p-8 rounded-2xl border border-white/80 shadow-xl flex items-center justify-between hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1"
+              className="col-span-3 bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-xl sm:rounded-2xl border border-white/80 shadow-lg sm:shadow-xl flex items-center justify-between hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1"
             >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                  <Shield className="text-blue-600" size={24} />
+              <div className="flex items-center gap-2.5 sm:gap-4">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+                  <Shield className="text-blue-600 sm:hidden" size={18} />
+                  <Shield className="text-blue-600 hidden sm:block" size={24} />
                 </div>
-                <div>
-                  <h4 className="text-[#1B3564] font-black tracking-wide">Trusted by 50+ Villa Owners</h4>
-                  <p className="text-[#1B3564]/70 text-xs font-semibold mt-1">Join the most premium hospitality network.</p>
+                <div className="text-left">
+                  <h4 className="text-[#1B3564] font-black tracking-wide text-xs sm:text-base leading-tight">Trusted by 50+ Owners</h4>
+                  <p className="text-[#1B3564]/70 text-[9px] sm:text-xs font-semibold mt-0.5 leading-tight">Join our premium hospitality network.</p>
                 </div>
               </div>
-              <div className="hidden sm:block text-blue-600 font-black text-2xl tracking-tight">
+              <div className="text-blue-600 font-black text-xs sm:text-2xl tracking-tight shrink-0 ml-2">
                 4.9/5 ⭐
               </div>
             </motion.div>
