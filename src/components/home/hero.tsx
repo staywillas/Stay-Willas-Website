@@ -14,7 +14,13 @@ import {
   CheckCircle, 
   Heart, 
   BellRing,
-  Calendar as CalendarIcon
+  Calendar as CalendarIcon,
+  MapPin,
+  ChevronDown,
+  ArrowRight,
+  Award,
+  ShieldCheck,
+  Headset
 } from "lucide-react";
 import { 
   format, 
@@ -41,7 +47,7 @@ const slides = [
     tag: "BEACHSIDE STAYS",
     title: "Memories made",
     titleItalic: "by the sea",
-    desc: "From sun-kissed days to cozy nights,\nexperience the best of beachside living."
+    desc: "From sun-kissed days to cozy nights,\nfind your perfect seaside hideaway."
   },
   {
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000",
@@ -195,8 +201,8 @@ const Hero = () => {
                   quality={75}
                   className="object-cover animate-ken-burns"
                 />
-                {/* Premium soft off-white vignetted overlay (left side only behind text) */}
-                <div className="absolute inset-y-0 left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-r from-[#F5F2EA] via-[#F5F2EA]/95 to-transparent z-1" />
+                {/* Premium soft off-white vignetted overlay (bottom-up on mobile, left-to-right on desktop) */}
+                <div className="absolute inset-0 md:inset-y-0 md:left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-t from-white/90 via-white/40 to-transparent md:bg-gradient-to-r md:from-[#F5F2EA] md:via-[#F5F2EA]/95 md:to-transparent z-1" />
               </div>
 
               {/* Slide content */}
@@ -213,17 +219,17 @@ const Hero = () => {
                         className="flex flex-col items-start"
                       >
                         {/* Tag — Premium White Badge */}
-                        <span className="inline-flex items-center gap-1.5 bg-white/95 border border-slate-200/50 text-[#2563EB] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-6 px-5 py-2.5 rounded-full shadow-sm w-fit">
-                          <span className="text-[#FF9F0A] text-xs">★</span> {slide.tag}
+                        <span className="inline-flex items-center gap-1.5 bg-white/95 border border-slate-200/50 text-[#E2A63B] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-6 px-5 py-2.5 rounded-full shadow-sm w-fit">
+                          <span className="text-[#E2A63B] text-xs">★</span> {slide.tag}
                         </span>
                         
                         {/* Main Heading - Refined Serif Typography */}
                         <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.1] mb-6 font-normal tracking-wide">
                           {slide.title} <br /> 
                           <span className="relative inline-block pb-1">
-                            <span className="italic text-[#2563EB] font-heading font-light tracking-wide">{slide.titleItalic}</span>
+                            <span className="italic text-[#E2A63B] font-heading font-light tracking-wide">{slide.titleItalic}</span>
                             {/* Beautiful gold horizontal line accent directly under the first half of the text (like "by the") */}
-                            <span className="absolute left-0 bottom-0 w-[45%] h-[3px] bg-[#FFB800] rounded-full" />
+                            <span className="absolute left-0 bottom-0 w-[45%] h-[3px] bg-[#E2A63B] rounded-full" />
                           </span>
                         </h1>
                         
@@ -233,7 +239,7 @@ const Hero = () => {
                         </p>
 
                         {/* CTA Section - Aligned with screenshot 3 */}
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8 w-full sm:w-auto mt-2">
+                        <div className="hidden md:flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8 w-full sm:w-auto mt-2">
                           <Link 
                             href="/villas" 
                             className="group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-8 py-4 text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 hover:-translate-y-0.5 text-center justify-center"
@@ -268,75 +274,91 @@ const Hero = () => {
       </button>
 
       {/* Booking Form Capsule & Highlights Row */}
-      <div className="absolute bottom-6 left-4 right-4 md:left-8 md:right-8 lg:left-16 lg:right-16 z-30 mx-auto max-w-6xl">
-        <form onSubmit={handleSearch} className="bg-white border border-slate-100 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_15px_50px_rgba(0,0,0,0.06)] p-6 md:p-4 lg:pl-10 lg:pr-3 lg:py-3 flex flex-col lg:flex-row items-center justify-between gap-6 relative">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 w-full lg:w-[80%] items-center">
-            {/* Where to? */}
-            <div className="col-span-2 md:col-span-1 flex flex-col gap-1.5 px-4 md:border-r md:border-slate-200/60">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Where to?</label>
-              <select
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                className="bg-transparent text-sm font-bold text-slate-700 outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
-              >
-                <option value="Alibaug">Alibaug</option>
-                <option value="Lonavala">Lonavala</option>
-                <option value="Nashik">Nashik</option>
-                <option value="Karjat">Karjat</option>
-              </select>
-            </div>
-
-            {/* Check-in */}
-            <div 
-              onClick={() => setIsCalendarOpen(true)}
-              className="col-span-1 md:col-span-1 flex flex-col gap-1.5 px-4 pt-2 md:pt-0 cursor-pointer select-none group md:border-r md:border-slate-200/60"
-            >
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-[#2563EB] transition-colors flex items-center gap-1.5">
-                <CalendarIcon size={10} className="text-slate-400 group-hover:text-[#2563EB] transition-colors" />
-                Check-in
-              </label>
-              <div className="text-sm font-bold text-slate-700 h-5 flex items-center">
-                {checkIn ? format(checkIn, "MMM dd, yyyy") : <span className="text-slate-400 font-normal">Add dates</span>}
+      <div className="absolute bottom-24 sm:bottom-28 md:bottom-8 lg:bottom-6 left-4 right-4 md:left-8 md:right-8 lg:left-16 lg:right-16 z-30 mx-auto max-w-6xl">
+        <form onSubmit={handleSearch} className="bg-white border border-slate-100 rounded-[1.8rem] md:rounded-[2.5rem] shadow-[0_15px_50px_rgba(0,0,0,0.08)] p-5 md:p-4 lg:pl-10 lg:pr-3 lg:py-3 flex flex-col lg:flex-row items-center justify-between gap-4 md:gap-6 relative">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-0 w-full lg:w-[80%] items-center">
+            {/* WHERE TO? */}
+            <div className="col-span-2 lg:col-span-1 flex items-center justify-between w-full pb-3 border-b border-slate-100 lg:border-none lg:pb-0 lg:px-4 lg:border-r lg:border-slate-200/60">
+              <div className="flex flex-col gap-1 w-full text-left">
+                <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest">WHERE TO?</label>
+                <select
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  className="bg-transparent text-lg font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
+                >
+                  <option value="Alibaug">Alibaug</option>
+                  <option value="Lonavala">Lonavala</option>
+                  <option value="Nashik">Nashik</option>
+                  <option value="Karjat">Karjat</option>
+                </select>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-[#1B3564]/5 flex items-center justify-center text-[#1B3564] shrink-0 lg:hidden">
+                <MapPin size={14} className="stroke-[2.5]" />
               </div>
             </div>
 
-            {/* Check-out */}
-            <div 
-              onClick={() => setIsCalendarOpen(true)}
-              className="col-span-1 md:col-span-1 flex flex-col gap-1.5 px-4 pt-2 md:pt-0 cursor-pointer select-none group md:border-r md:border-slate-200/60"
-            >
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-[#2563EB] transition-colors flex items-center gap-1.5">
-                <CalendarIcon size={10} className="text-slate-400 group-hover:text-[#2563EB] transition-colors" />
-                Check-out
-              </label>
-              <div className="text-sm font-bold text-slate-700 h-5 flex items-center">
-                {checkOut ? format(checkOut, "MMM dd, yyyy") : <span className="text-slate-400 font-normal">Add dates</span>}
+            {/* CHECK-IN & CHECK-OUT */}
+            <div className="col-span-2 lg:col-span-2 grid grid-cols-2 gap-0 pb-3 border-b border-slate-100 lg:border-none lg:pb-0">
+              {/* CHECK-IN */}
+              <div 
+                onClick={() => setIsCalendarOpen(true)}
+                className="flex flex-col gap-1 px-4 cursor-pointer select-none group border-r border-slate-200/60 text-left"
+              >
+                <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest group-hover:text-[#E2A63B] transition-colors flex items-center gap-1.5">
+                  <CalendarIcon size={10} className="text-[#1B3564]/40 group-hover:text-[#E2A63B] transition-colors" />
+                  CHECK-IN
+                </label>
+                <div className="text-base font-bold text-[#1B3564] h-5 flex items-center">
+                  {checkIn ? format(checkIn, "MMM dd") : <span className="text-[#1B3564]/40 font-normal">Add dates</span>}
+                </div>
+              </div>
+
+              {/* CHECK-OUT */}
+              <div 
+                onClick={() => setIsCalendarOpen(true)}
+                className="flex flex-col gap-1 px-4 cursor-pointer select-none group text-left"
+              >
+                <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest group-hover:text-[#E2A63B] transition-colors flex items-center gap-1.5">
+                  <CalendarIcon size={10} className="text-[#1B3564]/40 group-hover:text-[#E2A63B] transition-colors" />
+                  CHECK-OUT
+                </label>
+                <div className="text-base font-bold text-[#1B3564] h-5 flex items-center">
+                  {checkOut ? format(checkOut, "MMM dd") : <span className="text-[#1B3564]/40 font-normal">Add dates</span>}
+                </div>
               </div>
             </div>
 
-            {/* Guests */}
-            <div className="col-span-2 md:col-span-1 flex flex-col gap-1.5 px-4 pt-2 md:pt-0">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Guests</label>
-              <select
-                value={guests}
-                onChange={(e) => setGuests(e.target.value)}
-                className="bg-transparent text-sm font-bold text-slate-700 outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
-              >
-                <option value="1">1 Guest</option>
-                <option value="2">2 Guests</option>
-                <option value="3">3 Guests</option>
-                <option value="4">4 Guests</option>
-                <option value="5+">5+ Guests</option>
-              </select>
+            {/* GUESTS */}
+            <div className="col-span-2 lg:col-span-1 flex items-center justify-between w-full pt-1 lg:pt-0 lg:px-4">
+              <div className="flex flex-col gap-1 w-full text-left">
+                <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest">GUESTS</label>
+                <select
+                  value={guests}
+                  onChange={(e) => setGuests(e.target.value)}
+                  className="bg-transparent text-lg font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
+                >
+                  <option value="1">1 Guest</option>
+                  <option value="2">2 Guests</option>
+                  <option value="3">3 Guests</option>
+                  <option value="4">4 Guests</option>
+                  <option value="5+">5+ Guests</option>
+                </select>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-[#1B3564]/5 flex items-center justify-center text-[#1B3564] shrink-0 lg:hidden">
+                <ChevronDown size={14} className="stroke-[2.5]" />
+              </div>
             </div>
           </div>
 
-          {/* Gold button on the right */}
+          {/* Premium Gold CTA button */}
           <button
             type="submit"
-            className="w-full lg:w-auto bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] font-black text-xs tracking-widest uppercase rounded-full px-10 py-4.5 shadow-md shadow-yellow-500/10 hover:shadow-lg transition-all duration-300 cursor-pointer border-none"
+            className="w-full lg:w-auto bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-xs tracking-widest uppercase rounded-full pl-10 pr-4 py-3 shadow-lg shadow-yellow-500/10 hover:shadow-xl transition-all duration-300 cursor-pointer border-none flex items-center justify-between gap-6 shrink-0"
           >
-            CHECK AVAILABILITY
+            <span>CHECK AVAILABILITY</span>
+            <div className="w-8 h-8 rounded-full bg-[#1B3564] text-white flex items-center justify-center shrink-0">
+              <ArrowRight size={16} className="stroke-[2.5]" />
+            </div>
           </button>
 
           {/* Custom Premium React Calendar Popover */}
@@ -485,8 +507,39 @@ const Hero = () => {
           </AnimatePresence>
         </form>
 
-        {/* Highlights Row below the capsule */}
-        <div className="flex flex-wrap justify-center sm:justify-between items-center gap-4 w-full mt-4 px-6 md:px-10">
+        {/* Mobile Premium Translucent Highlights Capsule Card */}
+        <div className="lg:hidden bg-white/85 backdrop-blur-md border border-white/60 rounded-[1.8rem] px-5 py-4 flex justify-between items-center w-full mt-4 shadow-[0_10px_30px_rgba(44,31,14,0.08)]">
+          {/* Handpicked Villas */}
+          <div className="flex flex-col items-center text-center flex-1">
+            <Award size={18} className="text-[#A27B5C] mb-1.5" />
+            <span className="text-[7.5px] font-black text-[#1B3564] tracking-[0.12em] uppercase leading-tight">
+              Handpicked<br />Villas
+            </span>
+          </div>
+          
+          <div className="w-px h-8 bg-slate-200/80" />
+          
+          {/* Safe & Secure */}
+          <div className="flex flex-col items-center text-center flex-1">
+            <ShieldCheck size={18} className="text-[#A27B5C] mb-1.5" />
+            <span className="text-[7.5px] font-black text-[#1B3564] tracking-[0.12em] uppercase leading-tight">
+              Safe & Secure<br />Stays
+            </span>
+          </div>
+          
+          <div className="w-px h-8 bg-slate-200/80" />
+          
+          {/* 24/7 Support */}
+          <div className="flex flex-col items-center text-center flex-1">
+            <Headset size={18} className="text-[#A27B5C] mb-1.5" />
+            <span className="text-[7.5px] font-black text-[#1B3564] tracking-[0.12em] uppercase leading-tight">
+              24/7 Guest<br />Support
+            </span>
+          </div>
+        </div>
+
+        {/* Highlights Row below the capsule - Desktop Only */}
+        <div className="hidden lg:flex flex-wrap justify-center sm:justify-between items-center gap-4 w-full mt-4 px-6 md:px-10">
           <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
             <Shield size={14} className="text-[#FFB800]" />
             Best Price Guarantee
@@ -503,9 +556,9 @@ const Hero = () => {
             <BellRing size={14} className="text-[#FFB800]" />
             24/7 Concierge
           </span>
-        </div>
       </div>
-    </section>
+    </div>
+  </section>
   );
 };
 

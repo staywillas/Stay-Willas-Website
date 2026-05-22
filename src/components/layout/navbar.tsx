@@ -77,8 +77,12 @@ const Navbar = () => {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 transition-all duration-500 ease-in-out w-full",
-        isScrolled ? "px-0 py-0" : "px-4 md:px-8 lg:px-12 py-4 md:py-6"
+        "fixed transition-all duration-500 ease-in-out",
+        isScrolled 
+          ? "top-0 left-0 right-0 w-full px-0 py-0" 
+          : "top-0 left-0 right-0 w-full px-4 md:px-8 lg:px-12 py-4 md:py-6",
+        // Mobile override: always float like a card at the top
+        "max-xl:top-4 max-xl:left-4 max-xl:right-4 max-xl:w-auto max-xl:p-0"
       )}
       style={{ zIndex: 99999 }}
     >
@@ -87,12 +91,14 @@ const Navbar = () => {
           "mx-auto transition-all duration-500 ease-in-out flex items-center justify-between gap-6 md:gap-8 w-full",
           isScrolled
             ? "rounded-none bg-[#F5F2EA]/95 backdrop-blur-md shadow-md border-b border-[#DAA520]/15 px-6 md:px-8 lg:px-12 py-3 md:py-4"
-            : "max-w-[1400px] rounded-full px-6 md:px-8 lg:px-12 py-3 md:py-4 bg-[#F5F2EA]/90 backdrop-blur-md border border-[#DAA520]/20 shadow-xl"
+            : "max-w-[1400px] rounded-full px-6 md:px-8 lg:px-12 py-3 md:py-4 bg-[#F5F2EA]/90 backdrop-blur-md border border-[#DAA520]/20 shadow-xl",
+          // Mobile overrides: always rounded-full, with clean spacing
+          "max-xl:rounded-full max-xl:bg-[#F5F2EA]/90 max-xl:border max-xl:border-[#DAA520]/20 max-xl:shadow-xl max-xl:px-4 max-xl:py-2.5"
         )}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
-          <div className="relative w-12 md:w-14 h-12 md:h-14 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+          <div className="relative w-9 h-9 sm:w-12 md:w-14 h-9 sm:h-12 md:h-14 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
             <img 
               src="/images/stay villa brand logo.png" 
               alt="Stay Willas Logo" 
@@ -101,11 +107,11 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col">
             <span className={cn(
-              "font-heading text-xl md:text-2xl tracking-widest leading-tight transition-colors duration-500 whitespace-nowrap",
+              "font-heading text-sm sm:text-xl md:text-2xl tracking-widest leading-tight transition-colors duration-500 whitespace-nowrap",
               isDarkTheme ? "text-brand-navy" : "text-white"
             )}>STAY WILLAS</span>
             <span className={cn(
-              "font-sans text-[11px] md:text-[12px] tracking-[0.14em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
+              "font-sans text-[7px] sm:text-[11px] md:text-[12px] tracking-[0.14em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
               isDarkTheme ? "text-brand-navy/70" : "text-white/70"
             )}>stay ! Relax ! Repeat !</span>
           </div>
@@ -208,31 +214,25 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Toggle & Wishlist */}
-        <div className="xl:hidden flex items-center gap-2 md:gap-3 shrink-0">
+        <div className="xl:hidden flex items-center gap-1 sm:gap-2 shrink-0">
           <Link 
             href="/wishlist" 
-            className={cn(
-              "transition-colors relative group/wish flex items-center justify-center p-2",
-              isDarkTheme ? "text-brand-navy/50 hover:text-red-500" : "text-white/50 hover:text-red-400"
-            )}
+            className="transition-colors relative group/wish flex items-center justify-center p-2 text-brand-navy hover:text-red-500"
             title="View Wishlist"
           >
-            <Heart size={18} className="group-hover/wish:scale-110 transition-transform duration-300" />
+            <Heart size={22} className="group-hover/wish:scale-110 transition-transform duration-300 stroke-[1.8]" />
             {wishlistCount > 0 && (
-              <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-red-500 text-[8px] font-black text-white flex items-center justify-center border border-bg-primary">
+              <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-red-500 text-[8px] font-black text-white flex items-center justify-center border border-bg-primary">
                 {wishlistCount}
               </span>
             )}
           </Link>
           
           <button
-            className={cn(
-              "p-2 transition-colors",
-              isDarkTheme ? "text-brand-navy" : "text-white"
-            )}
+            className="p-2 transition-colors text-brand-navy"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={22} className="stroke-[1.8]" /> : <Menu size={22} className="stroke-[1.8]" />}
           </button>
         </div>
       </div>
