@@ -203,78 +203,78 @@ const Hero = () => {
                   quality={75}
                   className="object-cover animate-ken-burns"
                 />
-                {/* Premium soft off-white vignetted overlay (bottom-up on mobile, left-to-right on desktop) */}
-                <div className="absolute inset-0 md:inset-y-0 md:left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-t from-white/90 via-white/40 to-transparent md:bg-gradient-to-r md:from-[#F5F2EA] md:via-[#F5F2EA]/95 md:to-transparent z-1" />
+                {/* Premium soft cream vignetted overlay (bottom-up on mobile, left-to-right on desktop) */}
+                <div className="absolute inset-0 md:inset-y-0 md:left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-t from-[#F5F2EA]/98 via-[#F5F2EA]/92 to-[#F5F2EA]/75 md:bg-gradient-to-r md:from-[#F5F2EA] md:via-[#F5F2EA]/95 md:to-transparent z-10" />
               </div>
 
               {/* Slide content */}
-              <div className="relative z-10 h-full flex flex-col justify-center pt-16 pb-12 lg:pb-36 px-6 md:px-12 lg:px-24">
+              <div className="relative z-20 h-full flex flex-col justify-center pt-16 pb-12 lg:pb-36 px-6 md:px-12 lg:px-24">
                 <div className="max-w-2xl">
                   <AnimatePresence mode="wait">
                     {isActive && (
                       <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 30 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="flex flex-col items-start"
-                      >
-                        {/* Tag — Premium White Badge */}
-                        <span className="inline-flex items-center gap-1.5 bg-white/95 border border-slate-200/50 text-[#E2A63B] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-6 px-5 py-2.5 rounded-full shadow-sm w-fit">
-                          <span className="text-[#E2A63B] text-xs">★</span> {slide.tag}
+                      key={index}
+                      initial={{ opacity: 0, x: -50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 30 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      className="flex flex-col items-start"
+                    >
+                      {/* Tag — Premium White Badge */}
+                      <span className="inline-flex items-center gap-1.5 bg-white/95 border border-slate-200/50 text-[#DAA520] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-6 px-5 py-2.5 rounded-full shadow-sm w-fit">
+                        <span className="text-[#DAA520] text-xs">★</span> {slide.tag}
+                      </span>
+                      
+                      {/* Main Heading - Refined Serif Typography */}
+                      <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.1] mb-6 font-normal tracking-wide drop-shadow-[0_2px_4px_rgba(27,53,100,0.08)]">
+                        {slide.title} <br /> 
+                        <span className="relative inline-block pb-1">
+                          <span className="italic text-[#DAA520] font-heading font-semibold md:font-light tracking-wide">{slide.titleItalic}</span>
+                          {/* Beautiful gold horizontal line accent directly under the first half of the text (like "by the") */}
+                          <span className="absolute left-0 bottom-0 w-[45%] h-[3px] bg-[#DAA520] rounded-full" />
                         </span>
-                        
-                        {/* Main Heading - Refined Serif Typography */}
-                        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.1] mb-6 font-normal tracking-wide">
-                          {slide.title} <br /> 
-                          <span className="relative inline-block pb-1">
-                            <span className="italic text-[#E2A63B] font-heading font-light tracking-wide">{slide.titleItalic}</span>
-                            {/* Beautiful gold horizontal line accent directly under the first half of the text (like "by the") */}
-                            <span className="absolute left-0 bottom-0 w-[45%] h-[3px] bg-[#E2A63B] rounded-full" />
-                          </span>
-                        </h1>
-                        
-                        {/* Subtitle - Refined dark gray */}
-                        <p className="text-sm md:text-base text-slate-600/90 font-light max-w-md mb-8 leading-relaxed whitespace-pre-line">
-                          {slide.desc}
-                        </p>
+                      </h1>
+                      
+                      {/* Subtitle - Refined dark navy on mobile, slate on desktop */}
+                      <p className="text-[15px] sm:text-base text-[#1B3564] md:text-slate-600/90 font-extrabold md:font-normal max-w-md mb-8 leading-relaxed whitespace-pre-line">
+                        {slide.desc}
+                      </p>
 
-                        {/* CTA Section - Aligned with screenshot 3 */}
-                        <div className="hidden md:flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8 w-full sm:w-auto mt-2">
-                          <Link 
-                            href="/villas" 
-                            className="group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-8 py-4 text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 hover:-translate-y-0.5 text-center justify-center"
-                          >
-                            EXPLORE VILLAS
-                            <ChevronRight className="transition-transform group-hover:translate-x-1 stroke-[3]" size={13} />
-                          </Link>
-                          <Link 
-                            href="/contact" 
-                            className="group flex items-center justify-center sm:justify-start gap-1.5 text-[#1B3564] font-bold tracking-widest uppercase text-xs transition-all duration-300 border-b-2 border-[#FFB800] pb-1 hover:border-[#FFB800]/70 w-fit mx-auto sm:mx-0"
-                          >
-                            TALK TO CONCIERGE
-                            <ChevronRight size={13} className="text-[#FFB800] transition-transform group-hover:translate-x-0.5 stroke-[3]" />
-                          </Link>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                      {/* CTA Section - Aligned with screenshot 3 */}
+                      <div className="hidden md:flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8 w-full sm:w-auto mt-2">
+                        <Link 
+                          href="/villas" 
+                          className="group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-8 py-4 text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 hover:-translate-y-0.5 text-center justify-center"
+                        >
+                          EXPLORE VILLAS
+                          <ChevronRight className="transition-transform group-hover:translate-x-1 stroke-[3]" size={13} />
+                        </Link>
+                        <Link 
+                          href="/contact" 
+                          className="group flex items-center justify-center sm:justify-start gap-1.5 text-[#1B3564] font-bold tracking-widest uppercase text-xs transition-all duration-300 border-b-2 border-[#FFB800] pb-1 hover:border-[#FFB800]/70 w-fit mx-auto sm:mx-0"
+                        >
+                          TALK TO CONCIERGE
+                          <ChevronRight size={13} className="text-[#FFB800] transition-transform group-hover:translate-x-0.5 stroke-[3]" />
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+            </div>
+          </SwiperSlide>
+        );
+      })}
+    </Swiper>
 
-      {/* Floating Side Arrow Buttons - Premium Navy */}
-      <button className="hero-prev absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
-        <ChevronLeft size={24} className="group-hover:scale-110 transition-transform" />
-      </button>
-      <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
-        <ChevronRight size={24} className="group-hover:scale-110 transition-transform" />
-      </button>
-    </div>
+    {/* Floating Side Arrow Buttons - Premium Navy */}
+    <button className="hero-prev absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 hidden md:flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
+      <ChevronLeft size={24} className="group-hover:scale-110 transition-transform" />
+    </button>
+    <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 hidden md:flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
+      <ChevronRight size={24} className="group-hover:scale-110 transition-transform" />
+    </button>
+  </div>
 
     {/* Booking Form Capsule & Highlights Row */}
     <div className="relative lg:absolute lg:bottom-6 lg:left-16 lg:right-16 z-30 mx-auto max-w-6xl w-full px-4 lg:px-0 py-6 lg:py-0 bg-[#F5F2EA] lg:bg-transparent">
