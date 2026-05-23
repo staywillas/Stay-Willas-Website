@@ -59,11 +59,15 @@ const Navbar = () => {
       setIsScrolled(scrollPos > 30);
     };
     window.addEventListener("scroll", handleScroll);
+
+    const handleToggleMenu = () => setIsMobileMenuOpen(prev => !prev);
+    window.addEventListener("toggle-mobile-menu", handleToggleMenu);
     
     return () => {
       window.removeEventListener("wishlist-updated", updateCount);
       window.removeEventListener("storage", updateCount);
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("toggle-mobile-menu", handleToggleMenu);
     };
   }, []);
 
@@ -100,9 +104,9 @@ const Navbar = () => {
         <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
           <div className="relative w-9 h-9 sm:w-12 md:w-14 h-9 sm:h-12 md:h-14 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
             <img 
-              src="/images/stay villa brand logo.png" 
+              src="/images/web logo.png" 
               alt="Stay Willas Logo" 
-              className="w-full h-full object-cover scale-110" 
+              className="w-full h-full object-cover scale-[1.6]" 
             />
           </div>
           <div className="flex flex-col">
@@ -213,28 +217,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Toggle & Wishlist */}
-        <div className="xl:hidden flex items-center gap-1 sm:gap-2 shrink-0">
-          <Link 
-            href="/wishlist" 
-            className="transition-colors relative group/wish flex items-center justify-center p-2 text-brand-navy hover:text-red-500"
-            title="View Wishlist"
-          >
-            <Heart size={22} className="group-hover/wish:scale-110 transition-transform duration-300 stroke-[1.8]" />
-            {wishlistCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-red-500 text-[8px] font-black text-white flex items-center justify-center border border-bg-primary">
-                {wishlistCount}
-              </span>
-            )}
-          </Link>
-          
-          <button
-            className="p-2 transition-colors text-brand-navy"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={22} className="stroke-[1.8]" /> : <Menu size={22} className="stroke-[1.8]" />}
-          </button>
-        </div>
+        {/* Mobile Menu Toggle & Wishlist (Moved to Bottom Nav) */}
       </div>
 
       {/* Mobile Menu Overlay */}
@@ -250,7 +233,7 @@ const Navbar = () => {
             <div className="flex justify-between items-center mb-10">
               <div className="flex items-center gap-3">
                 <div className="relative w-10 h-10 rounded-full overflow-hidden border border-cream-border">
-                  <img src="/images/stay villa brand logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-110" />
+                  <img src="/images/web logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-[1.6]" />
                 </div>
                 <span className="font-heading text-xl tracking-widest text-brand-navy font-bold">MENU</span>
               </div>

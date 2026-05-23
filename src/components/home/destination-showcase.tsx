@@ -17,38 +17,57 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 const destinations = [
   {
     name: "Lonavala",
-    image: "/assets/villas/misty-mornings-cliffhouse/main.png",
-    count: "12 Villas",
+    image: "/assets/villas/angled-house/main.webp",
+    count: "1 Villa",
     tag: "Mountain Escapes",
-    desc: "Cool breeze, misty green hills, and quiet retreats."
-  },
-  {
-    name: "Alibaug",
-    image: "/assets/villas/alibaug-palms-beachhouse/main.png",
-    count: "8 Villas",
-    tag: "Beachside Stays",
-    desc: "Golden sand beaches, pools, and beautiful sunsets."
-  },
-  {
-    name: "Nashik",
-    image: "/assets/villas/lakeview-vineyard-villa/main.png",
-    count: "5 Villas",
-    tag: "Vineyards & Hills",
-    desc: "Stunning lakefront stays, wine tasting, and perfect weather."
+    desc: "Cool breeze, misty green hills, and quiet retreats.",
+    isLaunchingSoon: false,
+    link: "/villas?region=lonavala"
   },
   {
     name: "Karjat",
     image: "/assets/villas/karjat-river-house/main.png",
-    count: "7 Villas",
+    count: "LAUNCHING SOON",
     tag: "Riverside Views",
-    desc: "Green valleys, quiet rivers, and pure relaxation."
+    desc: "Green valleys, quiet rivers, and pure relaxation.",
+    isLaunchingSoon: true,
+    link: "/partner"
   },
   {
-    name: "Mulshi",
-    image: "/assets/villas/mulshi-lakehouse/main.png",
-    count: "4 Villas",
-    tag: "By the Lake",
-    desc: "Gorgeous views of the blue water right outside your room."
+    name: "Igatpuri",
+    image: "/assets/villas/igatpuri-clouds-villa/main.png",
+    count: "LAUNCHING SOON",
+    tag: "Mountain Views",
+    desc: "Mist-laden Western Ghats, waterfalls, and peaceful retreats.",
+    isLaunchingSoon: true,
+    link: "/partner"
+  },
+  {
+    name: "Alibaug",
+    image: "/assets/villas/alibaug-palms-beachhouse/main.png",
+    count: "LAUNCHING SOON",
+    tag: "Beachside Stays",
+    desc: "Golden sand beaches, pools, and beautiful sunsets.",
+    isLaunchingSoon: true,
+    link: "/partner"
+  },
+  {
+    name: "Khopoli",
+    image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1000",
+    count: "LAUNCHING SOON",
+    tag: "Nature Getaways",
+    desc: "Scenic foothills, waterfalls, and green valleys near the hills.",
+    isLaunchingSoon: true,
+    link: "/partner"
+  },
+  {
+    name: "Goa",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000",
+    count: "LAUNCHING SOON",
+    tag: "Coastal Paradise",
+    desc: "Boho-chic beach villas, Portuguese architecture, and ocean breezes.",
+    isLaunchingSoon: true,
+    link: "/partner"
   }
 ];
 
@@ -181,7 +200,7 @@ const DestinationShowcase = () => {
                 className="rounded-3xl shadow-lg"
               >
                 <Link
-                  href={`/villas?region=${dest.name.toLowerCase()}`}
+                  href={dest.link}
                   className="block relative aspect-[3/4] w-full h-full rounded-3xl overflow-hidden group border border-[#DAA520]/25 cursor-pointer shadow-xl shadow-black/20 hover:border-[#DAA520]/75 hover:shadow-[0_0_35px_rgba(218,165,32,0.45)] transition-all duration-500"
                 >
                   <Image
@@ -197,9 +216,17 @@ const DestinationShowcase = () => {
                   
                   <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end">
                     {/* Tag */}
-                    <div className="flex items-center gap-2 text-[#DAA520] text-[11px] font-bold uppercase tracking-[0.3em] mb-4">
-                      <MapPin size={13} className="stroke-[2.5]" />
-                      {dest.tag}
+                    <div className="flex items-center justify-between gap-2 mb-4 w-full">
+                      <div className="flex items-center gap-2 text-[#DAA520] text-[11px] font-bold uppercase tracking-[0.3em]">
+                        <MapPin size={13} className="stroke-[2.5]" />
+                        {dest.tag}
+                      </div>
+
+                      {dest.isLaunchingSoon && (
+                        <span className="text-[8px] font-black uppercase tracking-wider bg-[#DAA520]/20 text-[#DAA520] border border-[#DAA520]/30 px-2 py-0.5 rounded-full shrink-0">
+                          LAUNCHING SOON
+                        </span>
+                      )}
                     </div>
                     
                     {/* Title */}
@@ -212,12 +239,22 @@ const DestinationShowcase = () => {
                       {dest.desc}
                     </p>
                     
-                    {/* CTA */}
-                    <div className="flex items-center gap-4 group/btn">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#DAA520] to-[#E6B830] text-slate-950 flex items-center justify-center group-hover/btn:scale-110 transition-all duration-300 shadow-md">
-                        <ArrowUpRight size={18} className="stroke-[2.5]" />
+                    {/* CTA / Partner with us Option */}
+                    <div className="flex items-center justify-between w-full gap-2">
+                      <div className="flex items-center gap-3 group/btn">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#DAA520] to-[#E6B830] text-slate-950 flex items-center justify-center group-hover/btn:scale-110 transition-all duration-300 shadow-md">
+                          <ArrowUpRight size={18} className="stroke-[2.5]" />
+                        </div>
+                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#F5F2EA]">
+                          {dest.count}
+                        </span>
                       </div>
-                      <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#F5F2EA]">{dest.count}</span>
+
+                      {dest.isLaunchingSoon && (
+                        <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[#DAA520] hover:text-[#E6B830] transition-colors border-b border-transparent hover:border-[#DAA520]/60 pb-0.5 shrink-0 z-20">
+                          Partner with us →
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Link>

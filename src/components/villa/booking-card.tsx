@@ -2,8 +2,9 @@
 
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Users, Info, Loader2 } from "lucide-react";
+import { Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
+import { submitInquiry } from "@/app/actions/inquiry";
 
 interface BookingCardProps {
   villaId: string;
@@ -16,6 +17,9 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
   const [checkIn, setCheckIn] = useState<Date>(new Date());
   const [checkOut, setCheckOut] = useState<Date>(addDays(new Date(), 3));
   const [guests, setGuests] = useState(2);
+  const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const checkInRef = useRef<HTMLInputElement>(null);
@@ -38,12 +42,36 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
     }
   };
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
+    if (!clientName.trim()) {
+      alert("Please enter your Full Name.");
+      return;
+    }
+    if (!clientEmail.trim() || !/^\S+@\S+\.\S+$/.test(clientEmail)) {
+      alert("Please enter a valid Email Address.");
+      return;
+    }
+    if (!clientPhone.trim()) {
+      alert("Please enter your Phone Number.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const checkInStr = format(checkIn, "MMM dd, yyyy");
       const checkOutStr = format(checkOut, "MMM dd, yyyy");
       
+      // Submit Inquiry to database so the admin gets the notification instantly
+      const dbMessage = `Booking request initiated for ${villaName} from ${checkInStr} to ${checkOutStr} (${nights} nights) for ${guests} guests. Total Bill: ₹${total.toLocaleString("en-IN")}.`;
+      await submitInquiry({
+        name: clientName,
+        email: clientEmail,
+        phone: clientPhone,
+        message: dbMessage,
+        villaId: villaId,
+        type: "GUEST"
+      });
+
       const message = `🏰 *STAY WILLAS - RESERVATION REQUEST* 🏰\n` +
         `------------------------------------------\n` +
         `✨ *Villa:* ${villaName}\n` +
@@ -51,6 +79,10 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
         `📅 *Check-Out:* ${checkOutStr}\n` +
         `🌙 *Nights:* ${nights}\n` +
         `👥 *Guests:* ${guests} Guests\n\n` +
+        `👤 *CLIENT DETAILS:*\n` +
+        `• Name: ${clientName}\n` +
+        `• Email: ${clientEmail}\n` +
+        `• Phone: ${clientPhone}\n\n` +
         `💳 *BILLING SUMMARY:*\n` +
         `• Rate per Night: ₹${price}\n` +
         `• Subtotal: ₹${subtotal.toLocaleString("en-IN")}\n` +
@@ -142,6 +174,61 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
             </div>
           </div>
           <Users size={16} className="text-text-primary/30" />
+        </div>
+
+        {/* Contact Information Section */}
+        <div className="pt-4 border-t border-border-subtle/60 space-y-3">
+          <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block">
+            Contact Information (Almost Confirmed)
+          </span>
+
+          {/* Full Name */}
+          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-accent-primary focus-within:ring-1 focus-within:ring-accent-primary/25 transition-all duration-300">
+            <div className="flex-1">
+              <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Full Name</span>
+              <input
+                type="text"
+                required
+                placeholder="e.g. John Doe"
+                className="w-full text-text-primary text-sm font-semibold bg-transparent border-none outline-none p-0 focus:ring-0 placeholder:text-text-primary/20"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+              />
+            </div>
+            <Users size={16} className="text-text-primary/30 shrink-0" />
+          </div>
+
+          {/* Email Address */}
+          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-accent-primary focus-within:ring-1 focus-within:ring-accent-primary/25 transition-all duration-300">
+            <div className="flex-1">
+              <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Email Address</span>
+              <input
+                type="email"
+                required
+                placeholder="e.g. john@example.com"
+                className="w-full text-text-primary text-sm font-semibold bg-transparent border-none outline-none p-0 focus:ring-0 placeholder:text-text-primary/20"
+                value={clientEmail}
+                onChange={(e) => setClientEmail(e.target.value)}
+              />
+            </div>
+            <Mail size={16} className="text-text-primary/30 shrink-0" />
+          </div>
+
+          {/* Phone Number */}
+          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-accent-primary focus-within:ring-1 focus-within:ring-accent-primary/25 transition-all duration-300">
+            <div className="flex-1">
+              <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Phone Number</span>
+              <input
+                type="tel"
+                required
+                placeholder="e.g. +91 98765 43210"
+                className="w-full text-text-primary text-sm font-semibold bg-transparent border-none outline-none p-0 focus:ring-0 placeholder:text-text-primary/20"
+                value={clientPhone}
+                onChange={(e) => setClientPhone(e.target.value)}
+              />
+            </div>
+            <Phone size={16} className="text-text-primary/30 shrink-0" />
+          </div>
         </div>
       </div>
 

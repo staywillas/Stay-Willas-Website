@@ -23,9 +23,9 @@ const Footer = () => {
             <Link href="/" className="flex items-center gap-3 mb-8 group">
               <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/30 shadow-lg bg-white/10 flex items-center justify-center shrink-0 group-hover:border-blue-300 transition-colors">
                 <img 
-                  src="/images/stay villa brand logo.png" 
+                  src="/images/web logo.png" 
                   alt="Stay Willas Logo" 
-                  className="w-full h-full object-cover scale-110" 
+                  className="w-full h-full object-cover scale-[1.6]" 
                 />
               </div>
               <div className="flex flex-col">

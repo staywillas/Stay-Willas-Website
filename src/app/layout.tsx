@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
 import FloatingWidgets from "@/components/layout/floating-widgets";
+import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 
 // Fonts: swap display for fastest text paint
 const outfit = Outfit({
@@ -46,6 +47,7 @@ export default function RootLayout({
           <SmoothScrollProvider>
             {children}
             <FloatingWidgets />
+            <MobileBottomNav />
           </SmoothScrollProvider>
         </ClerkProvider>
       </body>

@@ -28,9 +28,9 @@ export default function Loading() {
           className="w-20 h-20 rounded-full flex items-center justify-center border border-border-subtle overflow-hidden bg-white shadow-lg"
         >
           <img 
-            src="/images/stay villa brand logo.png" 
+            src="/images/web logo.png" 
             alt="Stay Willas Logo" 
-            className="w-full h-full object-cover scale-110" 
+            className="w-full h-full object-cover scale-[1.6]" 
           />
         </motion.div>
 

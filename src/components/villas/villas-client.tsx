@@ -44,7 +44,7 @@ const CATEGORIES = [
   "Cold Climates"
 ];
 
-const REGIONS = ["Lonavala", "Alibaug", "Nashik", "Karjat", "Mulshi"];
+const REGIONS = ["Lonavala", "Karjat", "Igatpuri", "Alibaug", "Khopoli", "Goa"];
 
 const AMENITY_TAGS = [
   { label: "Swimming Pool", match: ["pool", "swimming"] },
@@ -65,7 +65,7 @@ export default function VillasClient({
   // Filter States
   const [region, setRegion] = useState<string>(initialRegion);
   const [category, setCategory] = useState<string>(initialCategory);
-  const [maxBudget, setMaxBudget] = useState<number>(60000);
+  const [maxBudget, setMaxBudget] = useState<number>(50000);
   const [minBedrooms, setMinBedrooms] = useState<number>(0);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [isFilterExpanded, setIsFilterExpanded] = useState<boolean>(true);
@@ -83,7 +83,7 @@ export default function VillasClient({
   const handleResetFilters = () => {
     setRegion("");
     setCategory("");
-    setMaxBudget(60000);
+    setMaxBudget(50000);
     setMinBedrooms(0);
     setSelectedAmenities([]);
   };
@@ -133,7 +133,7 @@ export default function VillasClient({
     let count = 0;
     if (region) count++;
     if (category) count++;
-    if (maxBudget < 60000) count++;
+    if (maxBudget < 50000) count++;
     if (minBedrooms > 0) count++;
     if (selectedAmenities.length > 0) count += selectedAmenities.length;
     return count;
@@ -230,17 +230,17 @@ export default function VillasClient({
                     </div>
                     <input
                       type="range"
-                      min={25000}
-                      max={60000}
+                      min={10000}
+                      max={50000}
                       step={1000}
                       value={maxBudget}
                       onChange={(e) => setMaxBudget(Number(e.target.value))}
                       className="w-full accent-[#1B3564] cursor-pointer bg-bg-secondary h-1.5 rounded-lg appearance-none"
                     />
                     <div className="flex justify-between text-[10px] text-charcoal/40 font-medium">
-                      <span>₹25,000</span>
-                      <span>₹40,000</span>
-                      <span>₹60,000+</span>
+                      <span>₹10,000</span>
+                      <span>₹30,000</span>
+                      <span>₹50,000</span>
                     </div>
                   </div>
 

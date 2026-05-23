@@ -37,9 +37,14 @@ export default function PartnerPage() {
           Let us handle the hard work of running, managing, and promoting your villa 
           so you can sit back and watch it thrive.
         </p>
-        <a href="#partner-form" className="btn-glow-gold px-12 py-6 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 shadow-2xl inline-block">
-          INQUIRE NOW
-        </a>
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <a href="#partner-form" className="btn-glow-gold px-12 py-6 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 shadow-2xl inline-block w-full sm:w-auto text-center">
+            INQUIRE NOW
+          </a>
+          <a href="/partner/portal" className="border border-accent-secondary hover:bg-accent-secondary/10 px-12 py-6 rounded-full text-[10px] font-bold tracking-widest text-accent-secondary uppercase transition-all duration-300 inline-block w-full sm:w-auto text-center">
+            OWNER LOG IN
+          </a>
+        </div>
       </section>
 
       {/* Benefits Grid */}

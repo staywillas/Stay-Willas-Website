@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { UserButton } from "@clerk/nextjs";
+import { logoutAction } from "@/app/actions/login-actions";
 import { 
   Home as HomeIcon, 
   Calendar, 
@@ -283,7 +284,17 @@ const AdminDashboard = ({
             <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Logged In As</p>
             <p className="text-sm font-medium text-blue-400 font-heading italic">Stay Willas Admin</p>
           </div>
-          <UserButton />
+          <button
+            onClick={async () => {
+              if (confirm("Are you sure you want to sign out?")) {
+                await logoutAction();
+                window.location.href = "/login?role=admin";
+              }
+            }}
+            className="text-[10px] bg-red-500/10 hover:bg-red-500 hover:text-white border border-red-500/20 text-red-500 px-3 py-1.5 rounded-full tracking-widest uppercase font-bold transition-all duration-300 cursor-pointer border-none"
+          >
+            SIGN OUT
+          </button>
         </div>
       </div>
 

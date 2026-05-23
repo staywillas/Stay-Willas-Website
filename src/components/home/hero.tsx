@@ -68,7 +68,7 @@ const slides = [
 const Hero = () => {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [destination, setDestination] = useState("Alibaug");
+  const [destination, setDestination] = useState("Lonavala");
   const [checkIn, setCheckIn] = useState<Date | null>(null);
   const [checkOut, setCheckOut] = useState<Date | null>(null);
   const [guests, setGuests] = useState("2");
@@ -289,10 +289,7 @@ const Hero = () => {
                   onChange={(e) => setDestination(e.target.value)}
                   className="bg-transparent text-lg font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
                 >
-                  <option value="Alibaug">Alibaug</option>
                   <option value="Lonavala">Lonavala</option>
-                  <option value="Nashik">Nashik</option>
-                  <option value="Karjat">Karjat</option>
                 </select>
               </div>
               <div className="w-8 h-8 rounded-full bg-[#1B3564]/5 flex items-center justify-center text-[#1B3564] shrink-0 lg:hidden">

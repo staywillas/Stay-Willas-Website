@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import { currentUser } from "@clerk/nextjs/server";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import AdminDashboard from "@/components/admin/admin-dashboard";
@@ -13,29 +13,27 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  // 1. Authenticate user server-side using Clerk
-  let userEmail = "Admin";
+  // 1. Authenticate user using secure staywillas_session cookie
+  let userEmail = "";
   let isAuthenticated = false;
 
-  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
-    userEmail = "admin@staywillas.com";
-    isAuthenticated = true;
-  } else {
-    try {
-      const user = await currentUser();
-      if (user) {
-        userEmail = user.emailAddresses[0]?.emailAddress || "Admin";
+  try {
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get("staywillas_session");
+    
+    if (sessionCookie?.value) {
+      const session = JSON.parse(sessionCookie.value);
+      if (session.role === "admin") {
+        userEmail = session.email || "admin@staywillas.com";
         isAuthenticated = true;
       }
-    } catch (e) {
-      console.warn("Clerk auth failed, falling back to local admin in dev:", e);
-      userEmail = "admin@staywillas.com";
-      isAuthenticated = true;
     }
+  } catch (e) {
+    console.error("Custom authentication verification failed:", e);
   }
 
   if (!isAuthenticated) {
-    redirect("/sign-in");
+    redirect("/login?role=admin");
   }
 
   // 2. Query all database statistics & pipelines dynamically in parallel
