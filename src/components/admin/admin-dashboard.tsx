@@ -28,12 +28,29 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import AvailabilityCalendar from "@/components/admin/availability-calendar";
+import DailyPricingCalendar from "@/components/admin/daily-pricing-calendar";
 import { 
   updateVillaDetails, 
   getChannelConfigs, 
   updateChannelConfig, 
   syncExternalChannels 
 } from "@/app/actions/admin";
+
+interface SeasonalPrice {
+  id: string;
+  villaId: string;
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  label?: string | null;
+}
+
+interface DailyPrice {
+  id: string;
+  villaId: string;
+  date: Date;
+  price: number;
+}
 
 interface Villa {
   id: string;
@@ -46,6 +63,9 @@ interface Villa {
   guests: number;
   images: string[];
   description: string;
+  weekendPrice?: number | null;
+  seasonalPrices: SeasonalPrice[];
+  dailyPrices: DailyPrice[];
 }
 
 interface Booking {
@@ -83,7 +103,7 @@ const AdminDashboard = ({
   initialInquiries,
   userEmail 
 }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "inquiries" | "calendar">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "inquiries" | "calendar" | "pricing">("overview");
   const [inquiryFilter, setInquiryFilter] = useState<"ALL" | "GUEST" | "OWNER">("ALL");
 
   // Lift properties and bookings to states for high reactivity
@@ -247,7 +267,7 @@ const AdminDashboard = ({
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 pb-8 border-b border-slate-100">
         <div>
           <div className="flex items-center gap-3 flex-wrap mb-2">
-            <h1 className="text-4xl font-heading tracking-wide italic">Administrative Suite</h1>
+            <h1 className="text-4xl font-cormorant font-bold tracking-wide italic">Administrative Suite</h1>
             <span className="bg-blue-500/10 text-blue-400 text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase border border-blue-500/20">
               SYSTEM LIVE
             </span>
@@ -282,7 +302,7 @@ const AdminDashboard = ({
         <div className="flex items-center gap-6 mt-6 md:mt-0 glass border border-slate-200 rounded-full px-6 py-3">
           <div className="text-right">
             <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Logged In As</p>
-            <p className="text-sm font-medium text-blue-400 font-heading italic">Stay Willas Admin</p>
+            <p className="text-sm font-medium text-blue-400 font-cormorant font-bold italic">Stay Willas Admin</p>
           </div>
           <button
             onClick={async () => {
@@ -308,7 +328,7 @@ const AdminDashboard = ({
               <HomeIcon size={20} />
             </div>
           </div>
-          <h2 className="text-4xl font-heading mb-2">{totalVillas}</h2>
+          <h2 className="text-4xl font-bold mb-2">{totalVillas}</h2>
           <p className="text-slate-500 text-xs">Active boutique properties listed</p>
         </div>
 
@@ -320,7 +340,7 @@ const AdminDashboard = ({
               <Calendar size={20} />
             </div>
           </div>
-          <h2 className="text-4xl font-heading mb-2">{totalBookings}</h2>
+          <h2 className="text-4xl font-bold mb-2">{totalBookings}</h2>
           <p className="text-slate-500 text-xs">
             <span className="text-blue-400 font-bold">{pendingBookings} pending</span> verification
           </p>
@@ -334,7 +354,7 @@ const AdminDashboard = ({
               <IndianRupee size={20} />
             </div>
           </div>
-          <h2 className="text-4xl font-heading mb-2 text-slate-900">
+          <h2 className="text-4xl font-bold mb-2 text-slate-900">
             ₹{totalRevenue.toLocaleString("en-IN")}
           </h2>
           <p className="text-slate-500 text-xs">Processed from confirmed stays</p>
@@ -348,7 +368,7 @@ const AdminDashboard = ({
               <MessageSquare size={20} />
             </div>
           </div>
-          <h2 className="text-4xl font-heading mb-2 text-slate-900">{totalInquiriesCount}</h2>
+          <h2 className="text-4xl font-bold mb-2 text-slate-900">{totalInquiriesCount}</h2>
           <p className="text-slate-500 text-xs">
             Includes <span className="text-blue-400 font-bold">{partnerRequestsCount} partner requests</span>
           </p>
@@ -361,8 +381,8 @@ const AdminDashboard = ({
           onClick={() => setActiveTab("overview")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
             activeTab === "overview" 
-              ? "border-blue-500 text-blue-400" 
-              : "border-transparent text-slate-500 hover:text-white"
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
           }`}
         >
           Overview
@@ -371,18 +391,28 @@ const AdminDashboard = ({
           onClick={() => setActiveTab("calendar")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
             activeTab === "calendar" 
-              ? "border-blue-500 text-blue-400" 
-              : "border-transparent text-slate-500 hover:text-white"
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
           }`}
         >
           Availability Scheduler
         </button>
         <button
+          onClick={() => setActiveTab("pricing")}
+          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
+            activeTab === "pricing" 
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
+          }`}
+        >
+          Daily Pricing Scheduler
+        </button>
+        <button
           onClick={() => setActiveTab("stays")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
             activeTab === "stays" 
-              ? "border-blue-500 text-blue-400" 
-              : "border-transparent text-slate-500 hover:text-white"
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
           }`}
         >
           Properties ({totalVillas})
@@ -391,8 +421,8 @@ const AdminDashboard = ({
           onClick={() => setActiveTab("bookings")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
             activeTab === "bookings" 
-              ? "border-blue-500 text-blue-400" 
-              : "border-transparent text-slate-500 hover:text-white"
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
           }`}
         >
           Bookings Pipeline ({totalBookings})
@@ -401,8 +431,8 @@ const AdminDashboard = ({
           onClick={() => setActiveTab("inquiries")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
             activeTab === "inquiries" 
-              ? "border-blue-500 text-blue-400" 
-              : "border-transparent text-slate-500 hover:text-white"
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
           }`}
         >
           User Inquiries ({totalInquiriesCount})
@@ -410,11 +440,18 @@ const AdminDashboard = ({
       </div>
 
       {/* Tab Contents */}
+      {activeTab === "pricing" && (
+        <DailyPricingCalendar 
+          villas={villas} 
+          onVillasChange={(updatedVillas) => setVillas(updatedVillas)}
+        />
+      )}
+
       {activeTab === "calendar" && (
         <AvailabilityCalendar 
-          villas={villas} 
-          bookings={bookings} 
-          onBookingsChange={(newBookings) => setBookings(newBookings)}
+          villas={villas as any} 
+          bookings={bookings as any} 
+          onBookingsChange={(newBookings) => setBookings(newBookings as any)}
         />
       )}
 
@@ -424,7 +461,7 @@ const AdminDashboard = ({
             {/* Recent Activity Bookings */}
             <div className="glass border border-slate-200 rounded-[32px] p-8 lg:col-span-2">
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-xl font-heading italic">Recent Reservations</h3>
+                <h3 className="text-xl font-cormorant font-bold italic">Recent Reservations</h3>
                 <button 
                   onClick={() => setActiveTab("bookings")}
                   className="text-blue-400 text-xs uppercase tracking-widest font-bold hover:underline cursor-pointer flex items-center gap-1"
@@ -449,7 +486,7 @@ const AdminDashboard = ({
                           />
                         </div>
                         <div>
-                          <h4 className="font-heading text-sm text-blue-400">{booking.villa.name}</h4>
+                          <h4 className="font-cormorant font-bold text-sm text-blue-400">{booking.villa.name}</h4>
                           <p className="text-slate-500 text-xs">
                             {new Date(booking.checkIn).toLocaleDateString("en-IN", { month: "short", day: "numeric" })} - {new Date(booking.checkOut).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}
                           </p>
@@ -476,7 +513,7 @@ const AdminDashboard = ({
 
             {/* Quick Actions Panel */}
             <div className="glass border border-slate-200 rounded-[32px] p-8">
-              <h3 className="text-xl font-heading italic mb-8">Quick Operations</h3>
+              <h3 className="text-xl font-cormorant font-bold italic mb-8">Quick Operations</h3>
               <div className="space-y-4">
                 <a 
                   href="/villas"
@@ -530,7 +567,7 @@ const AdminDashboard = ({
                     <MapPin size={12} className="text-blue-400" />
                     <span>{villa.location}</span>
                   </div>
-                  <h3 className="text-xl font-heading text-slate-900 italic group-hover:text-blue-600 transition-colors mb-4">{villa.name}</h3>
+                  <h3 className="text-xl font-cormorant font-bold text-slate-900 italic group-hover:text-blue-600 transition-colors mb-4">{villa.name}</h3>
                   
                   <div className="flex items-center gap-6 text-xs text-slate-600 mb-6">
                     <div>
@@ -571,8 +608,8 @@ const AdminDashboard = ({
       )}
 
       {activeTab === "bookings" && (
-        <div className="glass border border-slate-200 rounded-[32px] p-8 overflow-hidden">
-          <h3 className="text-2xl font-heading italic mb-8">Active Reservation Registry</h3>
+        <div className="glass border border-slate-200 rounded-[32px] p-8 overflow-hidden font-sans">
+          <h3 className="text-2xl font-cormorant font-bold italic mb-8">Active Reservation Registry</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -587,7 +624,7 @@ const AdminDashboard = ({
               <tbody className="divide-y divide-white/5 text-sm">
                 {initialBookings.map((booking) => (
                   <tr key={booking.id} className="hover:bg-slate-50 transition-colors group">
-                    <td className="py-5 font-heading italic text-blue-400 group-hover:text-slate-900 transition-colors">
+                    <td className="py-5 font-cormorant font-bold italic text-blue-400 group-hover:text-slate-900 transition-colors">
                       {booking.villa.name}
                     </td>
                     <td className="py-5 text-slate-700">
@@ -614,8 +651,8 @@ const AdminDashboard = ({
 
       {activeTab === "inquiries" && (
         <div className="space-y-8">
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-heading italic">Communication Queue</h3>
+          <div className="flex items-center justify-between font-sans">
+            <h3 className="text-2xl font-cormorant font-bold italic">Communication Queue</h3>
             {/* Filter buttons */}
             <div className="flex gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
               <button 
@@ -656,7 +693,7 @@ const AdminDashboard = ({
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
                     <div>
                       <div className="flex items-center gap-3 mb-1.5">
-                        <h4 className="text-lg font-heading text-blue-400 italic">{inquiry.name}</h4>
+                        <h4 className="text-lg font-cormorant font-bold text-blue-400 italic">{inquiry.name}</h4>
                         <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase ${
                           inquiry.type === "OWNER" 
                             ? "bg-purple-500/10 text-purple-400 border border-purple-500/25" 
@@ -692,13 +729,13 @@ const AdminDashboard = ({
       )}
       {/* 1. PMS Property Editor & Channel Sync Modal */}
       {editingVilla && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6 overflow-y-auto animate-fade-in">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6 overflow-y-auto animate-fade-in font-sans">
           <form 
             onSubmit={handleSaveVilla}
             className="glass border border-slate-200 rounded-[32px] p-8 max-w-2xl w-full my-8 relative shadow-2xl space-y-6"
           >
             <div>
-              <h4 className="text-2xl font-heading italic text-blue-400">Property Management Console</h4>
+              <h4 className="text-2xl font-cormorant font-bold italic text-blue-400">Property Management Console</h4>
               <p className="text-slate-500 text-xs mt-1">Specify sanctuary base pricing, parameters, and sync calendars.</p>
             </div>
 
@@ -883,7 +920,7 @@ const AdminDashboard = ({
               <CheckCircle size={20} />
             </div>
             <div className="flex-grow">
-              <h5 className="font-heading text-emerald-400 text-sm font-semibold">Synchronization Successful</h5>
+              <h5 className="font-cormorant font-bold text-emerald-400 text-sm font-semibold">Synchronization Successful</h5>
               <p className="text-slate-600 text-xs mt-1 leading-relaxed">
                 Synced <span className="text-emerald-700 font-bold">{syncStatus.syncedCount}</span> external events. Main scheduler updated.
               </p>

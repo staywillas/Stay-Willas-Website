@@ -340,3 +340,55 @@ export async function syncExternalChannels() {
     return { success: false, error: error.message || "Failed to execute channel manager synchronizations." };
   }
 }
+
+export async function setDailyPrice(villaId: string, dateStr: string, price: number) {
+  try {
+    const targetDate = new Date(dateStr);
+    targetDate.setHours(0, 0, 0, 0);
+
+    const override = await prisma.dailyPrice.upsert({
+      where: {
+        villaId_date: {
+          villaId,
+          date: targetDate,
+        },
+      },
+      update: {
+        price,
+      },
+      create: {
+        villaId,
+        date: targetDate,
+        price,
+      },
+    });
+
+    revalidatePath("/admin");
+    return { success: true, override };
+  } catch (error: any) {
+    console.error("Failed to set daily price:", error);
+    return { success: false, error: error.message || "Failed to set daily pricing override." };
+  }
+}
+
+export async function deleteDailyPrice(villaId: string, dateStr: string) {
+  try {
+    const targetDate = new Date(dateStr);
+    targetDate.setHours(0, 0, 0, 0);
+
+    await prisma.dailyPrice.delete({
+      where: {
+        villaId_date: {
+          villaId,
+          date: targetDate,
+        },
+      },
+    });
+
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete daily price:", error);
+    return { success: false, error: error.message || "Failed to remove daily pricing override." };
+  }
+}

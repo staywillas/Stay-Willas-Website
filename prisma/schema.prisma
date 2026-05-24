@@ -29,6 +29,7 @@ model Villa {
   bookings       Booking[]
   reviews        Review[]
   seasonalPrices SeasonalPrice[]
+  dailyPrices    DailyPrice[]
 }
 
 model Review {
@@ -80,4 +81,16 @@ model SeasonalPrice {
   label     String?  // e.g., "New Year Peak"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model DailyPrice {
+  id        String   @id @default(cuid())
+  villaId   String
+  villa     Villa    @relation(fields: [villaId], references: [id], onDelete: Cascade)
+  date      DateTime // Format: YYYY-MM-DD (stored as startOfDay)
+  price     Float    // Daily price override
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([villaId, date])
 }

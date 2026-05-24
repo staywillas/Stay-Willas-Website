@@ -9,6 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-outfit);
   --font-heading: var(--font-outfit);
+  --font-montserrat: var(--font-montserrat);
 
   /* ── Brand Palette (from logo) ─────────────────────── */
   --color-brand-beige:  #F5F2EA;   /* Ultra premium beige */
@@ -271,6 +272,14 @@
   }
   .text-pretty {
     text-wrap: pretty;
+  }
+
+  /* ── CUSTOM FONTS ────────────────----------------───── */
+  .font-montserrat {
+    font-family: var(--font-montserrat), sans-serif;
+  }
+  .font-cormorant {
+    font-family: var(--font-cormorant), serif;
   }
 }
 

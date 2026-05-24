@@ -19,7 +19,7 @@ export async function calculateStayPrice(
 ) {
   const villa = await prisma.villa.findUnique({
     where: { id: villaId },
-    include: { seasonalPrices: true }
+    include: { seasonalPrices: true, dailyPrices: true }
   });
   
   if (!villa) throw new Error("Villa not found");
@@ -29,24 +29,38 @@ export async function calculateStayPrice(
   const end = new Date(checkOut);
 
   while (currentDate.getTime() < end.getTime()) {
-    // 1. Check seasonal pricing table overrides
-    const seasonalOverride = villa.seasonalPrices.find(sp => {
-      const start = new Date(sp.startDate);
-      const endSp = new Date(sp.endDate);
-      return currentDate.getTime() >= start.getTime() && currentDate.getTime() <= endSp.getTime();
+    // 0. Check for exact daily override price (highest priority)
+    const normalizedDate = new Date(currentDate);
+    normalizedDate.setHours(0, 0, 0, 0);
+
+    const dailyOverride = villa.dailyPrices.find(dp => {
+      const dDate = new Date(dp.date);
+      dDate.setHours(0, 0, 0, 0);
+      return normalizedDate.getTime() === dDate.getTime();
     });
 
-    if (seasonalOverride) {
-      totalStayPrice += seasonalOverride.price;
+    if (dailyOverride) {
+      totalStayPrice += dailyOverride.price;
     } else {
-      // 2. Check weekend pricing (Friday = 5, Saturday = 6)
-      const dayOfWeek = currentDate.getDay();
-      const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
-      if (isWeekend && villa.weekendPrice) {
-        totalStayPrice += villa.weekendPrice;
+      // 1. Check seasonal pricing table overrides
+      const seasonalOverride = villa.seasonalPrices.find(sp => {
+        const start = new Date(sp.startDate);
+        const endSp = new Date(sp.endDate);
+        return currentDate.getTime() >= start.getTime() && currentDate.getTime() <= endSp.getTime();
+      });
+
+      if (seasonalOverride) {
+        totalStayPrice += seasonalOverride.price;
       } else {
-        // 3. Fallback to base pricing
-        totalStayPrice += villa.price;
+        // 2. Check weekend pricing (Friday = 5, Saturday = 6)
+        const dayOfWeek = currentDate.getDay();
+        const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+        if (isWeekend && villa.weekendPrice) {
+          totalStayPrice += villa.weekendPrice;
+        } else {
+          // 3. Fallback to base pricing
+          totalStayPrice += villa.price;
+        }
       }
     }
 
