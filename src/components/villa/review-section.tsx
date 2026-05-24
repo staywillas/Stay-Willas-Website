@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Star, MessageSquare, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { submitReview } from "@/app/actions/review";
-import { useUser, SignInButton } from "@clerk/nextjs";
+import { useAuth } from "@/lib/use-auth";
 import { format } from "date-fns";
 
 interface Review {
@@ -21,7 +21,7 @@ interface ReviewSectionProps {
 }
 
 const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const [reviews, setReviews] = useState(initialReviews);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
@@ -33,7 +33,7 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
     if (!comment) return;
 
     const activeUserName = isSignedIn && user 
-      ? (user.fullName || "Anonymous Guest") 
+      ? (user.name || "Anonymous Guest") 
       : (guestName.trim() || "Guest Traveler");
       
     const activeUserId = isSignedIn && user 
@@ -141,7 +141,7 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
 
               {isSignedIn && user && (
                 <div className="text-[10px] text-brand-navy/60 uppercase tracking-widest block font-bold">
-                  Posting as <span className="text-accent-primary font-black">{user.fullName || "Anonymous Guest"}</span>
+                  Posting as <span className="text-accent-primary font-black">{user.name || "Anonymous Guest"}</span>
                 </div>
               )}
 

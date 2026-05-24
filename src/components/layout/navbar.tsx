@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, Phone, ChevronDown, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
+import { useAuth } from "@/lib/use-auth";
 import { useLenis } from "lenis/react";
 
 
@@ -27,7 +27,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
-  const { isSignedIn } = useUser();
+  const { user, isSignedIn, signOut } = useAuth();
   const pathname = usePathname();
 
   useLenis((lenis) => {
@@ -198,17 +198,57 @@ const Navbar = () => {
               )}
             </Link>
 
-            {isSignedIn ? (
-              <UserButton />
+            {isSignedIn && user ? (
+              <div className="relative group/user">
+                <button className="flex items-center gap-1.5 p-1 rounded-full border border-[#DAA520]/30 hover:border-[#DAA520] transition-colors cursor-pointer shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[#1B3564] text-white flex items-center justify-center font-bold text-xs uppercase shadow-sm">
+                    {user.name ? user.name.charAt(0) : "G"}
+                  </div>
+                </button>
+                <div className="absolute right-0 top-full pt-2 hidden group-hover/user:block z-50">
+                  <div className="glass-premium border border-yellow-200/50 rounded-2xl p-5 min-w-[240px] shadow-xl text-left font-sans">
+                    <div className="mb-3 pb-3 border-b border-slate-200/50 select-none">
+                      <p className="text-[9px] text-slate-400 uppercase tracking-widest font-black">Logged In As</p>
+                      <p className="text-xs font-black text-[#1B3564] mt-0.5 truncate">{user.name}</p>
+                      <p className="text-[9px] text-slate-500 truncate mt-0.5">{user.email}</p>
+                    </div>
+                    <div className="flex flex-col gap-2.5">
+                      {user.role === "admin" && (
+                        <Link href="/admin" className="text-[10px] font-black text-[#1B3564] hover:text-[#DAA520] transition-colors uppercase tracking-widest">
+                          Admin Suite
+                        </Link>
+                      )}
+                      {user.role === "partner" && (
+                        <Link href="/partner/portal" className="text-[10px] font-black text-[#1B3564] hover:text-[#DAA520] transition-colors uppercase tracking-widest">
+                          Partner Portal
+                        </Link>
+                      )}
+                      {user.role === "guest" && (
+                        <Link href="/dashboard" className="text-[10px] font-black text-[#1B3564] hover:text-[#DAA520] transition-colors uppercase tracking-widest">
+                          My Dashboard
+                        </Link>
+                      )}
+                      <button 
+                        onClick={signOut}
+                        className="text-left text-[10px] font-black text-red-500 hover:text-red-600 transition-colors uppercase tracking-widest cursor-pointer border-none bg-transparent p-0 w-full"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ) : (
-              <SignInButton mode="modal">
-                <Button variant="ghost" className={cn(
-                  "hover:bg-transparent p-2 h-auto text-[14px]",
+              <Link 
+                href="/login?role=guest"
+                className={cn(
+                  "hover:bg-transparent p-2 h-auto text-[14px] flex items-center justify-center transition-colors duration-300",
                   isDarkTheme ? "text-brand-navy hover:text-brand-gold" : "text-white hover:text-brand-gold"
-                )}>
-                  <User size={20} />
-                </Button>
-              </SignInButton>
+                )}
+                title="Guest Log In"
+              >
+                <User size={20} />
+              </Link>
             )}
 
             <Link href="/villas" className="bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] rounded-full px-4 lg:px-6 py-2.5 lg:py-3 text-[11px] xl:text-[12px] font-black tracking-widest transition-all duration-300 flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg">

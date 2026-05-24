@@ -25,15 +25,27 @@ export async function loginAction(
   if (role === "admin") {
     if (username.trim() === "admin" && password === "staywillas2026") {
       const cookieStore = await cookies();
-      cookieStore.set("staywillas_session", JSON.stringify({
+      const payload = {
         email: "admin@staywillas.com",
-        role: "admin"
-      }), {
+        role: "admin",
+        name: "Stay Willas Admin",
+        id: "ADMIN_SUITE"
+      };
+      
+      cookieStore.set("staywillas_session", JSON.stringify(payload), {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 7, // 7 days session
+        maxAge: 60 * 60 * 24 * 30, // 30 days session
         path: "/"
       });
+
+      cookieStore.set("staywillas_user", JSON.stringify(payload), {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24 * 30, // 30 days session
+        path: "/"
+      });
+
       return { success: true, redirectTo: "/admin" };
     } else {
       return { success: false, error: "Invalid Admin ID or Password." };
@@ -51,19 +63,66 @@ export async function loginAction(
 
     if (password === "partner2026") {
       const cookieStore = await cookies();
-      cookieStore.set("staywillas_session", JSON.stringify({
+      const payload = {
         email: partnerEmail,
-        role: "partner"
-      }), {
+        role: "partner",
+        name: partnerEmail.split("@")[0].toUpperCase(),
+        id: "OWNER_" + partnerEmail.replace(/[^a-zA-Z0-9]/g, "")
+      };
+
+      cookieStore.set("staywillas_session", JSON.stringify(payload), {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 7, // 7 days session
+        maxAge: 60 * 60 * 24 * 30, // 30 days session
         path: "/"
       });
+
+      cookieStore.set("staywillas_user", JSON.stringify(payload), {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24 * 30, // 30 days session
+        path: "/"
+      });
+
       return { success: true, redirectTo: "/partner/portal" };
     } else {
       return { success: false, error: "Invalid Partner Password." };
     }
+  }
+
+  // 3. Validate Guest Portal Access
+  if (role === "guest") {
+    const guestEmail = username.trim().toLowerCase();
+    if (!/^\S+@\S+\.\S+$/.test(guestEmail)) {
+      return { success: false, error: "Please enter a valid email address." };
+    }
+
+    const guestName = password.trim() || "Guest Traveler";
+    const cookieStore = await cookies();
+    const payload = {
+      email: guestEmail,
+      role: "guest",
+      name: guestName,
+      id: "GUEST_" + Math.random().toString(36).substring(2, 11).toUpperCase()
+    };
+
+    cookieStore.set("staywillas_session", JSON.stringify(payload), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 30, // 30 days session
+      path: "/"
+    });
+
+    cookieStore.set("staywillas_user", JSON.stringify(payload), {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 30, // 30 days session
+      path: "/"
+    });
+
+    // Extract optional redirect parameter
+    const redirectUrl = formData.get("redirect") as string || "/dashboard";
+    return { success: true, redirectTo: redirectUrl };
   }
 
   return { success: false, error: "Invalid login attempt." };
@@ -72,5 +131,6 @@ export async function loginAction(
 export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete("staywillas_session");
+  cookieStore.delete("staywillas_user");
   return { success: true };
 }

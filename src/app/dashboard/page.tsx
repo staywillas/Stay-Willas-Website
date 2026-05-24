@@ -1,6 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
-import { auth } from "@clerk/nextjs/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
@@ -14,16 +15,26 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  let userId = "DEMO_USER_GUEST";
+  let userId = "";
+  let userEmail = "";
 
-  // 1. Secure Server-side Clerk Authentication check with graceful development fallback
+  // 1. Secure Server-side Cookie Authentication check
   try {
-    const authSession = await auth();
-    if (authSession?.userId) {
-      userId = authSession.userId;
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get("staywillas_session");
+    if (sessionCookie?.value) {
+      const session = JSON.parse(sessionCookie.value);
+      if (session.role === "guest" || session.role === "admin" || session.role === "partner") {
+        userId = session.id || "GUEST_USER";
+        userEmail = session.email;
+      }
     }
   } catch (e) {
-    console.warn("Clerk server auth skipped, using DEMO_USER_GUEST context for dashboard view.", e);
+    console.warn("Session check failed inside dashboard:", e);
+  }
+
+  if (!userId) {
+    redirect("/login?role=guest");
   }
 
   // 2. Query all database bookings created by this user

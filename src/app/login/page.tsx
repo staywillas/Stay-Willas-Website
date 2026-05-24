@@ -11,9 +11,13 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   
   // Extract initial role from search parameters
-  const initialRole = searchParams.get("role") === "admin" ? "admin" : "partner";
+  const initialRole = searchParams.get("role") === "admin" 
+    ? "admin" 
+    : searchParams.get("role") === "guest"
+      ? "guest"
+      : "partner";
   
-  const [role, setRole] = useState<"admin" | "partner">(initialRole);
+  const [role, setRole] = useState<"admin" | "partner" | "guest">(initialRole);
   
   // React 19 useActionState for form handling
   const [state, formAction, isPending] = useActionState(loginAction, null);
@@ -25,6 +29,8 @@ export default function LoginPage() {
       router.refresh();
     }
   }, [state, router]);
+
+  const redirectParam = searchParams.get("redirect") || "";
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-6 relative overflow-hidden font-sans">
@@ -57,30 +63,42 @@ export default function LoginPage() {
         <div className="glass-premium border border-white/5 rounded-[32px] p-8 shadow-2xl relative">
           
           {/* Role Toggles Tabs */}
-          <div className="flex bg-slate-900 border border-white/5 rounded-2xl p-1 mb-8">
+          <div className="flex bg-slate-900 border border-white/5 rounded-2xl p-1 mb-8 overflow-x-auto gap-0.5 no-scrollbar">
+            <button
+              type="button"
+              onClick={() => setRole("guest")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl text-[9px] font-black tracking-widest uppercase transition-all whitespace-nowrap cursor-pointer ${
+                role === "guest"
+                  ? "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/10 scale-102"
+                  : "text-white/50 hover:text-white"
+              }`}
+            >
+              <Users size={10} />
+              Guest Access
+            </button>
             <button
               type="button"
               onClick={() => setRole("partner")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl text-[9px] font-black tracking-widest uppercase transition-all whitespace-nowrap cursor-pointer ${
                 role === "partner"
                   ? "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/10 scale-102"
                   : "text-white/50 hover:text-white"
               }`}
             >
-              <Users size={12} />
-              Homeowner
+              <Users size={10} />
+              Partner
             </button>
             <button
               type="button"
               onClick={() => setRole("admin")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl text-[9px] font-black tracking-widest uppercase transition-all whitespace-nowrap cursor-pointer ${
                 role === "admin"
                   ? "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/10 scale-102"
                   : "text-white/50 hover:text-white"
               }`}
             >
-              <Lock size={12} />
-              Admin Suite
+              <Lock size={10} />
+              Admin
             </button>
           </div>
 
@@ -94,6 +112,9 @@ export default function LoginPage() {
 
           <form action={(formData) => {
             formData.append("role", role);
+            if (redirectParam) {
+              formData.append("redirect", redirectParam);
+            }
             startTransition(() => {
               formAction(formData);
             });
@@ -101,8 +122,8 @@ export default function LoginPage() {
             
             {/* Username / Email Input field */}
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest">
-                {role === "admin" ? "Administrative ID" : "Homeowner Email"}
+              <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest text-left">
+                {role === "admin" ? "Administrative ID" : role === "guest" ? "Your Email Address" : "Homeowner Email"}
               </label>
               <div className="relative flex items-center">
                 {role === "admin" ? (
@@ -114,7 +135,7 @@ export default function LoginPage() {
                   type={role === "admin" ? "text" : "email"}
                   name="username"
                   required
-                  placeholder={role === "admin" ? "e.g. admin" : "e.g. owner@staywillas.com"}
+                  placeholder={role === "admin" ? "e.g. admin" : role === "guest" ? "e.g. traveler@gmail.com" : "e.g. owner@staywillas.com"}
                   className="w-full bg-slate-950 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm font-semibold text-white focus:outline-none focus:border-amber-500 transition-colors focus:ring-1 focus:ring-amber-500/25 placeholder:text-white/20"
                 />
               </div>
@@ -122,28 +143,34 @@ export default function LoginPage() {
 
             {/* Password Input field */}
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest">
-                Security Password
+              <label className="text-[10px] font-bold text-white/50 uppercase tracking-widest text-left">
+                {role === "guest" ? "Your Full Name" : "Security Password"}
               </label>
               <div className="relative flex items-center">
-                <Lock size={16} className="absolute left-4 text-white/30" />
+                {role === "guest" ? (
+                  <Users size={16} className="absolute left-4 text-white/30" />
+                ) : (
+                  <Lock size={16} className="absolute left-4 text-white/30" />
+                )}
                 <input
-                  type="password"
+                  type={role === "guest" ? "text" : "password"}
                   name="password"
-                  required
-                  placeholder="••••••••"
+                  required={role !== "guest"}
+                  placeholder={role === "guest" ? "e.g. John Doe" : "••••••••"}
                   className="w-full bg-slate-950 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm font-semibold text-white focus:outline-none focus:border-amber-500 transition-colors focus:ring-1 focus:ring-amber-500/25 placeholder:text-white/20"
                 />
               </div>
             </div>
 
             {/* Hint message to guide dev users */}
-            <div className="p-3 bg-slate-950 border border-white/10 rounded-xl text-[10px] text-white/60 leading-normal select-none">
+            <div className="p-3 bg-slate-950 border border-white/10 rounded-xl text-[10px] text-white/60 leading-normal select-none text-left">
               <p className="font-semibold text-amber-400 mb-0.5">🔒 Credentials Hint:</p>
               {role === "admin" ? (
                 <span>ID: <code className="text-white font-bold">admin</code> | PW: <code className="text-white font-bold">staywillas2026</code></span>
-              ) : (
+              ) : role === "partner" ? (
                 <span>Email: <code className="text-white font-bold">owner@staywillas.com</code> | PW: <code className="text-white font-bold">partner2026</code></span>
+              ) : (
+                <span>No password required! Simply input your name & email to log in and manage your stay or book instantly.</span>
               )}
             </div>
 

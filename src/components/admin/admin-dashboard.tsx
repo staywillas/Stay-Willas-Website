@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { UserButton } from "@clerk/nextjs";
 import { logoutAction } from "@/app/actions/login-actions";
 import { 
   Home as HomeIcon, 

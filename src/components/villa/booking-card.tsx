@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
 import { createCheckoutSession } from "@/app/actions/booking";
-import { useUser, SignInButton } from "@clerk/nextjs";
+import { useAuth } from "@/lib/use-auth";
 
 interface BookingCardProps {
   villaId: string;
@@ -16,7 +17,7 @@ interface BookingCardProps {
 
 const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardProps) => {
   const numericPrice = parseInt(price.replace(/,/g, ""));
-  const { user } = useUser();
+  const { user, isSignedIn } = useAuth();
 
   const [checkIn, setCheckIn] = useState<Date>(new Date());
   const [checkOut, setCheckOut] = useState<Date>(addDays(new Date(), 3));
@@ -73,7 +74,7 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
         checkOut,
         guests,
         selectedAddOns: [],
-        userId: user!.id
+        userId: user ? user.id : "GUEST_USER"
       });
 
       if (session && session.url) {
@@ -244,7 +245,7 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
         </div>
       </div>
 
-      {user ? (
+      {isSignedIn && user ? (
         <Button 
           onClick={handleBooking}
           disabled={isLoading || nights <= 0}
@@ -253,14 +254,12 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
           {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
         </Button>
       ) : (
-        <SignInButton mode="modal">
-          <Button 
-            disabled={nights <= 0}
-            className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
-          >
-            SIGN IN TO SECURE STAY
-          </Button>
-        </SignInButton>
+        <Link 
+          href={`/login?role=guest&redirect=/villa/${villaId}`}
+          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
+        >
+          SIGN IN TO SECURE STAY
+        </Link>
       )}
       
       <p className="text-center text-text-primary/40 text-[10px] uppercase tracking-widest mb-6 select-none">

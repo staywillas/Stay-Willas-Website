@@ -305,7 +305,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         name: "Online Booking",
         email: "Processed via Stripe Node",
         phone: "",
-        notes: `Clerk Identifier: ${booking.userId}`,
+        notes: `User Identifier: ${booking.userId}`,
         channel: "Web Portal"
       };
     }

@@ -29,7 +29,7 @@ export default async function PartnerPortalPage() {
         isAuthenticated = true;
         
         // Enable account switching switcher in dev mode or local testing
-        if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || session.role === "admin") {
+        if (process.env.NODE_ENV === "development" || session.role === "admin") {
           isDevMode = true;
         }
       }

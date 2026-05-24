@@ -4,13 +4,13 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, Heart, MapPin, User } from "lucide-react";
-import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
+import { useAuth } from "@/lib/use-auth";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
-  const { isSignedIn } = useUser();
+  const { user, isSignedIn } = useAuth();
   const [wishlistCount, setWishlistCount] = useState(0);
 
   // Hide on villa detail pages to give priority to the sticky Book Now CTA
@@ -40,6 +40,20 @@ export default function MobileBottomNav() {
     return null;
   }
 
+  const handleProfileClick = () => {
+    if (isSignedIn && user) {
+      if (user.role === "admin") {
+        window.location.href = "/admin";
+      } else if (user.role === "partner") {
+        window.location.href = "/partner/portal";
+      } else {
+        window.location.href = "/dashboard";
+      }
+    } else {
+      window.location.href = "/login?role=guest";
+    }
+  };
+
   const navItems = [
     {
       name: "Explore",
@@ -62,7 +76,7 @@ export default function MobileBottomNav() {
   ];
 
   return (
-    <div className="xl:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#F5F2EA]/95 backdrop-blur-xl border-t border-[#DAA520]/20 pb-safe pt-2 px-6 shadow-[0_-8px_30px_rgba(44,31,14,0.08)]">
+    <div className="xl:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#F5F2EA]/95 backdrop-blur-xl border-t border-[#DAA520]/20 pb-safe pt-2 px-6 shadow-[0_-8px_30px_rgba(44,31,14,0.08)] font-sans">
       <div className="flex items-center justify-between gap-2 max-w-md mx-auto pb-2">
         {navItems.map((item) => (
           <Link
@@ -97,22 +111,21 @@ export default function MobileBottomNav() {
         ))}
 
         {/* Profile Item */}
-        <div className="flex flex-col items-center justify-center gap-1.5 p-2 min-w-[56px]">
-          {isSignedIn ? (
-            <div className="mb-0.5">
-              <UserButton appearance={{ elements: { userButtonAvatarBox: "w-6 h-6" } }} />
+        <button 
+          onClick={handleProfileClick}
+          className="flex flex-col items-center justify-center gap-1.5 p-2 min-w-[56px] text-[#1B3564]/60 hover:text-[#1B3564] transition-all cursor-pointer border-none bg-transparent"
+        >
+          {isSignedIn && user ? (
+            <div className="w-5.5 h-5.5 rounded-full bg-[#1B3564] text-white flex items-center justify-center font-bold text-[9px] uppercase shadow-sm">
+              {user.name ? user.name.charAt(0) : "G"}
             </div>
           ) : (
-            <SignInButton mode="modal">
-              <button className="flex flex-col items-center justify-center gap-1.5 text-[#1B3564]/60 hover:text-[#1B3564] transition-all">
-                <User size={22} className="stroke-[1.8]" />
-              </button>
-            </SignInButton>
+            <User size={22} className="stroke-[1.8]" />
           )}
-          <span className="text-[10px] tracking-wide font-medium text-[#1B3564]/60">
+          <span className="text-[10px] tracking-wide font-medium">
             Profile
           </span>
-        </div>
+        </button>
 
         {/* Menu Toggle */}
         <button 
