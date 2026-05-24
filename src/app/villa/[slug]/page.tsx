@@ -258,6 +258,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
               villaId={villaData.id}
               villaName={villaData.name}
               price={villaData.price}
+              maxGuests={villaData.guests}
             />
           </div>
         </div>

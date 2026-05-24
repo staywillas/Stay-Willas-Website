@@ -49,11 +49,11 @@ const Experiences = () => {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <span className="inline-block text-blue-600 font-bold tracking-[0.3em] uppercase text-xs mb-4 bg-blue-50 px-4 py-2 rounded-full">
+            <span className="inline-block text-[#559C24] font-bold tracking-[0.3em] uppercase text-xs mb-4 bg-[#559C24]/10 px-4 py-2 rounded-full">
               Curated Experiences
             </span>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-text-primary mt-6">
-              Find Your <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent pr-2 inline-block">Perfect Trip</span>
+              Find Your <span className="italic bg-gradient-to-r from-[#1B3564] to-[#DAA520] bg-clip-text text-transparent pr-2 inline-block">Perfect Trip</span>
             </h2>
             <p className="text-lg text-text-primary/60 mt-6 max-w-2xl mx-auto">
               From poolside relaxation to mountain adventures, we have the perfect villa for every mood.
@@ -85,7 +85,7 @@ const Experiences = () => {
             <div className="absolute inset-0 p-10 flex flex-col justify-end">
               <h3 className="text-4xl lg:text-5xl font-heading text-white mb-3 tracking-tight">{categories[0].title}</h3>
               <p className="text-white/85 max-w-md mb-8 text-lg leading-relaxed">{categories[0].description}</p>
-              <div className="flex items-center gap-3 text-blue-300 font-bold uppercase tracking-widest text-sm group-hover:gap-5 transition-all">
+              <div className="flex items-center gap-3 text-[#DAA520] font-bold uppercase tracking-widest text-sm group-hover:gap-5 transition-all">
                 Explore Collection <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
               </div>
             </div>
@@ -114,7 +114,7 @@ const Experiences = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute inset-0 p-6 flex flex-col justify-end">
                   <h3 className="text-2xl font-heading text-white mb-2">{cat.title}</h3>
-                  <div className="flex items-center gap-2 text-blue-300 font-bold uppercase tracking-widest text-xs group-hover:gap-4 transition-all">
+                  <div className="flex items-center gap-2 text-[#DAA520] font-bold uppercase tracking-widest text-xs group-hover:gap-4 transition-all">
                     Explore <ArrowRight size={14} />
                   </div>
                 </div>

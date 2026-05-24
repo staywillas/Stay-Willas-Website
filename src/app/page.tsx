@@ -56,7 +56,7 @@ export default async function Home() {
   }));
 
   return (
-    <main className="min-h-screen bg-charcoal">
+    <main className="min-h-screen bg-bg-primary">
       <Navbar />
       <Hero />
       <DestinationShowcase />

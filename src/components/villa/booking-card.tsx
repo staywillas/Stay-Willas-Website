@@ -2,18 +2,22 @@
 
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone } from "lucide-react";
+import { Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
-import { submitInquiry } from "@/app/actions/inquiry";
+import { createCheckoutSession } from "@/app/actions/booking";
+import { useUser } from "@clerk/nextjs";
 
 interface BookingCardProps {
   villaId: string;
   villaName: string;
   price: string;
+  maxGuests?: number;
 }
 
-const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
+const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardProps) => {
   const numericPrice = parseInt(price.replace(/,/g, ""));
+  const { user } = useUser();
+
   const [checkIn, setCheckIn] = useState<Date>(new Date());
   const [checkOut, setCheckOut] = useState<Date>(addDays(new Date(), 3));
   const [guests, setGuests] = useState(2);
@@ -22,13 +26,26 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
   const [clientPhone, setClientPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Interactive concierge upselling packages state
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+
   const checkInRef = useRef<HTMLInputElement>(null);
   const checkOutRef = useRef<HTMLInputElement>(null);
 
   const nights = differenceInDays(checkOut, checkIn);
   const subtotal = numericPrice * (nights > 0 ? nights : 0);
+  
+  // Calculate add-on costs in real-time in the UI
+  const addOnsTotal = selectedAddOns.reduce((acc, addon) => {
+    if (addon === "Gourmet Chef Experience") return acc + 6000 * (nights > 0 ? nights : 0);
+    if (addon === "Curated Vineyard Tour") return acc + 4500 * guests;
+    if (addon === "Celebration Decoration") return acc + 7500;
+    if (addon === "Premium SUV Airport Transfer") return acc + 9500;
+    return acc;
+  }, 0);
+
   const serviceFee = 5000;
-  const total = subtotal + serviceFee;
+  const total = subtotal + serviceFee + addOnsTotal;
 
   const handleCheckInClick = () => {
     if (checkInRef.current) {
@@ -40,6 +57,12 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
     if (checkOutRef.current) {
       try { checkOutRef.current.showPicker(); } catch (err) { checkOutRef.current.click(); }
     }
+  };
+
+  const toggleAddOn = (addon: string) => {
+    setSelectedAddOns(prev => 
+      prev.includes(addon) ? prev.filter(a => a !== addon) : [...prev, addon]
+    );
   };
 
   const handleBooking = async () => {
@@ -58,45 +81,25 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
 
     setIsLoading(true);
     try {
-      const checkInStr = format(checkIn, "MMM dd, yyyy");
-      const checkOutStr = format(checkOut, "MMM dd, yyyy");
-      
-      // Submit Inquiry to database so the admin gets the notification instantly
-      const dbMessage = `Booking request initiated for ${villaName} from ${checkInStr} to ${checkOutStr} (${nights} nights) for ${guests} guests. Total Bill: ₹${total.toLocaleString("en-IN")}.`;
-      await submitInquiry({
-        name: clientName,
-        email: clientEmail,
-        phone: clientPhone,
-        message: dbMessage,
-        villaId: villaId,
-        type: "GUEST"
+      // Securely check dates, calculate prices, create 10-minute hold status in DB, and create Stripe Checkout Session
+      const session = await createCheckoutSession({
+        villaId,
+        villaName,
+        checkIn,
+        checkOut,
+        guests,
+        selectedAddOns,
+        userId: user?.id || `GUEST_${Date.now()}`
       });
 
-      const message = `🏰 *STAY WILLAS - RESERVATION REQUEST* 🏰\n` +
-        `------------------------------------------\n` +
-        `✨ *Villa:* ${villaName}\n` +
-        `📅 *Check-In:* ${checkInStr}\n` +
-        `📅 *Check-Out:* ${checkOutStr}\n` +
-        `🌙 *Nights:* ${nights}\n` +
-        `👥 *Guests:* ${guests} Guests\n\n` +
-        `👤 *CLIENT DETAILS:*\n` +
-        `• Name: ${clientName}\n` +
-        `• Email: ${clientEmail}\n` +
-        `• Phone: ${clientPhone}\n\n` +
-        `💳 *BILLING SUMMARY:*\n` +
-        `• Rate per Night: ₹${price}\n` +
-        `• Subtotal: ₹${subtotal.toLocaleString("en-IN")}\n` +
-        `• Luxury Service & Culinary Fee: ₹${serviceFee.toLocaleString("en-IN")}\n` +
-        `------------------------------------------\n` +
-        `🌟 *TOTAL BILL: ₹${total.toLocaleString("en-IN")}*\n` +
-        `------------------------------------------\n` +
-        `✨ *Status:* Booking Inquiry Pending. Please verify calendar availability!`;
-
-      const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-    } catch (error) {
+      if (session && session.url) {
+        window.location.href = session.url;
+      } else {
+        throw new Error("Invalid session response received.");
+      }
+    } catch (error: any) {
       console.error("Booking Error:", error);
-      alert("Something went wrong. Please try again!");
+      alert(error.message || "Failed to initiate booking hold. Please select another date range.");
     } finally {
       setIsLoading(false);
     }
@@ -164,27 +167,93 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
           </div>
         </div>
 
-        <div className="w-full bg-white p-4 text-left border border-border-subtle rounded-2xl flex items-center justify-between">
-          <div>
-            <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">Guests</span>
-            <div className="flex items-center gap-4">
-              <button onClick={() => setGuests(Math.max(1, guests - 1))} className="text-accent-secondary hover:text-accent-primary font-bold text-lg leading-none">-</button>
-              <span className="text-text-primary text-sm">{guests} Guests</span>
-              <button onClick={() => setGuests(Math.min(20, guests + 1))} className="text-accent-secondary hover:text-accent-primary font-bold text-lg leading-none">+</button>
+        {/* Guests picker - Dual Type or Select Input */}
+        <div className="w-full bg-white p-4 text-left border border-border-subtle rounded-2xl flex items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">Guests (Max {maxGuests})</span>
+            <div className="flex items-center gap-2 mt-1">
+              <input
+                type="number"
+                min={1}
+                max={maxGuests}
+                className="w-12 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0"
+                value={guests}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  if (!isNaN(val)) {
+                    setGuests(Math.min(maxGuests, Math.max(1, val)));
+                  }
+                }}
+              />
+              <span className="text-text-primary/30 text-xs font-bold select-none border-l border-border-subtle/60 pl-2">or select:</span>
+              <select
+                value={guests}
+                onChange={(e) => setGuests(parseInt(e.target.value))}
+                className="flex-1 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0 cursor-pointer appearance-none"
+              >
+                {Array.from({ length: maxGuests }, (_, i) => i + 1).map(num => (
+                  <option key={num} value={num} className="text-text-primary">
+                    {num} Guest{num > 1 ? "s" : ""}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
-          <Users size={16} className="text-text-primary/30" />
+          <Users size={16} className="text-text-primary/30 shrink-0 pointer-events-none" />
+        </div>
+
+        {/* Concierge Experiential Upselling Packages Section */}
+        <div className="pt-4 border-t border-border-subtle/60 space-y-3 text-left">
+          <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block">
+            💎 LUXURY EXPERIENCE ADD-ONS
+          </span>
+          <div className="space-y-2">
+            {[
+              { id: "Gourmet Chef Experience", label: "Private Gourmet Chef", rate: "₹6,000 / night", desc: "Premium Chef catering custom multi-cuisine spreads." },
+              { id: "Curated Vineyard Tour", label: "Exclusive Vineyard Tour", rate: "₹4,500 / guest", desc: "Private VIP wine tasting sessions and estate tours." },
+              { id: "Celebration Decoration", label: "Bespoke Occasion Decoration", rate: "₹7,500 flat", desc: "Premium floral alignments & cake setup for anniversaries/birthdays." },
+              { id: "Premium SUV Airport Transfer", label: "Luxury SUV Chauffeur Transfer", rate: "₹9,500 flat", desc: "Airport drop or home pick-up in a premium luxury SUV." }
+            ].map(addon => {
+              const isChecked = selectedAddOns.includes(addon.id);
+              return (
+                <div 
+                  key={addon.id}
+                  onClick={() => toggleAddOn(addon.id)}
+                  className={`p-3 border rounded-xl flex items-start gap-3 cursor-pointer transition-all duration-300 ${
+                    isChecked 
+                      ? "border-[#1B3564] bg-[#1B3564]/5 shadow-sm" 
+                      : "border-border-subtle bg-white hover:border-[#1B3564]/40"
+                  }`}
+                >
+                  <div className="mt-0.5 shrink-0">
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                      isChecked ? "bg-[#1B3564] border-[#1B3564]" : "border-border-subtle bg-white"
+                    }`}>
+                      {isChecked && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-center mb-0.5">
+                      <span className="text-xs font-bold text-[#1B3564] truncate">{addon.label}</span>
+                      <span className="text-[10px] font-black text-accent-secondary shrink-0 ml-2">{addon.rate}</span>
+                    </div>
+                    <p className="text-[10px] text-text-primary/50 leading-snug">{addon.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Contact Information Section */}
         <div className="pt-4 border-t border-border-subtle/60 space-y-3">
-          <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block">
-            Contact Information (Almost Confirmed)
+          <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block text-left">
+            Contact Information (Secure Checkout)
           </span>
 
           {/* Full Name */}
-          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-accent-primary focus-within:ring-1 focus-within:ring-accent-primary/25 transition-all duration-300">
-            <div className="flex-1">
+          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
+            <div className="flex-1 text-left">
               <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Full Name</span>
               <input
                 type="text"
@@ -199,8 +268,8 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
           </div>
 
           {/* Email Address */}
-          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-accent-primary focus-within:ring-1 focus-within:ring-accent-primary/25 transition-all duration-300">
-            <div className="flex-1">
+          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
+            <div className="flex-1 text-left">
               <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Email Address</span>
               <input
                 type="email"
@@ -215,8 +284,8 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
           </div>
 
           {/* Phone Number */}
-          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-accent-primary focus-within:ring-1 focus-within:ring-accent-primary/25 transition-all duration-300">
-            <div className="flex-1">
+          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
+            <div className="flex-1 text-left">
               <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Phone Number</span>
               <input
                 type="tel"
@@ -235,13 +304,13 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
       <Button 
         onClick={handleBooking}
         disabled={isLoading || nights <= 0}
-        className="w-full bg-accent-primary hover:bg-accent-secondary text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(30,122,140,0.4)] transition-all duration-300 whitespace-nowrap"
+        className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
       >
         {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
       </Button>
       
-      <p className="text-center text-text-primary/40 text-[10px] uppercase tracking-widest mb-6">
-        You won&apos;t be charged yet
+      <p className="text-center text-text-primary/40 text-[10px] uppercase tracking-widest mb-6 select-none">
+        Secure checkout & temporary 10-minute hold
       </p>
 
       {nights > 0 && (
@@ -250,18 +319,24 @@ const BookingCard = ({ villaId, villaName, price }: BookingCardProps) => {
             <span className="text-text-primary/60">₹{price} x {nights} nights</span>
             <span className="text-text-primary">₹{subtotal.toLocaleString()}</span>
           </div>
+          {selectedAddOns.length > 0 && (
+            <div className="flex justify-between text-sm text-[#1B3564] font-semibold">
+              <span>Experience Add-ons</span>
+              <span>₹{addOnsTotal.toLocaleString()}</span>
+            </div>
+          )}
           <div className="flex justify-between text-sm">
-            <span className="text-text-primary/60">Service fee</span>
+            <span className="text-text-primary/60">Luxury Service Fee</span>
             <span className="text-text-primary">₹{serviceFee.toLocaleString()}</span>
           </div>
-          <div className="flex justify-between text-lg font-heading pt-4 border-t border-border-subtle">
-            <span className="text-text-primary">Total</span>
-            <span className="text-accent-primary">₹{total.toLocaleString()}</span>
+          <div className="flex justify-between text-lg font-heading pt-4 border-t border-[#1B3564]/10">
+            <span className="text-[#1B3564]">Total Stay Bill</span>
+            <span className="text-[#1B3564] font-bold">₹{total.toLocaleString()}</span>
           </div>
         </div>
       )}
 
-      <div className="mt-8 p-4 rounded-2xl bg-accent-secondary/8 border border-accent-secondary/20 flex gap-3 items-start">
+      <div className="mt-8 p-4 rounded-2xl bg-accent-secondary/8 border border-accent-secondary/20 flex gap-3 items-start text-left select-none">
         <Info className="text-accent-secondary shrink-0 mt-0.5" size={16} />
         <p className="text-[11px] text-accent-secondary/80 leading-relaxed">
           Best Price Guarantee: If you find a lower price on another OTA, we will match it and offer a complimentary experience.

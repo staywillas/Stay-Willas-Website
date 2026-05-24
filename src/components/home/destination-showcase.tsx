@@ -106,7 +106,7 @@ const DestinationShowcase = () => {
   }, []);
 
   return (
-    <section className="py-32 bg-gradient-to-b from-[#1B3564] via-[#0F1E36] to-[#070F1B] relative overflow-hidden">
+    <section className="py-32 bg-bg-primary relative overflow-hidden">
       {/* Elegant Gold Wave Lines - Left Boundary Overlay */}
       <div className="absolute left-0 top-0 bottom-0 w-64 opacity-20 pointer-events-none select-none z-0">
         <svg className="w-full h-full text-[#DAA520]" viewBox="0 0 200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -130,7 +130,7 @@ const DestinationShowcase = () => {
       </div>
 
       {/* Background Decorative Text - Premium Ghost Gold */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 text-[20vw] font-black text-[#DAA520]/5 whitespace-nowrap pointer-events-none select-none uppercase tracking-tighter">
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 text-[20vw] font-black text-[#1B3564]/3 whitespace-nowrap pointer-events-none select-none uppercase tracking-tighter">
         Explore
       </div>
 
@@ -144,7 +144,7 @@ const DestinationShowcase = () => {
             <span className="text-[#DAA520] font-bold tracking-[0.3em] uppercase text-xs mb-4 inline-block bg-[#DAA520]/15 px-4.5 py-2 rounded-full border border-[#DAA520]/20">
               🗺️ Where Do You Want To Go?
             </span>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-heading text-[#F5F2EA] leading-tight mt-6 font-normal tracking-wide">
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-heading text-[#1B3564] leading-tight mt-6 font-normal tracking-wide">
               Find Your <span className="italic text-[#DAA520]">Perfect Spot</span>
             </h2>
             {/* Scroll guideline */}
@@ -156,10 +156,10 @@ const DestinationShowcase = () => {
           
           {/* Navigation Buttons */}
           <div className="flex items-center gap-3">
-            <button className="dest-prev w-12 h-12 rounded-full border border-[#DAA520]/30 flex items-center justify-center text-[#F5F2EA] hover:bg-[#DAA520] hover:border-[#DAA520] hover:text-slate-950 transition-all duration-300 group cursor-pointer">
+            <button className="dest-prev w-12 h-12 rounded-full border border-[#1B3564]/30 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564] hover:border-[#1B3564] hover:text-white transition-all duration-300 group cursor-pointer">
               <ChevronLeft size={20} className="group-hover:scale-110 transition-transform" />
             </button>
-            <button className="dest-next w-12 h-12 rounded-full border border-[#DAA520]/30 flex items-center justify-center text-[#F5F2EA] hover:bg-[#DAA520] hover:border-[#DAA520] hover:text-slate-950 transition-all duration-300 group cursor-pointer">
+            <button className="dest-next w-12 h-12 rounded-full border border-[#1B3564]/30 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564] hover:border-[#1B3564] hover:text-white transition-all duration-300 group cursor-pointer">
               <ChevronRight size={20} className="group-hover:scale-110 transition-transform" />
             </button>
           </div>
@@ -265,12 +265,12 @@ const DestinationShowcase = () => {
 
         {/* Floating Side Arrow Buttons - Premium */}
         <div className="hidden xl:block absolute top-[55%] left-8 -translate-y-1/2 z-30 pointer-events-none">
-          <button className="dest-prev pointer-events-auto w-16 h-16 rounded-full bg-white/10 hover:bg-[#DAA520] hover:text-slate-950 border border-white/20 flex items-center justify-center text-white hover:shadow-lg hover:scale-105 transition-all duration-300 group backdrop-blur-md cursor-pointer">
+          <button className="dest-prev pointer-events-auto w-16 h-16 rounded-full bg-white/70 hover:bg-[#1B3564] hover:text-white border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564] hover:shadow-lg hover:scale-105 transition-all duration-300 group backdrop-blur-md cursor-pointer">
             <ChevronLeft size={28} className="group-hover:scale-125 transition-transform" />
           </button>
         </div>
         <div className="hidden xl:block absolute top-[55%] right-8 -translate-y-1/2 z-30 pointer-events-none">
-          <button className="dest-next pointer-events-auto w-16 h-16 rounded-full bg-white/10 hover:bg-[#DAA520] hover:text-slate-950 border border-white/20 flex items-center justify-center text-white hover:shadow-lg hover:scale-105 transition-all duration-300 group backdrop-blur-md cursor-pointer">
+          <button className="dest-next pointer-events-auto w-16 h-16 rounded-full bg-white/70 hover:bg-[#1B3564] hover:text-white border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564] hover:shadow-lg hover:scale-105 transition-all duration-300 group backdrop-blur-md cursor-pointer">
             <ChevronRight size={28} className="group-hover:scale-125 transition-transform" />
           </button>
         </div>

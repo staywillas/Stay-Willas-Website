@@ -138,12 +138,12 @@ export default function LoginPage() {
             </div>
 
             {/* Hint message to guide dev users */}
-            <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[10px] text-white/40 leading-normal select-none">
-              <p className="font-semibold text-amber-400/80 mb-0.5">🔒 Credentials Hint:</p>
+            <div className="p-3 bg-slate-950 border border-white/10 rounded-xl text-[10px] text-white/60 leading-normal select-none">
+              <p className="font-semibold text-amber-400 mb-0.5">🔒 Credentials Hint:</p>
               {role === "admin" ? (
-                <span>ID: <code className="text-white/70">admin</code> | PW: <code className="text-white/70">staywillas2026</code></span>
+                <span>ID: <code className="text-white font-bold">admin</code> | PW: <code className="text-white font-bold">staywillas2026</code></span>
               ) : (
-                <span>Email: <code className="text-white/70">owner@staywillas.com</code> | PW: <code className="text-white/70">partner2026</code></span>
+                <span>Email: <code className="text-white font-bold">owner@staywillas.com</code> | PW: <code className="text-white font-bold">partner2026</code></span>
               )}
             </div>
 

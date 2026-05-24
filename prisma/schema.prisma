@@ -19,13 +19,16 @@ model Villa {
   guests      Int
   bedrooms    Int
   bathrooms   Int
-  images      String[]
-  amenities   String[]
-  category    String   @default("Mountain View")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  bookings    Booking[]
-  reviews     Review[]
+  images         String[]
+  amenities      String[]
+  category       String   @default("Mountain View")
+  weekendPrice   Float?
+  iCalUrl        String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  bookings       Booking[]
+  reviews        Review[]
+  seasonalPrices SeasonalPrice[]
 }
 
 model Review {
@@ -40,16 +43,20 @@ model Review {
 }
 
 model Booking {
-  id        String   @id @default(cuid())
-  villaId   String
-  villa     Villa    @relation(fields: [villaId], references: [id])
-  userId    String   // Clerk User ID
-  checkIn   DateTime
-  checkOut  DateTime
+  id         String   @id @default(cuid())
+  villaId    String
+  villa      Villa    @relation(fields: [villaId], references: [id])
+  userId     String   // Clerk User ID
+  checkIn    DateTime
+  checkOut   DateTime
   totalPrice Float
-  status    String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status     String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED, HELD, BLOCKED
+  addOns     Json?    // Array of chosen packages
+  kycName    String?
+  kycGuests  Json?
+  kycIdUrl   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Inquiry {
@@ -61,4 +68,16 @@ model Inquiry {
   villaId   String?
   type      String   @default("GUEST") // GUEST or OWNER
   createdAt DateTime @default(now())
+}
+
+model SeasonalPrice {
+  id        String   @id @default(cuid())
+  villaId   String
+  villa     Villa    @relation(fields: [villaId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  price     Float    // Price override for this specific period
+  label     String?  // e.g., "New Year Peak"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
