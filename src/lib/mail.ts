@@ -1,6 +1,5 @@
+import { Resend } from "resend";
 import nodemailer from "nodemailer";
-import fs from "fs";
-import path from "path";
 
 interface EmailPayload {
   to: string;
@@ -9,66 +8,68 @@ interface EmailPayload {
 }
 
 /**
- * Sends an email utilizing production SMTP credentials if available.
- * If not configured, logs the email beautifully to the console and to `scratch/sent-emails.log`.
+ * Sends an email using:
+ * 1. Resend (if RESEND_API_KEY is set) - works on Vercel, free tier
+ * 2. SMTP via Nodemailer (if SMTP_HOST/USER/PASS is set)
+ * 3. Console log fallback for local development
  */
 export async function sendEmail({ to, subject, html }: EmailPayload): Promise<{ success: boolean; messageId?: string; devLogged?: boolean }> {
-  const host = process.env.SMTP_HOST;
-  const port = parseInt(process.env.SMTP_PORT || "587");
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const from = process.env.SMTP_FROM || "Stay Willas <staywillas@gmail.com>";
+  const from = process.env.EMAIL_FROM || "Stay Willas <onboarding@resend.dev>";
 
-  if (host && user && pass) {
+  // ── 1. Resend (Primary for Vercel) ──────────────────────────────────────
+  const resendKey = process.env.RESEND_API_KEY;
+  if (resendKey) {
     try {
-      const transporter = nodemailer.createTransport({
-        host,
-        port,
-        secure: port === 465,
-        auth: {
-          user,
-          pass,
-        },
-      });
-
-      const info = await transporter.sendMail({
+      const resend = new Resend(resendKey);
+      const { data, error } = await resend.emails.send({
         from,
         to,
         subject,
         html,
       });
 
-      console.log(`✉️ Production Email dispatched to ${to}. Message ID: ${info.messageId}`);
+      if (error) {
+        console.error("❌ Resend dispatch failed:", error);
+      } else {
+        console.log(`✉️ Email sent via Resend to ${to}. ID: ${data?.id}`);
+        return { success: true, messageId: data?.id };
+      }
+    } catch (error) {
+      console.error("❌ Resend exception:", error);
+    }
+  }
+
+  // ── 2. SMTP via Nodemailer (fallback) ────────────────────────────────────
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+
+  if (smtpHost && smtpUser && smtpPass) {
+    try {
+      const port = parseInt(process.env.SMTP_PORT || "587");
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port,
+        secure: port === 465,
+        auth: { user: smtpUser, pass: smtpPass },
+      });
+
+      const info = await transporter.sendMail({ from, to, subject, html });
+      console.log(`✉️ Email sent via SMTP to ${to}. ID: ${info.messageId}`);
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      console.error("❌ Production SMTP dispatch failed, falling back to local logging:", error);
+      console.error("❌ SMTP dispatch failed:", error);
     }
   }
 
-  // Local/Dev Logging Fallback
-  try {
-    const scratchDir = path.join(process.cwd(), "scratch");
-    if (!fs.existsSync(scratchDir)) {
-      fs.mkdirSync(scratchDir, { recursive: true });
-    }
-
-    const logPath = path.join(scratchDir, "sent-emails.log");
-    const timestamp = new Date().toISOString();
-    const logContent = `
-======================================================================
-[${timestamp}] EMAIL DISPATCHED
-To: ${to}
+  // ── 3. Console / Dev fallback ────────────────────────────────────────────
+  console.log(`\n══════════════════════════════════════════════
+✉️  [DEV EMAIL — No sender configured]
+To:      ${to}
 Subject: ${subject}
-----------------------------------------------------------------------
-${html}
-======================================================================
-`;
+══════════════════════════════════════════════
+${html.replace(/<[^>]+>/g, "").trim().substring(0, 800)}
+══════════════════════════════════════════════\n`);
 
-    fs.appendFileSync(logPath, logContent, "utf8");
-    console.log(`✉️ [DEVELOPMENT MODE] Local Mock Email logged for ${to} in scratch/sent-emails.log`);
-    return { success: true, devLogged: true };
-  } catch (err) {
-    console.error("❌ Failed to log mock email to local scratch folder:", err);
-    return { success: false };
-  }
+  return { success: true, devLogged: true };
 }
