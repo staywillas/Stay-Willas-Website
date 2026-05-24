@@ -28,10 +28,10 @@ const benefits = [
 
 const PartnerSection = () => {
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 overflow-hidden relative">
+    <section className="py-32 px-6 md:px-12 lg:px-24 bg-gradient-to-br from-[#4A5D23] via-[#559C24] to-[#2E3C14] overflow-hidden relative">
       {/* Ambient glow effects */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#559C24]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#DAA520]/10 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -42,12 +42,12 @@ const PartnerSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 1 }}
           >
-            <span className="inline-block text-blue-200 font-bold tracking-[0.3em] uppercase text-xs mb-6 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+            <span className="inline-block text-[#DAA520] font-bold tracking-[0.3em] uppercase text-xs mb-6 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
               🏠 Partnership Opportunity
             </span>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-white mb-10 leading-tight">
               Own a Villa? <br />
-              <span className="italic bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 bg-clip-text text-transparent pr-2 inline-block">Let's Share It</span> <br />
+              <span className="italic bg-gradient-to-r from-[#FAF7F0] via-[#DAA520] to-[#FAF7F0] bg-clip-text text-transparent pr-2 inline-block">Let's Share It</span> <br />
               With The World.
             </h2>
             <p className="text-white/80 text-lg mb-12 max-w-xl leading-relaxed font-light">
@@ -56,10 +56,10 @@ const PartnerSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-5">
-              <Link href="/partner" className="inline-flex items-center justify-center bg-white text-blue-700 hover:bg-blue-50 rounded-full px-8 py-4 text-sm font-bold tracking-widest h-auto shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              <Link href="/partner" className="inline-flex items-center justify-center bg-white text-[#4A5D23] hover:bg-[#F5F2EA] rounded-full px-8 py-4 text-sm font-bold tracking-widest h-auto shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 LIST YOUR PROPERTY
               </Link>
-              <Link href="/contact" className="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-blue-700 rounded-full px-8 py-4 text-sm font-bold tracking-widest h-auto transition-all duration-300 hover:-translate-y-1">
+              <Link href="/contact" className="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-[#4A5D23] rounded-full px-8 py-4 text-sm font-bold tracking-widest h-auto transition-all duration-300 hover:-translate-y-1">
                 CONTACT SALES
               </Link>
             </div>
@@ -76,12 +76,12 @@ const PartnerSection = () => {
                 transition={{ duration: 0.8, delay: index * 0.2 }}
                 className="bg-white/95 backdrop-blur-md p-3 sm:p-8 rounded-xl sm:rounded-2xl border border-white/80 shadow-lg sm:shadow-xl text-center flex flex-col items-center justify-center aspect-square sm:aspect-auto sm:h-56 hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1"
               >
-                <div className="w-9 h-9 sm:w-14 sm:h-14 rounded-full bg-blue-50 flex items-center justify-center mb-2.5 sm:mb-5 text-blue-600 transition-colors shrink-0">
+                <div className="w-9 h-9 sm:w-14 sm:h-14 rounded-full bg-[#559C24]/10 flex items-center justify-center mb-2.5 sm:mb-5 text-[#559C24] transition-colors shrink-0">
                   <benefit.icon size={18} className="group-hover:scale-110 transition-transform sm:hidden" />
                   <benefit.icon size={26} className="group-hover:scale-110 transition-transform hidden sm:block" />
                 </div>
                 <div className="text-lg sm:text-4xl font-black text-[#1B3564] tracking-tight mb-0.5 sm:mb-1">{benefit.value}</div>
-                <div className="text-[7px] sm:text-xs text-blue-600 uppercase tracking-widest font-extrabold mb-1.5 sm:mb-3 leading-none">{benefit.suffix}</div>
+                <div className="text-[7px] sm:text-xs text-[#559C24] uppercase tracking-widest font-extrabold mb-1.5 sm:mb-3 leading-none">{benefit.suffix}</div>
                 <div className="text-[9px] sm:text-sm text-[#1B3564]/80 font-bold leading-tight">{benefit.title}</div>
               </motion.div>
             ))}
@@ -94,16 +94,16 @@ const PartnerSection = () => {
               className="col-span-3 bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-xl sm:rounded-2xl border border-white/80 shadow-lg sm:shadow-xl flex items-center justify-between hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1"
             >
               <div className="flex items-center gap-2.5 sm:gap-4">
-                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                  <Shield className="text-blue-600 sm:hidden" size={18} />
-                  <Shield className="text-blue-600 hidden sm:block" size={24} />
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#559C24]/10 flex items-center justify-center text-[#559C24] shrink-0">
+                  <Shield className="text-[#559C24] sm:hidden" size={18} />
+                  <Shield className="text-[#559C24] hidden sm:block" size={24} />
                 </div>
                 <div className="text-left">
                   <h4 className="text-[#1B3564] font-black tracking-wide text-xs sm:text-base leading-tight">Trusted by 50+ Owners</h4>
                   <p className="text-[#1B3564]/70 text-[9px] sm:text-xs font-semibold mt-0.5 leading-tight">Join our premium hospitality network.</p>
                 </div>
               </div>
-              <div className="text-blue-600 font-black text-xs sm:text-2xl tracking-tight shrink-0 ml-2">
+              <div className="text-[#DAA520] font-black text-xs sm:text-2xl tracking-tight shrink-0 ml-2">
                 4.9/5 ⭐
               </div>
             </motion.div>
