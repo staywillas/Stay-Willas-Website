@@ -94,3 +94,18 @@ model DailyPrice {
 
   @@unique([villaId, date])
 }
+
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String
+  passwordHash      String?  // PBKDF2 secure password hashes
+  role              String   @default("guest") // guest, admin, partner
+  isVerified        Boolean  @default(false)
+  verificationToken String?  @unique
+  resetToken        String?  @unique
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([verificationToken])
+}

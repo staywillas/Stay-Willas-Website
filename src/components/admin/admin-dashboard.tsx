@@ -32,7 +32,9 @@ import {
   updateVillaDetails, 
   getChannelConfigs, 
   updateChannelConfig, 
-  syncExternalChannels 
+  syncExternalChannels,
+  createManualBooking,
+  deleteBooking
 } from "@/app/actions/admin";
 
 interface SeasonalPrice {
@@ -108,6 +110,86 @@ const AdminDashboard = ({
   // Lift properties and bookings to states for high reactivity
   const [villas, setVillas] = useState<Villa[]>(initialVillas);
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
+
+  // Manual Booking Form States
+  const [showAddBooking, setShowAddBooking] = useState(false);
+  const [newBookingVillaId, setNewBookingVillaId] = useState("");
+  const [newBookingCheckIn, setNewBookingCheckIn] = useState("");
+  const [newBookingCheckOut, setNewBookingCheckOut] = useState("");
+  const [newBookingGuestName, setNewBookingGuestName] = useState("");
+  const [newBookingGuestEmail, setNewBookingGuestEmail] = useState("");
+  const [newBookingGuestPhone, setNewBookingGuestPhone] = useState("");
+  const [newBookingPrice, setNewBookingPrice] = useState(0);
+  const [newBookingStatus, setNewBookingStatus] = useState("CONFIRMED");
+  const [newBookingType, setNewBookingType] = useState<"GUEST" | "MAINTENANCE" | "OWNER_USE">("GUEST");
+  const [isSavingBooking, setIsSavingBooking] = useState(false);
+  const [bookingFormError, setBookingFormError] = useState("");
+
+  const handleManualBookingSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBookingFormError("");
+
+    if (!newBookingVillaId || !newBookingCheckIn || !newBookingCheckOut || !newBookingGuestName || newBookingPrice <= 0) {
+      setBookingFormError("Please fill out all required fields.");
+      return;
+    }
+
+    setIsSavingBooking(true);
+    try {
+      const result = await createManualBooking({
+        villaId: newBookingVillaId,
+        checkIn: new Date(newBookingCheckIn).toISOString(),
+        checkOut: new Date(newBookingCheckOut).toISOString(),
+        guestName: newBookingGuestName,
+        guestEmail: newBookingGuestEmail,
+        guestPhone: newBookingGuestPhone,
+        totalPrice: newBookingPrice,
+        status: newBookingStatus,
+        type: newBookingType,
+      });
+
+      if (result.success && result.booking) {
+        const selectedVilla = villas.find(v => v.id === newBookingVillaId);
+        
+        const newBookingRecord: any = {
+          id: result.booking.id,
+          villaId: newBookingVillaId,
+          checkIn: new Date(newBookingCheckIn),
+          checkOut: new Date(newBookingCheckOut),
+          totalPrice: newBookingPrice,
+          status: newBookingStatus,
+          userId: result.booking.userId,
+          addOns: null,
+          kycName: null,
+          kycGuests: null,
+          kycIdUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          villa: {
+            name: selectedVilla ? selectedVilla.name : "Property"
+          }
+        };
+
+        setBookings([newBookingRecord, ...bookings]);
+        setShowAddBooking(false);
+
+        // Reset fields
+        setNewBookingVillaId("");
+        setNewBookingCheckIn("");
+        setNewBookingCheckOut("");
+        setNewBookingGuestName("");
+        setNewBookingGuestEmail("");
+        setNewBookingGuestPhone("");
+        setNewBookingPrice(0);
+      } else {
+        setBookingFormError(result.error || "Failed to save booking.");
+      }
+    } catch (err: any) {
+      setBookingFormError(err.message || "Failed to connect to backend server.");
+    } finally {
+      setIsSavingBooking(false);
+    }
+  };
 
   // iCal Sync States
   const [channelConfigs, setChannelConfigs] = useState<Record<string, { airbnb?: string; booking?: string; vrbo?: string }>>({});
@@ -607,44 +689,264 @@ const AdminDashboard = ({
       )}
 
       {activeTab === "bookings" && (
-        <div className="glass border border-slate-200 rounded-[32px] p-8 overflow-hidden font-sans">
-          <h3 className="text-2xl font-cormorant font-bold italic mb-8">Active Reservation Registry</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-200 text-slate-500 text-[10px] uppercase tracking-widest font-bold">
-                  <th className="py-4">Property</th>
-                  <th className="py-4">Dates</th>
-                  <th className="py-4">User Ident</th>
-                  <th className="py-4">Net Price</th>
-                  <th className="py-4">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5 text-sm">
-                {initialBookings.map((booking) => (
-                  <tr key={booking.id} className="hover:bg-slate-50 transition-colors group">
-                    <td className="py-5 font-cormorant font-bold italic text-blue-400 group-hover:text-slate-900 transition-colors">
-                      {booking.villa.name}
-                    </td>
-                    <td className="py-5 text-slate-700">
-                      {new Date(booking.checkIn).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })} - {new Date(booking.checkOut).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}
-                    </td>
-                    <td className="py-5 font-mono text-xs text-slate-500">{booking.userId}</td>
-                    <td className="py-5 font-bold text-slate-900">₹{booking.totalPrice.toLocaleString("en-IN")}</td>
-                    <td className="py-5">
-                      <span className={`inline-block px-3 py-1 rounded-full text-[9px] font-bold uppercase ${
-                        booking.status === "CONFIRMED" 
-                          ? "bg-blue-600/15 text-blue-400 border border-blue-500/20" 
-                          : "bg-slate-50 text-slate-600 border border-slate-200"
-                      }`}>
-                        {booking.status}
-                      </span>
-                    </td>
+        <div className="flex flex-col xl:flex-row gap-8 items-start">
+          
+          {/* Main Registry Table */}
+          <div className="flex-1 w-full glass border border-slate-200 rounded-[32px] p-8 overflow-hidden font-sans">
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-2xl font-cormorant font-bold italic">Active Reservation Registry</h3>
+              <button
+                onClick={() => {
+                  setShowAddBooking(!showAddBooking);
+                  setBookingFormError("");
+                }}
+                className="text-[10px] bg-[#1B3564] hover:bg-[#152A50] text-white font-black px-4 py-2.5 rounded-full tracking-widest uppercase transition-all flex items-center gap-1.5 cursor-pointer shadow-md border-none"
+              >
+                <Plus size={12} />
+                {showAddBooking ? "Hide Panel" : "Record Manual Booking"}
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-500 text-[10px] uppercase tracking-widest font-bold">
+                    <th className="py-4">Property</th>
+                    <th className="py-4">Dates</th>
+                    <th className="py-4">User Details / Ident</th>
+                    <th className="py-4">Net Price</th>
+                    <th className="py-4">Status</th>
+                    <th className="py-4 text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-sm">
+                  {bookings.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="py-8 text-center text-slate-400 italic text-sm">
+                        No active stay reservations registered yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    bookings.map((booking) => {
+                      let parsedDetails = booking.userId;
+                      try {
+                        if (booking.userId.startsWith("{")) {
+                          const parsed = JSON.parse(booking.userId);
+                          parsedDetails = parsed.name ? `${parsed.name} (${parsed.email || "N/A"})` : `${parsed.type || "Manual"}: ${parsed.reason || "N/A"}`;
+                        }
+                      } catch (e) {}
+
+                      return (
+                        <tr key={booking.id} className="hover:bg-slate-50 transition-colors group">
+                          <td className="py-5 font-cormorant font-bold italic text-[#1B3564] group-hover:text-slate-900 transition-colors">
+                            {booking.villa.name}
+                          </td>
+                          <td className="py-5 text-slate-700">
+                            {new Date(booking.checkIn).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })} - {new Date(booking.checkOut).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}
+                          </td>
+                          <td className="py-5 font-mono text-xs text-slate-500 max-w-[200px] truncate" title={parsedDetails}>
+                            {parsedDetails}
+                          </td>
+                          <td className="py-5 font-bold text-slate-900">₹{booking.totalPrice.toLocaleString("en-IN")}</td>
+                          <td className="py-5">
+                            <span className={`inline-block px-3 py-1 rounded-full text-[9px] font-bold uppercase ${
+                              booking.status === "CONFIRMED" 
+                                ? "bg-blue-600/15 text-blue-400 border border-blue-500/20" 
+                                : booking.status === "BLOCKED"
+                                  ? "bg-red-600/15 text-red-400 border border-red-500/20"
+                                  : "bg-slate-50 text-slate-600 border border-slate-200"
+                            }`}>
+                              {booking.status}
+                            </span>
+                          </td>
+                          <td className="py-5 text-right">
+                            <button
+                              onClick={async () => {
+                                if (confirm("Are you sure you want to cancel and remove this reservation? This will instantly release these dates on the calendars.")) {
+                                  const res = await deleteBooking(booking.id);
+                                  if (res.success) {
+                                    setBookings(bookings.filter(b => b.id !== booking.id));
+                                  } else {
+                                    alert(res.error || "Failed to remove stay block.");
+                                  }
+                                }
+                              }}
+                              className="text-[9px] text-red-500/80 hover:text-red-600 hover:underline tracking-widest uppercase font-bold cursor-pointer transition-colors"
+                            >
+                              Cancel Stays
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
+
+          {/* Record Manual Booking Sidebar Panel */}
+          {showAddBooking && (
+            <div className="w-full xl:w-96 bg-white border border-slate-200 rounded-[32px] p-8 font-sans shrink-0 animate-fade-in relative shadow-xl text-left">
+              <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                <h3 className="text-xl font-cormorant font-bold italic text-slate-800">Record Stay Stays</h3>
+                <button
+                  type="button"
+                  onClick={() => setShowAddBooking(false)}
+                  className="text-xs text-slate-400 hover:text-slate-600 transition-colors uppercase font-bold tracking-widest cursor-pointer border-none bg-none"
+                >
+                  Close
+                </button>
+              </div>
+
+              {bookingFormError && (
+                <div className="p-3 mb-4 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-500">
+                  {bookingFormError}
+                </div>
+              )}
+
+              <form onSubmit={handleManualBookingSubmit} className="space-y-4">
+                {/* Choice of Villa */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Property Selected *</label>
+                  <select
+                    value={newBookingVillaId}
+                    onChange={(e) => setNewBookingVillaId(e.target.value)}
+                    required
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold outline-none focus:border-slate-800"
+                  >
+                    <option value="">-- Select Property --</option>
+                    {villas.map((v) => (
+                      <option key={v.id} value={v.id}>{v.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Date Picker Pair */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Check-in *</label>
+                    <input
+                      type="date"
+                      value={newBookingCheckIn}
+                      onChange={(e) => setNewBookingCheckIn(e.target.value)}
+                      required
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Check-out *</label>
+                    <input
+                      type="date"
+                      value={newBookingCheckOut}
+                      onChange={(e) => setNewBookingCheckOut(e.target.value)}
+                      required
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                    />
+                  </div>
+                </div>
+
+                {/* Type Selection */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Reservation Type *</label>
+                  <select
+                    value={newBookingType}
+                    onChange={(e) => setNewBookingType(e.target.value as any)}
+                    required
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold outline-none focus:border-slate-800"
+                  >
+                    <option value="GUEST">Verified Guest Stays</option>
+                    <option value="OWNER_USE">Owner Occupancy block</option>
+                    <option value="MAINTENANCE">Blackout Maintenance Block</option>
+                  </select>
+                </div>
+
+                {/* Guest Profile Information */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+                    {newBookingType === "GUEST" ? "Guest Name *" : "Block Out Reason *"}
+                  </label>
+                  <input
+                    type="text"
+                    value={newBookingGuestName}
+                    onChange={(e) => setNewBookingGuestName(e.target.value)}
+                    required
+                    placeholder={newBookingType === "GUEST" ? "e.g. Rahul Sharma" : "e.g. Routine Pool Maintenance"}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold outline-none focus:border-slate-800"
+                  />
+                </div>
+
+                {newBookingType === "GUEST" && (
+                  <div className="grid grid-cols-2 gap-3 animate-fade-in">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Email</label>
+                      <input
+                        type="email"
+                        value={newBookingGuestEmail}
+                        onChange={(e) => setNewBookingGuestEmail(e.target.value)}
+                        placeholder="e.g. name@gmail.com"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold outline-none focus:border-slate-800"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Phone</label>
+                      <input
+                        type="tel"
+                        value={newBookingGuestPhone}
+                        onChange={(e) => setNewBookingGuestPhone(e.target.value)}
+                        placeholder="e.g. +91 99..."
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold outline-none focus:border-slate-800"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Net Price & Booking Status */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Total Tariff (INR) *</label>
+                    <input
+                      type="number"
+                      value={newBookingPrice || ""}
+                      onChange={(e) => setNewBookingPrice(parseInt(e.target.value) || 0)}
+                      required
+                      placeholder="e.g. 45000"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold outline-none focus:border-slate-800"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Tariff Status *</label>
+                    <select
+                      value={newBookingStatus}
+                      onChange={(e) => setNewBookingStatus(e.target.value)}
+                      required
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold outline-none focus:border-slate-800"
+                    >
+                      <option value="CONFIRMED">Confirmed</option>
+                      <option value="BLOCKED">Blocked</option>
+                      <option value="PENDING">Pending Hold</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSavingBooking}
+                  className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white font-black text-xs tracking-widest uppercase rounded-full py-4.5 mt-2 transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-md"
+                >
+                  {isSavingBooking ? (
+                    <>
+                      <Loader2 className="animate-spin" size={14} />
+                      <span>SAVING BLOCK OUT...</span>
+                    </>
+                  ) : (
+                    <span>CONFIRM & RECORD BLOCK</span>
+                  )}
+                </button>
+              </form>
+            </div>
+          )}
+
         </div>
       )}
 

@@ -27,6 +27,14 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
   const [clientPhone, setClientPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Prefill details from secure user session
+  React.useEffect(() => {
+    if (user) {
+      setClientName(user.name || "");
+      setClientEmail(user.email || "");
+    }
+  }, [user]);
+
   const checkInRef = useRef<HTMLInputElement>(null);
   const checkOutRef = useRef<HTMLInputElement>(null);
 
@@ -48,8 +56,6 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
     }
   };
 
-
-
   const handleBooking = async () => {
     if (!clientName.trim()) {
       alert("Please enter your Full Name.");
@@ -66,26 +72,32 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
 
     setIsLoading(true);
     try {
-      // Securely check dates, calculate prices, create 10-minute hold status in DB, and create Stripe Checkout Session
-      const session = await createCheckoutSession({
-        villaId,
-        villaName,
-        checkIn,
-        checkOut,
-        guests,
-        selectedAddOns: [],
-        userId: user ? user.id : "GUEST_USER"
-      });
+      const formattedCheckIn = format(checkIn, "dd MMM yyyy");
+      const formattedCheckOut = format(checkOut, "dd MMM yyyy");
+      
+      const msg = `Hi Stay Willas! I would like to book *${villaName}* for *${guests}* guest(s).
 
-      if (session && session.url) {
-        window.location.href = session.url;
-      } else {
-        throw new Error("Invalid session response received.");
-      }
+• Check-in: *${formattedCheckIn}*
+• Check-out: *${formattedCheckOut}*
+• Total Bill: *₹${total.toLocaleString("en-IN")}*
+
+My Verified Guest Details:
+• Name: *${clientName.trim()}*
+• Email: *${clientEmail.trim()}*
+• Phone: *${clientPhone.trim()}*
+
+Please check availability and confirm my booking request!`;
+
+      const encodedMsg = encodeURIComponent(msg);
+      const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
+      
+      setTimeout(() => {
+        window.open(whatsappUrl, "_blank");
+        setIsLoading(false);
+      }, 800);
     } catch (error: any) {
       console.error("Booking Error:", error);
-      alert(error.message || "Failed to initiate booking hold. Please select another date range.");
-    } finally {
+      alert("Failed to initiate WhatsApp redirection. Please try again.");
       setIsLoading(false);
     }
   };
