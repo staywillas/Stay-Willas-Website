@@ -177,17 +177,19 @@ const Hero = () => {
       {/* Swiper & Controls Container */}
       <div className="relative h-[65vh] lg:h-full w-full overflow-hidden">
         <Swiper
-        modules={[Autoplay, Navigation]}
-        speed={1200}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
-        loop
-        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-        navigation={{
-          prevEl: ".hero-prev",
-          nextEl: ".hero-next",
-        }}
-        className="h-full w-full"
-      >
+          modules={[Autoplay, Navigation]}
+          speed={1200}
+          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          loop={true}
+          slidesPerView={1}
+          spaceBetween={0}
+          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+          navigation={{
+            prevEl: ".hero-prev",
+            nextEl: ".hero-next",
+          }}
+          className="h-full w-full"
+        >
         {slides.map((slide, index) => {
           const isActive = activeIndex === index;
           return (
