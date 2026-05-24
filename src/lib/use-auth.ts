@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { logoutAction } from "@/app/actions/login-actions";
+/**
+ * use-auth.ts — Thin wrapper around Clerk's useUser/useAuth hooks.
+ * Provides the same interface the rest of the app expects:
+ *   { user, isSignedIn, isLoading }
+ */
+
+import { useUser } from "@clerk/nextjs";
 
 export interface UserSession {
   email: string;
@@ -11,62 +16,20 @@ export interface UserSession {
 }
 
 export function useAuth() {
-  const [user, setUser] = useState<UserSession | null>(null);
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isSignedIn, isLoaded } = useUser();
 
-  const getCookie = (name: string): string | null => {
-    if (typeof document === "undefined") return null;
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return decodeURIComponent(parts.pop()!.split(";").shift()!);
-    return null;
-  };
-
-  const refreshSession = () => {
-    try {
-      const userCookie = getCookie("staywillas_user");
-      if (userCookie) {
-        const parsed = JSON.parse(userCookie) as UserSession;
-        setUser(parsed);
-        setIsSignedIn(true);
-      } else {
-        setUser(null);
-        setIsSignedIn(false);
+  const mappedUser: UserSession | null = user
+    ? {
+        id: user.id,
+        email: user.primaryEmailAddress?.emailAddress ?? "",
+        name: user.fullName ?? user.firstName ?? "Guest",
+        role: "guest", // Guests via Clerk are always "guest"
       }
-    } catch (e) {
-      console.error("Failed to parse staywillas_user cookie:", e);
-      setUser(null);
-      setIsSignedIn(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    refreshSession();
-    
-    // Listen for cookie changes reactively in background
-    const interval = setInterval(refreshSession, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const signOut = async () => {
-    setIsLoading(true);
-    await logoutAction();
-    setUser(null);
-    setIsSignedIn(false);
-    setIsLoading(false);
-    
-    // Fast redirect back to home page
-    window.location.href = "/";
-  };
+    : null;
 
   return {
-    user,
-    isSignedIn,
-    isLoading,
-    signOut,
-    refreshSession
+    user: mappedUser,
+    isSignedIn: isSignedIn ?? false,
+    isLoading: !isLoaded,
   };
 }

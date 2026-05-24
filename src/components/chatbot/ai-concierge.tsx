@@ -183,7 +183,7 @@ export default function AiConcierge() {
         // Redirect after a premium short transition delay
         setTimeout(() => {
           const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMsg)}`;
-          window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+          window.location.href = whatsappUrl;
         }, 1500);
       }
     }, 800);

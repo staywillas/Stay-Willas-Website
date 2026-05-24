@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Outfit, Montserrat } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
 import FloatingWidgets from "@/components/layout/floating-widgets";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
@@ -49,11 +50,13 @@ export default function RootLayout({
         className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} antialiased font-sans`}
         suppressHydrationWarning
       >
-        <SmoothScrollProvider>
-          {children}
-          <FloatingWidgets />
-          <MobileBottomNav />
-        </SmoothScrollProvider>
+        <ClerkProvider>
+          <SmoothScrollProvider>
+            {children}
+            <FloatingWidgets />
+            <MobileBottomNav />
+          </SmoothScrollProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

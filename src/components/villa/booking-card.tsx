@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
 import { createCheckoutSession } from "@/app/actions/booking";
-import { useAuth } from "@/lib/use-auth";
+import { useUser, SignInButton } from "@clerk/nextjs";
 
 interface BookingCardProps {
   villaId: string;
@@ -17,7 +17,7 @@ interface BookingCardProps {
 
 const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardProps) => {
   const numericPrice = parseInt(price.replace(/,/g, ""));
-  const { user, isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
 
   const [checkIn, setCheckIn] = useState<Date>(new Date());
   const [checkOut, setCheckOut] = useState<Date>(addDays(new Date(), 3));
@@ -27,11 +27,13 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
   const [clientPhone, setClientPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Prefill details from secure user session
+  // Prefill details from Clerk user session
   React.useEffect(() => {
     if (user) {
-      setClientName(user.name || "");
-      setClientEmail(user.email || "");
+      const name = user.fullName ?? user.firstName ?? "";
+      const email = user.primaryEmailAddress?.emailAddress ?? "";
+      setClientName(name);
+      setClientEmail(email);
     }
   }, [user]);
 
@@ -91,10 +93,8 @@ Please check availability and confirm my booking request!`;
       const encodedMsg = encodeURIComponent(msg);
       const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
       
-      setTimeout(() => {
-        window.open(whatsappUrl, "_blank");
-        setIsLoading(false);
-      }, 800);
+      window.open(whatsappUrl, "_blank");
+      setIsLoading(false);
     } catch (error: any) {
       console.error("Booking Error:", error);
       alert("Failed to initiate WhatsApp redirection. Please try again.");
@@ -257,7 +257,7 @@ Please check availability and confirm my booking request!`;
         </div>
       </div>
 
-      {isSignedIn && user ? (
+      {isSignedIn ? (
         <Button 
           onClick={handleBooking}
           disabled={isLoading || nights <= 0}
@@ -266,12 +266,11 @@ Please check availability and confirm my booking request!`;
           {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
         </Button>
       ) : (
-        <Link 
-          href={`/login?role=guest&redirect=/villa/${villaId}`}
-          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
-        >
-          SIGN IN TO SECURE STAY
-        </Link>
+        <SignInButton mode="modal">
+          <button className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer">
+            SIGN IN TO SECURE STAY
+          </button>
+        </SignInButton>
       )}
       
       <p className="text-center text-text-primary/40 text-[10px] uppercase tracking-widest mb-6 select-none">

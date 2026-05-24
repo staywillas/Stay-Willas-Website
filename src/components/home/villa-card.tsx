@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { Users, Bed, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import WishlistButton from "@/components/villa/wishlist-button";
 
 interface VillaCardProps {
   id: string;
@@ -54,6 +55,11 @@ const VillaCard = ({
           {/* Arrow indicator - Premium */}
           <div className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center border border-white text-text-primary group-hover:bg-blue-500 group-hover:border-blue-500 group-hover:text-white transition-all duration-300 shadow-lg group-hover:shadow-glow-blue transform group-hover:scale-110">
             <ArrowUpRight size={19} strokeWidth={2.5} />
+          </div>
+
+          {/* Wishlist Heart Button */}
+          <div className="absolute top-4 left-4 z-10" onClick={(e) => e.stopPropagation()}>
+            <WishlistButton villaId={id} size="sm" />
           </div>
 
           {/* Category Badge - Enhanced */}
