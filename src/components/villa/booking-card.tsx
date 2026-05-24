@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
 import { createCheckoutSession } from "@/app/actions/booking";
-import { useUser } from "@clerk/nextjs";
+import { useUser, SignInButton } from "@clerk/nextjs";
 
 interface BookingCardProps {
   villaId: string;
@@ -89,7 +89,7 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
         checkOut,
         guests,
         selectedAddOns,
-        userId: user?.id || `GUEST_${Date.now()}`
+        userId: user!.id
       });
 
       if (session && session.url) {
@@ -301,13 +301,24 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
         </div>
       </div>
 
-      <Button 
-        onClick={handleBooking}
-        disabled={isLoading || nights <= 0}
-        className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
-      >
-        {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
-      </Button>
+      {user ? (
+        <Button 
+          onClick={handleBooking}
+          disabled={isLoading || nights <= 0}
+          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
+        >
+          {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
+        </Button>
+      ) : (
+        <SignInButton mode="modal">
+          <Button 
+            disabled={nights <= 0}
+            className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
+          >
+            SIGN IN TO SECURE STAY
+          </Button>
+        </SignInButton>
+      )}
       
       <p className="text-center text-text-primary/40 text-[10px] uppercase tracking-widest mb-6 select-none">
         Secure checkout & temporary 10-minute hold
