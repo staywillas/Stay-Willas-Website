@@ -26,26 +26,14 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
   const [clientPhone, setClientPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Interactive concierge upselling packages state
-  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
-
   const checkInRef = useRef<HTMLInputElement>(null);
   const checkOutRef = useRef<HTMLInputElement>(null);
 
   const nights = differenceInDays(checkOut, checkIn);
   const subtotal = numericPrice * (nights > 0 ? nights : 0);
-  
-  // Calculate add-on costs in real-time in the UI
-  const addOnsTotal = selectedAddOns.reduce((acc, addon) => {
-    if (addon === "Gourmet Chef Experience") return acc + 6000 * (nights > 0 ? nights : 0);
-    if (addon === "Curated Vineyard Tour") return acc + 4500 * guests;
-    if (addon === "Celebration Decoration") return acc + 7500;
-    if (addon === "Premium SUV Airport Transfer") return acc + 9500;
-    return acc;
-  }, 0);
 
   const serviceFee = 5000;
-  const total = subtotal + serviceFee + addOnsTotal;
+  const total = subtotal + serviceFee;
 
   const handleCheckInClick = () => {
     if (checkInRef.current) {
@@ -59,11 +47,7 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
     }
   };
 
-  const toggleAddOn = (addon: string) => {
-    setSelectedAddOns(prev => 
-      prev.includes(addon) ? prev.filter(a => a !== addon) : [...prev, addon]
-    );
-  };
+
 
   const handleBooking = async () => {
     if (!clientName.trim()) {
@@ -88,7 +72,7 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
         checkIn,
         checkOut,
         guests,
-        selectedAddOns,
+        selectedAddOns: [],
         userId: user!.id
       });
 
@@ -202,48 +186,7 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
           <Users size={16} className="text-text-primary/30 shrink-0 pointer-events-none" />
         </div>
 
-        {/* Concierge Experiential Upselling Packages Section */}
-        <div className="pt-4 border-t border-border-subtle/60 space-y-3 text-left">
-          <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block">
-            💎 LUXURY EXPERIENCE ADD-ONS
-          </span>
-          <div className="space-y-2">
-            {[
-              { id: "Gourmet Chef Experience", label: "Private Gourmet Chef", rate: "₹6,000 / night", desc: "Premium Chef catering custom multi-cuisine spreads." },
-              { id: "Curated Vineyard Tour", label: "Exclusive Vineyard Tour", rate: "₹4,500 / guest", desc: "Private VIP wine tasting sessions and estate tours." },
-              { id: "Celebration Decoration", label: "Bespoke Occasion Decoration", rate: "₹7,500 flat", desc: "Premium floral alignments & cake setup for anniversaries/birthdays." },
-              { id: "Premium SUV Airport Transfer", label: "Luxury SUV Chauffeur Transfer", rate: "₹9,500 flat", desc: "Airport drop or home pick-up in a premium luxury SUV." }
-            ].map(addon => {
-              const isChecked = selectedAddOns.includes(addon.id);
-              return (
-                <div 
-                  key={addon.id}
-                  onClick={() => toggleAddOn(addon.id)}
-                  className={`p-3 border rounded-xl flex items-start gap-3 cursor-pointer transition-all duration-300 ${
-                    isChecked 
-                      ? "border-[#1B3564] bg-[#1B3564]/5 shadow-sm" 
-                      : "border-border-subtle bg-white hover:border-[#1B3564]/40"
-                  }`}
-                >
-                  <div className="mt-0.5 shrink-0">
-                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
-                      isChecked ? "bg-[#1B3564] border-[#1B3564]" : "border-border-subtle bg-white"
-                    }`}>
-                      {isChecked && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-center mb-0.5">
-                      <span className="text-xs font-bold text-[#1B3564] truncate">{addon.label}</span>
-                      <span className="text-[10px] font-black text-accent-secondary shrink-0 ml-2">{addon.rate}</span>
-                    </div>
-                    <p className="text-[10px] text-text-primary/50 leading-snug">{addon.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+
 
         {/* Contact Information Section */}
         <div className="pt-4 border-t border-border-subtle/60 space-y-3">
@@ -330,12 +273,7 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
             <span className="text-text-primary/60">₹{price} x {nights} nights</span>
             <span className="text-text-primary">₹{subtotal.toLocaleString()}</span>
           </div>
-          {selectedAddOns.length > 0 && (
-            <div className="flex justify-between text-sm text-[#1B3564] font-semibold">
-              <span>Experience Add-ons</span>
-              <span>₹{addOnsTotal.toLocaleString()}</span>
-            </div>
-          )}
+
           <div className="flex justify-between text-sm">
             <span className="text-text-primary/60">Luxury Service Fee</span>
             <span className="text-text-primary">₹{serviceFee.toLocaleString()}</span>
