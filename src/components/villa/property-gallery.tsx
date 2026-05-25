@@ -114,6 +114,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
                 alt={`${propertyName} Mobile Photo ${idx + 1}`} 
                 fill 
                 priority={idx === 0}
+                sizes="(max-width: 768px) 100vw, 400px"
                 className="object-cover" 
               />
               <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[9px] uppercase tracking-widest font-black text-white/80 border border-white/10">
@@ -152,6 +153,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
               alt={`${propertyName} Cover`} 
               fill 
               priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
@@ -176,6 +178,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
               src={visibleImages[1]} 
               alt={`${propertyName} View 2`} 
               fill 
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 320px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
@@ -195,6 +198,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
               src={visibleImages[2]} 
               alt={`${propertyName} View 3`} 
               fill 
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 320px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
@@ -214,6 +218,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
               src={visibleImages[3]} 
               alt={`${propertyName} View 4`} 
               fill 
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 320px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
@@ -233,6 +238,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
               src={visibleImages[4]} 
               alt={`${propertyName} View 5`} 
               fill 
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 320px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
@@ -422,6 +428,7 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
                       src={img} 
                       alt={`Thumbnail ${idx + 1}`} 
                       fill 
+                      sizes="80px"
                       className="object-cover" 
                     />
                   </button>

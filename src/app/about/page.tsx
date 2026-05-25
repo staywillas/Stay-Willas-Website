@@ -38,6 +38,8 @@ export default function AboutPage() {
               src="/images/hero-villa.png" 
               alt="Luxury Estate" 
               fill 
+              priority
+              sizes="(max-width: 768px) 95vw, (max-width: 1200px) 45vw, 550px"
               className="object-cover" 
             />
           </div>

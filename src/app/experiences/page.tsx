@@ -43,6 +43,8 @@ export default function ExperiencesPage() {
           src="/images/exp-pool.png" 
           alt="Luxury Experience" 
           fill 
+          priority
+          sizes="100vw"
           className="object-cover opacity-40" 
         />
         <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/80 via-transparent to-[#FFFFFF]" />
@@ -71,6 +73,7 @@ export default function ExperiencesPage() {
                   src={exp.image} 
                   alt={exp.title} 
                   fill 
+                  sizes="(max-width: 768px) 95vw, (max-width: 1200px) 30vw, 380px"
                   className="object-cover transition-transform duration-700 group-hover:scale-110" 
                 />
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />

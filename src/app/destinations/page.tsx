@@ -82,6 +82,8 @@ export default function DestinationsPage() {
                   src={dest.image} 
                   alt={dest.name} 
                   fill 
+                  priority={i === 0}
+                  sizes="(max-width: 768px) 95vw, (max-width: 1200px) 55vw, 680px"
                   className="object-cover transition-transform duration-1000 group-hover:scale-110" 
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-700" />
