@@ -104,9 +104,9 @@ const Navbar = () => {
         <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
           <div className="relative w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
             <img 
-              src="/images/web logo.png" 
+              src="/images/LOGOO STAY WILLAS.png" 
               alt="Stay Willas Logo" 
-              className="w-full h-full object-cover object-[center_47.5%] scale-[1.6]" 
+              className="w-full h-full object-cover scale-[1.6]" 
             />
           </div>
           <div className="flex flex-col">
@@ -244,7 +244,7 @@ const Navbar = () => {
             <div className="flex justify-between items-center mb-10">
               <div className="flex items-center gap-3">
                 <div className="relative w-10 h-10 rounded-full overflow-hidden border border-cream-border">
-                  <img src="/images/web logo.png" alt="Stay Willas" className="w-full h-full object-cover object-[center_47.5%] scale-[1.6]" />
+                  <img src="/images/LOGOO STAY WILLAS.png" alt="Stay Willas" className="w-full h-full object-cover scale-[1.6]" />
                 </div>
                 <span className="font-heading text-xl tracking-widest text-brand-navy font-bold">MENU</span>
               </div>
