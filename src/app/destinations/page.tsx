@@ -18,7 +18,7 @@ const destinations = [
     name: "Lonavala",
     tagline: "The Sahyadri Sanctuary",
     desc: "Misty valleys, cascading waterfalls, and sprawling private estates perched on cliff edges.",
-    image: "/images/villa-lonavala.png",
+    image: "/assets/villas/angled-house/gallery-11.webp",
     count: 12
   },
   {
@@ -85,6 +85,14 @@ export default function DestinationsPage() {
                   className="object-cover transition-transform duration-1000 group-hover:scale-110" 
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-700" />
+                
+                {dest.name.toLowerCase() !== "lonavala" && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+                    <span className="text-xl md:text-2xl lg:text-3xl font-heading font-black tracking-[0.25em] text-white border border-white/30 px-6 py-3.5 rounded-2xl uppercase shadow-xl select-none">
+                      LAUNCHING SOON
+                    </span>
+                  </div>
+                )}
               </div>
             </ThreeDHoverCard>
             
@@ -98,15 +106,21 @@ export default function DestinationsPage() {
                 {dest.desc}
               </p>
               
-              <Link 
-                href={`/villas?region=${dest.name.toLowerCase()}`}
-                className="inline-flex items-center gap-4 group/link"
-              >
-                <span className="w-16 h-16 rounded-full border border-[#0F172A]/20 flex items-center justify-center group-hover/link:bg-accent-primary group-hover/link:border-accent-primary group-hover/link:text-white transition-all">
-                  <ArrowUpRight size={24} />
-                </span>
-                <span className="uppercase tracking-[0.2em] text-xs font-bold">Explore {dest.count} Villas</span>
-              </Link>
+              {dest.name.toLowerCase() === "lonavala" ? (
+                <Link 
+                  href={`/villas?region=${dest.name.toLowerCase()}`}
+                  className="inline-flex items-center gap-4 group/link"
+                >
+                  <span className="w-16 h-16 rounded-full border border-[#0F172A]/20 flex items-center justify-center group-hover/link:bg-accent-primary group-hover/link:border-accent-primary group-hover/link:text-white transition-all">
+                    <ArrowUpRight size={24} />
+                  </span>
+                  <span className="uppercase tracking-[0.2em] text-xs font-bold">Explore {dest.count} Villas</span>
+                </Link>
+              ) : (
+                <div className="text-3xl sm:text-4xl md:text-5xl font-heading font-black tracking-[0.15em] text-accent-primary uppercase select-none">
+                  LAUNCHING SOON
+                </div>
+              )}
             </div>
           </div>
         ))}

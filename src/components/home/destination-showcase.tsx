@@ -17,7 +17,7 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 const destinations = [
   {
     name: "Lonavala",
-    image: "/assets/villas/angled-house/main.webp",
+    image: "/assets/villas/angled-house/gallery-11.webp",
     count: "1 Villa",
     tag: "Mountain Escapes",
     desc: "Cool breeze, misty green hills, and quiet retreats.",
