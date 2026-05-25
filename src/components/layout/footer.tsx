@@ -25,7 +25,7 @@ const Footer = () => {
                 <img 
                   src="/images/web logo.png" 
                   alt="Stay Willas Logo" 
-                  className="w-full h-full object-cover scale-[1.6]" 
+                  className="w-full h-full object-cover object-[center_47.5%] scale-[1.6]" 
                 />
               </div>
               <div className="flex flex-col">
