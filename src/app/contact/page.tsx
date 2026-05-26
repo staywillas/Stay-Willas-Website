@@ -1,5 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
@@ -68,7 +69,7 @@ export default function ContactPage() {
                   </div>
                 </a>
                 <div className="flex gap-6 items-start">
-                  <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary">
+                  <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary shrink-0">
                     <Mail size={20} />
                   </div>
                   <div>
@@ -77,13 +78,49 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <div className="flex gap-6 items-start">
-                  <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary">
+                  <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary shrink-0">
                     <MapPin size={20} />
                   </div>
                   <div>
                     <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">Visit Us</p>
-                    <p className="text-xl">101, Luxury Plaza, Bandra West, Mumbai</p>
+                    <p className="text-xl leading-snug">
+                      Kim cottage, 14, PR Kadam Marg, <br />
+                      Maneklal Estate, Ghatkopar West, <br />
+                      Mumbai, Maharashtra 400084
+                    </p>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Navigation Buttons */}
+            <div className="p-10 rounded-[32px] bg-gradient-to-br from-[#1B3564] to-[#0F2341] text-white border border-white/10 relative overflow-hidden shadow-xl">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#DAA520]/15 rounded-full blur-[40px] translate-x-1/4 -translate-y-1/4" />
+              <div className="relative z-10">
+                <h4 className="text-2xl font-heading mb-3 text-[#DAA520] italic">Explore Properties</h4>
+                <p className="text-white/70 text-sm leading-relaxed mb-8">
+                  Ready to experience absolute luxury? Browse our handpicked private villas and premium destinations.
+                </p>
+                <div className="flex flex-col gap-4">
+                  <Link
+                    href="/villas"
+                    className="w-full bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] text-center rounded-full py-4 text-xs font-black tracking-[0.2em] uppercase transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-98 flex items-center justify-center gap-2"
+                  >
+                    View Our Villas
+                    <ArrowRight size={14} />
+                  </Link>
+                  <Link
+                    href="/destinations"
+                    className="w-full border border-white/20 hover:border-white hover:bg-white/5 text-white text-center rounded-full py-4 text-xs font-black tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    Explore Destinations
+                  </Link>
+                  <Link
+                    href="/experiences"
+                    className="w-full border border-white/20 hover:border-white hover:bg-white/5 text-white text-center rounded-full py-4 text-xs font-black tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    Luxury Experiences
+                  </Link>
                 </div>
               </div>
             </div>

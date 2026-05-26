@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   MapPin, SlidersHorizontal, Trash2, Users, Bed, Bath,
@@ -68,7 +68,19 @@ export default function VillasClient({
   const [maxBudget, setMaxBudget] = useState<number>(50000);
   const [minBedrooms, setMinBedrooms] = useState<number>(0);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [isFilterExpanded, setIsFilterExpanded] = useState<boolean>(true);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState<boolean>(false);
+
+  // Lock background scroll when modal is active
+  useEffect(() => {
+    if (isFilterModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isFilterModalOpen]);
 
   // Toggle Amenity Selection
   const handleToggleAmenity = (label: string) => {
@@ -142,141 +154,175 @@ export default function VillasClient({
   return (
     <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 pb-24 text-charcoal">
       
-      {/* Dynamic Search & Interactive Filters Suite */}
-      <div className="relative z-30 -mt-10 mb-16">
-        <div className="bg-bg-primary border border-border-subtle rounded-[32px] p-6 md:p-8 shadow-xl shadow-[#0F172A]/5 backdrop-blur-xl">
-          
-          {/* Main Filter Row */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-border-subtle/60">
-            <div className="flex flex-wrap items-center gap-4">
-              
-              {/* Region Selector */}
-              <div className="flex flex-col gap-1.5 min-w-[200px]">
-                <span className="text-[9px] text-accent-secondary uppercase tracking-[0.2em] font-black flex items-center gap-1">
-                  <MapPin size={10} /> Destination
-                </span>
-                <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
-                  className="bg-white border border-border-subtle text-charcoal rounded-xl px-4 py-2.5 text-xs font-heading italic outline-none cursor-pointer hover:border-accent-primary/30 transition-all"
-                >
-                  <option value="" className="bg-white text-charcoal">All Maharashtra Stays</option>
-                  {REGIONS.map(r => (
-                    <option key={r} value={r.toLowerCase()} className="bg-white text-charcoal">{r}</option>
-                  ))}
-                </select>
-              </div>
+      {/* Search Header Row */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 -mt-10 border-b border-border-subtle pb-6 select-none">
+        <div className="text-left w-full sm:w-auto">
+          <h2 className="text-3xl font-heading text-[#1B3564] italic">
+            Explore <span className="not-italic font-bold font-sans text-accent-primary">Sanctuaries</span>
+          </h2>
+          <p className="text-[10px] text-[#1B3564]/50 font-black uppercase tracking-widest mt-1">
+            Handpicked premium luxury villa stays in Maharashtra
+          </p>
+        </div>
+        
+        <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
+          {activeFilterCount > 0 && (
+            <button
+              onClick={handleResetFilters}
+              className="flex items-center gap-2 px-5 py-3.5 rounded-full border border-red-500/30 hover:border-red-500 bg-red-500/10 text-red-600 text-[10px] font-black tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-sm active:scale-95"
+            >
+              <Trash2 size={12} /> Clear ({activeFilterCount})
+            </button>
+          )}
 
-              {/* Category Selector */}
-              <div className="flex flex-col gap-1.5 min-w-[200px]">
-                <span className="text-[9px] text-accent-secondary uppercase tracking-[0.2em] font-black flex items-center gap-1">
-                  <Star size={10} /> Category
-                </span>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="bg-white border border-border-subtle text-charcoal rounded-xl px-4 py-2.5 text-xs font-heading italic outline-none cursor-pointer hover:border-accent-primary/30 transition-all"
-                >
-                  <option value="" className="bg-white text-charcoal">All Style Collections</option>
-                  {CATEGORIES.map(c => (
-                    <option key={c} value={c} className="bg-white text-charcoal">{c}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+          <button
+            onClick={() => setIsFilterModalOpen(true)}
+            className="flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#1B3564] hover:bg-[#152A50] text-white text-[11px] font-black tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 border border-white/10"
+          >
+            <SlidersHorizontal size={14} className="text-[#FFCC00]" />
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="w-5 h-5 rounded-full bg-[#FFCC00] text-slate-950 text-[9px] font-black flex items-center justify-center animate-pulse">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
 
-            {/* Expand / Advanced Filters and Clear Buttons */}
-            <div className="flex items-center gap-4 self-end lg:self-auto">
-              {activeFilterCount > 0 && (
+      {/* Dynamic Search & Interactive Filters Suite inside Popup Modal */}
+      <AnimatePresence>
+        {isFilterModalOpen && (
+          <>
+            {/* Dark frosted backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsFilterModalOpen(false)}
+              className="fixed inset-0 z-[9000] bg-black/60 backdrop-blur-md"
+            />
+            
+            {/* Modal Container */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="fixed inset-x-4 top-[10%] bottom-[10%] md:inset-y-auto md:top-[12%] md:bottom-auto md:left-1/2 md:-translate-x-1/2 md:w-[680px] z-[9100] bg-[#F5F2EA] border border-[#1B3564]/10 rounded-[2.5rem] shadow-[0_25px_60px_rgba(27,53,100,0.22)] p-6 md:p-8 flex flex-col justify-between overflow-hidden max-h-[76vh]"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-[#1B3564]/10 shrink-0">
+                <div className="text-left">
+                  <span className="text-[10px] text-accent-secondary font-black uppercase tracking-[0.25em] block mb-1">Stay Filter Suite</span>
+                  <h3 className="text-2xl font-heading text-[#1B3564] italic">
+                    Filter <span className="not-italic font-bold font-sans text-accent-primary">Sanctuaries</span>
+                  </h3>
+                </div>
                 <button
-                  onClick={handleResetFilters}
-                  className="flex items-center gap-2 px-4 py-3 rounded-full border border-red-500/30 hover:border-red-500 bg-red-500/10 text-red-600 text-[10px] font-black tracking-widest uppercase transition-all duration-300 cursor-pointer"
+                  onClick={() => setIsFilterModalOpen(false)}
+                  className="w-10 h-10 rounded-full bg-white border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564]/60 hover:text-[#1B3564] hover:bg-slate-50 transition-all cursor-pointer shadow-sm"
                 >
-                  <Trash2 size={12} /> Clear ({activeFilterCount})
+                  <X size={18} />
                 </button>
-              )}
+              </div>
 
-              <button
-                onClick={() => setIsFilterExpanded(!isFilterExpanded)}
-                className="flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-bg-secondary/50 border border-border-subtle text-charcoal text-[10px] font-black tracking-widest uppercase transition-all duration-300 cursor-pointer"
-              >
-                <SlidersHorizontal size={12} />
-                {isFilterExpanded ? "Hide Advanced" : "Advanced Filters"}
-              </button>
-            </div>
-          </div>
-
-          {/* Advanced Sliders & Checklist Panel */}
-          <AnimatePresence initial={true}>
-            {isFilterExpanded && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="overflow-hidden"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
-                  
-                  {/* Budget Slider */}
-                  <div className="flex flex-col gap-4 bg-white border border-border-subtle rounded-2xl p-6">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[10px] text-accent-secondary uppercase tracking-[0.2em] font-black flex items-center gap-1">
-                        <DollarSign size={12} /> Max Budget (per night)
-                      </span>
-                      <span className="text-sm font-bold text-accent-secondary bg-accent-secondary/10 px-3 py-1 rounded-full border border-accent-secondary/35">
-                        ₹{maxBudget.toLocaleString("en-IN")}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      min={10000}
-                      max={50000}
-                      step={1000}
-                      value={maxBudget}
-                      onChange={(e) => setMaxBudget(Number(e.target.value))}
-                      className="w-full accent-[#1B3564] cursor-pointer bg-bg-secondary h-1.5 rounded-lg appearance-none"
-                    />
-                    <div className="flex justify-between text-[10px] text-charcoal/40 font-medium">
-                      <span>₹10,000</span>
-                      <span>₹30,000</span>
-                      <span>₹50,000</span>
-                    </div>
-                  </div>
-
-                  {/* Bedrooms count filter */}
-                  <div className="flex flex-col gap-4 bg-white border border-border-subtle rounded-2xl p-6">
+              {/* Scrollable Modal Content */}
+              <div className="flex-1 overflow-y-auto py-6 space-y-8 pr-1 md:pr-2 select-none no-scrollbar">
+                {/* Destination & Category Selector Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Region Selector */}
+                  <div className="flex flex-col gap-1.5 text-left">
                     <span className="text-[10px] text-accent-secondary uppercase tracking-[0.2em] font-black flex items-center gap-1">
-                      <Bed size={12} /> Bedroom Size
+                      <MapPin size={12} /> Destination
                     </span>
-                    <div className="grid grid-cols-4 gap-2">
-                      {[
-                        { label: "Any BHK", value: 0 },
-                        { label: "3 BHK", value: 3 },
-                        { label: "4 BHK", value: 4 },
-                        { label: "5+ BHK", value: 5 }
-                      ].map((btn) => (
-                        <button
-                          key={btn.value}
-                          type="button"
-                          onClick={() => setMinBedrooms(btn.value)}
-                          className={cn(
-                            "py-2.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-all duration-300 border cursor-pointer",
-                            minBedrooms === btn.value
-                              ? "bg-accent-primary border-accent-primary text-white font-black shadow-md"
-                              : "bg-white border-border-subtle text-charcoal/60 hover:border-navy/30 hover:text-navy"
-                          )}
-                        >
-                          {btn.label}
-                        </button>
+                    <select
+                      value={region}
+                      onChange={(e) => setRegion(e.target.value)}
+                      className="w-full bg-white border border-border-subtle text-charcoal rounded-2xl px-4 py-3.5 text-xs font-heading italic outline-none cursor-pointer hover:border-accent-primary/30 transition-all shadow-sm"
+                    >
+                      <option value="" className="bg-white text-charcoal">All Maharashtra Stays</option>
+                      {REGIONS.map(r => (
+                        <option key={r} value={r.toLowerCase()} className="bg-white text-charcoal">{r}</option>
                       ))}
-                    </div>
+                    </select>
                   </div>
 
+                  {/* Category Selector */}
+                  <div className="flex flex-col gap-1.5 text-left">
+                    <span className="text-[10px] text-accent-secondary uppercase tracking-[0.2em] font-black flex items-center gap-1">
+                      <Star size={12} /> Category
+                    </span>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="w-full bg-white border border-border-subtle text-charcoal rounded-2xl px-4 py-3.5 text-xs font-heading italic outline-none cursor-pointer hover:border-accent-primary/30 transition-all shadow-sm"
+                    >
+                      <option value="" className="bg-white text-charcoal">All Style Collections</option>
+                      {CATEGORIES.map(c => (
+                        <option key={c} value={c} className="bg-white text-charcoal">{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Budget Slider */}
+                <div className="flex flex-col gap-4 bg-white border border-border-subtle rounded-2xl p-6 text-left shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] text-accent-secondary uppercase tracking-[0.2em] font-black flex items-center gap-1">
+                      <DollarSign size={12} /> Max Budget (per night)
+                    </span>
+                    <span className="text-xs font-bold text-accent-secondary bg-accent-secondary/10 px-3.5 py-1.5 rounded-full border border-accent-secondary/35">
+                      ₹{maxBudget.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={10000}
+                    max={50000}
+                    step={1000}
+                    value={maxBudget}
+                    onChange={(e) => setMaxBudget(Number(e.target.value))}
+                    className="w-full accent-[#1B3564] cursor-pointer bg-bg-secondary h-1.5 rounded-lg appearance-none"
+                  />
+                  <div className="flex justify-between text-[10px] text-charcoal/40 font-medium">
+                    <span>₹10,000</span>
+                    <span>₹30,000</span>
+                    <span>₹50,000</span>
+                  </div>
+                </div>
+
+                {/* Bedrooms count filter */}
+                <div className="flex flex-col gap-4 bg-white border border-border-subtle rounded-2xl p-6 text-left shadow-sm">
+                  <span className="text-[10px] text-accent-secondary uppercase tracking-[0.2em] font-black flex items-center gap-1">
+                    <Bed size={12} /> Bedroom Size
+                  </span>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      { label: "Any BHK", value: 0 },
+                      { label: "3 BHK", value: 3 },
+                      { label: "4 BHK", value: 4 },
+                      { label: "5+ BHK", value: 5 }
+                    ].map((btn) => (
+                      <button
+                        key={btn.value}
+                        type="button"
+                        onClick={() => setMinBedrooms(btn.value)}
+                        className={cn(
+                          "py-3 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-all duration-300 border cursor-pointer",
+                          minBedrooms === btn.value
+                            ? "bg-accent-primary border-accent-primary text-white font-black shadow-md"
+                            : "bg-white border-border-subtle text-charcoal/60 hover:border-[#1B3564]/30 hover:text-[#1B3564]"
+                        )}
+                      >
+                        {btn.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Amenities Selection Strip */}
-                <div className="pt-8 flex flex-col gap-3">
+                <div className="flex flex-col gap-3 text-left">
                   <span className="text-[10px] text-accent-secondary uppercase tracking-[0.2em] font-black">
                     Filter by Signature Offerings & Amenities
                   </span>
@@ -289,10 +335,10 @@ export default function VillasClient({
                           type="button"
                           onClick={() => handleToggleAmenity(tag.label)}
                           className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-bold tracking-wider uppercase transition-all duration-300 border cursor-pointer",
+                            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-bold tracking-wider uppercase transition-all duration-300 border cursor-pointer shadow-sm",
                             isSelected
                               ? "bg-accent-secondary border-accent-secondary text-white font-black shadow-md"
-                              : "bg-white border-border-subtle text-charcoal/50 hover:border-navy/30 hover:text-navy"
+                              : "bg-white border-border-subtle text-charcoal/50 hover:border-[#1B3564]/30 hover:text-[#1B3564]"
                           )}
                         >
                           {isSelected && <Check size={12} className="stroke-[3]" />}
@@ -302,13 +348,29 @@ export default function VillasClient({
                     })}
                   </div>
                 </div>
+              </div>
 
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-        </div>
-      </div>
+              {/* Modal Footer */}
+              <div className="pt-4 border-t border-[#1B3564]/10 flex items-center justify-between shrink-0">
+                <button
+                  onClick={handleResetFilters}
+                  disabled={activeFilterCount === 0}
+                  className="text-xs text-red-600 hover:text-red-700 underline font-extrabold tracking-wider transition-colors cursor-pointer disabled:opacity-30 disabled:no-underline disabled:cursor-not-allowed"
+                >
+                  RESET FILTERS
+                </button>
+                
+                <button
+                  onClick={() => setIsFilterModalOpen(false)}
+                  className="bg-[#1B3564] hover:bg-[#152A50] text-white px-8 py-3.5 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-md cursor-pointer active:scale-95"
+                >
+                  APPLY RETREATS ({filteredVillas.length})
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Grid Section & Instant Layout Animations */}
       <div className="w-full">

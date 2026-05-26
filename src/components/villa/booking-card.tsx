@@ -257,21 +257,13 @@ Please check availability and confirm my booking request!`;
         </div>
       </div>
 
-      {isSignedIn ? (
-        <Button 
-          onClick={handleBooking}
-          disabled={isLoading || nights <= 0}
-          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
-        >
-          {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
-        </Button>
-      ) : (
-        <SignInButton mode="modal">
-          <button className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer">
-            SIGN IN TO SECURE STAY
-          </button>
-        </SignInButton>
-      )}
+      <Button 
+        onClick={handleBooking}
+        disabled={isLoading || nights <= 0}
+        className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
+      >
+        {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
+      </Button>
       
       <p className="text-center text-text-primary/40 text-[10px] uppercase tracking-widest mb-6 select-none">
         Secure checkout & temporary 10-minute hold

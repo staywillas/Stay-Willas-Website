@@ -35,7 +35,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Stay Willas | Luxury Villas & Staycations in Maharashtra",
-  description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Mahabaleshwar and more.",
+  description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
   metadataBase: new URL("https://staywillas.com"),
 };
 

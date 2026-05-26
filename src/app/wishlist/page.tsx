@@ -7,7 +7,7 @@ import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "My Wishlist | Stay Willas | Premium Luxury Retreats",
-  description: "Browse your handpicked saved collection of luxury villas and private staycations in Lonavala, Alibaug, Karjat and Mahabaleshwar.",
+  description: "Browse your handpicked saved collection of luxury villas and private staycations in Lonavala, Alibaug, and Karjat.",
 };
 
 export const dynamic = "force-dynamic";

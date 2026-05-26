@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,6 +27,8 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const { isSignedIn } = useUser();
   const pathname = usePathname();
 
@@ -55,8 +57,18 @@ const Navbar = () => {
     window.addEventListener("storage", updateCount);
     
     const handleScroll = () => {
-      const scrollPos = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-      setIsScrolled(scrollPos > 30);
+      const currentScrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+      setIsScrolled(currentScrollY > 30);
+      
+      // Mobile hide/show based on scroll direction
+      if (currentScrollY < 80) {
+        setIsNavVisible(true);
+      } else if (currentScrollY > lastScrollY.current + 5) {
+        setIsNavVisible(false); // Scrolling down
+      } else if (currentScrollY < lastScrollY.current - 5) {
+        setIsNavVisible(true); // Scrolling up
+      }
+      lastScrollY.current = currentScrollY;
     };
     window.addEventListener("scroll", handleScroll);
 
@@ -86,7 +98,9 @@ const Navbar = () => {
           ? "top-0 left-0 right-0 w-full px-0 py-0" 
           : "top-0 left-0 right-0 w-full px-4 md:px-8 lg:px-12 py-4 md:py-6",
         // Mobile override: always float like a card at the top
-        "max-xl:top-4 max-xl:left-4 max-xl:right-4 max-xl:w-auto max-xl:p-0"
+        "max-xl:top-4 max-xl:left-4 max-xl:right-4 max-xl:w-auto max-xl:p-0",
+        // Scroll-direction-aware mobile hide/show
+        !isNavVisible && !isMobileMenuOpen ? "max-xl:-translate-y-[calc(100%+2rem)] max-xl:opacity-0" : "max-xl:translate-y-0 max-xl:opacity-100"
       )}
       style={{ zIndex: 99999 }}
     >
@@ -136,8 +150,8 @@ const Navbar = () => {
             >
               {link.name}
               <span className={cn(
-                "absolute -bottom-1.5 left-0 w-0 h-[2px] transition-all duration-300 group-hover/link:w-full",
-                isDarkTheme ? "bg-brand-gold" : "bg-brand-gold"
+                "absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover/link:scale-x-100",
+                "bg-brand-gold"
               )} />
             </Link>
           ))}
@@ -151,7 +165,7 @@ const Navbar = () => {
             )}>
               More <ChevronDown size={14} />
             </div>
-            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 hidden group-hover:block">
+            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none group-hover:pointer-events-auto">
               <div className="glass-premium border border-yellow-200/50 rounded-2xl p-6 min-w-[200px] shadow-xl shadow-yellow-900/5">
                 <div className="flex flex-col gap-4">
                   <Link href="/about" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">About</Link>
@@ -222,66 +236,116 @@ const Navbar = () => {
               </SignInButton>
             )}
 
-            <Link href="/villas" className="bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] rounded-full px-4 lg:px-6 py-2.5 lg:py-3 text-[11px] xl:text-[12px] font-black tracking-widest transition-all duration-300 flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg">
+            <a 
+              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi! I'd like to book a luxury villa stay with Stay Willas. Could you help me find the perfect villa?")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-4 lg:px-6 py-2.5 lg:py-3 text-[11px] xl:text-[12px] font-black tracking-widest transition-all duration-300 flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+            >
               BOOK NOW
-            </Link>
+            </a>
           </div>
         </div>
 
         {/* Mobile Menu Toggle & Wishlist (Moved to Bottom Nav) */}
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Full-Screen Glassmorphism Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 xl:hidden bg-cream flex flex-col p-6 sm:p-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="fixed inset-0 z-[100000] xl:hidden"
           >
-            <div className="flex justify-between items-center mb-10">
-              <div className="flex items-center gap-3">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-cream-border">
-                  <img src="/images/logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-[1.6]" />
+            {/* Glassmorphism Background */}
+            <div className="absolute inset-0 bg-[#0a1628]/85 backdrop-blur-2xl" />
+            
+            {/* Content */}
+            <div className="relative z-10 h-full flex flex-col justify-between p-8 sm:p-12">
+              {/* Header */}
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20">
+                    <img src="/images/logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-[1.6]" />
+                  </div>
+                  <span className="font-heading text-xl tracking-widest text-white/90">STAY WILLAS</span>
                 </div>
-                <span className="font-heading text-xl tracking-widest text-brand-navy font-bold">MENU</span>
-              </div>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="cursor-pointer">
-                <X size={26} className="text-brand-navy" />
-              </button>
-            </div>
-
-            <div className="flex flex-col gap-5">
-              {[...navLinks, { name: "About", href: "/about" }, { name: "Contact", href: "/contact" }].map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-2xl font-heading text-brand-navy hover:text-brand-gold transition-colors font-bold tracking-wide"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                <motion.button 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/80 hover:text-white hover:border-white/40 transition-all duration-300 cursor-pointer"
+                  whileHover={{ rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  {link.name}
-                </Link>
-              ))}
-
-              <div className="h-px w-full bg-slate-200/60 my-6" />
-
-              <div className="flex flex-col gap-3.5">
-                <a href="tel:+919619042310" className="flex items-center gap-3 text-brand-navy/90 text-base font-bold tracking-wide hover:text-brand-gold transition-colors">
-                  <Phone size={18} className="text-brand-navy" />
-                  <span>+91 96190 42310</span>
-                </a>
-
-                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-brand-navy hover:text-[#25D366] text-base font-bold tracking-wide transition-colors">
-                  <WhatsAppIcon size={18} className="text-[#25D366]" />
-                  <span>WhatsApp Chat</span>
-                </a>
+                  <X size={22} />
+                </motion.button>
               </div>
 
-              <Link href="/villas" onClick={() => setIsMobileMenuOpen(false)} className="bg-[#FFB800] hover:bg-[#E6A600] text-[#1B3564] text-center rounded-full w-full py-3.5 text-xs font-black tracking-widest mt-6 shadow-md hover:shadow-lg transition-all duration-300 block">
-                RESERVE NOW
-              </Link>
+              {/* Navigation Links - Centered with stagger */}
+              <motion.nav 
+                className="flex flex-col items-center justify-center gap-2"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.08, delayChildren: 0.15 }
+                  }
+                }}
+              >
+                {[...navLinks, { name: "About", href: "/about" }, { name: "Contact", href: "/contact" }].map((link) => (
+                  <motion.div
+                    key={link.name}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
+                    }}
+                  >
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "text-3xl sm:text-4xl font-heading tracking-wider transition-all duration-300 py-3 block",
+                        pathname === link.href 
+                          ? "text-[#DAA520]" 
+                          : "text-white/70 hover:text-white"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.nav>
+
+              {/* Bottom Section */}
+              <div className="flex flex-col items-center gap-6">
+                {/* Reserve CTA */}
+                <a
+                  href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi! I'd like to book a luxury villa stay with Stay Willas. Could you help me find the perfect villa?")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] text-center rounded-full w-full max-w-xs py-4 text-xs font-black tracking-[0.25em] uppercase shadow-lg shadow-[#DAA520]/20 hover:shadow-xl transition-all duration-300 block active:scale-95"
+                >
+                  RESERVE YOUR VILLA
+                </a>
+                
+                {/* Contact Row */}
+                <div className="flex items-center gap-6">
+                  <a href="tel:+919619042310" className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm">
+                    <Phone size={16} />
+                    <span className="font-medium">Call</span>
+                  </a>
+                  <div className="w-px h-4 bg-white/20" />
+                  <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/50 hover:text-[#25D366] transition-colors text-sm">
+                    <WhatsAppIcon size={16} />
+                    <span className="font-medium">WhatsApp</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

@@ -6,13 +6,16 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Grid, ZoomIn } from "lucide-react";
 import { useLenis } from "lenis/react";
+import ShareButton from "@/components/villa/share-button";
+import SaveButton from "@/components/villa/save-button";
 
 interface PropertyGalleryProps {
   images: string[];
   propertyName: string;
+  villaId: string;
 }
 
-const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
+const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps) => {
   const [isGridOpen, setIsGridOpen] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -128,6 +131,12 @@ const PropertyGallery = ({ images, propertyName }: PropertyGalleryProps) => {
         <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-[9px] uppercase tracking-widest font-black text-[#FFCC00] shadow-lg">
           <span className="w-1.5 h-1.5 rounded-full bg-[#FFCC00] animate-pulse"></span>
           Signature View
+        </div>
+
+        {/* Floating Share and Save Buttons on Mobile */}
+        <div className="absolute top-4 right-4 flex items-center gap-2.5 z-10">
+          <ShareButton minimal />
+          <SaveButton villaId={villaId} villaName={propertyName} minimal />
         </div>
 
         {/* Show All Photos floating button on Mobile */}

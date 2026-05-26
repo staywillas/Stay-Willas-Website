@@ -201,7 +201,7 @@ const DestinationShowcase = () => {
               >
                 <Link
                   href={dest.link}
-                  className="block relative aspect-[3/4] w-full h-full rounded-3xl overflow-hidden group border border-[#DAA520]/25 cursor-pointer shadow-xl shadow-black/20 hover:border-[#DAA520]/75 hover:shadow-[0_0_35px_rgba(218,165,32,0.45)] transition-all duration-500"
+                  className="block relative aspect-[3/4] w-full h-full rounded-3xl overflow-hidden group border-2 border-[#DAA520]/35 cursor-pointer shadow-[0_20px_45px_rgba(15,23,42,0.3)] hover:border-[#DAA520]/85 hover:shadow-[0_25px_60px_rgba(218,165,32,0.4)] transition-all duration-500"
                 >
                   <Image
                     src={dest.image}

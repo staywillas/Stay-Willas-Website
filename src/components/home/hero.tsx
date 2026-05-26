@@ -57,7 +57,7 @@ const slides = [
     desc: "From sun-kissed days to cozy nights,\nexperience the best of beachside living in our private estates."
   },
   {
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000",
+    image: "/assets/villas/angled-house/gallery-11.webp",
     tag: "Infinity Pools & Modern Design",
     title: "The Iconic",
     titleItalic: "Angled House",
@@ -164,12 +164,21 @@ const Hero = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (destination) params.set("region", destination.toLowerCase());
-    if (checkIn) params.set("checkIn", format(checkIn, "yyyy-MM-dd"));
-    if (checkOut) params.set("checkOut", format(checkOut, "yyyy-MM-dd"));
-    if (guests) params.set("guests", guests);
-    router.push(`/villas?${params.toString()}`);
+    
+    const checkInStr = checkIn ? format(checkIn, "dd MMM yyyy") : "Not specified";
+    const checkOutStr = checkOut ? format(checkOut, "dd MMM yyyy") : "Not specified";
+    
+    const msg = `Hi Stay Willas! I would like to book a luxury villa getaway in *${destination}* for *${guests}* guest(s).
+
+• Check-in: *${checkInStr}*
+• Check-out: *${checkOutStr}*
+
+Please check availability and confirm booking options for these dates!`;
+
+    const encodedMsg = encodeURIComponent(msg);
+    const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
+    
+    window.open(whatsappUrl, "_blank");
   };
 
   return (
@@ -205,13 +214,13 @@ const Hero = () => {
                   quality={75}
                   className="object-cover animate-ken-burns"
                 />
-                {/* Premium soft cream vignetted overlay (bottom-up on mobile, left-to-right on desktop) */}
-                <div className="absolute inset-0 md:inset-y-0 md:left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-t from-[#F5F2EA]/98 via-[#F5F2EA]/92 to-[#F5F2EA]/75 md:bg-gradient-to-r md:from-[#F5F2EA] md:via-[#F5F2EA]/95 md:to-transparent z-10" />
+                 {/* Premium soft cream vignetted overlay (bottom-up on mobile, left-to-right on desktop) */}
+                <div className="absolute inset-0 md:inset-y-0 md:left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-t from-[#F5F2EA]/60 via-[#F5F2EA]/20 to-transparent md:bg-gradient-to-r md:from-[#F5F2EA] md:via-[#F5F2EA]/95 md:to-transparent z-10" />
               </div>
 
               {/* Slide content */}
-              <div className="relative z-20 h-full flex flex-col justify-center pt-16 pb-12 lg:pb-36 px-6 md:px-12 lg:px-24">
-                <div className="max-w-2xl">
+               <div className="relative z-20 h-full flex items-center md:items-center pt-16 pb-12 lg:pb-36 px-6 md:px-12 lg:px-24">
+                <div className="max-w-2xl bg-[#F5F2EA]/85 backdrop-blur-md border border-[#1B3564]/5 p-6 sm:p-8 rounded-[2rem] shadow-xl md:bg-transparent md:backdrop-blur-none md:border-none md:p-0 md:shadow-none text-left">
                   <AnimatePresence mode="wait">
                     {isActive && (
                       <motion.div
@@ -357,7 +366,7 @@ const Hero = () => {
             type="submit"
             className="w-full lg:w-auto bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-xs tracking-widest uppercase rounded-full pl-10 pr-4 py-3 shadow-lg shadow-yellow-500/10 hover:shadow-xl transition-all duration-300 cursor-pointer border-none flex items-center justify-between gap-6 shrink-0"
           >
-            <span>CHECK AVAILABILITY</span>
+            <span>BOOK NOW</span>
             <div className="w-8 h-8 rounded-full bg-[#1B3564] text-white flex items-center justify-center shrink-0">
               <ArrowRight size={16} className="stroke-[2.5]" />
             </div>

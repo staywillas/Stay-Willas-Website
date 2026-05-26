@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Our Villa Collection | Stay Willas | Luxury Stays in Maharashtra",
-  description: "Browse our handpicked collection of luxury villas in Lonavala, Alibaug, Mahabaleshwar and Karjat. Each property is personally verified for the ultimate staycation experience.",
+  description: "Browse our handpicked collection of luxury villas in Lonavala, Alibaug, and Karjat. Each property is personally verified for the ultimate staycation experience.",
   keywords: ["luxury villa collection", "private villas maharashtra", "premium staycations", "Stay Willas properties"],
 };
 
@@ -51,20 +51,8 @@ export default async function VillasPage({ searchParams }: PageProps) {
       <div>
         <Navbar />
         
-        {/* Elegant Header Section */}
-        <section className="pt-48 pb-12 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto text-center">
-          <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
-            All Our Homes
-          </span>
-          <h1 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
-            Find Your <br />
-            <span className="italic text-accent-primary pr-4 font-heading font-medium">Perfect Stay</span>
-          </h1>
-          <p className="text-text-primary/55 text-xl max-w-2xl mx-auto leading-relaxed mb-4">
-            Whether you want a quiet home in the hills or a beautiful place by the beach, 
-            we have something for you.
-          </p>
-        </section>
+        {/* Spacing below Navbar */}
+        <div className="pt-32" />
 
         {/* Highly Interactive, Real-Time Client Filter and Grid Section */}
         <VillasClient 

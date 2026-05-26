@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Camera, Mail, MapPin, Phone, ArrowUp } from "lucide-react";
+import { Camera, Mail, MapPin, Phone, ArrowUp, ArrowRight } from "lucide-react";
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -14,6 +14,33 @@ const Footer = () => {
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-blue-700/20 rounded-full blur-[120px] -translate-y-1/2 -translate-x-1/2" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2" />
+
+      {/* Plan Your Stay CTA Banner */}
+      <div className="max-w-7xl mx-auto relative z-10 mb-24">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1B3564] to-[#0F2341] p-10 md:p-16 border border-white/10">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#DAA520]/10 rounded-full blur-[80px] translate-x-1/4 -translate-y-1/4" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/10 rounded-full blur-[60px] -translate-x-1/4 translate-y-1/4" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left">
+              <span className="text-[#DAA520] font-black tracking-[0.3em] uppercase text-[10px] mb-3 block">Ready to Escape?</span>
+              <h3 className="text-3xl md:text-4xl font-heading text-white leading-tight">
+                Plan Your <span className="italic text-[#DAA520]">Perfect Stay</span>
+              </h3>
+              <p className="text-white/50 text-sm mt-3 max-w-md font-light">Tell us your dates and preferences. Our villa concierge will curate the perfect villa for you.</p>
+            </div>
+            <a
+              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi! I'd like to plan my perfect villa stay with Stay Willas. Could you help me find the right villa?")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-10 py-4 text-xs font-black tracking-[0.25em] uppercase transition-all duration-300 shadow-lg shadow-[#DAA520]/20 hover:shadow-xl hover:scale-105 active:scale-95 flex items-center gap-3 whitespace-nowrap shrink-0"
+            >
+              BOOK NOW
+              <ArrowRight size={14} />
+            </a>
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Main Grid */}
@@ -96,7 +123,7 @@ const Footer = () => {
               <div className="flex items-start gap-3.5 group">
                 <MapPin className="text-blue-300 shrink-0 mt-1 group-hover:scale-110 transition-transform" size={18} />
                 <p className="text-white/70 text-sm leading-relaxed">
-                  101, Luxury Plaza, Bandra West,<br /> Mumbai, Maharashtra 400050
+                  Kim cottage, 14, PR Kadam Marg,<br /> Maneklal Estate, Ghatkopar West,<br /> Mumbai, Maharashtra 400084
                 </p>
               </div>
               <div className="flex items-center gap-3.5 group">
@@ -114,7 +141,7 @@ const Footer = () => {
                   <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
                 </svg>
                 <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-green-300 transition-colors text-sm font-medium">
-                  WhatsApp Us
+                  Chat with Villa Concierge
                 </a>
               </div>
               <div className="flex items-center gap-3.5 group">
