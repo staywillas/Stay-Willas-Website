@@ -44,9 +44,9 @@ const Footer = () => {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 mb-24">
           {/* Brand Column */}
-          <div className="md:col-span-4">
+          <div className="md:col-span-3">
             <Link href="/" className="flex items-center gap-3 mb-8 group">
               <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/30 shadow-lg bg-white/10 flex items-center justify-center shrink-0 group-hover:border-blue-300 transition-colors">
                 <img 
@@ -86,11 +86,30 @@ const Footer = () => {
               {[
                 { name: "All Villas", href: "/villas" },
                 { name: "Destinations", href: "/destinations" },
-                { name: "Experiences", href: "/experiences" }
+                { name: "Experiences", href: "/experiences" },
+                { name: "My Wishlist", href: "/wishlist" }
               ].map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-white/60 hover:text-blue-300 transition-colors duration-300 text-sm font-medium">
                     {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Popular Regions */}
+          <div className="md:col-span-2">
+            <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Destinations</h4>
+            <ul className="flex flex-col gap-4">
+              {[
+                { name: "Lonavala", href: "/villas?region=lonavala" },
+                { name: "Alibaug", href: "/destinations" },
+                { name: "Karjat", href: "/destinations" }
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-white/60 hover:text-blue-300 transition-colors duration-300 text-sm font-medium">
+                    {link.name} Villas
                   </Link>
                 </li>
               ))}
@@ -104,7 +123,6 @@ const Footer = () => {
               {[
                 { name: "About Us", href: "/about" },
                 { name: "Partner With Us", href: "/partner" },
-                { name: "Careers", href: "#" },
                 { name: "Contact Us", href: "/contact" }
               ].map((link) => (
                 <li key={link.name}>
@@ -117,7 +135,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Column */}
-          <div className="md:col-span-4">
+          <div className="md:col-span-3">
             <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Get in Touch</h4>
             <div className="flex flex-col gap-6">
               <div className="flex items-start gap-3.5 group">
