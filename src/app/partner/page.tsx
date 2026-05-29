@@ -41,7 +41,7 @@ export default function PartnerPage() {
           <a href="#partner-form" className="btn-glow-gold px-12 py-6 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 shadow-2xl inline-block w-full sm:w-auto text-center">
             INQUIRE NOW
           </a>
-          <a href="/partner/portal" className="border border-accent-secondary hover:bg-accent-secondary/10 px-12 py-6 rounded-full text-[10px] font-bold tracking-widest text-accent-secondary uppercase transition-all duration-300 inline-block w-full sm:w-auto text-center">
+          <a href="/homeowner" className="border border-accent-secondary hover:bg-accent-secondary/10 px-12 py-6 rounded-full text-[10px] font-bold tracking-widest text-accent-secondary uppercase transition-all duration-300 inline-block w-full sm:w-auto text-center">
             OWNER LOG IN
           </a>
         </div>

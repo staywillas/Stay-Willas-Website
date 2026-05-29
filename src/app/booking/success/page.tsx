@@ -10,8 +10,9 @@ import { CheckCircle2, Calendar, MapPin, ArrowRight, ShieldCheck, Download, Spar
 import { format } from "date-fns";
 
 export const metadata: Metadata = {
-  title: "Stay Confirmed | Stay Willas | Premium Stays",
-  description: "Your luxury staycation booking is confirmed. View details and secure your checklist before arrival."
+  title: "Booking Confirmed | Stay Willas",
+  description: "Your luxury staycation booking is confirmed. View your reservation details and complete check-in steps.",
+  robots: { index: false, follow: false },
 };
 
 interface PageProps {

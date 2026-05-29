@@ -39,7 +39,7 @@ export default function MobileBottomNav() {
   const handleProfileClick = () => {
     if (isSignedIn && user) {
       if (user.role === "admin") window.location.href = "/admin";
-      else if (user.role === "partner") window.location.href = "/partner/portal";
+      else if (user.role === "partner") window.location.href = "/homeowner";
       else window.location.href = "/dashboard";
     } else {
       window.location.href = "/login?role=guest";

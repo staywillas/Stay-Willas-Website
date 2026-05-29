@@ -5,9 +5,12 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import AdminDashboard from "@/components/admin/admin-dashboard";
 
+import LoginForm from "@/components/auth/login-form";
+
 export const metadata: Metadata = {
-  title: "Administrative Suite | Stay Willas",
-  description: "Stay Willas private management dashboard for tracking bookings, inquiries, revenue pipelines, and luxury property portfolios.",
+  title: "Admin Dashboard | Stay Willas",
+  description: "Stay Willas private administrative dashboard.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";
@@ -33,7 +36,11 @@ export default async function AdminPage() {
   }
 
   if (!isAuthenticated) {
-    redirect("/login?role=admin");
+    return (
+      <main className="min-h-screen bg-[#FAF8F3] flex flex-col justify-center items-center py-20 font-montserrat">
+        <LoginForm role="admin" />
+      </main>
+    );
   }
 
   // 2. Query all database statistics & pipelines dynamically in parallel

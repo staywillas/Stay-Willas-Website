@@ -8,8 +8,9 @@ import Footer from "@/components/layout/footer";
 import DashboardClient from "@/components/dashboard/dashboard-client";
 
 export const metadata: Metadata = {
-  title: "Guest Sanctuary Dashboard | Stay Willas | Luxury Estates",
-  description: "View upcoming luxury stays, complete KYC compliance verification, review selected concierge packages, and download billing invoices.",
+  title: "Guest Dashboard | Stay Willas",
+  description: "View your upcoming luxury stays, complete KYC verification, review concierge packages, and manage your bookings.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

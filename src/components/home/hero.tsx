@@ -43,25 +43,39 @@ import "swiper/css/navigation";
 
 const slides = [
   {
-    image: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&q=80&w=2000",
-    tag: "BEACHSIDE STAYS",
-    title: "Memories made",
-    titleItalic: "by the sea",
-    desc: "From sun-kissed days to cozy nights,\nfind your perfect seaside hideaway."
-  },
-  {
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000",
-    tag: "Our Handpicked Stays",
-    title: "Your Perfect",
-    titleItalic: "Getaway",
-    desc: "From sun-kissed days to cozy nights,\nexperience the best of beachside living in our private estates."
-  },
-  {
     image: "/assets/villas/angled-house/gallery-11.webp",
     tag: "Pool & Modern Design",
     title: "The Iconic",
     titleItalic: "Angled House",
     desc: "Where modern architecture meets slow luxury —\nour stunning designer villa in Lonavala, crafted for unforgettable escapes."
+  },
+  {
+    image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
+    tag: "Beachside Luxury",
+    title: "Breathtaking",
+    titleItalic: "Horizon Villa",
+    desc: "An oceanfront sanctuary on Alibaug's golden coast.\nExperience a heated private infinity pool blending into the sea."
+  },
+  {
+    image: "/assets/villas/skytaj-villa/main.jpg",
+    tag: "Oceanfront Luxury",
+    title: "The Beautiful",
+    titleItalic: "Skytaj Villa",
+    desc: "A serene beachfront masterpiece nestled in palm groves\non Alibaug's elite coast, defining modern seaside living."
+  },
+  {
+    image: "/assets/villas/heritage-villa/main.jpg",
+    tag: "Rustic Estate",
+    title: "The Majestic",
+    titleItalic: "Heritage Villa",
+    desc: "A countryside stone sanctuary in Karjat where\nold-world heritage architecture meets modern-day private luxury."
+  },
+  {
+    image: "/assets/villas/harmony-villa/main.jpg",
+    tag: "Hillside Retreat",
+    title: "The Peaceful",
+    titleItalic: "Harmony Villa",
+    desc: "A contemporary Tungarli masterpiece in Lonavala,\nfeaturing custom pool and open living areas with scenic hill backdrops."
   }
 ];
 
@@ -203,9 +217,9 @@ Could you please share the options available and help us plan our perfect getawa
         {slides.map((slide, index) => {
           const isActive = activeIndex === index;
           return (
-            <SwiperSlide key={index} className="relative h-full w-full">
+            <SwiperSlide key={index} className="relative h-full w-full overflow-hidden">
               {/* Ken Burns background */}
-              <div className="absolute inset-0 z-0">
+              <div className="absolute inset-0 z-0 overflow-hidden">
                 <Image
                   src={slide.image}
                   alt={slide.title}
@@ -281,12 +295,12 @@ Could you please share the options available and help us plan our perfect getawa
       })}
     </Swiper>
 
-    {/* Floating Side Arrow Buttons - Premium Navy */}
-    <button className="hero-prev absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 hidden md:flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
-      <ChevronLeft size={24} className="group-hover:scale-110 transition-transform" />
+    {/* Floating Side Arrow Buttons - Highly Visible Premium Navy/White */}
+    <button className="hero-prev absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/10 bg-white/95 text-[#1B3564] hover:bg-[#1B3564] hover:text-white shadow-[0_8px_30px_rgba(27,53,100,0.12)] flex items-center justify-center transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95">
+      <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
     </button>
-    <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/20 hidden md:flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 hover:border-[#1B3564]/50 backdrop-blur-md transition-all cursor-pointer group shadow-sm">
-      <ChevronRight size={24} className="group-hover:scale-110 transition-transform" />
+    <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/10 bg-white/95 text-[#1B3564] hover:bg-[#1B3564] hover:text-white shadow-[0_8px_30px_rgba(27,53,100,0.12)] flex items-center justify-center transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95">
+      <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
     </button>
   </div>
 
@@ -304,6 +318,8 @@ Could you please share the options available and help us plan our perfect getawa
                   className="bg-transparent text-lg font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
                 >
                   <option value="Lonavala">Lonavala</option>
+                  <option value="Alibaug">Alibaug</option>
+                  <option value="Karjat">Karjat</option>
                 </select>
               </div>
               <div className="w-8 h-8 rounded-full bg-[#1B3564]/5 flex items-center justify-center text-[#1B3564] shrink-0 lg:hidden">

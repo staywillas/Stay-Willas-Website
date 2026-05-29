@@ -8,6 +8,8 @@ import { prisma } from "@/lib/db";
 export const metadata: Metadata = {
   title: "My Wishlist | Stay Willas | Premium Luxury Retreats",
   description: "Browse your handpicked saved collection of luxury villas and private staycations in Lonavala, Alibaug, and Karjat.",
+  keywords: ["wishlist villas", "saved luxury stays", "favourite villas maharashtra"],
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

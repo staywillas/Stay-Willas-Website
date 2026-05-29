@@ -37,6 +37,21 @@ export const metadata: Metadata = {
   title: "Stay Willas | Luxury Villas & Staycations in Maharashtra",
   description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
   metadataBase: new URL("https://staywillas.com"),
+  keywords: ["luxury villa maharashtra", "private pool villa lonavala", "luxury staycation alibaug", "villa stay karjat", "Stay Willas"],
+  authors: [{ name: "Stay Willas" }],
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    siteName: "Stay Willas",
+    title: "Stay Willas | Luxury Villas & Staycations in Maharashtra",
+    description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
+    url: "https://staywillas.com",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Stay Willas | Luxury Villas & Staycations in Maharashtra",
+    description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
+  },
 };
 
 export default function RootLayout({

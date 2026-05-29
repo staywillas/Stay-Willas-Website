@@ -22,15 +22,20 @@ export async function getConciergeRecommendation(params: ConciergeRecommendation
       minGuests = 9;
     }
 
-    // 3. Parse budget input (e.g. "₹10,000 - ₹25,000" or "₹25,000 - ₹50,000")
+    // 3. Parse budget input dynamically (e.g. "₹10,000 - ₹15,000" -> min: 10000, max: 15000)
     let minBudget = 0;
-    let maxBudget = 100000;
-    if (params.budget.includes("10,000") && params.budget.includes("25,000")) {
-      minBudget = 10000;
-      maxBudget = 25000;
-    } else if (params.budget.includes("25,000") && params.budget.includes("50,000")) {
-      minBudget = 25000;
-      maxBudget = 50000;
+    let maxBudget = 1000000;
+    const numbers = params.budget.match(/\d+[\d,.]*/g);
+    if (numbers && numbers.length >= 2) {
+      minBudget = parseInt(numbers[0].replace(/,/g, ""), 10);
+      maxBudget = parseInt(numbers[1].replace(/,/g, ""), 10);
+    } else if (numbers && numbers.length === 1) {
+      const num = parseInt(numbers[0].replace(/,/g, ""), 10);
+      if (params.budget.toLowerCase().includes("under") || params.budget.toLowerCase().includes("below")) {
+        maxBudget = num;
+      } else if (params.budget.toLowerCase().includes("above") || params.budget.toLowerCase().includes("over")) {
+        minBudget = num;
+      }
     }
 
     // 4. Perform dynamic filtering
@@ -44,16 +49,22 @@ export async function getConciergeRecommendation(params: ConciergeRecommendation
       // Check guest capacity limit
       if (villa.guests < minGuests) return false;
 
-      // Check base price boundary
-      if (villa.price > maxBudget) return false;
+      // Check price range boundaries (both min and max)
+      if (villa.price < minBudget || villa.price > maxBudget) return false;
 
       return true;
     });
 
-    // If no perfect match found, fallback to the primary available property
+    // If no perfect match found, try to fall back to a villa in the selected location first
+    if (filtered.length === 0 && params.location && params.location !== "Anywhere") {
+      filtered = villas.filter((v) =>
+        v.location.toLowerCase().includes(params.location.toLowerCase())
+      );
+    }
+
+    // If still no match found, fallback to the seeded Angled House or the first available villa
     if (filtered.length === 0) {
-      // Look for the seeded Angled House
-      const angled = villas.find(v => v.slug === "angled-house");
+      const angled = villas.find((v) => v.slug === "angled-house");
       filtered = angled ? [angled] : [villas[0]];
     }
 

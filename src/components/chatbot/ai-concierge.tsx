@@ -81,7 +81,15 @@ export default function AiConcierge() {
             id: Date.now().toString(),
             role: "bot",
             content: `Excellent choice. What is your approximate budget per night?`,
-            options: ["₹10,000 - ₹25,000", "₹25,000 - ₹50,000"],
+            options: [
+              "₹10,000 - ₹15,000",
+              "₹15,000 - ₹20,000",
+              "₹20,000 - ₹25,000",
+              "₹25,000 - ₹30,000",
+              "₹30,000 - ₹35,000",
+              "₹35,000 - ₹40,000",
+              "₹45,000 - ₹50,000"
+            ],
           },
         ]);
       }, 800);

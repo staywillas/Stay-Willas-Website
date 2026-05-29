@@ -168,7 +168,7 @@ export async function loginAction(
         path: "/"
       });
 
-      return { success: true, redirectTo: "/partner/portal" };
+      return { success: true, redirectTo: "/homeowner" };
     } else {
       return { success: false, error: "Invalid Partner Password." };
     }

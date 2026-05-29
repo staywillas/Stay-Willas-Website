@@ -122,8 +122,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${villa.name} | Premium Luxury Retreat in ${villa.location} | Stay Willas`,
-    description: `Spend a magical, luxurious staycation at ${villa.name}, a curated premium property in ${villa.location}. Featuring ${villa.bedrooms} bedrooms, top-tier amenities, and gorgeous views.`,
+    title: `${villa.name} | Luxury Villa in ${villa.location} | Stay Willas`,
+    description: `Book ${villa.name} — a curated ${villa.bedrooms}-bedroom luxury villa in ${villa.location} with private pool, premium amenities, and stunning views. Available for exclusive stays.`,
+    keywords: [villa.name, villa.location, "luxury villa stay", "private pool villa", "Stay Willas"],
+    openGraph: {
+      title: `${villa.name} | Stay Willas`,
+      description: `A curated ${villa.bedrooms}-bedroom luxury villa in ${villa.location}.`,
+      images: villa.images[0] ? [{ url: villa.images[0] }] : [],
+      type: "website",
+    },
   };
 }
 
