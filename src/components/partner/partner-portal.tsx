@@ -29,17 +29,9 @@ import { Button } from "@/components/ui/button";
 interface PartnerPortalProps {
   initialData: any;
   defaultEmail: string;
-  isDevMode: boolean;
 }
 
-const mockAccounts = [
-  { email: "owner@staywillas.com", name: "Elite Villa Owner" },
-  { email: "partner@villa.com", name: "Premium Maharashtra Partner" },
-  { email: "igatpuri-owner@gmail.com", name: "Igatpuri Retreat Owner" },
-  { email: "kashid-partner@outlook.com", name: "Kashid Beachfront Associate" }
-];
-
-export default function PartnerPortal({ initialData, defaultEmail, isDevMode }: PartnerPortalProps) {
+export default function PartnerPortal({ initialData, defaultEmail }: PartnerPortalProps) {
   const [email, setEmail] = useState(defaultEmail);
   const [data, setData] = useState(initialData);
   const [activeTab, setActiveTab] = useState<"overview" | "blocking" | "sync">("overview");
@@ -55,21 +47,6 @@ export default function PartnerPortal({ initialData, defaultEmail, isDevMode }: 
   const [blockCheckOut, setBlockCheckOut] = useState("");
   const [blockType, setBlockType] = useState<"PERSONAL" | "MAINTENANCE">("PERSONAL");
   const [blockNotes, setBlockNotes] = useState("");
-
-  // Sync data dynamically if email is toggled client-side
-  const handleEmailChange = async (selectedEmail: string) => {
-    setEmail(selectedEmail);
-    setIsDataLoading(true);
-    try {
-      const updated = await getPartnerDashboardData(selectedEmail);
-      setData(updated);
-      setBlockVillaId(updated.villas?.[0]?.id || "");
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsDataLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (data.villas?.length > 0 && !blockVillaId) {
@@ -210,38 +187,7 @@ export default function PartnerPortal({ initialData, defaultEmail, isDevMode }: 
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12">
-      {/* Dev Demo switcher banner */}
-      {isDevMode && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 p-6 rounded-3xl bg-gradient-to-r from-amber-500/10 to-blue-600/10 border border-amber-500/20 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4"
-        >
-          <div>
-            <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
-              Dev Mode Switcher
-            </span>
-            <h4 className="font-heading text-lg font-bold text-white mt-2">Simulate Partner Accounts</h4>
-            <p className="text-xs text-white/50 mt-1">Switch email addresses client-side to test occupancy metrics, custom blocking constraints, and linked properties.</p>
-          </div>
-          <div className="flex flex-wrap gap-2 justify-center">
-            {mockAccounts.map((account) => (
-              <button
-                key={account.email}
-                onClick={() => handleEmailChange(account.email)}
-                disabled={isDataLoading}
-                className={`text-xs px-4 py-2 rounded-xl border transition-all uppercase tracking-wider font-semibold ${
-                  email === account.email
-                    ? "bg-amber-500 text-slate-950 font-black border-amber-500 shadow-md shadow-amber-500/20 scale-105"
-                    : "bg-white/5 hover:bg-white/10 text-white/70 border-white/10"
-                }`}
-              >
-                {account.name} ({account.email.split("@")[0]})
-              </button>
-            ))}
-          </div>
-        </motion.div>
-      )}
+
 
       {/* Main Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-white/5 pb-8">

@@ -16,7 +16,6 @@ export const dynamic = "force-dynamic";
 export default async function HomeownerPortalPage() {
   let userEmail = "";
   let isAuthenticated = false;
-  let isDevMode = false;
 
   // 1. Authenticate user using secure staywillas_session cookie
   try {
@@ -25,14 +24,9 @@ export default async function HomeownerPortalPage() {
     
     if (sessionCookie?.value) {
       const session = JSON.parse(sessionCookie.value);
-      if (session.role === "partner" || session.role === "admin") {
+      if (session.role === "partner") {
         userEmail = session.email;
         isAuthenticated = true;
-        
-        // Enable account switching switcher in dev mode or local testing
-        if (process.env.NODE_ENV === "development" || session.role === "admin") {
-          isDevMode = true;
-        }
       }
     }
   } catch (e) {
@@ -55,7 +49,6 @@ export default async function HomeownerPortalPage() {
       <PartnerPortal 
         initialData={initialData} 
         defaultEmail={userEmail}
-        isDevMode={isDevMode}
       />
     </main>
   );
