@@ -26,30 +26,47 @@ const ContactForm = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("https://formsubmit.co/ajax/staywillas@gmail.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          Name: name,
-          Email: email,
-          Phone: phone,
-          "Inquiry Type": inquiryType,
-          Message: message,
-          _subject: `🏰 Stay Willas - New ${inquiryType} from ${name}`,
-          _template: "box"
-        })
+      // 1. Submit to local Database first so the inquiry is safely registered in Admin Dashboard
+      const dbRes = await submitInquiry({
+        name,
+        email,
+        phone,
+        message: `[Inquiry Type: ${inquiryType}] ${message}`,
+        type: inquiryType === "Partner with Us" ? "OWNER" : "GUEST",
       });
 
-      const data = await res.json();
-      if (data.success === "true" || res.ok) {
-        setSuccess(true);
-        setName(""); setEmail(""); setPhone(""); setMessage("");
-      } else {
-        throw new Error("FormSubmit response failed");
+      if (!dbRes.success) {
+        throw new Error("Local DB submission failed");
       }
+
+      // 2. Best effort email notification via FormSubmit
+      try {
+        await fetch("https://formsubmit.co/ajax/staywillas@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            Name: name,
+            Email: email,
+            Phone: phone,
+            "Inquiry Type": inquiryType,
+            Message: message,
+            _subject: `🏰 Stay Willas - New ${inquiryType} from ${name}`,
+            _template: "box"
+          })
+        });
+      } catch (emailErr) {
+        console.warn("Best effort FormSubmit notification failed:", emailErr);
+      }
+
+      // 3. Mark as success since DB write succeeded
+      setSuccess(true);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
     } catch (err: any) {
       setError("Something went wrong. Please try again or reach out directly via phone.");
     } finally {

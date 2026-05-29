@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Loader2, Home } from "lucide-react";
+import { submitInquiry } from "@/app/actions/inquiry";
 
 const PartnerForm = () => {
   const [name, setName] = useState("");
@@ -26,34 +27,48 @@ const PartnerForm = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("https://formsubmit.co/ajax/staywillas@gmail.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          Name: name,
-          Email: email,
-          Phone: phone,
-          Location: location,
-          Message: message,
-          _subject: `🏰 Stay Willas - New Property Partnership Inquiry from ${name} (${location})`,
-          _template: "box"
-        })
+      // 1. Submit to local Database first so the inquiry is never lost and shows in Admin Dashboard
+      const dbRes = await submitInquiry({
+        name,
+        email,
+        phone,
+        message: `[Location: ${location}] ${message}`,
+        type: "OWNER",
       });
 
-      const data = await res.json();
-      if (data.success === "true" || res.ok) {
-        setSuccess(true);
-        setName("");
-        setEmail("");
-        setPhone("");
-        setLocation("");
-        setMessage("");
-      } else {
-        throw new Error("FormSubmit response failed");
+      if (!dbRes.success) {
+        throw new Error("Local DB submission failed");
       }
+
+      // 2. Best effort email notification via FormSubmit
+      try {
+        await fetch("https://formsubmit.co/ajax/staywillas@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            Name: name,
+            Email: email,
+            Phone: phone,
+            Location: location,
+            Message: message,
+            _subject: `🏰 Stay Willas - New Property Partnership Inquiry from ${name} (${location})`,
+            _template: "box"
+          })
+        });
+      } catch (emailErr) {
+        console.warn("Best effort FormSubmit notification failed:", emailErr);
+      }
+
+      // 3. Mark as success since DB save succeeded
+      setSuccess(true);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setLocation("");
+      setMessage("");
     } catch (err: any) {
       setError("Something went wrong. Please try again or connect directly with our partnership office.");
     } finally {
