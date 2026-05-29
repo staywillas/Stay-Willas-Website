@@ -145,6 +145,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
 
   const villaData = {
     id: villa.id,
+    slug: villa.slug,
     name: villa.name,
     location: villa.location,
     rating: avgRating,
@@ -177,6 +178,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
       };
     }),
     rules: defaultRules,
+    foodMenu: villa.foodMenu || [],
   };
 
   return (
@@ -192,7 +194,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
           {/* Nice little share/save bar at the top right of the page */}
           <div className="flex items-center gap-4">
             <ShareButton />
-            <SaveButton villaId={villaData.id} villaName={villaData.name} />
+            <SaveButton villaId={villaData.slug} villaName={villaData.name} />
           </div>
         </div>
 
@@ -227,7 +229,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
         </div>
 
         {/* Cinematic, Interactive Property Gallery & Lightbox */}
-        <PropertyGallery images={villaData.images} propertyName={villaData.name} villaId={villaData.id} />
+        <PropertyGallery images={villaData.images} propertyName={villaData.name} villaId={villaData.slug} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
           <div className="lg:col-span-8">
@@ -251,6 +253,31 @@ export default async function VillaDetailPage({ params }: PageProps) {
                 ))}
               </div>
             </div>
+
+            {villaData.foodMenu && villaData.foodMenu.length > 0 && (
+              <div className="mb-12 bg-gradient-to-br from-[#1B3564]/5 via-[#DAA520]/5 to-transparent border border-border-subtle p-8 rounded-[2rem] shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#DAA520]/10 rounded-full blur-2xl pointer-events-none" />
+                
+                <h2 className="text-3xl font-heading mb-2 flex items-center gap-3 text-[#1B3564] italic">
+                  <Coffee className="text-[#DAA520] stroke-[1.8]" size={28} />
+                  <span>Signature Culinary <span className="italic text-[#DAA520] font-serif font-light">Menu</span></span>
+                </h2>
+                <p className="text-[10px] text-[#1B3564]/60 font-black uppercase tracking-widest mb-6">
+                  Indulge in gourmet dishes prepared fresh by our private chefs
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {villaData.foodMenu.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-4 p-4 bg-white border border-border-subtle rounded-2xl shadow-sm hover:border-[#DAA520]/40 transition-all duration-300">
+                      <div className="w-10 h-10 rounded-xl bg-[#DAA520]/10 flex items-center justify-center text-[#DAA520] shrink-0 font-heading font-black text-sm">
+                        {String(idx + 1).padStart(2, "0")}
+                      </div>
+                      <span className="text-sm font-semibold text-text-primary/80 text-left">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="lg:col-span-4 relative" id="booking-card-section">
@@ -279,7 +306,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
           </div>
           <div className="flex items-center gap-2">
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! I would like to enquire about booking *${villaData.name}* in ${villaData.location}.`)}`}
+              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas Concierge! 🌿 I am absolutely in love with *${villaData.name}* in ${villaData.location}. I would love to enquire about its availability and details for my next escape.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-12 h-12 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white flex items-center justify-center transition-all duration-300 shadow-[0_0_15px_rgba(37,211,102,0.3)] shrink-0 active:scale-95 cursor-pointer"
@@ -290,7 +317,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
               </svg>
             </a>
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi! I'd like to book *${villaData.name}* in ${villaData.location}. Could you help me with availability and pricing?`)}`}
+              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🏰 I would love to book a luxury stay at *${villaData.name}* in ${villaData.location}. Could you please help me with availability, custom packages, and pricing for my group?`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-accent-primary hover:bg-accent-secondary text-white font-extrabold px-6 sm:px-8 py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(27,53,100,0.3)] flex items-center justify-center active:scale-95 whitespace-nowrap"

@@ -7,7 +7,7 @@ import { Search, Heart, User, Building2 } from "lucide-react";
 import { useAuth } from "@/lib/use-auth";
 import { cn } from "@/lib/utils";
 
-const WA_BOOKING_URL = `https://wa.me/919619042310?text=${encodeURIComponent("Hi! I'd like to book a luxury villa stay with Stay Willas. Could you help me find the perfect villa?")}`;
+const WA_BOOKING_URL = `https://wa.me/919619042310?text=${encodeURIComponent("Hello Stay Willas Concierge! 🌟 I am using your mobile app and would love to book a luxury villa stay. Could you help us find the perfect sanctuary for our next getaway?")}`;
 
 export default function MobileBottomNav() {
   const pathname = usePathname();

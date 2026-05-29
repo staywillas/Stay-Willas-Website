@@ -9,7 +9,7 @@ const WhatsAppSticky = () => {
   return (
     <div className="fixed bottom-24 left-5 md:bottom-8 md:left-8 z-[8000] flex items-center gap-3">
       <motion.a
-        href="https://wa.me/919619042310"
+        href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%21%20%F0%9F%8C%B4%20I%27m%20browsing%20your%20beautiful%20collection%20of%20private%20estates%20and%20would%20love%20to%20chat%20about%20planning%20our%20perfect%20staycation.%20%E2%9C%A8"
         target="_blank"
         rel="noopener noreferrer"
         initial={{ scale: 0, opacity: 0 }}

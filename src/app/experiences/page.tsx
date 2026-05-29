@@ -106,7 +106,7 @@ export default function ExperiencesPage() {
           ))}
         </div>
         <a
-          href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi! I'd love to experience luxury with Stay Willas. Could you help me find the perfect villa with curated experiences?")}`}
+          href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! ✨ I am looking to plan a truly special getaway and would love to experience your curated luxury staycations. Could you help me find the perfect villa with bespoke experiences (like a private chef, pool deck BBQs, and sunset views)? 🥂🍾")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-3 bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full px-10 py-4.5 text-xs font-black tracking-[0.25em] uppercase transition-all duration-300 shadow-lg shadow-[#1B3564]/20 hover:shadow-xl hover:scale-105 active:scale-95"

@@ -3,7 +3,10 @@
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2 } from "lucide-react";
+import { 
+  Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2,
+  ChefHat, Wine, Sparkles, Car, Check, ChevronDown, ChevronUp 
+} from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
 import { createCheckoutSession } from "@/app/actions/booking";
 import { useUser, SignInButton } from "@clerk/nextjs";
@@ -14,6 +17,45 @@ interface BookingCardProps {
   price: string;
   maxGuests?: number;
 }
+
+const availableAddOns = [
+  {
+    id: "Gourmet Chef Experience",
+    label: "Gourmet Chef Experience",
+    description: "Private chef preparing gourmet breakfast, lunch, and dinner.",
+    price: 6000,
+    perNight: true,
+    perGuest: false,
+    icon: ChefHat,
+  },
+  {
+    id: "Curated Vineyard Tour",
+    label: "Curated Vineyard Tour",
+    description: "Private guided tour of premium local vineyards with tasting.",
+    price: 4500,
+    perNight: false,
+    perGuest: true,
+    icon: Wine,
+  },
+  {
+    id: "Celebration Decoration",
+    label: "Celebration Decoration",
+    description: "Custom premium balloon & floral setups for special occasions.",
+    price: 7500,
+    perNight: false,
+    perGuest: false,
+    icon: Sparkles,
+  },
+  {
+    id: "Premium SUV Airport Transfer",
+    label: "Premium SUV Airport Transfer",
+    description: "Round-trip luxury SUV chauffeured airport transport.",
+    price: 9500,
+    perNight: false,
+    perGuest: false,
+    icon: Car,
+  },
+];
 
 const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardProps) => {
   const numericPrice = parseInt(price.replace(/,/g, ""));
@@ -26,6 +68,8 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [showAddOns, setShowAddOns] = useState(false);
 
   // Prefill details from Clerk user session
   React.useEffect(() => {
@@ -43,8 +87,30 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
   const nights = differenceInDays(checkOut, checkIn);
   const subtotal = numericPrice * (nights > 0 ? nights : 0);
 
+  // Dynamic add-ons cost calculation
+  let addOnsCost = 0;
+  selectedAddOns.forEach(addon => {
+    if (addon === "Gourmet Chef Experience") {
+      addOnsCost += 6000 * (nights > 0 ? nights : 0);
+    } else if (addon === "Curated Vineyard Tour") {
+      addOnsCost += 4500 * guests;
+    } else if (addon === "Celebration Decoration") {
+      addOnsCost += 7500;
+    } else if (addon === "Premium SUV Airport Transfer") {
+      addOnsCost += 9500;
+    }
+  });
+
+  const handleToggleAddOn = (addon: string) => {
+    setSelectedAddOns(prev => 
+      prev.includes(addon) 
+        ? prev.filter(item => item !== addon) 
+        : [...prev, addon]
+    );
+  };
+
   const serviceFee = 5000;
-  const total = subtotal + serviceFee;
+  const total = subtotal + serviceFee + addOnsCost;
 
   const handleCheckInClick = () => {
     if (checkInRef.current) {
@@ -77,18 +143,22 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
       const formattedCheckIn = format(checkIn, "dd MMM yyyy");
       const formattedCheckOut = format(checkOut, "dd MMM yyyy");
       
-      const msg = `Hi Stay Willas! I would like to book *${villaName}* for *${guests}* guest(s).
+      const addOnsSection = selectedAddOns.length > 0
+        ? `\n• Add-On Experiences: *${selectedAddOns.join(", ")}*`
+        : "";
 
-• Check-in: *${formattedCheckIn}*
-• Check-out: *${formattedCheckOut}*
-• Total Bill: *₹${total.toLocaleString("en-IN")}*
+      const msg = `Hello Stay Willas team! 🌟 I'm planning our next luxury staycation and would love to reserve *${villaName}* for our group of *${guests}* guest(s). 🏰✨
 
-My Verified Guest Details:
-• Name: *${clientName.trim()}*
-• Email: *${clientEmail.trim()}*
-• Phone: *${clientPhone.trim()}*
+Here are our stay details:
+📅 *Dates:* ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights)${addOnsSection}
+💵 *Total Stay Bill:* ₹${total.toLocaleString("en-IN")}
 
-Please check availability and confirm my booking request!`;
+Our Contact & Verified Details:
+👤 *Name:* ${clientName.trim()}
+✉️ *Email:* ${clientEmail.trim()}
+📱 *Phone:* ${clientPhone.trim()}
+
+We are so excited about this getaway! Could you please check availability and help us confirm our booking? Thank you so much! 🥂🍾`;
 
       const encodedMsg = encodeURIComponent(msg);
       const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
@@ -201,6 +271,76 @@ Please check availability and confirm my booking request!`;
 
 
 
+        {/* Experience Planner Accordion */}
+        <div className="border border-border-subtle rounded-2xl overflow-hidden bg-white shadow-sm transition-all duration-300">
+          <button
+            type="button"
+            onClick={() => setShowAddOns(!showAddOns)}
+            className="w-full flex items-center justify-between p-4 text-left font-bold text-[#1B3564] hover:bg-bg-primary transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <Sparkles size={16} className="text-[#DAA520]" />
+              <span className="text-[11px] uppercase tracking-wider font-extrabold">Plan Signature Experiences</span>
+              {selectedAddOns.length > 0 && (
+                <span className="w-5 h-5 rounded-full bg-[#1B3564] text-white text-[9px] font-black flex items-center justify-center animate-pulse">
+                  {selectedAddOns.length}
+                </span>
+              )}
+            </div>
+            {showAddOns ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          
+          {showAddOns && (
+            <div className="p-4 border-t border-border-subtle bg-bg-primary/30 space-y-3">
+              {availableAddOns.map((addon) => {
+                const isSelected = selectedAddOns.includes(addon.id);
+                const AddonIcon = addon.icon;
+                const cost = addon.perNight 
+                  ? addon.price * (nights > 0 ? nights : 1)
+                  : addon.perGuest 
+                    ? addon.price * guests
+                    : addon.price;
+                const pricingLabel = addon.perNight 
+                  ? `₹${addon.price.toLocaleString("en-IN")}/night`
+                  : addon.perGuest
+                    ? `₹${addon.price.toLocaleString("en-IN")}/guest`
+                    : `₹${addon.price.toLocaleString("en-IN")} flat`;
+                
+                return (
+                  <div 
+                    key={addon.id} 
+                    onClick={() => handleToggleAddOn(addon.id)}
+                    className={`flex items-start gap-3 p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
+                      isSelected 
+                        ? "bg-[#1B3564]/5 border-[#1B3564]/30 shadow-sm" 
+                        : "bg-white border-border-subtle hover:border-[#1B3564]/30"
+                    }`}
+                  >
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                      isSelected ? "bg-[#1B3564] text-white" : "bg-bg-primary text-text-primary/60"
+                    }`}>
+                      <AddonIcon size={16} />
+                    </div>
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="flex justify-between items-baseline gap-2">
+                        <span className="text-[11px] font-bold text-text-primary uppercase tracking-wide truncate">{addon.label}</span>
+                        <span className="text-[10px] font-black text-accent-secondary whitespace-nowrap">₹{cost.toLocaleString("en-IN")}</span>
+                      </div>
+                      <p className="text-[9px] text-text-primary/50 leading-relaxed mt-0.5">{addon.description}</p>
+                      <span className="text-[8px] font-bold text-[#DAA520] uppercase tracking-wider block mt-1">{pricingLabel}</span>
+                    </div>
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-0.5 ${
+                      isSelected ? "bg-[#1B3564] border-[#1B3564] text-white" : "border-border-subtle"
+                    }`}>
+                      {isSelected && <Check size={10} className="stroke-[3]" />}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         {/* Contact Information Section */}
         <div className="pt-4 border-t border-border-subtle/60 space-y-3">
           <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block text-left">
@@ -273,16 +413,23 @@ Please check availability and confirm my booking request!`;
         <div className="space-y-4 pt-6 border-t border-border-subtle">
           <div className="flex justify-between text-sm">
             <span className="text-text-primary/60">₹{price} x {nights} nights</span>
-            <span className="text-text-primary">₹{subtotal.toLocaleString()}</span>
+            <span className="text-text-primary">₹{subtotal.toLocaleString("en-IN")}</span>
           </div>
+
+          {addOnsCost > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-text-primary/60">Signature Experiences</span>
+              <span className="text-text-primary">₹{addOnsCost.toLocaleString("en-IN")}</span>
+            </div>
+          )}
 
           <div className="flex justify-between text-sm">
             <span className="text-text-primary/60">Luxury Service Fee</span>
-            <span className="text-text-primary">₹{serviceFee.toLocaleString()}</span>
+            <span className="text-text-primary">₹{serviceFee.toLocaleString("en-IN")}</span>
           </div>
           <div className="flex justify-between text-lg font-heading pt-4 border-t border-[#1B3564]/10">
             <span className="text-[#1B3564]">Total Stay Bill</span>
-            <span className="text-[#1B3564] font-bold">₹{total.toLocaleString()}</span>
+            <span className="text-[#1B3564] font-bold">₹{total.toLocaleString("en-IN")}</span>
           </div>
         </div>
       )}

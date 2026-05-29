@@ -65,7 +65,7 @@ export default function VillasClient({
   // Filter States
   const [region, setRegion] = useState<string>(initialRegion);
   const [category, setCategory] = useState<string>(initialCategory);
-  const [maxBudget, setMaxBudget] = useState<number>(50000);
+  const [maxBudget, setMaxBudget] = useState<number>(100000);
   const [minBedrooms, setMinBedrooms] = useState<number>(0);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState<boolean>(false);
@@ -95,7 +95,7 @@ export default function VillasClient({
   const handleResetFilters = () => {
     setRegion("");
     setCategory("");
-    setMaxBudget(50000);
+    setMaxBudget(100000);
     setMinBedrooms(0);
     setSelectedAmenities([]);
   };
@@ -145,7 +145,7 @@ export default function VillasClient({
     let count = 0;
     if (region) count++;
     if (category) count++;
-    if (maxBudget < 50000) count++;
+    if (maxBudget < 100000) count++;
     if (minBedrooms > 0) count++;
     if (selectedAmenities.length > 0) count += selectedAmenities.length;
     return count;
@@ -155,7 +155,7 @@ export default function VillasClient({
     <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 pb-24 text-charcoal">
       
       {/* Search Header Row */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 -mt-10 border-b border-border-subtle pb-6 select-none">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 border-b border-border-subtle pb-6 select-none">
         <div className="text-left w-full sm:w-auto">
           <h2 className="text-3xl font-heading text-[#1B3564] italic">
             Explore <span className="not-italic font-bold font-sans text-accent-primary">Sanctuaries</span>
@@ -209,7 +209,7 @@ export default function VillasClient({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="fixed inset-x-4 top-[10%] bottom-[10%] md:inset-y-auto md:top-[12%] md:bottom-auto md:left-1/2 md:-translate-x-1/2 md:w-[680px] z-[9100] bg-[#F5F2EA] border border-[#1B3564]/10 rounded-[2.5rem] shadow-[0_25px_60px_rgba(27,53,100,0.22)] p-6 md:p-8 flex flex-col justify-between overflow-hidden max-h-[76vh]"
+              className="fixed inset-x-4 top-[5%] bottom-[5%] md:inset-y-auto md:top-[12%] md:bottom-auto md:left-1/2 md:-translate-x-1/2 md:w-[680px] z-[9100] bg-[#F5F2EA] border border-[#1B3564]/10 rounded-[2.5rem] shadow-[0_25px_60px_rgba(27,53,100,0.22)] p-6 md:p-8 flex flex-col justify-between overflow-hidden max-h-[88vh] md:max-h-[76vh]"
             >
               {/* Modal Header */}
               <div className="flex items-center justify-between pb-4 border-b border-[#1B3564]/10 shrink-0">
@@ -279,7 +279,7 @@ export default function VillasClient({
                   <input
                     type="range"
                     min={10000}
-                    max={50000}
+                    max={100000}
                     step={1000}
                     value={maxBudget}
                     onChange={(e) => setMaxBudget(Number(e.target.value))}
@@ -287,8 +287,8 @@ export default function VillasClient({
                   />
                   <div className="flex justify-between text-[10px] text-charcoal/40 font-medium">
                     <span>₹10,000</span>
-                    <span>₹30,000</span>
-                    <span>₹50,000</span>
+                    <span>₹55,000</span>
+                    <span>₹100,000</span>
                   </div>
                 </div>
 
@@ -389,7 +389,7 @@ export default function VillasClient({
 
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 gap-16"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
         >
           <AnimatePresence mode="popLayout">
             {filteredVillas.map((villa) => (

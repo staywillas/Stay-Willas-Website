@@ -69,7 +69,7 @@ const VillaCard = ({
         </div>
         
         {/* Content Section */}
-        <div className="mt-6 flex flex-col flex-1 justify-between px-5 pb-4">
+        <div className="mt-6 flex flex-col flex-1 justify-between px-3 pb-3 md:px-5 md:pb-4">
           <div className="flex-1 flex flex-col justify-between">
             <div>
               <span className="text-blue-600 text-[11px] tracking-[0.25em] uppercase font-bold mb-2.5 block">

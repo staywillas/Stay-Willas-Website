@@ -36,10 +36,15 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 60, 
+              damping: 16,
+              duration: 1 
+            }}
             className="max-w-3xl"
           >
             <span className="inline-block text-[#559C24] font-bold tracking-[0.3em] uppercase text-xs mb-4 bg-[#559C24]/10 px-4 py-2 rounded-full">
@@ -55,10 +60,15 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
           </motion.div>
           
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 60, 
+              damping: 15,
+              delay: 0.15
+            }}
           >
             <Link href="/villas" className="bg-[#1B3564] hover:bg-[#152A50] text-white font-bold rounded-full px-8 py-4 text-sm tracking-widest uppercase transition-all duration-300 shadow-lg hover:shadow-glow-navy inline-block hover:-translate-y-1">
               VIEW ALL VILLAS
@@ -71,10 +81,16 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
           {villas.map((villa, index) => (
             <motion.div
               key={villa.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
+              initial={{ opacity: 0, y: 60, filter: "blur(12px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ 
+                type: "spring",
+                stiffness: 70,
+                damping: 18,
+                mass: 0.8,
+                delay: index * 0.15 
+              }}
               className="h-full flex flex-col"
             >
               <VillaCard {...villa} className="h-full" />

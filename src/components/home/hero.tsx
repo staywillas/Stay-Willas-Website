@@ -58,7 +58,7 @@ const slides = [
   },
   {
     image: "/assets/villas/angled-house/gallery-11.webp",
-    tag: "Infinity Pools & Modern Design",
+    tag: "Pool & Modern Design",
     title: "The Iconic",
     titleItalic: "Angled House",
     desc: "Where modern architecture meets slow luxury —\nour stunning designer villa in Lonavala, crafted for unforgettable escapes."
@@ -168,12 +168,13 @@ const Hero = () => {
     const checkInStr = checkIn ? format(checkIn, "dd MMM yyyy") : "Not specified";
     const checkOutStr = checkOut ? format(checkOut, "dd MMM yyyy") : "Not specified";
     
-    const msg = `Hi Stay Willas! I would like to book a luxury villa getaway in *${destination}* for *${guests}* guest(s).
+    const msg = `Hello Stay Willas! 🌟 I am planning a luxury villa staycation in *${destination}* and would love to check your availability. 
 
-• Check-in: *${checkInStr}*
-• Check-out: *${checkOutStr}*
+Here are our details:
+👥 *Guest Count:* ${guests} guests
+📅 *Preferred Dates:* ${checkInStr} to ${checkOutStr}
 
-Please check availability and confirm booking options for these dates!`;
+Could you please share the options available and help us plan our perfect getaway? Thank you so much! ✨`;
 
     const encodedMsg = encodeURIComponent(msg);
     const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
@@ -220,7 +221,7 @@ Please check availability and confirm booking options for these dates!`;
 
               {/* Slide content */}
                <div className="relative z-20 h-full flex items-center md:items-center pt-16 pb-12 lg:pb-36 px-6 md:px-12 lg:px-24">
-                <div className="max-w-2xl bg-[#F5F2EA]/85 backdrop-blur-md border border-[#1B3564]/5 p-6 sm:p-8 rounded-[2rem] shadow-xl md:bg-transparent md:backdrop-blur-none md:border-none md:p-0 md:shadow-none text-left">
+                 <div className="max-w-2xl bg-[#F5F2EA]/85 backdrop-blur-md border border-[#1B3564]/5 p-5 sm:p-8 rounded-[1.8rem] sm:rounded-[2rem] shadow-xl md:bg-transparent md:backdrop-blur-none md:border-none md:p-0 md:shadow-none text-left">
                   <AnimatePresence mode="wait">
                     {isActive && (
                       <motion.div
@@ -237,7 +238,7 @@ Please check availability and confirm booking options for these dates!`;
                       </span>
                       
                       {/* Main Heading - Refined Serif Typography */}
-                      <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.1] mb-6 font-normal tracking-wide drop-shadow-[0_2px_4px_rgba(27,53,100,0.08)]">
+                      <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.1] mb-6 font-normal tracking-wide drop-shadow-[0_2px_4px_rgba(27,53,100,0.08)]">
                         {slide.title} <br /> 
                         <span className="relative inline-block pb-1">
                           <span className="italic text-[#DAA520] font-heading font-semibold md:font-light tracking-wide">{slide.titleItalic}</span>
@@ -247,26 +248,28 @@ Please check availability and confirm booking options for these dates!`;
                       </h1>
                       
                       {/* Subtitle - Refined dark navy on mobile, slate on desktop */}
-                      <p className="text-[15px] sm:text-base text-[#1B3564] md:text-slate-600/90 font-extrabold md:font-normal max-w-md mb-8 leading-relaxed whitespace-pre-line">
+                      <p className="text-[14px] sm:text-base text-[#1B3564] md:text-slate-600/90 font-extrabold md:font-normal max-w-md mb-8 leading-relaxed whitespace-pre-line">
                         {slide.desc}
                       </p>
-
-                      {/* CTA Section - Aligned with screenshot 3 */}
-                      <div className="hidden md:flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8 w-full sm:w-auto mt-2">
+ 
+                      {/* CTA Section - Premium side-by-side responsive layout */}
+                      <div className="flex flex-row items-center gap-3 w-full sm:w-auto mt-2">
                         <Link 
                           href="/villas" 
-                          className="group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-8 py-4 text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 hover:-translate-y-0.5 text-center justify-center"
+                          className="flex-grow sm:flex-grow-0 group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-4 sm:px-8 py-3.5 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase flex items-center justify-center gap-1.5 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 active:scale-95"
                         >
-                          EXPLORE VILLAS
-                          <ChevronRight className="transition-transform group-hover:translate-x-1 stroke-[3]" size={13} />
+                          <span>EXPLORE</span>
+                          <ChevronRight className="transition-transform group-hover:translate-x-1 stroke-[3]" size={12} />
                         </Link>
-                        <Link 
-                          href="/contact" 
-                          className="group flex items-center justify-center sm:justify-start gap-1.5 text-[#1B3564] font-bold tracking-widest uppercase text-xs transition-all duration-300 border-b-2 border-[#FFB800] pb-1 hover:border-[#FFB800]/70 w-fit mx-auto sm:mx-0"
+                        <a 
+                          href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I'm browsing your stunning website and would love to connect with your concierge regarding curated luxury escapes. ✨`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-grow sm:flex-grow-0 group bg-white border border-[#1B3564]/20 hover:border-[#1B3564]/50 text-[#1B3564] font-bold rounded-full px-4 sm:px-8 py-3.5 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95"
                         >
-                          TALK TO CONCIERGE
-                          <ChevronRight size={13} className="text-[#FFB800] transition-transform group-hover:translate-x-0.5 stroke-[3]" />
-                        </Link>
+                          <span>CONCIERGE</span>
+                          <ChevronRight size={12} className="text-[#DAA520] transition-transform group-hover:translate-x-0.5 stroke-[3]" />
+                        </a>
                       </div>
                     </motion.div>
                   )}
@@ -445,7 +448,7 @@ Please check availability and confirm booking options for these dates!`;
                           disabled={isDisabled}
                           onClick={() => handleDateSelect(day)}
                           className={`
-                            w-8 h-8 md:w-9 md:h-9 rounded-full text-xs font-bold flex flex-col items-center justify-center transition-all relative
+                            w-9 h-9 rounded-full text-xs font-bold flex flex-col items-center justify-center transition-all relative
                             ${isDisabled ? 'text-slate-400/40 line-through cursor-not-allowed pointer-events-none' : ''}
                             ${isBooked ? 'bg-[#FFB800]/5' : ''}
                             ${isSelectedCheckIn || isSelectedCheckOut 

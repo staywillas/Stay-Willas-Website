@@ -16,8 +16,8 @@ export default function SaveButton({ villaId, villaName, minimal = false }: Save
     try {
       const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
       setIsSaved(wishlist.includes(villaId));
-    } catch (e) {
-      console.error("Failed to read wishlist from localStorage:", e);
+    } catch {
+      // Silently handle localStorage errors
     }
   }, [villaId]);
 
@@ -38,8 +38,8 @@ export default function SaveButton({ villaId, villaName, minimal = false }: Save
       
       // Dispatch custom event to let navbar know wishlist count changed!
       window.dispatchEvent(new Event("wishlist-updated"));
-    } catch (e) {
-      console.error("Failed to write wishlist to localStorage:", e);
+    } catch {
+      // Silently handle localStorage errors
     }
   };
 
@@ -47,10 +47,10 @@ export default function SaveButton({ villaId, villaName, minimal = false }: Save
     return (
       <button
         onClick={handleToggleSave}
-        className={`w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer shadow-lg group shrink-0 relative overflow-hidden ${
+        className={`w-9 h-9 rounded-full border flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer shadow-lg group shrink-0 relative overflow-hidden ${
           isSaved 
-            ? "border-red-500/30 text-red-500 bg-red-500/10" 
-            : "border-white/10 text-white hover:text-red-400"
+            ? "border-red-500 text-white bg-red-500 hover:bg-red-600 shadow-red-200/50" 
+            : "border-white/10 text-white hover:text-red-400 bg-black/60 backdrop-blur-md"
         }`}
         title={isSaved ? `Remove ${villaName} from Wishlist` : `Save ${villaName} to Wishlist`}
       >
@@ -58,7 +58,7 @@ export default function SaveButton({ villaId, villaName, minimal = false }: Save
           size={16} 
           className={`transition-all duration-300 ${
             isSaved 
-              ? "fill-red-500 text-red-500 scale-110" 
+              ? "fill-white text-white scale-110" 
               : "group-hover:scale-110 text-white"
           }`} 
         />
@@ -71,7 +71,7 @@ export default function SaveButton({ villaId, villaName, minimal = false }: Save
       onClick={handleToggleSave}
       className={`flex items-center gap-2 transition-all duration-300 text-xs uppercase tracking-widest border px-4 py-2 rounded-full active:scale-95 cursor-pointer relative overflow-hidden group shrink-0 ${
         isSaved 
-          ? "border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20" 
+          ? "border-red-500 bg-red-500 text-white hover:bg-red-600 shadow-red-200/50" 
           : "border-text-primary/10 text-text-primary/60 hover:text-red-400 hover:border-red-400/50 hover:bg-text-primary/5"
       }`}
       title={isSaved ? `Remove ${villaName} from Wishlist` : `Save ${villaName} to Wishlist`}
@@ -80,7 +80,7 @@ export default function SaveButton({ villaId, villaName, minimal = false }: Save
         size={14} 
         className={`transition-all duration-300 ${
           isSaved 
-            ? "fill-red-500 text-red-500 scale-110" 
+            ? "fill-white text-white scale-110" 
             : "group-hover:scale-110"
         }`} 
       />

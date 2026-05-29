@@ -121,6 +121,7 @@ export async function updateVillaDetails(data: {
   bedrooms: number;
   category: string;
   description: string;
+  foodMenu?: string[];
 }) {
   try {
     const updated = await prisma.villa.update({
@@ -133,6 +134,7 @@ export async function updateVillaDetails(data: {
         bedrooms: data.bedrooms,
         category: data.category,
         description: data.description,
+        foodMenu: data.foodMenu,
       },
     });
 

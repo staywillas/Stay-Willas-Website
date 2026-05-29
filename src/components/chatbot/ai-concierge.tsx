@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Send, Bot, User } from "lucide-react";
 import VillaCard from "@/components/home/villa-card";
+import { getConciergeRecommendation } from "@/app/actions/villa";
 
 type Role = "bot" | "user";
 
@@ -14,16 +15,16 @@ interface Message {
   options?: string[];
 }
 
-// Mock Villa for recommendation
+// Mock Villa for recommendation (Fallback)
 const recommendedVilla = {
-  id: "the-glasshouse",
-  name: "The Glasshouse Estate",
+  id: "angled-house",
+  name: "The Angled House",
   location: "Lonavala",
-  image: "/images/hero-villa.png",
-  price: "45,000",
-  guests: 8,
-  bedrooms: 4,
-  bathrooms: 4,
+  image: "/assets/villas/angled-house/gallery-11.webp",
+  price: "48,000",
+  guests: 16,
+  bedrooms: 3,
+  bathrooms: 3,
 };
 
 export default function AiConcierge() {
@@ -33,6 +34,7 @@ export default function AiConcierge() {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedBudget, setSelectedBudget] = useState("");
   const [selectedGuests, setSelectedGuests] = useState("");
+  const [matchedVilla, setMatchedVilla] = useState<any>(recommendedVilla);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom
@@ -56,7 +58,7 @@ export default function AiConcierge() {
     }
   }, [isOpen, messages.length]);
 
-  const handleOptionClick = (option: string, msgId: string) => {
+  const handleOptionClick = async (option: string, msgId: string) => {
     // Remove options from the message that was clicked so they don't stay on screen
     setMessages((prev) =>
       prev.map((msg) => (msg.id === msgId ? { ...msg, options: undefined } : msg))
@@ -69,10 +71,10 @@ export default function AiConcierge() {
     ]);
 
     // Bot response logic
-    setTimeout(() => {
-      if (stage === "greeting") {
-        setSelectedLocation(option);
-        setStage("budget");
+    if (stage === "greeting") {
+      setSelectedLocation(option);
+      setStage("budget");
+      setTimeout(() => {
         setMessages((prev) => [
           ...prev,
           {
@@ -82,9 +84,11 @@ export default function AiConcierge() {
             options: ["₹10,000 - ₹25,000", "₹25,000 - ₹50,000"],
           },
         ]);
-      } else if (stage === "budget") {
-        setSelectedBudget(option);
-        setStage("guests");
+      }, 800);
+    } else if (stage === "budget") {
+      setSelectedBudget(option);
+      setStage("guests");
+      setTimeout(() => {
         setMessages((prev) => [
           ...prev,
           {
@@ -94,21 +98,33 @@ export default function AiConcierge() {
             options: ["1-4 Guests", "5-8 Guests", "9+ Guests"],
           },
         ]);
-      } else if (stage === "guests") {
-        setSelectedGuests(option);
-        setStage("recommendation");
+      }, 800);
+    } else if (stage === "guests") {
+      setSelectedGuests(option);
+      setStage("recommendation");
 
-        // Construct pre-filled WhatsApp message based on collected guest inputs
-        const whatsappMsg = `🏰 *STAY WILLAS - AI CONCIERGE MATCH* 🏰\n` +
-          `------------------------------------------\n` +
-          `✨ *Suggested Stay:* ${recommendedVilla.name}\n` +
-          `📍 *Travel Location:* ${selectedLocation || "Anywhere"}\n` +
-          `👥 *Guest Count:* ${option || "Flexible"}\n` +
-          `💰 *Nightly Budget:* ${selectedBudget || "Flexible"}\n` +
-          `------------------------------------------\n` +
-          `🌟 *Concierge Request:* I would like to check availability and book this stay via the Stay Willas Concierge!`;
-        const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMsg)}`;
+      // Query dynamic recommendation from live DB via Server Action
+      const match = await getConciergeRecommendation({
+        location: selectedLocation,
+        budget: selectedBudget,
+        guests: option,
+      });
 
+      const finalVilla = match || recommendedVilla;
+      setMatchedVilla(finalVilla);
+
+      // Construct pre-filled WhatsApp message based on collected guest inputs
+      const whatsappMsg = `✨ *Stay Willas - AI Concierge Match* ✨\n` +
+        `------------------------------------------\n` +
+        `🏰 *Recommended Sanctuary:* ${finalVilla.name}\n` +
+        `📍 *Destination:* ${selectedLocation || "Anywhere"}\n` +
+        `👥 *Our Group Size:* ${option || "Flexible"}\n` +
+        `💰 *Target Budget:* ${selectedBudget || "Flexible"}\n` +
+        `------------------------------------------\n` +
+        `🌿 *Hello Stay Willas team!* I just used your delightful AI Concierge which matched me with this stunning villa. I would love to check its availability and talk about securing our reservation! 🥂`;
+      const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMsg)}`;
+
+      setTimeout(() => {
         setMessages((prev) => [
           ...prev,
           {
@@ -121,7 +137,17 @@ export default function AiConcierge() {
             role: "bot",
             content: (
               <div className="mt-4 w-full">
-                <VillaCard {...recommendedVilla} className="w-[280px]" />
+                <VillaCard
+                  id={finalVilla.id}
+                  name={finalVilla.name}
+                  location={finalVilla.location}
+                  image={finalVilla.image}
+                  price={finalVilla.price}
+                  guests={finalVilla.guests}
+                  bedrooms={finalVilla.bedrooms}
+                  bathrooms={finalVilla.bathrooms}
+                  className="w-[280px]"
+                />
               </div>
             ),
           },
@@ -147,11 +173,14 @@ export default function AiConcierge() {
             options: ["Yes, please", "Start over"],
           },
         ]);
-      } else if (stage === "recommendation" && option === "Start over") {
-        setSelectedLocation("");
-        setSelectedBudget("");
-        setSelectedGuests("");
-        setStage("greeting");
+      }, 800);
+    } else if (stage === "recommendation" && option === "Start over") {
+      setSelectedLocation("");
+      setSelectedBudget("");
+      setSelectedGuests("");
+      setMatchedVilla(recommendedVilla);
+      setStage("greeting");
+      setTimeout(() => {
         setMessages([
           {
             id: Date.now().toString(),
@@ -160,33 +189,34 @@ export default function AiConcierge() {
             options: ["Lonavala", "Alibaug", "Karjat", "Anywhere"],
           },
         ]);
-      } else if (stage === "recommendation" && option === "Yes, please") {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: Date.now().toString(),
-            role: "bot",
-            content: "Connecting you with our Luxury Concierge on WhatsApp to secure your stay at The Glasshouse Estate...",
-          }
-        ]);
+      }, 800);
+    } else if (stage === "recommendation" && option === "Yes, please") {
+      const finalVilla = matchedVilla || recommendedVilla;
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          role: "bot",
+          content: `Connecting you with our Luxury Concierge on WhatsApp to secure your stay at ${finalVilla.name}...`,
+        }
+      ]);
 
-        // Construct pre-filled WhatsApp message based on collected guest inputs
-        const whatsappMsg = `🏰 *STAY WILLAS - AI CONCIERGE MATCH* 🏰\n` +
-          `------------------------------------------\n` +
-          `✨ *Suggested Stay:* ${recommendedVilla.name}\n` +
-          `📍 *Travel Location:* ${selectedLocation || "Anywhere"}\n` +
-          `👥 *Guest Count:* ${selectedGuests || "Flexible"}\n` +
-          `💰 *Nightly Budget:* ${selectedBudget || "Flexible"}\n` +
-          `------------------------------------------\n` +
-          `🌟 *Concierge Request:* I would like to check availability and book this stay via the Stay Willas Concierge!`;
+      // Construct pre-filled WhatsApp message based on collected guest inputs
+      const whatsappMsg = `✨ *Stay Willas - AI Concierge Match* ✨\n` +
+        `------------------------------------------\n` +
+        `🏰 *Recommended Sanctuary:* ${finalVilla.name}\n` +
+        `📍 *Destination:* ${selectedLocation || "Anywhere"}\n` +
+        `👥 *Our Group Size:* ${selectedGuests || "Flexible"}\n` +
+        `💰 *Target Budget:* ${selectedBudget || "Flexible"}\n` +
+        `------------------------------------------\n` +
+        `🌿 *Hello Stay Willas team!* I just used your delightful AI Concierge which matched me with this stunning villa. I would love to check its availability and talk about securing our reservation! 🥂`;
 
-        // Redirect after a premium short transition delay
-        setTimeout(() => {
-          const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMsg)}`;
-          window.location.href = whatsappUrl;
-        }, 1500);
-      }
-    }, 800);
+      // Redirect after a premium short transition delay
+      setTimeout(() => {
+        const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMsg)}`;
+        window.location.href = whatsappUrl;
+      }, 1500);
+    }
   };
 
   return (

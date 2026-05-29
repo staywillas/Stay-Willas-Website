@@ -6,6 +6,7 @@ import Footer from "@/components/layout/footer";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
+import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Top Luxury Destinations in Maharashtra | Stay Willas",
@@ -13,24 +14,33 @@ export const metadata: Metadata = {
   keywords: ["best villa destinations", "lonavala luxury tourism", "alibaug weekend stays"],
 };
 
-const destinations = [
-  {
-    name: "Lonavala",
-    tagline: "The Sahyadri Sanctuary",
-    desc: "Misty valleys, cascading waterfalls, and sprawling private estates perched on cliff edges.",
-    image: "/assets/villas/angled-house/gallery-11.webp",
-    count: 12
-  },
-  {
-    name: "Alibaug",
-    tagline: "The Coastal Escape",
-    desc: "Pristine beaches and ultra-modern beachfront villas just a ferry ride away from Mumbai.",
-    image: "/images/villa-alibaug.png",
-    count: 8
-  }
-];
+export default async function DestinationsPage() {
+  // Dynamically count active luxury retreats in each region from live Supabase DB
+  const lonavalaCount = await prisma.villa.count({
+    where: { location: { contains: "Lonavala", mode: "insensitive" } }
+  });
+  
+  const alibaugCount = await prisma.villa.count({
+    where: { location: { contains: "Alibaug", mode: "insensitive" } }
+  });
 
-export default function DestinationsPage() {
+  const destinations = [
+    {
+      name: "Lonavala",
+      tagline: "The Sahyadri Sanctuary",
+      desc: "Misty valleys, cascading waterfalls, and sprawling private estates perched on cliff edges.",
+      image: "/assets/villas/angled-house/gallery-11.webp",
+      count: lonavalaCount
+    },
+    {
+      name: "Alibaug",
+      tagline: "The Coastal Escape",
+      desc: "Pristine beaches and ultra-modern beachfront villas just a ferry ride away from Mumbai.",
+      image: "/images/villa-alibaug.png",
+      count: alibaugCount
+    }
+  ];
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
       <Navbar />
@@ -113,7 +123,7 @@ export default function DestinationsPage() {
                     <span className="uppercase tracking-[0.2em] text-xs font-bold">Explore {dest.count} Villas</span>
                   </Link>
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi! I'd like to check availability for luxury villas in ${dest.name}. Could you help?`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hey Stay Willas team! 🏔️ I am exploring your stunning collections in *${dest.name}* and would love to check availability for an upcoming escape. Could you share some curated recommendations?`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-3 bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full px-6 py-3.5 text-[11px] font-black tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 w-fit"
@@ -128,7 +138,7 @@ export default function DestinationsPage() {
                     LAUNCHING SOON
                   </div>
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi! I'm interested in upcoming luxury villas in ${dest.name}. Can you notify me when they launch?`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello! 🌟 I noticed you are launching soon in *${dest.name}*! It looks absolutely breathtaking. I would love to be notified as soon as these handpicked sanctuaries are open for bookings.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-[#1B3564]/60 hover:text-[#1B3564] text-xs font-bold tracking-wider uppercase transition-all duration-300 w-fit"

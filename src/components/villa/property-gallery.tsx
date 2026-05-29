@@ -109,7 +109,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
           {visibleImages.slice(0, 5).map((img, idx) => (
             <div 
               key={idx}
-              onClick={openGridOverlay}
+              onClick={() => openLightbox(idx)}
               className="w-full h-full flex-shrink-0 snap-start snap-always relative cursor-pointer bg-charcoal"
             >
               <Image 

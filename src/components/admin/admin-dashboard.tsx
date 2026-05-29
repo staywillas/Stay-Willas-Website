@@ -67,6 +67,7 @@ interface Villa {
   weekendPrice?: number | null;
   seasonalPrices: SeasonalPrice[];
   dailyPrices: DailyPrice[];
+  foodMenu?: string[];
 }
 
 interface Booking {
@@ -205,6 +206,7 @@ const AdminDashboard = ({
   const [editBedrooms, setEditBedrooms] = useState(0);
   const [editCategory, setEditCategory] = useState("");
   const [editDescription, setEditDescription] = useState("");
+  const [editFoodMenuText, setEditFoodMenuText] = useState("");
   const [editAirbnb, setEditAirbnb] = useState("");
   const [editBooking, setEditBooking] = useState("");
   const [editVrbo, setEditVrbo] = useState("");
@@ -257,6 +259,7 @@ const AdminDashboard = ({
     setEditBedrooms(villa.bedrooms);
     setEditCategory(villa.category || "Mountain View");
     setEditDescription(villa.description || "");
+    setEditFoodMenuText((villa.foodMenu || []).join("\n"));
 
     const config = channelConfigs[villa.id] || {};
     setEditAirbnb(config.airbnb || "");
@@ -271,6 +274,11 @@ const AdminDashboard = ({
 
     setIsSavingVilla(true);
     try {
+      const foodMenuArray = editFoodMenuText
+        .split("\n")
+        .map(item => item.trim())
+        .filter(Boolean);
+
       // 1. Save villa specifications
       const villaRes = await updateVillaDetails({
         id: editingVilla.id,
@@ -281,6 +289,7 @@ const AdminDashboard = ({
         bedrooms: editBedrooms,
         category: editCategory,
         description: editDescription,
+        foodMenu: foodMenuArray,
       });
 
       // 2. Save Channel Manager iCal URLs
@@ -300,7 +309,8 @@ const AdminDashboard = ({
           guests: editGuests,
           bedrooms: editBedrooms,
           category: editCategory,
-          description: editDescription
+          description: editDescription,
+          foodMenu: foodMenuArray
         } : v));
 
         setChannelConfigs(prev => ({
@@ -1188,6 +1198,17 @@ const AdminDashboard = ({
                 onChange={(e) => setEditDescription(e.target.value)}
                 rows={3}
                 required
+                className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl p-4 text-xs focus:border-blue-500 outline-none leading-relaxed"
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Bespoke Food Menu (One dish per line)</label>
+              <textarea 
+                value={editFoodMenuText}
+                onChange={(e) => setEditFoodMenuText(e.target.value)}
+                rows={4}
+                placeholder="e.g.&#10;Konkani Surmai Fry&#10;Coastal Crab Masala&#10;Alibaug Special Sol Kadhi"
                 className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl p-4 text-xs focus:border-blue-500 outline-none leading-relaxed"
               />
             </div>

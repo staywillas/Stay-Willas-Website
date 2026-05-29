@@ -56,11 +56,18 @@ export default async function AdminPage() {
     }),
   ]);
 
+  // Sort dbVillas in memory to ensure "The Angled House" (slug: "angled-house") is always at the top/index 0
+  const sortedVillas = [...dbVillas].sort((a, b) => {
+    if (a.slug === "angled-house") return -1;
+    if (b.slug === "angled-house") return 1;
+    return 0;
+  });
+
   // 3. Render the interactive, stunning administration panel
   return (
     <main className="min-h-screen bg-[#FDFBF7] text-slate-900 pt-24 pb-12 font-montserrat">
       <AdminDashboard 
-        initialVillas={dbVillas as any} 
+        initialVillas={sortedVillas as any} 
         initialBookings={dbBookings as any} 
         initialInquiries={dbInquiries}
         userEmail={userEmail}

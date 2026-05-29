@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-const WISHLIST_KEY = "staywillas_wishlist";
+const WISHLIST_KEY = "wishlist";
 
 function getWishlist(): string[] {
   if (typeof window === "undefined") return [];

@@ -13,10 +13,25 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function WishlistPage() {
-  // Query all villas dynamically from the Supabase PostgreSQL database
-  const dbVillas = await prisma.villa.findMany({
+  // Fetch "The Angled House" (slug: 'angled-house') to ensure it is always first
+  const angledHouse = await prisma.villa.findUnique({
+    where: { slug: "angled-house" }
+  });
+
+  // Query other premium villas
+  const otherVillas = await prisma.villa.findMany({
+    where: {
+      slug: { not: "angled-house" }
+    },
     orderBy: { createdAt: "desc" },
   });
+
+  // Combine them with "The Angled House" always at the top/first spot!
+  const dbVillas = [];
+  if (angledHouse) {
+    dbVillas.push(angledHouse);
+  }
+  dbVillas.push(...otherVillas);
 
   // Map the database format to the UI model structure
   const allVillas = dbVillas.map((villa) => ({

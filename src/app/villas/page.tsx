@@ -22,10 +22,25 @@ export default async function VillasPage({ searchParams }: PageProps) {
   const regionParam = resolvedParams.region;
   const categoryParam = resolvedParams.category;
 
-  // Query all villas dynamically from the live Supabase PostgreSQL database
-  const dbVillas = await prisma.villa.findMany({
+  // Fetch "The Angled House" (slug: 'angled-house') to ensure it is always first
+  const angledHouse = await prisma.villa.findUnique({
+    where: { slug: "angled-house" }
+  });
+
+  // Query other premium villas
+  const otherVillas = await prisma.villa.findMany({
+    where: {
+      slug: { not: "angled-house" }
+    },
     orderBy: { createdAt: "desc" },
   });
+
+  // Combine them with "The Angled House" always at the top/first spot!
+  const dbVillas = [];
+  if (angledHouse) {
+    dbVillas.push(angledHouse);
+  }
+  dbVillas.push(...otherVillas);
 
   // Map the database format to the UI client model structure
   const villas = dbVillas.map((villa) => ({
@@ -52,7 +67,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
         <Navbar />
         
         {/* Spacing below Navbar */}
-        <div className="pt-32" />
+        <div className="pt-44" />
 
         {/* Highly Interactive, Real-Time Client Filter and Grid Section */}
         <VillasClient 

@@ -18,7 +18,7 @@ const destinations = [
   {
     name: "Lonavala",
     image: "/assets/villas/angled-house/gallery-11.webp",
-    count: "1 Villa",
+    count: "2 Villas",
     tag: "Mountain Escapes",
     desc: "Cool breeze, misty green hills, and quiet retreats.",
     isLaunchingSoon: false,
@@ -26,16 +26,16 @@ const destinations = [
   },
   {
     name: "Karjat",
-    image: "/assets/villas/karjat-river-house/main.png",
-    count: "LAUNCHING SOON",
+    image: "/assets/villas/heritage-villa/main.jpg",
+    count: "1 Villa",
     tag: "Riverside Views",
     desc: "Green valleys, quiet rivers, and pure relaxation.",
-    isLaunchingSoon: true,
-    link: "/partner"
+    isLaunchingSoon: false,
+    link: "/villas?region=karjat"
   },
   {
     name: "Igatpuri",
-    image: "/assets/villas/igatpuri-clouds-villa/main.png",
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
     count: "LAUNCHING SOON",
     tag: "Mountain Views",
     desc: "Mist-laden Western Ghats, waterfalls, and peaceful retreats.",
@@ -44,12 +44,12 @@ const destinations = [
   },
   {
     name: "Alibaug",
-    image: "/assets/villas/alibaug-palms-beachhouse/main.png",
-    count: "LAUNCHING SOON",
+    image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
+    count: "2 Villas",
     tag: "Beachside Stays",
     desc: "Golden sand beaches, pools, and beautiful sunsets.",
-    isLaunchingSoon: true,
-    link: "/partner"
+    isLaunchingSoon: false,
+    link: "/villas?region=alibaug"
   },
   {
     name: "Khopoli",

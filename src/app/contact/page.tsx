@@ -52,7 +52,7 @@ export default function ContactPage() {
                   </div>
                 </a>
 
-                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex gap-6 items-start group">
+                <a href="https://wa.me/919619042310?text=Hello%20Stay%20Willas%21%20%F0%9F%8C%B8%20I%20visited%20your%20contact%20page%20and%20would%20love%20to%20connect%20with%20your%20villa%20concierge%20to%20discuss%20planning%20an%20unforgettable%20luxury%20staycation.%20%E2%9C%A8" target="_blank" rel="noopener noreferrer" className="flex gap-6 items-start group">
                   <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary group-hover:bg-[#25D366] group-hover:text-white transition-all">
                     <svg 
                       viewBox="0 0 24 24" 

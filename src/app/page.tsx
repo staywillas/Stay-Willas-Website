@@ -28,12 +28,11 @@ export default async function Home() {
     where: { slug: "angled-house" }
   });
 
-  // Query other premium villas to fill the other two slots
+  // Query all other premium villas
   const otherVillas = await prisma.villa.findMany({
     where: {
       slug: { not: "angled-house" }
     },
-    take: 2,
     orderBy: { createdAt: "desc" },
   });
 
@@ -45,7 +44,7 @@ export default async function Home() {
   dbVillas.push(...otherVillas);
 
   const featuredVillas = dbVillas.map((villa) => ({
-    id: villa.id,
+    id: villa.slug,
     name: villa.name,
     location: villa.location,
     image: villa.images[0] || "/images/hero-villa.png",

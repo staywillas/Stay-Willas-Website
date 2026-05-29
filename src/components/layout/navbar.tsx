@@ -46,8 +46,8 @@ const Navbar = () => {
     try {
       const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
       setWishlistCount(wishlist.length);
-    } catch (e) {
-      console.error(e);
+    } catch {
+      // Silently fail in production
     }
   };
 
@@ -187,7 +187,7 @@ const Navbar = () => {
             <span className="text-[13px] xl:text-[14px] font-semibold tracking-wide whitespace-nowrap hidden 2xl:inline">+91 96190 42310</span>
           </a>
 
-          <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className={cn(
+          <a href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%21%20%F0%9F%8C%BF%20I%27m%20exploring%20your%20exquisite%20villas%20on%20your%20website%20and%20would%20love%20to%20chat%20with%20a%20concierge%20to%20plan%20our%20next%20vacation.%20%E2%9C%A8" target="_blank" rel="noopener noreferrer" className={cn(
             "flex items-center gap-2 transition-colors duration-300 p-1",
             isDarkTheme ? "text-brand-navy hover:text-[#25D366]" : "text-white hover:text-[#25D366]"
           )} title="WhatsApp Chat">
@@ -237,7 +237,7 @@ const Navbar = () => {
             )}
 
             <a 
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi! I'd like to book a luxury villa stay with Stay Willas. Could you help me find the perfect villa?")}`}
+              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas Concierge! 🏡 I'm browsing your mobile menu and would love to book a luxury staycation. Could you guide me to the perfect private estate?")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-4 lg:px-6 py-2.5 lg:py-3 text-[11px] xl:text-[12px] font-black tracking-widest transition-all duration-300 flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
@@ -247,7 +247,16 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Toggle & Wishlist (Moved to Bottom Nav) */}
+        {/* Mobile Hamburger Menu Toggle */}
+        <div className="xl:hidden flex items-center shrink-0">
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1B3564]/5 border border-[#DAA520]/40 hover:border-[#DAA520] flex items-center justify-center text-[#1B3564] hover:bg-[#DAA520]/10 transition-all duration-300 shadow-md active:scale-90 cursor-pointer"
+            aria-label="Open Navigation Menu"
+          >
+            <Menu size={18} className="stroke-[2.5]" />
+          </button>
+        </div>
       </div>
 
       {/* Full-Screen Glassmorphism Mobile Menu */}
@@ -324,7 +333,7 @@ const Navbar = () => {
               <div className="flex flex-col items-center gap-6">
                 {/* Reserve CTA */}
                 <a
-                  href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi! I'd like to book a luxury villa stay with Stay Willas. Could you help me find the perfect villa?")}`}
+                  href={`https://wa.me/919619042310?text=${encodeURIComponent("Hello Stay Willas! ✨ I am looking to book an exclusive villa stay. Could you please share some recommendations and help me choose the right sanctuary?")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -340,7 +349,7 @@ const Navbar = () => {
                     <span className="font-medium">Call</span>
                   </a>
                   <div className="w-px h-4 bg-white/20" />
-                  <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/50 hover:text-[#25D366] transition-colors text-sm">
+                  <a href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%21%20%F0%9F%A4%9D%20I%20would%20like%20to%20get%20in%20touch%20with%20your%20support%20team%20regarding%20booking%20enquiries%20and%20curated%20packages.%20Thanks%21" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/50 hover:text-[#25D366] transition-colors text-sm">
                     <WhatsAppIcon size={16} />
                     <span className="font-medium">WhatsApp</span>
                   </a>

@@ -34,10 +34,15 @@ const WhyChooseUs = () => {
         {/* Header */}
         <div className="text-center mb-20">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 35, filter: "blur(6px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ 
+              type: "spring",
+              stiffness: 60,
+              damping: 15,
+              duration: 0.8 
+            }}
           >
             <span className="inline-block text-blue-600 font-bold tracking-[0.3em] uppercase text-xs mb-4 bg-blue-50 px-4 py-2 rounded-full">
               Why Choose Us
@@ -56,10 +61,15 @@ const WhyChooseUs = () => {
           {reasons.map((reason, index) => (
             <motion.div
               key={reason.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ 
+                type: "spring",
+                stiffness: 80,
+                damping: 18,
+                delay: index * 0.12 
+              }}
               className="group"
             >
               <div className="h-full flex flex-col items-center text-center p-6 rounded-2xl transition-all duration-500 hover:bg-blue-50 hover:shadow-lg">
