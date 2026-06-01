@@ -310,5 +310,6 @@ export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete("staywillas_session");
   cookieStore.delete("staywillas_user");
+  cookieStore.delete("staywillas_admin_token");
   return { success: true };
 }

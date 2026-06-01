@@ -9,9 +9,9 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Top Luxury Destinations in Maharashtra | Stay Willas",
-  description: "Explore the most exclusive staycation destinations in Maharashtra. From the misty mountains of Lonavala to the serene beaches of Alibaug, find your perfect escape.",
-  keywords: ["best villa destinations", "lonavala luxury tourism", "alibaug weekend stays"],
+  title: "Destinations | Stay Willas Collection",
+  description: "Explore our beautiful getaways. From Lonavala and Karjat to Alibaug and Goa, find your perfect stay.",
+  keywords: ["villa destinations", "lonavala stays", "alibaug villas", "goa villas"],
 };
 
 export default async function DestinationsPage() {
@@ -24,20 +24,58 @@ export default async function DestinationsPage() {
     where: { location: { contains: "Alibaug", mode: "insensitive" } }
   });
 
+  const karjatCount = await prisma.villa.count({
+    where: { location: { contains: "Karjat", mode: "insensitive" } }
+  });
+
   const destinations = [
     {
       name: "Lonavala",
-      tagline: "The Sahyadri Sanctuary",
-      desc: "Misty valleys, cascading waterfalls, and sprawling private estates perched on cliff edges.",
+      tagline: "The Mountain Sanctuary",
+      desc: "Cool mountain breeze, misty green valleys, and spacious private pool villas perched on lush hills.",
       image: "/assets/villas/angled-house/gallery-11.webp",
-      count: lonavalaCount
+      count: lonavalaCount,
+      isLaunchingSoon: false
     },
     {
       name: "Alibaug",
-      tagline: "The Coastal Escape",
-      desc: "Pristine beaches and ultra-modern beachfront villas just a ferry ride away from Mumbai.",
-      image: "/images/villa-alibaug.png",
-      count: alibaugCount
+      tagline: "The Coastal Getaway",
+      desc: "Beautiful coconut trees, quiet sandy beaches, and modern villas just a scenic catamaran ferry ride away from Mumbai.",
+      image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
+      count: alibaugCount,
+      isLaunchingSoon: false
+    },
+    {
+      name: "Karjat",
+      tagline: "The Riverside Escape",
+      desc: "Lovely green valleys, quiet flowing streams, and peaceful villas built for complete relaxation in nature.",
+      image: "/assets/villas/heritage-villa/main.jpg",
+      count: karjatCount,
+      isLaunchingSoon: false
+    },
+    {
+      name: "Goa",
+      tagline: "The Beach Paradise",
+      desc: "Sunny beaches, beautiful old Portuguese-style homes, and warm private pool villas.",
+      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000",
+      count: "LAUNCHING SOON",
+      isLaunchingSoon: true
+    },
+    {
+      name: "Khopoli",
+      tagline: "The Nature Escape",
+      desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet private pool getaways.",
+      image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1000",
+      count: "LAUNCHING SOON",
+      isLaunchingSoon: true
+    },
+    {
+      name: "Igatpuri",
+      tagline: "The Misty Hills",
+      desc: "Gorgeous lake views, foggy mountain peaks, and peaceful hillside villas.",
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
+      count: "LAUNCHING SOON",
+      isLaunchingSoon: true
     }
   ];
 
@@ -47,14 +85,14 @@ export default async function DestinationsPage() {
       
       {/* Header */}
       <section className="relative pt-48 pb-24 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto text-center flex flex-col items-center overflow-hidden">
-        {/* Background Soft Glow for Premium Aesthetic */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-[#1B3564]/5 to-[#2563EB]/8 rounded-full blur-[80px] pointer-events-none -z-10 animate-pulse-slow" />
+        {/* Background Soft Glow for Premium Aesthetic - Optimized for mobile GPU */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-gradient-to-tr from-[#1B3564]/10 to-[#2563EB]/10 rounded-full blur-2xl md:blur-[80px] pointer-events-none -z-10" />
         
         <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-xs md:text-sm mb-4 block">
-          Our Footprint
+          Our Stays
         </span>
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading leading-tight mb-2 tracking-tight">
-          Curated <span className="italic text-accent-primary font-serif">Landscapes</span>
+          Where We <span className="italic text-accent-primary font-serif">Are</span>
         </h1>
         
         {/* Custom Luxury Elegant Divider */}
@@ -65,8 +103,7 @@ export default async function DestinationsPage() {
         </div>
         
         <p className="text-text-primary/70 text-lg md:text-xl leading-relaxed max-w-2xl font-light">
-          We don&apos;t just pick villas; we pick settings. Each of our destinations 
-          offers a unique soul, carefully vetted to provide a complete sense of escape.
+          We choose our locations very carefully. Every place we offer is selected to give you a perfect and relaxing getaway.
         </p>
       </section>
 
@@ -91,7 +128,7 @@ export default async function DestinationsPage() {
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-700" />
                 
-                {dest.name.toLowerCase() !== "lonavala" && (
+                {dest.isLaunchingSoon && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
                     <span className="text-xl md:text-2xl lg:text-3xl font-heading font-black tracking-[0.25em] text-white border border-white/30 px-6 py-3.5 rounded-2xl uppercase shadow-xl select-none">
                       LAUNCHING SOON
@@ -111,7 +148,7 @@ export default async function DestinationsPage() {
                 {dest.desc}
               </p>
               
-              {dest.name.toLowerCase() === "lonavala" ? (
+              {!dest.isLaunchingSoon ? (
                 <div className="flex flex-col gap-4">
                   <Link 
                     href={`/villas?region=${dest.name.toLowerCase()}`}
@@ -120,10 +157,10 @@ export default async function DestinationsPage() {
                     <span className="w-16 h-16 rounded-full border border-[#0F172A]/20 flex items-center justify-center group-hover/link:bg-accent-primary group-hover/link:border-accent-primary group-hover/link:text-white transition-all">
                       <ArrowUpRight size={24} />
                     </span>
-                    <span className="uppercase tracking-[0.2em] text-xs font-bold">Explore {dest.count} Villas</span>
+                    <span className="uppercase tracking-[0.2em] text-xs font-bold">Explore {dest.count} {dest.count === 1 ? "Villa" : "Villas"}</span>
                   </Link>
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hey Stay Willas team! 🏔️ I am exploring your stunning collections in *${dest.name}* and would love to check availability for an upcoming escape. Could you share some curated recommendations?`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hey Stay Willas team! 🏔️ I am exploring your getaways in *${dest.name}* and would love to check availability for an upcoming escape. Could you share some suggestions?`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-3 bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full px-6 py-3.5 text-[11px] font-black tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 w-fit"
@@ -138,7 +175,7 @@ export default async function DestinationsPage() {
                     LAUNCHING SOON
                   </div>
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello! 🌟 I noticed you are launching soon in *${dest.name}*! It looks absolutely breathtaking. I would love to be notified as soon as these handpicked sanctuaries are open for bookings.`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello! 🌟 I noticed you are launching soon in *${dest.name}*! It looks absolutely beautiful. I would love to be notified as soon as these sanctuaries are open for bookings.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-[#1B3564]/60 hover:text-[#1B3564] text-xs font-bold tracking-wider uppercase transition-all duration-300 w-fit"

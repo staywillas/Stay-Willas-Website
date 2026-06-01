@@ -18,7 +18,7 @@ interface Message {
 // Mock Villa for recommendation (Fallback)
 const recommendedVilla = {
   id: "angled-house",
-  name: "The Angled House",
+  name: "The Angle House",
   location: "Lonavala",
   image: "/assets/villas/angled-house/gallery-11.webp",
   price: "48,000",

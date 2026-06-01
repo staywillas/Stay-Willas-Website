@@ -121,7 +121,6 @@ export async function updateVillaDetails(data: {
   bedrooms: number;
   category: string;
   description: string;
-  foodMenu?: string[];
 }) {
   try {
     const updated = await prisma.villa.update({
@@ -134,11 +133,11 @@ export async function updateVillaDetails(data: {
         bedrooms: data.bedrooms,
         category: data.category,
         description: data.description,
-        foodMenu: data.foodMenu,
       },
     });
 
     revalidatePath("/admin");
+    revalidatePath("/");
     revalidatePath("/villas");
     revalidatePath(`/villa/${updated.slug}`);
     return { success: true, villa: updated };
@@ -346,7 +345,7 @@ export async function syncExternalChannels() {
 export async function setDailyPrice(villaId: string, dateStr: string, price: number) {
   try {
     const targetDate = new Date(dateStr);
-    targetDate.setHours(0, 0, 0, 0);
+    targetDate.setUTCHours(0, 0, 0, 0);
 
     const override = await prisma.dailyPrice.upsert({
       where: {
@@ -376,7 +375,7 @@ export async function setDailyPrice(villaId: string, dateStr: string, price: num
 export async function deleteDailyPrice(villaId: string, dateStr: string) {
   try {
     const targetDate = new Date(dateStr);
-    targetDate.setHours(0, 0, 0, 0);
+    targetDate.setUTCHours(0, 0, 0, 0);
 
     await prisma.dailyPrice.delete({
       where: {
@@ -394,3 +393,5 @@ export async function deleteDailyPrice(villaId: string, dateStr: string) {
     return { success: false, error: error.message || "Failed to remove daily pricing override." };
   }
 }
+
+

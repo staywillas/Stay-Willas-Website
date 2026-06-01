@@ -21,7 +21,6 @@ model Villa {
   bathrooms   Int
   images         String[]
   amenities      String[]
-  foodMenu       String[] @default([])
   category       String   @default("Mountain View")
   weekendPrice   Float?
   iCalUrl        String?

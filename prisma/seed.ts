@@ -5,7 +5,7 @@ const villasData = [
   {
     id: "lonavala-estate",
     slug: "angled-house",
-    name: "The Angled House",
+    name: "The Angle House",
     location: "Lonavala, Maharashtra",
     category: "Infinity Pools",
     description: `Where modern architecture meets slow luxury — this stunning designer villa is crafted for unforgettable escapes. With its striking angular façade, floor-to-ceiling glass windows, warm ambient lighting, private pool, and a private Jacuzzi integrated right inside one of the master bedrooms, the space blends tropical serenity with contemporary elegance.
@@ -36,13 +36,6 @@ Wake up to soft natural light, spend your afternoons by the pool, enjoy a relaxi
       "/assets/villas/angled-house/gallery-16.webp",
       "/assets/villas/angled-house/gallery-17.webp",
       "/assets/villas/angled-house/gallery-18.webp"
-    ],
-    foodMenu: [
-        "Truffle Mushroom Risotto",
-        "Butter Garlic Tiger Prawns",
-        "Woodfired Quattro Formaggi Pizza",
-        "Slow-Cooked Lamb Shanks",
-        "Warm Apple Galette with Vanilla Bean Gelato"
     ],
     amenities: [
       "Private Swimming Pool",
@@ -78,13 +71,6 @@ Step onto the private teakwood dining deck under glowing string lights, submerge
       "/assets/villas/alibaug-palms-beachhouse/gallery-3.jpg",
       "/assets/villas/alibaug-palms-beachhouse/gallery-4.jpg"
     ],
-    foodMenu: [
-        "Konkani Surmai Fry",
-        "Coastal Crab Masala",
-        "Koli-Style Prawn Curry",
-        "Alibaug Special Sol Kadhi",
-        "Elaneer Payasam (Tender Coconut Kheer)"
-    ],
     amenities: [
       "Direct Beach Access",
       "Heated Private Infinity Pool",
@@ -115,13 +101,6 @@ Step onto the private teakwood dining deck under glowing string lights, submerge
       "/assets/villas/skytaj-villa/gallery-2.jpg",
       "/assets/villas/skytaj-villa/gallery-3.jpg",
       "/assets/villas/skytaj-villa/gallery-4.jpg"
-    ],
-    foodMenu: [
-        "Paneer Tikka Butter Masala",
-        "Tandoori Pomfret",
-        "Lalla Mussa Dal (Slow-Cooked Black Lentils)",
-        "Murg Dum Biryani",
-        "Shahi Tukda with Rabdi"
     ],
     amenities: [
       "Private Swimming Pool",
@@ -154,13 +133,6 @@ Step onto the private teakwood dining deck under glowing string lights, submerge
       "/assets/villas/heritage-villa/gallery-4.jpg",
       "/assets/villas/heritage-villa/gallery-5.jpg"
     ],
-    foodMenu: [
-        "Maharashtrian Pithla Bhakri",
-        "Karjat Mutton Sukka",
-        "Kolhapuri Tambada Rassa",
-        "Bharli Vangi (Stuffed Eggplant)",
-        "Ukadiche Modak (Steam Sweet Dumplings)"
-    ],
     amenities: [
       "Private Swimming Pool",
       "Rustic Stone Architecture",
@@ -192,13 +164,6 @@ Unwind in the air-conditioned, beautifully decorated bedrooms featuring premium 
       "/assets/villas/harmony-villa/gallery-3.jpg",
       "/assets/villas/harmony-villa/gallery-4.jpg",
       "/assets/villas/harmony-villa/gallery-5.jpg"
-    ],
-    foodMenu: [
-        "Lonavala Corn Bhajiya",
-        "Methi Chaman Paneer",
-        "Dal Makhani Tadka",
-        "Spiced Tandoori Chicken Tikka",
-        "Hot Fudge Chocolate Brownie"
     ],
     amenities: [
       "Private Swimming Pool",

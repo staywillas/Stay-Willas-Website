@@ -11,10 +11,30 @@ import { format, addDays, differenceInDays } from "date-fns";
 import { createCheckoutSession } from "@/app/actions/booking";
 import { useUser, SignInButton } from "@clerk/nextjs";
 
+interface DailyPriceProp {
+  id: string;
+  villaId: string;
+  date: string | Date;
+  price: number;
+}
+
+interface SeasonalPriceProp {
+  id: string;
+  villaId: string;
+  startDate: string | Date;
+  endDate: string | Date;
+  price: number;
+  label?: string | null;
+}
+
 interface BookingCardProps {
   villaId: string;
   villaName: string;
   price: string;
+  basePrice: number;
+  weekendPrice?: number | null;
+  dailyPrices: DailyPriceProp[];
+  seasonalPrices: SeasonalPriceProp[];
   maxGuests?: number;
 }
 
@@ -57,8 +77,16 @@ const availableAddOns = [
   },
 ];
 
-const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardProps) => {
-  const numericPrice = parseInt(price.replace(/,/g, ""));
+const BookingCard = ({ 
+  villaId, 
+  villaName, 
+  price, 
+  basePrice, 
+  weekendPrice, 
+  dailyPrices = [], 
+  seasonalPrices = [], 
+  maxGuests = 16 
+}: BookingCardProps) => {
   const { user, isSignedIn } = useUser();
 
   const [checkIn, setCheckIn] = useState<Date>(new Date());
@@ -85,7 +113,71 @@ const BookingCard = ({ villaId, villaName, price, maxGuests = 16 }: BookingCardP
   const checkOutRef = useRef<HTMLInputElement>(null);
 
   const nights = differenceInDays(checkOut, checkIn);
-  const subtotal = numericPrice * (nights > 0 ? nights : 0);
+
+  // Timezone-safe daily rate calculation
+  const getDayPriceDetails = (date: Date) => {
+    const check = new Date(date);
+    check.setHours(0, 0, 0, 0);
+
+    // 1. Check Daily Overrides (highest priority)
+    const dailyOverride = dailyPrices?.find(dp => {
+      const dDate = new Date(dp.date);
+      return check.getFullYear() === dDate.getUTCFullYear() &&
+             check.getMonth() === dDate.getUTCMonth() &&
+             check.getDate() === dDate.getUTCDate();
+    });
+
+    if (dailyOverride) {
+      return { price: dailyOverride.price, type: "DAILY" as const, label: "due to demand" };
+    }
+
+    // 2. Check Seasonal Price Overrides
+    const seasonalOverride = seasonalPrices?.find(sp => {
+      const start = new Date(sp.startDate);
+      const end = new Date(sp.endDate);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
+      return check.getTime() >= start.getTime() && check.getTime() <= end.getTime();
+    });
+
+    if (seasonalOverride) {
+      return { 
+        price: seasonalOverride.price, 
+        type: "SEASONAL" as const, 
+        label: seasonalOverride.label || "Holiday Season" 
+      };
+    }
+
+    // 3. Check Weekend Pricing (Friday = 5, Saturday = 6)
+    const dayOfWeek = check.getDay();
+    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+    if (isWeekend && weekendPrice) {
+      return { price: weekendPrice, type: "WEEKEND" as const, label: "Weekend Rate" };
+    }
+
+    // 4. Fallback to base rate
+    return { price: basePrice, type: "BASE" as const, label: "Base Rate" };
+  };
+
+  const getPricingBreakdown = () => {
+    const breakdownList: Array<{ date: Date; price: number; type: string; label: string }> = [];
+    if (nights <= 0) return breakdownList;
+
+    for (let i = 0; i < nights; i++) {
+      const dayDate = addDays(checkIn, i);
+      const details = getDayPriceDetails(dayDate);
+      breakdownList.push({
+        date: dayDate,
+        price: details.price,
+        type: details.type,
+        label: details.label
+      });
+    }
+    return breakdownList;
+  };
+
+  const breakdown = getPricingBreakdown();
+  const subtotal = breakdown.reduce((sum, item) => sum + item.price, 0);
 
   // Dynamic add-ons cost calculation
   let addOnsCost = 0;
@@ -270,77 +362,6 @@ We are so excited about this getaway! Could you please check availability and he
         </div>
 
 
-
-        {/* Experience Planner Accordion */}
-        <div className="border border-border-subtle rounded-2xl overflow-hidden bg-white shadow-sm transition-all duration-300">
-          <button
-            type="button"
-            onClick={() => setShowAddOns(!showAddOns)}
-            className="w-full flex items-center justify-between p-4 text-left font-bold text-[#1B3564] hover:bg-bg-primary transition-colors cursor-pointer"
-          >
-            <div className="flex items-center gap-2">
-              <Sparkles size={16} className="text-[#DAA520]" />
-              <span className="text-[11px] uppercase tracking-wider font-extrabold">Plan Signature Experiences</span>
-              {selectedAddOns.length > 0 && (
-                <span className="w-5 h-5 rounded-full bg-[#1B3564] text-white text-[9px] font-black flex items-center justify-center animate-pulse">
-                  {selectedAddOns.length}
-                </span>
-              )}
-            </div>
-            {showAddOns ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          </button>
-          
-          {showAddOns && (
-            <div className="p-4 border-t border-border-subtle bg-bg-primary/30 space-y-3">
-              {availableAddOns.map((addon) => {
-                const isSelected = selectedAddOns.includes(addon.id);
-                const AddonIcon = addon.icon;
-                const cost = addon.perNight 
-                  ? addon.price * (nights > 0 ? nights : 1)
-                  : addon.perGuest 
-                    ? addon.price * guests
-                    : addon.price;
-                const pricingLabel = addon.perNight 
-                  ? `₹${addon.price.toLocaleString("en-IN")}/night`
-                  : addon.perGuest
-                    ? `₹${addon.price.toLocaleString("en-IN")}/guest`
-                    : `₹${addon.price.toLocaleString("en-IN")} flat`;
-                
-                return (
-                  <div 
-                    key={addon.id} 
-                    onClick={() => handleToggleAddOn(addon.id)}
-                    className={`flex items-start gap-3 p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
-                      isSelected 
-                        ? "bg-[#1B3564]/5 border-[#1B3564]/30 shadow-sm" 
-                        : "bg-white border-border-subtle hover:border-[#1B3564]/30"
-                    }`}
-                  >
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                      isSelected ? "bg-[#1B3564] text-white" : "bg-bg-primary text-text-primary/60"
-                    }`}>
-                      <AddonIcon size={16} />
-                    </div>
-                    <div className="flex-1 min-w-0 text-left">
-                      <div className="flex justify-between items-baseline gap-2">
-                        <span className="text-[11px] font-bold text-text-primary uppercase tracking-wide truncate">{addon.label}</span>
-                        <span className="text-[10px] font-black text-accent-secondary whitespace-nowrap">₹{cost.toLocaleString("en-IN")}</span>
-                      </div>
-                      <p className="text-[9px] text-text-primary/50 leading-relaxed mt-0.5">{addon.description}</p>
-                      <span className="text-[8px] font-bold text-[#DAA520] uppercase tracking-wider block mt-1">{pricingLabel}</span>
-                    </div>
-                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-0.5 ${
-                      isSelected ? "bg-[#1B3564] border-[#1B3564] text-white" : "border-border-subtle"
-                    }`}>
-                      {isSelected && <Check size={10} className="stroke-[3]" />}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
         {/* Contact Information Section */}
         <div className="pt-4 border-t border-border-subtle/60 space-y-3">
           <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block text-left">
@@ -411,9 +432,27 @@ We are so excited about this getaway! Could you please check availability and he
 
       {nights > 0 && (
         <div className="space-y-4 pt-6 border-t border-border-subtle">
-          <div className="flex justify-between text-sm">
-            <span className="text-text-primary/60">₹{price} x {nights} nights</span>
-            <span className="text-text-primary">₹{subtotal.toLocaleString("en-IN")}</span>
+          {/* Detailed stay breakdown card */}
+          <div className="bg-bg-primary border border-border-subtle rounded-2xl p-4 space-y-2.5 text-left select-none shadow-sm">
+            <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block">
+              Stay Rate Breakdown
+            </span>
+            <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
+              {breakdown.map((item, idx) => (
+                <div key={idx} className="flex justify-between text-xs text-text-primary/70">
+                  <span className="font-medium">
+                    {format(item.date, "dd MMM yyyy")} ({item.label})
+                  </span>
+                  <span className="font-bold text-text-primary">
+                    ₹{item.price.toLocaleString("en-IN")}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between text-xs pt-2.5 border-t border-border-subtle/60 font-bold text-text-primary/80">
+              <span>Accommodation Subtotal</span>
+              <span>₹{subtotal.toLocaleString("en-IN")}</span>
+            </div>
           </div>
 
           {addOnsCost > 0 && (

@@ -22,7 +22,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
   const regionParam = resolvedParams.region;
   const categoryParam = resolvedParams.category;
 
-  // Fetch "The Angled House" (slug: 'angled-house') to ensure it is always first
+  // Fetch "The Angle House" (slug: 'angled-house') to ensure it is always first
   const angledHouse = await prisma.villa.findUnique({
     where: { slug: "angled-house" }
   });
@@ -35,7 +35,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
     orderBy: { createdAt: "desc" },
   });
 
-  // Combine them with "The Angled House" always at the top/first spot!
+  // Combine them with "The Angle House" always at the top/first spot!
   const dbVillas = [];
   if (angledHouse) {
     dbVillas.push(angledHouse);

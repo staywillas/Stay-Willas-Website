@@ -46,7 +46,7 @@ const slides = [
     image: "/assets/villas/angled-house/gallery-11.webp",
     tag: "Pool & Modern Design",
     title: "The Iconic",
-    titleItalic: "Angled House",
+    titleItalic: "Angle House",
     desc: "Where modern architecture meets slow luxury —\nour stunning designer villa in Lonavala, crafted for unforgettable escapes."
   },
   {
@@ -230,12 +230,11 @@ Could you please share the options available and help us plan our perfect getawa
                   className="object-cover animate-ken-burns"
                 />
                  {/* Premium soft cream vignetted overlay (bottom-up on mobile, left-to-right on desktop) */}
-                <div className="absolute inset-0 md:inset-y-0 md:left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-t from-[#F5F2EA]/60 via-[#F5F2EA]/20 to-transparent md:bg-gradient-to-r md:from-[#F5F2EA] md:via-[#F5F2EA]/95 md:to-transparent z-10" />
+                 <div className="absolute inset-0 md:inset-y-0 md:left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-t from-[#F5F2EA]/60 via-[#F5F2EA]/20 to-transparent md:bg-gradient-to-r md:from-[#F5F2EA] md:via-[#F5F2EA]/95 md:to-transparent z-10" />
               </div>
-
-              {/* Slide content */}
+                        {/* Slide content */}
                <div className="relative z-20 h-full flex items-center md:items-center pt-16 pb-12 lg:pb-36 px-6 md:px-12 lg:px-24">
-                 <div className="max-w-2xl bg-[#F5F2EA]/85 backdrop-blur-md border border-[#1B3564]/5 p-5 sm:p-8 rounded-[1.8rem] sm:rounded-[2rem] shadow-xl md:bg-transparent md:backdrop-blur-none md:border-none md:p-0 md:shadow-none text-left">
+                 <div className="max-w-2xl bg-[#F5F2EA]/85 backdrop-blur-md border border-[#1B3564]/5 p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-xl md:bg-transparent md:backdrop-blur-none md:border-none md:p-0 md:shadow-none text-left">
                   <AnimatePresence mode="wait">
                     {isActive && (
                       <motion.div
@@ -247,13 +246,13 @@ Could you please share the options available and help us plan our perfect getawa
                       className="flex flex-col items-start"
                     >
                       {/* Tag — Premium White Badge */}
-                      <span className="inline-flex items-center gap-1.5 bg-white/95 border border-slate-200/50 text-[#DAA520] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-6 px-5 py-2.5 rounded-full shadow-sm w-fit">
+                      <span className="inline-flex items-center gap-1.5 bg-white/95 border border-slate-200/50 text-[#DAA520] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-3 md:mb-6 px-4 md:px-5 py-2 md:py-2.5 rounded-full shadow-sm w-fit">
                         <span className="text-[#DAA520] text-xs">★</span> {slide.tag}
                       </span>
                       
                       {/* Main Heading - Refined Serif Typography */}
-                      <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.1] mb-6 font-normal tracking-wide drop-shadow-[0_2px_4px_rgba(27,53,100,0.08)]">
-                        {slide.title} <br /> 
+                      <h1 className="text-xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.15] mb-3 md:mb-6 font-normal tracking-wide drop-shadow-[0_2px_4px_rgba(27,53,100,0.08)]">
+                        {slide.title} <br className="hidden sm:inline" /> 
                         <span className="relative inline-block pb-1">
                           <span className="italic text-[#DAA520] font-heading font-semibold md:font-light tracking-wide">{slide.titleItalic}</span>
                           {/* Beautiful gold horizontal line accent directly under the first half of the text (like "by the") */}
@@ -262,15 +261,15 @@ Could you please share the options available and help us plan our perfect getawa
                       </h1>
                       
                       {/* Subtitle - Refined dark navy on mobile, slate on desktop */}
-                      <p className="text-[14px] sm:text-base text-[#1B3564] md:text-slate-600/90 font-extrabold md:font-normal max-w-md mb-8 leading-relaxed whitespace-pre-line">
+                      <p className="text-[12px] sm:text-base text-[#1B3564] md:text-slate-600/90 font-medium md:font-normal max-w-md mb-4 md:mb-8 leading-relaxed whitespace-pre-line">
                         {slide.desc}
                       </p>
  
                       {/* CTA Section - Premium side-by-side responsive layout */}
-                      <div className="flex flex-row items-center gap-3 w-full sm:w-auto mt-2">
+                      <div className="flex flex-row items-center gap-2.5 w-full sm:w-auto mt-1 md:mt-2">
                         <Link 
                           href="/villas" 
-                          className="flex-grow sm:flex-grow-0 group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-4 sm:px-8 py-3.5 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase flex items-center justify-center gap-1.5 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 active:scale-95"
+                          className="flex-grow sm:flex-grow-0 group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-4 sm:px-8 py-2.5 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase flex items-center justify-center gap-1.5 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 active:scale-95"
                         >
                           <span>EXPLORE</span>
                           <ChevronRight className="transition-transform group-hover:translate-x-1 stroke-[3]" size={12} />
@@ -279,27 +278,27 @@ Could you please share the options available and help us plan our perfect getawa
                           href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I'm browsing your stunning website and would love to connect with your concierge regarding curated luxury escapes. ✨`)}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-grow sm:flex-grow-0 group bg-white border border-[#1B3564]/20 hover:border-[#1B3564]/50 text-[#1B3564] font-bold rounded-full px-4 sm:px-8 py-3.5 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95"
+                          className="flex-grow sm:flex-grow-0 group bg-white border border-[#1B3564]/20 hover:border-[#1B3564]/50 text-[#1B3564] font-bold rounded-full px-4 sm:px-8 py-2.5 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95"
                         >
                           <span>CONCIERGE</span>
                           <ChevronRight size={12} className="text-[#DAA520] transition-transform group-hover:translate-x-0.5 stroke-[3]" />
                         </a>
                       </div>
                     </motion.div>
-                  )}
-                </AnimatePresence>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
-            </div>
-          </SwiperSlide>
+            </SwiperSlide>
         );
       })}
     </Swiper>
 
     {/* Floating Side Arrow Buttons - Highly Visible Premium Navy/White */}
-    <button className="hero-prev absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/10 bg-white/95 text-[#1B3564] hover:bg-[#1B3564] hover:text-white shadow-[0_8px_30px_rgba(27,53,100,0.12)] flex items-center justify-center transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95">
+    <button className="hero-prev absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 hidden md:flex w-12 h-12 rounded-full border border-[#1B3564]/10 bg-white/95 text-[#1B3564] hover:bg-[#1B3564] hover:text-white shadow-[0_8px_30px_rgba(27,53,100,0.12)] flex items-center justify-center transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95">
       <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
     </button>
-    <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-[#1B3564]/10 bg-white/95 text-[#1B3564] hover:bg-[#1B3564] hover:text-white shadow-[0_8px_30px_rgba(27,53,100,0.12)] flex items-center justify-center transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95">
+    <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 hidden md:flex w-12 h-12 rounded-full border border-[#1B3564]/10 bg-white/95 text-[#1B3564] hover:bg-[#1B3564] hover:text-white shadow-[0_8px_30px_rgba(27,53,100,0.12)] flex items-center justify-center transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95">
       <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
     </button>
   </div>

@@ -9,19 +9,19 @@ const benefits = [
   {
     icon: TrendingUp,
     title: "Earn More",
-    value: "35%+",
+    value: "Max",
     suffix: "Higher Earnings",
   },
   {
     icon: Users,
     title: "Great Guests",
-    value: "100k+",
+    value: "Global",
     suffix: "Happy Travelers",
   },
   {
     icon: Globe,
     title: "We Handle It All",
-    value: "360°",
+    value: "Full",
     suffix: "Care & Service",
   },
 ];
@@ -99,12 +99,12 @@ const PartnerSection = () => {
                   <Shield className="text-[#559C24] hidden sm:block" size={24} />
                 </div>
                 <div className="text-left">
-                  <h4 className="text-[#1B3564] font-black tracking-wide text-xs sm:text-base leading-tight">Trusted by 50+ Owners</h4>
+                  <h4 className="text-[#1B3564] font-black tracking-wide text-xs sm:text-base leading-tight">Trusted by Owners</h4>
                   <p className="text-[#1B3564]/70 text-[9px] sm:text-xs font-semibold mt-0.5 leading-tight">Join our premium hospitality network.</p>
                 </div>
               </div>
               <div className="text-[#DAA520] font-black text-xs sm:text-2xl tracking-tight shrink-0 ml-2">
-                4.9/5 ⭐
+                Top Rated ⭐
               </div>
             </motion.div>
           </div>

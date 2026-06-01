@@ -93,8 +93,9 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
     // 1. Check Daily Overrides (highest priority)
     const dailyOverride = selectedVilla.dailyPrices?.find(dp => {
       const dDate = new Date(dp.date);
-      dDate.setHours(0, 0, 0, 0);
-      return check.getTime() === dDate.getTime();
+      return check.getFullYear() === dDate.getUTCFullYear() &&
+             check.getMonth() === dDate.getUTCMonth() &&
+             check.getDate() === dDate.getUTCDate();
     });
 
     if (dailyOverride) {
@@ -158,7 +159,12 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
           if (v.id === selectedVillaId) {
             const dailyPrices = [...(v.dailyPrices || [])];
             const existingIdx = dailyPrices.findIndex(
-              dp => new Date(dp.date).toDateString() === selectedCellDate.toDateString()
+              dp => {
+                const dDate = new Date(dp.date);
+                return dDate.getUTCFullYear() === selectedCellDate.getFullYear() &&
+                       dDate.getUTCMonth() === selectedCellDate.getMonth() &&
+                       dDate.getUTCDate() === selectedCellDate.getDate();
+              }
             );
 
             const newOverride: DailyPrice = {
@@ -204,7 +210,12 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
         const updatedVillas = villas.map(v => {
           if (v.id === selectedVillaId) {
             const dailyPrices = (v.dailyPrices || []).filter(
-              dp => new Date(dp.date).toDateString() !== selectedCellDate.toDateString()
+              dp => {
+                const dDate = new Date(dp.date);
+                return !(dDate.getUTCFullYear() === selectedCellDate.getFullYear() &&
+                         dDate.getUTCMonth() === selectedCellDate.getMonth() &&
+                         dDate.getUTCDate() === selectedCellDate.getDate());
+              }
             );
             return { ...v, dailyPrices };
           }
@@ -454,7 +465,12 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
               </button>
 
               {/* Reset to Base Price button (only visible if currently overridden) */}
-              {selectedVilla.dailyPrices?.some(dp => new Date(dp.date).toDateString() === selectedCellDate.toDateString()) && (
+              {selectedVilla.dailyPrices?.some(dp => {
+                const dDate = new Date(dp.date);
+                return dDate.getUTCFullYear() === selectedCellDate.getFullYear() &&
+                       dDate.getUTCMonth() === selectedCellDate.getMonth() &&
+                       dDate.getUTCDate() === selectedCellDate.getDate();
+              }) && (
                 <button 
                   type="button"
                   onClick={handleResetOverride}

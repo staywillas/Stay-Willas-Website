@@ -52,7 +52,7 @@ const highlightsData = [
       desc: "Private chefs serving delicious local cuisines",
     },
   ],
-  // Slide 1: Lonavala Infinity Pool / Angled House
+  // Slide 1: Lonavala Infinity Pool / Angle House
   [
     {
       icon: "Waves",

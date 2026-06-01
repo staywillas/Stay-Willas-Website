@@ -67,7 +67,6 @@ interface Villa {
   weekendPrice?: number | null;
   seasonalPrices: SeasonalPrice[];
   dailyPrices: DailyPrice[];
-  foodMenu?: string[];
 }
 
 interface Booking {
@@ -206,7 +205,6 @@ const AdminDashboard = ({
   const [editBedrooms, setEditBedrooms] = useState(0);
   const [editCategory, setEditCategory] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [editFoodMenuText, setEditFoodMenuText] = useState("");
   const [editAirbnb, setEditAirbnb] = useState("");
   const [editBooking, setEditBooking] = useState("");
   const [editVrbo, setEditVrbo] = useState("");
@@ -222,6 +220,8 @@ const AdminDashboard = ({
       handleSyncAll(true);
     }
   }, []);
+
+
 
   // Sync Channels Controller
   const handleSyncAll = async (isAuto = false) => {
@@ -259,7 +259,6 @@ const AdminDashboard = ({
     setEditBedrooms(villa.bedrooms);
     setEditCategory(villa.category || "Mountain View");
     setEditDescription(villa.description || "");
-    setEditFoodMenuText((villa.foodMenu || []).join("\n"));
 
     const config = channelConfigs[villa.id] || {};
     setEditAirbnb(config.airbnb || "");
@@ -274,11 +273,6 @@ const AdminDashboard = ({
 
     setIsSavingVilla(true);
     try {
-      const foodMenuArray = editFoodMenuText
-        .split("\n")
-        .map(item => item.trim())
-        .filter(Boolean);
-
       // 1. Save villa specifications
       const villaRes = await updateVillaDetails({
         id: editingVilla.id,
@@ -289,7 +283,6 @@ const AdminDashboard = ({
         bedrooms: editBedrooms,
         category: editCategory,
         description: editDescription,
-        foodMenu: foodMenuArray,
       });
 
       // 2. Save Channel Manager iCal URLs
@@ -310,7 +303,6 @@ const AdminDashboard = ({
           bedrooms: editBedrooms,
           category: editCategory,
           description: editDescription,
-          foodMenu: foodMenuArray
         } : v));
 
         setChannelConfigs(prev => ({
@@ -1062,7 +1054,7 @@ const AdminDashboard = ({
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
                     required
-                    className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
                   />
                 </div>
 
@@ -1073,7 +1065,7 @@ const AdminDashboard = ({
                     value={editLocation}
                     onChange={(e) => setEditLocation(e.target.value)}
                     required
-                    className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
                   />
                 </div>
 
@@ -1085,7 +1077,7 @@ const AdminDashboard = ({
                       value={editPrice}
                       onChange={(e) => setEditPrice(Number(e.target.value))}
                       required
-                      className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
                     />
                   </div>
                   <div>
@@ -1095,7 +1087,7 @@ const AdminDashboard = ({
                       value={editCategory}
                       onChange={(e) => setEditCategory(e.target.value)}
                       required
-                      className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
                     />
                   </div>
                 </div>
@@ -1108,7 +1100,7 @@ const AdminDashboard = ({
                       value={editGuests}
                       onChange={(e) => setEditGuests(Number(e.target.value))}
                       required
-                      className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
                     />
                   </div>
                   <div>
@@ -1118,7 +1110,7 @@ const AdminDashboard = ({
                       value={editBedrooms}
                       onChange={(e) => setEditBedrooms(Number(e.target.value))}
                       required
-                      className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
                     />
                   </div>
                 </div>
@@ -1163,7 +1155,7 @@ const AdminDashboard = ({
                     value={editAirbnb}
                     onChange={(e) => setEditAirbnb(e.target.value)}
                     placeholder="https://www.airbnb.com/calendar/ical/..."
-                    className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2 text-xs focus:border-blue-500 outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2 text-xs focus:border-blue-500 outline-none"
                   />
                 </div>
 
@@ -1174,7 +1166,7 @@ const AdminDashboard = ({
                     value={editBooking}
                     onChange={(e) => setEditBooking(e.target.value)}
                     placeholder="https://ical.booking.com/v1/..."
-                    className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2 text-xs focus:border-blue-500 outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2 text-xs focus:border-blue-500 outline-none"
                   />
                 </div>
 
@@ -1185,7 +1177,7 @@ const AdminDashboard = ({
                     value={editVrbo}
                     onChange={(e) => setEditVrbo(e.target.value)}
                     placeholder="https://www.vrbo.com/icalendar/..."
-                    className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl px-4 py-2 text-xs focus:border-blue-500 outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2 text-xs focus:border-blue-500 outline-none"
                   />
                 </div>
               </div>
@@ -1198,18 +1190,7 @@ const AdminDashboard = ({
                 onChange={(e) => setEditDescription(e.target.value)}
                 rows={3}
                 required
-                className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl p-4 text-xs focus:border-blue-500 outline-none leading-relaxed"
-              />
-            </div>
-
-            <div>
-              <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Bespoke Food Menu (One dish per line)</label>
-              <textarea 
-                value={editFoodMenuText}
-                onChange={(e) => setEditFoodMenuText(e.target.value)}
-                rows={4}
-                placeholder="e.g.&#10;Konkani Surmai Fry&#10;Coastal Crab Masala&#10;Alibaug Special Sol Kadhi"
-                className="w-full bg-slate-50 border border-slate-200 text-white rounded-xl p-4 text-xs focus:border-blue-500 outline-none leading-relaxed"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl p-4 text-xs focus:border-blue-500 outline-none leading-relaxed"
               />
             </div>
 

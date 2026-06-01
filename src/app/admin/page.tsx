@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import AdminDashboard from "@/components/admin/admin-dashboard";
-
 import LoginForm from "@/components/auth/login-form";
 
 export const metadata: Metadata = {
@@ -63,7 +62,7 @@ export default async function AdminPage() {
     }),
   ]);
 
-  // Sort dbVillas in memory to ensure "The Angled House" (slug: "angled-house") is always at the top/index 0
+  // Sort dbVillas in memory to ensure "The Angle House" (slug: "angled-house") is always at the top/index 0
   const sortedVillas = [...dbVillas].sort((a, b) => {
     if (a.slug === "angled-house") return -1;
     if (b.slug === "angled-house") return 1;

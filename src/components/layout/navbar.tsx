@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, Phone, ChevronDown, Heart } from "lucide-react";
+import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
+import { Menu, X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
@@ -82,6 +82,18 @@ const Navbar = () => {
       window.removeEventListener("toggle-mobile-menu", handleToggleMenu);
     };
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -259,103 +271,249 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Full-Screen Glassmorphism Mobile Menu */}
+      {/* Premium Slide-In Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="fixed inset-0 z-[100000] xl:hidden"
           >
-            {/* Glassmorphism Background */}
-            <div className="absolute inset-0 bg-[#0a1628]/85 backdrop-blur-2xl" />
-            
-            {/* Content */}
-            <div className="relative z-10 h-full flex flex-col justify-between p-8 sm:p-12">
-              {/* Header */}
-              <div className="flex justify-between items-center">
+            {/* Backdrop — tap to close */}
+            <motion.div
+              className="absolute inset-0 bg-[#0a1628]/60 backdrop-blur-sm"
+              onClick={() => setIsMobileMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            {/* Slide-in Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+                if (info.offset.x > 100 || info.velocity.x > 500) {
+                  setIsMobileMenuOpen(false);
+                }
+              }}
+              className="absolute top-0 right-0 bottom-0 w-[85%] max-w-[380px] bg-[#0e1b30]/95 backdrop-blur-2xl border-l border-white/10 shadow-2xl flex flex-col"
+            >
+              {/* Panel Header */}
+              <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-white/8">
                 <div className="flex items-center gap-3">
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20">
+                  <div className="relative w-9 h-9 rounded-full overflow-hidden border border-white/20">
                     <img src="/images/logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-[1.6]" />
                   </div>
-                  <span className="font-heading text-xl tracking-widest text-white/90">STAY WILLAS</span>
+                  <span className="font-heading text-lg tracking-widest text-white/90">STAY WILLAS</span>
                 </div>
-                <motion.button 
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/80 hover:text-white hover:border-white/40 transition-all duration-300 cursor-pointer"
-                  whileHover={{ rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
+                <motion.button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center text-white/60 hover:text-white hover:border-white/30 transition-all duration-300 cursor-pointer"
+                  whileTap={{ scale: 0.9, rotate: 90 }}
                 >
-                  <X size={22} />
+                  <X size={18} />
                 </motion.button>
               </div>
 
-              {/* Navigation Links - Centered with stagger */}
-              <motion.nav 
-                className="flex flex-col items-center justify-center gap-2"
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: { staggerChildren: 0.08, delayChildren: 0.15 }
-                  }
-                }}
-              >
-                {[...navLinks, { name: "About", href: "/about" }, { name: "Contact", href: "/contact" }].map((link) => (
+              {/* Scrollable Navigation Content */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-6">
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: { staggerChildren: 0.05, delayChildren: 0.1 }
+                    }
+                  }}
+                  className="flex flex-col gap-6"
+                >
+                  {/* Explore Section */}
+                  <div>
+                    <motion.p
+                      variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
+                      className="text-[10px] tracking-[0.3em] uppercase font-bold text-[#DAA520]/60 mb-3 pl-1"
+                    >
+                      Explore
+                    </motion.p>
+                    <div className="flex flex-col gap-0.5">
+                      {navLinks.map((link) => (
+                        <motion.div
+                          key={link.name}
+                          variants={{
+                            hidden: { opacity: 0, x: 30 },
+                            visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
+                          }}
+                        >
+                          <Link
+                            href={link.href}
+                            className={cn(
+                              "flex items-center gap-3 py-3 px-3 rounded-xl transition-all duration-300 group",
+                              pathname === link.href
+                                ? "bg-[#DAA520]/10 text-[#DAA520]"
+                                : "text-white/70 hover:text-white hover:bg-white/5"
+                            )}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {pathname === link.href && (
+                              <div className="w-1 h-5 rounded-full bg-[#DAA520]" />
+                            )}
+                            <span className="text-xl font-heading tracking-wider">{link.name}</span>
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="h-px bg-white/8 mx-3" />
+
+                  {/* Connect Section */}
+                  <div>
+                    <motion.p
+                      variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
+                      className="text-[10px] tracking-[0.3em] uppercase font-bold text-[#DAA520]/60 mb-3 pl-1"
+                    >
+                      Connect
+                    </motion.p>
+                    <div className="flex flex-col gap-0.5">
+                      {[
+                        { name: "About", href: "/about", icon: Info },
+                        { name: "Partner With Us", href: "/partner", icon: Handshake },
+                        { name: "Contact", href: "/contact", icon: Mail },
+                      ].map((link) => (
+                        <motion.div
+                          key={link.name}
+                          variants={{
+                            hidden: { opacity: 0, x: 30 },
+                            visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
+                          }}
+                        >
+                          <Link
+                            href={link.href}
+                            className={cn(
+                              "flex items-center gap-3 py-3 px-3 rounded-xl transition-all duration-300",
+                              pathname === link.href
+                                ? "bg-[#DAA520]/10 text-[#DAA520]"
+                                : "text-white/70 hover:text-white hover:bg-white/5"
+                            )}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {pathname === link.href && (
+                              <div className="w-1 h-5 rounded-full bg-[#DAA520]" />
+                            )}
+                            <link.icon size={18} className="opacity-60" />
+                            <span className="text-lg font-heading tracking-wider">{link.name}</span>
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="h-px bg-white/8 mx-3" />
+
+                  {/* Wishlist Quick Access */}
                   <motion.div
-                    key={link.name}
                     variants={{
-                      hidden: { opacity: 0, y: 20 },
-                      visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
+                      hidden: { opacity: 0, x: 30 },
+                      visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
                     }}
                   >
                     <Link
-                      href={link.href}
+                      href="/wishlist"
                       className={cn(
-                        "text-3xl sm:text-4xl font-heading tracking-wider transition-all duration-300 py-3 block",
-                        pathname === link.href 
-                          ? "text-[#DAA520]" 
-                          : "text-white/70 hover:text-white"
+                        "flex items-center gap-3 py-3 px-3 rounded-xl transition-all duration-300",
+                        pathname === "/wishlist"
+                          ? "bg-[#DAA520]/10 text-[#DAA520]"
+                          : "text-white/70 hover:text-white hover:bg-white/5"
                       )}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {link.name}
+                      <Heart size={18} className="opacity-60" />
+                      <span className="text-lg font-heading tracking-wider">Wishlist</span>
+                      {wishlistCount > 0 && (
+                        <span className="ml-auto w-5 h-5 rounded-full bg-red-500 text-[10px] font-black text-white flex items-center justify-center">
+                          {wishlistCount}
+                        </span>
+                      )}
                     </Link>
                   </motion.div>
-                ))}
-              </motion.nav>
 
-              {/* Bottom Section */}
-              <div className="flex flex-col items-center gap-6">
-                {/* Reserve CTA */}
+                  {/* User Auth Section */}
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, x: 30 },
+                      visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
+                    }}
+                    className="bg-white/5 rounded-2xl p-4 border border-white/8"
+                  >
+                    {isSignedIn ? (
+                      <div className="flex items-center gap-3">
+                        <UserButton
+                          appearance={{
+                            elements: {
+                              avatarBox: "w-10 h-10 border-2 border-[#DAA520]/40 rounded-full",
+                              userButtonPopoverCard: "shadow-xl border border-[#DAA520]/20 rounded-2xl",
+                            },
+                          }}
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-white/90 text-sm font-semibold">Account</span>
+                          <span className="text-white/40 text-xs">Manage your profile</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <SignInButton mode="modal">
+                        <button className="flex items-center gap-3 w-full text-left cursor-pointer">
+                          <div className="w-10 h-10 rounded-full bg-white/10 border border-white/15 flex items-center justify-center">
+                            <User size={18} className="text-white/60" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-white/90 text-sm font-semibold">Sign In</span>
+                            <span className="text-white/40 text-xs">Access your bookings & wishlist</span>
+                          </div>
+                        </button>
+                      </SignInButton>
+                    )}
+                  </motion.div>
+                </motion.div>
+              </div>
+
+              {/* Panel Footer — CTA + Contact */}
+              <div className="px-6 pb-6 pt-3 border-t border-white/8 flex flex-col gap-4">
                 <a
-                  href={`https://wa.me/919619042310?text=${encodeURIComponent("Hello Stay Willas! ✨ I am looking to book an exclusive villa stay. Could you please share some recommendations and help me choose the right sanctuary?")}`}
+                  href={`https://wa.me/919619042310?text=${encodeURIComponent("Hello Stay Willas! ✨ I am looking to book an exclusive villa stay. Could you please share some recommendations?")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] text-center rounded-full w-full max-w-xs py-4 text-xs font-black tracking-[0.25em] uppercase shadow-lg shadow-[#DAA520]/20 hover:shadow-xl transition-all duration-300 block active:scale-95"
+                  className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] text-center rounded-full w-full py-3.5 text-xs font-black tracking-[0.25em] uppercase shadow-lg shadow-[#DAA520]/20 hover:shadow-xl transition-all duration-300 block active:scale-95"
                 >
                   RESERVE YOUR VILLA
                 </a>
-                
-                {/* Contact Row */}
-                <div className="flex items-center gap-6">
-                  <a href="tel:+919619042310" className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm">
-                    <Phone size={16} />
-                    <span className="font-medium">Call</span>
+
+                <div className="flex items-center justify-center gap-5">
+                  <a href="tel:+919619042310" className="flex items-center gap-2 text-white/40 hover:text-white transition-colors text-xs font-medium">
+                    <Phone size={14} />
+                    <span>Call Us</span>
                   </a>
-                  <div className="w-px h-4 bg-white/20" />
-                  <a href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%21%20%F0%9F%A4%9D%20I%20would%20like%20to%20get%20in%20touch%20with%20your%20support%20team%20regarding%20booking%20enquiries%20and%20curated%20packages.%20Thanks%21" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/50 hover:text-[#25D366] transition-colors text-sm">
-                    <WhatsAppIcon size={16} />
-                    <span className="font-medium">WhatsApp</span>
+                  <div className="w-px h-3.5 bg-white/15" />
+                  <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/40 hover:text-[#25D366] transition-colors text-xs font-medium">
+                    <WhatsAppIcon size={14} />
+                    <span>WhatsApp</span>
                   </a>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

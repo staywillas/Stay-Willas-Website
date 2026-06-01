@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  Wifi, Waves, Car, Coffee,
+  Wifi, Waves, Car,
   Wind, MapPin, Award, ChevronLeft,
   Share2, Heart, CheckCircle2,
   Users, Bed, Bath
@@ -19,6 +19,7 @@ import ShareButton from "@/components/villa/share-button";
 import SaveButton from "@/components/villa/save-button";
 import { getReviews } from "@/app/actions/review";
 import { prisma } from "@/lib/db";
+import FoodMenuModal from "@/components/villa/food-menu-modal";
 import {
   AnimatedPoolIcon,
   AnimatedBonfireIcon,
@@ -38,11 +39,19 @@ export const dynamic = "force-dynamic";
 const getCachedVilla = cache(async (slug: string) => {
   let villa = await prisma.villa.findUnique({
     where: { slug },
+    include: {
+      dailyPrices: true,
+      seasonalPrices: true,
+    },
   });
 
   if (!villa) {
     villa = await prisma.villa.findUnique({
       where: { id: slug },
+      include: {
+        dailyPrices: true,
+        seasonalPrices: true,
+      },
     });
   }
   return villa;
@@ -185,7 +194,6 @@ export default async function VillaDetailPage({ params }: PageProps) {
       };
     }),
     rules: defaultRules,
-    foodMenu: villa.foodMenu || [],
   };
 
   return (
@@ -247,6 +255,9 @@ export default async function VillaDetailPage({ params }: PageProps) {
               </p>
             </div>
 
+            {/* In-Villa Bespoke Food Menu Popup */}
+            <FoodMenuModal />
+
             <div className="mb-12">
               <h2 className="text-3xl font-heading mb-8">What this place offers</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
@@ -261,30 +272,6 @@ export default async function VillaDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            {villaData.foodMenu && villaData.foodMenu.length > 0 && (
-              <div className="mb-12 bg-gradient-to-br from-[#1B3564]/5 via-[#DAA520]/5 to-transparent border border-border-subtle p-8 rounded-[2rem] shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#DAA520]/10 rounded-full blur-2xl pointer-events-none" />
-                
-                <h2 className="text-3xl font-heading mb-2 flex items-center gap-3 text-[#1B3564] italic">
-                  <Coffee className="text-[#DAA520] stroke-[1.8]" size={28} />
-                  <span>Signature Culinary <span className="italic text-[#DAA520] font-serif font-light">Menu</span></span>
-                </h2>
-                <p className="text-[10px] text-[#1B3564]/60 font-black uppercase tracking-widest mb-6">
-                  Indulge in gourmet dishes prepared fresh by our private chefs
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {villaData.foodMenu.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-4 p-4 bg-white border border-border-subtle rounded-2xl shadow-sm hover:border-[#DAA520]/40 transition-all duration-300">
-                      <div className="w-10 h-10 rounded-xl bg-[#DAA520]/10 flex items-center justify-center text-[#DAA520] shrink-0 font-heading font-black text-sm">
-                        {String(idx + 1).padStart(2, "0")}
-                      </div>
-                      <span className="text-sm font-semibold text-text-primary/80 text-left">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           <div className="lg:col-span-4 relative" id="booking-card-section">
@@ -292,6 +279,10 @@ export default async function VillaDetailPage({ params }: PageProps) {
               villaId={villaData.id}
               villaName={villaData.name}
               price={villaData.price}
+              basePrice={villa.price}
+              weekendPrice={villa.weekendPrice}
+              dailyPrices={villa.dailyPrices as any}
+              seasonalPrices={villa.seasonalPrices as any}
               maxGuests={villaData.guests}
             />
           </div>
