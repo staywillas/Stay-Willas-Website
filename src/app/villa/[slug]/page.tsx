@@ -246,8 +246,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
         {/* Cinematic, Interactive Property Gallery & Lightbox */}
         <PropertyGallery images={villaData.images} propertyName={villaData.name} villaId={villaData.slug} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
-          <div className="lg:col-span-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-12 lg:gap-16 mb-24">
+          <div className="order-2 lg:order-1 lg:col-span-8">
             <div className="mb-12">
               <h2 className="text-3xl font-heading mb-6 border-b border-border-subtle pb-6 italic text-accent-primary">The Story</h2>
               <p className="text-text-primary/65 text-lg leading-relaxed whitespace-pre-line">
@@ -274,7 +274,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
 
           </div>
 
-          <div className="lg:col-span-4 relative" id="booking-card-section">
+          <div className="order-1 lg:order-2 lg:col-span-4 relative" id="booking-card-section">
             <BookingCard
               villaId={villaData.id}
               villaName={villaData.name}

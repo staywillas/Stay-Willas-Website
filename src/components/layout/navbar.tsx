@@ -304,7 +304,7 @@ const Navbar = () => {
                   setIsMobileMenuOpen(false);
                 }
               }}
-              className="absolute top-0 right-0 bottom-0 w-[85%] max-w-[380px] bg-[#0e1b30]/95 backdrop-blur-2xl border-l border-white/10 shadow-2xl flex flex-col"
+              className="absolute top-0 right-0 bottom-0 w-[85%] max-w-[380px] bg-[#0e1b30] border-l border-white/10 shadow-2xl flex flex-col"
             >
               {/* Panel Header */}
               <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-white/8">

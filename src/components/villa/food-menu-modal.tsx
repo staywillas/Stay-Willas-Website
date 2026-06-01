@@ -68,7 +68,7 @@ export default function FoodMenuModal() {
       {/* Modal Popup */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-10">
+          <div className="fixed inset-0 z-[1000000] flex items-center justify-center p-4 md:p-10">
             {/* Frosted glass backdrop click listener */}
             <motion.div
               initial={{ opacity: 0 }}

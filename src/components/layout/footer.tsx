@@ -175,8 +175,8 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-white/40 text-xs tracking-wider font-medium">
-            © 2026 STAY WILLAS LUXURY HOSPITALITY. ALL RIGHTS RESERVED.
+          <p className="text-white/40 text-xs tracking-wider font-medium uppercase">
+            © {new Date().getFullYear()} Stay Willas. All Rights Reserved.
           </p>
           
           <div className="flex gap-8">
