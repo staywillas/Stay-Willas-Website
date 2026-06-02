@@ -33,7 +33,7 @@ export default async function DestinationsPage() {
       name: "Lonavala",
       tagline: "The Mountain Sanctuary",
       desc: "Cool mountain breeze, misty green valleys, and spacious private pool villas perched on lush hills.",
-      image: "/assets/villas/angled-house/gallery-11.webp",
+      image: "/assets/villas/the-angle-house/gallery-11.webp",
       count: lonavalaCount,
       isLaunchingSoon: false
     },

@@ -15,23 +15,23 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function WishlistPage() {
-  // Fetch "The Angle House" (slug: 'angled-house') to ensure it is always first
-  const angledHouse = await prisma.villa.findUnique({
-    where: { slug: "angled-house" }
+  // Fetch "The Angle House" (slug: 'the-angle-house') to ensure it is always first
+  const angleHouse = await prisma.villa.findUnique({
+    where: { slug: "the-angle-house" }
   });
 
   // Query other premium villas
   const otherVillas = await prisma.villa.findMany({
     where: {
-      slug: { not: "angled-house" }
+      slug: { not: "the-angle-house" }
     },
     orderBy: { createdAt: "desc" },
   });
 
   // Combine them with "The Angle House" always at the top/first spot!
   const dbVillas = [];
-  if (angledHouse) {
-    dbVillas.push(angledHouse);
+  if (angleHouse) {
+    dbVillas.push(angleHouse);
   }
   dbVillas.push(...otherVillas);
 

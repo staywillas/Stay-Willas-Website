@@ -64,8 +64,8 @@ export async function getConciergeRecommendation(params: ConciergeRecommendation
 
     // If still no match found, fallback to the seeded Angle House or the first available villa
     if (filtered.length === 0) {
-      const angled = villas.find((v) => v.slug === "angled-house");
-      filtered = angled ? [angled] : [villas[0]];
+      const angleHouse = villas.find((v) => v.slug === "the-angle-house");
+      filtered = angleHouse ? [angleHouse] : [villas[0]];
     }
 
     const villa = filtered[0];

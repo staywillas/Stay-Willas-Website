@@ -23,23 +23,23 @@ const Footer = dynamic(() => import("@/components/layout/footer"));
 import { prisma } from "@/lib/db";
 
 export default async function Home() {
-  // Let's explicitly fetch "The Angle House" (slug: 'angled-house') to ensure it is always first at the top
-  const angledHouse = await prisma.villa.findUnique({
-    where: { slug: "angled-house" }
+  // Let's explicitly fetch "The Angle House" (slug: 'the-angle-house') to ensure it is always first at the top
+  const angleHouse = await prisma.villa.findUnique({
+    where: { slug: "the-angle-house" }
   });
 
   // Query all other premium villas
   const otherVillas = await prisma.villa.findMany({
     where: {
-      slug: { not: "angled-house" }
+      slug: { not: "the-angle-house" }
     },
     orderBy: { createdAt: "desc" },
   });
 
   // Combine them with "The Angle House" always at the top/first spot!
   const dbVillas = [];
-  if (angledHouse) {
-    dbVillas.push(angledHouse);
+  if (angleHouse) {
+    dbVillas.push(angleHouse);
   }
   dbVillas.push(...otherVillas);
 

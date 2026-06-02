@@ -17,7 +17,7 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 const destinations = [
   {
     name: "Lonavala",
-    image: "/assets/villas/angled-house/gallery-11.webp",
+    image: "/assets/villas/the-angle-house/gallery-11.webp",
     count: "2 Villas",
     tag: "Mountain Escapes",
     desc: "Cool breeze, misty green hills, and quiet retreats.",
@@ -201,7 +201,7 @@ const DestinationShowcase = () => {
               >
                 <Link
                   href={dest.link}
-                  className="block relative aspect-[3/4] w-full h-full rounded-[28px] overflow-hidden group border border-[#DAA520]/20 cursor-pointer shadow-[0_20px_50px_rgba(15,23,42,0.25)] hover:border-[#DAA520]/65 hover:shadow-[0_25px_60px_rgba(218,165,32,0.35)] transition-all duration-500"
+                  className="block relative aspect-[3/4] w-full h-full rounded-[28px] overflow-hidden group border border-[#DAA520]/20 cursor-pointer shadow-[0_20px_50px_rgba(15,23,42,0.25)] hover:border-[#DAA520] hover:shadow-[0_0_40px_rgba(218,165,32,0.75)] hover:scale-[1.02] transition-all duration-500"
                 >
                   <Image
                     src={dest.image}

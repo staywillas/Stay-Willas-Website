@@ -43,7 +43,7 @@ import "swiper/css/navigation";
 
 const slides = [
   {
-    image: "/assets/villas/angled-house/gallery-11.webp",
+    image: "/assets/villas/the-angle-house/gallery-11.webp",
     tag: "Pool & Modern Design",
     title: "The Iconic",
     titleItalic: "Angle House",
