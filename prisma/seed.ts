@@ -209,17 +209,7 @@ async function main() {
     console.log(`- Created ${created.name} (${created.id})`);
   }
 
-  console.log("Seeding mock bookings...");
-  await prisma.booking.create({
-    data: {
-      villaId: "lonavala-estate",
-      userId: "user_mock_1",
-      checkIn: new Date("2026-06-01T14:00:00Z"),
-      checkOut: new Date("2026-06-04T11:00:00Z"),
-      totalPrice: 140000.0,
-      status: "CONFIRMED",
-    }
-  });
+  // Mock bookings cleared from production seed
 
   console.log("Seeding mock inquiries...");
   await prisma.inquiry.create({

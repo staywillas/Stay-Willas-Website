@@ -125,6 +125,30 @@ const AdminDashboard = ({
   const [isSavingBooking, setIsSavingBooking] = useState(false);
   const [bookingFormError, setBookingFormError] = useState("");
 
+  const [newBookingNightlyRate, setNewBookingNightlyRate] = useState(0);
+  const [newBookingGuests, setNewBookingGuests] = useState(1);
+
+  // Prefill base nightly rate and guests limit when villa is selected
+  useEffect(() => {
+    if (newBookingVillaId) {
+      const selectedVilla = villas.find(v => v.id === newBookingVillaId);
+      if (selectedVilla) {
+        setNewBookingNightlyRate(selectedVilla.price);
+        setNewBookingGuests(selectedVilla.guests || 1);
+      }
+    }
+  }, [newBookingVillaId, villas]);
+
+  // Recalculate price override automatically when dates or nightly rate changes
+  useEffect(() => {
+    if (newBookingCheckIn && newBookingCheckOut) {
+      const inDate = new Date(newBookingCheckIn);
+      const outDate = new Date(newBookingCheckOut);
+      const nights = Math.max(0, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
+      setNewBookingPrice(nights * newBookingNightlyRate);
+    }
+  }, [newBookingCheckIn, newBookingCheckOut, newBookingNightlyRate]);
+
   const handleManualBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBookingFormError("");
@@ -146,6 +170,8 @@ const AdminDashboard = ({
         totalPrice: newBookingPrice,
         status: newBookingStatus,
         type: newBookingType,
+        guests: newBookingGuests,
+        nightlyRate: newBookingNightlyRate,
       });
 
       if (result.success && result.booking) {
@@ -181,6 +207,8 @@ const AdminDashboard = ({
         setNewBookingGuestEmail("");
         setNewBookingGuestPhone("");
         setNewBookingPrice(0);
+        setNewBookingNightlyRate(0);
+        setNewBookingGuests(1);
       } else {
         setBookingFormError(result.error || "Failed to save booking.");
       }
@@ -391,7 +419,7 @@ const AdminDashboard = ({
             onClick={async () => {
               if (confirm("Are you sure you want to sign out?")) {
                 await logoutAction();
-                window.location.href = "/login?role=admin";
+                window.location.href = "/admin";
               }
             }}
             className="text-[10px] bg-red-500/10 hover:bg-red-500 hover:text-white border border-red-500/20 text-red-500 px-3 py-1.5 rounded-full tracking-widest uppercase font-bold transition-all duration-300 cursor-pointer border-none"
@@ -734,7 +762,14 @@ const AdminDashboard = ({
                       try {
                         if (booking.userId.startsWith("{")) {
                           const parsed = JSON.parse(booking.userId);
-                          parsedDetails = parsed.name ? `${parsed.name} (${parsed.email || "N/A"})` : `${parsed.type || "Manual"}: ${parsed.reason || "N/A"}`;
+                          if (parsed.name) {
+                            parsedDetails = `${parsed.name} (${parsed.email || "N/A"})`;
+                            if (parsed.guests || parsed.nightlyRate) {
+                              parsedDetails += ` | ${parsed.guests || 1} Guests @ ₹${(parsed.nightlyRate || 0).toLocaleString("en-IN")}/n`;
+                            }
+                          } else {
+                            parsedDetails = `${parsed.type || "Manual"}: ${parsed.reason || "N/A"}`;
+                          }
                         }
                       } catch (e) {}
 
@@ -900,6 +935,43 @@ const AdminDashboard = ({
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold outline-none focus:border-slate-800"
                       />
                     </div>
+                  </div>
+                )}
+
+                {newBookingType === "GUEST" && (
+                  <div className="grid grid-cols-2 gap-3 animate-fade-in bg-slate-50 p-4.5 rounded-2xl border border-slate-200/50">
+                    <div className="flex flex-col gap-1.5 col-span-2">
+                      <span className="text-[9px] text-[#1B3564]/60 font-bold uppercase tracking-widest block border-b border-slate-200 pb-1 mb-1">STAY PARAMETERS</span>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Nightly Rate (₹) *</label>
+                      <input
+                        type="number"
+                        value={newBookingNightlyRate || ""}
+                        onChange={(e) => setNewBookingNightlyRate(parseInt(e.target.value) || 0)}
+                        required
+                        placeholder="e.g. 15000"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Guests count *</label>
+                      <input
+                        type="number"
+                        value={newBookingGuests || ""}
+                        onChange={(e) => setNewBookingGuests(parseInt(e.target.value) || 1)}
+                        required
+                        min="1"
+                        placeholder="e.g. 4"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {newBookingCheckIn && newBookingCheckOut && (
+                  <div className="text-[11px] text-[#1B3564]/70 font-semibold bg-blue-500/5 border border-blue-500/10 px-4 py-2.5 rounded-xl">
+                    Duration: {Math.max(0, Math.round((new Date(newBookingCheckOut).getTime() - new Date(newBookingCheckIn).getTime()) / (1000 * 60 * 60 * 24)))} Nights
                   </div>
                 )}
 

@@ -20,6 +20,8 @@ export async function createManualBooking(formData: {
   status: string; // CONFIRMED, PENDING, BLOCKED
   notes?: string;
   type?: "GUEST" | "MAINTENANCE" | "OWNER_USE";
+  guests?: number;
+  nightlyRate?: number;
 }) {
   try {
     const checkInDate = new Date(formData.checkIn);
@@ -73,6 +75,8 @@ export async function createManualBooking(formData: {
         email: formData.guestEmail || "",
         phone: formData.guestPhone || "",
         notes: formData.notes || "",
+        guests: formData.guests || 1,
+        nightlyRate: formData.nightlyRate || 0,
       });
     }
 
@@ -346,6 +350,23 @@ export async function setDailyPrice(villaId: string, dateStr: string, price: num
   try {
     const targetDate = new Date(dateStr);
     targetDate.setUTCHours(0, 0, 0, 0);
+
+    // Overlap validation: check if the property is booked/blocked on this date
+    const bookingOnDate = await prisma.booking.findFirst({
+      where: {
+        villaId,
+        status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
+        checkIn: { lte: targetDate },
+        checkOut: { gt: targetDate },
+      },
+    });
+
+    if (bookingOnDate) {
+      return {
+        success: false,
+        error: `Cannot override pricing on this date because the property is already booked/blocked (${bookingOnDate.checkIn.toLocaleDateString("en-IN")} - ${bookingOnDate.checkOut.toLocaleDateString("en-IN")}).`,
+      };
+    }
 
     const override = await prisma.dailyPrice.upsert({
       where: {

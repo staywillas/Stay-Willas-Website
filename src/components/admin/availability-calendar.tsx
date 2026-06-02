@@ -68,8 +68,21 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   const [checkInStr, setCheckInStr] = useState("");
   const [checkOutStr, setCheckOutStr] = useState("");
 
+  const [nightlyRate, setNightlyRate] = useState(0);
+  const [numGuests, setNumGuests] = useState(1);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Recalculate price override automatically when dates or nightly rate changes
+  React.useEffect(() => {
+    if (checkInStr && checkOutStr) {
+      const inDate = new Date(checkInStr);
+      const outDate = new Date(checkOutStr);
+      const nights = Math.max(0, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
+      setTotalPriceOverride(nights * nightlyRate);
+    }
+  }, [checkInStr, checkOutStr, nightlyRate]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -134,6 +147,10 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       setBookingNotes("");
       setBookingStatus("CONFIRMED");
 
+      const selectedVilla = villas.find(v => v.id === villaId);
+      setNightlyRate(selectedVilla ? selectedVilla.price : 0);
+      setNumGuests(selectedVilla ? selectedVilla.guests : 1);
+
       // Set default dates strings (YYYY-MM-DD)
       const inDate = new Date(date);
       const outDate = new Date(date);
@@ -190,6 +207,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         status,
         notes: bookingNotes,
         type,
+        guests: numGuests,
+        nightlyRate: nightlyRate,
       });
 
       if (res.success && res.booking) {
@@ -246,13 +265,24 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
   // Parsing Inspector details dynamically
   const parseBookingDetails = (booking: Booking) => {
-    let parsed = {
+    let parsed: {
+      type: string;
+      name: string;
+      email: string;
+      phone: string;
+      notes: string;
+      channel: string;
+      guests?: number;
+      nightlyRate?: number;
+    } = {
       type: "CUSTOMER",
       name: "Stay Guest",
       email: "",
       phone: "",
       notes: "",
-      channel: ""
+      channel: "",
+      guests: 1,
+      nightlyRate: 0,
     };
 
     if (booking.userId.startsWith("{")) {
@@ -265,6 +295,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
             email: json.email || "",
             phone: json.phone || "",
             notes: json.notes || "",
+            guests: json.guests || 1,
+            nightlyRate: json.nightlyRate || 0,
             channel: "Direct Call-in"
           };
         } else if (json.type === "MAINTENANCE") {
@@ -562,15 +594,46 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                         </div>
                       </div>
 
+                      <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/50">
+                        <div className="col-span-2 text-[9px] text-[#1B3564]/60 font-bold uppercase tracking-widest border-b border-slate-200 pb-1 mb-1">STAY PARAMETERS</div>
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Nightly Rate (₹) *</label>
+                          <input 
+                            type="number" 
+                            value={nightlyRate || ""}
+                            onChange={(e) => setNightlyRate(Number(e.target.value) || 0)}
+                            required
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none font-semibold"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Guest Count *</label>
+                          <input 
+                            type="number" 
+                            value={numGuests || ""}
+                            onChange={(e) => setNumGuests(Number(e.target.value) || 1)}
+                            required
+                            min="1"
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none font-semibold"
+                          />
+                        </div>
+                      </div>
+
+                      {checkInStr && checkOutStr && (
+                        <div className="text-[11px] text-[#1B3564]/70 font-semibold bg-blue-500/5 border border-blue-500/10 px-4 py-2.5 rounded-xl">
+                          Duration: {Math.max(0, Math.round((new Date(checkOutStr).getTime() - new Date(checkInStr).getTime()) / (1000 * 60 * 60 * 24)))} Nights
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Paid Override Price (₹)</label>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Total Tariff (₹)</label>
                           <input 
                             type="number" 
                             value={totalPriceOverride}
                             onChange={(e) => setTotalPriceOverride(e.target.value !== "" ? Number(e.target.value) : "")}
                             placeholder="Leave empty for base rates"
-                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none"
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none font-semibold"
                           />
                         </div>
                         <div>
@@ -578,7 +641,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                           <select 
                             value={bookingStatus}
                             onChange={(e) => setBookingStatus(e.target.value)}
-                            className="w-full bg-[#0F172A] border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none"
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none font-semibold"
                           >
                             <option value="CONFIRMED" className="bg-white text-slate-900">CONFIRMED</option>
                             <option value="PENDING" className="bg-white text-slate-900">VERIFICATION PENDING</option>
@@ -677,7 +740,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
               {activeDetails.type === "MANUAL" && (
                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
-                  <span className="text-[8px] text-blue-600 font-bold uppercase tracking-widest block mb-1">GUEST CONTACT DETAILS</span>
+                  <span className="text-[8px] text-[#1B3564] font-bold uppercase tracking-widest block mb-1">GUEST DETAILS</span>
                   {activeDetails.phone && (
                     <div className="flex items-center gap-2 text-slate-800">
                       <Phone size={12} className="text-blue-600" />
@@ -690,6 +753,16 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       <span className="truncate">{activeDetails.email}</span>
                     </div>
                   )}
+                  <div className="pt-2 border-t border-slate-200 mt-2 grid grid-cols-2 gap-2 text-[10px] text-slate-600">
+                    <div>
+                      <span className="block text-[8px] uppercase tracking-wider text-slate-400 font-bold">GUESTS</span>
+                      <span className="font-bold text-slate-850">{activeDetails.guests ?? 1} Guests</span>
+                    </div>
+                    <div>
+                      <span className="block text-[8px] uppercase tracking-wider text-slate-400 font-bold">NIGHTLY RATE</span>
+                      <span className="font-bold text-slate-850">₹{(activeDetails.nightlyRate ?? 0).toLocaleString("en-IN")}</span>
+                    </div>
+                  </div>
                 </div>
               )}
 
