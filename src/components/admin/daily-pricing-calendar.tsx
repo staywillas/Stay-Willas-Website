@@ -152,7 +152,12 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
     }
 
     try {
-      const res = await setDailyPrice(selectedVillaId, selectedCellDate.toISOString(), numericPrice);
+      const utcDateStr = new Date(Date.UTC(
+        selectedCellDate.getFullYear(),
+        selectedCellDate.getMonth(),
+        selectedCellDate.getDate()
+      )).toISOString();
+      const res = await setDailyPrice(selectedVillaId, utcDateStr, numericPrice);
       if (res.success && res.override) {
         // Reactively update parent villas state
         const updatedVillas = villas.map(v => {
@@ -204,7 +209,12 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
     
     setIsDeleting(true);
     try {
-      const res = await deleteDailyPrice(selectedVillaId, selectedCellDate.toISOString());
+      const utcDateStr = new Date(Date.UTC(
+        selectedCellDate.getFullYear(),
+        selectedCellDate.getMonth(),
+        selectedCellDate.getDate()
+      )).toISOString();
+      const res = await deleteDailyPrice(selectedVillaId, utcDateStr);
       if (res.success) {
         // Reactively update local parent state
         const updatedVillas = villas.map(v => {
