@@ -130,13 +130,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const city = villa.location.split(",")[0].trim();
+  const rawTitle = `${villa.name} | Luxury Villa in ${city}`;
+  const titleText = rawTitle.length > 60 ? `${villa.name} | Stay Willas` : rawTitle;
+
+  const rawDesc = `Experience an exclusive luxury stay at ${villa.name}, a private pool ${villa.bedrooms} BHK villa in ${city}. Verified premium amenities, chef services, and scenic views await.`;
+  const words = rawDesc.split(/\s+/);
+  const descText = words.length > 150 ? words.slice(0, 150).join(" ") : rawDesc;
+
   return {
-    title: `${villa.name} | Luxury Villa in ${villa.location} | Stay Willas`,
-    description: `Book ${villa.name} — a curated ${villa.bedrooms}-bedroom luxury villa in ${villa.location} with private pool, premium amenities, and stunning views. Available for exclusive stays.`,
+    title: titleText,
+    description: descText,
     keywords: [villa.name, villa.location, "luxury villa stay", "private pool villa", "Stay Willas"],
     openGraph: {
-      title: `${villa.name} | Stay Willas`,
-      description: `A curated ${villa.bedrooms}-bedroom luxury villa in ${villa.location}.`,
+      title: titleText,
+      description: descText,
       images: villa.images[0] ? [{ url: villa.images[0] }] : [],
       type: "website",
     },
@@ -234,42 +242,71 @@ export default async function VillaDetailPage({ params }: PageProps) {
           )}
         </div>
 
-        {/* Specs / Features Grid */}
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-text-primary/70 text-xs uppercase tracking-widest mb-10 bg-white border border-border-subtle px-6 py-4 rounded-2xl max-w-fit shadow-sm">
-          <span className="flex items-center gap-2 font-bold"><Users size={14} className="text-accent-secondary" />{villaData.guests} Guests</span>
-          <span className="hidden sm:inline w-1 h-1 rounded-full bg-[#E2E8F0]" />
-          <span className="flex items-center gap-2 font-bold"><Bed size={14} className="text-accent-secondary" />{villaData.bedrooms} Bedrooms</span>
-          <span className="hidden sm:inline w-1 h-1 rounded-full bg-[#E2E8F0]" />
-          <span className="flex items-center gap-2 font-bold"><Bath size={14} className="text-accent-secondary" />{villaData.bathrooms} Bathrooms</span>
-        </div>
-
         {/* Cinematic, Interactive Property Gallery & Lightbox */}
         <PropertyGallery images={villaData.images} propertyName={villaData.name} villaId={villaData.slug} />
 
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-12 lg:gap-16 mb-24">
           <div className="order-2 lg:order-1 lg:col-span-8">
-            <div className="mb-12">
-              <h2 className="text-3xl font-heading mb-6 border-b border-border-subtle pb-6 italic text-accent-primary">The Story</h2>
-              <p className="text-text-primary/65 text-lg leading-relaxed whitespace-pre-line">
-                {villaData.description}
-              </p>
+            {/* 1. Guests, Bedrooms & Bathrooms Specs Capsule (Moved under photos) */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-slate-900 text-xs uppercase tracking-widest mb-8 bg-white border border-[#DAA520]/20 px-6 py-4 rounded-2xl max-w-fit shadow-sm">
+              <span className="flex items-center gap-2 font-bold"><Users size={14} className="text-accent-secondary" />{villaData.guests} Guests</span>
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-[#E2E8F0]" />
+              <span className="flex items-center gap-2 font-bold"><Bed size={14} className="text-accent-secondary" />{villaData.bedrooms} Bedrooms</span>
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-[#E2E8F0]" />
+              <span className="flex items-center gap-2 font-bold"><Bath size={14} className="text-accent-secondary" />{villaData.bathrooms} Bathrooms</span>
             </div>
 
-            {/* In-Villa Bespoke Food Menu Popup */}
-            <FoodMenuModal />
-
+            {/* 2. What this place offers (Amenities first) */}
             <div className="mb-12">
-              <h2 className="text-3xl font-heading mb-8">What this place offers</h2>
+              <h2 className="text-3xl font-heading text-[#1B3564] mb-8 font-bold border-b border-border-subtle pb-4">What this place offers</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                 {villaData.amenities.map((amenity) => (
-                  <div key={amenity.name} className="flex items-center gap-4 text-text-primary/65">
-                    <div className="w-10 h-10 rounded-xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary">
+                  <div key={amenity.name} className="flex items-center gap-4 text-slate-900 font-medium">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-[#DAA520]/20 flex items-center justify-center text-accent-secondary">
                       <amenity.icon size={20} />
                     </div>
                     <span className="text-sm">{amenity.name}</span>
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* 3. In-Villa Bespoke Food Menu Popup */}
+            <div className="mb-12">
+              <FoodMenuModal />
+            </div>
+
+            {/* 4. The Story & Readability Points (Story last, high contrast) */}
+            <div className="mb-12">
+              <h2 className="text-3xl font-heading mb-6 border-b border-[#DAA520]/20 pb-6 italic text-[#1B3564] font-bold">The Story</h2>
+              
+              {/* Highlight Readability Points Box */}
+              <div className="mb-8 bg-white border border-[#DAA520]/20 rounded-3xl p-6 md:p-8 shadow-sm">
+                <h3 className="text-lg font-bold text-[#1B3564] mb-4 uppercase tracking-wider">Key Highlights</h3>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <li className="flex items-start gap-2.5 text-slate-900 text-sm font-medium">
+                    <CheckCircle2 className="text-[#DAA520] shrink-0 mt-0.5" size={16} />
+                    <span>Luxe retreat ideal for up to {villaData.guests} guests.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5 text-slate-900 text-sm font-medium">
+                    <CheckCircle2 className="text-[#DAA520] shrink-0 mt-0.5" size={16} />
+                    <span>Expansive {villaData.bedrooms} bedrooms & private pool deck.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5 text-slate-900 text-sm font-medium">
+                    <CheckCircle2 className="text-[#DAA520] shrink-0 mt-0.5" size={16} />
+                    <span>Curated private chef & bespoke menu choices.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5 text-slate-900 text-sm font-medium">
+                    <CheckCircle2 className="text-[#DAA520] shrink-0 mt-0.5" size={16} />
+                    <span>Pristine verified hygiene & full housekeeping.</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* High Contrast Story Text */}
+              <p className="text-slate-900 text-lg leading-relaxed whitespace-pre-line font-normal">
+                {villaData.description}
+              </p>
             </div>
 
           </div>

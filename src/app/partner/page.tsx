@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Navbar from "@/components/layout/navbar";
 
 export const metadata: Metadata = {
-  title: "Partner With Stay Willas | Luxury Villa Management Maharashtra",
+  title: "Partner With Stay Willas | Villa Management",
   description: "List your property with Maharashtra's most exclusive villa staycation platform. We offer end-to-end management, marketing, and premium guest hospitality.",
   keywords: ["villa management lonavala", "luxury villa management alibaug", "list my villa", "Stay Willas partners"],
 };

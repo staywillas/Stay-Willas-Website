@@ -3,7 +3,7 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Stay Willas | Ultra-Luxury Villas & Private Estates in Maharashtra",
+  title: "Stay Willas | Luxury Private Villa Stays",
   description: "Experience world-class luxury staycations in Maharashtra. Discover curated premium villas with private pools in Lonavala, Alibaug, and Karjat. Book your exclusive getaway today.",
   keywords: ["luxury villas maharashtra", "private pool villas lonavala", "luxury staycation alibaug", "Stay Willas luxury"],
 };
