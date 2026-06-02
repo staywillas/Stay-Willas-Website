@@ -8,9 +8,23 @@ const villasData = [
     name: "The Angle House",
     location: "Lonavala, Maharashtra",
     category: "Infinity Pools",
-    description: `Where modern architecture meets slow luxury — this stunning designer villa is crafted for unforgettable escapes. With its striking angular façade, floor-to-ceiling glass windows, warm ambient lighting, private pool, and a private Jacuzzi integrated right inside one of the master bedrooms, the space blends tropical serenity with contemporary elegance.
+    description: `Imagine waking up to the gentle breeze of the hills, surrounded by sleek glass walls and green trees. Welcome to The Angle House, a stunning designer home where modern style meets cozy comfort. Located in the heart of the hills, if you are planning a memorable villa stay lonavala is the ultimate destination to unwind. This is not just a place to sleep—it is a space where you can slow down, connect with your loved ones, and enjoy a quiet villa stay lonavala experience. While there are many lonavala villas available, this property stands out.
 
-Wake up to soft natural light, spend your afternoons by the pool, enjoy a relaxing soak in the master bedroom's private Jacuzzi, and unwind in a space designed for comfort, conversations, and curated experiences. Whether it’s a weekend staycation, a celebration with friends, or a peaceful retreat away from the city, this villa offers the perfect balance of luxury and relaxation.`,
+Planning your next weekend getaway lonavala is just a short drive from Mumbai or Pune. It is the perfect setting for a refreshing weekend getaway lonavala has to offer. The very first thing you will notice is the striking design. With its unique angular facade, it represents the absolute peak of modern lonavala villas. If you appreciate beautiful lonavala villas, this home will take your breath away.
+
+Your Own Private Oasis
+
+Step outside onto the main deck, and you will find your own private swimming pool. If you have been searching for a premium villa in lonavala with pool access, you will fall in love with this backyard. It comes with a soothing waterfall feature, outdoor lounge chairs, and cozy corners to sit. It is the perfect place to spend your weekend getaway lonavala swimming and relaxing.
+
+Inside, the luxury continues. The villa has three spacious bedrooms, each designed with warm lighting to guarantee a restful sleep. But the real surprise of this villa in lonavala with pool is the private indoor Jacuzzi. Imagine coming back from a walk and enjoying a soak during your weekend getaway lonavala stay.
+
+Space to Gather and Celebrate
+
+When people browse through various lonavala villas, they are usually looking for a mix of style and peace. The Angle House gives you exactly that. It is a modern villa in lonavala with pool amenities, yet it feels as comfortable as your own home. There is no better choice for a villa stay lonavala has to offer.
+
+With enough room to host up to 16 guests, it is ideal for family reunions or birthdays. You can cook meals, play board games, or watch the sunset. For those who want an exceptional villa stay lonavala provides the perfect backdrop. Among the popular lonavala villas, this estate has earned a special place.
+
+As you plan your weekend getaway lonavala trip, imagine poolside dinners under the stars. Selecting this villa in lonavala with pool access means choosing a flawless escape. Book your stay today, pack your bags, and get ready for a wonderful villa stay lonavala trip. When comparing different lonavala villas, you will realize that this villa in lonavala with pool is in a class of its own. Make your weekend getaway lonavala a memory to cherish with a premium villa stay lonavala experience at this gorgeous villa in lonavala with pool retreat.`,
     price: 48000,
     weekendPrice: 54000,
     guests: 16,

@@ -197,11 +197,11 @@ const DestinationShowcase = () => {
                 maxTilt={8}
                 scale={1.04}
                 lift={-12}
-                className="rounded-3xl shadow-lg"
+                className="rounded-[28px] shadow-lg"
               >
                 <Link
                   href={dest.link}
-                  className="block relative aspect-[3/4] w-full h-full rounded-3xl overflow-hidden group border-2 border-[#DAA520]/35 cursor-pointer shadow-[0_20px_45px_rgba(15,23,42,0.3)] hover:border-[#DAA520]/85 hover:shadow-[0_25px_60px_rgba(218,165,32,0.4)] transition-all duration-500"
+                  className="block relative aspect-[3/4] w-full h-full rounded-[28px] overflow-hidden group border border-[#DAA520]/20 cursor-pointer shadow-[0_20px_50px_rgba(15,23,42,0.25)] hover:border-[#DAA520]/65 hover:shadow-[0_25px_60px_rgba(218,165,32,0.35)] transition-all duration-500"
                 >
                   <Image
                     src={dest.image}
@@ -212,46 +212,47 @@ const DestinationShowcase = () => {
                     quality={75}
                     className="object-cover transition-transform duration-1000 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1B3564]/50 via-transparent to-[#1B3564]/10 transition-opacity duration-500 group-hover:opacity-85" />
                   
-                  <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end">
-                    {/* Tag */}
-                    <div className="flex items-center justify-between gap-2 mb-4 w-full">
-                      <div className="flex items-center gap-2 text-[#DAA520] text-[11px] font-bold uppercase tracking-[0.3em]">
-                        <MapPin size={13} className="stroke-[2.5]" />
+                  {/* Floating Glassmorphic Content Card */}
+                  <div className="absolute inset-x-4 bottom-4 p-5 md:p-6 rounded-[20px] bg-[#1B3564]/65 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(15,23,42,0.2)] flex flex-col justify-end transition-all duration-500 group-hover:bg-[#1B3564]/85 group-hover:border-[#DAA520]/45 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_rgba(15,23,42,0.4)] z-10">
+                    {/* Tag & Status */}
+                    <div className="flex items-center justify-between gap-2 mb-3 w-full">
+                      <div className="flex items-center gap-1.5 text-[#DAA520] text-[10px] font-extrabold uppercase tracking-[0.25em]">
+                        <MapPin size={12} className="stroke-[2.5]" />
                         {dest.tag}
                       </div>
 
                       {dest.isLaunchingSoon && (
-                        <span className="text-[8px] font-black uppercase tracking-wider bg-[#DAA520]/20 text-[#DAA520] border border-[#DAA520]/30 px-2 py-0.5 rounded-full shrink-0">
-                          LAUNCHING SOON
+                        <span className="text-[8px] font-extrabold uppercase tracking-widest bg-[#DAA520]/25 text-[#FAF8F5] border border-[#DAA520]/45 px-2 py-0.5 rounded-full shrink-0">
+                          SOON
                         </span>
                       )}
                     </div>
                     
                     {/* Title */}
-                    <h3 className="text-3xl md:text-4xl font-heading text-[#F5F2EA] mb-3 italic pr-4 font-normal tracking-wide">
+                    <h3 className="text-2xl md:text-3xl font-heading text-[#FAF8F5] mb-2 pr-4 font-normal tracking-wide transition-colors duration-300 group-hover:text-[#DAA520]">
                       {dest.name}
                     </h3>
                     
                     {/* Description */}
-                    <p className="text-white/80 text-xs md:text-sm mb-8 max-w-[260px] leading-relaxed font-light">
+                    <p className="text-[#FAF8F5]/75 text-xs mb-5 max-w-[280px] leading-relaxed font-light transition-all duration-300 group-hover:text-[#FAF8F5]/90">
                       {dest.desc}
                     </p>
                     
-                    {/* CTA / Partner with us Option */}
+                    {/* CTA & Property Count */}
                     <div className="flex items-center justify-between w-full gap-2">
-                      <div className="flex items-center gap-3 group/btn">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#DAA520] to-[#E6B830] text-slate-950 flex items-center justify-center group-hover/btn:scale-110 transition-all duration-300 shadow-md">
-                          <ArrowUpRight size={18} className="stroke-[2.5]" />
+                      <div className="flex items-center gap-2.5 group/btn">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#DAA520] to-[#E6B830] text-slate-950 flex items-center justify-center transition-all duration-500 group-hover/btn:scale-110 group-hover/btn:rotate-45 shadow-md">
+                          <ArrowUpRight size={16} className="stroke-[2.5]" />
                         </div>
-                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#F5F2EA]">
+                        <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#FAF8F5]">
                           {dest.count}
                         </span>
                       </div>
 
                       {dest.isLaunchingSoon && (
-                        <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[#DAA520] hover:text-[#E6B830] transition-colors border-b border-transparent hover:border-[#DAA520]/60 pb-0.5 shrink-0 z-20">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#DAA520] hover:text-[#E6B830] transition-colors border-b border-[#DAA520]/30 hover:border-[#DAA520]/80 pb-0.5 shrink-0 z-20">
                           Partner with us →
                         </span>
                       )}
