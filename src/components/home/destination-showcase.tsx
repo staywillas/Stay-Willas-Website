@@ -173,6 +173,7 @@ const DestinationShowcase = () => {
           centeredSlides={true}
           grabCursor={true}
           slidesPerView={"auto"}
+          slideToClickedSlide={true}
           coverflowEffect={{
             rotate: 15,
             stretch: -20,
@@ -192,7 +193,7 @@ const DestinationShowcase = () => {
           className="dest-swiper py-16"
         >
           {destinations.map((dest) => (
-            <SwiperSlide key={dest.name} className="max-w-[320px] md:max-w-[400px] px-4">
+            <SwiperSlide key={dest.name} className="max-w-[320px] md:max-w-[400px] px-4 hover:!z-50 cursor-pointer">
               <ThreeDHoverCard
                 maxTilt={8}
                 scale={1.04}
