@@ -3,75 +3,75 @@
 import React from "react";
 
 const row1 = [
-  "LUXURY VILLA STAYS",
   "HEATED INFINITY POOLS",
-  "HEATED PLUNGE JACUZZIS",
-  "INTIMATE BONFIRE PITS",
-  "PET PLAY SANCTUARIES",
-  "GAMES & ENTERTAINMENT ROOMS",
-  "COZY STARLIGHT LOUNGES",
+  "PRIVATE MASTER SUITE JACUZZIS",
+  "PANORAMIC GLASS FRONTAGE",
+  "DIRECT BEACHFRONT ACCESS",
+  "RUSTIC COUNTRY STONE ARCHITECTURE",
+  "STUNNING WATERFALL FEATURES",
+  "OUTDOOR BONFIRE LOUNGES",
 ];
 
 const row2 = [
   "BESPOKE PRIVATE CHEFS",
-  "24/7 ULTRA-PREMIUM CONCIERGE",
-  "LUSH GREEN MANICURED LAWNS",
-  "MISTY MOUNTAIN GHATS",
+  "24/7 PERSONAL CONCIERGE",
+  "OPEN-AIR SUNSET BBQ GRILLS",
+  "LUSH TROPICAL GARDENS",
+  "ROOFTOP TURF LOUNGES",
   "AL FRESCO LUXURY DINING",
-  "WELLNESS & SPA SESSIONS",
-  "MAJESTIC MOUNTAIN ESCAPES",
+  "RESTORATIVE WELLNESS SESSIONS",
 ];
 
 export default function InfiniteMarquee() {
   return (
-    <section className="py-20 bg-gradient-to-r from-text-primary via-text-primary to-blue-900 overflow-hidden relative select-none">
-      {/* Ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-500/8 rounded-full blur-[120px] pointer-events-none" />
+    <section className="py-20 bg-gradient-to-r from-[#0E1B35] via-[#1B3564] to-[#0E1B35] overflow-hidden relative select-none">
+      {/* Ambient gold glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#DAA520]/8 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Decorative Top Line */}
       <div className="w-full flex justify-center mb-10">
-        <span className="text-xs uppercase tracking-[0.4em] text-blue-300/70 font-bold flex items-center gap-4">
-          <span className="w-8 h-px bg-gradient-to-r from-blue-500/0 to-blue-400/50" />
+        <span className="text-xs uppercase tracking-[0.4em] text-[#DAA520]/80 font-bold flex items-center gap-4">
+          <span className="w-8 h-px bg-gradient-to-r from-[#DAA520]/0 to-[#DAA520]/50" />
           ✨ The Stay Willas Experience
-          <span className="w-8 h-px bg-gradient-to-l from-blue-500/0 to-blue-400/50" />
+          <span className="w-8 h-px bg-gradient-to-l from-[#DAA520]/0 to-[#DAA520]/50" />
         </span>
       </div>
 
       {/* Marquee Row 1 - Scrolling Left */}
-      <div className="relative flex overflow-x-hidden border-y border-white/10 bg-white/5 py-5 backdrop-blur-sm mb-4">
+      <div className="relative flex overflow-x-hidden border-y border-[#DAA520]/20 bg-white/5 py-5 backdrop-blur-sm mb-4">
         <div className="flex whitespace-nowrap gap-12 animate-marquee-left">
           {[...row1, ...row1, ...row1].map((item, idx) => (
             <div key={idx} className="flex items-center gap-12 text-lg md:text-xl lg:text-2xl font-heading tracking-wider font-extrabold uppercase">
               {idx % 2 === 0 ? (
-                <span className="text-white hover:text-[#FFB800] transition-colors duration-500 cursor-default">
+                <span className="text-[#FAF8F5] hover:text-[#DAA520] transition-colors duration-500 cursor-default">
                   {item}
                 </span>
               ) : (
-                <span className="text-[#FFB800] hover:text-white transition-colors duration-500 font-extrabold">
+                <span className="text-[#DAA520] hover:text-[#FAF8F5] transition-colors duration-500 font-extrabold">
                   {item}
                 </span>
               )}
-              <span className="text-[#FFB800]/80 text-sm md:text-base font-light">✦</span>
+              <span className="text-[#DAA520]/85 text-sm md:text-base font-light">✦</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Marquee Row 2 - Scrolling Right */}
-      <div className="relative flex overflow-x-hidden border-y border-white/10 bg-white/5 py-5 backdrop-blur-sm">
+      <div className="relative flex overflow-x-hidden border-y border-[#DAA520]/20 bg-white/5 py-5 backdrop-blur-sm">
         <div className="flex whitespace-nowrap gap-12 animate-marquee-right">
           {[...row2, ...row2, ...row2].map((item, idx) => (
             <div key={idx} className="flex items-center gap-12 text-lg md:text-xl lg:text-2xl font-heading tracking-wider font-extrabold uppercase">
               {idx % 2 !== 0 ? (
-                <span className="text-white hover:text-[#FFB800] transition-colors duration-500 cursor-default">
+                <span className="text-[#FAF8F5] hover:text-[#DAA520] transition-colors duration-500 cursor-default">
                   {item}
                 </span>
               ) : (
-                <span className="text-[#FFB800] hover:text-white transition-colors duration-500 font-extrabold">
+                <span className="text-[#DAA520] hover:text-[#FAF8F5] transition-colors duration-500 font-extrabold">
                   {item}
                 </span>
               )}
-              <span className="text-[#FFB800]/80 text-sm md:text-base font-light">✦</span>
+              <span className="text-[#DAA520]/85 text-sm md:text-base font-light">✦</span>
             </div>
           ))}
         </div>
