@@ -167,6 +167,29 @@ export default async function VillaDetailPage({ params }: PageProps) {
     ? Number((reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount).toFixed(1))
     : 0;
 
+  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+  const activeBookings = await prisma.booking.findMany({
+    where: {
+      villaId: villa.id,
+      status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] },
+      OR: [
+        { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+        { status: "HELD", createdAt: { gte: tenMinutesAgo } }
+      ]
+    },
+    select: {
+      checkIn: true,
+      checkOut: true,
+      status: true,
+    }
+  });
+
+  const serializedBookings = activeBookings.map(b => ({
+    checkIn: b.checkIn.toISOString(),
+    checkOut: b.checkOut.toISOString(),
+    status: b.status,
+  }));
+
   const villaData = {
     id: villa.id,
     slug: villa.slug,
@@ -321,6 +344,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
               dailyPrices={villa.dailyPrices as any}
               seasonalPrices={villa.seasonalPrices as any}
               maxGuests={villaData.guests}
+              bookings={serializedBookings}
             />
           </div>
         </div>

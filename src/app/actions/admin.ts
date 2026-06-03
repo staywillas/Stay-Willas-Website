@@ -415,4 +415,129 @@ export async function deleteDailyPrice(villaId: string, dateStr: string) {
   }
 }
 
+export async function setDailyPriceRange(
+  villaId: string,
+  startDateStr: string,
+  endDateStr: string,
+  price: number
+) {
+  try {
+    const start = new Date(startDateStr);
+    const end = new Date(endDateStr);
+    
+    // Normalize to midnight UTC
+    start.setUTCHours(0, 0, 0, 0);
+    end.setUTCHours(0, 0, 0, 0);
+
+    if (start > end) {
+      return { success: false, error: "Start date must be on or before end date." };
+    }
+
+    // Collect all dates in range
+    const datesToOverride: Date[] = [];
+    let current = new Date(start);
+    while (current <= end) {
+      datesToOverride.push(new Date(current));
+      current.setUTCDate(current.getUTCDate() + 1);
+    }
+
+    // Overlap validation: check if any of these dates overlap with existing confirmed/pending/blocked bookings
+    const bookings = await prisma.booking.findMany({
+      where: {
+        villaId,
+        status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
+        AND: [
+          { checkIn: { lt: new Date(end.getTime() + 24 * 60 * 60 * 1000) } },
+          { checkOut: { gt: start } }
+        ]
+      }
+    });
+
+    // Check if any specific date is covered by bookings
+    const blockedDates: string[] = [];
+    for (const d of datesToOverride) {
+      const isBooked = bookings.some(b => {
+        const check = new Date(d);
+        check.setHours(0, 0, 0, 0);
+        const bStart = new Date(b.checkIn);
+        const bEnd = new Date(b.checkOut);
+        bStart.setHours(0, 0, 0, 0);
+        bEnd.setHours(0, 0, 0, 0);
+        return check >= bStart && check < bEnd;
+      });
+      if (isBooked) {
+        blockedDates.push(d.toLocaleDateString("en-IN"));
+      }
+    }
+
+    if (blockedDates.length > 0) {
+      return {
+        success: false,
+        error: `Cannot override pricing because the property is already booked/blocked on the following dates: ${blockedDates.join(", ")}`
+      };
+    }
+
+    // Perform upserts in a database transaction
+    const upserts = datesToOverride.map(date => {
+      return prisma.dailyPrice.upsert({
+        where: {
+          villaId_date: {
+            villaId,
+            date,
+          }
+        },
+        update: {
+          price
+        },
+        create: {
+          villaId,
+          date,
+          price
+        }
+      });
+    });
+
+    const results = await prisma.$transaction(upserts);
+
+    revalidatePath("/admin");
+    return { success: true, count: results.length, overrides: results };
+  } catch (error: any) {
+    console.error("Failed to set daily price range:", error);
+    return { success: false, error: error.message || "Failed to set daily price overrides." };
+  }
+}
+
+export async function deleteDailyPriceRange(
+  villaId: string,
+  startDateStr: string,
+  endDateStr: string
+) {
+  try {
+    const start = new Date(startDateStr);
+    const end = new Date(endDateStr);
+    start.setUTCHours(0, 0, 0, 0);
+    end.setUTCHours(0, 0, 0, 0);
+
+    if (start > end) {
+      return { success: false, error: "Start date must be on or before end date." };
+    }
+
+    await prisma.dailyPrice.deleteMany({
+      where: {
+        villaId,
+        date: {
+          gte: start,
+          lte: end
+        }
+      }
+    });
+
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete daily price range:", error);
+    return { success: false, error: error.message || "Failed to clear daily pricing overrides." };
+  }
+}
+
 

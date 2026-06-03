@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { 
   Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2,
-  ChefHat, Wine, Sparkles, Car, Check, ChevronDown, ChevronUp 
+  ChefHat, Wine, Sparkles, Car, Check, ChevronDown, ChevronUp,
+  ChevronLeft, ChevronRight
 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
 import { createCheckoutSession } from "@/app/actions/booking";
@@ -27,6 +28,12 @@ interface SeasonalPriceProp {
   label?: string | null;
 }
 
+interface BookingProp {
+  checkIn: string;
+  checkOut: string;
+  status: string;
+}
+
 interface BookingCardProps {
   villaId: string;
   villaName: string;
@@ -36,6 +43,7 @@ interface BookingCardProps {
   dailyPrices: DailyPriceProp[];
   seasonalPrices: SeasonalPriceProp[];
   maxGuests?: number;
+  bookings?: BookingProp[];
 }
 
 const availableAddOns = [
@@ -85,7 +93,8 @@ const BookingCard = ({
   weekendPrice, 
   dailyPrices = [], 
   seasonalPrices = [], 
-  maxGuests = 16 
+  maxGuests = 16,
+  bookings = []
 }: BookingCardProps) => {
   const { user, isSignedIn } = useUser();
 
@@ -98,6 +107,113 @@ const BookingCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [showAddOns, setShowAddOns] = useState(false);
+
+  // Premium custom calendar states
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [calendarTarget, setCalendarTarget] = useState<"checkIn" | "checkOut">("checkIn");
+  const [currentCalendarMonth, setCurrentCalendarMonth] = useState<Date>(new Date());
+
+  // Date booked checking logic (exclusive checkout day)
+  const isDateBooked = React.useCallback((date: Date) => {
+    const check = new Date(date);
+    check.setHours(0, 0, 0, 0);
+    return bookings.some(b => {
+      const start = new Date(b.checkIn);
+      const end = new Date(b.checkOut);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
+      return check >= start && check < end;
+    });
+  }, [bookings]);
+
+  // Date range overlap check
+  const isRangeInvalid = React.useCallback((start: Date, end: Date) => {
+    if (start >= end) return true;
+    return bookings.some(b => {
+      const bStart = new Date(b.checkIn);
+      const bEnd = new Date(b.checkOut);
+      bStart.setHours(0, 0, 0, 0);
+      bEnd.setHours(0, 0, 0, 0);
+      return bStart < end && bEnd > start;
+    });
+  }, [bookings]);
+
+  const isOverlapping = isRangeInvalid(checkIn, checkOut);
+
+  // Auto-shift default dates if current selection is booked/blocked
+  React.useEffect(() => {
+    let tempDate = new Date();
+    tempDate.setHours(0, 0, 0, 0);
+    let shiftCount = 0;
+    
+    // Shift checkIn until an available day is found
+    while (isDateBooked(tempDate) && shiftCount < 365) {
+      tempDate = addDays(tempDate, 1);
+      shiftCount++;
+    }
+    
+    if (isDateBooked(checkIn)) {
+      setCheckIn(tempDate);
+      let checkOutTemp = addDays(tempDate, 3);
+      
+      // Shift checkOut if the range overlaps
+      let rangeShift = 0;
+      if (isRangeInvalid(tempDate, checkOutTemp)) {
+        checkOutTemp = addDays(tempDate, 1);
+        while (isRangeInvalid(tempDate, checkOutTemp) && rangeShift < 365) {
+          checkOutTemp = addDays(checkOutTemp, 1);
+          rangeShift++;
+        }
+      }
+      setCheckOut(checkOutTemp);
+    }
+  }, [bookings, isDateBooked, isRangeInvalid]);
+
+  // Helper to generate calendar days grid
+  const generateCalendarDays = (monthDate: Date) => {
+    const y = monthDate.getFullYear();
+    const m = monthDate.getMonth();
+    const firstDayIndex = new Date(y, m, 1).getDay();
+    const totalDays = new Date(y, m + 1, 0).getDate();
+    
+    const daysArray: (Date | null)[] = [];
+    
+    for (let i = 0; i < firstDayIndex; i++) {
+      daysArray.push(null);
+    }
+    
+    for (let d = 1; d <= totalDays; d++) {
+      daysArray.push(new Date(y, m, d));
+    }
+    
+    return daysArray;
+  };
+
+  const handleDayClick = (day: Date) => {
+    if (calendarTarget === "checkIn") {
+      setCheckIn(day);
+      if (day >= checkOut || isRangeInvalid(day, checkOut)) {
+        // Automatically find next available checkout date
+        let tempOut = addDays(day, 1);
+        while (isRangeInvalid(day, tempOut)) {
+          tempOut = addDays(tempOut, 1);
+        }
+        setCheckOut(tempOut);
+      }
+      setCalendarTarget("checkOut");
+    } else {
+      if (day <= checkIn) {
+        alert("Check-out date must be after check-in date.");
+        return;
+      }
+      if (isRangeInvalid(checkIn, day)) {
+        alert("This range overlaps with an existing reservation. Please select another check-out date.");
+        return;
+      }
+      setCheckOut(day);
+      setShowCalendar(false);
+    }
+  };
 
   // Prefill details from Clerk user session
   React.useEffect(() => {
@@ -205,15 +321,13 @@ const BookingCard = ({
   const total = subtotal + serviceFee + addOnsCost;
 
   const handleCheckInClick = () => {
-    if (checkInRef.current) {
-      try { checkInRef.current.showPicker(); } catch (err) { checkInRef.current.click(); }
-    }
+    setCalendarTarget("checkIn");
+    setShowCalendar(prev => !prev || calendarTarget !== "checkIn");
   };
 
   const handleCheckOutClick = () => {
-    if (checkOutRef.current) {
-      try { checkOutRef.current.showPicker(); } catch (err) { checkOutRef.current.click(); }
-    }
+    setCalendarTarget("checkOut");
+    setShowCalendar(prev => !prev || calendarTarget !== "checkOut");
   };
 
   const handleBooking = async () => {
@@ -271,22 +385,26 @@ We are so excited about this getaway! Could you please check availability and he
           <span className="text-3xl font-heading text-text-primary">₹{price}</span>
           <span className="text-text-primary/40 text-sm ml-2">/ night</span>
         </div>
-        <div className="flex items-center gap-1 text-accent-secondary text-xs font-medium uppercase tracking-wider">
-          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          Available
+        <div className={`flex items-center gap-1 text-xs font-medium uppercase tracking-wider ${isOverlapping ? 'text-red-500' : 'text-accent-secondary'}`}>
+          <span className={`w-2 h-2 rounded-full ${isOverlapping ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`} />
+          {isOverlapping ? 'Reserved' : 'Available'}
         </div>
       </div>
 
       <div className="space-y-4 mb-8">
         {/* Date picker pair */}
-        <div className="grid grid-cols-2 gap-px bg-[#E2E8F0] border border-border-subtle rounded-2xl overflow-hidden relative">
+        <div className={`grid grid-cols-2 gap-px bg-[#E2E8F0] border rounded-2xl overflow-hidden relative transition-all duration-300 ${
+          showCalendar ? 'border-[#1B3564] shadow-sm' : 'border-border-subtle'
+        }`}>
           <div 
             onClick={handleCheckInClick}
-            className="relative bg-white p-4 text-left cursor-pointer hover:bg-bg-primary transition-colors"
+            className={`relative p-4 text-left cursor-pointer transition-colors ${
+              showCalendar && calendarTarget === 'checkIn' ? 'bg-[#1B3564]/5' : 'bg-white hover:bg-bg-primary'
+            }`}
           >
             <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">Check-in</span>
             <div className="flex items-center justify-between text-text-primary text-sm">
-              <span>{format(checkIn, "MMM dd, yyyy")}</span>
+              <span className="font-bold">{format(checkIn, "MMM dd, yyyy")}</span>
               <CalendarIcon size={14} className="text-accent-secondary" />
             </div>
             <input 
@@ -306,11 +424,13 @@ We are so excited about this getaway! Could you please check availability and he
           </div>
           <div 
             onClick={handleCheckOutClick}
-            className="relative bg-white p-4 text-left border-l border-border-subtle cursor-pointer hover:bg-bg-primary transition-colors"
+            className={`relative p-4 text-left border-l border-border-subtle cursor-pointer transition-colors ${
+              showCalendar && calendarTarget === 'checkOut' ? 'bg-[#1B3564]/5' : 'bg-white hover:bg-bg-primary'
+            }`}
           >
             <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">Check-out</span>
             <div className="flex items-center justify-between text-text-primary text-sm">
-              <span>{format(checkOut, "MMM dd, yyyy")}</span>
+              <span className="font-bold">{format(checkOut, "MMM dd, yyyy")}</span>
               <CalendarIcon size={14} className="text-accent-secondary" />
             </div>
             <input 
@@ -325,6 +445,119 @@ We are so excited about this getaway! Could you please check availability and he
             />
           </div>
         </div>
+
+        {/* Breathtakingly Premium Inline Calendar Picker */}
+        {showCalendar && (
+          <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 shadow-inner animate-fade-in space-y-4">
+            <div className="flex items-center justify-between">
+              <button 
+                type="button"
+                onClick={() => setCurrentCalendarMonth(new Date(currentCalendarMonth.getFullYear(), currentCalendarMonth.getMonth() - 1, 1))}
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors text-slate-600 cursor-pointer border border-slate-200/50"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <span className="text-xs font-sans font-black uppercase tracking-widest text-[#1B3564]">
+                {currentCalendarMonth.toLocaleString("en-US", { month: "long", year: "numeric" })}
+              </span>
+              <button 
+                type="button"
+                onClick={() => setCurrentCalendarMonth(new Date(currentCalendarMonth.getFullYear(), currentCalendarMonth.getMonth() + 1, 1))}
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors text-slate-600 cursor-pointer border border-slate-200/50"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+
+            <div className="text-[10px] uppercase tracking-widest text-slate-400 font-black flex justify-between items-center px-1">
+              <span>Select Date: <strong className="text-[#DAA520]">{calendarTarget === "checkIn" ? "Check-in" : "Check-out"}</strong></span>
+              <button 
+                type="button" 
+                onClick={() => setShowCalendar(false)} 
+                className="text-[#1B3564] hover:underline cursor-pointer font-bold"
+              >
+                Done
+              </button>
+            </div>
+
+            <div className="grid grid-cols-7 gap-1 text-center font-sans">
+              {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => (
+                <div key={d} className="text-[10px] font-bold text-slate-400 uppercase py-1">{d}</div>
+              ))}
+              
+              {generateCalendarDays(currentCalendarMonth).map((day, idx) => {
+                if (!day) return <div key={`empty-${idx}`} />;
+                
+                const isPast = day < new Date(new Date().setHours(0,0,0,0));
+                const isBooked = isDateBooked(day);
+                
+                const isSelCheckIn = checkIn && day.toDateString() === checkIn.toDateString();
+                const isSelCheckOut = checkOut && day.toDateString() === checkOut.toDateString();
+                const isInSelectedRange = checkIn && checkOut && day > checkIn && day < checkOut;
+                
+                let dayClass = "text-xs py-2 rounded-xl transition-all relative font-bold ";
+                let buttonDisabled = false;
+                
+                if (isPast) {
+                  dayClass += "text-slate-350 cursor-not-allowed opacity-30";
+                  buttonDisabled = true;
+                } else if (isBooked) {
+                  dayClass += "bg-red-50 text-red-400 line-through cursor-not-allowed border border-red-100/50 opacity-60";
+                  buttonDisabled = true;
+                } else if (isSelCheckIn || isSelCheckOut) {
+                  dayClass += "bg-[#1B3564] text-white shadow-md scale-105 z-10 cursor-pointer";
+                } else if (isInSelectedRange) {
+                  dayClass += "bg-blue-50 text-[#1B3564] cursor-pointer";
+                } else {
+                  dayClass += "text-slate-800 hover:bg-slate-200 cursor-pointer hover:scale-105";
+                }
+                
+                return (
+                  <button
+                    key={day.toISOString()}
+                    type="button"
+                    disabled={buttonDisabled}
+                    onClick={() => handleDayClick(day)}
+                    className={`${dayClass} h-9 w-9 flex items-center justify-center mx-auto`}
+                    title={isBooked ? "Unavailable due to Reservation" : undefined}
+                  >
+                    {day.getDate()}
+                    {isBooked && (
+                      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-red-500" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            
+            <div className="flex justify-center gap-4 text-[9px] font-sans text-slate-400 pt-3 border-t border-slate-200/60 uppercase tracking-widest font-black">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded bg-red-50 border border-red-150 line-through block" />
+                <span>Reserved</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded bg-[#1B3564] block" />
+                <span>Selected</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded bg-blue-50 block" />
+                <span>In Range</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isOverlapping && (
+          <div className="bg-red-50 border border-red-250 text-red-800 rounded-3xl p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500">
+            <Info className="text-red-500 shrink-0 mt-0.5" size={16} />
+            <div>
+              <h5 className="font-bold text-xs uppercase tracking-wider text-red-800">Dates Reserved</h5>
+              <p className="text-[11px] text-red-750 leading-relaxed mt-0.5">
+                These dates overlap with an existing reservation. Please select available sanctuary dates using the calendar.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Guests picker - Dual Type or Select Input */}
         <div className="w-full bg-white p-4 text-left border border-border-subtle rounded-2xl flex items-center justify-between gap-4">
@@ -420,10 +653,20 @@ We are so excited about this getaway! Could you please check availability and he
 
       <Button 
         onClick={handleBooking}
-        disabled={isLoading || nights <= 0}
-        className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)] transition-all duration-300 whitespace-nowrap cursor-pointer"
+        disabled={isLoading || nights <= 0 || isOverlapping}
+        className={`w-full text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 transition-all duration-300 whitespace-nowrap cursor-pointer ${
+          isOverlapping 
+            ? "bg-red-500 hover:bg-red-600 shadow-[0_0_20px_rgba(239,68,68,0.25)] cursor-not-allowed" 
+            : "bg-[#1B3564] hover:bg-[#152A50] shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)]"
+        }`}
       >
-        {isLoading ? <Loader2 className="animate-spin" /> : "RESERVE NOW & SECURE STAY"}
+        {isLoading ? (
+          <Loader2 className="animate-spin" />
+        ) : isOverlapping ? (
+          "DATES UNAVAILABLE DUE TO RESERVATION"
+        ) : (
+          "RESERVE NOW & SECURE STAY"
+        )}
       </Button>
       
       <p className="text-center text-text-primary/40 text-[10px] uppercase tracking-widest mb-6 select-none">

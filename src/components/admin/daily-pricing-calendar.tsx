@@ -14,7 +14,7 @@ import {
   HelpCircle,
   Tag
 } from "lucide-react";
-import { setDailyPrice, deleteDailyPrice } from "@/app/actions/admin";
+import { setDailyPrice, deleteDailyPrice, setDailyPriceRange, deleteDailyPriceRange } from "@/app/actions/admin";
 
 interface SeasonalPrice {
   id: string;
@@ -60,6 +60,111 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
   const [overridePrice, setOverridePrice] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Bulk rate override states
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [bulkStartDate, setBulkStartDate] = useState("");
+  const [bulkEndDate, setBulkEndDate] = useState("");
+  const [bulkPrice, setBulkPrice] = useState("");
+  const [bulkOperation, setBulkOperation] = useState<"SET" | "DELETE">("SET");
+  const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
+
+  // Prefill bulk dates on modal show
+  useEffect(() => {
+    if (showBulkModal) {
+      const todayStr = new Date().toISOString().split("T")[0];
+      setBulkStartDate(todayStr);
+      setBulkEndDate(todayStr);
+      setBulkPrice("");
+      setBulkOperation("SET");
+    }
+  }, [showBulkModal]);
+
+  const handleBulkOverride = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedVillaId || !bulkStartDate || !bulkEndDate) return;
+
+    const start = new Date(bulkStartDate);
+    const end = new Date(bulkEndDate);
+    if (start > end) {
+      alert("Start Date must be on or before End Date.");
+      return;
+    }
+
+    setIsBulkSubmitting(true);
+    try {
+      if (bulkOperation === "SET") {
+        const numericPrice = parseFloat(bulkPrice);
+        if (isNaN(numericPrice) || numericPrice <= 0) {
+          alert("Please enter a valid positive price.");
+          setIsBulkSubmitting(false);
+          return;
+        }
+
+        const res = await setDailyPriceRange(selectedVillaId, bulkStartDate, bulkEndDate, numericPrice);
+        if (res.success && res.overrides) {
+          // Reactively update parent villas state
+          const updatedVillas = villas.map(v => {
+            if (v.id === selectedVillaId) {
+              // Remove old overrides that overlap with [start, end]
+              let dailyPrices = (v.dailyPrices || []).filter(dp => {
+                const d = new Date(dp.date);
+                return d < start || d > end;
+              });
+
+              // Append new overrides
+              const newOverrides = res.overrides.map((o: any) => ({
+                id: o.id,
+                villaId: o.villaId,
+                date: new Date(o.date),
+                price: o.price
+              }));
+              dailyPrices = [...dailyPrices, ...newOverrides];
+
+              return { ...v, dailyPrices };
+            }
+            return v;
+          });
+
+          onVillasChange(updatedVillas);
+          setShowBulkModal(false);
+        } else {
+          alert(res.error || "Failed to set bulk price overrides.");
+        }
+      } else {
+        // DELETE operation
+        if (!confirm("Are you sure you want to restore the base rate for this range? This will clear all daily price overrides between these dates.")) {
+          setIsBulkSubmitting(false);
+          return;
+        }
+
+        const res = await deleteDailyPriceRange(selectedVillaId, bulkStartDate, bulkEndDate);
+        if (res.success) {
+          const updatedVillas = villas.map(v => {
+            if (v.id === selectedVillaId) {
+              const dailyPrices = (v.dailyPrices || []).filter(dp => {
+                const d = new Date(dp.date);
+                return d < start || d > end;
+              });
+
+              return { ...v, dailyPrices };
+            }
+            return v;
+          });
+
+          onVillasChange(updatedVillas);
+          setShowBulkModal(false);
+        } else {
+          alert(res.error || "Failed to clear bulk pricing overrides.");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred during the bulk pricing operation.");
+    } finally {
+      setIsBulkSubmitting(false);
+    }
+  };
 
   const selectedVilla = villas.find(v => v.id === selectedVillaId);
 
@@ -328,7 +433,7 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
           </p>
         </div>
 
-        {/* Villa Picker */}
+        {/* Villa Picker & Bulk Override */}
         <div className="flex items-center gap-3 font-sans shrink-0">
           <span className="text-xs uppercase tracking-widest font-bold text-slate-500">SANCTUARY:</span>
           <select 
@@ -345,6 +450,14 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
               </option>
             ))}
           </select>
+
+          <button 
+            type="button"
+            onClick={() => setShowBulkModal(true)}
+            className="bg-[#1B3564] text-white hover:bg-[#DAA520] rounded-full px-5 py-2.5 text-xs font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap"
+          >
+            Bulk Override Rates
+          </button>
         </div>
 
         {/* Month Navigation */}
@@ -498,6 +611,131 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
                 className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer"
               >
                 CLOSE OVERRIDE PANEL
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Bulk Pricing Setter Overlay Modal */}
+      {showBulkModal && selectedVilla && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6 overflow-y-auto animate-fade-in font-sans">
+          <form 
+            onSubmit={handleBulkOverride}
+            className="glass border border-slate-200 rounded-[32px] p-8 max-w-sm w-full relative shadow-2xl space-y-6"
+          >
+            <div className="text-left">
+              <h4 className="text-xl font-cormorant font-bold italic text-[#1B3564] flex items-center gap-2">
+                <Tag size={18} className="text-[#DAA520]" />
+                Bulk Rate Override
+              </h4>
+              <p className="text-slate-400 text-xs mt-1">
+                Set or clear custom rates for <strong className="text-slate-800">{selectedVilla.name}</strong> over a range of dates.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {/* Operation type toggler */}
+              <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/50">
+                <button
+                  type="button"
+                  onClick={() => setBulkOperation("SET")}
+                  className={`py-2 px-3 rounded-xl text-xs font-bold transition-all ${
+                    bulkOperation === "SET" 
+                      ? "bg-white text-[#1B3564] shadow-sm font-black" 
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  Set Custom Price
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBulkOperation("DELETE")}
+                  className={`py-2 px-3 rounded-xl text-xs font-bold transition-all ${
+                    bulkOperation === "DELETE" 
+                      ? "bg-white text-red-650 shadow-sm font-black" 
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  Restore Base
+                </button>
+              </div>
+
+              {/* Start Date */}
+              <div className="text-left space-y-1">
+                <label className="text-[9px] text-slate-400 uppercase tracking-widest block font-bold">Start Date</label>
+                <input
+                  type="date"
+                  required
+                  value={bulkStartDate}
+                  onChange={(e) => setBulkStartDate(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold focus:border-[#1B3564] outline-none"
+                />
+              </div>
+
+              {/* End Date */}
+              <div className="text-left space-y-1">
+                <label className="text-[9px] text-slate-400 uppercase tracking-widest block font-bold">End Date</label>
+                <input
+                  type="date"
+                  required
+                  value={bulkEndDate}
+                  min={bulkStartDate}
+                  onChange={(e) => setBulkEndDate(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold focus:border-[#1B3564] outline-none"
+                />
+              </div>
+
+              {/* Custom price field */}
+              {bulkOperation === "SET" && (
+                <div className="text-left space-y-1.5">
+                  <label className="text-[9px] text-slate-400 uppercase tracking-widest block font-black">
+                    NEW DAILY RATE (INR)
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold select-none text-xs">
+                      ₹
+                    </div>
+                    <input 
+                      type="number"
+                      required
+                      value={bulkPrice}
+                      onChange={(e) => setBulkPrice(e.target.value)}
+                      placeholder="e.g. 15000"
+                      className="w-full bg-white border border-slate-200 text-slate-800 rounded-2xl pl-8 pr-4 py-3.5 text-sm font-black focus:border-[#1B3564] focus:ring-1 focus:ring-[#1B3564]/10 outline-none"
+                      min={1}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Actions */}
+            <div className="space-y-3 pt-4 border-t border-slate-100">
+              <button 
+                type="submit"
+                disabled={isBulkSubmitting}
+                className={`w-full text-white py-3.5 rounded-full text-xs font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg ${
+                  bulkOperation === "SET"
+                    ? "bg-[#1B3564] hover:bg-[#DAA520]"
+                    : "bg-red-500 hover:bg-red-650"
+                }`}
+              >
+                {isBulkSubmitting ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : bulkOperation === "SET" ? (
+                  "APPLY RATE OVERRIDES"
+                ) : (
+                  "RESTORE BASE RATES"
+                )}
+              </button>
+
+              <button 
+                type="button"
+                onClick={() => setShowBulkModal(false)}
+                className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer"
+              >
+                CANCEL BULK OPERATION
               </button>
             </div>
           </form>
