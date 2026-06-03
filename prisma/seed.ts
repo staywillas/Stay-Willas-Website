@@ -25,7 +25,7 @@ When people browse through various lonavala villas, they are usually looking for
 With enough room to host up to 16 guests, it is ideal for family reunions or birthdays. You can cook meals, play board games, or watch the sunset. For those who want an exceptional villa stay lonavala provides the perfect backdrop. Among the popular lonavala villas, this estate has earned a special place.
 
 As you plan your weekend getaway lonavala trip, imagine poolside dinners under the stars. Selecting this villa in lonavala with pool access means choosing a flawless escape. Book your stay today, pack your bags, and get ready for a wonderful villa stay lonavala trip. When comparing different lonavala villas, you will realize that this villa in lonavala with pool is in a class of its own. Make your weekend getaway lonavala a memory to cherish with a premium villa stay lonavala experience at this gorgeous villa in lonavala with pool retreat.`,
-    price: 48000,
+    price: 15000,
     weekendPrice: 54000,
     guests: 16,
     bedrooms: 3,
