@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
 import FloatingWidgets from "@/components/layout/floating-widgets";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
+import Script from "next/script";
 
 // Fonts: swap display for fastest text paint
 const outfit = Outfit({
@@ -61,6 +62,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-YFK9H723YJ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-YFK9H723YJ');
+          `}
+        </Script>
+      </head>
       <body
         className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} antialiased font-sans`}
         suppressHydrationWarning
