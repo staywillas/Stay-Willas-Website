@@ -42,6 +42,75 @@ const nextConfig: NextConfig = {
         { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
       ],
     },
+    // Explicit X-Robots-Tag Headers for Google Search Console / SEO Curation
+    {
+      source: '/',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
+    },
+    {
+      source: '/villas',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
+    },
+    {
+      source: '/destinations',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
+    },
+    {
+      source: '/experiences',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
+    },
+    {
+      source: '/about',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
+    },
+    {
+      source: '/contact',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
+    },
+    {
+      source: '/partner',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
+    },
+    {
+      source: '/villa/:slug*',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
+    },
+    {
+      source: '/robots.txt',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
+    },
+    {
+      source: '/sitemap.xml',
+      headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
+    },
+    {
+      source: '/admin/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    },
+    {
+      source: '/dashboard/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    },
+    {
+      source: '/homeowner/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    },
+    {
+      source: '/login/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    },
+    {
+      source: '/booking/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    },
+    {
+      source: '/wishlist/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    },
+    {
+      source: '/api/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    },
   ],
 };
 

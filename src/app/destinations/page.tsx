@@ -9,9 +9,12 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Destinations | Stay Willas Collection",
+  title: "Top Luxury Villa Destinations | Lonavala, Alibaug, Karjat | Stay Willas",
   description: "Explore our beautiful getaways. From Lonavala and Karjat to Alibaug and Goa, find your perfect stay.",
-  keywords: ["villa destinations", "lonavala stays", "alibaug villas", "goa villas"],
+  keywords: ["best places for villa stay near mumbai", "luxury villas in lonavala on rent", "alibaug private pool villas", "weekend getaway destinations maharashtra"],
+  alternates: {
+    canonical: "/destinations",
+  },
 };
 
 export default async function DestinationsPage() {

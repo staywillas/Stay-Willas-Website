@@ -6,9 +6,12 @@ import Footer from "@/components/layout/footer";
 import { Sparkles, Calendar, Heart, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Experiences | Stay Willas Collection",
+  title: "Luxury Villa Experiences & Private Chef Stays | Stay Willas",
   description: "Curated travel and villa experiences designed for Stay Willas guests. Find your perfect escape.",
-  keywords: ["travel experiences", "private chef stays", "Stay Willas experiences"],
+  keywords: ["villa with private chef lonavala", "wellness retreats maharashtra", "luxury travel experiences near mumbai", "bespoke villa holidays"],
+  alternates: {
+    canonical: "/experiences",
+  },
 };
 
 export default function ExperiencesPage() {

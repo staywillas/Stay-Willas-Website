@@ -206,7 +206,7 @@ const DestinationShowcase = () => {
                 >
                   <Image
                     src={dest.image}
-                    alt={dest.name}
+                    alt={`Luxury villas and vacation rentals in ${dest.name}, Maharashtra`}
                     fill
                     sizes="(max-width: 768px) 90vw, 400px"
                     loading="lazy"

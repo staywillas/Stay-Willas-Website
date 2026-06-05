@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   title: "Stay Willas | Luxury Villas & Staycations in Maharashtra",
   description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
   metadataBase: new URL("https://staywillas.com"),
-  keywords: ["luxury villa maharashtra", "private pool villa lonavala", "luxury staycation alibaug", "villa stay karjat", "Stay Willas"],
+  keywords: ["luxury villa rental maharashtra", "book private pool villa near mumbai", "premium vacation rentals lonavala alibaug karjat", "stay willas luxury retreats", "private pool villa lonavala", "luxury staycation alibaug", "villa stay karjat", "Stay Willas"],
   authors: [{ name: "Stay Willas" }],
   robots: { index: true, follow: true },
   openGraph: {
@@ -67,6 +67,24 @@ export default function RootLayout({
       >
         <ClerkProvider>
           <SmoothScrollProvider>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "Organization",
+                  "name": "Stay Willas",
+                  "url": "https://staywillas.com",
+                  "logo": "https://staywillas.com/icon.png",
+                  "description": "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
+                  "contactPoint": {
+                    "@type": "ContactPoint",
+                    "telephone": "+91-9619042310",
+                    "contactType": "customer service"
+                  }
+                })
+              }}
+            />
             {children}
             <FloatingWidgets />
             <MobileBottomNav />

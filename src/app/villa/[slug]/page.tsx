@@ -135,13 +135,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const titleText = rawTitle.length > 60 ? `${villa.name} | Stay Willas` : rawTitle;
 
   const rawDesc = `Experience an exclusive luxury stay at ${villa.name}, a private pool ${villa.bedrooms} BHK villa in ${city}. Verified premium amenities, chef services, and scenic views await.`;
-  const words = rawDesc.split(/\s+/);
-  const descText = words.length > 150 ? words.slice(0, 150).join(" ") : rawDesc;
+  const descText = rawDesc.length > 145 ? rawDesc.substring(0, 142) + "..." : rawDesc;
 
   return {
     title: titleText,
     description: descText,
-    keywords: [villa.name, villa.location, "luxury villa stay", "private pool villa", "Stay Willas"],
+    keywords: [villa.name, villa.location, `rent private pool villa in ${city}`, `luxury staycation ${city}`, `book ${villa.name}`, "Stay Willas"],
+    alternates: {
+      canonical: `/villa/${villa.slug}`,
+    },
     openGraph: {
       title: titleText,
       description: descText,
@@ -229,6 +231,38 @@ export default async function VillaDetailPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary pb-28 lg:pb-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "VacationRental",
+            "name": villaData.name,
+            "description": villaData.description,
+            "image": villaData.images,
+            "url": `https://staywillas.com/villa/${villaData.slug}`,
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": villaData.location
+            },
+            "numberOfRooms": villaData.bedrooms,
+            "occupancy": {
+              "@type": "QuantitativeValue",
+              "value": villaData.guests
+            },
+            "amenityFeature": villaData.amenities.map(a => ({
+              "@type": "LocationFeatureSpecification",
+              "name": a.name,
+              "value": true
+            })),
+            "aggregateRating": villaData.reviews > 0 ? {
+              "@type": "AggregateRating",
+              "ratingValue": villaData.rating,
+              "reviewCount": villaData.reviews
+            } : undefined
+          })
+        }}
+      />
       <Navbar />
 
       <section className="pt-32 pb-12 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">

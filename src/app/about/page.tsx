@@ -6,9 +6,12 @@ import Footer from "@/components/layout/footer";
 import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us | Stay Willas | Stay ! Relax ! Repeat !",
+  title: "About Stay Willas | Premier Luxury Villa Rentals in Maharashtra",
   description: "Learn about the philosophy behind Stay Willas. We are dedicated to curating the most exclusive luxury villa experiences in Maharashtra.",
-  keywords: ["about stay willas", "luxury hospitality maharashtra", "premium villa curation"],
+  keywords: ["about stay willas", "luxury hospitality company maharashtra", "premium villa curation experts", "best villa rental company near mumbai"],
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {

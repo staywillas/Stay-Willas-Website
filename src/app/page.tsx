@@ -3,9 +3,12 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Stay Willas | Luxury Private Villa Stays",
-  description: "Experience world-class luxury staycations in Maharashtra. Discover curated premium villas with private pools in Lonavala, Alibaug, and Karjat. Book your exclusive getaway today.",
-  keywords: ["luxury villas maharashtra", "private pool villas lonavala", "luxury staycation alibaug", "Stay Willas luxury"],
+  title: "Stay Willas | Rent Luxury Private Pool Villas in Maharashtra",
+  description: "Experience luxury staycations in Maharashtra. Discover curated premium villas with private pools in Lonavala, Alibaug & Karjat. Book your getaway today.",
+  keywords: ["rent luxury villa maharashtra", "book private pool villa lonavala", "weekend getaway villas near mumbai", "luxury staycation alibaug", "stay willas booking"],
+  alternates: {
+    canonical: "/",
+  },
 };
 
 // Critical above-the-fold components (loaded immediately)
@@ -56,6 +59,22 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-bg-primary">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Stay Willas",
+            "url": "https://staywillas.com",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://staywillas.com/villas?region={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }}
+      />
       <Navbar />
       <Hero />
       <DestinationShowcase />

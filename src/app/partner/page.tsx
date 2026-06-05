@@ -3,9 +3,12 @@ import { Metadata } from "next";
 import Navbar from "@/components/layout/navbar";
 
 export const metadata: Metadata = {
-  title: "Partner With Stay Willas | Villa Management",
-  description: "List your property with Maharashtra's most exclusive villa staycation platform. We offer end-to-end management, marketing, and premium guest hospitality.",
-  keywords: ["villa management lonavala", "luxury villa management alibaug", "list my villa", "Stay Willas partners"],
+  title: "Partner With Stay Willas | Luxury Villa Property Management",
+  description: "List your property with Maharashtra's exclusive villa platform. We offer management, marketing, and premium hospitality for your holiday home.",
+  keywords: ["list my villa for rent maharashtra", "luxury villa property management lonavala", "holiday home management alibaug", "stay willas partnership"],
+  alternates: {
+    canonical: "/partner",
+  },
 };
 import Footer from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
