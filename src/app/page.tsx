@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 // Critical above-the-fold components (loaded immediately)
 import Hero from "@/components/home/hero";
 import TopTicker from "@/components/home/top-ticker";
+import BookingBar from "@/components/home/booking-bar";
 
 // Below-the-fold components (lazy-loaded, only rendered when scrolled into view)
 const DestinationShowcase = dynamic(() => import("@/components/home/destination-showcase"));
@@ -82,6 +83,7 @@ export default async function Home() {
       <Navbar />
       <TopTicker />
       <Hero />
+      <BookingBar />
       <DestinationShowcase />
       <FeaturedVillas villas={featuredVillas} />
       <Experiences />
