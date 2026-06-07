@@ -31,6 +31,10 @@ export default async function DestinationsPage() {
     where: { location: { contains: "Karjat", mode: "insensitive" } }
   });
 
+  const khopoliCount = await prisma.villa.count({
+    where: { location: { contains: "Khopoli", mode: "insensitive" } }
+  });
+
   const destinations = [
     {
       name: "Lonavala",
@@ -68,9 +72,9 @@ export default async function DestinationsPage() {
       name: "Khopoli",
       tagline: "The Nature Escape",
       desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet private pool getaways.",
-      image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1000",
-      count: "LAUNCHING SOON",
-      isLaunchingSoon: true
+      image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+      count: khopoliCount,
+      isLaunchingSoon: false
     },
     {
       name: "Igatpuri",

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Send, Bot, User } from "lucide-react";
+import { usePathname } from "next/navigation";
 import VillaCard from "@/components/home/villa-card";
 import { getConciergeRecommendation } from "@/app/actions/villa";
 
@@ -28,7 +29,9 @@ const recommendedVilla = {
 };
 
 export default function AiConcierge() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [showCenterPopup, setShowCenterPopup] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [stage, setStage] = useState<"greeting" | "budget" | "guests" | "recommendation">("greeting");
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -42,6 +45,21 @@ export default function AiConcierge() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Auto-open assistant center popup after 5 seconds on landing (session-based, homepage only)
+  useEffect(() => {
+    if (pathname !== "/") return;
+
+    const autoOpenTimer = setTimeout(() => {
+      const hasAutoOpened = sessionStorage.getItem("willa_assistant_auto_opened");
+      if (!hasAutoOpened && !isOpen) {
+        setShowCenterPopup(true);
+        sessionStorage.setItem("willa_assistant_auto_opened", "true");
+      }
+    }, 5000);
+
+    return () => clearTimeout(autoOpenTimer);
+  }, [isOpen, pathname]);
+
   // Initial greeting
   useEffect(() => {
     if (isOpen && messages.length === 0) {
@@ -50,8 +68,8 @@ export default function AiConcierge() {
           {
             id: "msg-1",
             role: "bot",
-            content: "Welcome to Stay Willas. I am your Willa Assistant. Let's find your perfect escape. Where are you looking to travel?",
-            options: ["Lonavala", "Alibaug", "Karjat", "Anywhere"],
+            content: "Greetings! 🌟 I am your Stay Willas Luxury Concierge. I specialize in matching discerning travelers with our handpicked collection of premium private pool estates. Let's design your perfect getaway. Where would you like to escape next?",
+            options: ["Lonavala", "Alibaug", "Karjat", "Khopoli", "Anywhere"],
           },
         ]);
       }, 500);
@@ -80,7 +98,7 @@ export default function AiConcierge() {
           {
             id: Date.now().toString(),
             role: "bot",
-            content: `Excellent choice. What is your approximate budget per night?`,
+            content: `A beautiful choice! ✨ To help me narrow down our exclusive selection, what is your preferred nightly budget range?`,
             options: [
               "₹10,000 - ₹15,000",
               "₹15,000 - ₹20,000",
@@ -102,7 +120,7 @@ export default function AiConcierge() {
           {
             id: Date.now().toString(),
             role: "bot",
-            content: "Got it. And how many guests will be joining you?",
+            content: "Understood. To ensure we select a sanctuary with perfect accommodations and spacing, how many guests will be joining you on this luxury staycation?",
             options: ["1-4 Guests", "5-8 Guests", "9+ Guests"],
           },
         ]);
@@ -138,7 +156,7 @@ export default function AiConcierge() {
           {
             id: Date.now().toString(),
             role: "bot",
-            content: "Perfect. Based on your preferences, I highly recommend this stunning property:",
+            content: "Excellent selection! 🏰 Based on your group size and preferences, I have matched you with this breathtaking, handpicked private pool sanctuary:",
           },
           {
             id: (Date.now() + 1).toString(),
@@ -164,7 +182,7 @@ export default function AiConcierge() {
             role: "bot",
             content: (
               <div className="flex flex-col gap-3">
-                <p>Would you like me to check availability for your dates? Or chat directly with us on WhatsApp:</p>
+                <p>Would you like to connect directly with our Booking Relations team on WhatsApp to check availability, secure your dates, or customize your luxury stay? 🥂</p>
                 <a
                   href={whatsappUrl}
                   target="_blank"
@@ -174,7 +192,7 @@ export default function AiConcierge() {
                   <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
                     <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.01 14.069.987 11.48.987 6.045.987 1.62 5.357 1.617 10.787c-.001 1.706.46 3.376 1.336 4.851l-.97 3.545 3.639-.949zM15.93 11.66c-.237-.117-1.4-.689-1.617-.768-.217-.078-.375-.117-.533.117-.158.234-.61.768-.748.922-.138.154-.276.176-.513.058-.237-.117-.999-.368-1.902-1.173-.703-.627-1.177-1.4-1.315-1.634-.138-.234-.015-.36.103-.476.106-.105.237-.276.355-.414.118-.138.158-.234.237-.39.079-.156.039-.293-.02-.41-.059-.117-.533-1.282-.73-1.758-.192-.464-.388-.4-.533-.408-.138-.006-.296-.007-.454-.007-.158 0-.414.059-.63.293-.217.234-.827.809-.827 1.97 0 1.161.847 2.282.965 2.44.118.156 1.666 2.544 4.037 3.565.564.243 1.004.388 1.347.497.567.18 1.082.155 1.49.094.454-.068 1.4-.57 1.597-1.12.197-.55.197-1.021.138-1.12-.059-.098-.217-.156-.454-.273z" />
                   </svg>
-                  Chat on WhatsApp
+                  Connect on WhatsApp
                 </a>
               </div>
             ),
@@ -193,8 +211,8 @@ export default function AiConcierge() {
           {
             id: Date.now().toString(),
             role: "bot",
-            content: "Let's start over. Where are you looking to travel?",
-            options: ["Lonavala", "Alibaug", "Karjat", "Anywhere"],
+            content: "Certainly! Let's find the perfect villa for your next getaway. Where would you like to travel?",
+            options: ["Lonavala", "Alibaug", "Karjat", "Khopoli", "Anywhere"],
           },
         ]);
       }, 800);
@@ -205,7 +223,7 @@ export default function AiConcierge() {
         {
           id: Date.now().toString(),
           role: "bot",
-          content: `Connecting you with our Luxury Concierge on WhatsApp to secure your stay at ${finalVilla.name}...`,
+          content: `Connecting you directly with our Luxury Concierge Team on WhatsApp to secure your preferred dates at ${finalVilla.name}... 🥂`,
         }
       ]);
 
@@ -237,7 +255,7 @@ export default function AiConcierge() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-28 right-6 md:bottom-10 md:right-10 z-50 w-12 h-12 md:w-16 md:h-16 bg-[#FFCC00] hover:bg-[#FFD700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.4)] transition-all duration-300 group overflow-hidden border-2 border-white/20"
+            className="fixed top-24 right-4 md:top-auto md:bottom-10 md:right-10 z-50 w-12 h-12 md:w-16 md:h-16 bg-[#FFCC00] hover:bg-[#FFD700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.4)] transition-all duration-300 group overflow-hidden border-2 border-white/20"
           >
             <img 
               src="/images/chatbot.png" 
@@ -350,6 +368,76 @@ export default function AiConcierge() {
               </div>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Centered Proactive Bot Popup */}
+      <AnimatePresence>
+        {showCenterPopup && (
+          <div className="fixed inset-0 z-[200000] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowCenterPopup(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            
+            {/* Popup Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-[420px] bg-[#FDFBF7] border border-[#DAA520]/20 rounded-[2.5rem] shadow-[0_20px_50px_rgba(27,53,100,0.25)] p-8 text-center z-10 flex flex-col items-center"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowCenterPopup(false)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564]/60 hover:text-[#1B3564] transition-all cursor-pointer hover:scale-105"
+              >
+                <X size={16} />
+              </button>
+
+              {/* Bot Image */}
+              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-accent-primary flex items-center justify-center mb-6 relative">
+                <img 
+                  src="/images/chatbot.png" 
+                  alt="Willa Assistant" 
+                  className="w-full h-full object-cover"
+                />
+                <span className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
+              </div>
+
+              {/* Title & Description */}
+              <span className="text-[10px] text-accent-secondary font-black uppercase tracking-[0.2em] mb-2 block">Personal Assistant</span>
+              <h3 className="text-2xl font-heading text-[#1B3564] italic mb-3 font-semibold">
+                Need help finding <span className="not-italic font-bold font-sans text-accent-primary">the best property?</span>
+              </h3>
+              <p className="text-xs text-text-primary/70 leading-relaxed mb-6 font-medium">
+                Would you like help in finding the best property for your needs and pet-friendly properties?
+              </p>
+
+              {/* Action Buttons */}
+              <div className="w-full flex flex-row gap-4">
+                <button
+                  onClick={() => {
+                    setShowCenterPopup(false);
+                    setIsOpen(true);
+                  }}
+                  className="flex-1 bg-[#1B3564] hover:bg-[#152A50] text-white py-3.5 rounded-full text-xs font-black tracking-wider uppercase transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer border-none font-bold"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => setShowCenterPopup(false)}
+                  className="flex-1 bg-transparent hover:bg-slate-100 text-text-primary/60 py-3.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer border border-[#1B3564]/10"
+                >
+                  No
+                </button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,6 +21,82 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
   const [activeIdx, setActiveIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
   const lenis = useLenis();
+
+  // Zoom & Pan states for Lightbox
+  const [zoomScale, setZoomScale] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const startTouch = useRef({ x: 0, y: 0 });
+  const startPan = useRef({ x: 0, y: 0 });
+
+  // Reset zoom whenever activeIdx changes or lightbox closes
+  useEffect(() => {
+    setZoomScale(1);
+    setPan({ x: 0, y: 0 });
+  }, [activeIdx, isLightboxOpen]);
+
+  const toggleZoom = (clientX: number, clientY: number, containerRect: DOMRect) => {
+    if (zoomScale > 1) {
+      setZoomScale(1);
+      setPan({ x: 0, y: 0 });
+    } else {
+      const x = (containerRect.width / 2 - (clientX - containerRect.left)) * 1.5;
+      const y = (containerRect.height / 2 - (clientY - containerRect.top)) * 1.5;
+      setZoomScale(2.5);
+      setPan({ x, y });
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (zoomScale === 1) return;
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      startTouch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      startPan.current = { ...pan };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || zoomScale === 1) return;
+    if (e.touches.length === 1) {
+      const dx = e.touches[0].clientX - startTouch.current.x;
+      const dy = e.touches[0].clientY - startTouch.current.y;
+      const maxPanX = (zoomScale - 1) * 200;
+      const maxPanY = (zoomScale - 1) * 200;
+      setPan({
+        x: Math.max(-maxPanX, Math.min(maxPanX, startPan.current.x + dx)),
+        y: Math.max(-maxPanY, Math.min(maxPanY, startPan.current.y + dy)),
+      });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoomScale === 1) return;
+    setIsDragging(true);
+    startTouch.current = { x: e.clientX, y: e.clientY };
+    startPan.current = { ...pan };
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || zoomScale === 1) return;
+    const dx = e.clientX - startTouch.current.x;
+    const dy = e.clientY - startTouch.current.y;
+    const maxPanX = (zoomScale - 1) * 250;
+    const maxPanY = (zoomScale - 1) * 250;
+    setPan({
+      x: Math.max(-maxPanX, Math.min(maxPanX, startPan.current.x + dx)),
+      y: Math.max(-maxPanY, Math.min(maxPanY, startPan.current.y + dy)),
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
   // Set mounted state to safely run React Portals on the client side
   useEffect(() => {
@@ -397,15 +473,53 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 1.01 }}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      className="w-full h-[90%] relative rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.85)] border border-white/5"
+                      className="w-full h-[90%] relative rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.85)] border border-white/5 select-none"
+                      style={{ cursor: zoomScale > 1 ? (isDragging ? "grabbing" : "grab") : "zoom-in" }}
+                      onMouseDown={handleMouseDown}
+                      onMouseMove={handleMouseMove}
+                      onMouseUp={handleMouseUp}
+                      onMouseLeave={handleMouseUp}
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
+                      onDoubleClick={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        toggleZoom(e.clientX, e.clientY, rect);
+                      }}
                     >
-                      <Image 
-                        src={images[activeIdx]} 
-                        alt={`${propertyName} Full Image ${activeIdx + 1}`}
-                        fill
-                        priority
-                        className="object-contain"
-                      />
+                      <div
+                        className="w-full h-full relative transition-transform duration-200 ease-out"
+                        style={{
+                          transform: `scale(${zoomScale}) translate(${pan.x / zoomScale}px, ${pan.y / zoomScale}px)`,
+                          transformOrigin: "center center",
+                        }}
+                      >
+                        <Image 
+                          src={images[activeIdx]} 
+                          alt={`${propertyName} Full Image ${activeIdx + 1}`}
+                          fill
+                          priority
+                          className="object-contain pointer-events-none"
+                        />
+                      </div>
+
+                      {/* Floating Zoom Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (zoomScale > 1) {
+                            setZoomScale(1);
+                            setPan({ x: 0, y: 0 });
+                          } else {
+                            setZoomScale(2.5);
+                            setPan({ x: 0, y: 0 });
+                          }
+                        }}
+                        className="absolute bottom-4 right-4 z-[99] bg-black/70 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full text-[10px] uppercase tracking-widest font-black text-white/90 hover:scale-105 transition-all flex items-center gap-1.5 shadow-lg active:scale-95 cursor-pointer"
+                      >
+                        <ZoomIn size={14} className="text-[#FFCC00]" />
+                        {zoomScale > 1 ? "Zoom Out" : "Zoom In"}
+                      </button>
                     </motion.div>
                   </AnimatePresence>
                 </div>

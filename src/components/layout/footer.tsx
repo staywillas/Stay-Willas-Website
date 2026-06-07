@@ -88,6 +88,7 @@ const Footer = () => {
                 { name: "Lonavala Villas", href: "/villas?region=lonavala" },
                 { name: "Alibaug Villas", href: "/villas?region=alibaug" },
                 { name: "Karjat Villas", href: "/villas?region=karjat" },
+                { name: "Khopoli Villas", href: "/villas?region=khopoli" },
                 { name: "Experiences", href: "/experiences" }
               ].map((link) => (
                 <li key={link.name}>
@@ -108,7 +109,8 @@ const Footer = () => {
                 { name: "Horizon Villa", href: "/villa/horizon-villa" },
                 { name: "Skytaj Villa", href: "/villa/skytaj-villa" },
                 { name: "Heritage Villa", href: "/villa/heritage-villa" },
-                { name: "Harmony Villa", href: "/villa/harmony-villa" }
+                { name: "Harmony Villa", href: "/villa/harmony-villa" },
+                { name: "Canopy Crest", href: "/villa/canopy-crest" }
               ].map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">

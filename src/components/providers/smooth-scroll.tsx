@@ -26,13 +26,11 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     <ReactLenis 
       root 
       options={{ 
-        lerp: 0.1,              // Snappier response
-        duration: 0.9,          // Shorter duration for less laggy feel
+        lerp: 0.08,             // Very smooth frame-by-frame interpolation
         smoothWheel: true, 
-        syncTouch: false,       // Use native momentum on touch screens (prevents lag)
-        touchMultiplier: 1.0,   // Native touch swipe speed (1.5 causes jitter/lag)
+        syncTouch: false,       // Prevent touch lag
+        touchMultiplier: 1.0,   // Native touch swipe speed
         wheelMultiplier: 1.0,   // Native wheel response
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // World-class exponential ease-out
         infinite: false,
       }}
     >

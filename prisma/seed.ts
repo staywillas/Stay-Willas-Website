@@ -25,8 +25,13 @@ When people browse through various lonavala villas, they are usually looking for
 With enough room to host up to 16 guests, it is ideal for family reunions or birthdays. You can cook meals, play board games, or watch the sunset. For those who want an exceptional villa stay lonavala provides the perfect backdrop. Among the popular lonavala villas, this estate has earned a special place.
 
 As you plan your weekend getaway lonavala trip, imagine poolside dinners under the stars. Selecting this villa in lonavala with pool access means choosing a flawless escape. Book your stay today, pack your bags, and get ready for a wonderful villa stay lonavala trip. When comparing different lonavala villas, you will realize that this villa in lonavala with pool is in a class of its own. Make your weekend getaway lonavala a memory to cherish with a premium villa stay lonavala experience at this gorgeous villa in lonavala with pool retreat.`,
-    price: 15000,
-    weekendPrice: 54000,
+    price: 13000,
+    weekendPrice: 20000,
+    fridayPrice: 15000,
+    saturdayPrice: 20000,
+    sundayPrice: 13000,
+    baseGuests: 12,
+    extraGuestFee: 1200,
     guests: 16,
     bedrooms: 3,
     bathrooms: 3,
@@ -190,6 +195,50 @@ Unwind in the air-conditioned, beautifully decorated bedrooms featuring premium 
       "Private Jacuzzi",
       "Music System",
       "Daily Housekeeping"
+    ]
+  },
+  {
+    id: "khopoli-canopy-crest",
+    slug: "canopy-crest",
+    name: "Canopy Crest",
+    location: "Khopoli, Maharashtra",
+    category: "Private Estates",
+    description: `Spread across an expansive field, this sprawling holiday getaway home is tucked away from bustling city life to provide you with a perfect window of relaxation. The villa features eclectic interiors, along with lavish amenities. Rejuvenate, detox, and unwind at this serene home, that is enveloped in lush verdant cover of greenery and towering hills. Savour the misty breeze in the mornings, relax on the lounge-worthy sit-outs, and make the most of the relaxing swimming pool, one of the key features of this beautiful villa. Guests can take a peaceful walk in the lawn and embrace the beauty of the overlooking mountainscapes and the horizon of the manicured fields around the villa. Imagine yourself, relishing a delicious barbeque by the pool living your best getaway, at the Canopy Crest.`,
+    price: 15000,
+    weekendPrice: 22000,
+    fridayPrice: 18000,
+    saturdayPrice: 22000,
+    sundayPrice: 22000,
+    baseGuests: 12,
+    extraGuestFee: 1200,
+    guests: 20,
+    bedrooms: 4,
+    bathrooms: 5,
+    images: [
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0014.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg"
+    ],
+    amenities: [
+      "Private Swimming Pool",
+      "Indoor/Outdoor Games",
+      "Music System/Speaker",
+      "Balcony/Terrace",
+      "Wheelchair Friendly",
+      "CCTV Security",
+      "Extra Mattress",
+      "Geyser",
+      "Wardrobes",
+      "Towels & Toiletries",
+      "Meals Available",
+      "Senior Citizen Friendly",
+      "Spacious Lawn"
     ]
   }
 ];

@@ -122,6 +122,11 @@ export async function updateVillaDetails(data: {
   location: string;
   price: number;
   guests: number;
+  baseGuests?: number;
+  extraGuestFee?: number;
+  fridayPrice?: number | null;
+  saturdayPrice?: number | null;
+  sundayPrice?: number | null;
   bedrooms: number;
   category: string;
   description: string;
@@ -134,6 +139,11 @@ export async function updateVillaDetails(data: {
         location: data.location,
         price: data.price,
         guests: data.guests,
+        baseGuests: data.baseGuests,
+        extraGuestFee: data.extraGuestFee,
+        fridayPrice: data.fridayPrice,
+        saturdayPrice: data.saturdayPrice,
+        sundayPrice: data.sundayPrice,
         bedrooms: data.bedrooms,
         category: data.category,
         description: data.description,

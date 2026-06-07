@@ -15,7 +15,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function calculateStayPrice(
   villaId: string,
   checkIn: Date,
-  checkOut: Date
+  checkOut: Date,
+  guests: number
 ) {
   const villa = await prisma.villa.findUnique({
     where: { id: villaId },
@@ -52,14 +53,24 @@ export async function calculateStayPrice(
       if (seasonalOverride) {
         totalStayPrice += seasonalOverride.price;
       } else {
-        // 2. Check weekend pricing (Friday = 5, Saturday = 6)
+        // 2. Check specific day-of-week pricing overrides
         const dayOfWeek = currentDate.getDay();
-        const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
-        if (isWeekend && villa.weekendPrice) {
-          totalStayPrice += villa.weekendPrice;
+        
+        if (dayOfWeek === 5 && villa.fridayPrice != null) {
+          totalStayPrice += villa.fridayPrice;
+        } else if (dayOfWeek === 6 && villa.saturdayPrice != null) {
+          totalStayPrice += villa.saturdayPrice;
+        } else if (dayOfWeek === 0 && villa.sundayPrice != null) {
+          totalStayPrice += villa.sundayPrice;
         } else {
-          // 3. Fallback to base pricing
-          totalStayPrice += villa.price;
+          // 3. Check legacy weekend pricing
+          const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+          if (isWeekend && villa.weekendPrice) {
+            totalStayPrice += villa.weekendPrice;
+          } else {
+            // 4. Fallback to base pricing
+            totalStayPrice += villa.price;
+          }
         }
       }
     }
@@ -67,7 +78,17 @@ export async function calculateStayPrice(
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  return { totalRoomPrice: totalStayPrice, baseRate: villa.price };
+  const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+  const baseGuestsCount = villa.baseGuests ?? villa.guests;
+  const extraGuests = Math.max(0, guests - baseGuestsCount);
+  const extraGuestsCostPerNight = villa.extraGuestFee ? extraGuests * villa.extraGuestFee : 0;
+  const totalExtraGuestsCost = extraGuestsCostPerNight * (nights > 0 ? nights : 0);
+
+  return { 
+    totalRoomPrice: totalStayPrice, 
+    totalExtraGuestsCost,
+    baseRate: villa.price 
+  };
 }
 
 /**
@@ -81,6 +102,7 @@ export async function createCheckoutSession(formData: {
   guests: number;
   selectedAddOns?: string[];
   userId: string;
+  couponCode?: string;
 }) {
   const checkInDate = new Date(formData.checkIn);
   const checkOutDate = new Date(formData.checkOut);
@@ -109,7 +131,7 @@ export async function createCheckoutSession(formData: {
     }
 
     // 2. STAGE B: Dynamic Pricing Calculation (Weighted)
-    const { totalRoomPrice } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate);
+    const { totalRoomPrice, totalExtraGuestsCost } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate, formData.guests);
 
     // 3. STAGE C: Add-Ons Aggregate Costs
     let addOnsPrice = 0;
@@ -127,8 +149,9 @@ export async function createCheckoutSession(formData: {
       }
     }
 
-    const serviceFee = 5000;
-    const finalTotal = totalRoomPrice + addOnsPrice + serviceFee;
+    const serviceFee = 0; // Removed luxury service fee
+    const discount = formData.couponCode === "STAY5" ? ((totalRoomPrice + totalExtraGuestsCost) * 0.05) : 0;
+    const finalTotal = totalRoomPrice + totalExtraGuestsCost + addOnsPrice + serviceFee - discount;
 
     // 4. STAGE D: Create database HELD Booking Record to secure the locked dates for 10 minutes
     const holdBooking = await prisma.booking.create({

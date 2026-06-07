@@ -28,9 +28,9 @@ interface FeaturedVillasProps {
 const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
   return (
     <section className="py-32 px-6 md:px-12 lg:px-24 bg-white relative overflow-hidden">
-      {/* Ambient gradients */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#DAA520]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#559C24]/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+      {/* Ambient gradients (Optimized) */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(218,165,32,0.1)_0,rgba(218,165,32,0)_60%)] -translate-y-1/2 translate-x-1/2 pointer-events-none transform-gpu" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(85,156,36,0.1)_0,rgba(85,156,36,0)_60%)] translate-y-1/2 -translate-x-1/2 pointer-events-none transform-gpu" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Section */}
@@ -98,30 +98,15 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
           ))}
         </div>
 
-        {/* Mobile 3D Coverflow Slider Layout */}
+        {/* Mobile 2-Column Vertical Scrolling Layout */}
         <div className="block md:hidden">
-          <Swiper
-            modules={[EffectCoverflow, Pagination]}
-            effect={"coverflow"}
-            grabCursor={true}
-            centeredSlides={true}
-            slidesPerView={"auto"}
-            coverflowEffect={{
-              rotate: 15,
-              stretch: -15,
-              depth: 120,
-              modifier: 1.1,
-              slideShadows: true,
-            }}
-            pagination={{ clickable: true, dynamicBullets: true }}
-            className="villas-mobile-swiper py-10"
-          >
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {villas.map((villa) => (
-              <SwiperSlide key={villa.id} className="max-w-[310px] px-3 h-full flex flex-col">
+              <div key={villa.id} className="w-full flex flex-col">
                 <VillaCard {...villa} className="h-full" />
-              </SwiperSlide>
+              </div>
             ))}
-          </Swiper>
+          </div>
         </div>
       </div>
 

@@ -152,7 +152,7 @@ const PartnerForm = () => {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               className="w-full bg-white border border-border-subtle rounded-2xl px-6 py-4 focus:border-accent-primary outline-none transition-all text-text-primary text-sm placeholder:text-text-primary/30" 
-              placeholder="e.g., Lonavala, Alibaug, Karjat" 
+              placeholder="e.g., Lonavala, Alibaug, Karjat, Khopoli" 
             />
           </div>
         </div>

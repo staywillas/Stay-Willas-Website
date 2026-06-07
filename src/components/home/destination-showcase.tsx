@@ -53,12 +53,12 @@ const destinations = [
   },
   {
     name: "Khopoli",
-    image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1000",
-    count: "LAUNCHING SOON",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    count: "1 Villa",
     tag: "Nature Getaways",
     desc: "Scenic foothills, waterfalls, and green valleys near the hills.",
-    isLaunchingSoon: true,
-    link: "/partner"
+    isLaunchingSoon: false,
+    link: "/villas?region=khopoli"
   },
   {
     name: "Goa",
@@ -135,7 +135,7 @@ const DestinationShowcase = () => {
       </div>
 
       {/* Ambient gold glow */}
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#DAA520]/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(218,165,32,0.1)_0,rgba(218,165,32,0)_60%)] pointer-events-none transform-gpu" />
 
       <div className="max-w-[1400px] mx-auto px-6 relative z-10">
         {/* Header */}
@@ -202,7 +202,7 @@ const DestinationShowcase = () => {
               >
                 <Link
                   href={dest.link}
-                  className="block relative aspect-[3/4] w-full h-full rounded-[28px] overflow-hidden group border border-[#DAA520]/20 cursor-pointer shadow-[0_20px_50px_rgba(15,23,42,0.25)] hover:border-[#DAA520] hover:shadow-[0_0_40px_rgba(218,165,32,0.75)] hover:scale-[1.02] transition-all duration-500"
+                  className="block relative aspect-[3/4] w-full h-full rounded-[28px] overflow-hidden group border-[3px] border-[#DAA520]/80 cursor-pointer shadow-[0_20px_50px_rgba(15,23,42,0.25)] hover:border-[#DAA520] hover:shadow-[0_0_45px_rgba(218,165,32,0.85)] hover:scale-[1.02] transition-all duration-500"
                 >
                   <Image
                     src={dest.image}
@@ -213,41 +213,29 @@ const DestinationShowcase = () => {
                     quality={75}
                     className="object-cover transition-transform duration-1000 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1B3564]/50 via-transparent to-[#1B3564]/10 transition-opacity duration-500 group-hover:opacity-85" />
+                  <div className="absolute inset-0 bg-black/10 transition-opacity duration-500 group-hover:bg-black/5" />
                   
-                  {/* Floating Glassmorphic Content Card */}
-                  <div className="absolute inset-x-4 bottom-4 p-5 md:p-6 rounded-[20px] bg-[#1B3564]/65 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(15,23,42,0.2)] flex flex-col justify-end transition-all duration-500 group-hover:bg-[#1B3564]/85 group-hover:border-[#DAA520]/45 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_rgba(15,23,42,0.4)] z-10">
-                    {/* Tag & Status */}
-                    <div className="flex items-center justify-between gap-2 mb-3 w-full">
-                      <div className="flex items-center gap-1.5 text-[#DAA520] text-[10px] font-extrabold uppercase tracking-[0.25em]">
-                        <MapPin size={12} className="stroke-[2.5]" />
-                        {dest.tag}
-                      </div>
-
+                  {/* Bottom Gradient Content Overlay */}
+                  <div className="absolute inset-x-0 bottom-0 p-6 rounded-b-[28px] bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 flex flex-col justify-end transition-all duration-500">
+                    {/* Title & Status */}
+                    <div className="flex items-end justify-between w-full mb-1">
+                      <h3 className="text-xl md:text-2xl font-heading text-white font-bold tracking-wide transition-colors duration-300 group-hover:text-[#DAA520]">
+                        {dest.name}
+                      </h3>
                       {dest.isLaunchingSoon && (
-                        <span className="text-[8px] font-extrabold uppercase tracking-widest bg-[#DAA520]/25 text-[#FAF8F5] border border-[#DAA520]/45 px-2 py-0.5 rounded-full shrink-0">
+                        <span className="text-[8px] font-extrabold uppercase tracking-widest bg-[#DAA520]/25 text-[#FAF8F5] border border-[#DAA520]/45 px-2 py-0.5 rounded-full shrink-0 mb-1">
                           SOON
                         </span>
                       )}
                     </div>
                     
-                    {/* Title */}
-                    <h3 className="text-2xl md:text-3xl font-heading text-[#FAF8F5] mb-2 pr-4 font-normal tracking-wide transition-colors duration-300 group-hover:text-[#DAA520]">
-                      {dest.name}
-                    </h3>
-                    
-                    {/* Description */}
-                    <p className="text-[#FAF8F5]/75 text-xs mb-5 max-w-[280px] leading-relaxed font-light transition-all duration-300 group-hover:text-[#FAF8F5]/90">
-                      {dest.desc}
-                    </p>
-                    
                     {/* CTA & Property Count */}
-                    <div className="flex items-center justify-between w-full gap-2">
-                      <div className="flex items-center gap-2.5 group/btn">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#DAA520] to-[#E6B830] text-slate-950 flex items-center justify-center transition-all duration-500 group-hover/btn:scale-110 group-hover/btn:rotate-45 shadow-md">
-                          <ArrowUpRight size={16} className="stroke-[2.5]" />
+                    <div className="flex items-center justify-between w-full mt-1.5">
+                      <div className="flex items-center gap-2 group/btn">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#DAA520] to-[#E6B830] text-slate-950 flex items-center justify-center transition-all duration-500 group-hover/btn:scale-110 shadow-md">
+                          <ArrowUpRight size={14} className="stroke-[2.5]" />
                         </div>
-                        <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#FAF8F5]">
+                        <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#FAF8F5]/90">
                           {dest.count}
                         </span>
                       </div>

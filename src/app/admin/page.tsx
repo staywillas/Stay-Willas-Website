@@ -62,10 +62,16 @@ export default async function AdminPage() {
     }),
   ]);
 
-  // Sort dbVillas in memory to ensure "The Angle House" (slug: "the-angle-house") is always at the top/index 0
+  // Sort dbVillas in memory to ensure priorities are at the top
   const sortedVillas = [...dbVillas].sort((a, b) => {
-    if (a.slug === "the-angle-house") return -1;
-    if (b.slug === "the-angle-house") return 1;
+    // 1st Priority
+    if (a.slug === "the-angle-house" && b.slug !== "the-angle-house") return -1;
+    if (b.slug === "the-angle-house" && a.slug !== "the-angle-house") return 1;
+    
+    // 2nd Priority
+    if (a.slug === "canopy-crest" && b.slug !== "canopy-crest") return -1;
+    if (b.slug === "canopy-crest" && a.slug !== "canopy-crest") return 1;
+    
     return 0;
   });
 

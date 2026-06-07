@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 
 // Critical above-the-fold components (loaded immediately)
 import Hero from "@/components/home/hero";
+import TopTicker from "@/components/home/top-ticker";
 
 // Below-the-fold components (lazy-loaded, only rendered when scrolled into view)
 const DestinationShowcase = dynamic(() => import("@/components/home/destination-showcase"));
@@ -26,24 +27,27 @@ const Footer = dynamic(() => import("@/components/layout/footer"));
 import { prisma } from "@/lib/db";
 
 export default async function Home() {
-  // Let's explicitly fetch "The Angle House" (slug: 'the-angle-house') to ensure it is always first at the top
+  // Let's explicitly fetch priorities
   const angleHouse = await prisma.villa.findUnique({
     where: { slug: "the-angle-house" }
+  });
+  
+  const canopyCrest = await prisma.villa.findUnique({
+    where: { slug: "canopy-crest" }
   });
 
   // Query all other premium villas
   const otherVillas = await prisma.villa.findMany({
     where: {
-      slug: { not: "the-angle-house" }
+      slug: { notIn: ["the-angle-house", "canopy-crest"] }
     },
     orderBy: { createdAt: "desc" },
   });
 
-  // Combine them with "The Angle House" always at the top/first spot!
+  // Combine them with priorities always at the top/first spot!
   const dbVillas = [];
-  if (angleHouse) {
-    dbVillas.push(angleHouse);
-  }
+  if (angleHouse) dbVillas.push(angleHouse);
+  if (canopyCrest) dbVillas.push(canopyCrest);
   dbVillas.push(...otherVillas);
 
   const featuredVillas = dbVillas.map((villa) => ({
@@ -76,6 +80,7 @@ export default async function Home() {
         }}
       />
       <Navbar />
+      <TopTicker />
       <Hero />
       <DestinationShowcase />
       <FeaturedVillas villas={featuredVillas} />

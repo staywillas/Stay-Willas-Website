@@ -15,24 +15,27 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function WishlistPage() {
-  // Fetch "The Angle House" (slug: 'the-angle-house') to ensure it is always first
+  // Fetch priorities to ensure they are always first
   const angleHouse = await prisma.villa.findUnique({
     where: { slug: "the-angle-house" }
+  });
+  
+  const canopyCrest = await prisma.villa.findUnique({
+    where: { slug: "canopy-crest" }
   });
 
   // Query other premium villas
   const otherVillas = await prisma.villa.findMany({
     where: {
-      slug: { not: "the-angle-house" }
+      slug: { notIn: ["the-angle-house", "canopy-crest"] }
     },
     orderBy: { createdAt: "desc" },
   });
 
-  // Combine them with "The Angle House" always at the top/first spot!
+  // Combine them with priorities always at the top/first spot!
   const dbVillas = [];
-  if (angleHouse) {
-    dbVillas.push(angleHouse);
-  }
+  if (angleHouse) dbVillas.push(angleHouse);
+  if (canopyCrest) dbVillas.push(canopyCrest);
   dbVillas.push(...otherVillas);
 
   // Map the database format to the UI model structure

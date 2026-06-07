@@ -62,6 +62,11 @@ interface Villa {
   category: string;
   bedrooms: number;
   guests: number;
+  baseGuests?: number;
+  extraGuestFee?: number;
+  fridayPrice?: number | null;
+  saturdayPrice?: number | null;
+  sundayPrice?: number | null;
   images: string[];
   description: string;
   weekendPrice?: number | null;
@@ -230,6 +235,11 @@ const AdminDashboard = ({
   const [editLocation, setEditLocation] = useState("");
   const [editPrice, setEditPrice] = useState(0);
   const [editGuests, setEditGuests] = useState(0);
+  const [editBaseGuests, setEditBaseGuests] = useState<number | undefined>(undefined);
+  const [editExtraGuestFee, setEditExtraGuestFee] = useState<number | undefined>(undefined);
+  const [editFridayPrice, setEditFridayPrice] = useState<number | null>(null);
+  const [editSaturdayPrice, setEditSaturdayPrice] = useState<number | null>(null);
+  const [editSundayPrice, setEditSundayPrice] = useState<number | null>(null);
   const [editBedrooms, setEditBedrooms] = useState(0);
   const [editCategory, setEditCategory] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -284,6 +294,11 @@ const AdminDashboard = ({
     setEditLocation(villa.location);
     setEditPrice(villa.price);
     setEditGuests(villa.guests);
+    setEditBaseGuests(villa.baseGuests);
+    setEditExtraGuestFee(villa.extraGuestFee);
+    setEditFridayPrice(villa.fridayPrice ?? null);
+    setEditSaturdayPrice(villa.saturdayPrice ?? null);
+    setEditSundayPrice(villa.sundayPrice ?? null);
     setEditBedrooms(villa.bedrooms);
     setEditCategory(villa.category || "Mountain View");
     setEditDescription(villa.description || "");
@@ -308,6 +323,11 @@ const AdminDashboard = ({
         location: editLocation,
         price: editPrice,
         guests: editGuests,
+        baseGuests: editBaseGuests,
+        extraGuestFee: editExtraGuestFee,
+        fridayPrice: editFridayPrice,
+        saturdayPrice: editSaturdayPrice,
+        sundayPrice: editSundayPrice,
         bedrooms: editBedrooms,
         category: editCategory,
         description: editDescription,
@@ -328,6 +348,11 @@ const AdminDashboard = ({
           location: editLocation,
           price: editPrice,
           guests: editGuests,
+          baseGuests: editBaseGuests,
+          extraGuestFee: editExtraGuestFee,
+          fridayPrice: editFridayPrice,
+          saturdayPrice: editSaturdayPrice,
+          sundayPrice: editSundayPrice,
           bedrooms: editBedrooms,
           category: editCategory,
           description: editDescription,
@@ -1183,6 +1208,62 @@ const AdminDashboard = ({
                       onChange={(e) => setEditBedrooms(Number(e.target.value))}
                       required
                       className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Base Guests (Included)</label>
+                    <input 
+                      type="number" 
+                      value={editBaseGuests || ""}
+                      onChange={(e) => setEditBaseGuests(e.target.value ? Number(e.target.value) : undefined)}
+                      placeholder="e.g. 12"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Extra Guest Fee / Night</label>
+                    <input 
+                      type="number" 
+                      value={editExtraGuestFee || ""}
+                      onChange={(e) => setEditExtraGuestFee(e.target.value ? Number(e.target.value) : undefined)}
+                      placeholder="e.g. 1200"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Friday ₹</label>
+                    <input 
+                      type="number" 
+                      value={editFridayPrice || ""}
+                      onChange={(e) => setEditFridayPrice(e.target.value ? Number(e.target.value) : null)}
+                      placeholder="Auto"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-2 py-2.5 text-sm focus:border-blue-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Saturday ₹</label>
+                    <input 
+                      type="number" 
+                      value={editSaturdayPrice || ""}
+                      onChange={(e) => setEditSaturdayPrice(e.target.value ? Number(e.target.value) : null)}
+                      placeholder="Auto"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-2 py-2.5 text-sm focus:border-blue-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Sunday ₹</label>
+                    <input 
+                      type="number" 
+                      value={editSundayPrice || ""}
+                      onChange={(e) => setEditSundayPrice(e.target.value ? Number(e.target.value) : null)}
+                      placeholder="Auto"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-2 py-2.5 text-sm focus:border-blue-500 outline-none"
                     />
                   </div>
                 </div>

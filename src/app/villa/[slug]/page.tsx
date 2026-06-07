@@ -7,7 +7,7 @@ import {
   Wifi, Waves, Car,
   Wind, MapPin, Award, ChevronLeft,
   Share2, Heart, CheckCircle2,
-  Users, Bed, Bath
+  Users, Bed, Bath, PawPrint
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
@@ -116,6 +116,49 @@ const defaultRules = [
   "Please don't smoke inside (but feel free to use the deck!)",
   "Your furry friends are more than welcome!",
   "Keep the music low after 10:00 PM so we stay friends with the neighbors",
+];
+
+const canopyCrestSpaces = [
+  {
+    title: "Bedroom 1",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
+    description: "This is a spacious bedroom situated on the ground floor of the property.\n\nThe room offers a comfortable king-sized bed, AC, Wi-Fi, wardrobes and a window that opens up to a beautiful view of the manicured field.\n\nIt has an ensuite bathroom with a geyser, towels, and basic toiletries."
+  },
+  {
+    title: "Bedroom 2",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg",
+    description: "This is a spacious bedroom situated on the ground floor of the property.\n\nThe room offers a comfortable king-sized bed, AC, Wi-Fi, wardrobes and a window that opens up to a beautiful view of the manicured field.\n\nIt has an ensuite bathroom with a geyser, towels, and basic toiletries."
+  },
+  {
+    title: "Bedroom 3",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg",
+    description: "This is a spacious bedroom situated on the ground floor of the property.\n\nThe room offers a comfortable king-sized bed, AC, Wi-Fi, wardrobes and a window that opens up to a beautiful view of the manicured field.\n\nIt has an ensuite bathroom with a geyser, towels, and basic toiletries."
+  },
+  {
+    title: "Bedroom 4",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
+    description: "This is a spacious bedroom situated on the ground floor of the property.\n\nThe room offers a comfortable king-sized bed, AC, Wi-Fi, wardrobes and a window that opens up to a beautiful view of the manicured field.\n\nIt has an ensuite bathroom with a geyser, towels, and basic toiletries."
+  },
+  {
+    title: "Living & Dining Room",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
+    description: "This living room is set on the ground floor.\n\nIt can easily seat upto 6 people & is equipped with an AC, a wired music system, WiFi and a cosy seating arrangement.\n\nThe dining room, offering comfortable seating for up to 6 people, is a part of the living room."
+  },
+  {
+    title: "Bathrooms",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
+    description: "There are 4 ensuite bathrooms and 1 powder room in the living area.\n\nAll bathrooms have geysers, towels and basic toiletries."
+  },
+  {
+    title: "Swimming Pool",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    description: "Guests can enjoy a relaxing soak in the private swimming pool.\n\nThis pool overlooks the surrounding hills, 22x12 ft. in size and 4 ft. in depth."
+  },
+  {
+    title: "Lawn",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg",
+    description: "This is an expansive lawn, located on the ground floor of the property, overlooking amazing views of the hills around.\n\nIt is decked with a sit-out space and comfortable traditional charpais for up to 12 people.\n\nGuests can meditate here, take a walk, have fun or relish some barbeque."
+  }
 ];
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -328,13 +371,65 @@ export default async function VillaDetailPage({ params }: PageProps) {
               </div>
             </div>
 
+            {/* Rooms & Spaces Layout (Conditional for Canopy Crest) */}
+            {villaData.slug === "canopy-crest" && (
+              <div className="mb-12 animate-fade-in">
+                <h2 className="text-3xl font-heading text-[#1B3564] mb-8 font-bold border-b border-border-subtle pb-4 border-[#DAA520]/20">
+                  Rooms & Spaces
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {canopyCrestSpaces.map((space, idx) => (
+                    <div key={idx} className="bg-white border border-[#DAA520]/15 hover:border-[#DAA520]/30 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+                      <div className="relative aspect-[16/10] w-full bg-slate-100 overflow-hidden">
+                        <Image
+                          src={space.image}
+                          alt={space.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 400px"
+                          className="object-cover transition-transform duration-500 hover:scale-105"
+                        />
+                      </div>
+                      <div className="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                          <h3 className="text-lg font-bold text-[#1B3564] mb-2">{space.title}</h3>
+                          <p className="text-slate-600 text-xs sm:text-sm leading-relaxed whitespace-pre-line">{space.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* 3. In-Villa Bespoke Food Menu Popup */}
-            <div className="mb-12">
-              <FoodMenuModal />
-            </div>
+            {villaData.slug === "the-angle-house" && (
+              <div className="mb-12">
+                <FoodMenuModal />
+              </div>
+            )}
 
             {/* 4. The Story & Readability Points (Story last, high contrast) */}
             <div className="mb-12">
+              {/* Pet Friendly Badge */}
+              {villaData.rules.some(r => r.toLowerCase().includes("furry") || r.toLowerCase().includes("pet")) && (
+                <div className="mb-6 bg-[#DAA520]/5 border border-[#DAA520]/20 rounded-3xl p-5 flex items-center justify-between gap-4 shadow-sm select-none animate-fade-in">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-[#DAA520]/10 border border-[#DAA520]/20 flex items-center justify-center text-[#DAA520] shrink-0">
+                      <PawPrint size={26} className="animate-pulse" />
+                    </div>
+                    <div className="text-left">
+                      <h4 className="font-heading text-lg text-[#1B3564] font-bold">Pet Friendly Sanctuary</h4>
+                      <p className="text-xs text-text-primary/60 leading-relaxed mt-0.5 font-medium">
+                        Your furry friends are more than welcome here! Sprawling outdoor space and safe layouts await.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-widest bg-white border border-[#DAA520]/10 px-3.5 py-1.5 rounded-full shadow-sm shrink-0">
+                    Pets Allowed
+                  </span>
+                </div>
+              )}
+
               <h2 className="text-3xl font-heading mb-6 border-b border-[#DAA520]/20 pb-6 italic text-[#1B3564] font-bold">The Story</h2>
               
               {/* Highlight Readability Points Box */}
@@ -351,7 +446,11 @@ export default async function VillaDetailPage({ params }: PageProps) {
                   </li>
                   <li className="flex items-start gap-2.5 text-slate-900 text-sm font-medium">
                     <CheckCircle2 className="text-[#DAA520] shrink-0 mt-0.5" size={16} />
-                    <span>Curated private chef & bespoke menu choices.</span>
+                    <span>
+                      {villaData.slug === "the-angle-house"
+                        ? "Curated private chef & bespoke menu choices."
+                        : "Curated private chef & gourmet dining choices."}
+                    </span>
                   </li>
                   <li className="flex items-start gap-2.5 text-slate-900 text-sm font-medium">
                     <CheckCircle2 className="text-[#DAA520] shrink-0 mt-0.5" size={16} />

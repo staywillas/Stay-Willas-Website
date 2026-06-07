@@ -4,9 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
+// Swiper imports removed for static hero section
 import { 
   ChevronRight, 
   ChevronLeft, 
@@ -37,51 +35,10 @@ import {
   parseISO 
 } from "date-fns";
 import { getDestinationAvailability } from "@/app/actions/booking";
-
-import "swiper/css";
-import "swiper/css/navigation";
-
-const slides = [
-  {
-    image: "/assets/villas/the-angle-house/gallery-11.webp",
-    tag: "Pool & Modern Design",
-    title: "The Iconic",
-    titleItalic: "Angle House",
-    desc: "Where modern architecture meets slow luxury —\nour stunning designer villa in Lonavala, crafted for unforgettable escapes."
-  },
-  {
-    image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
-    tag: "Beachside Luxury",
-    title: "Breathtaking",
-    titleItalic: "Horizon Villa",
-    desc: "An oceanfront sanctuary on Alibaug's golden coast.\nExperience a heated private infinity pool blending into the sea."
-  },
-  {
-    image: "/assets/villas/skytaj-villa/main.jpg",
-    tag: "Oceanfront Luxury",
-    title: "The Beautiful",
-    titleItalic: "Skytaj Villa",
-    desc: "A serene beachfront masterpiece nestled in palm groves\non Alibaug's elite coast, defining modern seaside living."
-  },
-  {
-    image: "/assets/villas/heritage-villa/main.jpg",
-    tag: "Rustic Estate",
-    title: "The Majestic",
-    titleItalic: "Heritage Villa",
-    desc: "A countryside stone sanctuary in Karjat where\nold-world heritage architecture meets modern-day private luxury."
-  },
-  {
-    image: "/assets/villas/harmony-villa/main.jpg",
-    tag: "Hillside Retreat",
-    title: "The Peaceful",
-    titleItalic: "Harmony Villa",
-    desc: "A contemporary Tungarli masterpiece in Lonavala,\nfeaturing custom pool and open living areas with scenic hill backdrops."
-  }
-];
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 
 const Hero = () => {
   const router = useRouter();
-  const [activeIndex, setActiveIndex] = useState(0);
   const [destination, setDestination] = useState("Lonavala");
   const [checkIn, setCheckIn] = useState<Date | null>(null);
   const [checkOut, setCheckOut] = useState<Date | null>(null);
@@ -181,11 +138,13 @@ const Hero = () => {
     
     const checkInStr = checkIn ? format(checkIn, "dd MMM yyyy") : "Not specified";
     const checkOutStr = checkOut ? format(checkOut, "dd MMM yyyy") : "Not specified";
+    const guestCount = guests.trim() || "2";
+    const guestLabel = guestCount === "1" ? "guest" : "guests";
     
     const msg = `Hello Stay Willas! 🌟 I am planning a luxury villa staycation in *${destination}* and would love to check your availability. 
 
 Here are our details:
-👥 *Guest Count:* ${guests} guests
+👥 *Guest Count:* ${guestCount} ${guestLabel}
 📅 *Preferred Dates:* ${checkInStr} to ${checkOutStr}
 
 Could you please share the options available and help us plan our perfect getaway? Thank you so much! ✨`;
@@ -196,398 +155,300 @@ Could you please share the options available and help us plan our perfect getawa
     window.open(whatsappUrl, "_blank");
   };
 
+  const { scrollYProgress } = useScroll();
+  const yPos1 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const yPos2 = useTransform(scrollYProgress, [0, 1], [0, 120]);
+
   return (
-    <section className="relative h-auto lg:h-screen w-full lg:overflow-hidden bg-[#F5F2EA]">
-      {/* Swiper & Controls Container */}
-      <div className="relative h-[65vh] lg:h-full w-full overflow-hidden">
-        <Swiper
-          modules={[Autoplay, Navigation]}
-          speed={1200}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
-          loop={true}
-          slidesPerView={1}
-          spaceBetween={0}
-          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-          navigation={{
-            prevEl: ".hero-prev",
-            nextEl: ".hero-next",
-          }}
-          className="h-full w-full"
+    <section className="relative min-h-screen w-full bg-[#F5F2EA] overflow-hidden pt-24 lg:pt-0 pb-12 lg:pb-0 flex items-center bg-[url('/assets/noise.png')] bg-blend-overlay">
+      
+      {/* Decorative Background Elements (Optimized for Performance) */}
+      <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(226,166,59,0.15)_0,rgba(226,166,59,0)_50%)] pointer-events-none transform-gpu" />
+      <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(27,53,100,0.12)_0,rgba(27,53,100,0)_50%)] pointer-events-none transform-gpu" />
+
+      <div className="max-w-[1400px] w-full mx-auto px-6 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-y-0 lg:gap-x-12 z-10 relative items-center">
+        
+        {/* Text & Buttons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          className="w-full lg:col-span-5 flex flex-col z-20 order-1 lg:self-end lg:pb-8"
         >
-        {slides.map((slide, index) => {
-          const isActive = activeIndex === index;
-          return (
-            <SwiperSlide key={index} className="relative h-full w-full overflow-hidden">
-              {/* Ken Burns background */}
-              <div className="absolute inset-0 z-0 overflow-hidden">
-                <Image
-                  src={slide.image}
-                  alt={slide.title}
-                  fill
-                  priority={index === 0}
-                  sizes="100vw"
-                  quality={75}
-                  className="object-cover animate-ken-burns"
-                />
-                 {/* Premium soft cream vignetted overlay (bottom-up on mobile, left-to-right on desktop) */}
-                 <div className="absolute inset-0 md:inset-y-0 md:left-0 w-full md:w-[60%] lg:w-[55%] bg-gradient-to-t from-[#F5F2EA]/60 via-[#F5F2EA]/20 to-transparent md:bg-gradient-to-r md:from-[#F5F2EA] md:via-[#F5F2EA]/95 md:to-transparent z-10" />
-              </div>
-                        {/* Slide content */}
-               <div className="relative z-20 h-full flex items-center md:items-center pt-16 pb-12 lg:pb-36 px-6 md:px-12 lg:px-24">
-                 <div className="max-w-2xl bg-[#F5F2EA]/85 backdrop-blur-md border border-[#1B3564]/5 p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-xl md:bg-transparent md:backdrop-blur-none md:border-none md:p-0 md:shadow-none text-left">
-                  <AnimatePresence mode="wait">
-                    {isActive && (
-                      <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 30 }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                      className="flex flex-col items-start"
-                    >
-                      {/* Tag — Premium White Badge */}
-                      <span className="inline-flex items-center gap-1.5 bg-white/95 border border-slate-200/50 text-[#DAA520] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-3 md:mb-6 px-4 md:px-5 py-2 md:py-2.5 rounded-full shadow-sm w-fit">
-                        <span className="text-[#DAA520] text-xs">★</span> {slide.tag}
-                      </span>
-                      
-                      {/* Main Heading - Refined Serif Typography */}
-                      <h1 className="text-xl sm:text-4xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] leading-[1.15] mb-3 md:mb-6 font-normal tracking-wide drop-shadow-[0_2px_4px_rgba(27,53,100,0.08)]">
-                        {slide.title} <br className="hidden sm:inline" /> 
-                        <span className="relative inline-block pb-1">
-                          <span className="italic text-[#DAA520] font-heading font-semibold md:font-light tracking-wide">{slide.titleItalic}</span>
-                          {/* Beautiful gold horizontal line accent directly under the first half of the text (like "by the") */}
-                          <span className="absolute left-0 bottom-0 w-[45%] h-[3px] bg-[#DAA520] rounded-full" />
-                        </span>
-                      </h1>
-                      
-                      {/* Subtitle - Refined dark navy on mobile, slate on desktop */}
-                      <p className="text-[12px] sm:text-base text-[#1B3564] md:text-slate-600/90 font-medium md:font-normal max-w-md mb-4 md:mb-8 leading-relaxed whitespace-pre-line">
-                        {slide.desc}
-                      </p>
- 
-                      {/* CTA Section - Premium side-by-side responsive layout */}
-                      <div className="flex flex-row items-center gap-2.5 w-full sm:w-auto mt-1 md:mt-2">
-                        <Link 
-                          href="/villas" 
-                          className="flex-grow sm:flex-grow-0 group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-4 sm:px-8 py-2.5 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase flex items-center justify-center gap-1.5 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300 active:scale-95"
-                        >
-                          <span>EXPLORE</span>
-                          <ChevronRight className="transition-transform group-hover:translate-x-1 stroke-[3]" size={12} />
-                        </Link>
-                        <a 
-                          href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I'm browsing your stunning website and would love to connect with your concierge regarding curated luxury escapes. ✨`)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-grow sm:flex-grow-0 group bg-white border border-[#1B3564]/20 hover:border-[#1B3564]/50 text-[#1B3564] font-bold rounded-full px-4 sm:px-8 py-2.5 sm:py-4 text-[10px] sm:text-xs tracking-widest uppercase flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95"
-                        >
-                          <span>CONCIERGE</span>
-                          <ChevronRight size={12} className="text-[#DAA520] transition-transform group-hover:translate-x-0.5 stroke-[3]" />
-                        </a>
-                      </div>
-                    </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            </SwiperSlide>
-        );
-      })}
-    </Swiper>
-
-    {/* Floating Side Arrow Buttons - Highly Visible Premium Navy/White */}
-    <button className="hero-prev absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 hidden md:flex w-12 h-12 rounded-full border border-[#1B3564]/10 bg-white/95 text-[#1B3564] hover:bg-[#1B3564] hover:text-white shadow-[0_8px_30px_rgba(27,53,100,0.12)] flex items-center justify-center transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95">
-      <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
-    </button>
-    <button className="hero-next absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 hidden md:flex w-12 h-12 rounded-full border border-[#1B3564]/10 bg-white/95 text-[#1B3564] hover:bg-[#1B3564] hover:text-white shadow-[0_8px_30px_rgba(27,53,100,0.12)] flex items-center justify-center transition-all duration-300 cursor-pointer group hover:scale-105 active:scale-95">
-      <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
-    </button>
-  </div>
-
-    {/* Booking Form Capsule & Highlights Row */}
-    <div className="relative lg:absolute lg:bottom-6 lg:left-16 lg:right-16 z-30 mx-auto max-w-6xl w-full px-4 lg:px-0 py-6 lg:py-0 bg-[#F5F2EA] lg:bg-transparent">
-      <form onSubmit={handleSearch} className="bg-white border border-slate-100 rounded-[1.8rem] md:rounded-[2.5rem] shadow-[0_15px_50px_rgba(0,0,0,0.08)] p-5 md:p-4 lg:pl-10 lg:pr-3 lg:py-3 flex flex-col lg:flex-row items-center justify-between gap-4 md:gap-6 relative">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-0 w-full lg:w-[80%] items-center">
-            {/* WHERE TO? */}
-            <div className="col-span-2 lg:col-span-1 flex items-center justify-between w-full pb-3 border-b border-slate-100 lg:border-none lg:pb-0 lg:px-4 lg:border-r lg:border-slate-200/60">
-              <div className="flex flex-col gap-1 w-full text-left">
-                <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest">WHERE TO?</label>
-                <select
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  className="bg-transparent text-lg font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
-                >
-                  <option value="Lonavala">Lonavala</option>
-                  <option value="Alibaug">Alibaug</option>
-                  <option value="Karjat">Karjat</option>
-                </select>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-[#1B3564]/5 flex items-center justify-center text-[#1B3564] shrink-0 lg:hidden">
-                <MapPin size={14} className="stroke-[2.5]" />
-              </div>
-            </div>
-
-            {/* CHECK-IN & CHECK-OUT */}
-            <div className="col-span-2 lg:col-span-2 grid grid-cols-2 gap-0 pb-3 border-b border-slate-100 lg:border-none lg:pb-0">
-              {/* CHECK-IN */}
-              <div 
-                onClick={() => setIsCalendarOpen(true)}
-                className="flex flex-col gap-1 px-4 cursor-pointer select-none group border-r border-slate-200/60 text-left"
-              >
-                <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest group-hover:text-[#E2A63B] transition-colors flex items-center gap-1.5">
-                  <CalendarIcon size={10} className="text-[#1B3564]/40 group-hover:text-[#E2A63B] transition-colors" />
-                  CHECK-IN
-                </label>
-                <div className="text-base font-bold text-[#1B3564] h-5 flex items-center">
-                  {checkIn ? format(checkIn, "MMM dd") : <span className="text-[#1B3564]/40 font-normal">Add dates</span>}
-                </div>
-              </div>
-
-              {/* CHECK-OUT */}
-              <div 
-                onClick={() => setIsCalendarOpen(true)}
-                className="flex flex-col gap-1 px-4 cursor-pointer select-none group text-left"
-              >
-                <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest group-hover:text-[#E2A63B] transition-colors flex items-center gap-1.5">
-                  <CalendarIcon size={10} className="text-[#1B3564]/40 group-hover:text-[#E2A63B] transition-colors" />
-                  CHECK-OUT
-                </label>
-                <div className="text-base font-bold text-[#1B3564] h-5 flex items-center">
-                  {checkOut ? format(checkOut, "MMM dd") : <span className="text-[#1B3564]/40 font-normal">Add dates</span>}
-                </div>
-              </div>
-            </div>
-
-            {/* GUESTS */}
-            <div className="col-span-2 lg:col-span-1 flex items-center justify-between w-full pt-1 lg:pt-0 lg:px-4">
-              <div className="flex flex-col gap-1 w-full text-left">
-                <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest">GUESTS</label>
-                <select
-                  value={guests}
-                  onChange={(e) => setGuests(e.target.value)}
-                  className="bg-transparent text-lg font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
-                >
-                  <option value="1">1 Guest</option>
-                  <option value="2">2 Guests</option>
-                  <option value="3">3 Guests</option>
-                  <option value="4">4 Guests</option>
-                  <option value="5+">5+ Guests</option>
-                </select>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-[#1B3564]/5 flex items-center justify-center text-[#1B3564] shrink-0 lg:hidden">
-                <ChevronDown size={14} className="stroke-[2.5]" />
-              </div>
-            </div>
-          </div>
-
-          {/* Premium Gold CTA button */}
-          <button
-            type="submit"
-            className="w-full lg:w-auto bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-xs tracking-widest uppercase rounded-full pl-10 pr-4 py-3 shadow-lg shadow-yellow-500/10 hover:shadow-xl transition-all duration-300 cursor-pointer border-none flex items-center justify-between gap-6 shrink-0"
+          {/* Tag */}
+          <motion.span 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="inline-flex items-center gap-1.5 bg-white border border-slate-200/60 text-[#DAA520] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-6 px-4 md:px-5 py-2 md:py-2.5 rounded-full shadow-sm w-fit"
           >
-            <span>BOOK NOW</span>
-            <div className="w-8 h-8 rounded-full bg-[#1B3564] text-white flex items-center justify-center shrink-0">
-              <ArrowRight size={16} className="stroke-[2.5]" />
-            </div>
-          </button>
+            <span className="text-[#DAA520] text-xs">★</span> Premium Luxury
+          </motion.span>
+          
+          {/* Main Heading */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.7 }}
+            className="text-4xl md:text-6xl lg:text-[4.5rem] font-heading text-[#1B3564] leading-[1.1] mb-6 font-normal tracking-tight"
+          >
+            The Iconic <br className="hidden sm:inline" />
+            <span className="relative inline-block pb-2 mt-2">
+              <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm">Angle House & <br />Canopy Crest</span>
+            </span>
+          </motion.h1>
+          
+          {/* Subtitle */}
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="text-[13px] md:text-base text-slate-600/90 font-medium max-w-md mb-10 leading-relaxed"
+          >
+            Where modern architecture meets slow luxury. Handpicked designer villas offering unforgettable private escapes.
+          </motion.p>
 
-          {/* Custom Premium React Calendar Popover */}
-          <AnimatePresence>
-            {isCalendarOpen && (
-              <>
-                {/* Backdrop overlay: dark blurred on mobile, transparent on desktop */}
-                <div 
-                  className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none"
-                  onClick={() => setIsCalendarOpen(false)}
-                />
+          {/* CTA Buttons */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.7 }}
+            className="flex flex-row items-center gap-4 w-full sm:w-auto mb-12"
+          >
+            <Link 
+              href="/villas" 
+              className="w-fit group bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-full px-8 py-4 text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-300"
+            >
+              <span>Explore Villas</span>
+              <ChevronRight className="transition-transform group-hover:translate-x-1 stroke-[3]" size={14} />
+            </Link>
+            <a 
+              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I'm browsing your stunning website and would love to connect with your concierge.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex group bg-white border border-[#1B3564]/10 hover:border-[#1B3564]/30 text-[#1B3564] font-bold rounded-full px-8 py-4 text-xs tracking-widest uppercase items-center justify-center gap-2 transition-all duration-300 shadow-sm"
+            >
+              <span>Concierge</span>
+            </a>
+          </motion.div>
+        </motion.div>
+
+        {/* Booking Form */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.7 }}
+          className="w-full relative lg:col-span-5 order-3 lg:order-none z-30 lg:self-start lg:pt-4"
+        >
+            <form onSubmit={handleSearch} className="bg-white/75 backdrop-blur-xl border border-white/60 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.08)] p-5 md:p-6 flex flex-col gap-4 relative z-30">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-slate-100 pb-4">
                 
-                <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 md:absolute md:top-auto md:bottom-full md:left-[20%] md:translate-y-0 md:mb-4 z-50 w-[calc(100vw-2rem)] sm:w-[380px] md:w-[400px] bg-[#F5F2EA] border border-[#1B3564]/10 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.18)] p-6 backdrop-blur-md">
-                  {/* Calendar Header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <button
-                      type="button"
-                      onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))}
-                      className="w-8 h-8 rounded-full border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 transition-colors cursor-pointer"
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
-                    
-                    <span className="text-[#1B3564] font-heading font-bold text-sm md:text-base tracking-wide select-none">
-                      {format(calendarViewMonth, "MMMM yyyy")}
-                    </span>
+                {/* WHERE TO? */}
+                <div className="flex flex-col gap-1 w-full text-left pr-4 md:border-r border-slate-100">
+                  <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest">WHERE TO?</label>
+                  <select
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    className="bg-transparent text-base font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-4"
+                  >
+                    <option value="Lonavala">Lonavala</option>
+                    <option value="Alibaug">Alibaug</option>
+                    <option value="Karjat">Karjat</option>
+                    <option value="Khopoli">Khopoli</option>
+                  </select>
+                </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))}
-                      className="w-8 h-8 rounded-full border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564]/5 transition-colors cursor-pointer"
-                    >
-                      <ChevronRight size={16} />
-                    </button>
-                  </div>
-
-                  {/* Weekdays Row */}
-                  <div className="grid grid-cols-7 text-center mb-2">
-                    {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
-                      <span 
-                        key={idx} 
-                        className="text-[10px] font-extrabold text-[#FFB800] uppercase tracking-widest select-none"
-                      >
-                        {day}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Days Grid */}
-                  <div className="grid grid-cols-7 gap-1 md:gap-1.5">
-                    {/* Padding blank spaces */}
-                    {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => (
-                      <div key={`empty-${i}`} />
-                    ))}
-                    
-                    {/* Actual Days */}
-                    {eachDayOfInterval({
-                      start: startOfMonth(calendarViewMonth),
-                      end: endOfMonth(calendarViewMonth)
-                    }).map((day) => {
-                      const isPast = isBefore(day, startOfDay(new Date()));
-                      const isBooked = isDateFullyBooked(day);
-                      const isSelectedCheckIn = checkIn && isSameDay(day, checkIn);
-                      const isSelectedCheckOut = checkOut && isSameDay(day, checkOut);
-                      const isInRange = checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
-                      
-                      const isDisabled = isPast || isBooked;
-
-                      return (
-                        <button
-                          key={day.toString()}
-                          type="button"
-                          disabled={isDisabled}
-                          onClick={() => handleDateSelect(day)}
-                          className={`
-                            w-9 h-9 rounded-full text-xs font-bold flex flex-col items-center justify-center transition-all relative
-                            ${isDisabled ? 'text-slate-400/40 line-through cursor-not-allowed pointer-events-none' : ''}
-                            ${isBooked ? 'bg-[#FFB800]/5' : ''}
-                            ${isSelectedCheckIn || isSelectedCheckOut 
-                              ? 'bg-[#2563EB] text-white shadow-md shadow-blue-500/20 scale-105 z-10 hover:bg-[#1D4ED8]' 
-                              : ''}
-                            ${isInRange 
-                              ? 'bg-[#2563EB]/10 text-[#2563EB]' 
-                              : ''}
-                            ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange 
-                              ? 'text-[#1B3564] hover:bg-[#1B3564]/10 cursor-pointer' 
-                              : ''}
-                          `}
-                        >
-                          <span>{format(day, "d")}</span>
-                          {/* Booked dot */}
-                          {isBooked && !isPast && (
-                            <span className="w-1 h-1 rounded-full bg-[#FFB800] mt-0.5" />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Gold Separator */}
-                  <div className="h-px bg-[#FFB800]/20 my-4" />
-
-                  {/* Legend & Buttons */}
-                  <div className="flex flex-col gap-3">
-                    {/* Legend */}
-                    <div className="flex items-center justify-between text-[9px] text-slate-500 font-bold select-none px-1">
-                      <div className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
-                        <span>Selected</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-[#FFB800]" />
-                        <span>Fully Booked</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-slate-300 line-through" />
-                        <span>Unavailable</span>
-                      </div>
-                    </div>
-
-                    {/* Bottom Action Buttons */}
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#1B3564]/5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setCheckIn(null);
-                          setCheckOut(null);
-                        }}
-                        className="text-xs text-[#1B3564]/70 hover:text-[#1B3564] underline font-extrabold tracking-wider transition-colors cursor-pointer"
-                      >
-                        CLEAR DATES
-                      </button>
-                      
-                      <button
-                        type="button"
-                        onClick={() => setIsCalendarOpen(false)}
-                        className="px-5 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-full text-xs font-black tracking-widest transition-all shadow-md shadow-blue-500/10 cursor-pointer hover:shadow-lg"
-                      >
-                        DONE
-                      </button>
-                    </div>
+                {/* CHECK-IN */}
+                <div 
+                  onClick={() => setIsCalendarOpen(true)}
+                  className="flex flex-col gap-1 cursor-pointer select-none group text-left px-4 md:border-r border-slate-100"
+                >
+                  <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest group-hover:text-[#E2A63B] transition-colors">
+                    CHECK-IN
+                  </label>
+                  <div className="text-base font-bold text-[#1B3564] h-6 flex items-center">
+                    {checkIn ? format(checkIn, "MMM dd, yyyy") : <span className="text-[#1B3564]/40 font-normal">Add dates</span>}
                   </div>
                 </div>
-              </>
-            )}
-          </AnimatePresence>
-        </form>
 
-        {/* Mobile Premium Translucent Highlights Capsule Card */}
-        <div className="lg:hidden bg-white/85 backdrop-blur-md border border-white/60 rounded-[1.8rem] px-5 py-4 flex justify-between items-center w-full mt-4 shadow-[0_10px_30px_rgba(44,31,14,0.08)]">
-          {/* Handpicked Villas */}
-          <div className="flex flex-col items-center text-center flex-1">
-            <Award size={18} className="text-[#A27B5C] mb-1.5" />
-            <span className="text-[7.5px] font-black text-[#1B3564] tracking-[0.12em] uppercase leading-tight">
-              Handpicked<br />Villas
-            </span>
-          </div>
+                {/* CHECK-OUT */}
+                <div 
+                  onClick={() => setIsCalendarOpen(true)}
+                  className="flex flex-col gap-1 cursor-pointer select-none group text-left pl-4"
+                >
+                  <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest group-hover:text-[#E2A63B] transition-colors">
+                    CHECK-OUT
+                  </label>
+                  <div className="text-base font-bold text-[#1B3564] h-6 flex items-center">
+                    {checkOut ? format(checkOut, "MMM dd, yyyy") : <span className="text-[#1B3564]/40 font-normal">Add dates</span>}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                {/* GUESTS */}
+                <div className="flex flex-col gap-1 text-left">
+                  <label className="text-[9px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest">GUESTS</label>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <button type="button" onClick={() => { const c = parseInt(guests)||1; if(c>1) setGuests(String(c-1)); }} className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 hover:bg-slate-200">-</button>
+                    <span className="text-base font-bold text-[#1B3564] min-w-[20px] text-center">{guests}</span>
+                    <button type="button" onClick={() => { const c = parseInt(guests)||1; setGuests(String(c+1)); }} className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 hover:bg-slate-200">+</button>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-[10px] tracking-widest uppercase rounded-full px-6 py-3 shadow-lg shadow-yellow-500/10 hover:shadow-xl transition-all duration-300 cursor-pointer border-none flex items-center gap-2 shrink-0"
+                >
+                  <span>Check Availability</span>
+                  <ArrowRight size={14} className="stroke-[2.5]" />
+                </button>
+              </div>
+
+              {/* Calendar Popover */}
+              <AnimatePresence>
+                {isCalendarOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40 bg-black/40 md:bg-transparent" onClick={() => setIsCalendarOpen(false)} />
+                    <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 md:absolute md:top-full md:left-0 md:translate-y-0 md:mt-4 z-50 w-[calc(100vw-2rem)] sm:w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-6">
+                      {/* Calendar Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <button type="button" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={16} /></button>
+                        <span className="text-[#1B3564] font-bold text-sm tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
+                        <button type="button" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={16} /></button>
+                      </div>
+                      
+                      {/* Weekdays */}
+                      <div className="grid grid-cols-7 text-center mb-2">
+                        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
+                          <span key={idx} className="text-[10px] font-extrabold text-[#E2A63B] uppercase tracking-widest">{day}</span>
+                        ))}
+                      </div>
+
+                      {/* Days */}
+                      <div className="grid grid-cols-7 gap-1">
+                        {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => <div key={`empty-${i}`} />)}
+                        {eachDayOfInterval({ start: startOfMonth(calendarViewMonth), end: endOfMonth(calendarViewMonth) }).map((day) => {
+                          const isPast = isBefore(day, startOfDay(new Date()));
+                          const isBooked = isDateFullyBooked(day);
+                          const isSelectedCheckIn = checkIn && isSameDay(day, checkIn);
+                          const isSelectedCheckOut = checkOut && isSameDay(day, checkOut);
+                          const isInRange = checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
+                          const isDisabled = isPast || isBooked;
+
+                          return (
+                            <button
+                              key={day.toString()} type="button" disabled={isDisabled} onClick={() => handleDateSelect(day)}
+                              className={`w-9 h-9 rounded-full text-xs font-bold flex flex-col items-center justify-center transition-all
+                                ${isDisabled ? 'text-slate-300 cursor-not-allowed' : ''}
+                                ${isBooked ? 'bg-[#FFB800]/10 text-slate-400' : ''}
+                                ${isSelectedCheckIn || isSelectedCheckOut ? 'bg-[#2563EB] text-white shadow-md scale-105 z-10' : ''}
+                                ${isInRange ? 'bg-[#2563EB]/10 text-[#2563EB]' : ''}
+                                ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange ? 'text-[#1B3564] hover:bg-slate-100 cursor-pointer' : ''}
+                              `}
+                            >
+                              <span>{format(day, "d")}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-100">
+                        <button type="button" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-xs text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
+                        <button type="button" onClick={() => setIsCalendarOpen(false)} className="px-5 py-2 bg-[#1B3564] text-white rounded-full text-xs font-bold tracking-widest shadow-md">DONE</button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </AnimatePresence>
+            </form>
+        </motion.div>
+
+        {/* Right Column: Magazine Collage */}
+        <div className="w-full lg:col-span-7 relative min-h-[450px] h-[55vh] md:h-[60vh] lg:min-h-0 lg:h-[85vh] lg:row-span-2 order-2 lg:order-none mt-4 lg:mt-0">
           
-          <div className="w-px h-8 bg-slate-200/80" />
-          
-          {/* Safe & Secure */}
-          <div className="flex flex-col items-center text-center flex-1">
-            <ShieldCheck size={18} className="text-[#A27B5C] mb-1.5" />
-            <span className="text-[7.5px] font-black text-[#1B3564] tracking-[0.12em] uppercase leading-tight">
-              Safe & Secure<br />Stays
-            </span>
-          </div>
-          
-          <div className="w-px h-8 bg-slate-200/80" />
-          
-          {/* 24/7 Support */}
-          <div className="flex flex-col items-center text-center flex-1">
-            <Headset size={18} className="text-[#A27B5C] mb-1.5" />
-            <span className="text-[7.5px] font-black text-[#1B3564] tracking-[0.12em] uppercase leading-tight">
-              24/7 Guest<br />Support
-            </span>
-          </div>
+          {/* Angle House Image - Main Back Image */}
+          <Link href="/villa/the-angle-house" className="contents">
+            <motion.div 
+              style={{ y: yPos1 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+              className="absolute top-[2%] left-0 w-[85%] sm:w-[75%] h-[55%] lg:h-[65%] rounded-[1.5rem] lg:rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-4 border-white/80 z-10 group cursor-pointer"
+            >
+              <Image
+                src="/assets/villas/the-angle-house/gallery-11.webp"
+                alt="The Angle House"
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+              {/* Overlay Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1B3564]/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 pointer-events-none" />
+              
+              {/* Content */}
+              <div className="absolute bottom-6 left-6 right-6 transform transition-transform duration-500 group-hover:-translate-y-2">
+                <span className="bg-white/95 backdrop-blur-md text-[#1B3564] text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-3 inline-block shadow-lg">Lonavala</span>
+                <h3 className="text-white text-3xl font-heading font-normal drop-shadow-lg flex items-center justify-between">
+                  The Angle House
+                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <ArrowRight size={18} className="text-white" />
+                  </div>
+                </h3>
+              </div>
+            </motion.div>
+          </Link>
+
+          {/* Canopy Crest Image - Front Offset Image */}
+          <Link href="/villa/canopy-crest" className="contents">
+            <motion.div 
+              style={{ y: yPos2 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+              className="absolute bottom-[2%] right-0 w-[75%] sm:w-[65%] h-[55%] lg:h-[55%] rounded-[1.5rem] lg:rounded-[2rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.25)] border-4 border-white/80 z-20 group cursor-pointer"
+            >
+              <Image
+                src="/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg"
+                alt="Canopy Crest"
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+              {/* Overlay Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1B3564]/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 pointer-events-none" />
+              
+              {/* Content */}
+              <div className="absolute bottom-6 left-6 right-6 transform transition-transform duration-500 group-hover:-translate-y-2">
+                <span className="bg-[#E2A63B]/95 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-3 inline-block shadow-lg">Khopoli</span>
+                <h3 className="text-white text-2xl font-heading font-normal drop-shadow-lg flex items-center justify-between">
+                  Canopy Crest
+                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <ArrowRight size={18} className="text-white" />
+                  </div>
+                </h3>
+              </div>
+            </motion.div>
+          </Link>
+
+          {/* Floating Highlight Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 1, type: "spring", stiffness: 100 }}
+            className="absolute bottom-[10%] left-[5%] lg:left-[10%] z-30 bg-white/95 backdrop-blur-md rounded-full px-5 py-3 shadow-xl border border-slate-100 flex items-center gap-3"
+          >
+            <div className="w-8 h-8 rounded-full bg-[#1B3564]/5 flex items-center justify-center">
+              <Award className="text-[#DAA520]" size={16} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[#1B3564] font-black text-[10px] uppercase tracking-widest leading-none mb-1">Premium</span>
+              <span className="text-slate-500 text-[9px] font-medium leading-none">Curated Escapes</span>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Highlights Row below the capsule - Desktop Only */}
-        <div className="hidden lg:flex flex-wrap justify-center sm:justify-between items-center gap-4 w-full mt-4 px-6 md:px-10">
-          <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
-            <Shield size={14} className="text-[#FFB800]" />
-            Best Price Guarantee
-          </span>
-          <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
-            <CheckCircle size={14} className="text-[#FFB800]" />
-            Flexible Cancellation
-          </span>
-          <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
-            <Heart size={14} className="text-[#FFB800]" />
-            Trusted by Guests
-          </span>
-          <span className="text-white font-extrabold text-[10px] md:text-[11px] tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
-            <BellRing size={14} className="text-[#FFB800]" />
-            24/7 Concierge
-          </span>
       </div>
-    </div>
-  </section>
+    </section>
   );
 };
 

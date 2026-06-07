@@ -15,14 +15,19 @@ model Villa {
   name        String
   location    String
   description String
-  price       Float
-  guests      Int
-  bedrooms    Int
-  bathrooms   Int
+  price          Float
+  guests         Int
+  baseGuests     Int      @default(12)
+  extraGuestFee  Float    @default(0)
+  bedrooms       Int
+  bathrooms      Int
   images         String[]
   amenities      String[]
   category       String   @default("Mountain View")
   weekendPrice   Float?
+  fridayPrice    Float?
+  saturdayPrice  Float?
+  sundayPrice    Float?
   iCalUrl        String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

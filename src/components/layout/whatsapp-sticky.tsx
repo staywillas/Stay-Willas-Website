@@ -15,7 +15,7 @@ const WhatsAppSticky = () => {
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.8 }}
-        className="flex items-center justify-center w-13 h-13 bg-[#1B3564] hover:bg-[#DAA520] text-white rounded-full shadow-[0_8px_24px_rgba(27,53,100,0.3)] hover:shadow-[0_12px_30px_rgba(218,165,32,0.4)] hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-[#DAA520]/30 hover:border-[#DAA520] relative"
+        className="flex items-center justify-center w-13 h-13 bg-[#25D366] hover:bg-[#20BA5A] text-white rounded-full shadow-[0_8px_24px_rgba(37,211,102,0.3)] hover:shadow-[0_12px_30px_rgba(32,186,90,0.4)] hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-[#20BA5A]/30 hover:border-[#20BA5A] relative"
         title="Villa Concierge"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -34,11 +34,11 @@ const WhatsAppSticky = () => {
           animate={{ opacity: 1, x: 0, scale: 1 }}
           exit={{ opacity: 0, x: -10, scale: 0.95 }}
           transition={{ duration: 0.2 }}
-          className="hidden sm:flex bg-white text-[#1B3564] px-4 py-2.5 rounded-2xl border border-[#DAA520]/20 shadow-[0_10px_30px_rgba(0,0,0,0.08)] items-center gap-2 select-none relative"
+          className="hidden sm:flex bg-white text-[#1B3564] px-4 py-2.5 rounded-2xl border border-emerald-500/25 shadow-[0_10px_30px_rgba(0,0,0,0.08)] items-center gap-2 select-none relative"
         >
-          <div className="absolute left-[-6px] top-[18px] w-3 h-3 bg-white border-l border-b border-[#DAA520]/20 rotate-45" />
+          <div className="absolute left-[-6px] top-[18px] w-3 h-3 bg-white border-l border-b border-emerald-500/25 rotate-45" />
           <div className="flex flex-col text-left">
-            <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-wider">Villa Concierge</span>
+            <span className="text-[10px] text-emerald-600 font-black uppercase tracking-wider">Villa Concierge</span>
             <span className="text-xs font-semibold text-[#1B3564]/70">Replies within 15 min</span>
           </div>
         </motion.div>

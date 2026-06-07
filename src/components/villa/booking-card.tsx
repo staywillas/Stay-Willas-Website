@@ -40,9 +40,14 @@ interface BookingCardProps {
   price: string;
   basePrice: number;
   weekendPrice?: number | null;
+  fridayPrice?: number | null;
+  saturdayPrice?: number | null;
+  sundayPrice?: number | null;
   dailyPrices: DailyPriceProp[];
   seasonalPrices: SeasonalPriceProp[];
   maxGuests?: number;
+  baseGuests?: number;
+  extraGuestFee?: number;
   bookings?: BookingProp[];
 }
 
@@ -91,9 +96,14 @@ const BookingCard = ({
   price, 
   basePrice, 
   weekendPrice, 
+  fridayPrice,
+  saturdayPrice,
+  sundayPrice,
   dailyPrices = [], 
   seasonalPrices = [], 
   maxGuests = 16,
+  baseGuests,
+  extraGuestFee,
   bookings = []
 }: BookingCardProps) => {
   const { user, isSignedIn } = useUser();
@@ -107,6 +117,8 @@ const BookingCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [showAddOns, setShowAddOns] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [isCouponApplied, setIsCouponApplied] = useState(false);
 
   // Premium custom calendar states
   const [showCalendar, setShowCalendar] = useState(false);
@@ -264,14 +276,25 @@ const BookingCard = ({
       };
     }
 
-    // 3. Check Weekend Pricing (Friday = 5, Saturday = 6)
+    // 3. Check specific day-of-week pricing overrides
     const dayOfWeek = check.getDay();
+    if (dayOfWeek === 5 && fridayPrice != null) {
+      return { price: fridayPrice, type: "FRIDAY" as const, label: "Friday Rate" };
+    }
+    if (dayOfWeek === 6 && saturdayPrice != null) {
+      return { price: saturdayPrice, type: "SATURDAY" as const, label: "Saturday Rate" };
+    }
+    if (dayOfWeek === 0 && sundayPrice != null) {
+      return { price: sundayPrice, type: "SUNDAY" as const, label: "Sunday Rate" };
+    }
+
+    // 4. Check Legacy Weekend Pricing
     const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
     if (isWeekend && weekendPrice) {
       return { price: weekendPrice, type: "WEEKEND" as const, label: "Weekend Rate" };
     }
 
-    // 4. Fallback to base rate
+    // 5. Fallback to base rate
     return { price: basePrice, type: "BASE" as const, label: "Base Rate" };
   };
 
@@ -295,6 +318,11 @@ const BookingCard = ({
   const breakdown = getPricingBreakdown();
   const subtotal = breakdown.reduce((sum, item) => sum + item.price, 0);
 
+  const baseGuestsCount = baseGuests ?? maxGuests;
+  const extraGuests = Math.max(0, guests - baseGuestsCount);
+  const extraGuestsCostPerNight = extraGuestFee ? extraGuests * extraGuestFee : 0;
+  const totalExtraGuestsCost = extraGuestsCostPerNight * (nights > 0 ? nights : 0);
+
   // Dynamic add-ons cost calculation
   let addOnsCost = 0;
   selectedAddOns.forEach(addon => {
@@ -317,8 +345,9 @@ const BookingCard = ({
     );
   };
 
-  const serviceFee = 5000;
-  const total = subtotal + serviceFee + addOnsCost;
+  const serviceFee = 0; // Removed luxury service fee
+  const discount = isCouponApplied && couponCode.toUpperCase() === "STAY5" ? Math.round((subtotal + totalExtraGuestsCost) * 0.05) : 0;
+  const total = subtotal + totalExtraGuestsCost + serviceFee + addOnsCost - discount;
 
   const handleCheckInClick = () => {
     setCalendarTarget("checkIn");
@@ -353,10 +382,14 @@ const BookingCard = ({
         ? `\n• Add-On Experiences: *${selectedAddOns.join(", ")}*`
         : "";
 
+      const discountSection = discount > 0
+        ? `\n🏷️ *Discount Applied:* -₹${discount.toLocaleString("en-IN")} (Coupon: ${couponCode.toUpperCase()})`
+        : "";
+
       const msg = `Hello Stay Willas team! 🌟 I'm planning our next luxury staycation and would love to reserve *${villaName}* for our group of *${guests}* guest(s). 🏰✨
 
 Here are our stay details:
-📅 *Dates:* ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights)${addOnsSection}
+📅 *Dates:* ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights)${addOnsSection}${discountSection}
 💵 *Total Stay Bill:* ₹${total.toLocaleString("en-IN")}
 
 Our Contact & Verified Details:
@@ -594,6 +627,77 @@ We are so excited about this getaway! Could you please check availability and he
           <Users size={16} className="text-text-primary/30 shrink-0 pointer-events-none" />
         </div>
 
+        {/* Coupon Code Section */}
+        <div className="w-full bg-gradient-to-r from-emerald-50/50 to-green-50/30 border border-emerald-500/20 rounded-2xl p-4 text-left shadow-sm space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-start sm:items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold shrink-0">🏷️</span>
+              <div>
+                <span className="text-[10px] text-emerald-800 uppercase tracking-wider font-bold block">Featured Offer</span>
+                <p className="text-xs text-text-primary/80 font-medium mt-0.5 leading-tight">
+                  Save 5% with coupon <strong className="text-emerald-750 font-extrabold select-all">STAY5</strong>
+                </p>
+              </div>
+            </div>
+            {!isCouponApplied ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCouponApplied(true);
+                  setCouponCode("STAY5");
+                }}
+                className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-bold uppercase transition-all duration-200 cursor-pointer shrink-0"
+              >
+                Apply
+              </button>
+            ) : (
+              <span className="text-[10px] font-extrabold text-emerald-700 uppercase flex items-center gap-1 w-full sm:w-auto shrink-0">
+                <Check size={12} className="stroke-[3]" /> Applied
+              </span>
+            )}
+          </div>
+          
+          <div className="flex gap-2 w-full">
+            <input
+              type="text"
+              placeholder="Enter coupon code"
+              className="flex-1 min-w-0 bg-white border border-border-subtle rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wider placeholder:text-text-primary/20 placeholder:normal-case outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
+              value={couponCode}
+              onChange={(e) => {
+                setCouponCode(e.target.value.toUpperCase());
+                if (isCouponApplied) {
+                  setIsCouponApplied(false);
+                }
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (isCouponApplied) {
+                  setIsCouponApplied(false);
+                  setCouponCode("");
+                } else {
+                  if (couponCode.trim().toUpperCase() === "STAY5") {
+                    setIsCouponApplied(true);
+                    setCouponCode("STAY5");
+                  } else if (couponCode.trim() === "") {
+                    setIsCouponApplied(false);
+                  } else {
+                    alert("Invalid coupon code. Please use coupon code STAY5 for a 5% discount.");
+                    setIsCouponApplied(false);
+                  }
+                }
+              }}
+              className={`px-3 py-2 border text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
+                isCouponApplied 
+                  ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-100" 
+                  : "border-border-subtle bg-white hover:bg-slate-50 text-text-primary"
+              }`}
+            >
+              {isCouponApplied ? "Remove" : "Apply"}
+            </button>
+          </div>
+        </div>
 
         {/* Contact Information Section */}
         <div className="pt-4 border-t border-border-subtle/60 space-y-3">
@@ -696,6 +800,12 @@ We are so excited about this getaway! Could you please check availability and he
               <span>Accommodation Subtotal</span>
               <span>₹{subtotal.toLocaleString("en-IN")}</span>
             </div>
+            {totalExtraGuestsCost > 0 && (
+              <div className="flex justify-between text-xs pt-1 font-bold text-text-primary/80">
+                <span>Extra Guests ({extraGuests} × ₹{extraGuestFee}/night)</span>
+                <span>₹{totalExtraGuestsCost.toLocaleString("en-IN")}</span>
+              </div>
+            )}
           </div>
 
           {addOnsCost > 0 && (
@@ -705,10 +815,12 @@ We are so excited about this getaway! Could you please check availability and he
             </div>
           )}
 
-          <div className="flex justify-between text-sm">
-            <span className="text-text-primary/60">Luxury Service Fee</span>
-            <span className="text-text-primary">₹{serviceFee.toLocaleString("en-IN")}</span>
-          </div>
+          {discount > 0 && (
+            <div className="flex justify-between text-sm text-emerald-600 font-semibold">
+              <span>Coupon Discount (5% Off)</span>
+              <span>-₹{discount.toLocaleString("en-IN")}</span>
+            </div>
+          )}
           <div className="flex justify-between text-lg font-heading pt-4 border-t border-[#1B3564]/10">
             <span className="text-[#1B3564]">Total Stay Bill</span>
             <span className="text-[#1B3564] font-bold">₹{total.toLocaleString("en-IN")}</span>
