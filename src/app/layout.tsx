@@ -47,11 +47,20 @@ export const metadata: Metadata = {
     title: "Stay Willas | Luxury Villas & Staycations in Maharashtra",
     description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
     url: "https://www.staywillas.com",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "Stay Willas Luxury Villas and Staycations",
+      }
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Stay Willas | Luxury Villas & Staycations in Maharashtra",
     description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 

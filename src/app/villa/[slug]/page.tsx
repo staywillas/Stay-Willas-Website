@@ -283,7 +283,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
             "name": villaData.name,
             "description": villaData.description,
             "image": villaData.images,
-            "url": `https://staywillas.com/villa/${villaData.slug}`,
+            "url": `https://www.staywillas.com/villa/${villaData.slug}`,
             "address": {
               "@type": "PostalAddress",
               "addressLocality": villaData.location

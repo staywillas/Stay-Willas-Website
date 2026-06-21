@@ -71,10 +71,10 @@ export default async function Home() {
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "Stay Willas",
-            "url": "https://staywillas.com",
+            "url": "https://www.staywillas.com",
             "potentialAction": {
               "@type": "SearchAction",
-              "target": "https://staywillas.com/villas?region={search_term_string}",
+              "target": "https://www.staywillas.com/villas?region={search_term_string}",
               "query-input": "required name=search_term_string"
             }
           })
