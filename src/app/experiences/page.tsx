@@ -81,7 +81,7 @@ export default function ExperiencesPage() {
                   <div className="w-10 h-10 rounded-xl bg-[#DAA520]/10 border border-[#DAA520]/25 flex items-center justify-center text-[#DAA520] mx-auto mb-3">
                     <pillar.icon size={18} />
                   </div>
-                  <h5 className="font-bold text-[11px] uppercase tracking-wider text-[#1B3564]">{pillar.title}</h5>
+                  <h2 className="font-bold text-[11px] uppercase tracking-wider text-[#1B3564]">{pillar.title}</h2>
                   <p className="text-[9px] text-text-primary/50 mt-1">{pillar.desc}</p>
                 </div>
               ))}

@@ -443,6 +443,30 @@ export default function VillasClient({
 
       </div>
 
+      {/* Villa Booking Guide / SEO Section */}
+      <section className="mt-24 pt-16 border-t border-border-subtle select-none text-charcoal">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <div>
+            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Why Book Our Private Pool Villas in Maharashtra?</h2>
+            <p className="text-sm text-charcoal/70 leading-relaxed">
+              Stay Willas offers an elite collection of verified private pool villas designed for premium staycations. Enjoy total isolation, high-speed Wi-Fi, fully equipped modern kitchens, custom cocktail bar spaces, and stunning hill views. Each luxury villa serves as your personal sanctuary.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Premium Retreats in Lonavala, Alibaug, and Karjat</h2>
+            <p className="text-sm text-charcoal/70 leading-relaxed">
+              Whether you are planning a misty getaway in Lonavala, a sunny beach trip to Alibaug, or a lush riverside break in Karjat, we have the perfect estate for your group. Our properties are chosen for their convenient locations, beautiful designs, and proximity to major tourist highlights.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">All-Inclusive Luxury Hospitality & Concierge</h2>
+            <p className="text-sm text-charcoal/70 leading-relaxed">
+              Every booking includes a dedicated stay concierge to manage your itinerary. From arranging professional private chef services cooking delicious local cuisines to setting up BBQ grills on green lawns or organizing temperature-regulated pools, we take care of all the details so you can relax.
+            </p>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

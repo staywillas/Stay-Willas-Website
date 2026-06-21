@@ -72,6 +72,30 @@ export default function StoriesPage() {
         </div>
       </section>
 
+      {/* SEO Guide Section */}
+      <section className="py-16 bg-[#1B3564]/5 border-t border-[#DAA520]/15 select-none text-charcoal">
+        <div className="max-w-4xl mx-auto px-6 space-y-12">
+          <div>
+            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Unfiltered Staycation Vlogs</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Explore authentic, uncut vlogs and video walkthroughs filmed directly by our guests. See the actual layout, private pool experiences, and home-style hospitality of Stay Willas properties as experienced by real families and groups.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Why Our Guests Love The Angle House</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Nestled in the scenic hills of Lonavala, The Angle House is celebrated for its cutting-edge modern architecture, pristine temperature-controlled pool, expansive green lawns, and professional culinary services. It offers a flawless blend of isolation and luxury convenience.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Book Your Own Luxury Stay Story</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Ready to write your own chapter of slow luxury? Connect with our dedicated concierge today to customize your itinerary, request private chef bookings, or organize special events at one of our premium Maharashtra estates.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </main>
   );

@@ -42,9 +42,9 @@ export default function ContactPage() {
           {/* Contact Details */}
           <div className="lg:col-span-5 space-y-16">
             <div>
-              <h3 className="text-2xl font-heading mb-8 flex items-center gap-4 italic text-accent-primary">
+              <h2 className="text-2xl font-heading mb-8 flex items-center gap-4 italic text-accent-primary">
                 Direct Contact
-              </h3>
+              </h2>
               <div className="space-y-8">
                 <a href="tel:+919619042310" className="flex gap-6 items-start group">
                   <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary group-hover:bg-accent-primary group-hover:text-white transition-all">
@@ -101,7 +101,7 @@ export default function ContactPage() {
             <div className="p-10 rounded-[32px] bg-gradient-to-br from-[#1B3564] to-[#0F2341] text-white border border-white/10 relative overflow-hidden shadow-xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#DAA520]/15 rounded-full blur-[40px] translate-x-1/4 -translate-y-1/4" />
               <div className="relative z-10">
-                <h4 className="text-2xl font-heading mb-3 text-[#DAA520] italic">Explore Properties</h4>
+                <h2 className="text-2xl font-heading mb-3 text-[#DAA520] italic">Explore Properties</h2>
                 <p className="text-white/70 text-sm leading-relaxed mb-8">
                   Ready to experience absolute luxury? Browse our handpicked private villas and premium destinations.
                 </p>
@@ -130,7 +130,7 @@ export default function ContactPage() {
             </div>
 
             <div className="p-10 rounded-[32px] bg-accent-primary/5 border border-accent-primary/10">
-              <h4 className="text-xl font-heading mb-4 text-accent-primary italic underline underline-offset-8">Property Owners</h4>
+              <h2 className="text-xl font-heading mb-4 text-accent-primary italic underline underline-offset-8">Property Owners</h2>
               <p className="text-text-primary/55 text-sm leading-relaxed mb-6">
                 Want to list your home with us? We&apos;d love to share it with our guests.
               </p>
