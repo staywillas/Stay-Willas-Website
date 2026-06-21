@@ -25,6 +25,15 @@ const destinations = [
     link: "/villas?region=lonavala"
   },
   {
+    name: "Khopoli",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    count: "1 Villa",
+    tag: "Nature Getaways",
+    desc: "Scenic foothills, waterfalls, and green valleys near the hills.",
+    isLaunchingSoon: false,
+    link: "/villas?region=khopoli"
+  },
+  {
     name: "Karjat",
     image: "/assets/villas/heritage-villa/main.jpg",
     count: "1 Villa",
@@ -50,15 +59,6 @@ const destinations = [
     desc: "Golden sand beaches, pools, and beautiful sunsets.",
     isLaunchingSoon: false,
     link: "/villas?region=alibaug"
-  },
-  {
-    name: "Khopoli",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
-    count: "1 Villa",
-    tag: "Nature Getaways",
-    desc: "Scenic foothills, waterfalls, and green valleys near the hills.",
-    isLaunchingSoon: false,
-    link: "/villas?region=khopoli"
   },
   {
     name: "Goa",
@@ -106,7 +106,7 @@ const DestinationShowcase = () => {
   }, []);
 
   return (
-    <section className="py-32 bg-bg-primary relative overflow-hidden">
+    <section className="py-16 md:py-32 bg-bg-primary relative overflow-hidden">
       {/* Elegant Gold Wave Lines - Left Boundary Overlay */}
       <div className="absolute left-0 top-0 bottom-0 w-64 opacity-20 pointer-events-none select-none z-0">
         <svg className="w-full h-full text-[#DAA520]" viewBox="0 0 200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -139,23 +139,23 @@ const DestinationShowcase = () => {
 
       <div className="max-w-[1400px] mx-auto px-6 relative z-10">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 px-6 md:px-12">
-          <div>
-            <span className="text-[#DAA520] font-bold tracking-[0.3em] uppercase text-xs mb-4 inline-block bg-[#DAA520]/15 px-4.5 py-2 rounded-full border border-[#DAA520]/20">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 md:mb-16 gap-6 px-4 md:px-12">
+          <div className="text-left">
+            <span className="text-[#DAA520] font-bold tracking-[0.15em] sm:tracking-[0.3em] uppercase text-[10px] sm:text-xs mb-3 inline-block bg-[#DAA520]/15 px-3.5 py-1.5 rounded-full border border-[#DAA520]/20 whitespace-nowrap">
               🗺️ Where Do You Want To Go?
             </span>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-heading text-[#1B3564] leading-tight mt-6 font-normal tracking-wide">
+            <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-heading text-[#1B3564] leading-tight mt-3 sm:mt-6 font-normal tracking-wide">
               Find Your <span className="italic text-[#DAA520]">Perfect Spot</span>
             </h2>
             {/* Scroll guideline */}
-            <div className="flex items-center gap-3 mt-8 text-xs uppercase tracking-[0.3em] text-[#DAA520]/80 font-bold">
-              <span className="w-2 h-2 rounded-full bg-[#DAA520] animate-pulse"></span>
+            <div className="flex items-center gap-2 mt-4 sm:mt-8 text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.3em] text-[#DAA520]/80 font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520] animate-pulse"></span>
               <span>Scroll or drag to explore stays</span>
             </div>
           </div>
           
           {/* Navigation Buttons */}
-          <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
             <button className="dest-prev w-12 h-12 rounded-full border border-[#1B3564]/30 flex items-center justify-center text-[#1B3564] hover:bg-[#1B3564] hover:border-[#1B3564] hover:text-white transition-all duration-300 group cursor-pointer">
               <ChevronLeft size={20} className="group-hover:scale-110 transition-transform" />
             </button>
@@ -175,10 +175,10 @@ const DestinationShowcase = () => {
           slidesPerView={"auto"}
           slideToClickedSlide={true}
           coverflowEffect={{
-            rotate: 15,
-            stretch: -20,
-            depth: 150,
-            modifier: 1.1,
+            rotate: 5,
+            stretch: -10,
+            depth: 80,
+            modifier: 1,
             slideShadows: false,
           }}
           navigation={{
@@ -193,16 +193,16 @@ const DestinationShowcase = () => {
           className="dest-swiper py-16"
         >
           {destinations.map((dest) => (
-            <SwiperSlide key={dest.name} className="max-w-[320px] md:max-w-[400px] px-4 hover:!z-50 cursor-pointer">
+            <SwiperSlide key={dest.name} className="max-w-[200px] sm:max-w-[320px] md:max-w-[400px] px-2.5 sm:px-4 hover:!z-50 cursor-pointer">
               <ThreeDHoverCard
                 maxTilt={8}
                 scale={1.04}
                 lift={-12}
-                className="rounded-[28px] shadow-lg"
+                className="rounded-[24px] sm:rounded-[28px] shadow-lg"
               >
                 <Link
                   href={dest.link}
-                  className="block relative aspect-[3/4] w-full h-full rounded-[28px] overflow-hidden group border-[3px] border-[#DAA520]/80 cursor-pointer shadow-[0_20px_50px_rgba(15,23,42,0.25)] hover:border-[#DAA520] hover:shadow-[0_0_45px_rgba(218,165,32,0.85)] hover:scale-[1.02] transition-all duration-500"
+                  className="block relative aspect-[3/4] w-full h-full rounded-[24px] sm:rounded-[28px] overflow-hidden group border-2 sm:border-[3px] border-[#DAA520]/80 cursor-pointer shadow-[0_15px_40px_rgba(15,23,42,0.22)] hover:border-[#DAA520] hover:shadow-[0_0_35px_rgba(218,165,32,0.75)] hover:scale-[1.02] transition-all duration-500"
                 >
                   <Image
                     src={dest.image}
@@ -216,10 +216,10 @@ const DestinationShowcase = () => {
                   <div className="absolute inset-0 bg-black/10 transition-opacity duration-500 group-hover:bg-black/5" />
                   
                   {/* Bottom Gradient Content Overlay */}
-                  <div className="absolute inset-x-0 bottom-0 p-6 rounded-b-[28px] bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 flex flex-col justify-end transition-all duration-500">
+                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 md:p-6 rounded-b-[24px] sm:rounded-b-[28px] bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 flex flex-col justify-end transition-all duration-500">
                     {/* Title & Status */}
                     <div className="flex items-end justify-between w-full mb-1">
-                      <h3 className="text-xl md:text-2xl font-heading text-white font-bold tracking-wide transition-colors duration-300 group-hover:text-[#DAA520]">
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-heading text-white font-bold tracking-wide transition-colors duration-300 group-hover:text-[#DAA520] line-clamp-1">
                         {dest.name}
                       </h3>
                       {dest.isLaunchingSoon && (
@@ -232,17 +232,17 @@ const DestinationShowcase = () => {
                     {/* CTA & Property Count */}
                     <div className="flex items-center justify-between w-full mt-1.5">
                       <div className="flex items-center gap-2 group/btn">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#DAA520] to-[#E6B830] text-slate-950 flex items-center justify-center transition-all duration-500 group-hover/btn:scale-110 shadow-md">
-                          <ArrowUpRight size={14} className="stroke-[2.5]" />
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-[#DAA520] to-[#E6B830] text-slate-950 flex items-center justify-center transition-all duration-500 group-hover/btn:scale-110 shadow-md">
+                          <ArrowUpRight size={12} className="stroke-[2.5] sm:w-[14px] sm:h-[14px]" />
                         </div>
-                        <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#FAF8F5]/90">
+                        <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#FAF8F5]/90">
                           {dest.count}
                         </span>
                       </div>
-
+ 
                       {dest.isLaunchingSoon && (
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#DAA520] hover:text-[#E6B830] transition-colors border-b border-[#DAA520]/30 hover:border-[#DAA520]/80 pb-0.5 shrink-0 z-20">
-                          Partner with us →
+                        <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-[#DAA520] hover:text-[#E6B830] transition-colors border-b border-[#DAA520]/30 hover:border-[#DAA520]/80 pb-0.5 shrink-0 z-20">
+                          Partner →
                         </span>
                       )}
                     </div>

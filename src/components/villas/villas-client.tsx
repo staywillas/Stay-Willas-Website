@@ -44,7 +44,7 @@ const CATEGORIES = [
   "Cold Climates"
 ];
 
-const REGIONS = ["Lonavala", "Karjat", "Igatpuri", "Alibaug", "Khopoli", "Goa"];
+const REGIONS = ["Lonavala", "Khopoli", "Karjat", "Igatpuri", "Alibaug", "Goa"];
 
 const AMENITY_TAGS = [
   { label: "Swimming Pool", match: ["pool", "swimming"] },
@@ -152,7 +152,7 @@ export default function VillasClient({
   }, [region, category, maxBudget, minBedrooms, selectedAmenities]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 pb-24 text-charcoal">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-24 text-charcoal">
       
       {/* Search Header Row */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 border-b border-border-subtle pb-6 select-none">
@@ -389,7 +389,7 @@ export default function VillasClient({
 
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
         >
           <AnimatePresence mode="popLayout">
             {filteredVillas.map((villa) => (

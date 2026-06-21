@@ -69,7 +69,7 @@ export default function AiConcierge() {
             id: "msg-1",
             role: "bot",
             content: "Greetings! 🌟 I am your Stay Willas Luxury Concierge. I specialize in matching discerning travelers with our handpicked collection of premium private pool estates. Let's design your perfect getaway. Where would you like to escape next?",
-            options: ["Lonavala", "Alibaug", "Karjat", "Khopoli", "Anywhere"],
+            options: ["Lonavala", "Khopoli", "Alibaug", "Karjat", "Anywhere"],
           },
         ]);
       }, 500);
@@ -212,7 +212,7 @@ export default function AiConcierge() {
             id: Date.now().toString(),
             role: "bot",
             content: "Certainly! Let's find the perfect villa for your next getaway. Where would you like to travel?",
-            options: ["Lonavala", "Alibaug", "Karjat", "Khopoli", "Anywhere"],
+            options: ["Lonavala", "Khopoli", "Alibaug", "Karjat", "Anywhere"],
           },
         ]);
       }, 800);

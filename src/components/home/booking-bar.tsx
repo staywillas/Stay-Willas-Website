@@ -171,9 +171,9 @@ Could you please share the options available and help us plan our perfect getawa
                   className="bg-transparent text-sm font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-6 font-heading"
                 >
                   <option value="Lonavala">Lonavala</option>
+                  <option value="Khopoli">Khopoli</option>
                   <option value="Alibaug">Alibaug</option>
                   <option value="Karjat">Karjat</option>
-                  <option value="Khopoli">Khopoli</option>
                 </select>
                 <ChevronDown size={14} className="absolute right-0 text-[#1B3564]/50 pointer-events-none" />
               </div>
@@ -222,10 +222,16 @@ Could you please share the options available and help us plan our perfect getawa
                 <Users size={10} className="text-[#DAA520]" />
                 GUESTS
               </label>
-              <div className="flex items-center gap-2 mt-0.5">
-                <button type="button" onClick={() => { const c = parseInt(guests)||1; if(c>1) setGuests(String(c-1)); }} className="w-5 h-5 rounded-full bg-slate-100/80 hover:bg-slate-200/80 flex items-center justify-center font-bold text-slate-600 transition-colors">-</button>
-                <span className="text-sm font-bold text-[#1B3564] min-w-[16px] text-center font-heading">{guests}</span>
-                <button type="button" onClick={() => { const c = parseInt(guests)||1; setGuests(String(c+1)); }} className="w-5 h-5 rounded-full bg-slate-100/80 hover:bg-slate-200/80 flex items-center justify-center font-bold text-slate-600 transition-colors">+</button>
+              <div className="relative flex items-center mt-0.5">
+                <input
+                  type="number"
+                  min="1"
+                  max="50"
+                  value={guests}
+                  onChange={(e) => setGuests(e.target.value)}
+                  className="bg-transparent text-sm font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-full font-heading"
+                  placeholder="Enter guests"
+                />
               </div>
             </div>
 
@@ -256,9 +262,9 @@ Could you please share the options available and help us plan our perfect getawa
                     className="bg-transparent text-xs font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-6 font-heading"
                   >
                     <option value="Lonavala">Lonavala</option>
+                    <option value="Khopoli">Khopoli</option>
                     <option value="Alibaug">Alibaug</option>
                     <option value="Karjat">Karjat</option>
-                    <option value="Khopoli">Khopoli</option>
                   </select>
                   <ChevronDown size={12} className="absolute right-0 text-[#1B3564]/50 pointer-events-none" />
                 </div>
@@ -295,15 +301,21 @@ Could you please share the options available and help us plan our perfect getawa
 
               {/* GUESTS ROW */}
               <div className="flex items-center justify-between bg-slate-50/50 p-2.5 rounded-xl border border-slate-100">
-                <div className="flex flex-col gap-1 text-left">
+                <div className="flex flex-col gap-1 text-left flex-1 mr-3">
                   <label className="text-[8px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest flex items-center gap-1">
                     <Users size={8} className="text-[#DAA520]" />
                     GUESTS
                   </label>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <button type="button" onClick={() => { const c = parseInt(guests)||1; if(c>1) setGuests(String(c-1)); }} className="w-5 h-5 rounded-full bg-white flex items-center justify-center font-bold text-slate-500 shadow-sm border border-slate-100 text-xs">-</button>
-                    <span className="text-xs font-bold text-[#1B3564] min-w-[16px] text-center font-heading">{guests}</span>
-                    <button type="button" onClick={() => { const c = parseInt(guests)||1; setGuests(String(c+1)); }} className="w-5 h-5 rounded-full bg-white flex items-center justify-center font-bold text-slate-500 shadow-sm border border-slate-100 text-xs">+</button>
+                  <div className="relative flex items-center mt-0.5">
+                    <input
+                      type="number"
+                      min="1"
+                      max="50"
+                      value={guests}
+                      onChange={(e) => setGuests(e.target.value)}
+                      className="bg-transparent text-xs font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-full font-heading"
+                      placeholder="Enter guests"
+                    />
                   </div>
                 </div>
 

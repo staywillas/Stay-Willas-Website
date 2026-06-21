@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart, User, Building2, Menu } from "lucide-react";
+import { Heart, Home, Building2, Menu } from "lucide-react";
 import { useAuth } from "@/lib/use-auth";
 import { cn } from "@/lib/utils";
 
@@ -36,16 +36,6 @@ export default function MobileBottomNav() {
 
   if (isVillaDetailPage) return null;
 
-  const handleProfileClick = () => {
-    if (isSignedIn && user) {
-      if (user.role === "admin") window.location.href = "/admin";
-      else if (user.role === "partner") window.location.href = "/homeowner";
-      else window.location.href = "/dashboard";
-    } else {
-      window.location.href = "/login?role=guest";
-    }
-  };
-
   const handleMenuClick = () => {
     window.dispatchEvent(new CustomEvent("toggle-mobile-menu"));
   };
@@ -58,20 +48,30 @@ export default function MobileBottomNav() {
       {/* Frosted Glass Bar */}
       <div className="bg-[#F5F2EA]/92 backdrop-blur-2xl border-t border-[#DAA520]/15 shadow-[0_-8px_30px_rgba(44,31,14,0.08)] px-4 pt-2 pb-2">
         <div className="flex items-end justify-around max-w-md mx-auto relative">
-          {/* Menu Tab */}
-          <button
-            onClick={handleMenuClick}
-            className="flex flex-col items-center justify-center gap-1 py-1.5 min-w-[56px] text-[#1B3564]/50 hover:text-[#1B3564] transition-all duration-300 active:scale-90 cursor-pointer border-none bg-transparent"
+          
+          {/* Home Tab */}
+          <Link
+            href="/"
+            className={cn(
+              "flex flex-col items-center justify-center gap-1 py-1.5 min-w-[56px] transition-all duration-300 active:scale-90 relative",
+              pathname === "/" ? "text-[#DAA520]" : "text-[#1B3564]/50 hover:text-[#1B3564]"
+            )}
           >
-            <Menu size={21} className="stroke-[1.8]" />
-            <span className="text-[9px] tracking-wider uppercase font-medium">Menu</span>
-          </button>
+            <Home size={21} className={cn("transition-all", pathname === "/" ? "stroke-[2.5]" : "stroke-[1.8]")} />
+            <span className={cn("text-[9px] tracking-wider uppercase", pathname === "/" ? "font-bold" : "font-medium")}>
+              Home
+            </span>
+            {/* Active indicator dot */}
+            {pathname === "/" && (
+              <div className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-[#DAA520]" />
+            )}
+          </Link>
 
           {/* Villas Tab */}
           <Link
             href="/villas"
             className={cn(
-              "flex flex-col items-center justify-center gap-1 py-1.5 min-w-[56px] transition-all duration-300 active:scale-90",
+              "flex flex-col items-center justify-center gap-1 py-1.5 min-w-[56px] transition-all duration-300 active:scale-90 relative",
               pathname === "/villas" ? "text-[#DAA520]" : "text-[#1B3564]/50 hover:text-[#1B3564]"
             )}
           >
@@ -126,19 +126,13 @@ export default function MobileBottomNav() {
             )}
           </Link>
 
-          {/* Profile Tab */}
+          {/* Menu Tab */}
           <button
-            onClick={handleProfileClick}
-            className="flex flex-col items-center justify-center gap-1 py-1.5 min-w-[56px] text-[#1B3564]/50 hover:text-[#1B3564] transition-all active:scale-90 cursor-pointer border-none bg-transparent"
+            onClick={handleMenuClick}
+            className="flex flex-col items-center justify-center gap-1 py-1.5 min-w-[56px] text-[#1B3564]/50 hover:text-[#1B3564] transition-all duration-300 active:scale-90 cursor-pointer border-none bg-transparent"
           >
-            {isSignedIn && user ? (
-              <div className="w-[21px] h-[21px] rounded-full bg-[#1B3564] text-white flex items-center justify-center font-bold text-[8px] uppercase">
-                {user.name ? user.name.charAt(0) : "G"}
-              </div>
-            ) : (
-              <User size={21} className="stroke-[1.8]" />
-            )}
-            <span className="text-[9px] tracking-wider uppercase font-medium">Profile</span>
+            <Menu size={21} className="stroke-[1.8]" />
+            <span className="text-[9px] tracking-wider uppercase font-medium">Menu</span>
           </button>
         </div>
       </div>

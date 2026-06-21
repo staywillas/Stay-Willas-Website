@@ -163,27 +163,27 @@ const Experiences = () => {
   };
 
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 bg-[#FAF7F0] relative overflow-hidden select-none">
+    <section className="py-8 md:py-32 px-4 md:px-12 lg:px-24 bg-[#FAF7F0] relative overflow-hidden select-none">
       {/* Background Subtle Accent Gradients */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#DAA520]/3 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#1B3564]/3 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="mb-24 text-center">
-          <span className="inline-flex items-center gap-1.5 text-[#DAA520] font-black tracking-[0.3em] uppercase text-[10px] md:text-xs mb-4 bg-[#DAA520]/15 px-5 py-2.5 rounded-full border border-[#DAA520]/20">
-            <Sparkles size={11} className="text-[#DAA520] animate-pulse" /> Curated Experiences
+        <div className="mb-6 md:mb-24 text-center">
+          <span className="inline-flex items-center gap-1.5 text-[#DAA520] font-black tracking-[0.3em] uppercase text-[9px] md:text-xs mb-1 md:mb-4 bg-[#DAA520]/15 px-4 py-2 rounded-full border border-[#DAA520]/20">
+            <Sparkles size={10} className="text-[#DAA520] animate-pulse" /> Curated Experiences
           </span>
-          <h2 className="text-4xl sm:text-6xl md:text-7xl font-heading text-[#1B3564] mt-4 leading-tight font-normal">
+          <h2 className="text-2xl sm:text-6xl md:text-7xl font-heading text-[#1B3564] mt-1 md:mt-4 leading-tight font-normal">
             Elevate Your <span className="italic text-[#DAA520]">Every Mood</span>
           </h2>
-          <p className="text-sm md:text-base text-slate-500 mt-6 max-w-xl mx-auto leading-relaxed font-light">
+          <p className="text-[11px] md:text-base text-slate-500 mt-2 md:mt-6 max-w-xl mx-auto leading-relaxed font-light">
             From temperature-controlled pool submersions to bespoke star-lit fires, discover the slow luxury staycation crafted specifically for you.
           </p>
         </div>
 
         {/* Dual Layout: Interactive 3D Stack Panel & Card Deck */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center min-h-[500px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center min-h-[400px] lg:min-h-[500px]">
           
           {/* Left Column: Synchronized Details Info Card */}
           <div className="lg:col-span-6 flex flex-col text-left">
@@ -194,11 +194,11 @@ const Experiences = () => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="space-y-6"
+                className="space-y-3 sm:space-y-6"
               >
                 {/* Active Tag */}
                 <motion.div variants={itemVariants}>
-                  <span className="inline-block text-[#DAA520] font-extrabold tracking-[0.25em] text-[10px] uppercase bg-[#DAA520]/10 border border-[#DAA520]/20 px-3.5 py-1.5 rounded-md">
+                  <span className="inline-block text-[#DAA520] font-extrabold tracking-[0.25em] text-[9px] sm:text-[10px] uppercase bg-[#DAA520]/10 border border-[#DAA520]/20 px-3 py-1 rounded-md">
                     {activeExperience.tag}
                   </span>
                 </motion.div>
@@ -206,7 +206,7 @@ const Experiences = () => {
                 {/* Active Title */}
                 <motion.h3 
                   variants={itemVariants}
-                  className="text-4xl sm:text-5xl font-heading text-[#1B3564] leading-tight font-normal"
+                  className="text-2xl sm:text-5xl font-heading text-[#1B3564] leading-tight font-normal"
                 >
                   {activeExperience.title}
                 </motion.h3>
@@ -214,28 +214,28 @@ const Experiences = () => {
                 {/* Active Description */}
                 <motion.p 
                   variants={itemVariants}
-                  className="text-[#1B3564]/70 text-sm md:text-base leading-relaxed font-light max-w-xl"
+                  className="text-[#1B3564]/70 text-xs sm:text-base leading-relaxed font-light max-w-xl"
                 >
                   {activeExperience.description}
                 </motion.p>
 
                 {/* Interactive Action Row */}
-                <motion.div variants={itemVariants} className="pt-6 flex flex-wrap items-center gap-4">
+                <motion.div variants={itemVariants} className="pt-2 sm:pt-6 flex flex-row items-center gap-2 sm:gap-4">
                   <Link
                     href={activeExperience.link}
-                    className="group bg-[#1B3564] hover:bg-[#152A50] text-white font-extrabold px-8 py-4 rounded-full text-xs tracking-widest uppercase flex items-center gap-2 shadow-lg shadow-[#1B3564]/15 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300"
+                    className="group bg-[#1B3564] hover:bg-[#152A50] text-white font-extrabold px-4 py-2.5 sm:px-8 sm:py-4 rounded-full text-[10px] sm:text-xs tracking-widest uppercase flex items-center gap-1.5 shadow-lg shadow-[#1B3564]/15 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 whitespace-nowrap"
                   >
                     Explore villas
-                    <ArrowRight size={13} className="transition-transform group-hover:translate-x-1.5" />
+                    <ArrowRight size={12} className="transition-transform group-hover:translate-x-1.5" />
                   </Link>
 
                   <button
                     onClick={handleNextCard}
                     disabled={swiping}
-                    className="group flex items-center gap-2.5 px-6 py-4 rounded-full border border-[#1B3564]/15 hover:border-[#1B3564]/40 text-[#1B3564] text-[10px] font-black tracking-widest uppercase transition-all duration-300 cursor-pointer hover:bg-[#1B3564]/5 disabled:opacity-50"
+                    className="group flex items-center gap-1.5 px-3.5 py-2.5 sm:px-6 sm:py-4 rounded-full border border-[#1B3564]/15 hover:border-[#1B3564]/40 text-[#1B3564] text-[9px] sm:text-[10px] font-black tracking-widest uppercase transition-all duration-300 cursor-pointer hover:bg-[#1B3564]/5 disabled:opacity-50 whitespace-nowrap"
                   >
                     Next Experience
-                    <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                    <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </motion.div>
               </motion.div>
@@ -243,20 +243,20 @@ const Experiences = () => {
           </div>
 
           {/* Right Column: Interactive 3D Stack Polaroid Card Deck */}
-          <div className="lg:col-span-6 flex flex-col items-center justify-center relative min-h-[460px] md:min-h-[500px]">
+          <div className="lg:col-span-6 flex flex-col items-center justify-center relative min-h-[380px] sm:min-h-[460px] md:min-h-[500px]">
             {/* Control Reset floating button */}
-            <div className="absolute top-[-30px] right-[10%] z-20">
+            <div className="absolute top-[-24px] right-[10%] z-20">
               <button
                 onClick={handleResetDeck}
-                className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-slate-400 hover:text-[#DAA520] transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-slate-400 hover:text-[#DAA520] transition-colors cursor-pointer"
                 title="Reset Deck"
               >
-                <RotateCcw size={10} /> Reset Deck
+                <RotateCcw size={9} /> Reset Deck
               </button>
             </div>
 
             {/* Stacked Cards Area */}
-            <div className="relative w-[280px] h-[360px] md:w-[320px] md:h-[410px]">
+            <div className="relative w-[230px] h-[300px] sm:w-[280px] sm:h-[360px] md:w-[320px] md:h-[410px]">
               {deck.map((catIdx, position) => {
                 const isTop = position === 0;
                 const cat = categories[catIdx];
@@ -338,12 +338,12 @@ const Experiences = () => {
                       mass: 0.8,
                     }}
                     className={`
-                      absolute inset-0 rounded-[2rem] bg-white border border-[#1B3564]/10 shadow-[0_15px_35px_rgba(27,53,100,0.12)] p-4 pb-12 flex flex-col justify-between cursor-pointer transition-shadow duration-300 origin-bottom select-none
+                      absolute inset-0 rounded-[1.5rem] sm:rounded-[2rem] bg-white border border-[#1B3564]/10 shadow-[0_15px_35px_rgba(27,53,100,0.12)] p-3 pb-8 sm:p-4 sm:pb-12 flex flex-col justify-between cursor-pointer transition-shadow duration-300 origin-bottom select-none
                       ${isTop ? 'hover:shadow-[0_25px_50px_rgba(27,53,100,0.22)] active:scale-[0.98]' : 'pointer-events-none'}
                     `}
                   >
                     {/* Inner Image Container */}
-                    <div className="relative w-full h-[82%] rounded-[1.5rem] overflow-hidden bg-slate-100">
+                    <div className="relative w-full h-[78%] sm:h-[82%] rounded-[1rem] sm:rounded-[1.5rem] overflow-hidden bg-slate-100">
                       <Image
                         src={cat.image}
                         alt={cat.title}
@@ -361,16 +361,16 @@ const Experiences = () => {
                     </div>
 
                     {/* Lower Polaroid label */}
-                    <div className="pt-4 px-2 flex items-center justify-between">
+                    <div className="pt-2 px-1.5 sm:pt-4 sm:px-2 flex items-center justify-between">
                       <div className="flex flex-col text-left">
-                        <span className="text-[7.5px] font-black tracking-[0.25em] text-[#DAA520] uppercase">
+                        <span className="text-[6.5px] sm:text-[7.5px] font-black tracking-[0.25em] text-[#DAA520] uppercase">
                           {cat.tag}
                         </span>
-                        <span className="text-base font-heading text-[#1B3564] mt-0.5 font-bold italic">
+                        <span className="text-xs sm:text-base font-heading text-[#1B3564] mt-0.5 font-bold italic">
                           {cat.title}
                         </span>
                       </div>
-                      <span className="w-6 h-6 rounded-full bg-[#1B3564]/5 flex items-center justify-center text-[#1B3564] text-xs font-black">
+                      <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#1B3564]/5 flex items-center justify-center text-[#1B3564] text-[10px] sm:text-xs font-black">
                         →
                       </span>
                     </div>

@@ -27,14 +27,14 @@ interface FeaturedVillasProps {
 
 const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 bg-white relative overflow-hidden">
+    <section className="py-12 md:py-32 px-6 md:px-12 lg:px-24 bg-white relative overflow-hidden">
       {/* Ambient gradients (Optimized) */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(218,165,32,0.1)_0,rgba(218,165,32,0)_60%)] -translate-y-1/2 translate-x-1/2 pointer-events-none transform-gpu" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(85,156,36,0.1)_0,rgba(85,156,36,0)_60%)] translate-y-1/2 -translate-x-1/2 pointer-events-none transform-gpu" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-20 gap-8">
           <motion.div
             initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}

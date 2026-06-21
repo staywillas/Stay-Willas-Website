@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
-import { Menu, X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail } from "lucide-react";
+import { Menu, X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
@@ -100,6 +100,7 @@ const Navbar = () => {
     { name: "Villas", href: "/villas" },
     { name: "Destinations", href: "/destinations" },
     { name: "Experiences", href: "/experiences" },
+    { name: "Stories", href: "/stories" },
   ];
 
   return (
@@ -192,13 +193,6 @@ const Navbar = () => {
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-1.5 lg:gap-3 xl:gap-4 shrink-0">
-          <a href="tel:+919619042310" className={cn(
-            "flex items-center gap-2 transition-colors duration-300 p-1",
-            isDarkTheme ? "text-brand-navy hover:text-brand-gold" : "text-white hover:text-brand-gold"
-          )} title="+91 96190 42310">
-            <Phone size={16} className="shrink-0" />
-            <span className="text-[13px] xl:text-[14px] font-semibold tracking-wide whitespace-nowrap hidden 2xl:inline">+91 96190 42310</span>
-          </a>
 
           <a href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%21%20%F0%9F%8C%BF%20I%27m%20exploring%20your%20exquisite%20villas%20on%20your%20website%20and%20would%20love%20to%20chat%20with%20a%20concierge%20to%20plan%20our%20next%20vacation.%20%E2%9C%A8" target="_blank" rel="noopener noreferrer" className={cn(
             "flex items-center gap-2 transition-colors duration-300 p-1",
@@ -239,12 +233,14 @@ const Navbar = () => {
               <SignInButton mode="modal">
                 <button
                   className={cn(
-                    "p-2 flex items-center justify-center transition-colors duration-300 rounded-full hover:bg-[#DAA520]/10",
-                    isDarkTheme ? "text-brand-navy hover:text-brand-gold" : "text-white hover:text-brand-gold"
+                    "px-4 py-2 border text-[11px] font-black uppercase tracking-widest transition-all duration-300 rounded-full hover:bg-[#DAA520]/10 whitespace-nowrap cursor-pointer",
+                    isDarkTheme
+                      ? "text-brand-navy border-[#1B3564]/15 hover:border-brand-navy hover:text-brand-gold"
+                      : "text-white border-white/15 hover:border-white hover:text-brand-gold"
                   )}
-                  title="Guest Log In"
+                  title="Guest Log In / Register"
                 >
-                  <User size={20} />
+                  Login / Register
                 </button>
               </SignInButton>
             )}
@@ -259,8 +255,25 @@ const Navbar = () => {
             </a>
           </div>
         </div>
-        {/* Mobile Hamburger Menu Toggle */}
-        <div className="xl:hidden flex items-center shrink-0">
+        {/* Mobile Hamburger Menu Toggle & Auth Toggle */}
+        <div className="xl:hidden flex items-center gap-2 shrink-0">
+          {isSignedIn ? (
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-8.5 h-8.5 border border-[#DAA520]/40 rounded-full",
+                },
+              }}
+            />
+          ) : (
+            <SignInButton mode="modal">
+              <button
+                className="px-3 py-1.5 border border-[#1B3564]/15 hover:border-[#DAA520] text-[#1B3564] hover:text-[#DAA520] text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-full bg-[#FAF8F5]/80 hover:bg-[#DAA520]/10 whitespace-nowrap cursor-pointer shadow-sm"
+              >
+                Login
+              </button>
+            </SignInButton>
+          )}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1B3564]/5 border border-[#DAA520]/40 hover:border-[#DAA520] flex items-center justify-center text-[#1B3564] hover:bg-[#DAA520]/10 transition-all duration-300 shadow-md active:scale-90 cursor-pointer"
@@ -347,31 +360,42 @@ const Navbar = () => {
                     Explore
                   </motion.p>
                   <div className="flex flex-col gap-0.5">
-                    {navLinks.map((link) => (
-                      <motion.div
-                        key={link.name}
-                        variants={{
-                          hidden: { opacity: 0, x: 30 },
-                          visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
-                        }}
-                      >
-                        <Link
-                          href={link.href}
-                          className={cn(
-                            "flex items-center gap-3 py-3 px-3 rounded-xl transition-all duration-300 group",
-                            pathname === link.href
-                              ? "bg-[#DAA520]/10 text-[#DAA520] border border-[#DAA520]/20"
-                              : "text-[#FAF8F5]/75 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5"
-                          )}
-                          onClick={() => setIsMobileMenuOpen(false)}
+                    {navLinks.map((link) => {
+                      const Icon = {
+                        Home: Home,
+                        Villas: Building2,
+                        Destinations: MapPin,
+                        Experiences: Sparkles,
+                        Stories: MessageSquare,
+                      }[link.name] || Sparkles;
+
+                      return (
+                        <motion.div
+                          key={link.name}
+                          variants={{
+                            hidden: { opacity: 0, x: 30 },
+                            visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
+                          }}
                         >
-                          {pathname === link.href && (
-                            <div className="w-1 h-5 rounded-full bg-[#DAA520]" />
-                          )}
-                          <span className="text-xl font-heading tracking-wider">{link.name}</span>
-                        </Link>
-                      </motion.div>
-                    ))}
+                          <Link
+                            href={link.href}
+                            className={cn(
+                              "flex items-center gap-3.5 py-3 px-3 rounded-xl transition-all duration-300 group",
+                              pathname === link.href
+                                ? "bg-[#DAA520]/10 text-[#DAA520] border border-[#DAA520]/20"
+                                : "text-[#FAF8F5]/75 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5"
+                            )}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {pathname === link.href && (
+                              <div className="w-1 h-5 rounded-full bg-[#DAA520]" />
+                            )}
+                            <Icon size={18} className="opacity-75 text-[#DAA520]" />
+                            <span className="text-lg font-heading tracking-wider">{link.name}</span>
+                          </Link>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </div>
 

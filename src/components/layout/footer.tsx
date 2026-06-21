@@ -89,7 +89,8 @@ const Footer = () => {
                 { name: "Alibaug Villas", href: "/villas?region=alibaug" },
                 { name: "Karjat Villas", href: "/villas?region=karjat" },
                 { name: "Khopoli Villas", href: "/villas?region=khopoli" },
-                { name: "Experiences", href: "/experiences" }
+                { name: "Experiences", href: "/experiences" },
+                { name: "Guest Stories", href: "/stories" }
               ].map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">
