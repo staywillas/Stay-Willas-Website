@@ -157,9 +157,9 @@ export default function VillasClient({
       {/* Search Header Row */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 border-b border-border-subtle pb-6 select-none">
         <div className="text-left w-full sm:w-auto">
-          <h2 className="text-3xl font-heading text-[#1B3564] italic">
-            Explore <span className="not-italic font-bold font-sans text-accent-primary">Sanctuaries</span>
-          </h2>
+          <h1 className="text-3xl font-heading text-[#1B3564] italic">
+            Explore Luxury <span className="not-italic font-bold font-sans text-accent-primary">Villas</span>
+          </h1>
           <p className="text-[10px] text-[#1B3564]/50 font-black uppercase tracking-widest mt-1">
             Handpicked premium luxury villa stays in Maharashtra
           </p>

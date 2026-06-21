@@ -43,7 +43,7 @@ const Hero = () => {
         </motion.span>
         
         {/* Main Heading */}
-        <motion.h1 
+        <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.7 }}
@@ -51,7 +51,7 @@ const Hero = () => {
         >
           The <br />
           <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans">Angle House</span>
-        </motion.h1>
+        </motion.h2>
         
         {/* Subtitle */}
         <motion.p 

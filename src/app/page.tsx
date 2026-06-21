@@ -64,6 +64,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-bg-primary">
+      <h1 className="sr-only">Stay Willas - Luxury Private Pool Villas for Rent in Maharashtra</h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

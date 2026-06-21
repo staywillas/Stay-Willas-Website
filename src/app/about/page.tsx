@@ -6,8 +6,8 @@ import Footer from "@/components/layout/footer";
 import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Stay Willas | Premier Luxury Villa Rentals in Maharashtra",
-  description: "Learn about the philosophy behind Stay Willas. We are dedicated to curating the most exclusive luxury villa experiences in Maharashtra.",
+  title: "About Stay Willas | Luxury Villa Rentals | Maharashtra",
+  description: "Learn about the hospitality philosophy behind Stay Willas. We are dedicated to curating the most exclusive luxury private villa staycations in Maharashtra.",
   keywords: ["about stay willas", "luxury hospitality company maharashtra", "premium villa curation experts", "best villa rental company near mumbai"],
   alternates: {
     canonical: "/about",
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
+      <h1 className="sr-only">About Stay Willas - Luxury Villa Rentals in Maharashtra</h1>
       <Navbar />
       
       {/* Hero Section */}
@@ -26,10 +27,10 @@ export default function AboutPage() {
             <span className="text-accent-secondary font-medium tracking-[0.4em] uppercase text-xs mb-6 block">
               Our Story
             </span>
-            <h1 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
+            <h2 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
               What Luxury <br />
               <span className="italic text-accent-primary">Really Means.</span>
-            </h1>
+            </h2>
             <p className="text-text-primary/55 text-xl leading-relaxed mb-10">
               Stay Willas started because we realized something simple: a great holiday isn&apos;t just about 
               a fancy house. It&apos;s about how a space makes you feel, and the care and warmth you 

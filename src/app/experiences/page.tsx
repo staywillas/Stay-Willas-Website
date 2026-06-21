@@ -7,7 +7,7 @@ import { Sparkles, Calendar, Heart, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Experiences & Private Chef Stays | Stay Willas",
-  description: "Curated travel and villa experiences designed for Stay Willas guests. Find your perfect escape.",
+  description: "Discover curated travel and villa experiences with Stay Willas. From private chefs and BBQ services to wellness retreats, find your perfect luxury escape.",
   keywords: ["villa with private chef lonavala", "wellness retreats maharashtra", "luxury travel experiences near mumbai", "bespoke villa holidays"],
   alternates: {
     canonical: "/experiences",
@@ -47,7 +47,7 @@ export default function ExperiencesPage() {
 
             {/* Title */}
             <h1 className="text-5xl md:text-8xl font-heading mb-6 tracking-tight text-[#1B3564]">
-              Stay <span className="italic text-[#DAA520] font-serif font-normal">Experiences</span>
+              Luxury Villa <span className="italic text-[#DAA520] font-serif font-normal">Experiences</span>
             </h1>
 
             {/* Coming Soon Subtitle */}

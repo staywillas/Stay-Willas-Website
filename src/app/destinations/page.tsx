@@ -9,8 +9,8 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Top Luxury Villa Destinations | Lonavala, Alibaug, Karjat | Stay Willas",
-  description: "Explore our beautiful getaways. From Lonavala and Karjat to Alibaug and Goa, find your perfect stay.",
+  title: "Luxury Villa Destinations in Maharashtra | Stay Willas",
+  description: "Explore Maharashtra's top luxury villa destinations. Find the perfect private pool villa staycation in Lonavala, Alibaug, Karjat, and Khopoli today.",
   keywords: ["best places for villa stay near mumbai", "luxury villas in lonavala on rent", "alibaug private pool villas", "weekend getaway destinations maharashtra"],
   alternates: {
     canonical: "/destinations",
@@ -99,7 +99,7 @@ export default async function DestinationsPage() {
           Our Stays
         </span>
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-heading leading-tight mb-1 tracking-tight">
-          Where We <span className="italic text-accent-primary font-serif">Are</span>
+          Luxury Villa <span className="italic text-accent-primary font-serif">Destinations</span>
         </h1>
         
         {/* Custom Luxury Elegant Divider */}

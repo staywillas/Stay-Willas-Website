@@ -25,6 +25,7 @@ export default function PartnerPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
+      <h1 className="sr-only">Partner With Stay Willas - Luxury Villa Property Management</h1>
       <Navbar />
       
       {/* Hero Section */}
@@ -32,10 +33,10 @@ export default function PartnerPage() {
         <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
           List Your Property
         </span>
-        <h1 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
+        <h2 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
           Let&apos;s Share Your <br />
           <span className="italic text-accent-primary">Home With Guests.</span>
-        </h1>
+        </h2>
         <p className="text-text-primary/55 text-xl max-w-2xl mx-auto leading-relaxed mb-12">
           Let us handle the hard work of running, managing, and promoting your villa 
           so you can sit back and watch it thrive.

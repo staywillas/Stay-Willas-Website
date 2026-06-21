@@ -8,8 +8,8 @@ import VillasClient from "@/components/villas/villas-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa Collection for Rent | Stay Willas",
-  description: "Browse our collection of luxury villas in Lonavala, Alibaug & Karjat. Each verified property offers the ultimate private staycation experience.",
+  title: "Luxury Villas for Rent in Maharashtra | Stay Willas",
+  description: "Browse our exclusive collection of luxury villas in Lonavala, Alibaug, and Karjat. Book your verified private staycation with premium chef service today.",
   keywords: ["luxury villas for rent in maharashtra", "book premium villa lonavala", "private pool properties alibaug", "corporate offsite villas karjat", "family vacation villas near mumbai"],
   alternates: {
     canonical: "/villas",
