@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { 
   Check, Plus, Minus, ArrowRight, ShieldCheck, Star, Users, Home, 
-  MapPin, Flame, Utensils, Music, Heart, Calendar, ArrowDown, AlertCircle
+  MapPin, Flame, Utensils, Music, Heart, Calendar, ArrowDown, AlertCircle,
+  Sparkles
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -32,6 +33,175 @@ interface EscapeClientPageProps {
   canopyCrest: VillaData;
 }
 
+interface ScratchCardProps {
+  id: string;
+  title: string;
+  subtitle: string;
+  isUnlocked: boolean;
+  onScratchComplete: () => void;
+}
+
+function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: ScratchCardProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isDrawingRef = useRef(false);
+
+  useEffect(() => {
+    if (isUnlocked) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Retina display resolution scaling
+    const rect = canvas.getBoundingClientRect();
+    const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
+
+    // Fill silver scratch pattern
+    const gradient = ctx.createLinearGradient(0, 0, rect.width, rect.height);
+    gradient.addColorStop(0, "#C0C0C0");
+    gradient.addColorStop(0.3, "#E8E8E8");
+    gradient.addColorStop(0.5, "#A8A8A8");
+    gradient.addColorStop(0.7, "#E8E8E8");
+    gradient.addColorStop(1, "#909090");
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, rect.width, rect.height);
+
+    // Draw card inner border
+    ctx.strokeStyle = "rgba(218, 165, 32, 0.4)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(6, 6, rect.width - 12, rect.height - 12);
+
+    // Draw luxury graphics & text
+    ctx.fillStyle = "#1B3564";
+    ctx.font = "bold 13px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("STAY WILLAS", rect.width / 2, rect.height / 2 - 25);
+
+    ctx.fillStyle = "#DAA520";
+    ctx.font = "bold 12px sans-serif";
+    ctx.fillText("★ SCRATCH HERE ★", rect.width / 2, rect.height / 2);
+
+    ctx.fillStyle = "#4A4A4A";
+    ctx.font = "italic 9px sans-serif";
+    ctx.fillText("Unlock Special Detour Discount", rect.width / 2, rect.height / 2 + 25);
+  }, [isUnlocked]);
+
+  const getCoordinates = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return null;
+    const rect = canvas.getBoundingClientRect();
+    
+    let clientX, clientY;
+    if ("touches" in e) {
+      if (e.touches.length === 0) return null;
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  };
+
+  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
+    if (isUnlocked) return;
+    if (e.cancelable) e.preventDefault();
+    isDrawingRef.current = true;
+    draw(e);
+  };
+
+  const stopDrawing = () => {
+    if (!isDrawingRef.current) return;
+    isDrawingRef.current = false;
+    checkScratchPercentage();
+  };
+
+  const draw = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDrawingRef.current || isUnlocked) return;
+    if (e.cancelable) e.preventDefault();
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    const coords = getCoordinates(e);
+    if (!canvas || !ctx || !coords) return;
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(coords.x, coords.y, 22, 0, Math.PI * 2);
+    ctx.fill();
+  };
+
+  const checkScratchPercentage = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let transparentCount = 0;
+    
+    for (let i = 3; i < pixels.length; i += 4) {
+      if (pixels[i] === 0) {
+        transparentCount++;
+      }
+    }
+
+    const totalPixels = canvas.width * canvas.height;
+    const percent = (transparentCount / totalPixels) * 100;
+
+    if (percent >= 35) {
+      onScratchComplete();
+    }
+  };
+
+  return (
+    <div className="relative w-full h-[160px] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-[#101F3B] to-[#1B3564] border border-[#DAA520]/20 flex flex-col items-center justify-center p-4">
+      {/* Revealed discount offer details */}
+      <div className="text-center z-0 select-none space-y-1.5 animate-fade-in">
+        <Sparkles className="text-[#DAA520] mx-auto animate-pulse" size={22} />
+        <span className="text-[10px] uppercase tracking-widest text-[#DAA520] font-bold block">
+          {title}
+        </span>
+        <div className="text-2xl font-black text-white tracking-wide font-heading">
+          10% DISCOUNT
+        </div>
+        <p className="text-[9px] text-white/90 uppercase tracking-widest font-semibold border border-dashed border-[#DAA520]/50 px-2 py-1 rounded bg-[#DAA520]/15 inline-block">
+          PROMO: ESCAPE10
+        </p>
+      </div>
+
+      {/* Scratch Layer */}
+      <AnimatePresence>
+        {!isUnlocked && (
+          <motion.canvas
+            ref={canvasRef}
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={stopDrawing}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="absolute top-0 left-0 w-full h-full cursor-crosshair z-10 touch-none"
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClientPageProps) {
   // Navigation active state on scroll
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,6 +213,11 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   const [selectedVillaSlug, setSelectedVillaSlug] = useState<string>("the-angle-house");
   const [nights, setNights] = useState<number>(2);
   const [guestsCount, setGuestsCount] = useState<number>(12);
+
+  // Scratch card states
+  const [isCard1Scratched, setIsCard1Scratched] = useState(false);
+  const [isCard2Scratched, setIsCard2Scratched] = useState(false);
+  const isDiscountApplied = isCard1Scratched || isCard2Scratched;
   
   // Active selected villa data helper
   const selectedVilla = selectedVillaSlug === "the-angle-house" ? angleHouse : canopyCrest;
@@ -73,9 +248,14 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   const extraGuestsTotal = extraGuestsCount * extraGuestFee * nights;
   const estimatedTotal = baseStayTotal + extraGuestsTotal;
 
+  const discountAmount = isDiscountApplied ? estimatedTotal * 0.1 : 0;
+  const finalTotal = estimatedTotal - discountAmount;
+
   // WhatsApp prefilled message link builder
   const whatsappNumber = "919619042310";
-  const whatsappText = `Hello Stay Willas! 🌟 I am interested in booking an exclusive getaway at *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights\n- Guests: ${guestsCount} Guests\n- Estimated Base price: ₹${estimatedTotal.toLocaleString("en-IN")}\n\nCan you please check availability for our group?`;
+  const whatsappText = isDiscountApplied
+    ? `Hello Stay Willas! 🌟 I scratched the Escape card and unlocked my 10% Promo discount!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (10% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and apply my discount?`
+    : `Hello Stay Willas! 🌟 I am interested in booking an exclusive getaway at *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights\n- Guests: ${guestsCount} Guests\n- Estimated Base price: ₹${estimatedTotal.toLocaleString("en-IN")}\n\nCan you please check availability for our group?`;
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`;
 
   // Tab definitions
@@ -159,36 +339,154 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       </header>
 
       {/* 2. HERO / PSYCHOLOGICAL COPY HOOK */}
-      <section className="relative min-h-[95vh] flex flex-col items-center justify-center pt-24 px-6 text-center overflow-hidden">
-        {/* Dynamic Background Gradients */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#DAA520]/5 blur-[120px] rounded-full -translate-y-12 translate-x-12" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#4A5D23]/5 blur-[120px] rounded-full translate-y-12 -translate-x-12" />
-        
-        <div className="max-w-4xl mx-auto z-10 space-y-8 animate-slide-up">
-          <span className="text-[#DAA520] font-medium tracking-[0.5em] uppercase text-xs sm:text-sm block">
-            An Unexpected Detour
-          </span>
-          
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-heading font-black text-[#1B3564] tracking-tight leading-[1.1] text-balance">
-            What if your best vacation this year started with a <span className="italic text-[#4A5D23]">wrong click?</span>
-          </h1>
-          
-          <p className="max-w-2xl mx-auto text-[#4A4A4A] text-lg sm:text-xl md:text-2xl font-light leading-relaxed">
-            You were browsing, perhaps distracted. But now you&apos;re here. 
-            Step off the digital treadmill and discover what real stillness feels like.
-          </p>
+      <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-28 pb-16 px-6 text-center overflow-hidden">
+        {/* Subtle Background Image of The Angle House */}
+        <div className="absolute inset-0 z-0 select-none pointer-events-none">
+          <img 
+            src="/assets/villas/the-angle-house/gallery-11.webp" 
+            alt="The Angle House Background" 
+            className="w-full h-full object-cover opacity-[0.14] filter brightness-95 contrast-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F5F2EA]/95 via-[#F5F2EA]/75 to-[#F5F2EA]" />
+          {/* Radial shadow overlay */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_40%,_#F5F2EA_100%)]" />
+        </div>
 
-          <div className="pt-8">
-            <button 
-              onClick={() => scrollToSection("philosophy-section")}
-              className="inline-flex flex-col items-center gap-3 text-xs uppercase tracking-[0.25em] font-bold text-[#1B3564] hover:text-[#4A5D23] transition-colors focus:outline-none group"
-            >
-              <span>Scroll Down to Escape</span>
-              <div className="w-10 h-10 rounded-full border border-[#1B3564]/10 flex items-center justify-center bg-white/50 backdrop-blur-sm group-hover:border-[#4A5D23]/30 shadow-sm animate-bounce mt-2">
-                <ArrowDown size={14} className="text-[#1B3564] group-hover:text-[#4A5D23] transition-colors" />
-              </div>
-            </button>
+        <div className="max-w-5xl mx-auto z-10 w-full flex flex-col items-center gap-10">
+          
+          {/* Header text container */}
+          <div className="space-y-6 max-w-3xl mx-auto">
+            <span className="text-[#DAA520] font-semibold tracking-[0.4em] uppercase text-xs sm:text-sm block animate-pulse">
+              🌟 An Unexpected Detour
+            </span>
+            
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black text-[#1B3564] tracking-tight leading-[1.05] text-balance">
+              What if your best vacation started with a <span className="italic text-[#4A5D23] underline decoration-[#DAA520]/40">wrong click?</span>
+            </h1>
+            
+            <p className="max-w-2xl mx-auto text-[#4A4A4A] text-base sm:text-lg md:text-xl font-light leading-relaxed">
+              Step off the digital treadmill. Scratch cards below to unlock your secret 10% discount on Lonavala and Khopoli luxury pool villas.
+            </p>
           </div>
+
+          {/* SCRATCHCARDS GRID */}
+          <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 px-4">
+            {/* Card 1: The Angle House Promo */}
+            <div className="flex flex-col gap-3">
+              <div className="text-left flex items-center justify-between px-2">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#1B3564]">
+                  📍 Lonavala Flagship
+                </span>
+                <span className="text-[10px] uppercase font-semibold text-[#DAA520]">
+                  The Angle House
+                </span>
+              </div>
+              <ScratchCard 
+                id="card-angle-house"
+                title="The Angle House Secret"
+                subtitle="Scratch to reveal 10% Lonavala discount"
+                isUnlocked={isCard1Scratched}
+                onScratchComplete={() => {
+                  setIsCard1Scratched(true);
+                }}
+              />
+            </div>
+
+            {/* Card 2: Canopy Crest Promo */}
+            <div className="flex flex-col gap-3">
+              <div className="text-left flex items-center justify-between px-2">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#1B3564]">
+                  📍 Khopoli Flagship
+                </span>
+                <span className="text-[10px] uppercase font-semibold text-[#DAA520]">
+                  Canopy Crest
+                </span>
+              </div>
+              <ScratchCard 
+                id="card-canopy-crest"
+                title="Canopy Crest Secret"
+                subtitle="Scratch to reveal 10% Khopoli discount"
+                isUnlocked={isCard2Scratched}
+                onScratchComplete={() => {
+                  setIsCard2Scratched(true);
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Quick Booking Options and Congratulations banner */}
+          {isDiscountApplied && (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
+              className="bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-[#DAA520]/45 shadow-xl max-w-2xl w-full mx-auto space-y-6 text-center"
+            >
+              <div className="space-y-2">
+                <span className="text-xs uppercase font-bold tracking-[0.25em] text-[#4A5D23] bg-[#4A5D23]/10 px-4 py-1.5 rounded-full inline-block">
+                  🎉 10% DISCOUNT ACTIVATED (ESCAPE10)
+                </span>
+                <h3 className="text-2xl font-heading font-extrabold text-[#1B3564]">
+                  Your Luxury Escape Awaits!
+                </h3>
+                <p className="text-xs text-[#4A4A4A] max-w-md mx-auto font-light">
+                  Select your private villa below to automatically apply the 10% discount and start chatting on WhatsApp instantly.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                <button
+                  onClick={() => setSelectedVillaSlug("the-angle-house")}
+                  className={`p-4 rounded-2xl border text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                    selectedVillaSlug === "the-angle-house"
+                      ? "bg-[#1B3564] text-white border-[#1B3564] shadow-md scale-[1.02]"
+                      : "bg-white text-[#1B3564] border-[#E2E8F0] hover:bg-[#F5F2EA] hover:border-[#1B3564]/30"
+                  }`}
+                >
+                  The Angle House
+                </button>
+                <button
+                  onClick={() => setSelectedVillaSlug("canopy-crest")}
+                  className={`p-4 rounded-2xl border text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                    selectedVillaSlug === "canopy-crest"
+                      ? "bg-[#1B3564] text-white border-[#1B3564] shadow-md scale-[1.02]"
+                      : "bg-white text-[#1B3564] border-[#E2E8F0] hover:bg-[#F5F2EA] hover:border-[#1B3564]/30"
+                  }`}
+                >
+                  Canopy Crest
+                </button>
+              </div>
+
+              <div className="pt-2">
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-4 px-8 rounded-full text-xs tracking-widest uppercase transition-all duration-300 shadow-lg inline-flex items-center gap-3 hover:-translate-y-0.5"
+                >
+                  <span>Avail Discount & Chat on WhatsApp</span>
+                  <ArrowRight size={14} />
+                </a>
+                <span className="text-[10px] text-[#4A4A4A]/60 block mt-3 italic">
+                  Estimated price will automatically deduct the 10% promo code details in chat
+                </span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Scroll indicator */}
+          {!isDiscountApplied && (
+            <div className="pt-4 animate-bounce">
+              <button 
+                onClick={() => scrollToSection("philosophy-section")}
+                className="inline-flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-bold text-[#1B3564] hover:text-[#4A5D23] transition-colors focus:outline-none"
+              >
+                <span>Or scroll to explore</span>
+                <ArrowDown size={14} className="text-[#DAA520]" />
+              </button>
+            </div>
+          )}
+
         </div>
       </section>
 
@@ -234,7 +532,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               {/* Blur gradient cover */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
                 <span className="text-xs uppercase tracking-widest text-[#DAA520] font-semibold mb-2">Flagship Sanctuary</span>
-                <h3 className="text-2xl sm:text-3xl font-heading font-bold">The Angle House</h3>
+                <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white">The Angle House</h3>
                 <p className="text-white/80 text-sm flex items-center gap-1.5 mt-1 font-light">
                   <MapPin size={12} className="text-[#DAA520]" /> Lonavala, Maharashtra
                 </p>
@@ -276,7 +574,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 <div className="flex items-center gap-1.5 text-xs text-[#DAA520] uppercase font-bold tracking-wider mb-1">
                   <MapPin size={12} /> {angleHouse.location}
                 </div>
-                <h3 className="text-2xl font-heading font-bold">{angleHouse.name}</h3>
+                <h3 className="text-2xl font-heading font-bold text-white">{angleHouse.name}</h3>
               </div>
             </div>
             
@@ -360,7 +658,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 <div className="flex items-center gap-1.5 text-xs text-[#DAA520] uppercase font-bold tracking-wider mb-1">
                   <MapPin size={12} /> {canopyCrest.location}
                 </div>
-                <h3 className="text-2xl font-heading font-bold">{canopyCrest.name}</h3>
+                <h3 className="text-2xl font-heading font-bold text-white">{canopyCrest.name}</h3>
               </div>
             </div>
             
@@ -603,6 +901,15 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                         <span className="font-semibold">₹{extraGuestsTotal.toLocaleString("en-IN")}</span>
                       </div>
                     )}
+                    {isDiscountApplied && (
+                      <div className="flex justify-between text-[#4A5D23] font-semibold bg-[#4A5D23]/5 p-2 rounded-lg border border-[#4A5D23]/25">
+                        <span className="flex items-center gap-1">
+                          <Sparkles size={12} className="text-[#DAA520] animate-pulse" />
+                          Escape 10% Discount:
+                        </span>
+                        <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-[11px] opacity-60">
                       <span>Base Villa Tariff includes up to {baseGuestsLimit} guests.</span>
                     </div>
@@ -610,10 +917,17 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
 
                   <div className="bg-[#F5F2EA] p-4 rounded-2xl flex items-center justify-between border border-[#DAA520]/15">
                     <div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-[#4A4A4A]">Est. Base Total</span>
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-[#4A4A4A]">
+                        {isDiscountApplied ? "Est. Discounted Total" : "Est. Base Total"}
+                      </span>
                       <div className="text-2xl md:text-3xl font-black text-[#1B3564] font-heading">
-                        ₹{estimatedTotal.toLocaleString("en-IN")}
+                        ₹{finalTotal.toLocaleString("en-IN")}
                       </div>
+                      {isDiscountApplied && (
+                        <span className="text-[9px] text-[#4A5D23] font-bold uppercase tracking-wider block mt-0.5">
+                          Code ESCAPE10 applied
+                        </span>
+                      )}
                     </div>
                     
                     <a
