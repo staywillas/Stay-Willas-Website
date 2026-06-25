@@ -5,7 +5,7 @@ import Link from "next/link";
 import { 
   Check, Plus, Minus, ArrowRight, ShieldCheck, Star, Users, Home, 
   MapPin, Flame, Utensils, Music, Heart, Calendar, ArrowDown, AlertCircle,
-  Sparkles
+  Sparkles, Menu, X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -205,6 +205,7 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
 export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClientPageProps) {
   // Navigation active state on scroll
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Filter tabs state
   const [activeTab, setActiveTab] = useState<"family" | "friends" | "romantic" | "corporate">("family");
@@ -303,13 +304,13 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       {/* 1. STICKY GLASS HEADER */}
       <header 
         className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${
-          isScrolled 
-            ? "bg-[#F5F2EA]/85 backdrop-blur-xl border-b border-[#DAA520]/15 shadow-sm py-4" 
+          isScrolled || isMobileMenuOpen
+            ? "bg-[#F5F2EA]/95 backdrop-blur-xl border-b border-[#DAA520]/15 shadow-sm py-4" 
             : "bg-transparent py-6"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group z-50">
             <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#DAA520]/30 shadow-md bg-white flex items-center justify-center shrink-0">
               <img 
                 src="/images/logo.png" 
@@ -326,16 +327,106 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               </span>
             </div>
           </Link>
+
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-8">
+            <Link href="/" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
+              Home
+            </Link>
+            <Link href="/villas" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
+              Villas
+            </Link>
+            <Link href="/destinations" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
+              Destinations
+            </Link>
+            <Link href="/experiences" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
+              Experiences
+            </Link>
+            <Link href="/stories" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
+              Stories
+            </Link>
+          </nav>
           
-          <a 
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase bg-[#1B3564] text-white hover:bg-[#2563EB] shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
-          >
-            Book Direct
-          </a>
+          <div className="flex items-center gap-4 z-50">
+            <a 
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase bg-[#1B3564] text-white hover:bg-[#2563EB] shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 max-sm:hidden"
+            >
+              Book Direct
+            </a>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-[#1B3564] hover:text-[#4A5D23] transition-colors focus:outline-none"
+              aria-label="Toggle Menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden bg-[#F5F2EA] border-b border-[#DAA520]/15 w-full absolute top-full left-0 overflow-hidden shadow-lg z-40"
+            >
+              <div className="px-6 py-6 flex flex-col gap-5">
+                <Link 
+                  href="/" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2 border-b border-[#DAA520]/5"
+                >
+                  Home
+                </Link>
+                <Link 
+                  href="/villas" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2 border-b border-[#DAA520]/5"
+                >
+                  Villas
+                </Link>
+                <Link 
+                  href="/destinations" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2 border-b border-[#DAA520]/5"
+                >
+                  Destinations
+                </Link>
+                <Link 
+                  href="/experiences" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2 border-b border-[#DAA520]/5"
+                >
+                  Experiences
+                </Link>
+                <Link 
+                  href="/stories" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2"
+                >
+                  Stories
+                </Link>
+                <a 
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full text-center py-3 rounded-xl text-xs font-bold tracking-widest uppercase bg-[#1B3564] text-white hover:bg-[#2563EB] shadow-md sm:hidden mt-2"
+                >
+                  Book Direct
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* 2. HERO / PSYCHOLOGICAL COPY HOOK */}
