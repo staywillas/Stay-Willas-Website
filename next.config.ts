@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
 
+const isProduction = process.env.VERCEL_ENV === "production" || !process.env.VERCEL_ENV;
+const defaultRobotsHeader = isProduction
+  ? "index, follow, max-image-preview:large"
+  : "noindex, nofollow";
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -28,6 +33,7 @@ const nextConfig: NextConfig = {
         { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
         { key: 'X-DNS-Prefetch-Control', value: 'on' },
         { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+        { key: 'X-Robots-Tag', value: defaultRobotsHeader },
       ],
     },
     {
@@ -41,47 +47,6 @@ const nextConfig: NextConfig = {
       headers: [
         { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
       ],
-    },
-    // Explicit X-Robots-Tag Headers for Google Search Console / SEO Curation
-    {
-      source: '/',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
-    },
-    {
-      source: '/villas',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
-    },
-    {
-      source: '/destinations',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
-    },
-    {
-      source: '/experiences',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
-    },
-    {
-      source: '/about',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
-    },
-    {
-      source: '/contact',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
-    },
-    {
-      source: '/partner',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
-    },
-    {
-      source: '/villa/:slug*',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow, max-image-preview:large' }],
-    },
-    {
-      source: '/robots.txt',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
-    },
-    {
-      source: '/sitemap.xml',
-      headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
     },
     {
       source: '/admin/:path*',
