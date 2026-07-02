@@ -152,7 +152,7 @@ Could you please share the options available and help us plan our perfect getawa
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="glass-premium rounded-[2rem] md:rounded-full p-4 md:p-3.5 pl-4 md:pl-8 pr-4 md:pr-4 shadow-[0_20px_50px_rgba(27,53,100,0.08)] border border-white/60"
+        className="bg-white rounded-[2rem] md:rounded-full p-4 md:p-3.5 pl-4 md:pl-8 pr-4 md:pr-4 shadow-[0_25px_60px_rgba(27,53,100,0.15)] border border-[#DAA520]/25"
       >
         <form onSubmit={handleSearch} className="relative z-30">
           {/* Desktop Layout */}

@@ -98,7 +98,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Villas", href: "/villas" },
-    { name: "Destinations", href: "/destinations" },
+    { name: "Areas", href: "/areas" },
     { name: "Experiences", href: "/experiences" },
     { name: "Stories", href: "/stories" },
   ];
@@ -183,6 +183,8 @@ const Navbar = () => {
               <div className="glass-premium border border-yellow-200/50 rounded-2xl p-6 min-w-[200px] shadow-xl shadow-yellow-900/5">
                 <div className="flex flex-col gap-4">
                   <Link href="/about" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">About</Link>
+                  <Link href="/destinations" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Destinations</Link>
+                  <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Escape</Link>
                   <Link href="/partner" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Partner</Link>
                   <Link href="/contact" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Contact</Link>
                 </div>
@@ -413,6 +415,8 @@ const Navbar = () => {
                   <div className="flex flex-col gap-0.5">
                     {[
                       { name: "About", href: "/about", icon: Info },
+                      { name: "Destinations", href: "/destinations", icon: MapPin },
+                      { name: "Escape", href: "/escape", icon: Sparkles },
                       { name: "Partner With Us", href: "/partner", icon: Handshake },
                       { name: "Contact", href: "/contact", icon: Mail },
                     ].map((link) => (

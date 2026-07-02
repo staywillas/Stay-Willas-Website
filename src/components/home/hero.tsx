@@ -71,7 +71,7 @@ const Hero = () => {
           className="flex flex-wrap gap-2.5 md:gap-3 mb-10"
         >
           <span className="inline-flex items-center gap-2 text-[10px] md:text-xs font-semibold text-white/95 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/15 shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E2A63B]" /> 4 Bedrooms
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E2A63B]" /> 3 Bedrooms
           </span>
           <span className="inline-flex items-center gap-2 text-[10px] md:text-xs font-semibold text-white/95 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/15 shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#E2A63B]" /> Private Pool

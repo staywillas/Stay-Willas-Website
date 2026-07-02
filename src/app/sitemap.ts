@@ -54,7 +54,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.4,
     },
+    {
+      url: `${BASE_URL}/areas`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
   ];
+
+  // Dynamic area routes
+  const regions = ["lonavala", "alibaug", "karjat", "khopoli", "goa", "igatpuri"];
+  const areaRoutes: MetadataRoute.Sitemap = regions.map((region) => ({
+    url: `${BASE_URL}/areas/${region}`,
+    lastModified: new Date(),
+    changeFrequency: "daily",
+    priority: 0.85,
+  }));
 
   // Dynamic villa routes from database
   let villaRoutes: MetadataRoute.Sitemap = [];
@@ -72,5 +87,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // If DB is unavailable during build, return static routes only
   }
 
-  return [...staticRoutes, ...villaRoutes];
+  return [...staticRoutes, ...areaRoutes, ...villaRoutes];
 }
