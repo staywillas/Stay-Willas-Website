@@ -3,9 +3,18 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Stay Willas | Rent Luxury Private Pool Villas in Maharashtra",
-  description: "Experience luxury staycations in Maharashtra. Discover curated premium villas with private pools in Lonavala, Alibaug & Karjat. Book your getaway today.",
-  keywords: ["rent luxury villa maharashtra", "book private pool villa lonavala", "weekend getaway villas near mumbai", "luxury staycation alibaug", "stay willas booking"],
+  title: "Private Pool Villa near Mumbai & Maharashtra | Stay Willas",
+  description: "Rent luxury staycation villas in Maharashtra. Curated private pool villas near Mumbai & Pune with chef services. Perfect for family getaways. Book now.",
+  keywords: [
+    "private pool villa near Mumbai",
+    "staycation villas Maharashtra",
+    "luxury villa rental near Mumbai for family",
+    "private villa with heated pool near Mumbai",
+    "pet friendly villa near Mumbai",
+    "villa near Mumbai for weekend",
+    "villa 2 hours from Mumbai/Pune",
+    "Stay Willas"
+  ],
   alternates: {
     canonical: "/",
   },

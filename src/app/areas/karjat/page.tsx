@@ -9,15 +9,12 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Villas in Karjat | Rent Luxury Private Pool Stays",
-  description: "Book premium Villas in Karjat for weekend farm stays. Enjoy private infinity pools, mango orchards, and five-star hospitality. Reserve your stay now!",
+  title: "Karjat Villa with Pool Booking | Stay Willas",
+  description: "Secure your Karjat villa with pool booking for family farmstays, corporate offsites, and weekend getaways. Enjoy private chef services & pools. Book now.",
   keywords: [
-    "karjat villas for rent",
-    "private pool villa karjat",
-    "luxury farmhouse karjat",
-    "weekend getaway karjat",
-    "riverside villa near mumbai",
-    "karjat bungalows on rent"
+    "Karjat villa with pool booking",
+    "corporate offsite villa Karjat",
+    "Stay Willas"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/karjat",

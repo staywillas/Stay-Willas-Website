@@ -9,23 +9,15 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Villas in Lonavala | Rent Luxury Private Pool Stays",
-  description: "Book premium Villas in Lonavala for couples and families. Enjoy heated private pools, scenic valley views, and five-star hospitality. Reserve your stay now!",
+  title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
+  description: "Rent a luxury villa in Lonavala with private pool, scenic mountain views & private chef. Ideal for friends group trips & family getaways. Check availability.",
   keywords: [
-    "Private Pool Villa in Lonavala",
-    "Villas in Lonavala",
-    "Luxury Villas in Lonavala",
-    "Couple Villa in Lonavala",
-    "Family Villa in Lonavala",
-    "Weekend Getaway Near Mumbai",
-    "Villa Near Mumbai",
-    "Pool Villa Near Pune",
-    "Pet Friendly Villa Lonavala",
-    "Birthday Party Villa",
-    "Bachelor Party Villa",
-    "Corporate Retreat Villa",
-    "Villa for Group Stay",
-    "Staycation Near Mumbai"
+    "luxury villa Lonavala with private pool",
+    "weekend getaway villas near Pune",
+    "villa for friends group trip Lonavala",
+    "villa with private chef Lonavala",
+    "New Year villa party Lonavala",
+    "Stay Willas"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",

@@ -9,24 +9,11 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Villas in Khopoli | Rent Luxury Private Pool Stays",
-  description: "Book premium Villas in Khopoli for couples and groups. Enjoy private pools, serene mountain valleys, and five-star hospitality. Reserve your stay now!",
+  title: "Khopoli Private Pool Villa | Luxury Rentals | Stay Willas",
+  description: "Escape to a Khopoli private pool villa nestled in serene green mountains. Enjoy private chef services, premium hospitality & direct views. Check availability.",
   keywords: [
-    "Luxury Stay in Khopoli",
-    "Private Pool Villa in Lonavala",
-    "Villas in Lonavala",
-    "Luxury Villas in Lonavala",
-    "Couple Villa in Lonavala",
-    "Family Villa in Lonavala",
-    "Weekend Getaway Near Mumbai",
-    "Villa Near Mumbai",
-    "Pool Villa Near Pune",
-    "Pet Friendly Villa Lonavala",
-    "Birthday Party Villa",
-    "Bachelor Party Villa",
-    "Corporate Retreat Villa",
-    "Villa for Group Stay",
-    "Staycation Near Mumbai"
+    "Khopoli private pool villa",
+    "Stay Willas"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/khopoli",

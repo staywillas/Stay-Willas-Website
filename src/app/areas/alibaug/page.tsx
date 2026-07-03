@@ -9,15 +9,14 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Villas in Alibaug | Rent Luxury Private Pool Stays",
-  description: "Book premium Villas in Alibaug for beach weekend getaways. Enjoy private pools, beach access, and five-star coastal dining. Reserve your stay now!",
+  title: "Villa on Rent in Alibaug for Weekend | Stay Willas",
+  description: "Rent a luxury beachfront villa in Alibaug for weekend getaways, bachelor parties, or birthday parties. Enjoy private pool, chef service & views. Book now.",
   keywords: [
-    "alibaug villas for rent",
-    "private pool villa alibaug",
-    "luxury stay alibaug",
-    "weekend getaway alibaug",
-    "beach villa alibaug",
-    "alibaug bungalows on rent"
+    "villa on rent in Alibaug for weekend",
+    "villa for birthday party Lonavala/Alibaug",
+    "birthday party villa Alibaug",
+    "bachelor party villa Alibaug",
+    "Stay Willas"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/alibaug",

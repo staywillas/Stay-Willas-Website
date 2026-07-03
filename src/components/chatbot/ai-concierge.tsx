@@ -22,7 +22,7 @@ const recommendedVilla = {
   name: "The Angle House",
   location: "Lonavala",
   image: "/assets/villas/the-angle-house/gallery-11.webp",
-  price: "48,000",
+  price: "13,000",
   guests: 16,
   bedrooms: 3,
   bathrooms: 3,
@@ -100,13 +100,10 @@ export default function AiConcierge() {
             role: "bot",
             content: `A beautiful choice! ✨ To help me narrow down our exclusive selection, what is your preferred nightly budget range?`,
             options: [
-              "₹10,000 - ₹15,000",
-              "₹15,000 - ₹20,000",
-              "₹20,000 - ₹25,000",
-              "₹25,000 - ₹30,000",
-              "₹30,000 - ₹35,000",
-              "₹35,000 - ₹40,000",
-              "₹45,000 - ₹50,000"
+              "₹10,000 - ₹12,000",
+              "₹12,000 - ₹15,000",
+              "₹15,000 - ₹18,000",
+              "₹18,000 - ₹20,000"
             ],
           },
         ]);

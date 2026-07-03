@@ -174,16 +174,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const city = villa.location.split(",")[0].trim();
-  const rawTitle = `${villa.name} | Luxury Villa in ${city}`;
-  const titleText = rawTitle.length > 60 ? `${villa.name} | Stay Willas` : rawTitle;
-
-  const rawDesc = `Experience an exclusive luxury stay at ${villa.name}, a private pool ${villa.bedrooms} BHK villa in ${city}. Verified premium amenities, chef services, and scenic views await.`;
-  const descText = rawDesc.length > 145 ? rawDesc.substring(0, 142) + "..." : rawDesc;
+  const titleText = `${villa.name} – Private Pool Villa in ${city} | Stay Willas`;
+  const descText = `${villa.bedrooms}BHK luxury villa in ${city} with private pool, scenic views & concierge service. Perfect for families, groups & celebrations. Book now.`;
 
   return {
     title: titleText,
     description: descText,
-    keywords: [villa.name, villa.location, `rent private pool villa in ${city}`, `luxury staycation ${city}`, `book ${villa.name}`, "Stay Willas"],
+    keywords: [
+      villa.name,
+      villa.location,
+      `rent private pool villa in ${city}`,
+      `luxury staycation ${city}`,
+      `book ${villa.name}`,
+      "Stay Willas"
+    ],
     alternates: {
       canonical: `/villa/${villa.slug}`,
     },

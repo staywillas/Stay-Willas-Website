@@ -4,9 +4,13 @@ import { prisma } from "@/lib/db";
 import EscapeClientPage from "./escape-client-page";
 
 export const metadata: Metadata = {
-  title: "Exclusive Getaway | Stay Willas Luxury Private Pool Villas",
-  description: "Take an unexpected detour. Discover our premium private villas in Lonavala and Khopoli. Calculate your getaway plans and book directly.",
-  keywords: ["stay willas", "the angle house", "canopy crest", "luxury villas maharashtra", "private pool villa lonavala", "lonavala staycation"],
+  title: "Couple Staycation near Mumbai | Day Drives | Stay Willas",
+  description: "Plan a luxury couple staycation near Mumbai. Serene private pool villas, ideal for day drives and spontaneous weekend escapes. Check availability.",
+  keywords: [
+    "couple staycation near Mumbai",
+    "day drive villa from Mumbai",
+    "Stay Willas"
+  ],
   alternates: {
     canonical: "/escape",
   },

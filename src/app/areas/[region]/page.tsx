@@ -78,15 +78,57 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  let titleText = `Luxury Villas in ${area.name} with Private Pool | Stay Willas`;
+  let descText = `Rent premium verified luxury villas in ${area.name}, Maharashtra. ${area.desc} Private pools, custom chef services, and scenic views.`;
+  let keywordList = [
+    `luxury villas in ${regionKey} for rent`,
+    `book villa ${regionKey} private pool`,
+    `best villa staycation ${regionKey}`,
+    `stay willas ${regionKey}`
+  ];
+
+  if (regionKey === "lonavala") {
+    titleText = `Luxury Villa Lonavala with Private Pool | Stay Willas`;
+    descText = `Rent a luxury villa in Lonavala with private pool, scenic mountain views & private chef. Ideal for friends group trips & family getaways. Check availability.`;
+    keywordList = [
+      "luxury villa Lonavala with private pool",
+      "weekend getaway villas near Pune",
+      "villa for friends group trip Lonavala",
+      "villa with private chef Lonavala",
+      "New Year villa party Lonavala",
+      "Stay Willas"
+    ];
+  } else if (regionKey === "alibaug") {
+    titleText = `Villa on Rent in Alibaug for Weekend | Stay Willas`;
+    descText = `Rent a luxury beachfront villa in Alibaug for weekend getaways, bachelor parties, or birthday parties. Enjoy private pool, chef service & views. Book now.`;
+    keywordList = [
+      "villa on rent in Alibaug for weekend",
+      "villa for birthday party Lonavala/Alibaug",
+      "birthday party villa Alibaug",
+      "bachelor party villa Alibaug",
+      "Stay Willas"
+    ];
+  } else if (regionKey === "karjat") {
+    titleText = `Karjat Villa with Pool Booking | Stay Willas`;
+    descText = `Secure your Karjat villa with pool booking for family farmstays, corporate offsites, and weekend getaways. Enjoy private chef services & pools. Book now.`;
+    keywordList = [
+      "Karjat villa with pool booking",
+      "corporate offsite villa Karjat",
+      "Stay Willas"
+    ];
+  } else if (regionKey === "khopoli") {
+    titleText = `Khopoli Private Pool Villa | Luxury Rentals | Stay Willas`;
+    descText = `Escape to a Khopoli private pool villa nestled in serene green mountains. Enjoy private chef services, premium hospitality & direct views. Check availability.`;
+    keywordList = [
+      "Khopoli private pool villa",
+      "Stay Willas"
+    ];
+  }
+
   return {
-    title: `Luxury Villas in ${area.name} with Private Pool | Stay Willas`,
-    description: `Rent premium verified luxury villas in ${area.name}, Maharashtra. ${area.desc} Private pools, custom chef services, and scenic views.`,
-    keywords: [
-      `luxury villas in ${regionKey} for rent`,
-      `book villa ${regionKey} private pool`,
-      `best villa staycation ${regionKey}`,
-      `stay willas ${regionKey}`
-    ],
+    title: titleText,
+    description: descText,
+    keywords: keywordList,
     alternates: {
       canonical: `https://www.staywillas.com/areas/${regionKey}`,
     },
