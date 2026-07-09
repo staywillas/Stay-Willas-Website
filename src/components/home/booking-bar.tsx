@@ -348,15 +348,18 @@ Could you please share the options available and help us plan our perfect getawa
       </motion.div>
 
       {/* Calendar Popover */}
-      <AnimatePresence>
-        {isCalendarOpen && (
-          isMobile && mounted ? (
-            createPortal(
+      {isMobile && mounted ? (
+        createPortal(
+          <AnimatePresence>
+            {isCalendarOpen && (
               <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
                 {/* Dark blur backdrop */}
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsCalendarOpen(false)} />
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-0" onClick={() => setIsCalendarOpen(false)} />
                 {/* Centered Modal Content Card */}
-                <div className="relative z-[1000] w-full max-w-[350px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left">
+                <div 
+                  onClick={(e) => e.stopPropagation()} 
+                  className="relative z-10 w-full max-w-[350px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left"
+                >
                   {/* Calendar Header */}
                   <div className="flex items-center justify-between mb-4">
                     <button type="button" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
@@ -404,13 +407,20 @@ Could you please share the options available and help us plan our perfect getawa
                     <button type="button" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
                   </div>
                 </div>
-              </div>,
-              document.body
-            )
-          ) : (
+              </div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )
+      ) : (
+        <AnimatePresence>
+          {isCalendarOpen && (
             <>
               <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsCalendarOpen(false)} />
-              <div className="absolute top-full left-1/2 -translate-x-1/2 translate-y-0 mt-4 z-50 w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left">
+              <div 
+                onClick={(e) => e.stopPropagation()} 
+                className="absolute top-full left-1/2 -translate-x-1/2 translate-y-0 mt-4 z-50 w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left"
+              >
                 {/* Calendar Header */}
                 <div className="flex items-center justify-between mb-4">
                   <button type="button" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
@@ -459,9 +469,9 @@ Could you please share the options available and help us plan our perfect getawa
                 </div>
               </div>
             </>
-          )
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      )}
     </div>
   );
 };

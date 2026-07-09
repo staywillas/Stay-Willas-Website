@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { 
@@ -237,8 +237,7 @@ const BookingCard = ({
     }
   }, [user]);
 
-  const checkInRef = useRef<HTMLInputElement>(null);
-  const checkOutRef = useRef<HTMLInputElement>(null);
+
 
   const nights = differenceInDays(checkOut, checkIn);
 
@@ -440,20 +439,6 @@ We are so excited about this getaway! Could you please check availability and he
               <span className="font-bold">{format(checkIn, "MMM dd, yyyy")}</span>
               <CalendarIcon size={14} className="text-accent-secondary" />
             </div>
-            <input 
-              ref={checkInRef}
-              type="date"
-              className="absolute bottom-0 right-0 w-0 h-0 opacity-0 pointer-events-none"
-              min={format(new Date(), "yyyy-MM-dd")}
-              value={format(checkIn, "yyyy-MM-dd")}
-              onChange={(e) => {
-                if (e.target.value) {
-                  const newDate = new Date(e.target.value);
-                  setCheckIn(newDate);
-                  if (newDate >= checkOut) setCheckOut(addDays(newDate, 3));
-                }
-              }}
-            />
           </div>
           <div 
             onClick={handleCheckOutClick}
@@ -466,16 +451,6 @@ We are so excited about this getaway! Could you please check availability and he
               <span className="font-bold">{format(checkOut, "MMM dd, yyyy")}</span>
               <CalendarIcon size={14} className="text-accent-secondary" />
             </div>
-            <input 
-              ref={checkOutRef}
-              type="date"
-              className="absolute bottom-0 right-0 w-0 h-0 opacity-0 pointer-events-none"
-              min={format(addDays(checkIn, 1), "yyyy-MM-dd")}
-              value={format(checkOut, "yyyy-MM-dd")}
-              onChange={(e) => {
-                if (e.target.value) setCheckOut(new Date(e.target.value));
-              }}
-            />
           </div>
         </div>
 
