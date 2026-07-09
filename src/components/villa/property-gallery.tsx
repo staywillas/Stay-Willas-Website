@@ -190,7 +190,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
             >
               <Image 
                 src={img} 
-                alt={`${propertyName} Mobile Photo ${idx + 1}`} 
+                alt={`${propertyName} luxury private pool villa photo ${idx + 1}`} 
                 fill 
                 priority={idx === 0}
                 sizes="(max-width: 768px) 100vw, 400px"
@@ -235,7 +235,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
           >
             <Image 
               src={visibleImages[0]} 
-              alt={`${propertyName} Cover`} 
+              alt={`${propertyName} private pool villa exterior view`} 
               fill 
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
@@ -261,7 +261,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
           >
             <Image 
               src={visibleImages[1]} 
-              alt={`${propertyName} View 2`} 
+              alt={`${propertyName} pool and garden area`} 
               fill 
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 320px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -281,7 +281,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
           >
             <Image 
               src={visibleImages[2]} 
-              alt={`${propertyName} View 3`} 
+              alt={`${propertyName} luxury bedroom interior`} 
               fill 
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 320px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -301,7 +301,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
           >
             <Image 
               src={visibleImages[3]} 
-              alt={`${propertyName} View 4`} 
+              alt={`${propertyName} living area and amenities`} 
               fill 
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 320px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -321,7 +321,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
           >
             <Image 
               src={visibleImages[4]} 
-              alt={`${propertyName} View 5`} 
+              alt={`${propertyName} outdoor lounge and scenic view`} 
               fill 
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 320px"
               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -400,7 +400,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
                     >
                       <Image 
                         src={img}
-                        alt={`${propertyName} Gallery Photo ${index + 1}`}
+                        alt={`${propertyName} luxury villa gallery image ${index + 1}`}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-95 group-hover:brightness-105"
@@ -496,7 +496,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
                       >
                         <Image 
                           src={images[activeIdx]} 
-                          alt={`${propertyName} Full Image ${activeIdx + 1}`}
+                          alt={`${propertyName} high resolution villa photo ${activeIdx + 1}`}
                           fill
                           priority
                           className="object-contain pointer-events-none"
@@ -549,7 +549,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
                   >
                     <Image 
                       src={img} 
-                      alt={`Thumbnail ${idx + 1}`} 
+                      alt={`${propertyName} thumbnail preview ${idx + 1}`} 
                       fill 
                       sizes="80px"
                       className="object-cover" 

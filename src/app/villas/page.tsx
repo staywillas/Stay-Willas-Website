@@ -8,13 +8,20 @@ import VillasClient from "@/components/villas/villas-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Staycation Villas Maharashtra | Luxury Rentals | Stay Willas",
-  description: "Rent pet friendly staycation villas in Maharashtra for weekend getaways, long weekends, and holidays. Handpicked luxury properties with pools. Book now.",
+  title: "Staycation Villas in Maharashtra with Chef | Private Pool Villa | Stay Willas",
+  description: "Rent pet friendly private pool villas in Maharashtra for weekend getaways and holidays. Handpicked luxury properties near Mumbai & Pune with chef services.",
   keywords: [
-    "staycation villas Maharashtra",
-    "pet friendly villa near Mumbai",
-    "Diwali/long weekend villa Maharashtra",
-    "luxury villas for rent in maharashtra",
+    "villas near mumbai",
+    "villas near pune",
+    "private pool villa",
+    "pet friendly villas",
+    "villas with chef",
+    "pool villas lonavala",
+    "alibaug pool villa",
+    "karjat pool villa",
+    "khopoli villa",
+    "luxury staycation",
+    "weekend getaways",
     "Stay Willas"
   ],
   alternates: {

@@ -276,8 +276,61 @@ export default async function VillaDetailPage({ params }: PageProps) {
     rules: defaultRules,
   };
 
+  // Define FAQ data
+  const villaFaqsMap: Record<string, { question: string; answer: string }[]> = {
+    "the-angle-house": [
+      {
+        question: "Does The Angle House in Lonavala have a private pool?",
+        answer: "Yes, The Angle House features a private swimming pool with a soothing waterfall feature, outdoor lounging spaces, and comfortable chairs."
+      },
+      {
+        question: "Is Jain food available at The Angle House?",
+        answer: "Absolutely. The Angle House offers in-house private chef services that can prepare customized veg-only and Jain food spreads in separate kitchen setups."
+      },
+      {
+        question: "What is the guest capacity of The Angle House?",
+        answer: "The Angle House can comfortably host up to 16 guests, making it ideal for family reunions, birthdays, and celebrations."
+      }
+    ],
+    "canopy-crest": [
+      {
+        question: "Is Canopy Crest pet friendly?",
+        answer: "Yes, Canopy Crest is a fully pet-friendly private estate featuring an expansive lawn where your pets can run and play safely."
+      },
+      {
+        question: "How close is Canopy Crest to Adlabs Imagica in Khopoli?",
+        answer: "Canopy Crest is located in Khopoli, Maharashtra, just a short drive from Adlabs Imagica, making it an ideal base for families visiting the theme park."
+      },
+      {
+        question: "What amenities are available at Canopy Crest?",
+        answer: "Canopy Crest features a private pool (22x12 ft), spacious lawn, music system, indoor/outdoor games, wheelchair accessibility, CCTV security, and dedicated caretaker services."
+      }
+    ]
+  };
+
+  const villaFaqs = villaFaqsMap[villa.slug] || [];
+  
+  const faqSchema = villaFaqs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": villaFaqs.map(f => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.answer
+      }
+    }))
+  } : null;
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary pb-28 lg:pb-0">
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

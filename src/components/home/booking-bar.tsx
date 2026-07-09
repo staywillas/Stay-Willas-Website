@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { 
   ChevronRight, 
@@ -41,6 +42,19 @@ const BookingBar = () => {
   const [bookingsData, setBookingsData] = useState<any[]>([]);
   const [totalVillas, setTotalVillas] = useState<number>(0);
   const [isLoadingBookings, setIsLoadingBookings] = useState(false);
+
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Sync destination with live Prisma database availability
   useEffect(() => {
@@ -336,57 +350,116 @@ Could you please share the options available and help us plan our perfect getawa
       {/* Calendar Popover */}
       <AnimatePresence>
         {isCalendarOpen && (
-          <>
-            <div className="fixed inset-0 z-40 bg-black/40 md:bg-transparent" onClick={() => setIsCalendarOpen(false)} />
-            <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 md:absolute md:top-full md:left-1/2 md:-translate-x-1/2 md:translate-y-0 md:mt-4 z-50 w-[calc(100vw-2rem)] sm:w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5">
-              {/* Calendar Header */}
-              <div className="flex items-center justify-between mb-4">
-                <button type="button" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
-                <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
-                <button type="button" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
-              </div>
-              
-              {/* Weekdays */}
-              <div className="grid grid-cols-7 text-center mb-1.5">
-                {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
-                  <span key={idx} className="text-[9px] font-extrabold text-[#E2A63B] uppercase tracking-widest">{day}</span>
-                ))}
-              </div>
+          isMobile && mounted ? (
+            createPortal(
+              <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
+                {/* Dark blur backdrop */}
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsCalendarOpen(false)} />
+                {/* Centered Modal Content Card */}
+                <div className="relative z-[1000] w-full max-w-[350px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left">
+                  {/* Calendar Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <button type="button" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
+                    <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
+                    <button type="button" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
+                  </div>
+                  
+                  {/* Weekdays */}
+                  <div className="grid grid-cols-7 text-center mb-1.5">
+                    {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
+                      <span key={idx} className="text-[9px] font-extrabold text-[#E2A63B] uppercase tracking-widest">{day}</span>
+                    ))}
+                  </div>
 
-              {/* Days */}
-              <div className="grid grid-cols-7 gap-0.5">
-                {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => <div key={`empty-${i}`} />)}
-                {eachDayOfInterval({ start: startOfMonth(calendarViewMonth), end: endOfMonth(calendarViewMonth) }).map((day) => {
-                  const isPast = isBefore(day, startOfDay(new Date()));
-                  const isBooked = isDateFullyBooked(day);
-                  const isSelectedCheckIn = checkIn && isSameDay(day, checkIn);
-                  const isSelectedCheckOut = checkOut && isSameDay(day, checkOut);
-                  const isInRange = checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
-                  const isDisabled = isPast || isBooked;
+                  {/* Days */}
+                  <div className="grid grid-cols-7 gap-0.5">
+                    {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => <div key={`empty-${i}`} />)}
+                    {eachDayOfInterval({ start: startOfMonth(calendarViewMonth), end: endOfMonth(calendarViewMonth) }).map((day) => {
+                      const isPast = isBefore(day, startOfDay(new Date()));
+                      const isBooked = isDateFullyBooked(day);
+                      const isSelectedCheckIn = checkIn && isSameDay(day, checkIn);
+                      const isSelectedCheckOut = checkOut && isSameDay(day, checkOut);
+                      const isInRange = checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
+                      const isDisabled = isPast || isBooked;
 
-                  return (
-                    <button
-                      key={day.toString()} type="button" disabled={isDisabled} onClick={() => handleDateSelect(day)}
-                      className={`w-8 h-8 rounded-full text-[11px] font-bold flex flex-col items-center justify-center transition-all
-                        ${isDisabled ? 'text-slate-300 cursor-not-allowed' : ''}
-                        ${isBooked ? 'bg-[#FFB800]/10 text-slate-400' : ''}
-                        ${isSelectedCheckIn || isSelectedCheckOut ? 'bg-[#2563EB] text-white shadow-md scale-105 z-10' : ''}
-                        ${isInRange ? 'bg-[#2563EB]/10 text-[#2563EB]' : ''}
-                        ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange ? 'text-[#1B3564] hover:bg-slate-100 cursor-pointer' : ''}
-                      `}
-                    >
-                      <span>{format(day, "d")}</span>
-                    </button>
-                  );
-                })}
-              </div>
+                      return (
+                        <button
+                          key={day.toString()} type="button" disabled={isDisabled} onClick={() => handleDateSelect(day)}
+                          className={`w-8 h-8 rounded-full text-[11px] font-bold flex flex-col items-center justify-center transition-all
+                            ${isDisabled ? 'text-slate-300 cursor-not-allowed' : ''}
+                            ${isBooked ? 'bg-[#FFB800]/10 text-slate-400' : ''}
+                            ${isSelectedCheckIn || isSelectedCheckOut ? 'bg-[#2563EB] text-white shadow-md scale-105 z-10' : ''}
+                            ${isInRange ? 'bg-[#2563EB]/10 text-[#2563EB]' : ''}
+                            ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange ? 'text-[#1B3564] hover:bg-slate-100 cursor-pointer' : ''}
+                          `}
+                        >
+                          <span>{format(day, "d")}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
 
-              <div className="flex items-center justify-between mt-5 pt-3 border-t border-slate-100">
-                <button type="button" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
-                <button type="button" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
+                  <div className="flex items-center justify-between mt-5 pt-3 border-t border-slate-100">
+                    <button type="button" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
+                    <button type="button" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
+                  </div>
+                </div>
+              </div>,
+              document.body
+            )
+          ) : (
+            <>
+              <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsCalendarOpen(false)} />
+              <div className="absolute top-full left-1/2 -translate-x-1/2 translate-y-0 mt-4 z-50 w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left">
+                {/* Calendar Header */}
+                <div className="flex items-center justify-between mb-4">
+                  <button type="button" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
+                  <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
+                  <button type="button" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
+                </div>
+                
+                {/* Weekdays */}
+                <div className="grid grid-cols-7 text-center mb-1.5">
+                  {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
+                    <span key={idx} className="text-[9px] font-extrabold text-[#E2A63B] uppercase tracking-widest">{day}</span>
+                  ))}
+                </div>
+
+                {/* Days */}
+                <div className="grid grid-cols-7 gap-0.5">
+                  {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => <div key={`empty-${i}`} />)}
+                  {eachDayOfInterval({ start: startOfMonth(calendarViewMonth), end: endOfMonth(calendarViewMonth) }).map((day) => {
+                    const isPast = isBefore(day, startOfDay(new Date()));
+                    const isBooked = isDateFullyBooked(day);
+                    const isSelectedCheckIn = checkIn && isSameDay(day, checkIn);
+                    const isSelectedCheckOut = checkOut && isSameDay(day, checkOut);
+                    const isInRange = checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
+                    const isDisabled = isPast || isBooked;
+
+                    return (
+                      <button
+                        key={day.toString()} type="button" disabled={isDisabled} onClick={() => handleDateSelect(day)}
+                        className={`w-8 h-8 rounded-full text-[11px] font-bold flex flex-col items-center justify-center transition-all
+                          ${isDisabled ? 'text-slate-300 cursor-not-allowed' : ''}
+                          ${isBooked ? 'bg-[#FFB800]/10 text-slate-400' : ''}
+                          ${isSelectedCheckIn || isSelectedCheckOut ? 'bg-[#2563EB] text-white shadow-md scale-105 z-10' : ''}
+                          ${isInRange ? 'bg-[#2563EB]/10 text-[#2563EB]' : ''}
+                          ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange ? 'text-[#1B3564] hover:bg-slate-100 cursor-pointer' : ''}
+                        `}
+                      >
+                        <span>{format(day, "d")}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center justify-between mt-5 pt-3 border-t border-slate-100">
+                  <button type="button" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
+                  <button type="button" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
+                </div>
               </div>
-            </div>
-          </>
+            </>
+          )
         )}
       </AnimatePresence>
     </div>

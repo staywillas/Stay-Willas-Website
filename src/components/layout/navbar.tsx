@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
-import { Menu, X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare } from "lucide-react";
+import { Menu, X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
@@ -101,6 +101,7 @@ const Navbar = () => {
     { name: "Areas", href: "/areas" },
     { name: "Experiences", href: "/experiences" },
     { name: "Stories", href: "/stories" },
+    { name: "Blog", href: "/blog" },
   ];
 
   return (
@@ -369,6 +370,7 @@ const Navbar = () => {
                         Destinations: MapPin,
                         Experiences: Sparkles,
                         Stories: MessageSquare,
+                        Blog: BookOpen,
                       }[link.name] || Sparkles;
 
                       return (

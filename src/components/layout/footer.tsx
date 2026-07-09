@@ -186,12 +186,15 @@ const Footer = () => {
             © {new Date().getFullYear()} Stay Willas. All Rights Reserved.
           </p>
           
-          <div className="flex gap-8">
-            <Link href="#" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
+          <div className="flex flex-wrap gap-x-8 gap-y-3 justify-center">
+            <Link href="/privacy" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
               Privacy Policy
             </Link>
-            <Link href="#" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
+            <Link href="/terms" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
               Terms of Service
+            </Link>
+            <Link href="/cancellation-policy" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
+              Cancellation Policy
             </Link>
           </div>
 

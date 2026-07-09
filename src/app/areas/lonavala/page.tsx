@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
   description: "Rent a luxury villa in Lonavala with private pool, scenic mountain views & private chef. Ideal for friends group trips & family getaways. Check availability.",
   keywords: [
+    "best villas in lonavla",
+    "veg-only/Jain food villa Lonavala",
     "luxury villa Lonavala with private pool",
     "weekend getaway villas near Pune",
     "villa for friends group trip Lonavala",
@@ -58,6 +60,35 @@ export default async function LonavalaPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
       <div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LodgingBusiness",
+              "name": "Stay Willas — Lonavala Villas",
+              "description": "Premium luxury private pool villas for rent in Lonavala, Maharashtra. Pet-friendly, Jain food chef, ideal for family getaways and birthday celebrations.",
+              "url": "https://www.staywillas.com/areas/lonavala",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Lonavala",
+                "addressRegion": "Maharashtra",
+                "addressCountry": "IN"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "18.7546",
+                "longitude": "73.4062"
+              },
+              "priceRange": "₹₹₹",
+              "amenityFeature": [
+                { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
+                { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true },
+                { "@type": "LocationFeatureSpecification", "name": "Pet Friendly", "value": true }
+              ]
+            })
+          }}
+        />
         <Navbar />
         
         {/* Banner Section */}
@@ -382,6 +413,16 @@ export default async function LonavalaPage() {
             </article>
           </div>
         </section>
+
+          {/* Internal Blog Links */}
+          <div className="mt-16 p-8 bg-[#FAF8F5] rounded-3xl border border-[#DAA520]/15">
+            <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Related Guides</h3>
+            <ul className="space-y-3 text-sm text-slate-700 font-light">
+              <li>→ <Link href="/blog/pet-friendly-villas-near-mumbai-why-the-angle-house" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Pet-Friendly Villas Near Mumbai: Why The Angle House Is Perfect for You</Link></li>
+              <li>→ <Link href="/blog/best-villa-in-lonavala-for-birthday-parties-family-reunions" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Best Villa in Lonavala for Birthday Parties & Family Reunions</Link></li>
+              <li>→ <Link href="/blog/pet-friendly-villa-rules-near-mumbai-what-to-know" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Pet-Friendly Villa Rules Near Mumbai — What to Know Before You Book</Link></li>
+            </ul>
+          </div>
 
         {/* Bottom Navigation for SEO flow */}
         <section className="py-12 border-t border-[#DAA520]/10 max-w-7xl mx-auto px-6 md:px-12 w-full">

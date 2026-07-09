@@ -3,16 +3,21 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Private Pool Villa near Mumbai & Maharashtra | Stay Willas",
-  description: "Rent luxury staycation villas in Maharashtra. Curated private pool villas near Mumbai & Pune with chef services. Perfect for family getaways. Book now.",
+  title: "Private Pool Villa near Mumbai & Pune | Staycation Villas Maharashtra | Stay Willas",
+  description: "Rent luxury staycation villas in Maharashtra. Handpicked private pool villas near Mumbai & Pune with chef services. Pet-friendly family getaway homes. Book now.",
   keywords: [
-    "private pool villa near Mumbai",
-    "staycation villas Maharashtra",
-    "luxury villa rental near Mumbai for family",
-    "private villa with heated pool near Mumbai",
-    "pet friendly villa near Mumbai",
-    "villa near Mumbai for weekend",
-    "villa 2 hours from Mumbai/Pune",
+    "best villas in lonavla",
+    "villas near mumbai",
+    "villas near pune",
+    "private pool villa",
+    "pet friendly villas",
+    "villas with chef",
+    "pool villas lonavala",
+    "alibaug pool villa",
+    "karjat pool villa",
+    "khopoli villa",
+    "luxury staycation",
+    "weekend getaways",
     "Stay Willas"
   ],
   alternates: {
@@ -31,6 +36,7 @@ const FeaturedVillas = dynamic(() => import("@/components/home/featured-villas")
 const Experiences = dynamic(() => import("@/components/home/experiences"));
 const InfiniteMarquee = dynamic(() => import("@/components/home/infinite-marquee"));
 const WhyChooseUs = dynamic(() => import("@/components/home/why-choose-us"));
+const SEOContent = dynamic(() => import("@/components/home/seo-content"));
 const PartnerSection = dynamic(() => import("@/components/home/partner-section"));
 const Footer = dynamic(() => import("@/components/layout/footer"));
 
@@ -90,6 +96,49 @@ export default async function Home() {
           })
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Stay Willas",
+            "description": "Premium luxury villa rentals in Maharashtra. Handpicked private pool villas near Mumbai and Pune with chef services, pet-friendly options, and concierge support.",
+            "url": "https://www.staywillas.com",
+            "logo": "https://www.staywillas.com/icon.png",
+            "image": "https://www.staywillas.com/icon.png",
+            "telephone": "+91-9136aborz",
+            "email": "bookings@staywillas.com",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mumbai",
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "19.0760",
+              "longitude": "72.8777"
+            },
+            "areaServed": [
+              { "@type": "Place", "name": "Lonavala" },
+              { "@type": "Place", "name": "Alibaug" },
+              { "@type": "Place", "name": "Karjat" },
+              { "@type": "Place", "name": "Khopoli" }
+            ],
+            "priceRange": "₹₹₹",
+            "openingHoursSpecification": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "opens": "00:00",
+              "closes": "23:59"
+            },
+            "sameAs": [
+              "https://www.instagram.com/staywillas"
+            ]
+          })
+        }}
+      />
       <Navbar />
       <TopTicker />
       <Hero />
@@ -99,6 +148,7 @@ export default async function Home() {
       <Experiences />
       <InfiniteMarquee />
       <WhyChooseUs />
+      <SEOContent />
       <PartnerSection />
       <Footer />
     </main>

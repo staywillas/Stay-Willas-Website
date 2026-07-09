@@ -54,6 +54,35 @@ export default async function KhopoliPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
       <div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LodgingBusiness",
+              "name": "Stay Willas — Khopoli Villas",
+              "description": "Premium private pool villas near Imagica in Khopoli, Maharashtra. Spacious estates for corporate offsites, family weekends, and adventure getaways.",
+              "url": "https://www.staywillas.com/areas/khopoli",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Khopoli",
+                "addressRegion": "Maharashtra",
+                "addressCountry": "IN"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "18.7830",
+                "longitude": "73.3430"
+              },
+              "priceRange": "₹₹₹",
+              "amenityFeature": [
+                { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
+                { "@type": "LocationFeatureSpecification", "name": "Near Imagica", "value": true },
+                { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true }
+              ]
+            })
+          }}
+        />
         <Navbar />
         
         {/* Banner Section */}
@@ -358,6 +387,17 @@ export default async function KhopoliPage() {
                 </div>
               </div>
             </article>
+          </div>
+        </section>
+
+        {/* Internal Blog Links */}
+        <section className="max-w-5xl mx-auto px-6 md:px-12 lg:px-24 mb-16">
+          <div className="p-8 bg-[#FAF8F5] rounded-3xl border border-[#DAA520]/15">
+            <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Related Guides</h3>
+            <ul className="space-y-3 text-sm text-slate-700 font-light">
+              <li>→ <Link href="/blog/corporate-offsite-checklist-for-a-khopoli-villa" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Corporate Offsite Checklist for a Khopoli Villa</Link></li>
+              <li>→ <Link href="/blog/things-to-do-near-adlabs-imagica-khopoli" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Things to Do Near Adlabs Imagica, Khopoli</Link></li>
+            </ul>
           </div>
         </section>
 
