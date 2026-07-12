@@ -41,16 +41,7 @@ export const metadata: Metadata = {
   keywords: [
     "villas near mumbai",
     "villas near pune",
-    "private pool villa",
-    "pet friendly villas",
-    "villas with chef",
-    "pool villas lonavala",
-    "alibaug pool villa",
-    "karjat pool villa",
-    "khopoli villa",
-    "luxury staycation",
-    "weekend getaways",
-    "Stay Willas"
+    "private pool villa"
   ],
   authors: [{ name: "Stay Willas" }],
   robots: { index: true, follow: true },

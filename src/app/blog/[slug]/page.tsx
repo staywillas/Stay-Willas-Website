@@ -33,12 +33,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${blog.title} | Stay Willas Guides`,
     description: blog.description,
     keywords: [
-      blog.keyword,
-      "best villas in lonavla",
-      "luxury staycation guides maharashtra",
-      "Stay Willas Blog",
-      "Stay Willas"
-    ],
+    blog.keyword,
+    "best villas in lonavla",
+    "luxury staycation guides maharashtra"
+  ],
     alternates: {
       canonical: `/blog/${blog.slug}`,
     },

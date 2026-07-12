@@ -10,7 +10,11 @@ import ContactForm from "@/components/contact/contact-form";
 export const metadata: Metadata = {
   title: "Contact Stay Willas | Luxury Villa Bookings & Inquiries",
   description: "Get in touch with the Stay Willas support team. Whether you want to book a private pool villa or list your luxury property, we are here to help.",
-  keywords: ["stay willas contact", "book luxury villa maharashtra", "villa rental customer support", "stay willas concierge"],
+  keywords: [
+    "stay willas contact",
+    "book luxury villa maharashtra",
+    "villa rental customer support"
+  ],
   alternates: {
     canonical: "/contact",
   },

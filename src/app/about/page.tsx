@@ -8,7 +8,11 @@ import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 export const metadata: Metadata = {
   title: "About Stay Willas | Luxury Villa Rentals | Maharashtra",
   description: "Learn about the hospitality philosophy behind Stay Willas. We are dedicated to curating the most exclusive luxury private villa staycations in Maharashtra.",
-  keywords: ["about stay willas", "luxury hospitality company maharashtra", "premium villa curation experts", "best villa rental company near mumbai"],
+  keywords: [
+    "about stay willas",
+    "luxury hospitality company maharashtra",
+    "premium villa curation experts"
+  ],
   alternates: {
     canonical: "/about",
   },

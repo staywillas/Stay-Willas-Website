@@ -14,12 +14,7 @@ export const metadata: Metadata = {
   keywords: [
     "best villas in lonavla",
     "veg-only/Jain food villa Lonavala",
-    "luxury villa Lonavala with private pool",
-    "weekend getaway villas near Pune",
-    "villa for friends group trip Lonavala",
-    "villa with private chef Lonavala",
-    "New Year villa party Lonavala",
-    "Stay Willas"
+    "luxury villa Lonavala with private pool"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",

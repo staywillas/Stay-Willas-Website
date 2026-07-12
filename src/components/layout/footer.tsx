@@ -85,10 +85,10 @@ const Footer = () => {
             <ul className="flex flex-col gap-4">
               {[
                 { name: "All Stays", href: "/villas" },
-                { name: "Lonavala Villas", href: "/villas?region=lonavala" },
-                { name: "Alibaug Villas", href: "/villas?region=alibaug" },
-                { name: "Karjat Villas", href: "/villas?region=karjat" },
-                { name: "Khopoli Villas", href: "/villas?region=khopoli" },
+                { name: "Lonavala Villas", href: "/areas/lonavala" },
+                { name: "Alibaug Villas", href: "/areas/alibaug" },
+                { name: "Karjat Villas", href: "/areas/karjat" },
+                { name: "Khopoli Villas", href: "/areas/khopoli" },
                 { name: "Experiences", href: "/experiences" },
                 { name: "Guest Stories", href: "/stories" }
               ].map((link) => (

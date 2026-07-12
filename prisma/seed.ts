@@ -129,7 +129,7 @@ Step onto the private teakwood dining deck under glowing string lights, submerge
     name: "Heritage Villa",
     location: "Karjat, Maharashtra",
     category: "Private Estates",
-    description: `A majestic stone-built countryside sanctuary where old-world heritage meets modern luxury. Heritage Villa is a top-rated pet friendly villa Karjat private pool option, featuring beautifully textured brick walls, a gorgeous private swimming pool with outdoor poolside dining, and custom warm lighting that glows under the night sky. Unwind in its spacious, air-conditioned master suites featuring private outdoor access, or enjoy quiet evenings on the paved deck under swaying palms. Experience absolute peace and privacy at this exclusive estate.`,
+    description: `A majestic stone-built countryside sanctuary where old-world heritage meets modern luxury. Heritage Villa is a pet-friendly retreat featuring beautifully textured brick walls, a gorgeous private swimming pool with outdoor poolside dining, and custom warm lighting that glows under the night sky. Unwind in its spacious, air-conditioned master suites featuring private outdoor access, or enjoy quiet evenings on the paved deck under swaying palms. Experience absolute peace and privacy at this exclusive estate.`,
     price: 16000,
     weekendPrice: 19000,
     guests: 12,
@@ -159,7 +159,7 @@ Step onto the private teakwood dining deck under glowing string lights, submerge
     name: "Harmony Villa",
     location: "Tungarli, Lonavala, Maharashtra",
     category: "Infinity Pools",
-    description: `Nestled in the serene hills of Tungarli, Lonavala, Harmony Villa is a masterpiece of contemporary architecture and tranquil luxury. If you are looking for a luxury villa in Tungarli Lonavala with pool access, this stunning 3-bedroom estate boasts a spectacular, sprawling private pool set against beautiful hill backdrops. With high-vaulted ceilings, open living halls, and a beautifully manicured lawn terrace complete with cozy outdoor seating, a carrom board, and swings, the villa provides the perfect environment for relaxation and fun.
+    description: `Nestled in the serene hills of Tungarli, Lonavala, Harmony Villa is a masterpiece of contemporary architecture and tranquil luxury. This stunning 3-bedroom estate boasts a spectacular, sprawling private pool set against beautiful hill backdrops. With high-vaulted ceilings, open living halls, and a beautifully manicured lawn terrace complete with cozy outdoor seating, a carrom board, and swings, the villa provides the perfect environment for relaxation and fun.
 
 Unwind in the air-conditioned, beautifully decorated bedrooms featuring premium bedding and unique accent walls. Whether you're enjoying a poolside BBQ under the night sky or playing games with loved ones on the artificial turf rooftop, Harmony Villa offers an unforgettable luxury staycation experience.`,
     price: 12000,
@@ -193,7 +193,7 @@ Unwind in the air-conditioned, beautifully decorated bedrooms featuring premium 
     name: "Canopy Crest",
     location: "Khopoli, Maharashtra",
     category: "Private Estates",
-    description: `Spread across an expansive field, this sprawling holiday getaway home is tucked away from bustling city life to provide you with a perfect window of relaxation. As a premium private pool villa near Imagica Khopoli, it is the perfect sanctuary to rejuvenate, detox, and unwind. The villa features eclectic interiors, along with lavish amenities. Rejuvenate, detox, and unwind at this serene home, that is enveloped in lush verdant cover of greenery and towering hills. Savour the misty breeze in the mornings, relax on the lounge-worthy sit-outs, and make the most of the relaxing swimming pool, one of the key features of this beautiful villa. Guests can take a peaceful walk in the lawn and embrace the beauty of the overlooking mountainscapes and the horizon of the manicured fields around the villa. Imagine yourself, relishing a delicious barbeque by the pool living your best getaway, at the Canopy Crest.`,
+    description: `Spread across an expansive field, this sprawling holiday getaway home is tucked away from bustling city life to provide you with a perfect window of relaxation. Located near Khopoli, it is the perfect sanctuary to rejuvenate, detox, and unwind. The villa features eclectic interiors, along with lavish amenities. Rejuvenate, detox, and unwind at this serene home, that is enveloped in lush verdant cover of greenery and towering hills. Savour the misty breeze in the mornings, relax on the lounge-worthy sit-outs, and make the most of the relaxing swimming pool, one of the key features of this beautiful villa. Guests can take a peaceful walk in the lawn and embrace the beauty of the overlooking mountainscapes and the horizon of the manicured fields around the villa. Imagine yourself, relishing a delicious barbeque by the pool living your best getaway, at the Canopy Crest.`,
     price: 15000,
     weekendPrice: 22000,
     fridayPrice: 18000,

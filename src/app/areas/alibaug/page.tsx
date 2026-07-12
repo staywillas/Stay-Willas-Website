@@ -14,9 +14,7 @@ export const metadata: Metadata = {
   keywords: [
     "villa on rent in Alibaug for weekend",
     "villa for birthday party Lonavala/Alibaug",
-    "birthday party villa Alibaug",
-    "bachelor party villa Alibaug",
-    "Stay Willas"
+    "birthday party villa Alibaug"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/alibaug",

@@ -9,7 +9,11 @@ import { Sparkles } from "lucide-react";
 export const metadata: Metadata = {
   title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
   description: "Hear directly from our guests. Watch video reviews and vlog diaries from luxury private pool villa staycations at The Angle House in Lonavala.",
-  keywords: ["guest reviews stay willas", "villa rental reviews maharashtra", "video testimonials lonavala villa", "stay willas testimonials", "verified client reviews"],
+  keywords: [
+    "guest reviews stay willas",
+    "villa rental reviews maharashtra",
+    "video testimonials lonavala villa"
+  ],
   alternates: {
     canonical: "/stories",
   },

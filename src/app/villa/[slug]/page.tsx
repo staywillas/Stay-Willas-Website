@@ -181,22 +181,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: titleText,
     description: descText,
     keywords: [
-      villa.name,
-      villa.location,
-      `rent private pool villa in ${city}`,
-      `luxury staycation ${city}`,
-      `book ${villa.name}`,
-      "Stay Willas"
-    ],
+    villa.name,
+    villa.location,
+    `rent private pool villa in ${city}`
+  ],
     alternates: {
       canonical: `/villa/${villa.slug}`,
     },
     openGraph: {
       title: titleText,
       description: descText,
-      images: villa.images[0] ? [{ url: villa.images[0] }] : [],
+      images: villa.images[0] ? [{ url: `https://www.staywillas.com${villa.images[0]}` }] : [],
       type: "website",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: titleText,
+      description: descText,
+      images: villa.images[0] ? [`https://www.staywillas.com${villa.images[0]}`] : [],
+    }
   };
 }
 
@@ -336,7 +339,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "VacationRental",
+            "@type": "LodgingBusiness",
             "name": villaData.name,
             "description": villaData.description,
             "image": villaData.images,

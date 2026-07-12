@@ -3,22 +3,12 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Private Pool Villa near Mumbai & Pune | Staycation Villas Maharashtra | Stay Willas",
+  title: "Luxury Private Pool Villas Near Mumbai | Stay Willas",
   description: "Rent luxury staycation villas in Maharashtra. Handpicked private pool villas near Mumbai & Pune with chef services. Pet-friendly family getaway homes. Book now.",
   keywords: [
     "best villas in lonavla",
     "villas near mumbai",
-    "villas near pune",
-    "private pool villa",
-    "pet friendly villas",
-    "villas with chef",
-    "pool villas lonavala",
-    "alibaug pool villa",
-    "karjat pool villa",
-    "khopoli villa",
-    "luxury staycation",
-    "weekend getaways",
-    "Stay Willas"
+    "private pool villa"
   ],
   alternates: {
     canonical: "/",
@@ -79,7 +69,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-bg-primary">
-      <h1 className="sr-only">Stay Willas - Luxury Private Pool Villas for Rent in Maharashtra</h1>
+      <h1 className="sr-only">Luxury Private Pool Villas Near Mumbai & Pune | Stay Willas</h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

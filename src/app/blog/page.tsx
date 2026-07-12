@@ -14,10 +14,7 @@ export const metadata: Metadata = {
   keywords: [
     "stay willas blog",
     "best villas in lonavla",
-    "villa for birthday party near Mumbai with pool",
-    "villa for corporate offsite Karjat",
-    "3 bedroom villa near Pune with private pool",
-    "villa near Mumbai for family weekend"
+    "villa for birthday party near Mumbai with pool"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/blog",

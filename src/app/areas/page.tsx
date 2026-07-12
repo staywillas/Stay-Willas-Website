@@ -14,8 +14,7 @@ export const metadata: Metadata = {
   keywords: [
     "weekend getaway villas near Pune",
     "resort/villa near Navi Mumbai",
-    "villa 2 hours from Mumbai/Pune",
-    "Stay Willas"
+    "villa 2 hours from Mumbai/Pune"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas",
