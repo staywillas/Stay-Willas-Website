@@ -90,6 +90,12 @@ export default function RootLayout({
             gtag('config', 'G-YFK9H723YJ');
           `}
         </Script>
+        {/* Ahrefs Analytics */}
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="tL823LIpA1b/wcL/aWHL1Q"
+          strategy="afterInteractive"
+        />
       </head>
       <body
         className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} antialiased font-sans`}
