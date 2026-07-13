@@ -25,7 +25,7 @@ export const blogsData: BlogPost[] = [
     keyword: "pet friendly villa rules near Mumbai",
     readTime: "8 min read",
     date: "July 09, 2026",
-    image: "/assets/villas/heritage-villa/gallery-5.jpg",
+    image: "/assets/villas/the-angle-house/gallery-10.webp",
     intro: "Heading out for a weekend getaway is exciting, but leaving your pet behind is always tough. Increasingly, families are opting to bring their dogs and cats along for staycations. However, booking a pet-welcoming rental is not just about finding a place that says 'pets allowed'. Understanding the pet friendly villa rules near Mumbai is essential to ensure a smooth, stress-free holiday. From security deposits to lawn access, knowing what is expected will help you plan the perfect escape with your pet.",
     sections: [
       {
@@ -51,10 +51,10 @@ export const blogsData: BlogPost[] = [
         ]
       },
       {
-        heading: "Heritage Villa: Karjat's Top Pet Friendly Estate",
+        heading: "The Angle House: Lonavala's Top Pet Friendly Estate",
         paragraphs: [
-          "If you are seeking a perfect getaway, look no further than <a href=\"/villa/heritage-villa\" class=\"underline font-bold text-accent-primary\">Heritage Villa in Karjat</a>. This rustic stone-built estate features sprawling, fenced paved gardens where dogs can explore safely.",
-          "Equipped with spacious air-conditioned suites and an outdoor pool deck under swaying palms, it offers a luxurious sanctuary. Our on-site caretakers are highly friendly and can arrange customized, simple meals for your pets upon request."
+          "If you are seeking a perfect getaway, look no further than <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House in Lonavala</a>. This stunning modern estate is fully pet-friendly, offering beautiful grassy lawns where your dogs can play safely.",
+          "Equipped with a private swimming pool with a waterfall, a private jacuzzi, and spacious air-conditioned suites, it offers a luxurious sanctuary. Our on-site caretakers are highly friendly and can assist you with your pet's needs upon request."
         ]
       },
       {
@@ -74,7 +74,7 @@ export const blogsData: BlogPost[] = [
     keyword: "best time to visit Karjat for villa stay",
     readTime: "7 min read",
     date: "July 07, 2026",
-    image: "/assets/villas/heritage-villa/gallery-2.jpg",
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
     intro: "Nestled at the base of the Sahyadri mountains, Karjat is a scenic countryside paradise just 2 hours drive from Mumbai. Known for its quiet rivers, historic forts, and green hills, it has become a hot spot for luxury staycations. However, your experience depends greatly on when you travel. Understanding the best time to visit Karjat for a villa stay helps you choose the perfect dates for swimming, bonfires, and outdoor activities.",
     sections: [
       {

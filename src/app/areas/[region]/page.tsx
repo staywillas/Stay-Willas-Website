@@ -29,14 +29,14 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
     tagline: "The Coastal Getaway",
     desc: "Beautiful coconut trees, quiet sandy beaches, and modern villas just a scenic catamaran ferry ride away from Mumbai.",
     image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
-    isLaunchingSoon: false
+    isLaunchingSoon: true
   },
   karjat: {
     name: "Karjat",
     tagline: "The Riverside Escape",
     desc: "Lovely green valleys, quiet flowing streams, and peaceful villas built for complete relaxation in nature.",
     image: "/assets/villas/heritage-villa/main.jpg",
-    isLaunchingSoon: false
+    isLaunchingSoon: true
   },
   khopoli: {
     name: "Khopoli",

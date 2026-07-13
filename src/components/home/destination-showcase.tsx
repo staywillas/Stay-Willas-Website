@@ -18,7 +18,7 @@ const destinations = [
   {
     name: "Lonavala",
     image: "/assets/villas/the-angle-house/gallery-11.webp",
-    count: "2 Villas",
+    count: "1 Villa",
     tag: "Mountain Escapes",
     desc: "Cool breeze, misty green hills, and quiet retreats.",
     isLaunchingSoon: false,
@@ -36,11 +36,11 @@ const destinations = [
   {
     name: "Karjat",
     image: "/assets/villas/heritage-villa/main.jpg",
-    count: "1 Villa",
+    count: "LAUNCHING SOON",
     tag: "Riverside Views",
     desc: "Green valleys, quiet rivers, and pure relaxation.",
-    isLaunchingSoon: false,
-    link: "/villas?region=karjat"
+    isLaunchingSoon: true,
+    link: "/partner"
   },
   {
     name: "Igatpuri",
@@ -54,11 +54,11 @@ const destinations = [
   {
     name: "Alibaug",
     image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
-    count: "2 Villas",
+    count: "LAUNCHING SOON",
     tag: "Beachside Stays",
     desc: "Golden sand beaches, pools, and beautiful sunsets.",
-    isLaunchingSoon: false,
-    link: "/villas?region=alibaug"
+    isLaunchingSoon: true,
+    link: "/partner"
   },
   {
     name: "Goa",

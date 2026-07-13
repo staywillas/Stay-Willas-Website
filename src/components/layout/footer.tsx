@@ -107,10 +107,6 @@ const Footer = () => {
             <ul className="flex flex-col gap-4">
               {[
                 { name: "The Angle House", href: "/villa/the-angle-house" },
-                { name: "Horizon Villa", href: "/villa/horizon-villa" },
-                { name: "Skytaj Villa", href: "/villa/skytaj-villa" },
-                { name: "Heritage Villa", href: "/villa/heritage-villa" },
-                { name: "Harmony Villa", href: "/villa/harmony-villa" },
                 { name: "Canopy Crest", href: "/villa/canopy-crest" }
               ].map((link) => (
                 <li key={link.name}>

@@ -66,6 +66,9 @@ export const metadata: Metadata = {
     description: "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
+  },
 };
 
 export default function RootLayout({

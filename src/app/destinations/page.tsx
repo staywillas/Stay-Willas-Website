@@ -46,7 +46,7 @@ export default async function DestinationsPage() {
       desc: "Cool mountain breeze, misty green valleys, and spacious private pool villas perched on lush hills.",
       image: "/assets/villas/the-angle-house/gallery-11.webp",
       count: lonavalaCount,
-      isLaunchingSoon: false
+      isLaunchingSoon: lonavalaCount === 0
     },
     {
       name: "Khopoli",
@@ -54,7 +54,7 @@ export default async function DestinationsPage() {
       desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet private pool getaways.",
       image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
       count: khopoliCount,
-      isLaunchingSoon: false
+      isLaunchingSoon: khopoliCount === 0
     },
     {
       name: "Alibaug",
@@ -62,7 +62,7 @@ export default async function DestinationsPage() {
       desc: "Beautiful coconut trees, quiet sandy beaches, and modern villas just a scenic catamaran ferry ride away from Mumbai.",
       image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
       count: alibaugCount,
-      isLaunchingSoon: false
+      isLaunchingSoon: alibaugCount === 0
     },
     {
       name: "Karjat",
@@ -70,7 +70,7 @@ export default async function DestinationsPage() {
       desc: "Lovely green valleys, quiet flowing streams, and peaceful villas built for complete relaxation in nature.",
       image: "/assets/villas/heritage-villa/main.jpg",
       count: karjatCount,
-      isLaunchingSoon: false
+      isLaunchingSoon: karjatCount === 0
     },
     {
       name: "Goa",
