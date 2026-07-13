@@ -454,23 +454,26 @@ export default function AiConcierge() {
       setSelectedGuests(option);
       setStage("recommendation");
 
-      // Query dynamic recommendation from live DB via Server Action
-      let match = null;
-      try {
-        match = await getConciergeRecommendation({
-          location: selectedLocation,
-          budget: selectedBudget,
-          guests: option,
-        });
-      } catch (err) {
-        console.error("Failed to query getConciergeRecommendation, falling back:", err);
-      }
+      // Match only between Angle House & Canopy Crest client-side to ensure 100% success
+      let finalVilla = recommendedVilla; // default is The Angle House
 
-      // Client-side fallback matching if DB query fails or returns null
-      let finalVilla = match;
-      if (!finalVilla) {
-        const lowercaseLoc = (selectedLocation || "").toLowerCase();
-        if (lowercaseLoc.includes("khopoli")) {
+      const loc = (selectedLocation || "").toLowerCase();
+      if (loc.includes("khopoli")) {
+        finalVilla = {
+          id: "canopy-crest",
+          name: "Canopy Crest",
+          location: "Khopoli",
+          image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+          price: "15,000",
+          guests: 20,
+          bedrooms: 4,
+          bathrooms: 5,
+        };
+      } else if (loc.includes("lonavala")) {
+        finalVilla = recommendedVilla;
+      } else {
+        // If Anywhere or other location chosen, select based on group size
+        if (option.includes("9+")) {
           finalVilla = {
             id: "canopy-crest",
             name: "Canopy Crest",
@@ -545,7 +548,7 @@ export default function AiConcierge() {
                 </a>
               </div>
             ),
-            options: ["Yes, please", "Start over"],
+            options: ["Chat on WhatsApp", "Start over"],
           },
         ]);
       }, 800);
