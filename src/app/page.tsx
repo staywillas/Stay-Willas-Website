@@ -3,13 +3,9 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Luxury Private Pool Villas Near Mumbai | Stay Willas",
-  description: "Rent luxury private pool villas near Mumbai & Pune. Handpicked verified homes, scenic views & chef services. Book your dream holiday staycation now.",
-  keywords: [
-    "best villas in lonavla",
-    "villas near mumbai",
-    "private pool villa"
-  ],
+  title: "Villas Near Mumbai | Luxury Private Pool Villa Rentals | Stay Willas",
+  description: "Rent luxury private pool villas near Mumbai. Handpicked verified getaway homes, scenic views, and private chef services. Book your dream staycation now.",
+  keywords: ["villas near mumbai"],
   alternates: {
     canonical: "/",
   },

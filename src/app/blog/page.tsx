@@ -9,13 +9,9 @@ import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa Guides & Staycation Tips | Stay Willas",
-  description: "Discover luxury villa guides, weekend staycation tips, and travel ideas near Mumbai. Learn about rules, corporate retreats, and parties. Read the blog.",
-  keywords: [
-    "stay willas blog",
-    "best villas in lonavla",
-    "villa for birthday party near Mumbai with pool"
-  ],
+  title: "Stay Willas Blog | Luxury Villa Guides & Staycation Tips",
+  description: "Explore the Stay Willas blog for luxury villa guides, weekend staycation tips, and travel ideas near Mumbai and Pune. Read our latest articles.",
+  keywords: ["stay willas blog"],
   alternates: {
     canonical: "https://www.staywillas.com/blog",
   },

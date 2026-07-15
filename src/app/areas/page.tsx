@@ -9,13 +9,9 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Weekend Getaway Villas near Pune & Mumbai | Stay Willas",
-  description: "Explore premium weekend getaway villas near Mumbai & Pune. Strictly handpicked private pool estates in Lonavala, Alibaug and Karjat. Check availability.",
-  keywords: [
-    "weekend getaway villas near Pune",
-    "resort/villa near Navi Mumbai",
-    "villa 2 hours from Mumbai/Pune"
-  ],
+  title: "Weekend Getaway Villas | Private Pool Rentals | Stay Willas",
+  description: "Explore premium weekend getaway villas with private pools near Mumbai and Pune. Rent handpicked private estates in Lonavala, Alibaug, and Karjat.",
+  keywords: ["weekend getaway villas"],
   alternates: {
     canonical: "https://www.staywillas.com/areas",
   },

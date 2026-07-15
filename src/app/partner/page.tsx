@@ -4,12 +4,8 @@ import Navbar from "@/components/layout/navbar";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Property Management Partner | Stay Willas",
-  description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest checks, cleaning & payouts. Partner with us.",
-  keywords: [
-    "list my villa for rent maharashtra",
-    "luxury villa property management lonavala",
-    "holiday home management alibaug"
-  ],
+  description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest check-ins, cleaning & payouts. Partner with us.",
+  keywords: ["luxury villa property management"],
   alternates: {
     canonical: "/partner",
   },

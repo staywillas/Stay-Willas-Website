@@ -8,12 +8,8 @@ import { Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
-  description: "Read luxury villa guest stories, watch video vlogs, and explore reviews from verified families who stayed at our Lonavala pool estates. Discover more.",
-  keywords: [
-    "guest reviews stay willas",
-    "villa rental reviews maharashtra",
-    "video testimonials lonavala villa"
-  ],
+  description: "Read luxury villa guest stories, watch guest video vlogs, and explore testimonials from verified families who stayed at our private pool estates.",
+  keywords: ["luxury villa guest stories"],
   alternates: {
     canonical: "/stories",
   },

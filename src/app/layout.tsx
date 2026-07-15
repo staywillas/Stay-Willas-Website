@@ -35,15 +35,20 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Luxury Villas & Staycations in Maharashtra | Stay Willas",
-  description: "Experience world-class luxury staycations in Maharashtra. Rent handpicked private pool villas in Lonavala and Alibaug with chefs. Book your stay now.",
+  title: "Luxury Villas in Maharashtra | Staycations with Private Pools | Stay Willas",
+  description: "Experience premium luxury villas in Maharashtra with private pools and chefs. Book handpicked verified staycations in Lonavala, Alibaug, and Karjat.",
   metadataBase: new URL("https://www.staywillas.com"),
-  keywords: [
-    "villas near mumbai",
-    "villas near pune",
-    "private pool villa"
-  ],
+  keywords: ["luxury villas in maharashtra"],
   authors: [{ name: "Stay Willas" }],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",

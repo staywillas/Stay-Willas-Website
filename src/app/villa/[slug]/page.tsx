@@ -201,11 +201,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: titleText,
     description: descText,
-    keywords: [
-    villa.name,
-    villa.location,
-    `rent private pool villa in ${city}`
-  ],
+    keywords: [`rent private pool villa in ${city}`],
     alternates: {
       canonical: `/villa/${villa.slug}`,
     },

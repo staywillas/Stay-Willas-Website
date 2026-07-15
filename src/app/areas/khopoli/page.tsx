@@ -9,12 +9,9 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Khopoli Luxury Private Pool Villa Rentals | Stay Willas",
-  description: "Book a Khopoli private pool villa for your next holiday. Escape to private mountain view estates with customized chef service. Check availability today.",
-  keywords: [
-    "Khopoli private pool villa",
-    "Stay Willas"
-  ],
+  title: "Khopoli Private Pool Villa | Luxury Villa Rentals | Stay Willas",
+  description: "Book a premium Khopoli private pool villa for your next holiday. Escape to private mountain view estates with customized chef service. Check availability today.",
+  keywords: ["Khopoli private pool villa"],
   alternates: {
     canonical: "https://www.staywillas.com/areas/khopoli",
   },
@@ -111,7 +108,7 @@ export default async function KhopoliPage() {
               The Nature Escape
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              Luxury Private Pool Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Khopoli</span>
+              Khopoli Private Pool Villa <span className="italic text-accent-primary font-serif font-light font-normal">Rentals</span>
             </h1>
             <p className="text-text-primary/80 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               Tucked at the base of the Sahyadri mountains, Khopoli is Maharashtra's best-kept secret for luxury nature escapes. Discover premium private pool villas hidden amidst waterfalls and lush forests.
@@ -233,7 +230,7 @@ export default async function KhopoliPage() {
         <section className="py-20 px-6 md:px-12 lg:px-24">
           <div className="max-w-4xl mx-auto">
             <article className="prose prose-invert prose-p:text-text-primary/75 prose-p:text-base prose-p:leading-relaxed prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-h3:text-accent-secondary prose-h3:font-heading prose-h3:text-xl prose-a:text-accent-primary">
-              <h2>The Undiscovered Charm of private estates</h2>
+              <h2>The Undiscovered Charm of a Khopoli Private Pool Villa</h2>
               <p>
                 When people think of driving out of Mumbai on the expressway, Lonavala is usually the default answer. But right before you begin the steep climb up the ghats, sitting quietly at the base of the majestic Sahyadri mountain range, is Khopoli. If you want to escape the crowded commercial areas, choosing private luxury properties is a refreshing alternative. Exploring luxury holiday options in premium retreats allows you to connect with nature without distraction.
               </p>
@@ -250,7 +247,7 @@ export default async function KhopoliPage() {
                 />
               </div>
 
-              <h2>Why Rent Private private sanctuaries?</h2>
+              <h2>Why Choose a Khopoli Private Pool Villa?</h2>
               <p>
                 Khopoli gets warmer than the hill stations above it during the summer months, which makes it the absolute perfect location for a pool villa. There is a distinct joy in jumping into a massive, crystal-clear pool when you rent private exclusive villas. If you are specifically searching for a relaxing staycation, the premium villa properties offer uncompromised space, absolute privacy, and scenic mountain backdrops. You can read details about our premium <Link href="/villa/khopoli-canopycrest" className="underline text-accent-primary font-bold">Canopy Crest</Link> villa online.
               </p>
@@ -333,7 +330,7 @@ export default async function KhopoliPage() {
                 </div>
               </div>
 
-              <h2>Booking Your Escape in Villas in Khopoli</h2>
+              <h2>Booking Your Khopoli Private Pool Villa Escape</h2>
               <p>
                 When browsing our inventory, pay attention to the amenities that suit your group. If you're coming with a large group of friends to celebrate, you can rent party-friendly Villas in Khopoli equipped with outdoor barbecue pits, massive music systems, and poolside bars.
               </p>

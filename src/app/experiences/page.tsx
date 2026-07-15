@@ -7,12 +7,8 @@ import { Sparkles, Calendar, Heart, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Experiences & Private Chefs | Stay Willas",
-  description: "Discover luxury villa experiences with gourmet chef dining, BBQ, wellness spa, and activities. Plan your bespoke staycation with us. Check details.",
-  keywords: [
-    "villa with private chef lonavala",
-    "wellness retreats maharashtra",
-    "luxury travel experiences near mumbai"
-  ],
+  description: "Discover premium luxury villa experiences with gourmet chef dining, barbecues, wellness retreats, and tailored staycation activities.",
+  keywords: ["luxury villa experiences"],
   alternates: {
     canonical: "/experiences",
   },

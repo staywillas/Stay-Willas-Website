@@ -32,11 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: blog.metaTitle,
     description: blog.description,
-    keywords: [
-    blog.keyword,
-    "best villas in lonavla",
-    "luxury staycation guides maharashtra"
-  ],
+    keywords: [blog.keyword],
     alternates: {
       canonical: `/blog/${blog.slug}`,
     },

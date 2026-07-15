@@ -8,13 +8,9 @@ import { Mail, Phone, MapPin, MessageSquare, ArrowRight } from "lucide-react";
 import ContactForm from "@/components/contact/contact-form";
 
 export const metadata: Metadata = {
-  title: "Contact Us for Luxury Villa Bookings | Stay Willas",
-  description: "Contact Us for luxury villa bookings & guest support. Our concierge team is here to assist with bookings, amenities, and property listings. Reach out.",
-  keywords: [
-    "stay willas contact",
-    "book luxury villa maharashtra",
-    "villa rental customer support"
-  ],
+  title: "Stay Willas Contact | Customer Support & Villa Bookings",
+  description: "Reach out to the Stay Willas contact team for luxury villa bookings and guest support. Our concierge team is here to assist you with your booking requests.",
+  keywords: ["stay willas contact"],
   alternates: {
     canonical: "/contact",
   },

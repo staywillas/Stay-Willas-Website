@@ -11,11 +11,7 @@ import { ChevronRight, ArrowLeft } from "lucide-react";
 export const metadata: Metadata = {
   title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
   description: "Rent a luxury villa Lonavala with private pool, waterfall decks, and private chef service. Ideal for family staycations & group trips. Book your stay now.",
-  keywords: [
-    "best villas in lonavla",
-    "veg-only/Jain food villa Lonavala",
-    "luxury villa Lonavala with private pool"
-  ],
+  keywords: ["luxury villa Lonavala with private pool"],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",
   },
@@ -112,7 +108,7 @@ export default async function LonavalaPage() {
               The Mountain Sanctuary
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              Luxury Private Pool Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span>
+              Luxury Villa <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span> with Private Pool
             </h1>
             <p className="text-text-primary/80 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               Just a short drive away from the chaos of Mumbai and Pune lies Lonavala—a misty, green paradise. Discover our handpicked selection of premium private pool villas designed for unforgettable weekend getaways.
@@ -147,7 +143,7 @@ export default async function LonavalaPage() {
                     {signatureVilla.name}
                   </h2>
                   <p className="text-text-primary/75 text-sm font-light leading-relaxed mb-6">
-                    A stunning architectural landmark perched on the hills of Lonavala. Boasting a massive private pool, glass facade, expansive lawns, and five-star hospitality services, it stands as the ultimate benchmark for a Private Pool Villa in Lonavala.
+                    A stunning architectural landmark perched on the hills of Lonavala. Boasting a massive private pool, glass facade, expansive lawns, and five-star hospitality services, it stands as the ultimate benchmark for a luxury villa Lonavala with private pool.
                   </p>
                   
                   <div className="grid grid-cols-3 gap-4 border-t border-b border-[#DAA520]/15 py-6 mb-8 w-full">
@@ -234,7 +230,7 @@ export default async function LonavalaPage() {
         <section className="py-20 px-6 md:px-12 lg:px-24">
           <div className="max-w-4xl mx-auto">
             <article className="prose prose-invert prose-p:text-text-primary/75 prose-p:text-base prose-p:leading-relaxed prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-h3:text-accent-secondary prose-h3:font-heading prose-h3:text-xl prose-a:text-accent-primary">
-              <h2>Why Villas in Lonavala Remain the Ultimate Weekend Escape</h2>
+              <h2>Renting a Luxury Villa Lonavala with Private Pool: The Ultimate Weekend Escape</h2>
               <p>
                 We’ve all been there. It’s Thursday afternoon in Mumbai, the traffic on the Western Express Highway is at a standstill, and you’re staring out the window dreaming of breathing actual fresh air. Selecting premium private estates isn't just a destination choice; for anyone living in western Maharashtra, it’s a necessary pressure valve. When the monsoon hits and the Sahyadri mountains turn a green shade, nothing beats renting private Villas in Lonavala. 
               </p>
@@ -251,7 +247,7 @@ export default async function LonavalaPage() {
                 />
               </div>
 
-              <h2>The Private Pool Experience in Villas in Lonavala</h2>
+              <h2>The Premium Luxury Villa Lonavala with Private Pool Experience</h2>
               <p>
                 Imagine waking up to the sound of rain hitting the large French windows of your bedroom. You step out onto a massive private deck, cup of hot chai in hand, looking out over a valley shrouded in mist. Our luxury holiday homes are designed around this exact feeling of uninterrupted peace. There's no rush to hit the breakfast buffet before 10 AM, no fighting for a lounge chair by a shared pool, and zero noisy neighbors when you book private Villas in Lonavala here.
               </p>
@@ -269,7 +265,7 @@ export default async function LonavalaPage() {
                 <span className="text-[10px] tracking-wider uppercase font-bold text-accent-secondary">- Stay Willas Concierge</span>
               </div>
 
-              <h2>Villas in Lonavala: Ideal for Every Occasion</h2>
+              <h2>Choosing a Luxury Villa Lonavala with Private Pool for Every Occasion</h2>
               <p>
                 We host a massive variety of groups here at Stay Willas. Geographically, our villa properties are perfectly positioned, making them the ideal choice for a weekend retreat. From family reunions to corporate gatherings, renting Villas in Lonavala ensures that your group has the space it needs to connect and unwind. If you want to check out our primary listing, you can visit <Link href="/villa/lonavala-anglehouse" className="underline text-accent-primary font-bold">The Angle House</Link> directly.
               </p>

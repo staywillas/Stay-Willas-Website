@@ -9,12 +9,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Staycation Villas in Maharashtra with Chef | Stay Willas",
-  description: "Rent pet friendly private pool villas in Maharashtra with chef services. Explore handpicked verified luxury homes near Mumbai & Pune. Check availability.",
-  keywords: [
-    "villas near mumbai",
-    "villas near pune",
-    "private pool villa"
-  ],
+  description: "Rent staycation villas in Maharashtra with chef services. Explore handpicked verified luxury homes near Mumbai and Pune with private swimming pools.",
+  keywords: ["staycation villas in Maharashtra"],
   alternates: {
     canonical: "/villas",
   },

@@ -79,59 +79,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   let titleText = `Luxury Villas in ${area.name} with Private Pool | Stay Willas`;
-  if (titleText.length > 60 || titleText.length < 50) {
-    titleText = `Luxury Villas in ${area.name} with Pool | Stay Willas`;
-  }
-  if (titleText.length > 60) {
-    titleText = `Villas in ${area.name} | Stay Willas`;
-  } else if (titleText.length < 50) {
-    titleText = `Premium Luxury Villas in ${area.name} with Pool | Stay Willas`;
-  }
-
   let descText = `Rent luxury villas in ${area.name} with private pool, scenic views & chef service. Ideal for family weekend getaways. Check availability and book now.`;
-  let keywordList = [
-    `luxury villas in ${regionKey} for rent`,
-    `book villa ${regionKey} private pool`,
-    `best villa staycation ${regionKey}`,
-    `stay willas ${regionKey}`
-  ];
+  let keywordList = [`luxury villas in ${area.name} with private pool`];
 
   if (regionKey === "lonavala") {
     titleText = `Luxury Villa Lonavala with Private Pool | Stay Willas`;
-    descText = "Rent a luxury villa in Lonavala with private pool, scenic mountain views & chef. Ideal for family getaways and group trips. Check availability now.";
-    keywordList = [
-      "luxury villa Lonavala with private pool",
-      "weekend getaway villas near Pune",
-      "villa for friends group trip Lonavala",
-      "villa with private chef Lonavala",
-      "New Year villa party Lonavala",
-      "Stay Willas"
-    ];
+    descText = "Rent a luxury villa Lonavala with private pool, scenic mountain views & chef. Ideal for family getaways and group trips. Check availability now.";
+    keywordList = ["luxury villa Lonavala with private pool"];
   } else if (regionKey === "alibaug") {
     titleText = `Villa on Rent in Alibaug for Weekend | Stay Willas`;
-    descText = "Rent a luxury beachfront villa in Alibaug for weekend getaways, parties, or family retreats. Enjoy a private pool and chef. Check availability now.";
-    keywordList = [
-      "villa on rent in Alibaug for weekend",
-      "villa for birthday party Lonavala/Alibaug",
-      "birthday party villa Alibaug",
-      "bachelor party villa Alibaug",
-      "Stay Willas"
-    ];
+    descText = "Book a luxury beachfront villa on rent in Alibaug for weekend getaways with a private pool and chef. Check availability and book now.";
+    keywordList = ["villa on rent in Alibaug for weekend"];
   } else if (regionKey === "karjat") {
-    titleText = `Luxury Karjat Villa with Pool Booking | Stay Willas`;
-    descText = "Book a luxury Karjat villa with pool for serene farmstays and riverside escapes. Complete with personal caretakers and chef services. Book online today.";
-    keywordList = [
-      "Karjat villa with pool booking",
-      "corporate offsite villa Karjat",
-      "Stay Willas"
-    ];
+    titleText = `Karjat Villa with Pool Booking | Luxury Stays | Stay Willas`;
+    descText = "Secure your Karjat villa with pool booking for serene farmstays and riverside retreats. Complete with personal caretakers and gourmet chef services.";
+    keywordList = ["Karjat villa with pool booking"];
   } else if (regionKey === "khopoli") {
-    titleText = `Khopoli Luxury Private Pool Villa Rentals | Stay Willas`;
+    titleText = `Khopoli Private Pool Villa | Luxury Villa Rentals | Stay Willas`;
     descText = "Rent a premium Khopoli private pool villa nestled in green mountains. Enjoy direct scenic valley views, private chef & top hospitality. Book online now.";
-    keywordList = [
-      "Khopoli private pool villa",
-      "Stay Willas"
-    ];
+    keywordList = ["Khopoli private pool villa"];
   }
 
   return {

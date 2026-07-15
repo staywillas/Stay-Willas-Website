@@ -4,13 +4,9 @@ import { prisma } from "@/lib/db";
 import EscapeClientPage from "./escape-client-page";
 
 export const metadata: Metadata = {
-  title: "Couple Staycation near Mumbai | Day Drives | Stay Willas",
-  description: "Plan a couple staycation near Mumbai with Stay Willas. Discover private pool estates, scenic hill view drives, and personalized chef services. Book now.",
-  keywords: [
-    "couple staycation near Mumbai",
-    "day drive villa from Mumbai",
-    "Stay Willas"
-  ],
+  title: "Couple Staycation near Mumbai | Private Pool Drives | Stay Willas",
+  description: "Plan a romantic couple staycation near Mumbai with Stay Willas. Discover private pool estates, scenic hill view drives, and personalized chef services.",
+  keywords: ["couple staycation near Mumbai"],
   alternates: {
     canonical: "/escape",
   },

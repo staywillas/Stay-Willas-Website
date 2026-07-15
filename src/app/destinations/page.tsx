@@ -10,12 +10,8 @@ import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Destinations in Maharashtra | Stay Willas",
-  description: "Explore luxury villa destinations in Maharashtra with Stay Willas. Find verified private pool villas in Lonavala, Alibaug, and Karjat. Book today.",
-  keywords: [
-    "best places for villa stay near mumbai",
-    "luxury villas in lonavala on rent",
-    "alibaug private pool villas"
-  ],
+  description: "Explore premium luxury villa destinations in Maharashtra with Stay Willas. Find verified private pool villas in Lonavala, Alibaug, and Karjat.",
+  keywords: ["luxury villa destinations"],
   alternates: {
     canonical: "/destinations",
   },
