@@ -9,8 +9,8 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Khopoli Private Pool Villa | Luxury Rentals | Stay Willas",
-  description: "Escape to a Khopoli private pool villa nestled in serene green mountains. Enjoy private chef services, premium hospitality & direct views. Check availability.",
+  title: "Khopoli Luxury Private Pool Villa Rentals | Stay Willas",
+  description: "Book a Khopoli private pool villa for your next holiday. Escape to private mountain view estates with customized chef service. Check availability today.",
   keywords: [
     "Khopoli private pool villa",
     "Stay Willas"
@@ -111,7 +111,7 @@ export default async function KhopoliPage() {
               The Nature Escape
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              Luxury Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Khopoli</span>
+              Luxury Private Pool Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Khopoli</span>
             </h1>
             <p className="text-text-primary/80 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               Tucked at the base of the Sahyadri mountains, Khopoli is Maharashtra's best-kept secret for luxury nature escapes. Discover premium private pool villas hidden amidst waterfalls and lush forests.

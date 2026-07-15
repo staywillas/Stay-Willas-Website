@@ -5,7 +5,7 @@ import EscapeClientPage from "./escape-client-page";
 
 export const metadata: Metadata = {
   title: "Couple Staycation near Mumbai | Day Drives | Stay Willas",
-  description: "Plan a luxury couple staycation near Mumbai. Serene private pool villas, ideal for day drives and spontaneous weekend escapes. Check availability.",
+  description: "Plan a couple staycation near Mumbai with Stay Willas. Discover private pool estates, scenic hill view drives, and personalized chef services. Book now.",
   keywords: [
     "couple staycation near Mumbai",
     "day drive villa from Mumbai",

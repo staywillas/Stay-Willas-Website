@@ -74,31 +74,94 @@ export default function SEOContent() {
             Premium <span className="italic text-[#DAA520] font-serif font-normal">Private Pool Villas</span> near Mumbai & Pune
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-slate-800 text-sm sm:text-base leading-relaxed font-light">
-            <div className="space-y-6">
+          <div className="space-y-8 text-slate-800 text-sm sm:text-base leading-relaxed font-light">
+            {/* Section 1 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                The Rise of Private Pool Stays
+              </h3>
               <p>
-                Escape the city routine. At <strong>Stay Willas</strong>, we offer premium holiday homes for family 
-                getaways. Find a <span className="text-[#1B3564] font-semibold">private pool villa</span> or a luxury 
-                estate nestled in the hills. Your stay is your private sanctuary.
-              </p>
-              <p>
-                Our properties feature high-speed Wi-Fi, green lawns, and clean pools. We also offer 
-                dedicated <span className="text-[#1B3564] font-semibold">villas with chef</span> services. Enjoy fresh, 
-                custom meals cooked at the villa. It is easy and stress-free.
+                For city dwellers seeking a break from the fast-paced urban lifestyle, the popularity of <strong>private pool villas near Mumbai</strong> has soared. The convenience of driving just a couple of hours to a private sanctuary is unmatched. Staying in <strong>private pool villas near Mumbai</strong> offers families and friends the perfect setting to relax and reconnect. Rather than booking crowded hotels with shared amenities, renting <strong>private pool villas near Mumbai</strong> ensures absolute seclusion. You can swim, dine, and unwind without any external interruptions. At Stay Willas, we recognize that a weekend getaway is about comfort and ease. That is why our selection of <strong>private pool villas near Mumbai</strong> is curated to the highest standards. Each property is handpicked to guarantee that the pool, lawns, and bedrooms meet our luxury criteria. Booking <strong>private pool villas near Mumbai</strong> is no longer just about accommodation; it is about creating unforgettable experiences.
               </p>
             </div>
-            <div className="space-y-6">
+
+            {/* Section 2 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                Bespoke Dining and Premium Comfort
+              </h3>
               <p>
-                Book top-rated <span className="text-[#1B3564] font-semibold">villas near mumbai</span> and 
-                cozy <span className="text-[#1B3564] font-semibold">villas near pune</span>. Drive down the Expressway to a 
-                premium <span className="text-[#1B3564] font-semibold">pool villas lonavala</span>. Or rent a coastal 
-                <span className="text-[#1B3564] font-semibold">alibaug pool villa</span> just a short ferry ride away.
+                When you choose our <strong>private pool villas near Mumbai</strong>, you gain access to luxury amenities. Many of these properties feature customized culinary options with private chefs. Enjoying fresh meals cooked inside your own kitchen is a staple when you stay in <strong>private pool villas near Mumbai</strong>. These estates cater to all food preferences, including local Maharashtrian dishes, barbecues, and Jain meals. This combination of privacy and bespoke hospitality makes <strong>private pool villas near Mumbai</strong> stand out from traditional luxury resorts. Moreover, the layout of each property is designed to host groups comfortably. Large living rooms, dining spaces, and open-air decks provide ample room for interactions, while the quiet bedrooms offer a peaceful space to retreat. The inclusion of modern facilities like high-speed internet, smart televisions, and power backup ensures that you can enjoy a luxurious getaway without sacrificing any modern conveniences.
               </p>
+            </div>
+
+            {/* Section 3 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                Regional Highlights: Lonavala, Karjat, and Alibaug
+              </h3>
               <p>
-                We also offer serene <span className="text-[#1B3564] font-semibold">karjat pool villa</span> properties and 
-                quiet <span className="text-[#1B3564] font-semibold">khopoli villa</span> stays. Many of our getaways are 
-                fully <span className="text-[#1B3564] font-semibold">pet friendly villas</span>. Secure your dates today 
-                for a relaxing weekend.
+                Location plays a vital role when choosing the right weekend escape. Our portfolio of <strong>private pool villas near Mumbai</strong> includes stunning destinations like Lonavala, Karjat, Khopoli, and Alibaug. Lonavala is famous for its misty valleys, while Karjat offers peaceful riverside views. Each of these spots has a range of <strong>private pool villas near Mumbai</strong> designed to make the most of the natural landscape. For beach lovers, Alibaug offers coastal retreats with warm ocean breezes. If you want a quick escape surrounded by nature, our properties in Khopoli provide absolute serenity. Whether you prefer a modern villa perched on a hill or a traditional home surrounded by trees, our <strong>private pool villas near Mumbai</strong> offer diverse architectural styles to match your tastes. Every region has its own charm, but they all share the convenience of being close to the city, making them excellent choices for any quick getaway.
+              </p>
+            </div>
+
+            {/* Section 4 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                Effortless Travel and Quick Commutes
+              </h3>
+              <p>
+                Accessibility is another reason why travelers prefer <strong>private pool villas near Mumbai</strong>. Most of our properties are located within a scenic two-hour drive from the city. With smooth highway connectivity, reaching your <strong>private pool villas near Mumbai</strong> is stress-free. For coastal destinations like Alibaug, you can access our <strong>private pool villas near Mumbai</strong> via a quick catamaran ferry from Gateway of India. This ease of travel makes <strong>private pool villas near Mumbai</strong> the perfect choice for spontaneous weekend staycations. You can finish your workday in the city and arrive at your luxurious estate in time for dinner, completely bypassing the hassles of airports or long-distance train journeys. This convenience is a primary driver behind the rising demand for premium weekend rentals.
+              </p>
+            </div>
+
+            {/* Section 5 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                Designing the Perfect Staycation Experience
+              </h3>
+              <p>
+                A successful staycation is built on detail and personal touches. Unlike a standardized hotel room, a villa offers a sense of home where you define the schedule. You can wake up to a sunrise over the mountains, enjoy breakfast in the garden, and spend the afternoon reading by the water. For families with children, having a private outdoor space means kids can play freely and safely. Many of our properties feature indoor games, table tennis, and dedicated lawns for outdoor activities. If you are planning a corporate retreat, these spacious homes offer the perfect mix of business and leisure, allowing teams to collaborate in a relaxed environment and build stronger bonds. The flexibility of a private estate means your itinerary can be as active or as relaxed as you desire, with our dedicated guest relations team ready to assist with any special requests.
+              </p>
+            </div>
+
+            {/* Section 6 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                Making the Most of Pet-Friendly Spaces
+              </h3>
+              <p>
+                Leaving pets behind when going on vacation is a common challenge for pet owners. That is why many of our properties are designed to be pet-friendly. Sprawling, fully fenced lawns allow your dogs to run around and explore safely. Our staff is trained to be welcoming to pets, ensuring a stress-free experience for the entire family. You do not have to worry about finding boarding services or dealing with the anxiety of leaving your animals at home. Having your pets join you by the pool adds an extra layer of joy to your weekend getaway, making the trip complete for everyone involved.
+              </p>
+            </div>
+
+            {/* Section 7 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                Sustainable and Responsible Tourism
+              </h3>
+              <p>
+                We believe in preserving the beauty of the destinations where our properties are located. We encourage our guests to respect the local environment and community guidelines during their stay. From minimizing single-use plastics to conserving water and electricity, small actions contribute to sustainable tourism. Our local estate managers are recruited from nearby villages, supporting the local economy and providing authentic hospitality. By choosing Stay Willas, you are not only enjoying a premium holiday but also contributing to the community and supporting sustainable practices in these beautiful tourist destinations.
+              </p>
+            </div>
+
+            {/* Section 8 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                Planning Your Booking
+              </h3>
+              <p>
+                Booking your next stay is straightforward and secure. Our online platform provides detailed descriptions, high-resolution photos, and real-time availability for all our homes. Our customer support team is available to answer any questions and assist you with the booking process, ensuring a smooth experience from start to finish. We offer flexible cancellation options and transparent pricing with no hidden fees, so you can book with confidence. Security and safety are our top priorities, and all our estates are equipped with security systems and on-site staff to ensure peace of mind during your stay. Plan your next holiday today and discover the comfort of our <strong>private pool villas near Mumbai</strong>.
+              </p>
+            </div>
+
+            {/* Section 9 */}
+            <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
+                A Sanctuary for Rejuvenation
+              </h3>
+              <p>
+                Ultimately, a weekend getaway is an investment in your well-being. Leaving behind the digital noise and urban stress allows you to recharge your mind and body. Spending time in nature, breathing fresh air, and enjoying the company of loved ones can significantly improve your health. Our properties are designed to facilitate this rejuvenation, offering peaceful corners, comfortable seating, and beautiful views. Whether you spend your time swimming, reading, or simply doing nothing, you will return to the city feeling refreshed. Experience the perfect balance of luxury and nature at our <strong>private pool villas near Mumbai</strong>.
               </p>
             </div>
           </div>

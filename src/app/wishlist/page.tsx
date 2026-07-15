@@ -6,8 +6,8 @@ import WishlistClient from "@/components/wishlist/wishlist-client";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "My Wishlist | Stay Willas | Premium Luxury Retreats",
-  description: "Browse your handpicked saved collection of luxury villas and private staycations in Lonavala, Alibaug, and Karjat.",
+  title: "My Wishlist of Premium Luxury Retreats | Stay Willas",
+  description: "Browse My Wishlist of premium luxury retreats saved for your next getaway. Compare private pool villas, view pricing, and check dates. Plan your trip.",
   keywords: ["wishlist villas", "saved luxury stays", "favourite villas maharashtra"],
   robots: { index: false, follow: false },
 };
@@ -61,7 +61,7 @@ export default async function WishlistPage() {
           Your Saved Sanctuary
         </span>
         <h1 className="text-5xl md:text-8xl font-heading mb-6 leading-tight">
-          My <span className="italic text-accent-primary pr-4 font-heading font-medium">Wishlist</span>
+          My <span className="italic text-accent-primary pr-4 font-heading font-medium">Wishlist of Premium Luxury Retreats</span>
         </h1>
         <p className="text-text-primary/55 text-lg max-w-2xl mx-auto leading-relaxed">
           Your private collection of premium getaways and modern architecture estates across Maharashtra.

@@ -5,8 +5,8 @@ import Footer from "@/components/layout/footer";
 import { FileText } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | Stay Willas",
-  description: "Read the Stay Willas Terms and Conditions for villa rentals, bookings, guest conduct, and liability details.",
+  title: "Terms & Conditions for Guests & Bookings | Stay Willas",
+  description: "Read the terms and conditions for guests and villa bookings with Stay Willas. Learn about payment policies, house rules, and safety terms. Read today.",
   alternates: {
     canonical: "https://www.staywillas.com/terms",
   },

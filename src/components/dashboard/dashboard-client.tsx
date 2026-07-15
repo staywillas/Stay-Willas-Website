@@ -153,7 +153,7 @@ export default function DashboardClient({ initialStays }: DashboardClientProps) 
           MEMBERS SANCTUARY PORTAL
         </span>
         <h1 className="text-4xl md:text-6xl font-heading leading-tight mb-4 text-[#1B3564]">
-          My Luxury <span className="italic font-serif pr-2 text-[#DAA520]">Sanctuaries</span>
+          My Guest <span className="italic font-serif pr-2 text-[#DAA520]">Dashboard</span>
         </h1>
         <p className="text-text-primary/60 text-base max-w-2xl leading-relaxed">
           Welcome to your private Stay Willas dashboard. Access active caretaker coordinates, complete state compliance verifications, and download print invoice statements.

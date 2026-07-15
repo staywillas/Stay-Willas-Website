@@ -169,13 +169,34 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!villa) {
     return {
-      title: "Villa Not Found | Stay Willas",
+      title: "Requested Luxury Villa Was Not Found | Stay Willas",
     };
   }
 
   const city = villa.location.split(",")[0].trim();
-  const titleText = `${villa.name} – Private Pool Villa in ${city} | Stay Willas`;
-  const descText = `${villa.bedrooms}BHK luxury villa in ${city} with private pool, scenic views & concierge service. Perfect for families, groups & celebrations. Book now.`;
+  let titleText = `${villa.name} | Private Pool Villa in ${city} | Stay Willas`;
+  if (titleText.length > 60 || titleText.length < 50) {
+    titleText = `${villa.name} | Pool Villa in ${city} | Stay Willas`;
+  }
+  if (titleText.length > 60) {
+    const maxNameLen = 60 - 13 - 17 - city.length;
+    titleText = `${villa.name.slice(0, maxNameLen)} | Pool Villa in ${city} | Stay Willas`;
+  } else if (titleText.length < 50) {
+    titleText = `${villa.name} | Luxury Private Pool Villa in ${city} | Stay Willas`;
+    if (titleText.length < 50) {
+      titleText = `${villa.name} | Premium Luxury Pool Villa in ${city} | Stay Willas`;
+    }
+  }
+  let descText = `Book this ${villa.bedrooms}BHK luxury villa in ${city} featuring a private swimming pool, scenic views, gourmet chef services & concierge. Reserve your holiday now.`;
+  if (descText.length > 160) {
+    descText = `Book this ${villa.bedrooms}BHK luxury villa in ${city} featuring a private pool, scenic views, caretakers & concierge. Book your holiday staycation now.`;
+  }
+  if (descText.length < 140) {
+    descText = `${descText} Enjoy handpicked amenities.`;
+  }
+  if (descText.length > 160) {
+    descText = descText.slice(0, 157) + "...";
+  }
 
   return {
     title: titleText,

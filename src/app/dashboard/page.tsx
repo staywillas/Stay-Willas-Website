@@ -8,8 +8,8 @@ import Footer from "@/components/layout/footer";
 import DashboardClient from "@/components/dashboard/dashboard-client";
 
 export const metadata: Metadata = {
-  title: "Guest Dashboard | Stay Willas",
-  description: "View your upcoming luxury stays, complete KYC verification, review concierge packages, and manage your bookings.",
+  title: "Guest Dashboard & Booking Management | Stay Willas",
+  description: "Log in to your Guest Dashboard to manage your upcoming luxury villa bookings. Complete KYC verification, order meals, and explore concierge services.",
   robots: { index: false, follow: false },
 };
 

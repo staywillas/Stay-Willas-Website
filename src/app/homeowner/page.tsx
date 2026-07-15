@@ -6,8 +6,8 @@ import PartnerPortal from "@/components/partner/partner-portal";
 import LoginForm from "@/components/auth/login-form";
 
 export const metadata: Metadata = {
-  title: "Homeowner Portal | Stay Willas",
-  description: "Homeowner dashboard to monitor villa occupancy, earnings, and availability.",
+  title: "Homeowner Portal & Villa Partner Program | Stay Willas",
+  description: "Welcome to the homeowner portal. Monitor your luxury villa occupancy rates, track monthly earnings, and manage booking calendars. Log in to dashboard.",
   robots: { index: false, follow: false },
 };
 

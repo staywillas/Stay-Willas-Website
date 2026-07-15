@@ -25,12 +25,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!blog) {
     return {
-      title: "Article Not Found | Stay Willas Blog",
+      title: "Requested Blog Article Was Not Found | Stay Willas",
     };
   }
 
   return {
-    title: `${blog.title} | Stay Willas Guides`,
+    title: blog.metaTitle,
     description: blog.description,
     keywords: [
     blog.keyword,
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `/blog/${blog.slug}`,
     },
     openGraph: {
-      title: `${blog.title} | Stay Willas Guides`,
+      title: blog.metaTitle,
       description: blog.description,
       images: [{ url: blog.image }],
       type: "article",

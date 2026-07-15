@@ -5,8 +5,8 @@ import Footer from "@/components/layout/footer";
 import { Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Stay Willas",
-  description: "Read the Stay Willas Privacy Policy to understand how we collect, protect, and use your personal information during bookings.",
+  title: "Privacy Policy & Guest Data Protection | Stay Willas",
+  description: "Read the Stay Willas privacy policy & guest data protection standards. Learn how we handle your personal information and transaction security. Read now.",
   alternates: {
     canonical: "https://www.staywillas.com/privacy",
   },
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
             <div>
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest font-mono">Last Updated: July 09, 2026</span>
               <h1 className="text-3xl md:text-5xl font-heading text-[#1B3564] font-bold leading-tight mt-1">
-                Privacy Policy
+                Privacy Policy & Guest Data Protection
               </h1>
             </div>
           </div>

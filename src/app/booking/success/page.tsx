@@ -10,8 +10,8 @@ import { CheckCircle2, Calendar, MapPin, ArrowRight, ShieldCheck, Download, Spar
 import { format } from "date-fns";
 
 export const metadata: Metadata = {
-  title: "Booking Confirmed | Stay Willas",
-  description: "Your luxury staycation booking is confirmed. View your reservation details and complete check-in steps.",
+  title: "Book Your Luxury Staycation Successfully | Stay Willas",
+  description: "Your booking is confirmed! You have successfully booked your luxury staycation. Review check-in instructions, concierge menus, and directions today.",
   robots: { index: false, follow: false },
 };
 
@@ -90,7 +90,7 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
           TRANSACTION COMPLETED SUCCESSFULLY
         </span>
         <h1 className="text-4xl md:text-6xl font-heading leading-tight mb-8">
-          Your Sanctuary <span className="italic text-[#1B3564]">Is Secured</span>
+          Luxury Staycation <span className="italic text-[#1B3564]">Booking Secured</span>
         </h1>
         <p className="text-text-primary/60 text-lg leading-relaxed max-w-2xl mb-12">
           Congratulations! Your payment has been processed and dates are officially locked in. A copy of your stay reservation details has been registered in our central administration suite.

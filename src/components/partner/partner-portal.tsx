@@ -196,7 +196,7 @@ export default function PartnerPortal({ initialData, defaultEmail }: PartnerPort
             Homeowner Services
           </span>
           <h1 className="text-4xl md:text-5xl font-heading font-light tracking-wide text-white">
-            Partner <span className="italic text-accent-primary font-serif">Workspace</span>
+            Homeowner Portal <span className="italic text-accent-primary font-serif">Workspace</span>
           </h1>
           <p className="text-xs text-white/40 mt-1">Account email address: {email}</p>
         </div>

@@ -73,13 +73,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!area) {
     return {
-      title: "Luxury Villas | Stay Willas",
+      title: "Luxury Villas & Staycations in Maharashtra | Stay Willas",
       description: "Book premium verified private pool villas in Maharashtra.",
     };
   }
 
   let titleText = `Luxury Villas in ${area.name} with Private Pool | Stay Willas`;
-  let descText = `Rent premium verified luxury villas in ${area.name}, Maharashtra. ${area.desc} Private pools, custom chef services, and scenic views.`;
+  if (titleText.length > 60 || titleText.length < 50) {
+    titleText = `Luxury Villas in ${area.name} with Pool | Stay Willas`;
+  }
+  if (titleText.length > 60) {
+    titleText = `Villas in ${area.name} | Stay Willas`;
+  } else if (titleText.length < 50) {
+    titleText = `Premium Luxury Villas in ${area.name} with Pool | Stay Willas`;
+  }
+
+  let descText = `Rent luxury villas in ${area.name} with private pool, scenic views & chef service. Ideal for family weekend getaways. Check availability and book now.`;
   let keywordList = [
     `luxury villas in ${regionKey} for rent`,
     `book villa ${regionKey} private pool`,
@@ -89,7 +98,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (regionKey === "lonavala") {
     titleText = `Luxury Villa Lonavala with Private Pool | Stay Willas`;
-    descText = `Rent a luxury villa in Lonavala with private pool, scenic mountain views & private chef. Ideal for friends group trips & family getaways. Check availability.`;
+    descText = "Rent a luxury villa in Lonavala with private pool, scenic mountain views & chef. Ideal for family getaways and group trips. Check availability now.";
     keywordList = [
       "luxury villa Lonavala with private pool",
       "weekend getaway villas near Pune",
@@ -100,7 +109,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ];
   } else if (regionKey === "alibaug") {
     titleText = `Villa on Rent in Alibaug for Weekend | Stay Willas`;
-    descText = `Rent a luxury beachfront villa in Alibaug for weekend getaways, bachelor parties, or birthday parties. Enjoy private pool, chef service & views. Book now.`;
+    descText = "Rent a luxury beachfront villa in Alibaug for weekend getaways, parties, or family retreats. Enjoy a private pool and chef. Check availability now.";
     keywordList = [
       "villa on rent in Alibaug for weekend",
       "villa for birthday party Lonavala/Alibaug",
@@ -109,16 +118,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "Stay Willas"
     ];
   } else if (regionKey === "karjat") {
-    titleText = `Karjat Villa with Pool Booking | Stay Willas`;
-    descText = `Secure your Karjat villa with pool booking for family farmstays, corporate offsites, and weekend getaways. Enjoy private chef services & pools. Book now.`;
+    titleText = `Luxury Karjat Villa with Pool Booking | Stay Willas`;
+    descText = "Book a luxury Karjat villa with pool for serene farmstays and riverside escapes. Complete with personal caretakers and chef services. Book online today.";
     keywordList = [
       "Karjat villa with pool booking",
       "corporate offsite villa Karjat",
       "Stay Willas"
     ];
   } else if (regionKey === "khopoli") {
-    titleText = `Khopoli Private Pool Villa | Luxury Rentals | Stay Willas`;
-    descText = `Escape to a Khopoli private pool villa nestled in serene green mountains. Enjoy private chef services, premium hospitality & direct views. Check availability.`;
+    titleText = `Khopoli Luxury Private Pool Villa Rentals | Stay Willas`;
+    descText = "Rent a premium Khopoli private pool villa nestled in green mountains. Enjoy direct scenic valley views, private chef & top hospitality. Book online now.";
     keywordList = [
       "Khopoli private pool villa",
       "Stay Willas"
@@ -146,7 +155,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
         <div>
           <Navbar />
           <div className="pt-48 pb-24 text-center">
-            <h1 className="text-3xl font-heading mb-4">Location Not Found</h1>
+            <h1 className="text-3xl font-heading mb-4">Luxury Villa Location Not Found</h1>
             <p className="text-text-primary/60 mb-6">The location you are looking for does not exist.</p>
             <Link href="/areas" className="text-[#1B3564] hover:text-accent-primary font-bold uppercase tracking-wider text-xs inline-flex items-center gap-2">
               <ArrowLeft size={16} /> Back to all areas
@@ -212,7 +221,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
               {area.tagline}
             </span>
             <h1 className="text-4xl md:text-6xl font-heading leading-none tracking-tight mb-4">
-              Villas in <span className="italic text-accent-primary font-serif font-light">{area.name}</span>
+              Luxury Villas in <span className="italic text-accent-primary font-serif font-light">{area.name}</span>
             </h1>
             <p className="text-text-primary/75 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               {area.desc}

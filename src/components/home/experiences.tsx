@@ -346,7 +346,7 @@ const Experiences = () => {
                     <div className="relative w-full h-[78%] sm:h-[82%] rounded-[1rem] sm:rounded-[1.5rem] overflow-hidden bg-slate-100">
                       <Image
                         src={cat.image}
-                        alt={cat.title}
+                        alt={`${cat.title} at luxury private pool villas near Mumbai`}
                         fill
                         sizes="320px"
                         priority={isTop}

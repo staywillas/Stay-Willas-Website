@@ -8,7 +8,7 @@ import { Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
-  description: "Hear directly from our guests. Watch video reviews and vlog diaries from luxury private pool villa staycations at The Angle House in Lonavala.",
+  description: "Read luxury villa guest stories, watch video vlogs, and explore reviews from verified families who stayed at our Lonavala pool estates. Discover more.",
   keywords: [
     "guest reviews stay willas",
     "villa rental reviews maharashtra",
@@ -34,7 +34,7 @@ export default function StoriesPage() {
             <Sparkles size={12} className="text-[#DAA520]" /> Guest Experiences
           </span>
           <h1 className="text-4xl md:text-6xl font-heading text-[#1B3564] leading-tight mb-6">
-            Guest Stories & <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans">Testimonials</span>
+            Luxury Villa Guest Stories & <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans">Testimonials</span>
           </h1>
           <p className="text-sm md:text-base text-slate-600/90 max-w-xl mx-auto leading-relaxed">
             Step into the real moments of slow luxury captured by our guests during their stays at The Angle House. Explore their video diaries.

@@ -18,7 +18,7 @@ const Hero = () => {
       <div className="absolute inset-0 z-0 select-none pointer-events-none">
         <Image
           src="/assets/villas/the-angle-house/gallery-11.webp"
-          alt="The Angle House Lonavala"
+          alt="The Angle House Lonavala - premium private pool villas near Mumbai"
           fill
           priority
           sizes="100vw"

@@ -9,8 +9,8 @@ import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 
 export const metadata: Metadata = {
-  title: "Stay Willas Blog | Luxury Villa Guides & Staycation Tips",
-  description: "Read our curated guides on renting the best private pool villas near Mumbai & Pune. Discover tips for birthday parties, corporate offsites, and family weekends.",
+  title: "Luxury Villa Guides & Staycation Tips | Stay Willas",
+  description: "Discover luxury villa guides, weekend staycation tips, and travel ideas near Mumbai. Learn about rules, corporate retreats, and parties. Read the blog.",
   keywords: [
     "stay willas blog",
     "best villas in lonavla",
@@ -36,7 +36,7 @@ export default function BlogIndexPage() {
               <Sparkles size={12} className="text-[#DAA520]" /> Stay Willas Blog
             </span>
             <h1 className="text-4xl md:text-6xl font-heading text-[#1B3564] leading-tight mb-6">
-              Our Curated <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans">Guides & Stories</span>
+              Curated <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans">Luxury Villa Guides & Stories</span>
             </h1>
             <p className="text-sm md:text-base text-slate-600/90 max-w-xl mx-auto leading-relaxed">
               Explore expert tips on booking the best private pool villas, planning corporate offsites, hosting events, and getting the most out of your weekend staycations near Mumbai and Pune.

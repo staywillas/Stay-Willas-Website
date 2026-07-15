@@ -5,9 +5,12 @@ import Link from "next/link";
 import { 
   Check, Plus, Minus, ArrowRight, ShieldCheck, Star, Users, Home, 
   MapPin, Flame, Utensils, Music, Heart, Calendar, ArrowDown, AlertCircle,
-  Sparkles, Menu, X
+  Sparkles, Menu, X, Briefcase
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import GhostCursor from "@/components/ui/GhostCursor";
+import WarpLines from "@/components/ui/WarpLines";
+import Navbar from "@/components/layout/navbar";
 
 interface VillaData {
   id: string;
@@ -61,24 +64,24 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
 
-    // Fill silver scratch pattern
+    // Fill premium dark charcoal scratch pattern
     const gradient = ctx.createLinearGradient(0, 0, rect.width, rect.height);
-    gradient.addColorStop(0, "#C0C0C0");
-    gradient.addColorStop(0.3, "#E8E8E8");
-    gradient.addColorStop(0.5, "#A8A8A8");
-    gradient.addColorStop(0.7, "#E8E8E8");
-    gradient.addColorStop(1, "#909090");
+    gradient.addColorStop(0, "#191526");
+    gradient.addColorStop(0.3, "#2C2542");
+    gradient.addColorStop(0.5, "#141021");
+    gradient.addColorStop(0.7, "#221C34");
+    gradient.addColorStop(1, "#0D0A14");
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, rect.width, rect.height);
 
-    // Draw card inner border
+    // Draw card inner border (gold outline)
     ctx.strokeStyle = "rgba(218, 165, 32, 0.4)";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
     ctx.strokeRect(6, 6, rect.width - 12, rect.height - 12);
 
     // Draw luxury graphics & text
-    ctx.fillStyle = "#1B3564";
+    ctx.fillStyle = "#FAF8F3";
     ctx.font = "bold 13px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -88,7 +91,7 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
     ctx.font = "bold 12px sans-serif";
     ctx.fillText("★ SCRATCH HERE ★", rect.width / 2, rect.height / 2);
 
-    ctx.fillStyle = "#4A4A4A";
+    ctx.fillStyle = "#A3A3A3";
     ctx.font = "italic 9px sans-serif";
     ctx.fillText("Unlock Special Detour Discount", rect.width / 2, rect.height / 2 + 25);
   }, [isUnlocked]);
@@ -165,7 +168,7 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
   };
 
   return (
-    <div className="relative w-full h-[160px] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-[#101F3B] to-[#1B3564] border border-[#DAA520]/20 flex flex-col items-center justify-center p-4">
+    <div className="relative w-full h-[160px] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#120a24]/80 to-[#1d0e38]/80 border border-[#DAA520]/20 flex flex-col items-center justify-center p-4">
       {/* Revealed discount offer details */}
       <div className="text-center z-0 select-none space-y-1.5 animate-fade-in">
         <Sparkles className="text-[#DAA520] mx-auto animate-pulse" size={22} />
@@ -175,7 +178,7 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
         <div className="text-2xl font-black text-white tracking-wide font-heading">
           10% DISCOUNT
         </div>
-        <p className="text-[9px] text-white/90 uppercase tracking-widest font-semibold border border-dashed border-[#DAA520]/50 px-2 py-1 rounded bg-[#DAA520]/15 inline-block">
+        <p className="text-[9px] text-white/90 uppercase tracking-widest font-semibold border border-dashed border-[#DAA520]/50 px-3 py-1 rounded bg-[#DAA520]/15 inline-block">
           PROMO: ESCAPE10
         </p>
       </div>
@@ -203,15 +206,12 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
 }
 
 export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClientPageProps) {
-  // Navigation active state on scroll
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
   // Filter tabs state
   const [activeTab, setActiveTab] = useState<"family" | "friends" | "romantic" | "corporate">("family");
   
   // Calculator states
   const [selectedVillaSlug, setSelectedVillaSlug] = useState<string>("the-angle-house");
+  const [stayType, setStayType] = useState<"weekday" | "weekend">("weekday");
   const [nights, setNights] = useState<number>(2);
   const [guestsCount, setGuestsCount] = useState<number>(12);
 
@@ -223,15 +223,6 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   // Active selected villa data helper
   const selectedVilla = selectedVillaSlug === "the-angle-house" ? angleHouse : canopyCrest;
 
-  // Track scroll position for glass header styling
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   // Update guests count if selected villa limits are lower than current selection
   useEffect(() => {
     if (guestsCount > selectedVilla.guests) {
@@ -240,7 +231,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   }, [selectedVillaSlug, selectedVilla.guests, guestsCount]);
 
   // Pricing calculations
-  const basePricePerNight = selectedVilla.price;
+  const basePricePerNight = stayType === "weekday" ? selectedVilla.price : (selectedVilla.weekendPrice || selectedVilla.price);
   const extraGuestFee = selectedVilla.extraGuestFee || 1200;
   const baseGuestsLimit = selectedVilla.baseGuests || 12;
 
@@ -249,14 +240,16 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   const extraGuestsTotal = extraGuestsCount * extraGuestFee * nights;
   const estimatedTotal = baseStayTotal + extraGuestsTotal;
 
-  const discountAmount = isDiscountApplied ? estimatedTotal * 0.1 : 0;
+  // 10% discount on weekdays, 0% on weekends
+  const discountPercent = (stayType === "weekday" && isDiscountApplied) ? 0.1 : 0;
+  const discountAmount = estimatedTotal * discountPercent;
   const finalTotal = estimatedTotal - discountAmount;
 
   // WhatsApp prefilled message link builder
   const whatsappNumber = "919619042310";
-  const whatsappText = isDiscountApplied
-    ? `Hello Stay Willas! 🌟 I scratched the Escape card and unlocked my 10% Promo discount!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (10% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and apply my discount?`
-    : `Hello Stay Willas! 🌟 I am interested in booking an exclusive getaway at *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights\n- Guests: ${guestsCount} Guests\n- Estimated Base price: ₹${estimatedTotal.toLocaleString("en-IN")}\n\nCan you please check availability for our group?`;
+  const whatsappText = (stayType === "weekday" && isDiscountApplied)
+    ? `Hello Stay Willas! 🌟 I scratched the Escape card and unlocked my 10% Promo discount!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location} for a Weekday stay.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (10% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and apply my discount?`
+    : `Hello Stay Willas! 🌟 I am interested in booking an exclusive getaway at *${selectedVilla.name}* in ${selectedVilla.location} for a ${stayType === "weekday" ? "Weekday" : "Weekend"} stay.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Estimated Total: ₹${estimatedTotal.toLocaleString("en-IN")}\n\nCan you please check availability for our group?`;
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`;
 
   // Tab definitions
@@ -299,173 +292,79 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F2EA] text-[#1A1A1A] font-sans antialiased overflow-x-hidden selection:bg-[#4A5D23]/20 selection:text-[#4A5D23]">
+    <div className="min-h-screen bg-[#07050d] text-slate-100 font-sans antialiased overflow-x-hidden selection:bg-[#B497CF]/30 selection:text-white relative">
       
-      {/* 1. STICKY GLASS HEADER */}
-      <header 
-        className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${
-          isScrolled || isMobileMenuOpen
-            ? "bg-[#F5F2EA]/95 backdrop-blur-xl border-b border-[#DAA520]/15 shadow-sm py-4" 
-            : "bg-transparent py-6"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group z-50">
-            <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#DAA520]/30 shadow-md bg-white flex items-center justify-center shrink-0">
-              <img 
-                src="/images/logo.png" 
-                alt="Stay Willas Logo" 
-                className="w-full h-full object-cover scale-[1.5]" 
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-heading text-lg font-bold tracking-widest text-[#1B3564] leading-tight">
-                STAY WILLAS
-              </span>
-              <span className="font-sans text-[8px] tracking-[0.14em] uppercase font-bold text-[#1B3564]/70">
-                stay ! Relax ! Repeat !
-              </span>
-            </div>
-          </Link>
+      {/* GhostCursor follows the cursor across the entire page */}
+      <div className="fixed inset-0 pointer-events-none z-50">
+        <GhostCursor
+          color="#B497CF"
+          brightness={2.0}
+          edgeIntensity={0}
+          trailLength={20}
+          inertia={0.5}
+          grainIntensity={0.02}
+          bloomStrength={0.05}
+          bloomRadius={1}
+          bloomThreshold={0.025}
+          fadeDelayMs={1000}
+          fadeDurationMs={1500}
+        />
+      </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
-              Home
-            </Link>
-            <Link href="/villas" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
-              Villas
-            </Link>
-            <Link href="/destinations" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
-              Destinations
-            </Link>
-            <Link href="/experiences" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
-              Experiences
-            </Link>
-            <Link href="/stories" className="text-xs font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors">
-              Stories
-            </Link>
-          </nav>
-          
-          <div className="flex items-center gap-4 z-50">
-            <a 
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase bg-[#1B3564] text-white hover:bg-[#2563EB] shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 max-sm:hidden"
-            >
-              Book Direct
-            </a>
+      {/* Background visual components */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[50%] rounded-full bg-[#1b1035]/35 blur-[150px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#40186d]/25 blur-[150px]" />
+        <div className="absolute top-[40%] right-[-20%] w-[45%] h-[40%] rounded-full bg-[#DAA520]/5 blur-[120px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.012)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)]" />
+      </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-[#1B3564] hover:text-[#4A5D23] transition-colors focus:outline-none"
-              aria-label="Toggle Menu"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation Drawer */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden bg-[#F5F2EA] border-b border-[#DAA520]/15 w-full absolute top-full left-0 overflow-hidden shadow-lg z-40"
-            >
-              <div className="px-6 py-6 flex flex-col gap-5">
-                <Link 
-                  href="/" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2 border-b border-[#DAA520]/5"
-                >
-                  Home
-                </Link>
-                <Link 
-                  href="/villas" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2 border-b border-[#DAA520]/5"
-                >
-                  Villas
-                </Link>
-                <Link 
-                  href="/destinations" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2 border-b border-[#DAA520]/5"
-                >
-                  Destinations
-                </Link>
-                <Link 
-                  href="/experiences" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2 border-b border-[#DAA520]/5"
-                >
-                  Experiences
-                </Link>
-                <Link 
-                  href="/stories" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-sm font-bold uppercase tracking-widest text-[#1B3564] hover:text-[#4A5D23] transition-colors py-2"
-                >
-                  Stories
-                </Link>
-                <a 
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center py-3 rounded-xl text-xs font-bold tracking-widest uppercase bg-[#1B3564] text-white hover:bg-[#2563EB] shadow-md sm:hidden mt-2"
-                >
-                  Book Direct
-                </a>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+      <Navbar />
 
       {/* 2. HERO / PSYCHOLOGICAL COPY HOOK */}
-      <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-28 pb-16 px-6 text-center overflow-hidden">
+      <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-36 sm:pt-48 pb-16 px-6 text-center overflow-hidden z-10 select-none">
+        
         {/* Subtle Background Image of The Angle House */}
-        <div className="absolute inset-0 z-0 select-none pointer-events-none">
+        <div className="absolute inset-0 z-0 select-none pointer-events-none opacity-25 mix-blend-overlay">
           <img 
             src="/assets/villas/the-angle-house/gallery-11.webp" 
             alt="The Angle House Background" 
-            className="w-full h-full object-cover opacity-[0.14] filter brightness-95 contrast-105"
+            className="w-full h-full object-cover filter brightness-[0.4]"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F5F2EA]/95 via-[#F5F2EA]/75 to-[#F5F2EA]" />
-          {/* Radial shadow overlay */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_40%,_#F5F2EA_100%)]" />
         </div>
+        {/* CSS Ambient Glowing Orbs */}
+        <div className="absolute top-[20%] left-[10%] w-[40%] h-[30%] rounded-full bg-[#1b1035]/35 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[20%] right-[10%] w-[35%] h-[25%] rounded-full bg-[#40186d]/25 blur-[120px] pointer-events-none" />
+        
+        {/* WarpLines Interactive Background (60fps, 2D Canvas speed lines) */}
+        <div className="absolute inset-0 z-0 opacity-50 select-none pointer-events-auto">
+          <WarpLines count={50} baseSpeed={3} colorGold="#DAA520" colorPurple="#B497CF" />
+        </div>
+        
+        <div className="absolute inset-0 bg-gradient-to-b from-[#07050d]/80 via-transparent to-[#07050d]" />
 
         <div className="max-w-5xl mx-auto z-10 w-full flex flex-col items-center gap-10">
           
           {/* Header text container */}
           <div className="space-y-6 max-w-3xl mx-auto">
             <span className="text-[#DAA520] font-semibold tracking-[0.4em] uppercase text-xs sm:text-sm block animate-pulse">
-              🌟 An Unexpected Detour
+              🍻 crew getaway activated
             </span>
             
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black text-[#1B3564] tracking-tight leading-[1.05] text-balance">
-              What if your best vacation started with a <span className="italic text-[#4A5D23] underline decoration-[#DAA520]/40">wrong click?</span>
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight leading-[1.08] text-balance bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+              Accidentally clicked? Or did your crew just demand a <span className="italic text-[#B497CF] underline decoration-[#DAA520]/40">villa staycation near Mumbai</span>?
             </h1>
             
-            <p className="max-w-2xl mx-auto text-[#4A4A4A] text-base sm:text-lg md:text-xl font-light leading-relaxed">
-              Step off the digital treadmill. Scratch cards below to unlock your secret 10% discount on Lonavala and Khopoli luxury pool villas.
+            <p className="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg md:text-xl font-light leading-relaxed">
+              Stop pretending to work. Scratch the cards below to reveal your secret 10% discount on Lonavala & Khopoli private pool villas. Gather the group, blast the music, and let's make some questionable decisions before Monday.
             </p>
           </div>
-
           {/* SCRATCHCARDS GRID */}
           <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 px-4">
             {/* Card 1: The Angle House Promo */}
             <div className="flex flex-col gap-3">
               <div className="text-left flex items-center justify-between px-2">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-[#1B3564]">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#B497CF]">
                   📍 Lonavala Flagship
                 </span>
                 <span className="text-[10px] uppercase font-semibold text-[#DAA520]">
@@ -486,7 +385,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             {/* Card 2: Canopy Crest Promo */}
             <div className="flex flex-col gap-3">
               <div className="text-left flex items-center justify-between px-2">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-[#1B3564]">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#B497CF]">
                   📍 Khopoli Flagship
                 </span>
                 <span className="text-[10px] uppercase font-semibold text-[#DAA520]">
@@ -510,17 +409,17 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
-              className="bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-[#DAA520]/45 shadow-xl max-w-2xl w-full mx-auto space-y-6 text-center"
+              transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
+              className="bg-[#130f24]/50 backdrop-blur-2xl rounded-3xl p-6 md:p-8 border border-[#DAA520]/30 shadow-[0_0_30px_rgba(218,165,32,0.15)] max-w-2xl w-full mx-auto space-y-6 text-center"
             >
               <div className="space-y-2">
-                <span className="text-xs uppercase font-bold tracking-[0.25em] text-[#4A5D23] bg-[#4A5D23]/10 px-4 py-1.5 rounded-full inline-block">
+                <span className="text-xs uppercase font-bold tracking-[0.25em] text-[#DAA520] bg-[#DAA520]/10 px-4 py-1.5 rounded-full inline-block border border-[#DAA520]/20">
                   🎉 10% DISCOUNT ACTIVATED (ESCAPE10)
                 </span>
-                <h3 className="text-2xl font-heading font-extrabold text-[#1B3564]">
+                <h3 className="text-2xl font-heading font-extrabold text-white">
                   Your Luxury Escape Awaits!
                 </h3>
-                <p className="text-xs text-[#4A4A4A] max-w-md mx-auto font-light">
+                <p className="text-xs text-slate-300 max-w-md mx-auto font-light">
                   Select your private villa below to automatically apply the 10% discount and start chatting on WhatsApp instantly.
                 </p>
               </div>
@@ -530,8 +429,8 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                   onClick={() => setSelectedVillaSlug("the-angle-house")}
                   className={`p-4 rounded-2xl border text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
                     selectedVillaSlug === "the-angle-house"
-                      ? "bg-[#1B3564] text-white border-[#1B3564] shadow-md scale-[1.02]"
-                      : "bg-white text-[#1B3564] border-[#E2E8F0] hover:bg-[#F5F2EA] hover:border-[#1B3564]/30"
+                      ? "bg-gradient-to-r from-[#DAA520] to-[#C9A84C] text-black border-transparent shadow-[0_0_15px_rgba(218,165,32,0.3)] scale-[1.02]"
+                      : "bg-white/5 text-slate-200 border-white/10 hover:bg-white/10 hover:border-white/20"
                   }`}
                 >
                   The Angle House
@@ -540,8 +439,8 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                   onClick={() => setSelectedVillaSlug("canopy-crest")}
                   className={`p-4 rounded-2xl border text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
                     selectedVillaSlug === "canopy-crest"
-                      ? "bg-[#1B3564] text-white border-[#1B3564] shadow-md scale-[1.02]"
-                      : "bg-white text-[#1B3564] border-[#E2E8F0] hover:bg-[#F5F2EA] hover:border-[#1B3564]/30"
+                      ? "bg-gradient-to-r from-[#DAA520] to-[#C9A84C] text-black border-transparent shadow-[0_0_15px_rgba(218,165,32,0.3)] scale-[1.02]"
+                      : "bg-white/5 text-slate-200 border-white/10 hover:bg-white/10 hover:border-white/20"
                   }`}
                 >
                   Canopy Crest
@@ -553,12 +452,12 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                   href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-4 px-8 rounded-full text-xs tracking-widest uppercase transition-all duration-300 shadow-lg inline-flex items-center gap-3 hover:-translate-y-0.5"
+                  className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-4 px-8 rounded-full text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_20px_rgba(37,211,102,0.25)] inline-flex items-center gap-3 hover:-translate-y-0.5"
                 >
                   <span>Avail Discount & Chat on WhatsApp</span>
                   <ArrowRight size={14} />
                 </a>
-                <span className="text-[10px] text-[#4A4A4A]/60 block mt-3 italic">
+                <span className="text-[10px] text-slate-400 block mt-3 italic">
                   Estimated price will automatically deduct the 10% promo code details in chat
                 </span>
               </div>
@@ -570,7 +469,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             <div className="pt-4 animate-bounce">
               <button 
                 onClick={() => scrollToSection("philosophy-section")}
-                className="inline-flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-bold text-[#1B3564] hover:text-[#4A5D23] transition-colors focus:outline-none"
+                className="inline-flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-bold text-slate-300 hover:text-[#DAA520] transition-colors focus:outline-none"
               >
                 <span>Or scroll to explore</span>
                 <ArrowDown size={14} className="text-[#DAA520]" />
@@ -582,8 +481,8 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       </section>
 
       {/* 3. IMMERSIVE ROW (THE PHILOSOPHY) */}
-      <section id="philosophy-section" className="py-24 md:py-32 px-6 md:px-12 lg:px-24 bg-white border-y border-[#E2E8F0] relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-[#5CADE2]/5 blur-[100px] -translate-x-1/2 -translate-y-1/2" />
+      <section id="philosophy-section" className="py-24 md:py-32 px-6 md:px-12 lg:px-24 border-y border-white/5 relative overflow-hidden z-10 bg-transparent">
+        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-[#B497CF]/5 blur-[120px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
         
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
           
@@ -592,20 +491,20 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
               The Philosophy
             </span>
-            <h2 className="text-3xl sm:text-5xl font-heading font-bold text-[#1B3564] leading-tight">
+            <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white leading-tight">
               Imagine waking up to sweeping mountain silhouettes...
             </h2>
-            <div className="w-16 h-0.5 bg-[#4A5D23]/30" />
-            <p className="text-[#4A4A4A] text-lg leading-relaxed">
+            <div className="w-16 h-0.5 bg-[#DAA520]/30" />
+            <p className="text-slate-300 text-lg leading-relaxed font-light">
               No alarms, no deadlines, no screens clamoring for your attention. At Stay Willas, we believe in slow luxury. We build architecture that wraps around the landscape, not the other way around. 
             </p>
-            <p className="text-[#4A4A4A] text-md leading-relaxed opacity-80">
+            <p className="text-slate-400 text-md leading-relaxed font-light">
               Each estate is hand-curated and fully staffed with premium catering and hospitality, designed specifically to help you disconnect from the routine and reconnect with yourself.
             </p>
             <div className="pt-4">
               <button 
                 onClick={() => scrollToSection("properties-section")}
-                className="inline-flex items-center gap-3 text-sm font-bold text-[#4A5D23] hover:text-[#1B3564] group transition-colors"
+                className="inline-flex items-center gap-3 text-sm font-bold text-[#DAA520] hover:text-white group transition-colors"
               >
                 Explore our flagships <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
@@ -614,14 +513,14 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           
           {/* Right Column: Immersive Card Image */}
           <div className="lg:col-span-7">
-            <div className="relative group rounded-3xl overflow-hidden shadow-2xl border border-[#DAA520]/15 bg-bg-primary aspect-[4/3] sm:aspect-[16/10]">
+            <div className="relative group rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 aspect-[4/3] sm:aspect-[16/10]">
               <img 
                 src="/assets/villas/the-angle-house/gallery-11.webp" 
                 alt="The Angle House Lonavala" 
                 className="w-full h-full object-cover transition-transform duration-[4000ms] ease-out group-hover:scale-110" 
               />
               {/* Blur gradient cover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
                 <span className="text-xs uppercase tracking-widest text-[#DAA520] font-semibold mb-2">Flagship Sanctuary</span>
                 <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white">The Angle House</h3>
                 <p className="text-white/80 text-sm flex items-center gap-1.5 mt-1 font-light">
@@ -635,15 +534,15 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       </section>
 
       {/* FLAGSHIP PROPERTIES SHOWCASE */}
-      <section id="properties-section" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto space-y-16">
+      <section id="properties-section" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto space-y-16 z-10 relative">
         <div className="text-center space-y-4">
-          <span className="text-[#4A5D23] font-medium tracking-[0.4em] uppercase text-xs block">
+          <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
             Our Sanctuaries
           </span>
-          <h2 className="text-3xl sm:text-5xl font-heading font-bold text-[#1B3564]">
+          <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white">
             Two Main Flagship Properties
           </h2>
-          <p className="max-w-2xl mx-auto text-[#4A4A4A] text-md font-light">
+          <p className="max-w-2xl mx-auto text-slate-300 text-md font-light">
             We list only the most premium, fully private estates. Here are our top two properties, available for direct booking.
           </p>
         </div>
@@ -651,17 +550,17 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           
           {/* Property 1: The Angle House */}
-          <div className="bg-white rounded-3xl overflow-hidden border border-[#E2E8F0] shadow-lg flex flex-col hover:shadow-xl transition-all duration-300 group">
-            <div className="relative aspect-[16/10] overflow-hidden">
+          <div className="bg-[#0D0A14]/75 backdrop-blur-xl rounded-3xl overflow-hidden border border-[#DAA520]/20 shadow-2xl flex flex-col hover:border-[#DAA520]/45 transition-all duration-500 group">
+            <div className="relative aspect-[16/10] overflow-hidden border-b border-[#DAA520]/15">
               <img 
                 src={angleHouse.images[0] || "/assets/villas/the-angle-house/gallery-11.webp"} 
                 alt={angleHouse.name} 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
               />
-              <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-xs font-bold text-[#1B3564] shadow-sm flex items-center gap-1 border border-[#DAA520]/25">
+              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold text-white shadow-sm flex items-center gap-1 border border-[#DAA520]/35">
                 <Star size={12} className="fill-[#DAA520] text-[#DAA520]" /> 4.9 (18 Reviews)
               </div>
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 text-white pt-12">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white pt-12">
                 <div className="flex items-center gap-1.5 text-xs text-[#DAA520] uppercase font-bold tracking-wider mb-1">
                   <MapPin size={12} /> {angleHouse.location}
                 </div>
@@ -671,61 +570,61 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             
             <div className="p-6 md:p-8 flex-1 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
-                <p className="text-sm text-[#4A4A4A] leading-relaxed line-clamp-3 font-light">
+                <p className="text-sm text-slate-300 leading-relaxed line-clamp-3 font-light">
                   An architectural masterpiece. Striking angular facade featuring double-height glass panels that open to a cascading private waterfall swimming pool and an indoor heated Jacuzzi.
                 </p>
                 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 border-y border-[#E2E8F0] py-4 text-center">
+                <div className="grid grid-cols-3 gap-4 border-y border-[#DAA520]/15 py-4 text-center">
                   <div>
-                    <span className="text-[10px] uppercase text-[#4A4A4A]/60 tracking-wider block">Bedrooms</span>
-                    <span className="font-semibold text-[#1B3564] text-base">{angleHouse.bedrooms} BHK</span>
+                    <span className="text-[10px] uppercase text-slate-400 tracking-wider block">Bedrooms</span>
+                    <span className="font-semibold text-white text-base">{angleHouse.bedrooms} BHK</span>
                   </div>
-                  <div className="border-x border-[#E2E8F0]">
-                    <span className="text-[10px] uppercase text-[#4A4A4A]/60 tracking-wider block">Guests</span>
-                    <span className="font-semibold text-[#1B3564] text-base">Up to {angleHouse.guests}</span>
+                  <div className="border-x border-[#DAA520]/15">
+                    <span className="text-[10px] uppercase text-slate-400 tracking-wider block">Guests</span>
+                    <span className="font-semibold text-white text-base">Up to {angleHouse.guests}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase text-[#4A4A4A]/60 tracking-wider block">Private Pool</span>
-                    <span className="font-semibold text-[#1B3564] text-base">Yes (Waterfall)</span>
+                    <span className="text-[10px] uppercase text-slate-400 tracking-wider block">Private Pool</span>
+                    <span className="font-semibold text-white text-base">Yes (Waterfall)</span>
                   </div>
                 </div>
 
                 {/* Key Amenities */}
                 <div className="flex flex-wrap gap-2 pt-2">
                   {angleHouse.amenities.slice(0, 4).map((amenity, idx) => (
-                    <span key={idx} className="text-[11px] bg-[#F5F2EA] border border-[#DAA520]/20 text-[#1B3564] px-2.5 py-1 rounded-full font-medium">
+                    <span key={idx} className="text-[11px] bg-white/5 border border-white/10 text-slate-200 px-3 py-1.5 rounded-full font-medium">
                       {amenity}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-[#E2E8F0]">
+              <div className="space-y-4 pt-4 border-t border-[#DAA520]/15">
                 <div className="flex items-baseline justify-between">
                   <div>
-                    <span className="text-xs text-[#4A4A4A]/60 block font-light">Starting from</span>
-                    <span className="text-2xl font-bold text-[#1B3564]">₹{angleHouse.price.toLocaleString("en-IN")}</span>
-                    <span className="text-xs text-[#4A4A4A]/60 font-light"> / night (Weekday)</span>
+                    <span className="text-xs text-slate-400 block font-light">Starting from</span>
+                    <span className="text-2xl font-bold text-white">₹{angleHouse.price.toLocaleString("en-IN")}</span>
+                    <span className="text-xs text-slate-400 font-light"> / night (Weekday)</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-[#4A4A4A]/60 block font-light">Weekend Tariff</span>
+                    <span className="text-xs text-slate-400 block font-light">Weekend Tariff</span>
                     <span className="text-sm font-semibold text-[#DAA520]">₹{angleHouse.weekendPrice?.toLocaleString("en-IN") || "20,000"}</span>
-                    <span className="text-[10px] text-[#4A4A4A]/60 block">Fri - Sun</span>
+                    <span className="text-[10px] text-slate-400 block">Fri - Sun</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <button 
                     onClick={() => handleSelectVillaForCalculator("the-angle-house")}
-                    className="w-full bg-[#1B3564] hover:bg-[#2563EB] text-white py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all shadow-md active:translate-y-0.5 hover:-translate-y-0.5"
+                    className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold py-3 rounded-xl text-xs tracking-widest uppercase transition-all shadow-md hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] active:translate-y-0.5 hover:-translate-y-0.5 hover:brightness-110 cursor-pointer"
                   >
                     Select & Quote
                   </button>
                   <Link 
                     href={`/villa/${angleHouse.slug}`}
                     target="_blank"
-                    className="w-full border border-[#1B3564]/30 hover:border-[#1B3564] hover:bg-[#1B3564]/5 text-[#1B3564] py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all text-center flex items-center justify-center"
+                    className="w-full border border-[#DAA520]/20 hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 text-white py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all text-center flex items-center justify-center"
                   >
                     View Villa
                   </Link>
@@ -735,17 +634,17 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           </div>
 
           {/* Property 2: Canopy Crest */}
-          <div className="bg-white rounded-3xl overflow-hidden border border-[#E2E8F0] shadow-lg flex flex-col hover:shadow-xl transition-all duration-300 group">
-            <div className="relative aspect-[16/10] overflow-hidden">
+          <div className="bg-[#0D0A14]/75 backdrop-blur-xl rounded-3xl overflow-hidden border border-[#DAA520]/20 shadow-2xl flex flex-col hover:border-[#DAA520]/45 transition-all duration-500 group">
+            <div className="relative aspect-[16/10] overflow-hidden border-b border-[#DAA520]/15">
               <img 
                 src={canopyCrest.images[0] || "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg"} 
                 alt={canopyCrest.name} 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
               />
-              <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-xs font-bold text-[#1B3564] shadow-sm flex items-center gap-1 border border-[#DAA520]/25">
+              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold text-white shadow-sm flex items-center gap-1 border border-[#DAA520]/35">
                 <Star size={12} className="fill-[#DAA520] text-[#DAA520]" /> 4.8 (14 Reviews)
               </div>
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 text-white pt-12">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white pt-12">
                 <div className="flex items-center gap-1.5 text-xs text-[#DAA520] uppercase font-bold tracking-wider mb-1">
                   <MapPin size={12} /> {canopyCrest.location}
                 </div>
@@ -755,61 +654,61 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             
             <div className="p-6 md:p-8 flex-1 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
-                <p className="text-sm text-[#4A4A4A] leading-relaxed line-clamp-3 font-light">
+                <p className="text-sm text-slate-300 leading-relaxed line-clamp-3 font-light">
                   A sprawling sanctuary enveloped in a lush verdant forest. Features huge manicured lawns, indoor/outdoor sports, open-air BBQ by the pool, and wide windows framing misty green hills.
                 </p>
                 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 border-y border-[#E2E8F0] py-4 text-center">
+                <div className="grid grid-cols-3 gap-4 border-y border-[#DAA520]/15 py-4 text-center">
                   <div>
-                    <span className="text-[10px] uppercase text-[#4A4A4A]/60 tracking-wider block">Bedrooms</span>
-                    <span className="font-semibold text-[#1B3564] text-base">{canopyCrest.bedrooms} BHK</span>
+                    <span className="text-[10px] uppercase text-slate-400 tracking-wider block">Bedrooms</span>
+                    <span className="font-semibold text-white text-base">{canopyCrest.bedrooms} BHK</span>
                   </div>
-                  <div className="border-x border-[#E2E8F0]">
-                    <span className="text-[10px] uppercase text-[#4A4A4A]/60 tracking-wider block">Guests</span>
-                    <span className="font-semibold text-[#1B3564] text-base">Up to {canopyCrest.guests}</span>
+                  <div className="border-x border-[#DAA520]/15">
+                    <span className="text-[10px] uppercase text-slate-400 tracking-wider block">Guests</span>
+                    <span className="font-semibold text-white text-base">Up to {canopyCrest.guests}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase text-[#4A4A4A]/60 tracking-wider block">Private Pool</span>
-                    <span className="font-semibold text-[#1B3564] text-base">Yes (Lawnside)</span>
+                    <span className="text-[10px] uppercase text-slate-400 tracking-wider block">Private Pool</span>
+                    <span className="font-semibold text-white text-base">Yes (Lawnside)</span>
                   </div>
                 </div>
 
                 {/* Key Amenities */}
                 <div className="flex flex-wrap gap-2 pt-2">
                   {canopyCrest.amenities.slice(0, 4).map((amenity, idx) => (
-                    <span key={idx} className="text-[11px] bg-[#F5F2EA] border border-[#DAA520]/20 text-[#1B3564] px-2.5 py-1 rounded-full font-medium">
+                    <span key={idx} className="text-[11px] bg-white/5 border border-white/10 text-slate-200 px-3 py-1.5 rounded-full font-medium">
                       {amenity}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-[#E2E8F0]">
+              <div className="space-y-4 pt-4 border-t border-[#DAA520]/15">
                 <div className="flex items-baseline justify-between">
                   <div>
-                    <span className="text-xs text-[#4A4A4A]/60 block font-light">Starting from</span>
-                    <span className="text-2xl font-bold text-[#1B3564]">₹{canopyCrest.price.toLocaleString("en-IN")}</span>
-                    <span className="text-xs text-[#4A4A4A]/60 font-light"> / night (Weekday)</span>
+                    <span className="text-xs text-slate-400 block font-light">Starting from</span>
+                    <span className="text-2xl font-bold text-white">₹{canopyCrest.price.toLocaleString("en-IN")}</span>
+                    <span className="text-xs text-slate-400 font-light"> / night (Weekday)</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-[#4A4A4A]/60 block font-light">Weekend Tariff</span>
+                    <span className="text-xs text-slate-400 block font-light">Weekend Tariff</span>
                     <span className="text-sm font-semibold text-[#DAA520]">₹{canopyCrest.weekendPrice?.toLocaleString("en-IN") || "22,000"}</span>
-                    <span className="text-[10px] text-[#4A4A4A]/60 block">Fri - Sun</span>
+                    <span className="text-[10px] text-slate-400 block">Fri - Sun</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <button 
                     onClick={() => handleSelectVillaForCalculator("canopy-crest")}
-                    className="w-full bg-[#1B3564] hover:bg-[#2563EB] text-white py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all shadow-md active:translate-y-0.5 hover:-translate-y-0.5"
+                    className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold py-3 rounded-xl text-xs tracking-widest uppercase transition-all shadow-md hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] active:translate-y-0.5 hover:-translate-y-0.5 hover:brightness-110 cursor-pointer"
                   >
                     Select & Quote
                   </button>
                   <Link 
                     href={`/villa/${canopyCrest.slug}`}
                     target="_blank"
-                    className="w-full border border-[#1B3564]/30 hover:border-[#1B3564] hover:bg-[#1B3564]/5 text-[#1B3564] py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all text-center flex items-center justify-center"
+                    className="w-full border border-[#DAA520]/20 hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 text-white py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all text-center flex items-center justify-center"
                   >
                     View Villa
                   </Link>
@@ -822,71 +721,87 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       </section>
 
       {/* 4. DYNAMIC FILTER TABS & INTERACTIVE VALUE MODULE */}
-      <section id="calculator-section" className="py-24 md:py-32 bg-[#EBE5D6]/50 border-y border-[#D1C7B3]/40 px-6 md:px-12 lg:px-24 relative">
+      <section id="calculator-section" className="py-24 md:py-32 px-6 md:px-12 lg:px-24 border-y border-white/5 relative z-10 bg-transparent">
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-[#DAA520]/5 blur-[130px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        
         <div className="max-w-7xl mx-auto space-y-16">
           
           <div className="text-center space-y-4">
             <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
               Tailored Getaway Planner
             </span>
-            <h2 className="text-3xl sm:text-5xl font-heading font-bold text-[#1B3564]">
+            <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white">
               Build Your Private Escape
             </h2>
-            <p className="max-w-xl mx-auto text-[#4A4A4A] text-sm font-light">
+            <p className="max-w-xl mx-auto text-slate-300 text-sm font-light">
               Customize your booking requirements below. Switch stay styles to explore custom amenities and calculate your pricing.
             </p>
           </div>
 
           {/* DYNAMIC FILTER TABS */}
-          <div className="flex flex-wrap justify-center gap-3">
-            {(["family", "friends", "romantic", "corporate"] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 focus:outline-none ${
-                  activeTab === tab
-                    ? "bg-[#4A5D23] text-white shadow-md scale-105"
-                    : "bg-white text-[#1B3564]/70 border border-[#D1C7B3] hover:bg-[#F5F2EA] hover:text-[#1B3564]"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="flex flex-wrap justify-center relative z-20">
+            <div className="bg-[#120D1A]/80 backdrop-blur-xl border border-white/10 p-2 rounded-2xl sm:rounded-full flex flex-wrap gap-2 shadow-2xl justify-center">
+              {(["family", "friends", "romantic", "corporate"] as const).map((tab) => {
+                const Icon = {
+                  family: Home,
+                  friends: Users,
+                  romantic: Heart,
+                  corporate: Briefcase,
+                }[tab];
+                
+                const isActive = activeTab === tab;
+
+                return (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-5 py-3 rounded-xl sm:rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 focus:outline-none flex items-center gap-2 relative cursor-pointer ${
+                      isActive
+                        ? "bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black shadow-lg scale-105"
+                        : "text-slate-300 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Icon size={14} className={isActive ? "text-black animate-pulse" : "text-[#DAA520]"} />
+                    <span>{tab}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch">
             
             {/* Left side: Dynamic Content from Tabs */}
-            <div className="lg:col-span-6 flex flex-col justify-center space-y-8 bg-white/40 border border-white/50 p-8 rounded-3xl backdrop-blur-sm">
+            <div className="lg:col-span-6 flex flex-col justify-center space-y-8 bg-[#0D0A14]/75 border border-[#DAA520]/20 p-8 md:p-10 rounded-3xl backdrop-blur-xl shadow-2xl transition-all duration-500 hover:border-[#DAA520]/45">
               <div className="space-y-4">
                 <span className="text-[10px] uppercase font-bold text-[#DAA520] tracking-widest flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520] animate-pulse" />
                   Recommended Stay Style
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-heading font-bold text-[#1B3564] leading-snug">
+                <h3 className="text-2xl sm:text-3xl font-heading font-extrabold text-white leading-snug tracking-wide bg-gradient-to-r from-white via-slate-100 to-[#B497CF] bg-clip-text text-transparent">
                   {tabs[activeTab].headline}
                 </h3>
-                <p className="text-[#4A4A4A] text-base leading-relaxed font-light">
+                <p className="text-slate-300 text-base leading-relaxed font-light">
                   {tabs[activeTab].description}
                 </p>
               </div>
 
               {/* Dynamic Checklist */}
-              <div className="space-y-3.5 pt-4">
-                <h4 className="text-xs uppercase font-bold tracking-wider text-[#1B3564]">Included Highlights:</h4>
+              <div className="space-y-4 pt-4 border-t border-white/5">
+                <h4 className="text-xs uppercase font-bold tracking-wider text-slate-300">Included Highlights:</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {tabs[activeTab].amenities.map((amenity, index) => (
-                    <div key={index} className="flex items-center gap-3 text-sm text-[#4A4A4A]">
-                      <div className="w-5 h-5 rounded-full bg-[#4A5D23]/10 text-[#4A5D23] flex items-center justify-center shrink-0">
+                    <div key={index} className="flex items-center gap-3 text-sm text-slate-300">
+                      <div className="w-6 h-6 rounded-full bg-[#DAA520]/15 text-[#DAA520] border border-[#DAA520]/30 flex items-center justify-center shrink-0 shadow-md">
                         <Check size={12} className="stroke-[3]" />
                       </div>
-                      <span className="font-medium">{amenity}</span>
+                      <span className="font-semibold">{amenity}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="pt-2 text-xs text-[#4A4A4A]/60 flex items-start gap-2 italic">
+              <div className="pt-2 text-xs text-slate-400 flex items-start gap-2 italic border-t border-[#DAA520]/10 pt-4">
                 <AlertCircle size={14} className="shrink-0 text-[#DAA520] mt-0.5" />
                 <span>All Stay Willas properties feature standard premium luxury comforts: air conditioning, high speed Wi-Fi, toiletries, security, and private parking.</span>
               </div>
@@ -894,39 +809,66 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
 
             {/* Right side: Interactive Calculator */}
             <div className="lg:col-span-6">
-              <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#D1C7B3]/50 shadow-xl space-y-6 flex flex-col justify-between h-full">
+              <div className="bg-[#0D0A14]/75 border border-[#DAA520]/20 rounded-3xl p-6 md:p-8 backdrop-blur-xl shadow-2xl space-y-6 flex flex-col justify-between h-full transition-all duration-500 hover:border-[#DAA520]/45">
                 
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-4">
-                    <h3 className="font-heading text-lg font-bold text-[#1B3564]">Estimated Getaway Plan</h3>
-                    <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded bg-[#DAA520]/15 text-[#DAA520]">
+                  <div className="flex items-center justify-between border-b border-[#DAA520]/15 pb-4">
+                    <h3 className="font-heading text-lg font-bold text-white">Estimated Getaway Plan</h3>
+                    <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded bg-[#DAA520]/15 text-[#DAA520] border border-[#DAA520]/20">
                       Best price guaranteed
                     </span>
                   </div>
 
                   {/* Villa Selector */}
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold tracking-widest text-[#4A4A4A]/70">1. Select Private Villa</label>
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400">1. Select Private Villa</label>
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => setSelectedVillaSlug("the-angle-house")}
-                        className={`p-3 rounded-xl border text-xs font-semibold text-center transition-all ${
+                        className={`p-3 rounded-xl border text-xs font-semibold text-center transition-all duration-300 cursor-pointer ${
                           selectedVillaSlug === "the-angle-house"
-                            ? "bg-[#1B3564] text-white border-[#1B3564]"
-                            : "border-[#E2E8F0] text-[#1B3564] hover:bg-[#F5F2EA]"
+                            ? "bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold border-transparent shadow-[0_0_15px_rgba(218,165,32,0.35)] scale-[1.02]"
+                            : "border-white/10 text-slate-200 hover:bg-white/5"
                         }`}
                       >
                         The Angle House
                       </button>
                       <button
                         onClick={() => setSelectedVillaSlug("canopy-crest")}
-                        className={`p-3 rounded-xl border text-xs font-semibold text-center transition-all ${
+                        className={`p-3 rounded-xl border text-xs font-semibold text-center transition-all duration-300 cursor-pointer ${
                           selectedVillaSlug === "canopy-crest"
-                            ? "bg-[#1B3564] text-white border-[#1B3564]"
-                            : "border-[#E2E8F0] text-[#1B3564] hover:bg-[#F5F2EA]"
+                            ? "bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold border-transparent shadow-[0_0_15px_rgba(218,165,32,0.35)] scale-[1.02]"
+                            : "border-white/10 text-slate-200 hover:bg-white/5"
                         }`}
                       >
                         Canopy Crest
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Stay Type Selector */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400">2. Select Stay Period</label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => setStayType("weekday")}
+                        className={`p-3 rounded-xl border text-xs font-semibold text-center transition-all duration-300 cursor-pointer ${
+                          stayType === "weekday"
+                            ? "bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold border-transparent shadow-[0_0_15px_rgba(218,165,32,0.35)] scale-[1.02]"
+                            : "border-white/10 text-slate-200 hover:bg-white/5"
+                        }`}
+                      >
+                        Weekday (Mon - Thu)
+                      </button>
+                      <button
+                        onClick={() => setStayType("weekend")}
+                        className={`p-3 rounded-xl border text-xs font-semibold text-center transition-all duration-300 cursor-pointer ${
+                          stayType === "weekend"
+                            ? "bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold border-transparent shadow-[0_0_15px_rgba(218,165,32,0.35)] scale-[1.02]"
+                            : "border-white/10 text-slate-200 hover:bg-white/5"
+                        }`}
+                      >
+                        Weekend (Fri - Sun)
                       </button>
                     </div>
                   </div>
@@ -936,18 +878,18 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                     
                     {/* Nights Stepper */}
                     <div className="space-y-2">
-                      <label className="text-[10px] uppercase font-bold tracking-widest text-[#4A4A4A]/70 block">2. Nights</label>
-                      <div className="flex items-center justify-between bg-[#F5F2EA] rounded-xl p-2 border border-[#E2E8F0]">
+                      <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">3. Nights</label>
+                      <div className="flex items-center justify-between bg-black/50 rounded-xl p-2 border border-white/10">
                         <button
                           onClick={() => setNights(Math.max(1, nights - 1))}
-                          className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#1B3564] hover:bg-[#EBE5D6] transition-colors focus:outline-none"
+                          className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-[#DAA520] hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 transition-all duration-200 focus:outline-none cursor-pointer"
                         >
                           <Minus size={14} />
                         </button>
-                        <span className="font-heading font-bold text-lg text-[#1B3564]">{nights}</span>
+                        <span className="font-heading font-bold text-lg text-white">{nights}</span>
                         <button
                           onClick={() => setNights(Math.min(14, nights + 1))}
-                          className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#1B3564] hover:bg-[#EBE5D6] transition-colors focus:outline-none"
+                          className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-[#DAA520] hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 transition-all duration-200 focus:outline-none cursor-pointer"
                         >
                           <Plus size={14} />
                         </button>
@@ -956,49 +898,57 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
 
                     {/* Guests Stepper */}
                     <div className="space-y-2">
-                      <label className="text-[10px] uppercase font-bold tracking-widest text-[#4A4A4A]/70 block">
-                        3. Guests (Max {selectedVilla.guests})
+                      <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">
+                        4. Guests (Max {selectedVilla.guests})
                       </label>
-                      <div className="flex items-center justify-between bg-[#F5F2EA] rounded-xl p-2 border border-[#E2E8F0]">
+                      <div className="flex items-center justify-between bg-black/50 rounded-xl p-2 border border-white/10">
                         <button
                           onClick={() => setGuestsCount(Math.max(1, guestsCount - 1))}
-                          className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#1B3564] hover:bg-[#EBE5D6] transition-colors focus:outline-none"
+                          className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-[#DAA520] hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 transition-all duration-200 focus:outline-none cursor-pointer"
                         >
                           <Minus size={14} />
                         </button>
-                        <span className="font-heading font-bold text-lg text-[#1B3564]">{guestsCount}</span>
+                        <span className="font-heading font-bold text-lg text-white">{guestsCount}</span>
                         <button
                           onClick={() => setGuestsCount(Math.min(selectedVilla.guests, guestsCount + 1))}
-                          className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#1B3564] hover:bg-[#EBE5D6] transition-colors focus:outline-none"
+                          className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-[#DAA520] hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 transition-all duration-200 focus:outline-none cursor-pointer"
                         >
                           <Plus size={14} />
                         </button>
                       </div>
                     </div>
-
                   </div>
                 </div>
 
                 {/* Calculation Output */}
-                <div className="space-y-4 pt-6 border-t border-[#E2E8F0]">
-                  <div className="space-y-2 text-sm text-[#4A4A4A]">
+                <div className="space-y-4 pt-6 border-t border-white/5">
+                  <div className="space-y-2 text-sm text-slate-300">
                     <div className="flex justify-between">
                       <span>Base Stay ({nights} nights):</span>
-                      <span className="font-semibold">₹{baseStayTotal.toLocaleString("en-IN")}</span>
+                      <span className="font-semibold text-white">₹{baseStayTotal.toLocaleString("en-IN")}</span>
                     </div>
                     {guestsCount > baseGuestsLimit && (
-                      <div className="flex justify-between text-[#4A5D23]">
+                      <div className="flex justify-between text-slate-300">
                         <span>Extra Guests ({extraGuestsCount} guests x ₹{extraGuestFee}):</span>
-                        <span className="font-semibold">₹{extraGuestsTotal.toLocaleString("en-IN")}</span>
+                        <span className="font-semibold text-white">₹{extraGuestsTotal.toLocaleString("en-IN")}</span>
                       </div>
                     )}
-                    {isDiscountApplied && (
-                      <div className="flex justify-between text-[#4A5D23] font-semibold bg-[#4A5D23]/5 p-2 rounded-lg border border-[#4A5D23]/25">
+                    {isDiscountApplied && stayType === "weekday" && (
+                      <div className="flex justify-between text-[#DAA520] font-semibold bg-[#DAA520]/5 p-2 rounded-lg border border-[#DAA520]/25 animate-pulse">
                         <span className="flex items-center gap-1">
-                          <Sparkles size={12} className="text-[#DAA520] animate-pulse" />
-                          Escape 10% Discount:
+                          <Sparkles size={12} className="text-[#DAA520]" />
+                          Escape 10% Weekday Discount:
                         </span>
                         <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+                    {isDiscountApplied && stayType === "weekend" && (
+                      <div className="flex justify-between text-slate-400 font-semibold bg-white/5 p-2 rounded-lg border border-white/10">
+                        <span className="flex items-center gap-1 text-[11px]">
+                          <AlertCircle size={12} className="text-slate-400" />
+                          Promo active (No weekend discount)
+                        </span>
+                        <span>₹0</span>
                       </div>
                     )}
                     <div className="flex justify-between text-[11px] opacity-60">
@@ -1006,17 +956,22 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                     </div>
                   </div>
 
-                  <div className="bg-[#F5F2EA] p-4 rounded-2xl flex items-center justify-between border border-[#DAA520]/15">
+                  <div className="bg-[#120d1c] p-4 rounded-2xl flex items-center justify-between border border-[#DAA520]/25 shadow-lg">
                     <div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-[#4A4A4A]">
-                        {isDiscountApplied ? "Est. Discounted Total" : "Est. Base Total"}
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                        {isDiscountApplied && stayType === "weekday" ? "Est. Discounted Total" : "Est. Base Total"}
                       </span>
-                      <div className="text-2xl md:text-3xl font-black text-[#1B3564] font-heading">
+                      <div className="text-2xl md:text-3xl font-black text-white font-heading">
                         ₹{finalTotal.toLocaleString("en-IN")}
                       </div>
-                      {isDiscountApplied && (
-                        <span className="text-[9px] text-[#4A5D23] font-bold uppercase tracking-wider block mt-0.5">
+                      {isDiscountApplied && stayType === "weekday" && (
+                        <span className="text-[9px] text-[#DAA520] font-bold uppercase tracking-wider block mt-0.5 animate-pulse">
                           Code ESCAPE10 applied
+                        </span>
+                      )}
+                      {isDiscountApplied && stayType === "weekend" && (
+                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-0.5">
+                          ESCAPE10 not applicable on weekends
                         </span>
                       )}
                     </div>
@@ -1025,7 +980,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                       href={whatsappLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-[#4A5D23] hover:bg-[#1B3564] text-white px-5 py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md text-center inline-flex items-center gap-2 hover:-translate-y-0.5"
+                      className="bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black px-6 py-3.5 rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md text-center inline-flex items-center gap-2 hover:scale-105 hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] active:scale-100 cursor-pointer"
                     >
                       Book Getaway <ArrowRight size={14} />
                     </a>
@@ -1041,7 +996,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       </section>
 
       {/* 5. TRUST VERIFICATION BAR */}
-      <section className="bg-[#1B3564] text-white py-10 border-y border-[#DAA520]/20 overflow-hidden relative">
+      <section className="bg-[#0b0816]/80 backdrop-blur-md text-white py-10 border-y border-white/5 overflow-hidden relative z-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent pointer-events-none" />
         
         {/* Verification elements */}
@@ -1075,26 +1030,26 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       </section>
 
       {/* 6. FINAL HIGH-CONVERSION CTA */}
-      <section className="py-28 md:py-36 px-6 text-center relative overflow-hidden bg-white">
-        <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-[#4A5D23]/5 blur-[150px] rounded-full -translate-x-1/2 -translate-y-1/2" />
+      <section className="py-28 md:py-36 px-6 text-center relative overflow-hidden bg-transparent z-10">
+        <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-[#B497CF]/5 blur-[150px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
         
         <div className="max-w-3xl mx-auto space-y-10 z-10 relative">
           <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
             Make the Detour Count
           </span>
           
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading font-black text-[#1B3564] tracking-tight leading-tight">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading font-black text-white tracking-tight leading-tight">
             What if this wasn&apos;t a wrong click?
           </h2>
           
-          <p className="max-w-xl mx-auto text-[#4A4A4A] text-lg font-light leading-relaxed">
+          <p className="max-w-xl mx-auto text-slate-300 text-lg font-light leading-relaxed">
             Maybe this is exactly where you were supposed to land. Browse our complete handpicked selection of premium luxury private estates and start planning your escape.
           </p>
 
           <div className="pt-4">
             <Link 
               href="/villas"
-              className="inline-flex items-center gap-3 bg-[#1B3564] hover:bg-[#4A5D23] text-white px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase shadow-lg transition-all duration-300 hover:-translate-y-1"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-[#DAA520] to-[#C9A84C] text-black px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase shadow-lg hover:scale-105 active:scale-100 transition-all duration-300"
             >
               Explore Handpicked Villas
               <ArrowRight size={16} />
@@ -1104,7 +1059,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-[#101F3B] text-white/50 text-xs py-8 border-t border-[#DAA520]/10 text-center px-6">
+      <footer className="bg-[#050308]/90 text-white/40 text-xs py-8 border-t border-white/5 text-center px-6 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} Stay Willas. All rights reserved. Crafted for slow luxury.</p>
           <div className="flex gap-6">

@@ -403,7 +403,7 @@ const AdminDashboard = ({
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 pb-8 border-b border-slate-100">
         <div>
           <div className="flex items-center gap-3 flex-wrap mb-2">
-            <h1 className="text-4xl font-cormorant font-bold tracking-wide italic">Administrative Suite</h1>
+            <h1 className="text-4xl font-cormorant font-bold tracking-wide italic">Admin Dashboard & Operations</h1>
             <span className="bg-blue-500/10 text-blue-400 text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase border border-blue-500/20">
               SYSTEM LIVE
             </span>

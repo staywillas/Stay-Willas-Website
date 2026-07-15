@@ -7,8 +7,8 @@ import AdminDashboard from "@/components/admin/admin-dashboard";
 import LoginForm from "@/components/auth/login-form";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard | Stay Willas",
-  description: "Stay Willas private administrative dashboard.",
+  title: "Admin Dashboard & Booking Operations | Stay Willas",
+  description: "Access the secure Admin Dashboard for Stay Willas. Manage luxury villa reservations, update partner calendar settings, and view user bookings. Login now.",
   robots: { index: false, follow: false },
 };
 

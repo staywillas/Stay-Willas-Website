@@ -44,7 +44,7 @@ const VillaCard = ({
         <div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg md:rounded-xl bg-gradient-warm shrink-0">
           <Image
             src={image}
-            alt={`Luxury private pool villa: ${name} in ${location}`}
+            alt={`Luxury private pool villas near Mumbai: ${name} in ${location}`}
             fill
             sizes="(max-width: 768px) 50vw, 33vw"
             loading="lazy"

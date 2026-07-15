@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign In | Stay Willas",
-  description: "Sign in to your Stay Willas account to access bookings, saved villas, and exclusive offers.",
+  title: "Sign In & Access Your Guest Bookings | Stay Willas",
+  description: "Sign in to your Stay Willas guest account to access your bookings, edit wishlist retreats, and unlock exclusive discounts. Access guest portal today.",
   robots: { index: false, follow: false },
 };
 

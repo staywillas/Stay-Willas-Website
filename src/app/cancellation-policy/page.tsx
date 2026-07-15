@@ -5,8 +5,8 @@ import Footer from "@/components/layout/footer";
 import { XCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Cancellation & Refund Policy | Stay Willas",
-  description: "Read the Stay Willas Cancellation and Refund Policy to understand cancellation slabs, refunds, and rescheduling details.",
+  title: "Cancellation & Refund Policy Guidelines | Stay Willas",
+  description: "Read the Stay Willas cancellation and refund policy for your peace of mind. Learn about cancellation slabs, refunds, and rescheduling. Read details.",
   alternates: {
     canonical: "https://www.staywillas.com/cancellation-policy",
   },

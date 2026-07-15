@@ -10,7 +10,7 @@ import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Weekend Getaway Villas near Pune & Mumbai | Stay Willas",
-  description: "Explore luxury staycation villas 2 hours from Mumbai & Pune. Discover private pool estates in Lonavala, Alibaug, Karjat & Khopoli. Check availability.",
+  description: "Explore premium weekend getaway villas near Mumbai & Pune. Strictly handpicked private pool estates in Lonavala, Alibaug and Karjat. Check availability.",
   keywords: [
     "weekend getaway villas near Pune",
     "resort/villa near Navi Mumbai",
@@ -109,7 +109,7 @@ export default async function AreasPage() {
             Locations
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading leading-tight mb-2 tracking-tight">
-            Our Premium <span className="italic text-accent-primary font-serif font-light">Areas</span>
+            Weekend Getaway Villas & <span className="italic text-accent-primary font-serif font-light">Areas</span>
           </h1>
           
           <div className="flex items-center gap-4 my-4 w-full max-w-[200px]">

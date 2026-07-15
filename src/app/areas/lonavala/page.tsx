@@ -10,7 +10,7 @@ import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
-  description: "Rent a luxury villa in Lonavala with private pool, scenic mountain views & private chef. Ideal for friends group trips & family getaways. Check availability.",
+  description: "Rent a luxury villa Lonavala with private pool, waterfall decks, and private chef service. Ideal for family staycations & group trips. Book your stay now.",
   keywords: [
     "best villas in lonavla",
     "veg-only/Jain food villa Lonavala",
@@ -112,7 +112,7 @@ export default async function LonavalaPage() {
               The Mountain Sanctuary
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              Luxury Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span>
+              Luxury Private Pool Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span>
             </h1>
             <p className="text-text-primary/80 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               Just a short drive away from the chaos of Mumbai and Pune lies Lonavala—a misty, green paradise. Discover our handpicked selection of premium private pool villas designed for unforgettable weekend getaways.

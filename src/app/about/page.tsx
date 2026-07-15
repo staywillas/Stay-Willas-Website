@@ -6,8 +6,8 @@ import Footer from "@/components/layout/footer";
 import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Stay Willas | Luxury Villa Rentals | Maharashtra",
-  description: "Learn about the hospitality philosophy behind Stay Willas. We are dedicated to curating the most exclusive luxury private villa staycations in Maharashtra.",
+  title: "About Stay Willas & Luxury Villa Rentals | Stay Willas",
+  description: "Learn about Stay Willas, our story, values, and curation process. We offer premium luxury private villa rentals with warm local hospitality. Discover more.",
   keywords: [
     "about stay willas",
     "luxury hospitality company maharashtra",
