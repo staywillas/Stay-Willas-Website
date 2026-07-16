@@ -10,8 +10,8 @@ import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Weekend Getaway Villas | Private Pool Rentals | Stay Willas",
-  description: "Explore premium weekend getaway villas with private pools near Mumbai and Pune. Rent handpicked private estates in Lonavala, Alibaug, and Karjat.",
-  keywords: ["weekend getaway villas"],
+  description: "Explore premium weekend getaway villas with private pools near Mumbai and Pune. Rent handpicked private pool rentals in Lonavala, Alibaug, and Karjat.",
+  keywords: ["weekend getaway villas", "private pool rentals"],
   alternates: {
     canonical: "https://www.staywillas.com/areas",
   },
@@ -193,9 +193,9 @@ export default async function AreasPage() {
         {/* SEO Content Section */}
         <section className="py-20 px-6 md:px-12 bg-white border-t border-[#DAA520]/15 w-full">
           <div className="max-w-4xl mx-auto prose text-left">
-            <h2>Premium Weekend Getaways: Luxury Villas Near Mumbai & Pune</h2>
+            <h2>Weekend Getaway Villas Near Mumbai & Pune</h2>
             <p>
-              Are you tired of the repetitive city routine and seeking a relaxing break close to home? Finding luxury <strong>villas near mumbai</strong> has become the preferred choice for discerning travelers who want to escape traffic, noise, and pollution. Whether it is a quick family gathering or a private pool party with friends, booking independent <strong>villas near pune</strong> or Mumbai provides the perfect solution. You get the space, privacy, and specialized concierge services that traditional hotels simply cannot deliver. Our homes are built to offer you a home away from home.
+              Are you tired of the repetitive city routine and seeking a relaxing break close to home? Finding luxury <strong>weekend getaway villas</strong> has become the preferred choice for discerning travelers who want to escape traffic, noise, and pollution. Whether it is a quick family gathering or a private pool party with friends, booking independent <strong>private pool rentals</strong> near Mumbai and Pune provides the perfect solution. You get the space, privacy, and specialized concierge services that traditional hotels simply cannot deliver. Our homes are built to offer you a home away from home.
             </p>
             <p>
               Our carefully curated portfolio highlights premium properties in the most scenic locations of Maharashtra. From the misty heights of Lonavala and the serene base of the Sahyadri mountains in Khopoli, to the quiet coastal breezes of Alibaug and the riverside farmhouses in Karjat, we offer a diverse selection of <strong>villas near mumbai</strong> to match every group's requirement. If you are a resident of Pune looking to beat the summer heat, our properties act as the ultimate collection of <strong>villas near pune</strong>, offering cool, temperature-controlled private pools and spacious lawns. Each villa is checked for safety, hygiene, and luxury standards before your arrival.

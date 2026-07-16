@@ -9,9 +9,9 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Khopoli Private Pool Villa | Luxury Villa Rentals | Stay Willas",
-  description: "Book a premium Khopoli private pool villa for your next holiday. Escape to private mountain view estates with customized chef service. Check availability today.",
-  keywords: ["Khopoli private pool villa"],
+  title: "Khopoli Private Pool Villa | Luxury Villa in Khopoli on Rent",
+  description: "Book a premium khopoli private pool villa for your next holiday. Escape to a private mountain view villa in khopoli on rent with customized chef service.",
+  keywords: ["khopoli private pool villa", "villa in khopoli on rent"],
   alternates: {
     canonical: "https://www.staywillas.com/areas/khopoli",
   },
@@ -232,7 +232,7 @@ export default async function KhopoliPage() {
             <article className="prose prose-invert prose-p:text-text-primary/75 prose-p:text-base prose-p:leading-relaxed prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-h3:text-accent-secondary prose-h3:font-heading prose-h3:text-xl prose-a:text-accent-primary">
               <h2>The Undiscovered Charm of a Khopoli Private Pool Villa</h2>
               <p>
-                When people think of driving out of Mumbai on the expressway, Lonavala is usually the default answer. But right before you begin the steep climb up the ghats, sitting quietly at the base of the majestic Sahyadri mountain range, is Khopoli. If you want to escape the crowded commercial areas, choosing private luxury properties is a refreshing alternative. Exploring luxury holiday options in premium retreats allows you to connect with nature without distraction.
+                When people think of driving out of Mumbai on the expressway, Lonavala is usually the default answer. But right before you begin the steep climb up the ghats, sitting quietly at the base of the majestic Sahyadri mountain range, is Khopoli. If you want to escape the crowded commercial areas, choosing a <strong>khopoli private pool villa</strong> is a refreshing alternative. Exploring luxury holiday options by finding a premium <strong>villa in khopoli on rent</strong> allows you to connect with nature without distraction.
               </p>
               <p>
                 Why? Because it offers something increasingly rare: untouched nature. The deep valleys here catch the heavy monsoon clouds, creating seasonal waterfalls that flow right through the backyards of some of our most exclusive holiday homes. If you want the dramatic views of the mountains without the tourist traffic jams of the more famous hill stations, renting spacious vacation rentals is the smartest decision you can make for your next weekend getaway.

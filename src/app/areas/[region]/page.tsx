@@ -80,24 +80,32 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   let titleText = `Luxury Villas in ${area.name} with Private Pool | Stay Willas`;
   let descText = `Rent luxury villas in ${area.name} with private pool, scenic views & chef service. Ideal for family weekend getaways. Check availability and book now.`;
-  let keywordList = [`luxury villas in ${area.name} with private pool`];
+  let keywordList = [`luxury villas in ${area.name} with private pool`, `private pool villa in ${area.name}`];
 
   if (regionKey === "lonavala") {
-    titleText = `Luxury Villa Lonavala with Private Pool | Stay Willas`;
-    descText = "Rent a luxury villa Lonavala with private pool, scenic mountain views & chef. Ideal for family getaways and group trips. Check availability now.";
-    keywordList = ["luxury villa Lonavala with private pool"];
+    titleText = `Luxury Villa in Lonavala with Private Pool | Stay Willas`;
+    descText = "Rent a luxury villa in lonavala with private pool, scenic mountain views & chef. Ideal for a lonavala villa staycation and group trips. Check availability now.";
+    keywordList = ["luxury villa in lonavala with private pool", "lonavala villa staycation"];
   } else if (regionKey === "alibaug") {
-    titleText = `Villa on Rent in Alibaug for Weekend | Stay Willas`;
-    descText = "Book a luxury beachfront villa on rent in Alibaug for weekend getaways with a private pool and chef. Check availability and book now.";
-    keywordList = ["villa on rent in Alibaug for weekend"];
+    titleText = `Luxury Villa in Alibaug with Private Pool | Stay Willas`;
+    descText = "Rent a premium luxury villa in alibaug with private pool, beach views, and a private chef. Perfect for family weekend staycations. Book your villa on rent in alibaug today!";
+    keywordList = ["luxury villa in alibaug with private pool", "villa on rent in alibaug"];
   } else if (regionKey === "karjat") {
-    titleText = `Karjat Villa with Pool Booking | Luxury Stays | Stay Willas`;
-    descText = "Secure your Karjat villa with pool booking for serene farmstays and riverside retreats. Complete with personal caretakers and gourmet chef services.";
-    keywordList = ["Karjat villa with pool booking"];
+    titleText = `Private Pool Villa in Karjat | Luxury Karjat Villa on Rent`;
+    descText = "Book a premium private pool villa in karjat for a peaceful riverside getaway. Enjoy custom chef meals, private lawns, and top hospitality. Plan your karjat villa on rent now.";
+    keywordList = ["private pool villa in karjat", "karjat villa on rent"];
   } else if (regionKey === "khopoli") {
-    titleText = `Khopoli Private Pool Villa | Luxury Villa Rentals | Stay Willas`;
-    descText = "Rent a premium Khopoli private pool villa nestled in green mountains. Enjoy direct scenic valley views, private chef & top hospitality. Book online now.";
-    keywordList = ["Khopoli private pool villa"];
+    titleText = `Khopoli Private Pool Villa | Luxury Villa in Khopoli on Rent`;
+    descText = "Book a premium khopoli private pool villa nestled in green mountains. Escape to a private mountain view villa in khopoli on rent with customized chef service.";
+    keywordList = ["khopoli private pool villa", "villa in khopoli on rent"];
+  } else if (regionKey === "goa") {
+    titleText = `Luxury Villa in Goa with Private Pool | Goa Villa Rental`;
+    descText = "Book an exquisite luxury villa in goa with private pool, beach views, and fully serviced hospitality. Explore premier goa villa rental options with Stay Willas.";
+    keywordList = ["luxury villa in goa with private pool", "goa villa rental"];
+  } else if (regionKey === "igatpuri") {
+    titleText = `Private Pool Villa in Igatpuri | Luxury Villa in Igatpuri`;
+    descText = "Escape to a scenic private pool villa in igatpuri. Rent premium luxury villa in igatpuri properties with stunning mountain views, private chef, and top amenities. Book today!";
+    keywordList = ["private pool villa in igatpuri", "luxury villa in igatpuri"];
   }
 
   return {
@@ -157,6 +165,35 @@ export default async function AreaRegionPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.staywillas.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Areas",
+                "item": "https://www.staywillas.com/areas"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": area.name,
+                "item": `https://www.staywillas.com/areas/${regionKey}`
+              }
+            ]
+          })
+        }}
+      />
       <div>
         <Navbar />
         
@@ -187,7 +224,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
               {area.tagline}
             </span>
             <h1 className="text-4xl md:text-6xl font-heading leading-none tracking-tight mb-4">
-              Luxury Villas in <span className="italic text-accent-primary font-serif font-light">{area.name}</span>
+              Luxury Villas in <span className="italic text-accent-primary font-serif font-light">{area.name}</span> with Private Pool
             </h1>
             <p className="text-text-primary/75 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               {area.desc}

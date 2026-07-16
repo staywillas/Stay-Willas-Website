@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 export const metadata: Metadata = {
   title: "Villas Near Mumbai | Luxury Private Pool Villa Rentals | Stay Willas",
   description: "Rent luxury private pool villas near Mumbai. Handpicked verified getaway homes, scenic views, and private chef services. Book your dream staycation now.",
-  keywords: ["villas near mumbai"],
+  keywords: ["villas near Mumbai", "private pool villas near Mumbai"],
   alternates: {
     canonical: "/",
   },

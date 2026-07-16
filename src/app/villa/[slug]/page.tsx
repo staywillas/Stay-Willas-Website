@@ -174,34 +174,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const city = villa.location.split(",")[0].trim();
-  let titleText = `${villa.name} | Private Pool Villa in ${city} | Stay Willas`;
-  if (titleText.length > 60 || titleText.length < 50) {
-    titleText = `${villa.name} | Pool Villa in ${city} | Stay Willas`;
+  const primaryKeyword = `luxury villa in ${city} with private pool`;
+  const secondaryKeyword = `rent private pool villa in ${city}`;
+
+  let titleText = `${villa.name} | Luxury Villa in ${city} with Private Pool`;
+  if (titleText.length > 60) {
+    titleText = `${villa.name} | Luxury Villa in ${city} with Pool`;
   }
   if (titleText.length > 60) {
-    const maxNameLen = 60 - 13 - 17 - city.length;
-    titleText = `${villa.name.slice(0, maxNameLen)} | Pool Villa in ${city} | Stay Willas`;
-  } else if (titleText.length < 50) {
-    titleText = `${villa.name} | Luxury Private Pool Villa in ${city} | Stay Willas`;
-    if (titleText.length < 50) {
-      titleText = `${villa.name} | Premium Luxury Pool Villa in ${city} | Stay Willas`;
-    }
+    titleText = `${villa.name} | Villa in ${city} with Pool`;
   }
-  let descText = `Book this ${villa.bedrooms}BHK luxury villa in ${city} featuring a private swimming pool, scenic views, gourmet chef services & concierge. Reserve your holiday now.`;
-  if (descText.length > 160) {
-    descText = `Book this ${villa.bedrooms}BHK luxury villa in ${city} featuring a private pool, scenic views, caretakers & concierge. Book your holiday staycation now.`;
-  }
-  if (descText.length < 140) {
-    descText = `${descText} Enjoy handpicked amenities.`;
-  }
-  if (descText.length > 160) {
-    descText = descText.slice(0, 157) + "...";
-  }
+
+  const descText = `Book ${villa.name}, a premium ${villa.bedrooms}BHK luxury villa in ${city} with private pool, chef service, and scenic views. Reserve your staycation today!`;
 
   return {
     title: titleText,
     description: descText,
-    keywords: [`rent private pool villa in ${city}`],
+    keywords: [primaryKeyword, secondaryKeyword],
     alternates: {
       canonical: `/villa/${villa.slug}`,
     },
@@ -345,6 +334,35 @@ export default async function VillaDetailPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary pb-28 lg:pb-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.staywillas.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Villas",
+                "item": "https://www.staywillas.com/villas"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": villaData.name,
+                "item": `https://www.staywillas.com/villa/${villaData.slug}`
+              }
+            ]
+          })
+        }}
+      />
       {faqSchema && (
         <script
           type="application/ld+json"

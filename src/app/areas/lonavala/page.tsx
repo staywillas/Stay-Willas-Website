@@ -9,9 +9,9 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
-  description: "Rent a luxury villa Lonavala with private pool, waterfall decks, and private chef service. Ideal for family staycations & group trips. Book your stay now.",
-  keywords: ["luxury villa Lonavala with private pool"],
+  title: "Luxury Villa in Lonavala with Private Pool | Stay Willas",
+  description: "Rent a luxury villa in lonavala with private pool, scenic mountain views & chef. Ideal for a lonavala villa staycation and group trips. Check availability now.",
+  keywords: ["luxury villa in lonavala with private pool", "lonavala villa staycation"],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",
   },
@@ -232,10 +232,10 @@ export default async function LonavalaPage() {
             <article className="prose prose-invert prose-p:text-text-primary/75 prose-p:text-base prose-p:leading-relaxed prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-h3:text-accent-secondary prose-h3:font-heading prose-h3:text-xl prose-a:text-accent-primary">
               <h2>Renting a Luxury Villa Lonavala with Private Pool: The Ultimate Weekend Escape</h2>
               <p>
-                We’ve all been there. It’s Thursday afternoon in Mumbai, the traffic on the Western Express Highway is at a standstill, and you’re staring out the window dreaming of breathing actual fresh air. Selecting premium private estates isn't just a destination choice; for anyone living in western Maharashtra, it’s a necessary pressure valve. When the monsoon hits and the Sahyadri mountains turn a green shade, nothing beats renting private Villas in Lonavala. 
+                We’ve all been there. It’s Thursday afternoon in Mumbai, the traffic on the Western Express Highway is at a standstill, and you’re staring out the window dreaming of breathing actual fresh air. Selecting a premium <strong>luxury villa lonavala with private pool</strong> isn't just a destination choice; for anyone living in western Maharashtra, it’s a necessary pressure valve. When the monsoon hits and the Sahyadri mountains turn a green shade, nothing beats an exclusive <strong>lonavala villa staycation</strong>. 
               </p>
               <p>
-                But let's be honest—the days of cramming into a crowded hotel room are over. You work hard, and when you take a break, you want space, privacy, and absolute comfort. That is exactly why choosing luxury properties has completely changed how we experience this classic hill station. For city dwellers, renting quality Villas in Lonavala represents a hassle-free journey to natural rejuvenation. It is the easiest way to swap concrete skylines for mist-laden valleys when you select from our exclusive premium retreats.
+                But let's be honest—the days of cramming into a crowded hotel room are over. You work hard, and when you take a break, you want space, privacy, and absolute comfort. That is exactly why choosing luxury properties has completely changed how we experience this classic hill station. For city dwellers, renting a quality luxury villa lonavala with private pool represents a hassle-free journey to natural rejuvenation. It is the easiest way to swap concrete skylines for mist-laden valleys when you select from our exclusive premium retreats.
               </p>
 
               <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">

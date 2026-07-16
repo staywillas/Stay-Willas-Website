@@ -9,7 +9,7 @@ export interface BlogPost {
   title: string;
   metaTitle: string;
   description: string;
-  keyword: string;
+  keywords: string[];
   readTime: string;
   date: string;
   image: string;
@@ -24,7 +24,7 @@ export const blogsData: BlogPost[] = [
     title: "Pet-Friendly Villa Rules Near Mumbai — What to Know Before You Book",
     metaTitle: "Pet-Friendly Villa Rules Near Mumbai & Tips | Stay Willas",
     description: "Planning a staycation with your pet? Read the essential pet-friendly villa rules near Mumbai, and discover our top pet-friendly pool estates.",
-    keyword: "pet friendly villa rules near Mumbai",
+    keywords: ["pet friendly villa rules near Mumbai", "pet friendly staycation near Mumbai"],
     readTime: "8 min read",
     date: "July 09, 2026",
     image: "/assets/villas/the-angle-house/gallery-10.webp",
@@ -74,7 +74,7 @@ export const blogsData: BlogPost[] = [
     title: "Best Time to Visit Karjat for a Villa Stay",
     metaTitle: "Best Time to Visit Karjat for a Villa Stay | Stay Willas",
     description: "When is the best time to visit Karjat for a villa stay? Read our detailed guide on weather, seasons, and luxury riverside pool getaways. Plan your stay now.",
-    keyword: "best time to visit Karjat for villa stay",
+    keywords: ["best time to visit Karjat for villa stay", "Karjat villa stay"],
     readTime: "7 min read",
     date: "July 07, 2026",
     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
@@ -114,9 +114,9 @@ export const blogsData: BlogPost[] = [
   {
     slug: "corporate-offsite-checklist-for-a-khopoli-villa",
     title: "Corporate Offsite Checklist for a Khopoli Villa",
-    metaTitle: "Corporate Offsite Checklist for Khopoli Villas | Stay Willas",
+    metaTitle: "Corporate Offsite Checklist for Khopoli Villa | Stay Willas",
     description: "Plan your team retreat with our corporate offsite checklist Khopoli villa guide. Enjoy fast Wi-Fi, meeting rooms, and pool bonding. Read details now.",
-    keyword: "corporate offsite checklist Khopoli villa",
+    keywords: ["corporate offsite checklist Khopoli villa", "corporate offsite villa near Mumbai"],
     readTime: "9 min read",
     date: "July 04, 2026",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
@@ -159,9 +159,9 @@ export const blogsData: BlogPost[] = [
   {
     slug: "things-to-do-near-adlabs-imagica-khopoli",
     title: "Things to Do Near Adlabs Imagica, Khopoli",
-    metaTitle: "Best Things to Do Near Imagicaa in Khopoli | Stay Willas",
+    metaTitle: "Things to Do Near Adlabs Imagica Khopoli | Stay Willas",
     description: "Explore the best things to do near Adlabs Imagica, Khopoli. Discover waterfalls, historic forts, and premium pool villa stays. Read our guides now.",
-    keyword: "things to do near Adlabs Imagica Khopoli",
+    keywords: ["things to do near Adlabs Imagica Khopoli", "places to visit in Khopoli"],
     readTime: "7 min read",
     date: "July 01, 2026",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
@@ -204,9 +204,9 @@ export const blogsData: BlogPost[] = [
   {
     slug: "pet-friendly-villas-near-mumbai-why-the-angle-house",
     title: "Pet-Friendly Villas Near Mumbai: Why The Angle House in Lonavala Is Perfect for You (and Your Dog)",
-    metaTitle: "Pet Friendly Villa in Lonavala with Pool | Stay Willas",
+    metaTitle: "Pet Friendly Villa Lonavala with Private Pool | Stay Willas",
     description: "Need a pet friendly villa Lonavala with private pool? See why The Angle House is the perfect choice for your next staycation with your dog. Read more.",
-    keyword: "pet friendly villa Lonavala with private pool",
+    keywords: ["pet friendly villa Lonavala with private pool", "dog friendly villa in Lonavala"],
     readTime: "6 min read",
     date: "June 25, 2026",
     image: "/assets/villas/the-angle-house/gallery-10.webp",
@@ -247,7 +247,7 @@ export const blogsData: BlogPost[] = [
     title: "The Best Villa in Lonavala for Birthday Parties & Family Reunions: Inside The Angle House",
     metaTitle: "Best Birthday Party Villa in Lonavala | Stay Willas",
     description: "Hosting an event? Discover why The Angle House is the best birthday party villa Lonavala choice, perfect for family reunions near Mumbai. Book now.",
-    keyword: "birthday party villa Lonavala",
+    keywords: ["birthday party villa Lonavala", "Lonavala party villa"],
     readTime: "7 min read",
     date: "June 22, 2026",
     image: "/assets/villas/the-angle-house/gallery-12.webp",
