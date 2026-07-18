@@ -9,9 +9,9 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa Destinations in Maharashtra | Stay Willas",
-  description: "Explore premium luxury villa destinations in Maharashtra with Stay Willas. Find verified private pool villas in Lonavala, Alibaug, and Karjat.",
-  keywords: ["luxury villa destinations"],
+  title: "Luxury Villa Destinations | Lonavala, Khopoli & More | Stay Willas",
+  description: "Discover premium luxury villa rentals across top destinations in Maharashtra including Lonavala, Khopoli, Alibaug, and Karjat. Find your perfect getaway.",
+  keywords: ["Stay Willas destinations", "villas in lonavala", "khopoli private pool villas", "alibaug luxury villas", "karjat private pool villas", "panchgani holiday homes", "mahabaleshwar villa rentals", "best weekend getaways maharashtra", "staywillas"],
   alternates: {
     canonical: "/destinations",
   },

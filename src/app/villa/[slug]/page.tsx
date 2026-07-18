@@ -20,6 +20,7 @@ import SaveButton from "@/components/villa/save-button";
 import { getReviews } from "@/app/actions/review";
 import { prisma } from "@/lib/db";
 import FoodMenuModal from "@/components/villa/food-menu-modal";
+import VillaSEOContent from "@/components/villas/villa-seo-content";
 import {
   AnimatedPoolIcon,
   AnimatedBonfireIcon,
@@ -176,6 +177,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const city = villa.location.split(",")[0].trim();
   const primaryKeyword = `luxury villa in ${city} with private pool`;
   const secondaryKeyword = `rent private pool villa in ${city}`;
+  const tertiaryKeyword = `holiday home in ${city}`;
+  const quartKeyword = `${villa.bedrooms}BHK villa in ${city}`;
 
   let titleText = `${villa.name} | Luxury Villa in ${city} with Private Pool`;
   if (titleText.length > 60) {
@@ -185,12 +188,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     titleText = `${villa.name} | Villa in ${city} with Pool`;
   }
 
-  const descText = `Book ${villa.name}, a premium ${villa.bedrooms}BHK luxury villa in ${city} with private pool, chef service, and scenic views. Reserve your staycation today!`;
+  const descText = `Book ${villa.name}, a premium ${villa.bedrooms}BHK luxury villa in ${city} with private pool, premium amenities, and scenic views. Reserve your staycation today!`;
 
   return {
     title: titleText,
     description: descText,
-    keywords: [primaryKeyword, secondaryKeyword],
+    keywords: [primaryKeyword, secondaryKeyword, tertiaryKeyword, quartKeyword],
     alternates: {
       canonical: `/villa/${villa.slug}`,
     },
@@ -578,6 +581,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
         </div>
 
         <ReviewSection villaId={villaData.id} initialReviews={reviews} />
+        
+        <VillaSEOContent slug={villaData.slug} />
       </section>
 
       {/* Mobile Sticky CTA */}

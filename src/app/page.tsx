@@ -3,9 +3,9 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Villas Near Mumbai | Luxury Private Pool Villa Rentals | Stay Willas",
-  description: "Rent luxury private pool villas near Mumbai. Handpicked verified getaway homes, scenic views, and private chef services. Book your dream staycation now.",
-  keywords: ["villas near Mumbai", "private pool villas near Mumbai"],
+  title: "Villas Near Mumbai & Lonavala | Luxury Private Pool Villa Rentals | Stay Willas",
+  description: "Rent luxury private pool villas near Mumbai, Lonavala, and Khopoli. Handpicked verified getaway homes, premium amenities, and scenic views. Book your dream staycation now.",
+  keywords: ["Stay Willas", "staywillas", "luxury villas in maharashtra", "private pool villas near mumbai", "villas in lonavala", "khopoli private pool villas", "weekend getaway villas", "premium staycation near pune", "luxury holiday homes", "villa rentals maharashtra", "pet friendly villas lonavala"],
   alternates: {
     canonical: "/",
   },
@@ -73,6 +73,7 @@ export default async function Home() {
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "Stay Willas",
+            "alternateName": ["StayWillas", "Stay Willas"],
             "url": "https://www.staywillas.com",
             "potentialAction": {
               "@type": "SearchAction",
@@ -89,6 +90,7 @@ export default async function Home() {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": "Stay Willas",
+            "alternateName": ["StayWillas", "Stay Willas"],
             "description": "Premium luxury villa rentals in Maharashtra. Handpicked private pool villas near Mumbai and Pune with chef services, pet-friendly options, and concierge support.",
             "url": "https://www.staywillas.com",
             "logo": "https://www.staywillas.com/icon.png",

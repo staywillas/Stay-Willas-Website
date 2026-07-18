@@ -8,9 +8,9 @@ import VillasClient from "@/components/villas/villas-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Staycation Villas in Maharashtra with Pool & Chef | Stay Willas",
-  description: "Rent staycation villas in Maharashtra with chef services. Explore handpicked verified luxury villas in Maharashtra with pool near Mumbai and Pune.",
-  keywords: ["staycation villas in Maharashtra", "luxury villas in Maharashtra with pool"],
+  title: "Staycation Villas in Maharashtra & Lonavala | Stay Willas",
+  description: "Rent staycation villas in Maharashtra, Lonavala, and Khopoli. Explore handpicked verified luxury villas with pool near Mumbai and Pune. Premium amenities and scenic views.",
+  keywords: ["Stay Willas", "staywillas", "staycation villas in Maharashtra", "luxury villas in Maharashtra with pool", "villas in lonavala", "lonavala private pool villas", "villas in khopoli", "rent luxury villa maharashtra", "staycation villas near mumbai", "large villas for groups", "premium villa booking"],
   alternates: {
     canonical: "/villas",
   },

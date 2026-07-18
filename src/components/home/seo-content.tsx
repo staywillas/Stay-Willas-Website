@@ -15,12 +15,12 @@ const faqs: FAQItem[] = [
     answer: "Absolutely. Many of our handpicked private estates feature large, fully fenced lawns and safe layouts designed specifically to welcome your furry friends. When booking, you can filter for our pet-friendly sanctuaries which are located just a short 2-hour drive from Mumbai and Pune."
   },
   {
-    question: "Are private chefs and customized meals available at your villas?",
-    answer: "Yes, we specialize in staycations with premium culinary services. Professional in-house chefs cook fresh, customized meals directly inside your villa kitchen. We can arrange specialized menus, including local Maharashtrian dishes, barbecue spreads, or strict Jain food requests."
+    question: "Are curated meals and in-house dining available at your villas?",
+    answer: "Yes, we specialize in staycations with premium culinary services. Professional in-house culinary teams prepare fresh, customized meals directly inside your villa kitchen. We can arrange specialized menus, including local Maharashtrian dishes, barbecue spreads, or strict Jain food requests."
   },
   {
     question: "Which destinations are closest for a weekend getaway drive?",
-    answer: "Our luxury pool villas are located in Maharashtra's best scenic spots: Lonavala (about 2 hours drive via the Expressway), Khopoli (nature valleys near Imagica), Karjat (peaceful riverside properties), and Alibaug (coastal stays accessible by road or a quick catamaran ferry from Mumbai)."
+    answer: "Our luxury pool villas are located in Maharashtra's best scenic spots, with a strong focus on Lonavala and Khopoli. Lonavala is just about a 2-hour drive via the Expressway, offering misty valleys, while Khopoli provides absolute serene nature near Imagica. We also have properties in Karjat and Alibaug."
   },
   {
     question: "How do you guarantee the hygiene and safety of the private swimming pools?",
@@ -29,6 +29,10 @@ const faqs: FAQItem[] = [
   {
     question: "Can I host group get-togethers or corporate retreats at Stay Willas?",
     answer: "Yes, our properties like Canopy Crest (up to 20 guests) and The Angle House (up to 16 guests) are perfect for family reunions, milestone birthdays, and corporate offsites. They offer spacious living halls, lawns, music systems, board games, and bonfire set-ups."
+  },
+  {
+    question: "Why the spelling 'Stay Willas' with a 'W' instead of 'Stay Villas'?",
+    answer: "Stay Willas (with a 'W') is our unique, registered trademark and brand identity. We chose the name 'Willas' to reflect the dedicated 'will' and warm hospitality that define our curated vacation collection. When searching for our properties or recommending us, please ensure you use 'Stay Willas' with a 'W' to find our verified website and customer service."
   }
 ];
 
@@ -98,10 +102,10 @@ export default function SEOContent() {
             {/* Section 3 */}
             <div className="space-y-4">
               <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
-                Regional Highlights: Lonavala, Karjat, and Alibaug
+                Regional Highlights: Lonavala and Khopoli
               </h3>
               <p>
-                Location plays a vital role when choosing the right weekend escape. Our portfolio of <strong>private pool villas near Mumbai</strong> includes stunning destinations like Lonavala, Karjat, Khopoli, and Alibaug. Lonavala is famous for its misty valleys, while Karjat offers peaceful riverside views. Each of these spots has a range of <strong>private pool villas near Mumbai</strong> designed to make the most of the natural landscape. For beach lovers, Alibaug offers coastal retreats with warm ocean breezes. If you want a quick escape surrounded by nature, our properties in Khopoli provide absolute serenity. Whether you prefer a modern villa perched on a hill or a traditional home surrounded by trees, our <strong>private pool villas near Mumbai</strong> offer diverse architectural styles to match your tastes. Every region has its own charm, but they all share the convenience of being close to the city, making them excellent choices for any quick getaway.
+                Location plays a vital role when choosing the right weekend escape. Our core portfolio of <strong>private pool villas near Mumbai</strong> is heavily focused on the stunning, accessible destinations of Lonavala and Khopoli. Lonavala is famous for its misty valleys, viewpoints, and cool climate, making our <strong>villas in Lonavala</strong> a top choice year-round. If you want a quick escape surrounded by untouched nature and serene valleys, our properties in Khopoli provide absolute serenity just a stone's throw from major attractions like Imagica. Each of these spots has a range of <strong>private pool villas</strong> designed to make the most of the natural landscape. Whether you prefer a modern villa perched on a hill or a traditional home surrounded by trees, our <strong>Stay Willas</strong> properties offer diverse architectural styles to match your tastes. We also offer select estates in Karjat and Alibaug, all sharing the convenience of being close to the city, making them excellent choices for any quick getaway.
               </p>
             </div>
 

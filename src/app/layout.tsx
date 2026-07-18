@@ -40,15 +40,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.staywillas.com"),
   keywords: ["luxury villas in maharashtra"],
   authors: [{ name: "Stay Willas" }],
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.png", type: "image/png", sizes: "512x512" },
-    ],
-    apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-  },
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",
@@ -118,6 +109,7 @@ export default function RootLayout({
                   "@context": "https://schema.org",
                   "@type": "Organization",
                   "name": "Stay Willas",
+                  "alternateName": ["StayWillas", "Stay Willas", "Stay Willas Luxury Collection"],
                   "url": "https://www.staywillas.com",
                   "logo": "https://www.staywillas.com/icon.png",
                   "description": "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",

@@ -9,8 +9,8 @@ import ContactForm from "@/components/contact/contact-form";
 
 export const metadata: Metadata = {
   title: "Stay Willas Contact | Customer Support & Villa Bookings",
-  description: "Reach out to the Stay Willas contact team for luxury villa bookings and guest support. Our concierge team is here to assist you with your booking requests.",
-  keywords: ["stay willas contact", "villa booking customer support"],
+  description: "Reach out to the Stay Willas contact team for luxury villa bookings and guest support. Our concierge team is here to assist you with your booking requests for Lonavala, Khopoli and more.",
+  keywords: ["stay willas contact", "villa booking customer support", "staywillas", "lonavala villa booking"],
   alternates: {
     canonical: "/contact",
   },
