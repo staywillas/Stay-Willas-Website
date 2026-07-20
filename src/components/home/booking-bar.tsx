@@ -182,6 +182,7 @@ Could you please share the options available and help us plan our perfect getawa
                 <select
                   value={destination}
                   onChange={(e) => setDestination(e.target.value)}
+                  aria-label="Select Destination"
                   className="bg-transparent text-sm font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-6 font-heading"
                 >
                   <option value="Lonavala">Lonavala</option>
@@ -243,6 +244,7 @@ Could you please share the options available and help us plan our perfect getawa
                   max="50"
                   value={guests}
                   onChange={(e) => setGuests(e.target.value)}
+                  aria-label="Number of Guests"
                   className="bg-transparent text-sm font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-full font-heading"
                   placeholder="Enter guests"
                 />
@@ -252,6 +254,7 @@ Could you please share the options available and help us plan our perfect getawa
             {/* Submit Button */}
             <button
               type="submit"
+              aria-label="Check Availability"
               className="bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-[10px] tracking-widest uppercase rounded-full px-6 py-3.5 shadow-lg shadow-yellow-500/10 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2 shrink-0 self-center"
             >
               <span>Check Availability</span>
@@ -273,6 +276,7 @@ Could you please share the options available and help us plan our perfect getawa
                   <select
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
+                    aria-label="Select Destination"
                     className="bg-transparent text-xs font-bold text-[#1B3564] outline-none cursor-pointer border-none p-0 focus:ring-0 w-full appearance-none pr-6 font-heading"
                   >
                     <option value="Lonavala">Lonavala</option>
@@ -327,6 +331,7 @@ Could you please share the options available and help us plan our perfect getawa
                       max="50"
                       value={guests}
                       onChange={(e) => setGuests(e.target.value)}
+                      aria-label="Number of Guests"
                       className="bg-transparent text-xs font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-full font-heading"
                       placeholder="Enter guests"
                     />
@@ -335,6 +340,7 @@ Could you please share the options available and help us plan our perfect getawa
 
                 <button
                   type="submit"
+                  aria-label="Check Availability"
                   className="bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-[9px] tracking-widest uppercase rounded-full px-4.5 py-2.5 shadow-lg shadow-yellow-500/10 hover:shadow-xl transition-all duration-300 cursor-pointer border-none flex items-center gap-1 shrink-0"
                 >
                   <span>Check Availability</span>
@@ -362,9 +368,9 @@ Could you please share the options available and help us plan our perfect getawa
                 >
                   {/* Calendar Header */}
                   <div className="flex items-center justify-between mb-4">
-                    <button type="button" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
+                    <button type="button" aria-label="Previous month" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
                     <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
-                    <button type="button" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
+                    <button type="button" aria-label="Next month" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
                   </div>
                   
                   {/* Weekdays */}
@@ -403,8 +409,8 @@ Could you please share the options available and help us plan our perfect getawa
                   </div>
 
                   <div className="flex items-center justify-between mt-5 pt-3 border-t border-slate-100">
-                    <button type="button" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
-                    <button type="button" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
+                    <button type="button" aria-label="Clear Dates" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
+                    <button type="button" aria-label="Done" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
                   </div>
                 </div>
               </div>
@@ -423,9 +429,9 @@ Could you please share the options available and help us plan our perfect getawa
               >
                 {/* Calendar Header */}
                 <div className="flex items-center justify-between mb-4">
-                  <button type="button" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
+                  <button type="button" aria-label="Previous month" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
                   <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
-                  <button type="button" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
+                  <button type="button" aria-label="Next month" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
                 </div>
                 
                 {/* Weekdays */}
@@ -464,8 +470,8 @@ Could you please share the options available and help us plan our perfect getawa
                 </div>
 
                 <div className="flex items-center justify-between mt-5 pt-3 border-t border-slate-100">
-                  <button type="button" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
-                  <button type="button" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
+                  <button type="button" aria-label="Clear Dates" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
+                  <button type="button" aria-label="Done" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
                 </div>
               </div>
             </>

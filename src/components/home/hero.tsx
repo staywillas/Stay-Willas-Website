@@ -22,6 +22,7 @@ const Hero = () => {
           fill
           priority
           sizes="100vw"
+          quality={60}
           className="object-cover object-center animate-ken-burns"
         />
         {/* Dark Navy Overlays for High Contrast and Luxury Feel */}
@@ -99,6 +100,7 @@ const Hero = () => {
             href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I'm looking at the stunning Angle House on your website and would love to check availability.`)}`}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Contact Concierge via WhatsApp"
             className="flex group bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/45 text-white font-bold rounded-full px-4 py-2.5 sm:px-8 sm:py-4 text-[10px] sm:text-xs tracking-wider sm:tracking-widest uppercase items-center justify-center gap-1.5 sm:gap-2 transition-all duration-300 shadow-sm hover:bg-white/20 whitespace-nowrap"
           >
             <span>Concierge</span>

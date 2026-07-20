@@ -91,6 +91,7 @@ export default function MobileBottomNav() {
               href={WA_BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Book via WhatsApp"
               className="w-[56px] h-[56px] rounded-full bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] flex items-center justify-center shadow-[0_4px_20px_rgba(218,165,32,0.4)] hover:shadow-[0_6px_25px_rgba(218,165,32,0.55)] active:scale-90 transition-all duration-300 border-[3px] border-[#F5F2EA] relative"
             >
               {/* WhatsApp icon */}
@@ -129,6 +130,7 @@ export default function MobileBottomNav() {
           {/* Menu Tab */}
           <button
             onClick={handleMenuClick}
+            aria-label="Open Mobile Menu"
             className="flex flex-col items-center justify-center gap-1 py-1.5 min-w-[56px] text-[#1B3564]/50 hover:text-[#1B3564] transition-all duration-300 active:scale-90 cursor-pointer border-none bg-transparent"
           >
             <Menu size={21} className="stroke-[1.8]" />

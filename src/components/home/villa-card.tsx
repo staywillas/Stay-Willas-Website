@@ -116,7 +116,7 @@ const VillaCard = ({
               </span>
             </div>
             
-            <button className="hidden sm:block flex-shrink-0 bg-accent-primary hover:bg-[#5C742D] text-[#FAF8F5] py-2 px-3.5 rounded-lg text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-md hover:shadow-[0_6px_15px_rgba(74,93,35,0.25)] hover:-translate-y-0.5 font-sans">
+            <button aria-label={`Book ${name}`} className="hidden sm:block flex-shrink-0 bg-accent-primary hover:bg-[#5C742D] text-[#FAF8F5] py-2 px-3.5 rounded-lg text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-md hover:shadow-[0_6px_15px_rgba(74,93,35,0.25)] hover:-translate-y-0.5 font-sans">
               BOOK
             </button>
           </div>

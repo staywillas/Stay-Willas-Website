@@ -135,6 +135,8 @@ const Navbar = () => {
             <img 
               src="/images/logo.png" 
               alt="Stay Willas Logo" 
+              width="56"
+              height="56"
               className="w-full h-full object-cover scale-[1.6]" 
             />
           </div>
@@ -197,7 +199,7 @@ const Navbar = () => {
         {/* Actions */}
         <div className="hidden md:flex items-center gap-1.5 lg:gap-3 xl:gap-4 shrink-0">
 
-          <a href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%21%20%F0%9F%8C%BF%20I%27m%20exploring%20your%20exquisite%20villas%20on%20your%20website%20and%20would%20love%20to%20chat%20with%20a%20concierge%20to%20plan%20our%20next%20vacation.%20%E2%9C%A8" target="_blank" rel="noopener noreferrer" className={cn(
+          <a href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%21%20%F0%9F%8C%BF%20I%27m%20exploring%20your%20exquisite%20villas%20on%20your%20website%20and%20would%20love%20to%20chat%20with%20a%20concierge%20to%20plan%20our%20next%20vacation.%20%E2%9C%A8" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" className={cn(
             "flex items-center gap-2 transition-colors duration-300 p-1",
             isDarkTheme ? "text-brand-navy hover:text-[#25D366]" : "text-white hover:text-[#25D366]"
           )} title="WhatsApp Chat">
@@ -242,6 +244,7 @@ const Navbar = () => {
                       : "text-white border-white/15 hover:border-white hover:text-brand-gold"
                   )}
                   title="Guest Log In / Register"
+                  aria-label="Login or Register"
                 >
                   Login / Register
                 </button>
@@ -272,6 +275,7 @@ const Navbar = () => {
             <SignInButton mode="modal">
               <button
                 className="px-3 py-1.5 border border-[#1B3564]/15 hover:border-[#DAA520] text-[#1B3564] hover:text-[#DAA520] text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-full bg-[#FAF8F5]/80 hover:bg-[#DAA520]/10 whitespace-nowrap cursor-pointer shadow-sm"
+                aria-label="Login"
               >
                 Login
               </button>
@@ -327,7 +331,7 @@ const Navbar = () => {
             <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-[#DAA520]/15">
               <div className="flex items-center gap-3">
                 <div className="relative w-9 h-9 rounded-full overflow-hidden border border-[#DAA520]/35">
-                  <img src="/images/logo.png" alt="Stay Willas" className="w-full h-full object-cover scale-[1.6]" />
+                  <img src="/images/logo.png" alt="Stay Willas" width="36" height="36" className="w-full h-full object-cover scale-[1.6]" />
                 </div>
                 <span className="font-heading text-lg tracking-widest text-[#FAF8F5]">STAY WILLAS</span>
               </div>
@@ -335,6 +339,7 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="w-10 h-10 rounded-full border border-[#DAA520]/30 flex items-center justify-center text-[#FAF8F5]/80 hover:text-white hover:border-[#DAA520] transition-all duration-300 cursor-pointer"
                 whileTap={{ scale: 0.9, rotate: 90 }}
+                aria-label="Close Navigation Menu"
               >
                 <X size={18} className="text-[#FAF8F5]" />
               </motion.button>
@@ -538,7 +543,7 @@ const Navbar = () => {
                   <span>Call Us</span>
                 </a>
                 <div className="w-px h-3.5 bg-[#DAA520]/20" />
-                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#FAF8F5]/50 hover:text-[#25D366] transition-colors text-xs font-medium">
+                <a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer" aria-label="Contact us on WhatsApp" className="flex items-center gap-2 text-[#FAF8F5]/50 hover:text-[#25D366] transition-colors text-xs font-medium">
                   <WhatsAppIcon size={14} className="fill-[#DAA520]" />
                   <span>WhatsApp</span>
                 </a>
