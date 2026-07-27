@@ -503,11 +503,9 @@ export default async function VillaDetailPage({ params }: PageProps) {
             )}
 
             {/* 3. In-Villa Bespoke Food Menu Popup */}
-            {villaData.slug === "the-angle-house" && (
-              <div className="mb-12">
-                <FoodMenuModal />
-              </div>
-            )}
+            <div className="mb-12">
+              <FoodMenuModal />
+            </div>
 
             {/* 4. The Story & Readability Points (Story last, high contrast) */}
             <div className="mb-12">
