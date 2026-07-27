@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import VillaCard from "@/components/home/villa-card";
-import { MapPin, ChevronRight, ArrowLeft } from "lucide-react";
+import { MapPin, ChevronRight, ArrowLeft, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 interface AreaDetails {
   name: string;
@@ -258,82 +258,170 @@ export default async function AreaRegionPage({ params }: PageProps) {
             </p>
           </div>
         </section>
+        {/* 3-Column Region Container with Navigation and Booking Sidebars */}
+        <section className="py-16 px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1600px] mx-auto w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-start">
+            
+            {/* LEFT SIDEBAR: Area Navigation & Trust Badges */}
+            <aside className="lg:col-span-3 space-y-6 lg:sticky lg:top-28">
+              <div className="bg-[#FAF8F5] border border-[#DAA520]/25 rounded-3xl p-6 shadow-sm">
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#DAA520]/15">
+                  <MapPin className="text-accent-primary w-5 h-5" />
+                  <h3 className="font-heading font-bold text-[#1B3564] text-lg">Explore Destinations</h3>
+                </div>
+                <div className="space-y-2.5">
+                  <Link href="/areas/lonavala" className={`flex items-center justify-between p-3 rounded-2xl transition-all border ${regionKey === 'lonavala' ? 'bg-[#1B3564] text-white shadow-md' : 'bg-white hover:bg-slate-100 text-[#1B3564] border-[#DAA520]/15'}`}>
+                    <span className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${regionKey === 'lonavala' ? 'bg-[#DAA520] animate-pulse' : 'bg-[#DAA520]'}`} />
+                      Lonavala
+                    </span>
+                    <span className="text-[10px] uppercase font-bold bg-[#DAA520] text-[#1B3564] px-2.5 py-1 rounded-full">Active</span>
+                  </Link>
 
-        {/* Villa Grid Section */}
-        <section className="py-16 px-6 md:px-12 max-w-7xl mx-auto">
-          {area.isLaunchingSoon ? (
-            <div className="bg-[#FAF8F5]/50 backdrop-blur-md rounded-3xl border border-[#DAA520]/15 p-12 text-center max-w-2xl mx-auto shadow-sm">
-              <span className="bg-accent-primary text-white font-bold tracking-widest text-[9px] uppercase px-3.5 py-1.5 rounded-full inline-block mb-4 shadow-md">
-                Launching Soon
-              </span>
-              <h2 className="text-3xl font-heading mb-4 text-[#1B3564]">
-                Stay Willas is coming to {area.name}
-              </h2>
-              <p className="text-text-primary/60 text-sm font-light mb-8 max-w-md mx-auto">
-                We are actively curating premium private pool sanctuaries in {area.name} to offer you the signature Stay Willas experience.
-              </p>
-              <a
-                href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas team! 🌟 Please let me know when your private pool villas in *${area.name}* are live.`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full px-6 py-3.5 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-lg"
-              >
-                Get Notified on WhatsApp
-              </a>
-            </div>
-          ) : villas.length === 0 ? (
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-heading mb-4 text-[#1B3564]">No villas found</h2>
-              <p className="text-text-primary/60 text-sm mb-6">There are currently no active listings in this region. Please check back soon.</p>
-              <Link href="/areas" className="text-[#1B3564] hover:text-accent-primary font-bold uppercase tracking-wider text-xs inline-flex items-center gap-2">
-                <ArrowLeft size={16} /> View all areas
-              </Link>
-            </div>
-          ) : (
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-                {villas.map((villa) => (
-                  <VillaCard 
-                    key={villa.id}
-                    id={villa.id}
-                    name={villa.name}
-                    location={villa.location}
-                    image={villa.image}
-                    price={villa.price}
-                    guests={villa.guests}
-                    bedrooms={villa.bedrooms}
-                    bathrooms={villa.bathrooms}
-                  />
-                ))}
+                  <Link href="/areas/khopoli" className={`flex items-center justify-between p-3 rounded-2xl transition-all border ${regionKey === 'khopoli' ? 'bg-[#1B3564] text-white shadow-md' : 'bg-white hover:bg-slate-100 text-[#1B3564] border-[#DAA520]/15'}`}>
+                    <span className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${regionKey === 'khopoli' ? 'bg-emerald-400 animate-pulse' : 'bg-emerald-500'}`} />
+                      Khopoli
+                    </span>
+                    <span className="text-[10px] uppercase font-bold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full">Active</span>
+                  </Link>
+
+                  {[
+                    { name: "Alibaug", slug: "alibaug" },
+                    { name: "Karjat", slug: "karjat" },
+                    { name: "Pawna Lake", slug: "pawna" },
+                    { name: "Igatpuri", slug: "igatpuri" },
+                    { name: "Goa", slug: "goa" }
+                  ].map((a) => (
+                    <Link key={a.slug} href={`/areas/${a.slug}`} className={`flex items-center justify-between p-3 rounded-2xl transition-all border ${regionKey === a.slug ? 'bg-[#1B3564] text-white font-bold' : 'bg-white/60 hover:bg-white text-slate-600 border-slate-200/60'}`}>
+                      <span>{a.name}</span>
+                      <span className="text-[10px] uppercase font-semibold bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200/60">Coming Soon</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
 
-              {/* Bottom Navigation to other regions for SEO flow */}
-              <div className="mt-20 border-t border-[#DAA520]/15 pt-12 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="text-left">
-                  <h4 className="text-sm font-semibold uppercase tracking-wider text-text-primary/40 mb-1">
-                    Explore Other Destinations
-                  </h4>
-                  <p className="text-xs text-text-primary/60 font-light">
-                    Discover luxury escapes in other premium areas of Maharashtra.
+              {/* Stay Willas Guarantee */}
+              <div className="bg-gradient-to-br from-[#1B3564] to-[#0F2142] text-white rounded-3xl p-6 shadow-md border border-[#DAA520]/30 space-y-4">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="text-[#DAA520] w-7 h-7 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-heading font-bold text-base text-white">Stay Willas Guarantee</h4>
+                    <p className="text-xs text-white/70">Verified Luxury & Hospitality</p>
+                  </div>
+                </div>
+                <ul className="space-y-2.5 text-xs text-white/80 font-light pt-2 border-t border-white/10">
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#DAA520]" /> 100% Private Pools</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#DAA520]" /> In-House Chef Options</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#DAA520]" /> 24/7 Estate Concierge</li>
+                </ul>
+              </div>
+            </aside>
+
+            {/* CENTER COLUMN: Main Content */}
+            <main className="lg:col-span-6">
+              {area.isLaunchingSoon ? (
+                <div className="bg-white rounded-3xl border border-[#DAA520]/15 p-8 sm:p-12 text-center shadow-sm space-y-6">
+                  <span className="bg-amber-100 text-amber-900 border border-amber-300 font-bold tracking-widest text-[10px] uppercase px-4 py-1.5 rounded-full inline-block shadow-sm">
+                    Launching Soon
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-heading text-[#1B3564]">
+                    Stay Willas is coming to {area.name}
+                  </h2>
+                  <p className="text-slate-700 text-base md:text-lg leading-relaxed font-normal max-w-md mx-auto">
+                    We are actively curating premium private pool sanctuaries in {area.name} to offer you the signature Stay Willas experience. Join the waitlist to be notified first!
                   </p>
+                  <div className="pt-4">
+                    <a
+                      href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas team! 🌟 Please let me know when your private pool villas in *${area.name}* are live.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 bg-[#1B3564] hover:bg-[#152A50] text-white rounded-2xl px-6 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-lg"
+                    >
+                      <PhoneCall size={14} className="text-[#DAA520]" /> Get Notified on WhatsApp
+                    </a>
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                  {Object.keys(AREA_DATA)
-                    .filter(k => k !== regionKey)
-                    .map(k => (
-                      <Link
-                        key={k}
-                        href={`/areas/${k}`}
-                        className="bg-[#FAF8F5] hover:bg-[#1B3564] border border-[#DAA520]/20 hover:border-[#1B3564] text-[#1B3564] hover:text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300"
-                      >
-                        {AREA_DATA[k].name}
-                      </Link>
-                    ))
-                  }
+              ) : villas.length === 0 ? (
+                <div className="bg-white rounded-3xl border border-[#DAA520]/15 p-12 text-center shadow-sm">
+                  <h2 className="text-2xl font-heading mb-4 text-[#1B3564]">No villas found</h2>
+                  <p className="text-slate-600 text-base mb-6">There are currently no active listings in this region. Please check back soon.</p>
+                  <Link href="/areas" className="text-[#1B3564] hover:text-accent-primary font-bold uppercase tracking-wider text-xs inline-flex items-center gap-2">
+                    <ArrowLeft size={16} /> View all areas
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {villas.map((villa) => (
+                      <VillaCard 
+                        key={villa.id}
+                        id={villa.id}
+                        name={villa.name}
+                        location={villa.location}
+                        image={villa.image}
+                        price={villa.price}
+                        guests={villa.guests}
+                        bedrooms={villa.bedrooms}
+                        bathrooms={villa.bathrooms}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </main>
+
+            {/* RIGHT SIDEBAR: Booking & Reservation Concierge */}
+            <aside className="lg:col-span-3 space-y-6 lg:sticky lg:top-28">
+              <div className="bg-[#FAF8F5] border border-[#DAA520]/30 rounded-3xl p-6 shadow-md space-y-4">
+                <div className="flex items-center justify-between border-b border-[#DAA520]/15 pb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary">Active Bookings</span>
+                  <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">Available</span>
+                </div>
+
+                <p className="text-xs text-slate-600 font-light leading-relaxed">
+                  Looking to book a private pool villa immediately? Choose one of our 2 active destinations:
+                </p>
+
+                <div className="space-y-3 pt-1">
+                  <Link 
+                    href="/areas/lonavala" 
+                    className="flex items-center justify-between w-full bg-[#1B3564] hover:bg-[#0F2142] text-white p-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all"
+                  >
+                    <span>Lonavala — The Angle House</span>
+                    <ChevronRight size={16} className="text-[#DAA520]" />
+                  </Link>
+
+                  <Link 
+                    href="/areas/khopoli" 
+                    className="flex items-center justify-between w-full bg-emerald-700 hover:bg-emerald-800 text-white p-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all"
+                  >
+                    <span>Khopoli — Canopy Crest</span>
+                    <ChevronRight size={16} className="text-emerald-200" />
+                  </Link>
                 </div>
               </div>
-            </div>
-          )}
+
+              {/* Inquiry Box */}
+              <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+                <h4 className="font-heading font-bold text-[#1B3564] text-base border-b border-slate-100 pb-3 flex items-center gap-2">
+                  <Calendar size={16} className="text-accent-primary" /> Concierge Waitlist
+                </h4>
+                <p className="text-xs text-slate-600 font-light">
+                  Want us to help you book in {area.name} or recommend an active villa nearby?
+                </p>
+                <a 
+                  href={`https://wa.me/919920000000?text=${encodeURIComponent(`Hi Stay Willas concierge, I'm interested in booking a villa in ${area.name}`)}`} 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] font-bold text-xs uppercase tracking-wider text-center py-3.5 rounded-xl transition-colors"
+                >
+                  Contact Concierge
+                </a>
+              </div>
+            </aside>
+
+          </div>
         </section>
       </div>
 
