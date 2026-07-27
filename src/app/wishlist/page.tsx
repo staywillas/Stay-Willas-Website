@@ -9,7 +9,10 @@ export const metadata: Metadata = {
   title: "My Wishlist of Premium Luxury Retreats | Stay Willas",
   description: "Browse My Wishlist of premium luxury retreats saved for your next getaway. Compare private pool villas, view pricing, and check dates. Plan your trip.",
   keywords: ["wishlist villas", "saved luxury stays", "favourite villas maharashtra"],
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
+  alternates: {
+    canonical: "https://www.staywillas.com/wishlist",
+  },
   openGraph: {
     title: "My Wishlist of Premium Luxury Retreats | Stay Willas",
     description: "Browse My Wishlist of premium luxury retreats saved for your next getaway. Compare private pool villas, view pricing, and check dates. Plan your trip.",
@@ -35,41 +38,46 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function WishlistPage() {
-  // Fetch priorities to ensure they are always first
-  const angleHouse = await prisma.villa.findUnique({
-    where: { slug: "the-angle-house" }
-  });
-  
-  const canopyCrest = await prisma.villa.findUnique({
-    where: { slug: "canopy-crest" }
-  });
+  let allVillas: any[] = [];
+  try {
+    // Fetch priorities to ensure they are always first
+    const angleHouse = await prisma.villa.findUnique({
+      where: { slug: "the-angle-house" }
+    });
+    
+    const canopyCrest = await prisma.villa.findUnique({
+      where: { slug: "canopy-crest" }
+    });
 
-  // Query other premium villas
-  const otherVillas = await prisma.villa.findMany({
-    where: {
-      slug: { notIn: ["the-angle-house", "canopy-crest"] }
-    },
-    orderBy: { createdAt: "desc" },
-  });
+    // Query other premium villas
+    const otherVillas = await prisma.villa.findMany({
+      where: {
+        slug: { notIn: ["the-angle-house", "canopy-crest"] }
+      },
+      orderBy: { createdAt: "desc" },
+    });
 
-  // Combine them with priorities always at the top/first spot!
-  const dbVillas = [];
-  if (angleHouse) dbVillas.push(angleHouse);
-  if (canopyCrest) dbVillas.push(canopyCrest);
-  dbVillas.push(...otherVillas);
+    // Combine them with priorities always at the top/first spot!
+    const dbVillas = [];
+    if (angleHouse) dbVillas.push(angleHouse);
+    if (canopyCrest) dbVillas.push(canopyCrest);
+    dbVillas.push(...otherVillas);
 
-  // Map the database format to the UI model structure
-  const allVillas = dbVillas.map((villa) => ({
-    id: villa.id,
-    slug: villa.slug,
-    name: villa.name,
-    location: villa.location,
-    price: villa.price.toLocaleString("en-IN"),
-    image: villa.images[0] || "/images/hero-villa.png",
-    guests: villa.guests,
-    bedrooms: villa.bedrooms,
-    bathrooms: villa.bathrooms,
-  }));
+    // Map the database format to the UI model structure
+    allVillas = dbVillas.map((villa) => ({
+      id: villa.id,
+      slug: villa.slug,
+      name: villa.name,
+      location: villa.location,
+      price: villa.price.toLocaleString("en-IN"),
+      image: villa.images[0] || "/images/hero-villa.png",
+      guests: villa.guests,
+      bedrooms: villa.bedrooms,
+      bathrooms: villa.bathrooms,
+    }));
+  } catch (error) {
+    console.error("Error fetching wishlist villas:", error);
+  }
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
