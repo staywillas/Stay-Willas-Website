@@ -322,7 +322,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       <Navbar />
 
       {/* 2. HERO / PSYCHOLOGICAL COPY HOOK */}
-      <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-36 sm:pt-48 pb-16 px-6 text-center overflow-hidden z-10 select-none">
+      <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-36 sm:pt-48 pb-16 px-6 text-center overflow-hidden z-10">
         
         {/* Subtle Background Image of The Angle House */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none opacity-25 mix-blend-overlay">

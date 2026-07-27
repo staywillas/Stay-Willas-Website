@@ -163,7 +163,7 @@ const Experiences = () => {
   };
 
   return (
-    <section className="py-8 md:py-32 px-4 md:px-12 lg:px-24 bg-[#FAF7F0] relative overflow-hidden select-none">
+    <section className="py-8 md:py-32 px-4 md:px-12 lg:px-24 bg-[#FAF7F0] relative overflow-hidden">
       {/* Background Subtle Accent Gradients */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#DAA520]/3 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#1B3564]/3 rounded-full blur-[80px] pointer-events-none" />

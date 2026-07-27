@@ -93,7 +93,7 @@ export default function StoriesPage() {
       </section>
 
       {/* SEO Guide Section */}
-      <section className="py-16 bg-[#1B3564]/5 border-t border-[#DAA520]/15 select-none text-charcoal">
+      <section className="py-16 bg-[#1B3564]/5 border-t border-[#DAA520]/15 text-charcoal">
         <div className="max-w-4xl mx-auto px-6 space-y-12">
           <div>
             <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Unfiltered Staycation Vlogs</h2>

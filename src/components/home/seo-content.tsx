@@ -58,7 +58,7 @@ export default function SEOContent() {
   };
 
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 bg-white border-t border-[#DAA520]/20 select-none text-charcoal relative overflow-hidden">
+    <section className="py-24 px-6 md:px-12 lg:px-24 bg-white border-t border-[#DAA520]/20 text-charcoal relative overflow-hidden">
       {/* Schema Injection */}
       <script
         type="application/ld+json"

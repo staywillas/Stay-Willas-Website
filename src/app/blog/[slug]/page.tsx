@@ -232,7 +232,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
 
         {/* Recommendation Cards */}
         {otherBlogs.length > 0 && (
-          <div className="border-t border-[#DAA520]/20 pt-16 mt-20 select-none">
+          <div className="border-t border-[#DAA520]/20 pt-16 mt-20">
             <h3 className="text-2xl font-heading text-[#1B3564] font-bold mb-8 text-center italic">Recommended Reads</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
               {otherBlogs.map((item) => (
