@@ -4,30 +4,30 @@ import { prisma } from "@/lib/db";
 import EscapeClientPage from "./escape-client-page";
 
 export const metadata: Metadata = {
-  title: "Couple Staycation near Mumbai | Private Pool Drives | Stay Willas",
-  description: "Plan a romantic couple staycation near Mumbai with Stay Willas. Discover private pool estates, scenic hill view drives, and personalized chef services.",
-  keywords: ["couple staycation near Mumbai"],
+  title: "Villa Vacation & Villa Rentals in Lonavla & Khopoli | Stay Willas",
+  description: "Plan an epic friends group villa vacation in Lonavla or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
+  keywords: ["villa rentals in lonavla", "villas in khopoli", "friends villa vacation"],
   alternates: {
     canonical: "/escape",
   },
   openGraph: {
-    title: "Couple Staycation near Mumbai | Private Pool Drives | Stay Willas",
-    description: "Plan a romantic couple staycation near Mumbai with Stay Willas. Discover private pool estates, scenic hill view drives, and personalized chef services.",
+    title: "Villa Vacation & Villa Rentals in Lonavla & Khopoli | Stay Willas",
+    description: "Plan an epic friends group villa vacation in Lonavla or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
     url: "https://www.staywillas.com/escape",
     images: [
       {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Romantic Couple Staycation near Mumbai",
+        alt: "Friends Villa Vacation in Lonavla & Khopoli",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Couple Staycation near Mumbai | Private Pool Drives | Stay Willas",
-    description: "Plan a romantic couple staycation near Mumbai with Stay Willas. Discover private pool estates, scenic hill view drives, and personalized chef services.",
+    title: "Villa Vacation & Villa Rentals in Lonavla & Khopoli | Stay Willas",
+    description: "Plan an epic friends group villa vacation in Lonavla or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

@@ -207,7 +207,7 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
 
 export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClientPageProps) {
   // Filter tabs state
-  const [activeTab, setActiveTab] = useState<"family" | "friends" | "romantic" | "corporate">("family");
+  const [activeTab, setActiveTab] = useState<"family" | "friends" | "romantic" | "corporate">("friends");
   
   // Calculator states
   const [selectedVillaSlug, setSelectedVillaSlug] = useState<string>("the-angle-house");
@@ -352,11 +352,11 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             </span>
             
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight leading-[1.08] text-balance bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-              Accidentally clicked? Or did your crew just demand a <span className="italic text-[#B497CF] underline decoration-[#DAA520]/40">villa staycation near Mumbai</span>?
+              Accidentally clicked? Or did your crew just demand a <span className="italic text-[#B497CF] underline decoration-[#DAA520]/40">villa vacation in Lonavla or Khopoli</span>?
             </h1>
             
             <p className="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg md:text-xl font-light leading-relaxed">
-              Stop pretending to work. Scratch the cards below to reveal your secret 10% discount on Lonavala & Khopoli private pool villas. Gather the group, blast the music, and let's make some questionable decisions before Monday.
+              Stop pretending to work. Scratch the cards below to reveal your secret 10% discount on premium villa rentals in Lonavla and Khopoli. Gather your friends, fire up the BBQ, and book the ultimate pool retreat.
             </p>
           </div>
           {/* SCRATCHCARDS GRID */}
