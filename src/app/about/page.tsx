@@ -8,7 +8,7 @@ import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 export const metadata: Metadata = {
   title: "About Stay Willas | Luxury Villa Rentals in Lonavala & Beyond",
   description: "Learn about Stay Willas, our story, values, and curation process. We offer premium luxury private villa rentals with warm local hospitality in Lonavala, Khopoli and more.",
-  keywords: ["about Stay Willas", "luxury villas in lonavla and khopoli", "premium villa management"],
+  keywords: ["about Stay Willas", "luxury villas in lonavala and khopoli", "premium villa management"],
   alternates: {
     canonical: "/about",
   },

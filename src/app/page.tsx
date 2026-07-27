@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 export const metadata: Metadata = {
   title: "Villas Near Mumbai & Lonavala | Luxury Private Pool Villa Rentals | Stay Willas",
   description: "Rent luxury private pool villas near Mumbai, Lonavala, and Khopoli. Handpicked verified getaway homes, premium amenities, and scenic views. Book your dream staycation now.",
-  keywords: ["villas in lonavla", "luxury villas in lonavla and khopoli", "luxury villas in khopoli"],
+  keywords: ["villas in lonavala", "luxury villas in lonavala and khopoli", "luxury villas in khopoli"],
   alternates: {
     canonical: "/",
   },

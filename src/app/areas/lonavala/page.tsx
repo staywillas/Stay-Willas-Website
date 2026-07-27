@@ -9,15 +9,15 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa in Lonavla with Private Pool | Stay Willas",
-  description: "Rent a luxury villa in lonavla (lonavala) with private pool, scenic mountain views & chef. Ideal for a lonavla villa staycation and group trips. Check availability now.",
-  keywords: ["villas in lonavla", "luxury villas in lonavla", "lonavla villa staycation"],
+  title: "Luxury Villa in Lonavala with Private Pool | Stay Willas",
+  description: "Rent a luxury villa in lonavala (lonavala) with private pool, scenic mountain views & chef. Ideal for a lonavala villa staycation and group trips. Check availability now.",
+  keywords: ["villas in lonavala", "luxury villas in lonavala", "lonavala villa staycation"],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",
   },
   openGraph: {
-    title: "Luxury Villa in Lonavla with Private Pool | Stay Willas",
-    description: "Rent a luxury villa in lonavla (lonavala) with private pool, scenic mountain views & chef. Ideal for a lonavla villa staycation and group trips. Check availability now.",
+    title: "Luxury Villa in Lonavala with Private Pool | Stay Willas",
+    description: "Rent a luxury villa in lonavala (lonavala) with private pool, scenic mountain views & chef. Ideal for a lonavala villa staycation and group trips. Check availability now.",
     url: "https://www.staywillas.com/areas/lonavala",
     images: [
       {
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villa in Lonavla with Private Pool | Stay Willas",
-    description: "Rent a luxury villa in lonavla (lonavala) with private pool, scenic mountain views & chef. Ideal for a lonavla villa staycation and group trips. Check availability now.",
+    title: "Luxury Villa in Lonavala with Private Pool | Stay Willas",
+    description: "Rent a luxury villa in lonavala (lonavala) with private pool, scenic mountain views & chef. Ideal for a lonavala villa staycation and group trips. Check availability now.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -138,7 +138,7 @@ export default async function LonavalaPage() {
               "mainEntity": [
                 {
                   "@type": "Question",
-                  "name": "Are the private pools in Lonavla villas safe and hygienic?",
+                  "name": "Are the private pools in Lonavala villas safe and hygienic?",
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": "Yes. All private pools in our private estates undergo a strict chlorine filtration cycle before every arrival. Our estate managers test the water quality daily to ensure absolute safety and hygiene."
@@ -343,7 +343,7 @@ export default async function LonavalaPage() {
 
               <h2>Choosing a Luxury Villa Lonavala with Private Pool for Every Occasion</h2>
               <p>
-                We host a massive variety of groups here at Stay Willas. Geographically, our villa properties are perfectly positioned, making them the ideal choice for a weekend retreat. From family reunions to corporate gatherings, renting a private villa in Lonavla ensures that your group has the space it needs to connect and unwind. If you want to check out our primary listing, you can visit <Link href="/villa/the-angle-house" className="underline text-accent-primary font-bold">The Angle House</Link> directly.
+                We host a massive variety of groups here at Stay Willas. Geographically, our villa properties are perfectly positioned, making them the ideal choice for a weekend retreat. From family reunions to corporate gatherings, renting a private villa in Lonavala ensures that your group has the space it needs to connect and unwind. If you want to check out our primary listing, you can visit <Link href="/villa/the-angle-house" className="underline text-accent-primary font-bold">The Angle House</Link> directly.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-10 not-prose">
@@ -356,7 +356,7 @@ export default async function LonavalaPage() {
                 <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
                   <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Corporate Getaways</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Escape the office environment by booking our Lonavla properties to run collaborative offsites, workshops, and build team bonding around a cozy bonfire.
+                    Escape the office environment by booking our Lonavala properties to run collaborative offsites, workshops, and build team bonding around a cozy bonfire.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
@@ -368,7 +368,7 @@ export default async function LonavalaPage() {
                 <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
                   <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Milestone Celebrations</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Celebrate birthdays or get-togethers by booking party-friendly properties in Lonavla with private chefs and custom event spaces.
+                    Celebrate birthdays or get-togethers by booking party-friendly properties in Lonavala with private chefs and custom event spaces.
                   </p>
                 </div>
               </div>
@@ -391,7 +391,7 @@ export default async function LonavalaPage() {
                     <tr>
                       <td className="px-6 py-4 font-semibold">Monsoon Peak</td>
                       <td className="px-6 py-4">June to September</td>
-                      <td className="px-6 py-4">Foggy mornings, heavy rains, lush green valleys, and rushing waterfalls. High demand for our Lonavla private pool villas.</td>
+                      <td className="px-6 py-4">Foggy mornings, heavy rains, lush green valleys, and rushing waterfalls. High demand for our Lonavala private pool villas.</td>
                     </tr>
                     <tr>
                       <td className="px-6 py-4 font-semibold">Crisp Winter</td>
@@ -465,7 +465,7 @@ export default async function LonavalaPage() {
 
               <div className="my-8 space-y-4 not-prose text-left">
                 <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Are the private pools in Lonavla villas safe and hygienic?</h4>
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Are the private pools in Lonavala villas safe and hygienic?</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
                     Yes. All private pools in our private estates undergo a strict chlorine filtration cycle before every arrival. Our estate managers test the water quality daily to ensure absolute safety and hygiene.
                   </p>

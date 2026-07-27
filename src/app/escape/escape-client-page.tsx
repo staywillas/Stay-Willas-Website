@@ -352,11 +352,11 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             </span>
             
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight leading-[1.08] text-balance bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-              Accidentally clicked? Or did your crew just demand a <span className="italic text-[#B497CF] underline decoration-[#DAA520]/40">villa vacation in Lonavla or Khopoli</span>?
+              Accidentally clicked? Or did your crew just demand a <span className="italic text-[#B497CF] underline decoration-[#DAA520]/40">villa vacation in Lonavala or Khopoli</span>?
             </h1>
             
             <p className="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg md:text-xl font-light leading-relaxed">
-              Stop pretending to work. Scratch the cards below to reveal your secret 10% discount on premium villa rentals in Lonavla and Khopoli. Gather your friends, fire up the BBQ, and book the ultimate pool retreat.
+              Stop pretending to work. Scratch the cards below to reveal your secret 10% discount on premium villa rentals in Lonavala and Khopoli. Gather your friends, fire up the BBQ, and book the ultimate pool retreat.
             </p>
           </div>
           {/* SCRATCHCARDS GRID */}
@@ -1064,22 +1064,22 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           
           <div>
             <h2 className="text-2xl md:text-3xl font-heading font-black text-white mb-4 tracking-tight">
-              The Ultimate Guide to Luxury Group Escapes: Lonavla & Khopoli Villa Vacations
+              The Ultimate Guide to Luxury Group Escapes: Lonavala & Khopoli Villa Vacations
             </h2>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-6">
-              The concept of weekend getaways near Mumbai and Pune has undergone a massive evolution. Instead of booking multiple detached hotel rooms where groups are separated, travelers are seeking cohesive, private sanctuaries. Selecting premium <strong className="text-[#DAA520] font-semibold">villa rentals in lonavla</strong> provides the space, freedom, and exclusivity required for memorable group getaways. From infinity pools overlooking deep green valley panoramas to customized gourmet meals prepared by dedicated in-house chefs, private estates represent a complete shift in leisure travel. The monsoons turn the surrounding Sahyadri hills into a misty playground, making the quick drive up the ghats an absolute pleasure for friend reunions and family milestone celebrations.
+              The concept of weekend getaways near Mumbai and Pune has undergone a massive evolution. Instead of booking multiple detached hotel rooms where groups are separated, travelers are seeking cohesive, private sanctuaries. Selecting premium <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> provides the space, freedom, and exclusivity required for memorable group getaways. From infinity pools overlooking deep green valley panoramas to customized gourmet meals prepared by dedicated in-house chefs, private estates represent a complete shift in leisure travel. The monsoons turn the surrounding Sahyadri hills into a misty playground, making the quick drive up the ghats an absolute pleasure for friend reunions and family milestone celebrations.
             </p>
           </div>
 
           <div>
             <h3 className="text-xl font-heading font-bold text-white mb-4">
-              Why Lonavla Remains the Flagship Mountain Retreat
+              Why Lonavala Remains the Flagship Mountain Retreat
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-6">
-              Lonavla has always been the primary choice for weekenders. Whether it is trekking up the historic Lohagad Fort, enjoying picnics at Pawna Lake, or buying local chikki, there is something for everyone. However, the true luxury experience lies in checking into one of the elite <strong className="text-[#DAA520] font-semibold">villa rentals in lonavla</strong> such as The Angle House. These private pool villas seamlessly combine cutting-edge modern architecture with high-end hospitality services. When planning an escape with friends, features like temperature-controlled pools, spacious deck spaces, and custom sound systems make a massive difference. Opting for modern <strong className="text-[#DAA520] font-semibold">villa rentals in lonavla</strong> ensures your group enjoys complete freedom without hotel curfews or sharing facilities with strangers.
+              Lonavala has always been the primary choice for weekenders. Whether it is trekking up the historic Lohagad Fort, enjoying picnics at Pawna Lake, or buying local chikki, there is something for everyone. However, the true luxury experience lies in checking into one of the elite <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> such as The Angle House. These private pool villas seamlessly combine cutting-edge modern architecture with high-end hospitality services. When planning an escape with friends, features like temperature-controlled pools, spacious deck spaces, and custom sound systems make a massive difference. Opting for modern <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> ensures your group enjoys complete freedom without hotel curfews or sharing facilities with strangers.
             </p>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light">
-              Furthermore, the proximity of Lonavla makes it incredibly easy to coordinate travel logistics for large groups. Whether your friends are arriving from different parts of Mumbai or Pune, Lonavla serves as a central meeting point. Many high-end <strong className="text-[#DAA520] font-semibold">villa rentals in lonavla</strong> also offer specialized workspaces and high-speed internet connectivity, making them popular for creative retreats and brainstorming sessions.
+              Furthermore, the proximity of Lonavala makes it incredibly easy to coordinate travel logistics for large groups. Whether your friends are arriving from different parts of Mumbai or Pune, Lonavala serves as a central meeting point. Many high-end <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> also offer specialized workspaces and high-speed internet connectivity, making them popular for creative retreats and brainstorming sessions.
             </p>
           </div>
 
@@ -1100,7 +1100,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               Key Amenities to Vette for a Perfect Group Getaway
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-4">
-              When reviewing potential properties for your group stay, certain amenities are non-negotiable. Whether you are looking at spacious <strong className="text-[#DAA520] font-semibold">villa rentals in lonavla</strong> or quiet <strong className="text-[#DAA520] font-semibold">villas in khopoli</strong>, ensure the property offers:
+              When reviewing potential properties for your group stay, certain amenities are non-negotiable. Whether you are looking at spacious <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> or quiet <strong className="text-[#DAA520] font-semibold">villas in khopoli</strong>, ensure the property offers:
             </p>
             <ul className="text-xs md:text-sm text-slate-300 space-y-3 pl-5 list-disc font-light">
               <li>
@@ -1123,7 +1123,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               Booking Your Next Staycation with Stay Willas
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light">
-              Planning a group getaway should be exciting, not stressful. Vetting caretakers, coordinating food menus, and verifying pool cleanliness are details we handle directly at Stay Willas. Booking verified luxury <strong className="text-[#DAA520] font-semibold font-bold font-heading">villas in khopoli</strong> or Lonavla guarantees that your weekend plays out exactly as shown in photographs. Secure your dates well in advance, particularly during the monsoon and winter seasons when the Sahyadri mountains are at their most beautiful, and let us build the perfect group retreat for you and your friends.
+              Planning a group getaway should be exciting, not stressful. Vetting caretakers, coordinating food menus, and verifying pool cleanliness are details we handle directly at Stay Willas. Booking verified luxury <strong className="text-[#DAA520] font-semibold font-bold font-heading">villas in khopoli</strong> or Lonavala guarantees that your weekend plays out exactly as shown in photographs. Secure your dates well in advance, particularly during the monsoon and winter seasons when the Sahyadri mountains are at their most beautiful, and let us build the perfect group retreat for you and your friends.
             </p>
           </div>
 

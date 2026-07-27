@@ -4,30 +4,30 @@ import { prisma } from "@/lib/db";
 import EscapeClientPage from "./escape-client-page";
 
 export const metadata: Metadata = {
-  title: "Villa Vacation & Villa Rentals in Lonavla & Khopoli | Stay Willas",
-  description: "Plan an epic friends group villa vacation in Lonavla or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
-  keywords: ["villa rentals in lonavla", "villas in khopoli", "friends villa vacation"],
+  title: "Villa Vacation & Villa Rentals in Lonavala & Khopoli | Stay Willas",
+  description: "Plan an epic friends group villa vacation in Lonavala or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
+  keywords: ["villa rentals in lonavala", "villas in khopoli", "friends villa vacation"],
   alternates: {
     canonical: "/escape",
   },
   openGraph: {
-    title: "Villa Vacation & Villa Rentals in Lonavla & Khopoli | Stay Willas",
-    description: "Plan an epic friends group villa vacation in Lonavla or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
+    title: "Villa Vacation & Villa Rentals in Lonavala & Khopoli | Stay Willas",
+    description: "Plan an epic friends group villa vacation in Lonavala or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
     url: "https://www.staywillas.com/escape",
     images: [
       {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Friends Villa Vacation in Lonavla & Khopoli",
+        alt: "Friends Villa Vacation in Lonavala & Khopoli",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villa Vacation & Villa Rentals in Lonavla & Khopoli | Stay Willas",
-    description: "Plan an epic friends group villa vacation in Lonavla or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
+    title: "Villa Vacation & Villa Rentals in Lonavala & Khopoli | Stay Willas",
+    description: "Plan an epic friends group villa vacation in Lonavala or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

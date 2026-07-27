@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Staycation Villas in Maharashtra & Lonavala | Stay Willas",
   description: "Rent staycation villas in Maharashtra, Lonavala, and Khopoli. Explore handpicked verified luxury villas with pool near Mumbai and Pune. Premium amenities and scenic views.",
-  keywords: ["villas in lonavla on rent", "luxury villas in lonavla and khopoli", "luxury villas in khopoli with pool"],
+  keywords: ["villas in lonavala on rent", "luxury villas in lonavala and khopoli", "luxury villas in khopoli with pool"],
   alternates: {
     canonical: "/villas",
   },

@@ -8,7 +8,7 @@ import { Sparkles, Calendar, Heart, Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: "Luxury Villa Experiences | Lonavala & Khopoli | Stay Willas",
   description: "Discover premium luxury villa experiences in Lonavala and Khopoli. Enjoy wellness retreats, tailored staycation activities, and premium dining at our verified villas.",
-  keywords: ["Stay Willas experiences", "luxury villas in lonavla and khopoli", "corporate offsite villas"],
+  keywords: ["Stay Willas experiences", "luxury villas in lonavala and khopoli", "corporate offsite villas"],
   alternates: {
     canonical: "/experiences",
   },

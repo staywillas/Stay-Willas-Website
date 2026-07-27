@@ -11,7 +11,7 @@ import { prisma } from "@/lib/db";
 export const metadata: Metadata = {
   title: "Luxury Villa Destinations | Lonavala, Khopoli & More | Stay Willas",
   description: "Discover premium luxury villa rentals across top destinations in Maharashtra including Lonavala, Khopoli, Alibaug, and Karjat. Find your perfect getaway.",
-  keywords: ["Stay Willas destinations", "villas in lonavla", "luxury villas in khopoli"],
+  keywords: ["Stay Willas destinations", "villas in lonavala", "luxury villas in khopoli"],
   alternates: {
     canonical: "/destinations",
   },

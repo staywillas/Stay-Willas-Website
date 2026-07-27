@@ -28,7 +28,7 @@ export const blogsData: BlogPost[] = [
     readTime: "8 min read",
     date: "July 24, 2026",
     image: "/assets/villas/the-angle-house/gallery-4.webp",
-    intro: "Tucked away in the Western Ghats, Pawna Lake has evolved from a quiet reservoir into one of the most sought-after weekend getaways in Maharashtra. Offering sweeping views of tranquil water and historic fort ruins, finding the perfect accommodation is key. If you are seeking premium comfort, booking one of the luxurious <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> near the lake is an unbeatable choice. Properties like <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House</a> provide a private pool, professional caretakers, and unmatched privacy, making your lakeside holiday absolutely memorable.",
+    intro: "Tucked away in the Western Ghats, Pawna Lake has evolved from a quiet reservoir into one of the most sought-after weekend getaways in Maharashtra. Offering sweeping views of tranquil water and historic fort ruins, finding the perfect accommodation is key. If you are seeking premium comfort, booking one of the luxurious <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavala</a> near the lake is an unbeatable choice. Properties like <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House</a> provide a private pool, professional caretakers, and unmatched privacy, making your lakeside holiday absolutely memorable.",
     sections: [
       {
         heading: "Why Rent a Private Villa Near Pawna Lake?",
@@ -41,7 +41,7 @@ export const blogsData: BlogPost[] = [
       {
         heading: "Lakeside FAQs",
         paragraphs: ["Here are quick answers to some common questions about renting lakeside villas:"],
-        list: ["Are Pawna Lake villas safe for families? Yes, all our verified estates have gated boundaries and 24/7 on-site caretaker staff.","What is the travel distance? It is a scenic 2.5-hour drive from both Mumbai and Pune, with smooth road access.","Are pets allowed? Many properties in our Lonavla inventory feature large, pet-friendly fenced lawns."]
+        list: ["Are Pawna Lake villas safe for families? Yes, all our verified estates have gated boundaries and 24/7 on-site caretaker staff.","What is the travel distance? It is a scenic 2.5-hour drive from both Mumbai and Pune, with smooth road access.","Are pets allowed? Many properties in our Lonavala inventory feature large, pet-friendly fenced lawns."]
       }
     ],
     conclusion: "A staycation near Pawna Lake is the perfect antidote to city stress. Secure your private pool villa today and experience slow luxury at its finest."
@@ -55,7 +55,7 @@ export const blogsData: BlogPost[] = [
     readTime: "7 min read",
     date: "July 22, 2026",
     image: "/assets/villas/the-angle-house/gallery-11.webp",
-    intro: "For adventure enthusiasts and history buffs, Lohagad Fort is a spectacular trekking destination, especially during the monsoons when the hills are carpeted in green. After a tiring climb up the historic stone steps, returning to a crowded hotel room is far from ideal. Choosing a private <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">villa near Lohagad Fort trek, Lonavala</a> allows you to relax in a private pool, enjoy hot chef-prepared meals, and unwind in style. With our curated <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> collection, you get the perfect basecamp for your weekend adventure.",
+    intro: "For adventure enthusiasts and history buffs, Lohagad Fort is a spectacular trekking destination, especially during the monsoons when the hills are carpeted in green. After a tiring climb up the historic stone steps, returning to a crowded hotel room is far from ideal. Choosing a private <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">villa near Lohagad Fort trek, Lonavala</a> allows you to relax in a private pool, enjoy hot chef-prepared meals, and unwind in style. With our curated <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavala</a> collection, you get the perfect basecamp for your weekend adventure.",
     sections: [
       {
         heading: "The Joy of an Adventure Staycation",
@@ -82,7 +82,7 @@ export const blogsData: BlogPost[] = [
     readTime: "9 min read",
     date: "July 19, 2026",
     image: "/assets/villas/the-angle-house/gallery-10.webp",
-    intro: "There is nothing quite like Lonavala during the rainy season. Heavy clouds hover over valleys, seasonal waterfalls spring to life on every hill, and the air is crisp and cool. To make the most of this spectacular season, renting a private pool estate is the ultimate way to travel. Our <a href=\"/blog/lonavala-villa-monsoon-weekend-guide\" class=\"underline font-bold text-accent-primary\">Lonavala villa monsoon weekend guide</a> is designed to help you plan a cozy, safe, and luxurious escape. By choosing a verified property from our <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> catalog, you guarantee a flawless stay for your family.",
+    intro: "There is nothing quite like Lonavala during the rainy season. Heavy clouds hover over valleys, seasonal waterfalls spring to life on every hill, and the air is crisp and cool. To make the most of this spectacular season, renting a private pool estate is the ultimate way to travel. Our <a href=\"/blog/lonavala-villa-monsoon-weekend-guide\" class=\"underline font-bold text-accent-primary\">Lonavala villa monsoon weekend guide</a> is designed to help you plan a cozy, safe, and luxurious escape. By choosing a verified property from our <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavala</a> catalog, you guarantee a flawless stay for your family.",
     sections: [
       {
         heading: "Monsoon Essentials for a Villa Stay",
@@ -98,7 +98,7 @@ export const blogsData: BlogPost[] = [
         list: ["Are pools open during the rains? Yes, and many of our top villas feature covered pool decks or temperature-controlled options.","Do you provide indoor entertainment? Yes, all properties are stocked with board games, high-speed Wi-Fi, and smart TVs.","Are caretakers available? Our villa staff remains on-site 24/7 to manage housekeeping and food preparation."]
       }
     ],
-    conclusion: "Embrace the beauty of the rains. Book a signature private pool villa today and experience the magic of a Lonavla monsoon."
+    conclusion: "Embrace the beauty of the rains. Book a signature private pool villa today and experience the magic of a Lonavala monsoon."
   },
   {
     slug: "lonavala-vs-khandala-villa-comparison",
@@ -109,7 +109,7 @@ export const blogsData: BlogPost[] = [
     readTime: "8 min read",
     date: "July 17, 2026",
     image: "/assets/villas/the-angle-house/gallery-12.webp",
-    intro: "Lonavala and Khandala are twin hill stations so closely linked that they are often spoken of in a single breath. Yet, when it comes to booking a luxury vacation rental, they offer distinct experiences. Our detailed <a href=\"/blog/lonavala-vs-khandala-villa-comparison\" class=\"underline font-bold text-accent-primary\">Lonavala vs Khandala villa comparison</a> helps you choose the perfect destination for your group. Whether you want the bustling convenience of the main markets or the quiet clifftops overlooking deep valleys, we have handpicked options in our premium <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> collection to suit your tastes.",
+    intro: "Lonavala and Khandala are twin hill stations so closely linked that they are often spoken of in a single breath. Yet, when it comes to booking a luxury vacation rental, they offer distinct experiences. Our detailed <a href=\"/blog/lonavala-vs-khandala-villa-comparison\" class=\"underline font-bold text-accent-primary\">Lonavala vs Khandala villa comparison</a> helps you choose the perfect destination for your group. Whether you want the bustling convenience of the main markets or the quiet clifftops overlooking deep valleys, we have handpicked options in our premium <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavala</a> collection to suit your tastes.",
     sections: [
       {
         heading: "Lonavala: The Heart of Action and Convenience",
@@ -132,7 +132,7 @@ export const blogsData: BlogPost[] = [
     title: "Khopoli vs Lonavala Villa Comparison: Valley Views or Quiet Sanctuary?",
     metaTitle: "Khopoli vs Lonavala Villa Comparison | Stay Willas",
     description: "Comparing Khopoli vs Lonavala villa options? Discover the key differences in travel time, size, and pool villas near Mumbai.",
-    keywords: ["Khopoli vs Lonavala villa comparison","lonavla vs khopoli villas","weekend getaway comparison"],
+    keywords: ["Khopoli vs Lonavala villa comparison","lonavala vs khopoli villas","weekend getaway comparison"],
     readTime: "8 min read",
     date: "July 14, 2026",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
@@ -224,7 +224,7 @@ export const blogsData: BlogPost[] = [
         paragraphs: [
           "Private pool estates offer open spaces and gardens where pets can run freely. Unlike crowded hotels, you get a completely independent layout. However, clear guidelines prevent property damage and ensure hygiene for subsequent guests.",
           "Most luxury properties have guidelines regarding where pets are allowed. For example, pets are strictly prohibited from entering swimming pools or lounge pools for safety and filtration hygiene reasons.",
-          "Before checking in, make sure to read the check-in guides provided by the concierge. You can search our handpicked catalog of verified <a href=\"/villas\" class=\"underline font-bold text-accent-primary\">villas near Mumbai</a> or check out our dedicated <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> to find properties that offer dedicated pet-friendly areas and large fenced gardens."
+          "Before checking in, make sure to read the check-in guides provided by the concierge. You can search our handpicked catalog of verified <a href=\"/villas\" class=\"underline font-bold text-accent-primary\">villas near Mumbai</a> or check out our dedicated <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavala</a> to find properties that offer dedicated pet-friendly areas and large fenced gardens."
         ]
       },
       {
@@ -399,7 +399,7 @@ export const blogsData: BlogPost[] = [
     readTime: "6 min read",
     date: "June 25, 2026",
     image: "/assets/villas/the-angle-house/gallery-10.webp",
-    intro: "Planning a weekend getaway in India with your furry best friend is often harder than it should be. Many hotels and resorts have strict 'no pets' policies, or hidden restrictions that turn your relaxing trip into an ordeal. What does true pet-friendliness mean? It means safe, open outdoor spaces, transparent guidelines, and an on-site team that welcomes pets with open arms. If you have been searching for a premium <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">pet friendly villa Lonavala with private pool</a> access in our scenic <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">Lonavla area collection</a>, The Angle House is the perfect sanctuary for you and your dog.",
+    intro: "Planning a weekend getaway in India with your furry best friend is often harder than it should be. Many hotels and resorts have strict 'no pets' policies, or hidden restrictions that turn your relaxing trip into an ordeal. What does true pet-friendliness mean? It means safe, open outdoor spaces, transparent guidelines, and an on-site team that welcomes pets with open arms. If you have been searching for a premium <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">pet friendly villa Lonavala with private pool</a> access in our scenic <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">Lonavala area collection</a>, The Angle House is the perfect sanctuary for you and your dog.",
     sections: [
       {
         heading: "What 'Pet-Friendly' Actually Means to Us",
