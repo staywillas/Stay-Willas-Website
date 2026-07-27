@@ -22,7 +22,7 @@ const destinations = [
     tag: "Mountain Escapes",
     desc: "Cool breeze, misty green hills, and quiet retreats.",
     isLaunchingSoon: false,
-    link: "/villas?region=lonavala"
+    link: "/areas/lonavala"
   },
   {
     name: "Khopoli",
@@ -31,7 +31,7 @@ const destinations = [
     tag: "Nature Getaways",
     desc: "Scenic foothills, waterfalls, and green valleys near the hills.",
     isLaunchingSoon: false,
-    link: "/villas?region=khopoli"
+    link: "/areas/khopoli"
   },
   {
     name: "Karjat",
@@ -40,7 +40,7 @@ const destinations = [
     tag: "Riverside Views",
     desc: "Green valleys, quiet rivers, and pure relaxation.",
     isLaunchingSoon: true,
-    link: "/partner"
+    link: "/areas/karjat"
   },
   {
     name: "Igatpuri",
@@ -49,7 +49,7 @@ const destinations = [
     tag: "Mountain Views",
     desc: "Mist-laden Western Ghats, waterfalls, and peaceful retreats.",
     isLaunchingSoon: true,
-    link: "/partner"
+    link: "/areas/igatpuri"
   },
   {
     name: "Alibaug",
@@ -58,7 +58,7 @@ const destinations = [
     tag: "Beachside Stays",
     desc: "Golden sand beaches, pools, and beautiful sunsets.",
     isLaunchingSoon: true,
-    link: "/partner"
+    link: "/areas/alibaug"
   },
   {
     name: "Goa",
@@ -67,7 +67,7 @@ const destinations = [
     tag: "Coastal Paradise",
     desc: "Boho-chic beach villas, Portuguese architecture, and ocean breezes.",
     isLaunchingSoon: true,
-    link: "/partner"
+    link: "/areas/goa"
   }
 ];
 
@@ -202,6 +202,7 @@ const DestinationShowcase = () => {
               >
                 <Link
                   href={dest.link}
+                  aria-label={`Explore luxury private pool villas in ${dest.name}, Maharashtra`}
                   className="block relative aspect-[3/4] w-full h-full rounded-[24px] sm:rounded-[28px] overflow-hidden group border-2 sm:border-[3px] border-[#DAA520]/80 cursor-pointer shadow-[0_15px_40px_rgba(15,23,42,0.22)] hover:border-[#DAA520] hover:shadow-[0_0_35px_rgba(218,165,32,0.75)] hover:scale-[1.02] transition-all duration-500"
                 >
                   <Image

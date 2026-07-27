@@ -5,9 +5,29 @@ import dynamic from "next/dynamic";
 export const metadata: Metadata = {
   title: "Villas Near Mumbai & Lonavala | Luxury Private Pool Villa Rentals | Stay Willas",
   description: "Rent luxury private pool villas near Mumbai, Lonavala, and Khopoli. Handpicked verified getaway homes, premium amenities, and scenic views. Book your dream staycation now.",
-  keywords: ["Stay Willas", "staywillas", "luxury villas in maharashtra", "private pool villas near mumbai", "villas in lonavala", "khopoli private pool villas", "weekend getaway villas", "premium staycation near pune", "luxury holiday homes", "villa rentals maharashtra", "pet friendly villas lonavala"],
+  keywords: ["villas in lonavla", "luxury villas in lonavla and khopoli", "luxury villas in khopoli"],
   alternates: {
     canonical: "/",
+  },
+  openGraph: {
+    title: "Villas Near Mumbai & Lonavala | Luxury Private Pool Villa Rentals | Stay Willas",
+    description: "Rent luxury private pool villas near Mumbai, Lonavala, and Khopoli. Handpicked verified getaway homes, premium amenities, and scenic views. Book your dream staycation now.",
+    url: "https://www.staywillas.com",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "Stay Willas Luxury Villas and Staycations",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Villas Near Mumbai & Lonavala | Luxury Private Pool Villa Rentals | Stay Willas",
+    description: "Rent luxury private pool villas near Mumbai, Lonavala, and Khopoli. Handpicked verified getaway homes, premium amenities, and scenic views. Book your dream staycation now.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 
@@ -95,18 +115,20 @@ export default async function Home() {
             "url": "https://www.staywillas.com",
             "logo": "https://www.staywillas.com/icon.png",
             "image": "https://www.staywillas.com/icon.png",
-            "telephone": "+91-9136aborz",
+            "telephone": "+91-9619042310",
             "email": "bookings@staywillas.com",
             "address": {
               "@type": "PostalAddress",
+              "streetAddress": "Kim cottage, 14, PR Kadam Marg, Maneklal Estate, Ghatkopar West",
               "addressLocality": "Mumbai",
               "addressRegion": "Maharashtra",
+              "postalCode": "400084",
               "addressCountry": "IN"
             },
             "geo": {
               "@type": "GeoCoordinates",
-              "latitude": "19.0760",
-              "longitude": "72.8777"
+              "latitude": "19.0912",
+              "longitude": "72.9016"
             },
             "areaServed": [
               { "@type": "Place", "name": "Lonavala" },

@@ -8,9 +8,29 @@ import { Sparkles, Calendar, Heart, Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: "Luxury Villa Experiences | Lonavala & Khopoli | Stay Willas",
   description: "Discover premium luxury villa experiences in Lonavala and Khopoli. Enjoy wellness retreats, tailored staycation activities, and premium dining at our verified villas.",
-  keywords: ["Stay Willas experiences", "luxury villa experiences lonavala", "curated villa stays khopoli", "wellness retreats near mumbai", "corporate offsite villas lonavala", "villas for private events", "romantic getaway villas", "staywillas"],
+  keywords: ["Stay Willas experiences", "luxury villas in lonavla and khopoli", "corporate offsite villas"],
   alternates: {
     canonical: "/experiences",
+  },
+  openGraph: {
+    title: "Luxury Villa Experiences | Lonavala & Khopoli | Stay Willas",
+    description: "Discover premium luxury villa experiences in Lonavala and Khopoli. Enjoy wellness retreats, tailored staycation activities, and premium dining at our verified villas.",
+    url: "https://www.staywillas.com/experiences",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "Stay Willas Experiences",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luxury Villa Experiences | Lonavala & Khopoli | Stay Willas",
+    description: "Discover premium luxury villa experiences in Lonavala and Khopoli. Enjoy wellness retreats, tailored staycation activities, and premium dining at our verified villas.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 

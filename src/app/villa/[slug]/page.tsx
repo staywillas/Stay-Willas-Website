@@ -190,24 +190,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const descText = `Book ${villa.name}, a premium ${villa.bedrooms}BHK luxury villa in ${city} with private pool, premium amenities, and scenic views. Reserve your staycation today!`;
 
+  const ogImageUrl = villa.images[0] ? `https://www.staywillas.com${villa.images[0]}` : "https://www.staywillas.com/images/hero-villa.png";
+
   return {
     title: titleText,
     description: descText,
-    keywords: [primaryKeyword, secondaryKeyword, tertiaryKeyword, quartKeyword],
+    keywords: [primaryKeyword, secondaryKeyword, tertiaryKeyword],
     alternates: {
-      canonical: `/villa/${villa.slug}`,
+      canonical: `https://www.staywillas.com/villa/${villa.slug}`,
     },
     openGraph: {
       title: titleText,
       description: descText,
-      images: villa.images[0] ? [{ url: `https://www.staywillas.com${villa.images[0]}` }] : [],
+      url: `https://www.staywillas.com/villa/${villa.slug}`,
+      images: [{ url: ogImageUrl }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: titleText,
       description: descText,
-      images: villa.images[0] ? [`https://www.staywillas.com${villa.images[0]}`] : [],
+      images: [ogImageUrl],
     }
   };
 }

@@ -13,6 +13,26 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/stories",
   },
+  openGraph: {
+    title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
+    description: "Read luxury villa guest stories, watch guest video vlogs, and explore testimonials from verified families who stayed at our private pool estates.",
+    url: "https://www.staywillas.com/stories",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "Stay Willas Guest Stories",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
+    description: "Read luxury villa guest stories, watch guest video vlogs, and explore testimonials from verified families who stayed at our private pool estates.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
+  },
 };
 
 export default function StoriesPage() {

@@ -20,6 +20,195 @@ export interface BlogPost {
 
 export const blogsData: BlogPost[] = [
   {
+    slug: "villas-near-pawna-lake-lonavala",
+    title: "Villas Near Pawna Lake, Lonavala: Your Ultimate Lakeside Retreat",
+    metaTitle: "Villas Near Pawna Lake Lonavala | Lakeside Staycations | Stay Willas",
+    description: "Discover the best private pool villas near Pawna Lake, Lonavala. Enjoy lake view staycations, customized private chefs, and absolute serenity. Book your stay.",
+    keywords: ["villas near Pawna Lake Lonavala","Pawna lake villa","lonavala lakeside stay"],
+    readTime: "8 min read",
+    date: "July 24, 2026",
+    image: "/assets/villas/the-angle-house/gallery-4.webp",
+    intro: "Tucked away in the Western Ghats, Pawna Lake has evolved from a quiet reservoir into one of the most sought-after weekend getaways in Maharashtra. Offering sweeping views of tranquil water and historic fort ruins, finding the perfect accommodation is key. If you are seeking premium comfort, booking one of the luxurious <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> near the lake is an unbeatable choice. Properties like <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House</a> provide a private pool, professional caretakers, and unmatched privacy, making your lakeside holiday absolutely memorable.",
+    sections: [
+      {
+        heading: "Why Rent a Private Villa Near Pawna Lake?",
+        paragraphs: ["Unlike standard campsites or crowded hotels, private pool villas near Pawna Lake offer a sense of home combined with resort-level amenities. You get a massive living space, private gardens, and the freedom to define your own itinerary.","Imagine spending your day kayaking on the calm lake waters and returning to a private warm pool for a relaxing dip. At Stay Willas, we ensure that every guest has access to verified properties with top-tier security and hygiene.","For more details, check out our related article on <a href=\"/blog/villa-near-lohagad-fort-trek-lonavala\" class=\"underline font-bold text-accent-primary\">choosing a villa near Lohagad Fort trek</a> to see other local adventure ideas."],
+      },
+      {
+        heading: "Bespoke Lakeside Dining with Private Chefs",
+        paragraphs: ["One of the biggest highlights of booking an independent villa near Pawna is the customized dining experience. Skip the mediocre restaurants and let a professional in-house chef prepare fresh, local Maharashtrian cuisine or international spreads tailored to your tastes.","Whether you prefer a quiet poolside dinner under string lights or a heavy morning brunch after a lakeside walk, your group gets dedicated concierge service to manage every meal."],
+      },
+      {
+        heading: "Lakeside FAQs",
+        paragraphs: ["Here are quick answers to some common questions about renting lakeside villas:"],
+        list: ["Are Pawna Lake villas safe for families? Yes, all our verified estates have gated boundaries and 24/7 on-site caretaker staff.","What is the travel distance? It is a scenic 2.5-hour drive from both Mumbai and Pune, with smooth road access.","Are pets allowed? Many properties in our Lonavla inventory feature large, pet-friendly fenced lawns."]
+      }
+    ],
+    conclusion: "A staycation near Pawna Lake is the perfect antidote to city stress. Secure your private pool villa today and experience slow luxury at its finest."
+  },
+  {
+    slug: "villa-near-lohagad-fort-trek-lonavala",
+    title: "Choosing a Villa Near Lohagad Fort Trek, Lonavala",
+    metaTitle: "Villa Near Lohagad Fort Trek Lonavala | Stay Willas",
+    description: "Looking for a villa near Lohagad Fort trek, Lonavala? Explore our handpicked luxury villas with private pools, ideal for adventure staycations near Lohagad.",
+    keywords: ["villa near Lohagad Fort trek Lonavala","lohagad fort staycation","lonavala adventure villa"],
+    readTime: "7 min read",
+    date: "July 22, 2026",
+    image: "/assets/villas/the-angle-house/gallery-11.webp",
+    intro: "For adventure enthusiasts and history buffs, Lohagad Fort is a spectacular trekking destination, especially during the monsoons when the hills are carpeted in green. After a tiring climb up the historic stone steps, returning to a crowded hotel room is far from ideal. Choosing a private <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">villa near Lohagad Fort trek, Lonavala</a> allows you to relax in a private pool, enjoy hot chef-prepared meals, and unwind in style. With our curated <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> collection, you get the perfect basecamp for your weekend adventure.",
+    sections: [
+      {
+        heading: "The Joy of an Adventure Staycation",
+        paragraphs: ["Trekking is highly rewarding, but it leaves you exhausted. Waking up early to hike up the fort and then returning to your own private estate with a waterfall pool is the ultimate luxury. You get to jump into the water, soothe your muscles, and sit around a cozy bonfire at night.","Our properties offer high-speed internet, power backups, and spacious bedrooms so you don't have to sacrifice any modern comforts during your hill escape.","To learn more about the best seasons for these trips, read our <a href=\"/blog/lonavala-villa-monsoon-weekend-guide\" class=\"underline font-bold text-accent-primary\">Lonavala villa monsoon weekend guide</a>."],
+      },
+      {
+        heading: "Exploring Nearby Historic Caves",
+        paragraphs: ["Lohagad Fort is not the only attraction nearby. The ancient Karla and Bhaja caves, carved directly into the basalt mountainside over 2,000 years ago, are situated just a short drive away. They offer a quiet, spiritual look into Buddhist history, featuring historic stone pillars and large arched prayer halls."],
+      },
+      {
+        heading: "Adventure Stays FAQs",
+        paragraphs: ["To plan your trek and stay, here are the most important details summarized:"],
+        list: ["How far is Lohagad Fort from Lonavala town? It is about 11 km away, taking roughly 30 minutes via the scenic village roads.","Are villas nearby suitable for large groups? Yes, our premium villas like The Angle House can easily host up to 16 guests.","Is a private chef included? Yes, custom meal packages can be booked, including local farm-style lunches."]
+      }
+    ],
+    conclusion: "Combine the thrill of the outdoors with the comfort of a luxury estate. Book a private villa near Lohagad Fort trek for your next group weekend outing."
+  },
+  {
+    slug: "lonavala-villa-monsoon-weekend-guide",
+    title: "The Ultimate Lonavala Villa Monsoon Weekend Guide",
+    metaTitle: "Lonavala Villa Monsoon Weekend Guide | Stay Willas",
+    description: "Read our Lonavala villa monsoon weekend guide. Plan the perfect rainy season getaway with private pools, waterfalls, and warm hospitality.",
+    keywords: ["Lonavala villa monsoon weekend guide","monsoon staycation lonavala","lonavala rainy season villa"],
+    readTime: "9 min read",
+    date: "July 19, 2026",
+    image: "/assets/villas/the-angle-house/gallery-10.webp",
+    intro: "There is nothing quite like Lonavala during the rainy season. Heavy clouds hover over valleys, seasonal waterfalls spring to life on every hill, and the air is crisp and cool. To make the most of this spectacular season, renting a private pool estate is the ultimate way to travel. Our <a href=\"/blog/lonavala-villa-monsoon-weekend-guide\" class=\"underline font-bold text-accent-primary\">Lonavala villa monsoon weekend guide</a> is designed to help you plan a cozy, safe, and luxurious escape. By choosing a verified property from our <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> catalog, you guarantee a flawless stay for your family.",
+    sections: [
+      {
+        heading: "Monsoon Essentials for a Villa Stay",
+        paragraphs: ["Monsoons in the Western Ghats can get intense. When choosing a villa, ensure it features covered verandas, indoor recreational spaces (like board games or pool tables), and reliable power backup system. Having an in-house caretaker is extremely useful for arranging hot tea and pakodas on demand.","Properties like <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House</a> offer glass-facade lounges where you can watch the rain cascade down the hills without getting wet."],
+      },
+      {
+        heading: "Safety First: Travel Tips",
+        paragraphs: ["While driving through the misty roads is highly romantic, safety is paramount. Check tire treads and wiper blades before starting from Mumbai or Pune. Maintain low speeds on the Express Highway, as visibility can drop significantly during heavy downpours.","For a detailed comparison of nearby locations, take a look at our <a href=\"/blog/lonavala-vs-khandala-villa-comparison\" class=\"underline font-bold text-accent-primary\">Lonavala vs Khandala villa comparison guide</a>."],
+      },
+      {
+        heading: "Monsoon FAQs",
+        paragraphs: ["Here are the answers to common monsoon staycation queries:"],
+        list: ["Are pools open during the rains? Yes, and many of our top villas feature covered pool decks or temperature-controlled options.","Do you provide indoor entertainment? Yes, all properties are stocked with board games, high-speed Wi-Fi, and smart TVs.","Are caretakers available? Our villa staff remains on-site 24/7 to manage housekeeping and food preparation."]
+      }
+    ],
+    conclusion: "Embrace the beauty of the rains. Book a signature private pool villa today and experience the magic of a Lonavla monsoon."
+  },
+  {
+    slug: "lonavala-vs-khandala-villa-comparison",
+    title: "Lonavala vs Khandala Villa Comparison: Which Location Is Best for You?",
+    metaTitle: "Lonavala vs Khandala Villa Comparison | Stay Willas",
+    description: "Read our Lonavala vs Khandala villa comparison. Find out which hill station is best for your next luxury private pool villa staycation.",
+    keywords: ["Lonavala vs Khandala villa comparison","khandala vs lonavala villa","luxury stay comparison"],
+    readTime: "8 min read",
+    date: "July 17, 2026",
+    image: "/assets/villas/the-angle-house/gallery-12.webp",
+    intro: "Lonavala and Khandala are twin hill stations so closely linked that they are often spoken of in a single breath. Yet, when it comes to booking a luxury vacation rental, they offer distinct experiences. Our detailed <a href=\"/blog/lonavala-vs-khandala-villa-comparison\" class=\"underline font-bold text-accent-primary\">Lonavala vs Khandala villa comparison</a> helps you choose the perfect destination for your group. Whether you want the bustling convenience of the main markets or the quiet clifftops overlooking deep valleys, we have handpicked options in our premium <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> collection to suit your tastes.",
+    sections: [
+      {
+        heading: "Lonavala: The Heart of Action and Convenience",
+        paragraphs: ["Lonavala is the central hub. It is home to the famous chikki shops, local restaurants, and primary sightseeing spots like Ryewood Park and Bushi Dam. Booking a villa in Lonavala puts you close to local markets, making it highly convenient if you plan to explore outdoors or order local food.","Villas here are ideal for family reunions where convenience is key, especially if you have children or senior members who prefer shorter travel distances to attractions like <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House</a>."],
+      },
+      {
+        heading: "Khandala: Deep Valleys and Quiet Serenity",
+        paragraphs: ["Khandala is situated slightly higher up the slopes. It is known for its quiet, winding lanes and dramatic valley views, including the famous Duke's Nose viewpoint. If your goal is to escape the crowds, enjoy peaceful morning mist, and lounge in a secluded pool, Khandala is the preferred option.","For more information on other close destinations, see our guide on <a href=\"/blog/villas-near-pawna-lake-lonavala\" class=\"underline font-bold text-accent-primary\">villas near Pawna Lake Lonavala</a>."],
+      },
+      {
+        heading: "Comparison FAQs",
+        paragraphs: ["Here is a summary of the differences:"],
+        list: ["Which location has better views? Khandala is famous for steep valley vistas, while Lonavala offers lush garden settings and lake access.","Which is easier to access? Both are right off the Expressway, but Khandala is reached slightly earlier when driving from Mumbai.","Are rates different? Premium villa rates are comparable and depend more on property amenities and size."]
+      }
+    ],
+    conclusion: "Whether you choose the vibrant energy of Lonavala or the quiet slopes of Khandala, Stay Willas ensures a premium, fully serviced staycation."
+  },
+  {
+    slug: "khopoli-vs-lonavala-villa-comparison",
+    title: "Khopoli vs Lonavala Villa Comparison: Valley Views or Quiet Sanctuary?",
+    metaTitle: "Khopoli vs Lonavala Villa Comparison | Stay Willas",
+    description: "Comparing Khopoli vs Lonavala villa options? Discover the key differences in travel time, size, and pool villas near Mumbai.",
+    keywords: ["Khopoli vs Lonavala villa comparison","lonavla vs khopoli villas","weekend getaway comparison"],
+    readTime: "8 min read",
+    date: "July 14, 2026",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    intro: "When planning a quick weekend escape from Mumbai or Pune, Lonavala is the default destination that comes to mind. However, just down the slope of the ghats lies Khopoli, a scenic valley destination that is fast becoming a favorite for luxury staycations. Our comprehensive <a href=\"/blog/khopoli-vs-lonavala-villa-comparison\" class=\"underline font-bold text-accent-primary\">Khopoli vs Lonavala villa comparison</a> highlights the key differences between these two spots. From road traffic and travel times to the sheer size of the properties, understanding these factors helps you select the perfect <a href=\"/areas/khopoli\" class=\"underline font-bold text-accent-primary\">villas in Khopoli</a> or Lonavala for your next retreat.",
+    sections: [
+      {
+        heading: "Khopoli: Sprawling Valley Sanctuaries and Quick Commutes",
+        paragraphs: ["Khopoli's biggest advantage is accessibility. By avoiding the winding ghat roads where weekend traffic jams are common, you save almost 45 minutes of drive time. Taking the Khalapur toll exit leads you straight to massive properties like <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest</a>.","Because land is more abundant in the Khopoli valley, these estates feature sprawling multi-acre lawns, large private pools, and spacious layouts that are rare in the crowded hills.","For monsoon lovers, read our <a href=\"/blog/khopoli-waterfall-monsoon-villa-guide\" class=\"underline font-bold text-accent-primary\">Khopoli waterfall monsoon villa guide</a> to see why the rainy season here is spectacular."],
+      },
+      {
+        heading: "Lonavala: Misty Hills and Cooler Climates",
+        paragraphs: ["Lonavala, being situated at a higher altitude, offers a cooler climate year-round. The misty mornings and cool winter breezes are its main appeal. It features a wider range of tourist cafes, chikki shops, and viewpoints. However, you trade this cooler air for smaller property plots and busier weekend crowds."],
+      },
+      {
+        heading: "Valley vs Hill FAQs",
+        paragraphs: ["To summarize the comparison:"],
+        list: ["Which is closer to Mumbai? Khopoli is closer as you skip the steep ghat climb, saving time and fuel.","Which is better for corporate offsites? Khopoli's larger estates (like Canopy Crest) are highly popular for corporate groups.","What about local weather? Lonavala is cooler, while Khopoli is slightly warmer but offers lush forest scenery."]
+      }
+    ],
+    conclusion: "Choose Lonavala for classic hill-station mist and local markets, or select Khopoli for a peaceful, massive private estate with a quick expressway drive."
+  },
+  {
+    slug: "khopoli-waterfall-monsoon-villa-guide",
+    title: "The Khopoli Waterfall & Monsoon Villa Guide",
+    metaTitle: "Khopoli Waterfall Monsoon Villa Guide | Stay Willas",
+    description: "Plan your monsoon trip with our Khopoli waterfall monsoon villa guide. Discover Zenith waterfalls, misty trails, and private pool villa retreats.",
+    keywords: ["Khopoli waterfall monsoon villa guide","zenith waterfall khopoli stay","monsoon getaway khopoli"],
+    readTime: "7 min read",
+    date: "July 12, 2026",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
+    intro: "When the monsoon rains hit Maharashtra, the Khopoli valley transforms into a breathtaking tropical paradise. Rushing streams flow through fields, and spectacular waterfalls emerge along the mountainsides. Our <a href=\"/blog/khopoli-waterfall-monsoon-villa-guide\" class=\"underline font-bold text-accent-primary\">Khopoli waterfall monsoon villa guide</a> is your ultimate roadmap to exploring this green wonderland. By staying in a premium private pool estate like <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest</a>, you get a luxurious base to return to after a wet day of trekking. Browse our verified <a href=\"/areas/khopoli\" class=\"underline font-bold text-accent-primary\">villas in Khopoli</a> to plan your rainy season escape.",
+    sections: [
+      {
+        heading: "Trekking to the Famous Zenith Waterfall",
+        paragraphs: ["Zenith Waterfall is one of the most famous monsoon spots near Mumbai. A short, beautiful trek through wooded trails and shallow streams brings you to the foot of a massive cliff where water cascades down from the hills above. It is a fantastic spot to splash in the water and take photographs.","After your trek, return to your private villa to enjoy dry clothes, hot shower amenities, and fresh hot tea prepared by your caretaker.","For larger teams traveling together, check out our guide on the <a href=\"/blog/best-khopoli-villa-for-large-groups\" class=\"underline font-bold text-accent-primary\">best Khopoli villa for large groups</a>."],
+      },
+      {
+        heading: "The Serenity of Bhirghu Lake",
+        paragraphs: ["If you prefer a quieter experience away from the trekking crowds, Bhirghu Lake is a scenic reservoir surrounded by misty Sahyadri peaks. It is an ideal spot for peaceful morning walks and quiet photography before returning to your pool deck."],
+      },
+      {
+        heading: "Monsoon FAQs",
+        paragraphs: ["Key details for a monsoon stay:"],
+        list: ["Is it safe to trek during heavy rain? Yes, but avoid climbing steep rocks and always follow local guide recommendations.","Do villas have power backup? All our verified properties feature full inverter or generator setups.","Can we request hot meals? Yes, in-house chefs can prepare fresh hot local meals on demand."]
+      }
+    ],
+    conclusion: "Experience the dramatic beauty of the monsoons. Reserve your Khopoli private pool villa today and watch the rains transform the valley."
+  },
+  {
+    slug: "best-khopoli-villa-for-large-groups",
+    title: "The Best Khopoli Villa for Large Groups & Corporate Offsites",
+    metaTitle: "Best Khopoli Villa for Large Groups & Offsites | Stay Willas",
+    description: "Looking for the best Khopoli villa for large groups? Read why Canopy Crest is perfect for team offsites, reunions, and family get-togethers.",
+    keywords: ["best Khopoli villa for large groups","large group villa khopoli","corporate offsite khopoli"],
+    readTime: "8 min read",
+    date: "July 09, 2026",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    intro: "Organizing a getaway for a large group—whether it is a milestone family reunion, a gathering of old friends, or a corporate team offsite—comes with logistical challenges. You need spacious living rooms, plenty of bedrooms with ensuite bathrooms, large lawns, and custom dining. If you are seeking the ultimate <a href=\"/blog/best-khopoli-villa-for-large-groups\" class=\"underline font-bold text-accent-primary\">best Khopoli villa for large groups</a>, look no further than <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest</a>. Managed by Stay Willas, this massive estate offers the space, privacy, and warm hospitality that groups need to bond and recharge.",
+    sections: [
+      {
+        heading: "Why Canopy Crest is the Ultimate Choice for Groups",
+        paragraphs: ["Canopy Crest is situated on a massive private plot at the base of the mountains. It features 4 spacious bedrooms, 5 modern bathrooms, a 22x12 feet private swimming pool, and expansive green lawns perfect for team games or evening bonfires.","Unlike a hotel where your group is split across floors, you get an independent estate all to yourselves. Enjoy customized catering with Jain and vegetarian chef packages prepared on-site.","Compare options easily by checking out our <a href=\"/blog/khopoli-vs-lonavala-villa-comparison\" class=\"underline font-bold text-accent-primary\">Khopoli vs Lonavala villa comparison guide</a>."],
+      },
+      {
+        heading: "Corporate Offsite Infrastructure",
+        paragraphs: ["For business retreats, Canopy Crest provides high-speed Wi-Fi, full generator backup, and massive living halls that can easily be set up for brainstorms, presentations, and team workshops."],
+      },
+      {
+        heading: "Group Stays FAQs",
+        paragraphs: ["Common questions regarding group bookings:"],
+        list: ["How many guests can stay? Canopy Crest can comfortably accommodate up to 20 guests with extra bedding setups.","Are events permitted? Yes, the lawns and gazebo are perfect for small intimate gatherings and corporate bonding sessions.","What is the food arrangement? We provide customizable all-inclusive meal packages cooked fresh by our chef."]
+      }
+    ],
+    conclusion: "Take your next group gathering to a new level. Book Canopy Crest and enjoy a fully serviced private pool retreat in Khopoli."
+  },
+  {
     slug: "pet-friendly-villa-rules-near-mumbai-what-to-know",
     title: "Pet-Friendly Villa Rules Near Mumbai — What to Know Before You Book",
     metaTitle: "Pet-Friendly Villa Rules Near Mumbai & Tips | Stay Willas",
@@ -35,7 +224,7 @@ export const blogsData: BlogPost[] = [
         paragraphs: [
           "Private pool estates offer open spaces and gardens where pets can run freely. Unlike crowded hotels, you get a completely independent layout. However, clear guidelines prevent property damage and ensure hygiene for subsequent guests.",
           "Most luxury properties have guidelines regarding where pets are allowed. For example, pets are strictly prohibited from entering swimming pools or lounge pools for safety and filtration hygiene reasons.",
-          "Before checking in, make sure to read the check-in guides provided by the concierge. You can search our handpicked catalog of verified <a href=\"/villas\" class=\"underline font-bold text-accent-primary\">villas near Mumbai</a> to find properties that offer dedicated pet-friendly areas and large fenced gardens."
+          "Before checking in, make sure to read the check-in guides provided by the concierge. You can search our handpicked catalog of verified <a href=\"/villas\" class=\"underline font-bold text-accent-primary\">villas near Mumbai</a> or check out our dedicated <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">villas in Lonavla</a> to find properties that offer dedicated pet-friendly areas and large fenced gardens."
         ]
       },
       {
@@ -171,7 +360,7 @@ export const blogsData: BlogPost[] = [
         heading: "1. Thrill Rides at Imagicaa Theme & Water Park",
         paragraphs: [
           "The park itself features high-speed rollercoasters, indoor virtual reality rides, and massive wave pools. We suggest dedicating a full day to explore the park. Stay nearby in a private pool villa so you can return to complete peace and comfort after a tiring day at the slides.",
-          "Check out our <a href=\"/areas/khopoli\" class=\"underline font-bold text-accent-primary\">Khopoli Area Page</a> to browse handpicked luxury villas situated just 15 minutes drive from the park entrance."
+          "Check out our <a href=\"/areas/khopoli\" class=\"underline font-bold text-accent-primary\">Khopoli Area Page</a> to browse handpicked luxury villas, including the gorgeous <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest</a>, situated just 15 minutes drive from the park entrance."
         ]
       },
       {
@@ -210,7 +399,7 @@ export const blogsData: BlogPost[] = [
     readTime: "6 min read",
     date: "June 25, 2026",
     image: "/assets/villas/the-angle-house/gallery-10.webp",
-    intro: "Planning a weekend getaway in India with your furry best friend is often harder than it should be. Many hotels and resorts have strict 'no pets' policies, or hidden restrictions that turn your relaxing trip into an ordeal. What does true pet-friendliness mean? It means safe, open outdoor spaces, transparent guidelines, and an on-site team that welcomes pets with open arms. If you have been searching for a premium <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">pet friendly villa Lonavala with private pool</a> access, The Angle House is the perfect sanctuary for you and your dog.",
+    intro: "Planning a weekend getaway in India with your furry best friend is often harder than it should be. Many hotels and resorts have strict 'no pets' policies, or hidden restrictions that turn your relaxing trip into an ordeal. What does true pet-friendliness mean? It means safe, open outdoor spaces, transparent guidelines, and an on-site team that welcomes pets with open arms. If you have been searching for a premium <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">pet friendly villa Lonavala with private pool</a> access in our scenic <a href=\"/areas/lonavala\" class=\"underline font-bold text-accent-primary\">Lonavla area collection</a>, The Angle House is the perfect sanctuary for you and your dog.",
     sections: [
       {
         heading: "What 'Pet-Friendly' Actually Means to Us",

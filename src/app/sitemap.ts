@@ -88,11 +88,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic area routes
-  const regions = ["lonavala", "alibaug", "karjat", "khopoli", "goa", "igatpuri"];
+  const regions = ["lonavala", "khopoli", "goa", "igatpuri"];
   const areaRoutes: MetadataRoute.Sitemap = regions.map((region) => ({
     url: `${BASE_URL}/areas/${region}`,
     lastModified: new Date(),
-    changeFrequency: "daily",
+    changeFrequency: "daily" as const,
     priority: 0.85,
   }));
 

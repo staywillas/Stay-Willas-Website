@@ -10,6 +10,26 @@ export const metadata: Metadata = {
   description: "Browse My Wishlist of premium luxury retreats saved for your next getaway. Compare private pool villas, view pricing, and check dates. Plan your trip.",
   keywords: ["wishlist villas", "saved luxury stays", "favourite villas maharashtra"],
   robots: { index: false, follow: false },
+  openGraph: {
+    title: "My Wishlist of Premium Luxury Retreats | Stay Willas",
+    description: "Browse My Wishlist of premium luxury retreats saved for your next getaway. Compare private pool villas, view pricing, and check dates. Plan your trip.",
+    url: "https://www.staywillas.com/wishlist",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "My Wishlist Stay Willas",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "My Wishlist of Premium Luxury Retreats | Stay Willas",
+    description: "Browse My Wishlist of premium luxury retreats saved for your next getaway. Compare private pool villas, view pricing, and check dates. Plan your trip.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
+  },
 };
 
 export const dynamic = "force-dynamic";

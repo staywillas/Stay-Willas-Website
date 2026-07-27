@@ -8,9 +8,29 @@ import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 export const metadata: Metadata = {
   title: "About Stay Willas | Luxury Villa Rentals in Lonavala & Beyond",
   description: "Learn about Stay Willas, our story, values, and curation process. We offer premium luxury private villa rentals with warm local hospitality in Lonavala, Khopoli and more.",
-  keywords: ["about Stay Willas", "Stay Willas company", "luxury hospitality maharashtra", "premium villa management", "who owns stay willas", "staywillas", "villas in lonavala"],
+  keywords: ["about Stay Willas", "luxury villas in lonavla and khopoli", "premium villa management"],
   alternates: {
     canonical: "/about",
+  },
+  openGraph: {
+    title: "About Stay Willas | Luxury Villa Rentals in Lonavala & Beyond",
+    description: "Learn about Stay Willas, our story, values, and curation process. We offer premium luxury private villa rentals with warm local hospitality in Lonavala, Khopoli and more.",
+    url: "https://www.staywillas.com/about",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "About Stay Willas",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Stay Willas | Luxury Villa Rentals in Lonavala & Beyond",
+    description: "Learn about Stay Willas, our story, values, and curation process. We offer premium luxury private villa rentals with warm local hospitality in Lonavala, Khopoli and more.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 
@@ -19,6 +39,27 @@ export default function AboutPage() {
     <main className="min-h-screen bg-bg-primary text-text-primary">
       <h1 className="sr-only">About Stay Willas - Luxury Villa Rentals in Maharashtra</h1>
       <Navbar />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Stay Willas",
+            "description": "Premium luxury villa rentals in Maharashtra. Handpicked private pool villas near Mumbai and Pune with chef services, pet-friendly options, and concierge support.",
+            "url": "https://www.staywillas.com",
+            "telephone": "+91-9619042310",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Kim cottage, 14, PR Kadam Marg, Maneklal Estate, Ghatkopar West",
+              "addressLocality": "Mumbai",
+              "addressRegion": "Maharashtra",
+              "postalCode": "400084",
+              "addressCountry": "IN"
+            }
+          })
+        }}
+      />
       
       {/* Hero Section */}
       <section className="pt-48 pb-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">

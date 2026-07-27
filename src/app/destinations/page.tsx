@@ -11,9 +11,29 @@ import { prisma } from "@/lib/db";
 export const metadata: Metadata = {
   title: "Luxury Villa Destinations | Lonavala, Khopoli & More | Stay Willas",
   description: "Discover premium luxury villa rentals across top destinations in Maharashtra including Lonavala, Khopoli, Alibaug, and Karjat. Find your perfect getaway.",
-  keywords: ["Stay Willas destinations", "villas in lonavala", "khopoli private pool villas", "alibaug luxury villas", "karjat private pool villas", "panchgani holiday homes", "mahabaleshwar villa rentals", "best weekend getaways maharashtra", "staywillas"],
+  keywords: ["Stay Willas destinations", "villas in lonavla", "luxury villas in khopoli"],
   alternates: {
     canonical: "/destinations",
+  },
+  openGraph: {
+    title: "Luxury Villa Destinations | Lonavala, Khopoli & More | Stay Willas",
+    description: "Discover premium luxury villa rentals across top destinations in Maharashtra including Lonavala, Khopoli, Alibaug, and Karjat. Find your perfect getaway.",
+    url: "https://www.staywillas.com/destinations",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "Stay Willas Destinations",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luxury Villa Destinations | Lonavala, Khopoli & More | Stay Willas",
+    description: "Discover premium luxury villa rentals across top destinations in Maharashtra including Lonavala, Khopoli, Alibaug, and Karjat. Find your perfect getaway.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 

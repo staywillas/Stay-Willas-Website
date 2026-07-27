@@ -15,6 +15,26 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.staywillas.com/blog",
   },
+  openGraph: {
+    title: "Stay Willas Blog | Luxury Villa Guides & Staycation Tips",
+    description: "Explore the Stay Willas blog for luxury villa guides, weekend staycation tips, and travel ideas near Mumbai and Pune. Read our latest articles.",
+    url: "https://www.staywillas.com/blog",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "Stay Willas Blog",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Stay Willas Blog | Luxury Villa Guides & Staycation Tips",
+    description: "Explore the Stay Willas blog for luxury villa guides, weekend staycation tips, and travel ideas near Mumbai and Pune. Read our latest articles.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
+  },
 };
 
 export default function BlogIndexPage() {

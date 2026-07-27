@@ -81,19 +81,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   let titleText = `Luxury Villas in ${area.name} with Private Pool | Stay Willas`;
   let descText = `Rent luxury villas in ${area.name} with private pool, scenic views & chef service. Ideal for family weekend getaways. Check availability and book now.`;
   let keywordList = [`luxury villas in ${area.name} with private pool`, `private pool villa in ${area.name}`];
+  let indexRobots = true;
 
   if (regionKey === "lonavala") {
     titleText = `Luxury Villa in Lonavala with Private Pool | Stay Willas`;
     descText = "Rent a luxury villa in lonavala with private pool, scenic mountain views & chef. Ideal for a lonavala villa staycation and group trips. Check availability now.";
     keywordList = ["luxury villa in lonavala with private pool", "lonavala villa staycation"];
   } else if (regionKey === "alibaug") {
-    titleText = `Luxury Villa in Alibaug with Private Pool | Stay Willas`;
-    descText = "Rent a premium luxury villa in alibaug with private pool, beach views, and a private chef. Perfect for family weekend staycations. Book your villa on rent in alibaug today!";
+    titleText = "Alibaug Villas Coming Soon | Join the Waitlist – Stay Willas";
+    descText = "Join the Stay Willas waitlist for our upcoming luxury private pool villas in Alibaug. Be the first to get notified when these premium properties launch.";
     keywordList = ["luxury villa in alibaug with private pool", "villa on rent in alibaug"];
+    indexRobots = false;
   } else if (regionKey === "karjat") {
-    titleText = `Private Pool Villa in Karjat | Luxury Karjat Villa on Rent`;
-    descText = "Book a premium private pool villa in karjat for a peaceful riverside getaway. Enjoy custom chef meals, private lawns, and top hospitality. Plan your karjat villa on rent now.";
+    titleText = "Karjat Villas Coming Soon | Join the Waitlist – Stay Willas";
+    descText = "Join the Stay Willas waitlist for our upcoming luxury private pool villas in Karjat. Be the first to get notified when these premium properties launch.";
     keywordList = ["private pool villa in karjat", "karjat villa on rent"];
+    indexRobots = false;
   } else if (regionKey === "khopoli") {
     titleText = `Khopoli Private Pool Villa | Luxury Villa in Khopoli on Rent`;
     descText = "Book a premium khopoli private pool villa nestled in green mountains. Escape to a private mountain view villa in khopoli on rent with customized chef service.";
@@ -112,8 +115,32 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: titleText,
     description: descText,
     keywords: keywordList,
+    robots: {
+      index: indexRobots,
+      follow: true,
+    },
     alternates: {
       canonical: `https://www.staywillas.com/areas/${regionKey}`,
+    },
+    openGraph: {
+      title: titleText,
+      description: descText,
+      url: `https://www.staywillas.com/areas/${regionKey}`,
+      images: [
+        {
+          url: "https://www.staywillas.com/images/hero-villa.png",
+          width: 1200,
+          height: 630,
+          alt: `Stay Willas Luxury Villas in ${area.name}`,
+        }
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titleText,
+      description: descText,
+      images: ["https://www.staywillas.com/images/hero-villa.png"],
     },
   };
 }

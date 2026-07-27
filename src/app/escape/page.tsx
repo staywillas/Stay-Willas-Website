@@ -10,6 +10,26 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/escape",
   },
+  openGraph: {
+    title: "Couple Staycation near Mumbai | Private Pool Drives | Stay Willas",
+    description: "Plan a romantic couple staycation near Mumbai with Stay Willas. Discover private pool estates, scenic hill view drives, and personalized chef services.",
+    url: "https://www.staywillas.com/escape",
+    images: [
+      {
+        url: "https://www.staywillas.com/images/hero-villa.png",
+        width: 1200,
+        height: 630,
+        alt: "Romantic Couple Staycation near Mumbai",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Couple Staycation near Mumbai | Private Pool Drives | Stay Willas",
+    description: "Plan a romantic couple staycation near Mumbai with Stay Willas. Discover private pool estates, scenic hill view drives, and personalized chef services.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
+  },
 };
 
 export default async function EscapePage() {

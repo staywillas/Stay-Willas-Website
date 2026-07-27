@@ -29,19 +29,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const ogImageUrl = blog.image.startsWith("http") ? blog.image : `https://www.staywillas.com${blog.image}`;
+
   return {
     title: blog.metaTitle,
     description: blog.description,
     keywords: blog.keywords,
     alternates: {
-      canonical: `/blog/${blog.slug}`,
+      canonical: `https://www.staywillas.com/blog/${blog.slug}`,
     },
     openGraph: {
       title: blog.metaTitle,
       description: blog.description,
-      images: [{ url: blog.image }],
+      url: `https://www.staywillas.com/blog/${blog.slug}`,
+      images: [{ url: ogImageUrl }],
       type: "article",
       publishedTime: new Date(blog.date).toISOString(),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: blog.metaTitle,
+      description: blog.description,
+      images: [ogImageUrl],
     },
   };
 }
@@ -95,11 +104,40 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     }
   };
 
-  const schemaToInject = faqList.length > 0 ? [articleSchema, {
+  const breadcrumbSchema = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqList
-  }] : [articleSchema];
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.staywillas.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://www.staywillas.com/blog"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": blog.title,
+        "item": `https://www.staywillas.com/blog/${blog.slug}`
+      }
+    ]
+  };
+
+  const schemaToInject = [
+    articleSchema,
+    breadcrumbSchema,
+    ...(faqList.length > 0 ? [{
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqList
+    }] : [])
+  ];
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary selection:bg-accent-primary selection:text-white">
