@@ -114,7 +114,7 @@ export default async function AreasPage() {
             <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#2563EB]/40" />
           </div>
           
-          <p className="text-text-primary/70 text-sm sm:text-base leading-relaxed max-w-2xl font-light">
+          <p className="text-text-primary/75 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl font-normal mt-4">
             Targeting the most scenic locations across Maharashtra. Choose your escape from our carefully curated destinations.
           </p>
         </section>
@@ -158,7 +158,7 @@ export default async function AreasPage() {
                     <h2 className="text-2xl font-heading font-semibold text-text-primary mb-3">
                       {area.name}
                     </h2>
-                    <p className="text-text-primary/60 text-xs sm:text-sm leading-relaxed font-light">
+                    <p className="text-text-primary/60 text-sm sm:text-base leading-relaxed font-light">
                       {area.desc}
                     </p>
                   </div>
@@ -192,7 +192,7 @@ export default async function AreasPage() {
 
         {/* SEO Content Section */}
         <section className="py-20 px-6 md:px-12 bg-white border-t border-[#DAA520]/15 w-full">
-          <div className="max-w-4xl mx-auto prose text-left">
+          <div className="max-w-4xl mx-auto prose prose-lg md:prose-xl text-left text-slate-800 leading-relaxed font-light select-text">
             <h2>Weekend Getaway Villas Near Mumbai & Pune</h2>
             <p>
               Are you tired of the repetitive city routine and seeking a relaxing break close to home? Finding luxury <strong>weekend getaway villas</strong> has become the preferred choice for discerning travelers who want to escape traffic, noise, and pollution. Whether it is a quick family gathering or a private pool party with friends, booking independent <strong>private pool rentals</strong> near Mumbai and Pune provides the perfect solution. You get the space, privacy, and specialized concierge services that traditional hotels simply cannot deliver. Our homes are built to offer you a home away from home.
