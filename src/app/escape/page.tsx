@@ -4,15 +4,15 @@ import { prisma } from "@/lib/db";
 import EscapeClientPage from "./escape-client-page";
 
 export const metadata: Metadata = {
-  title: "Villa Vacation & Villa Rentals in Lonavala & Khopoli | Stay Willas",
-  description: "Plan an epic friends group villa vacation in Lonavala or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
-  keywords: ["villa rentals in lonavala", "villas in khopoli", "friends villa vacation"],
+  title: "Villa Rentals in Lonavala & Villas in Khopoli | Friends Villa Vacation & Staycation Villas in Maharashtra",
+  description: "Plan an epic friends villa vacation with verified villa rentals in lonavala and luxury villas in khopoli. Rent staycation villas in maharashtra with chef services and private pool.",
+  keywords: ["villa rentals in lonavala", "villas in khopoli", "friends villa vacation", "staycation villas in maharashtra"],
   alternates: {
-    canonical: "/escape",
+    canonical: "https://www.staywillas.com/escape",
   },
   openGraph: {
-    title: "Villa Vacation & Villa Rentals in Lonavala & Khopoli | Stay Willas",
-    description: "Plan an epic friends group villa vacation in Lonavala or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
+    title: "Villa Rentals in Lonavala & Villas in Khopoli | Friends Villa Vacation & Staycation Villas in Maharashtra",
+    description: "Plan an epic friends villa vacation with verified villa rentals in lonavala and luxury villas in khopoli. Rent staycation villas in maharashtra with chef services and private pool.",
     url: "https://www.staywillas.com/escape",
     images: [
       {
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villa Vacation & Villa Rentals in Lonavala & Khopoli | Stay Willas",
-    description: "Plan an epic friends group villa vacation in Lonavala or Khopoli. Rent luxury private pool villas with chef services, BBQ setup, and games. Book your staycation today!",
+    title: "Villa Rentals in Lonavala & Villas in Khopoli | Friends Villa Vacation & Staycation Villas in Maharashtra",
+    description: "Plan an epic friends villa vacation with verified villa rentals in lonavala and luxury villas in khopoli. Rent staycation villas in maharashtra with chef services and private pool.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

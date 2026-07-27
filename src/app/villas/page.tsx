@@ -8,15 +8,15 @@ import VillasClient from "@/components/villas/villas-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Staycation Villas in Maharashtra & Lonavala | Stay Willas",
-  description: "Rent staycation villas in Maharashtra, Lonavala, and Khopoli. Explore handpicked verified luxury villas with pool near Mumbai and Pune. Premium amenities and scenic views.",
-  keywords: ["villas in lonavala on rent", "luxury villas in lonavala and khopoli", "luxury villas in khopoli with pool"],
+  title: "Staycation Villas in Maharashtra & Villas in Lonavala | Villas Near Mumbai & Luxury Villas in Maharashtra with Pool",
+  description: "Rent staycation villas in maharashtra and verified villas in lonavala. Discover luxury villas in maharashtra with pool and villas near mumbai for weekend getaways with private chef service.",
+  keywords: ["staycation villas in maharashtra", "villas in lonavala", "villas near mumbai", "luxury villas in maharashtra with pool"],
   alternates: {
-    canonical: "/villas",
+    canonical: "https://www.staywillas.com/villas",
   },
   openGraph: {
-    title: "Staycation Villas in Maharashtra & Lonavala | Stay Willas",
-    description: "Rent staycation villas in Maharashtra, Lonavala, and Khopoli. Explore handpicked verified luxury villas with pool near Mumbai and Pune. Premium amenities and scenic views.",
+    title: "Staycation Villas in Maharashtra & Villas in Lonavala | Villas Near Mumbai & Luxury Villas in Maharashtra with Pool",
+    description: "Rent staycation villas in maharashtra and verified villas in lonavala. Discover luxury villas in maharashtra with pool and villas near mumbai for weekend getaways with private chef service.",
     url: "https://www.staywillas.com/villas",
     images: [
       {
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Staycation Villas in Maharashtra & Lonavala | Stay Willas",
-    description: "Rent staycation villas in Maharashtra, Lonavala, and Khopoli. Explore handpicked verified luxury villas with pool near Mumbai and Pune. Premium amenities and scenic views.",
+    title: "Staycation Villas in Maharashtra & Villas in Lonavala | Villas Near Mumbai & Luxury Villas in Maharashtra with Pool",
+    description: "Rent staycation villas in maharashtra and verified villas in lonavala. Discover luxury villas in maharashtra with pool and villas near mumbai for weekend getaways with private chef service.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

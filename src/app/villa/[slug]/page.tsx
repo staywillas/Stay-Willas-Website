@@ -175,27 +175,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const city = villa.location.split(",")[0].trim();
-  const primaryKeyword = `luxury villa in ${city} with private pool`;
-  const secondaryKeyword = `rent private pool villa in ${city}`;
-  const tertiaryKeyword = `holiday home in ${city}`;
-  const quartKeyword = `${villa.bedrooms}BHK villa in ${city}`;
+  let titleText = `${villa.name} | Luxury Villa in ${city} with Private Pool | ${villa.bedrooms} BHK Villa in ${city}`;
+  let descText = `Book ${villa.name}, a luxury villa in ${city} with private pool and ${villa.bedrooms} bhk villa in ${city}. Reserve your staycation today!`;
+  let keywordsList = [`luxury villa in ${city} with private pool`, `private pool villa in ${city}`, `${villa.bedrooms} bhk villa in ${city}`];
 
-  let titleText = `${villa.name} | Luxury Villa in ${city} with Private Pool`;
-  if (titleText.length > 60) {
-    titleText = `${villa.name} | Luxury Villa in ${city} with Pool`;
+  if (villa.slug === "the-angle-house") {
+    titleText = "The Angle House Lonavala | Luxury Villa in Lonavala with Private Pool | 4 BHK Villa in Lonavala & Pet Friendly Villa in Lonavala";
+    descText = "Book The Angle House Lonavala, a 4 bhk villa in lonavala and pet friendly villa in lonavala. Experience a luxury villa in lonavala with private pool, mountain views, and chef.";
+    keywordsList = ["the angle house lonavala", "luxury villa in lonavala with private pool", "4 bhk villa in lonavala", "pet friendly villa in lonavala"];
+  } else if (villa.slug === "canopy-crest") {
+    titleText = "Canopy Crest Khopoli | Khopoli Private Pool Villa | 3 BHK Villa in Khopoli & Luxury Villa in Khopoli on Rent";
+    descText = "Reserve Canopy Crest Khopoli, a 3 bhk villa in khopoli and khopoli private pool villa. Rent a luxury villa in khopoli on rent with private chef and scenic views.";
+    keywordsList = ["canopy crest khopoli", "khopoli private pool villa", "3 bhk villa in khopoli", "luxury villa in khopoli on rent"];
   }
-  if (titleText.length > 60) {
-    titleText = `${villa.name} | Villa in ${city} with Pool`;
-  }
-
-  const descText = `Book ${villa.name}, a premium ${villa.bedrooms}BHK luxury villa in ${city} with private pool, premium amenities, and scenic views. Reserve your staycation today!`;
 
   const ogImageUrl = villa.images[0] ? `https://www.staywillas.com${villa.images[0]}` : "https://www.staywillas.com/images/hero-villa.png";
 
   return {
     title: titleText,
     description: descText,
-    keywords: [primaryKeyword, secondaryKeyword, tertiaryKeyword],
+    keywords: keywordsList,
     alternates: {
       canonical: `https://www.staywillas.com/villa/${villa.slug}`,
     },
