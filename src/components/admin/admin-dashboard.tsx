@@ -28,6 +28,7 @@ import {
 import Image from "next/image";
 import AvailabilityCalendar from "@/components/admin/availability-calendar";
 import DailyPricingCalendar from "@/components/admin/daily-pricing-calendar";
+import BillCalculator from "@/components/admin/bill-calculator";
 import { 
   updateVillaDetails, 
   getChannelConfigs, 
@@ -109,7 +110,7 @@ const AdminDashboard = ({
   initialInquiries,
   userEmail 
 }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "inquiries" | "calendar" | "pricing">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "inquiries" | "calendar" | "pricing" | "calculator">("overview");
   const [inquiryFilter, setInquiryFilter] = useState<"ALL" | "GUEST" | "OWNER">("ALL");
 
   // Lift properties and bookings to states for high reactivity
@@ -573,9 +574,23 @@ const AdminDashboard = ({
         >
           User Inquiries ({totalInquiriesCount})
         </button>
+        <button
+          onClick={() => setActiveTab("calculator")}
+          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
+            activeTab === "calculator" 
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
+          }`}
+        >
+          🧮 Invoice Calculator
+        </button>
       </div>
 
       {/* Tab Contents */}
+      {activeTab === "calculator" && (
+        <BillCalculator villas={villas as any} />
+      )}
+
       {activeTab === "pricing" && (
         <DailyPricingCalendar 
           villas={villas} 
