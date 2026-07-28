@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import fs from "fs";
 import path from "path";
+import { sendEmail } from "@/lib/mail";
 
 // -------------------------------------------------------------------------
 // 1. Manual Bookings / Stays Operations
@@ -549,5 +550,161 @@ export async function deleteDailyPriceRange(
     return { success: false, error: error.message || "Failed to clear daily pricing overrides." };
   }
 }
+
+// -------------------------------------------------------------------------
+// 4. Email Invoice Action
+// -------------------------------------------------------------------------
+
+export async function sendInvoiceEmailAction(data: {
+  guestName: string;
+  guestEmail: string;
+  guestPhone?: string;
+  villaName: string;
+  location: string;
+  nights: number;
+  guestsCount: number;
+  totalStayCost: number;
+  foodPlanName: string;
+  totalFoodCost: number;
+  totalExtrasCost: number;
+  subtotal: number;
+  gstPercent: number;
+  gstAmount: number;
+  grandTotal: number;
+  advancePaid: number;
+  balanceDue: number;
+}) {
+  try {
+    if (!data.guestEmail || !data.guestEmail.includes("@")) {
+      return { success: false, error: "Please enter a valid guest email address." };
+    }
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Stay Willas Reservation Invoice</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; background-color: #FAF8F5; margin: 0; padding: 20px; color: #1E293B;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #1B3564; padding: 24px; text-align: center;">
+              <h1 style="color: #DAA520; margin: 0; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; font-weight: bold;">STAY WILLAS</h1>
+              <p style="color: #ffffff; margin: 4px 0 0 0; font-size: 11px; tracking: 1px; text-transform: uppercase;">Luxury Estates & Private Sanctuary</p>
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 32px 24px;">
+              <h2 style="color: #1B3564; font-size: 18px; margin-top: 0;">Reservation Invoice & Booking Confirmation</h2>
+              <p style="font-size: 14px; color: #475569; line-height: 1.6;">Dear <strong>${data.guestName || "Valued Guest"}</strong>,</p>
+              <p style="font-size: 14px; color: #475569; line-height: 1.6;">Thank you for choosing Stay Willas! Below is your official invoice statement for your upcoming stay at <strong>${data.villaName} (${data.location})</strong>.</p>
+
+              <!-- Reservation Overview Card -->
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; margin: 20px 0; padding: 16px;">
+                <tr>
+                  <td style="padding: 6px 0; font-size: 13px; color: #64748B;">Property Location:</td>
+                  <td style="padding: 6px 0; font-size: 13px; font-weight: bold; color: #1B3564; text-align: right;">${data.villaName} (${data.location})</td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; font-size: 13px; color: #64748B;">Total Stay Duration:</td>
+                  <td style="padding: 6px 0; font-size: 13px; font-weight: bold; color: #1E293B; text-align: right;">${data.nights} Night(s)</td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; font-size: 13px; color: #64748B;">Guest Occupancy:</td>
+                  <td style="padding: 6px 0; font-size: 13px; font-weight: bold; color: #1E293B; text-align: right;">${data.guestsCount} Guest(s)</td>
+                </tr>
+              </table>
+
+              <!-- Invoice Cost Breakdown Table -->
+              <h3 style="font-size: 14px; color: #1B3564; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Tariff Breakdown</h3>
+              <table width="100%" border="0" cellpadding="8" cellspacing="0" style="border-collapse: collapse; font-size: 13px; margin-bottom: 20px;">
+                <tr style="background-color: #1B3564; color: #ffffff;">
+                  <th align="left" style="border-radius: 6px 0 0 6px;">Description</th>
+                  <th align="right" style="border-radius: 0 6px 6px 0;">Amount (INR)</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #E2E8F0;">
+                  <td style="color: #334155;">Villa Accommodation Tariff (${data.nights} Nights)</td>
+                  <td align="right" style="font-weight: bold; color: #0F172A;">₹${data.totalStayCost.toLocaleString("en-IN")}</td>
+                </tr>
+                ${
+                  data.totalFoodCost > 0
+                    ? `<tr style="border-bottom: 1px solid #E2E8F0;">
+                        <td style="color: #334155;">Catering Package (${data.foodPlanName})</td>
+                        <td align="right" style="font-weight: bold; color: #0F172A;">₹${data.totalFoodCost.toLocaleString("en-IN")}</td>
+                       </tr>`
+                    : ""
+                }
+                ${
+                  data.totalExtrasCost > 0
+                    ? `<tr style="border-bottom: 1px solid #E2E8F0;">
+                        <td style="color: #334155;">Custom Add-ons & Extra Services</td>
+                        <td align="right" style="font-weight: bold; color: #0F172A;">₹${data.totalExtrasCost.toLocaleString("en-IN")}</td>
+                       </tr>`
+                    : ""
+                }
+                <tr style="border-bottom: 1px solid #E2E8F0; background-color: #F8FAFC;">
+                  <td style="font-weight: bold; color: #475569;">Gross Subtotal</td>
+                  <td align="right" style="font-weight: bold; color: #0F172A;">₹${data.subtotal.toLocaleString("en-IN")}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E2E8F0;">
+                  <td style="color: #64748B;">GST (${data.gstPercent}%)</td>
+                  <td align="right" style="color: #0F172A;">₹${data.gstAmount.toLocaleString("en-IN")}</td>
+                </tr>
+                <tr style="background-color: #FEF3C7;">
+                  <td style="font-weight: bold; color: #92400E; font-size: 15px;">NET PAYABLE AMOUNT</td>
+                  <td align="right" style="font-weight: bold; color: #92400E; font-size: 16px;">₹${data.grandTotal.toLocaleString("en-IN")}</td>
+                </tr>
+              </table>
+
+              <!-- Payment Status Card -->
+              <table width="100%" border="0" cellpadding="12" cellspacing="0" style="background-color: #1B3564; border-radius: 12px; color: #ffffff; margin-top: 10px;">
+                <tr>
+                  <td>
+                    <div style="font-size: 12px; color: #DAA520; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Advance Paid: ₹${data.advancePaid.toLocaleString("en-IN")}</div>
+                    <div style="font-size: 16px; font-weight: bold; margin-top: 4px;">
+                      BALANCE REMAINING: ${data.balanceDue <= 0 ? "PAID IN FULL" : `₹${data.balanceDue.toLocaleString("en-IN")}`}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="font-size: 13px; color: #64748B; margin-top: 24px; line-height: 1.5;">
+                For any modifications or assistance with your reservation, please contact our concierge team directly on WhatsApp or call <strong>+91 9619042310</strong>.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #F1F5F9; padding: 16px; text-align: center; font-size: 11px; color: #94A3B8;">
+              Stay Willas Luxury Estates  |  www.staywillas.com  |  Automated Reservation Billing
+            </td>
+          </tr>
+        </table>
+      </body>
+      </html>
+    `;
+
+    const result = await sendEmail({
+      to: data.guestEmail,
+      subject: `Stay Willas Booking Invoice - ${data.villaName} (${data.guestName})`,
+      html: htmlContent,
+    });
+
+    if (result.success) {
+      return { success: true, message: `Invoice email successfully sent to ${data.guestEmail}!` };
+    } else {
+      return { success: false, error: "Failed to dispatch email. Please check server mail settings." };
+    }
+  } catch (error: any) {
+    console.error("sendInvoiceEmailAction error:", error);
+    return { success: false, error: error.message || "Failed to dispatch email." };
+  }
+}
+
 
 

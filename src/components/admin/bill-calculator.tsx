@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Calendar, User, FileText, Plus, Trash2, Download, Calculator } from "lucide-react";
+import { Sparkles, Calendar, User, FileText, Plus, Trash2, Download, Calculator, Mail, Send, Share2, CheckCircle2, AlertCircle } from "lucide-react";
+import { sendInvoiceEmailAction } from "@/app/actions/admin";
 
 interface Villa {
   id: string;
@@ -66,6 +67,112 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   const [discountFlat, setDiscountFlat] = useState(0);
   const [gstPercent, setGstPercent] = useState(18);
   const [advancePaid, setAdvancePaid] = useState(0);
+
+  // Email & Communication States
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailFeedback, setEmailFeedback] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+
+  // Auto-Draft Mailto Link Launcher (Opens client email app with pre-written text & details)
+  const handleDraftMailto = () => {
+    const selectedVilla = villas.find((v) => v.slug === selectedVillaSlug);
+    const villaName = selectedVilla ? selectedVilla.name : "Villa Property";
+    const villaLoc = selectedVilla ? selectedVilla.location : "";
+
+    const mailSubject = `Stay Willas Booking Invoice - ${villaName} (${guestName || "Guest"})`;
+    const mailBody = `Dear ${guestName || "Valued Guest"},\n\n` +
+      `Thank you for choosing Stay Willas Luxury Estates!\n\n` +
+      `Below is your reservation invoice summary for your stay at ${villaName} (${villaLoc}):\n` +
+      `------------------------------------------\n` +
+      `• Primary Guest: ${guestName || "N/A"}\n` +
+      `• Contact Phone: ${guestPhone || "N/A"}\n` +
+      `• Total Duration: ${nights} Night(s)\n` +
+      `• Guest Count: ${guestsCount} Guest(s)\n` +
+      `------------------------------------------\n` +
+      `• Stay Accommodation Tariff: Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
+      (foodPlan !== "none" ? `• Catering Plan (${foodPlan}): Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
+      (totalExtrasCost > 0 ? `• Add-ons & Custom Extras: Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
+      `• Subtotal: Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}\n` +
+      `• GST Tax (${gstPercent}%): Rs. ${gstAmount.toLocaleString("en-IN")}\n` +
+      `• NET PAYABLE GRAND TOTAL: Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
+      `------------------------------------------\n` +
+      `• Advance Received: Rs. ${advancePaid.toLocaleString("en-IN")}\n` +
+      `• BALANCE REMAINING: ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
+      `------------------------------------------\n\n` +
+      `Please find your detailed invoice statement PDF attached.\n\n` +
+      `Warm regards,\n` +
+      `Stay Willas Luxury Estates Concierge\n` +
+      `WhatsApp / Call: +91 9619042310 | www.staywillas.com`;
+
+    const mailtoUrl = `mailto:${encodeURIComponent(guestEmail || "")}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+    window.location.href = mailtoUrl;
+  };
+
+  // Direct Server-Side Email Dispatch via Resend / Nodemailer
+  const handleSendDirectEmail = async () => {
+    const selectedVilla = villas.find((v) => v.slug === selectedVillaSlug);
+    if (!selectedVilla) return;
+
+    if (!guestEmail || !guestEmail.includes("@")) {
+      setEmailFeedback({ type: "error", msg: "Please enter a valid guest email in Section 1." });
+      return;
+    }
+
+    setIsSendingEmail(true);
+    setEmailFeedback(null);
+
+    const res = await sendInvoiceEmailAction({
+      guestName: guestName || "Valued Guest",
+      guestEmail: guestEmail.trim(),
+      guestPhone,
+      villaName: selectedVilla.name,
+      location: selectedVilla.location,
+      nights,
+      guestsCount,
+      totalStayCost,
+      foodPlanName: foodPlan === "none" ? "No Meal Plan" : foodPlan,
+      totalFoodCost,
+      totalExtrasCost,
+      subtotal: subtotalBeforeDiscount,
+      gstPercent,
+      gstAmount,
+      grandTotal,
+      advancePaid,
+      balanceDue,
+    });
+
+    setIsSendingEmail(false);
+    if (res.success) {
+      setEmailFeedback({ type: "success", msg: res.message || "Invoice email dispatched to guest!" });
+    } else {
+      setEmailFeedback({ type: "error", msg: res.error || "Failed to send email." });
+    }
+  };
+
+  // Share via WhatsApp Web / App
+  const handleShareWhatsApp = () => {
+    const selectedVilla = villas.find((v) => v.slug === selectedVillaSlug);
+    const villaName = selectedVilla ? selectedVilla.name : "Stay Willas Property";
+
+    const msg = `✨ *Stay Willas - Reservation Invoice* ✨\n` +
+      `------------------------------------------\n` +
+      `🏰 *Property:* ${villaName}\n` +
+      `👤 *Guest Name:* ${guestName || "Valued Guest"}\n` +
+      `🌙 *Stay Duration:* ${nights} Night(s)\n` +
+      `👥 *Guests:* ${guestsCount} Pax\n` +
+      `------------------------------------------\n` +
+      `💰 *Grand Total:* Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
+      `💳 *Advance Received:* Rs. ${advancePaid.toLocaleString("en-IN")}\n` +
+      `📌 *Balance Due:* ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
+      `------------------------------------------\n` +
+      `Thank you for booking with Stay Willas! 🥂`;
+
+    const cleanPhone = guestPhone ? guestPhone.replace(/[^0-9]/g, "") : "";
+    const waUrl = cleanPhone.length >= 10
+      ? `https://wa.me/${cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`
+      : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+
+    window.open(waUrl, "_blank");
+  };
 
   // Prefill values when villa changes
   useEffect(() => {
@@ -443,81 +550,104 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   };
 
   return (
-    <div className="bg-[#FAF8F5] border border-border-subtle rounded-3xl p-6 md:p-8 max-w-6xl mx-auto shadow-sm text-left">
-      <div className="flex items-center gap-3 border-b border-border-subtle pb-6 mb-8">
-        <div className="w-12 h-12 rounded-2xl bg-[#1B3564] text-white flex items-center justify-center shadow-md">
-          <Calculator className="w-6 h-6 text-[#DAA520]" />
+    <div className="bg-[#FAF8F5] border border-border-subtle rounded-3xl p-4 md:p-8 max-w-7xl mx-auto shadow-sm text-left">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-subtle pb-6 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-[#1B3564] text-white flex items-center justify-center shadow-md shrink-0">
+            <Calculator className="w-6 h-6 text-[#DAA520]" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-heading font-bold text-[#1B3564]">Admin Invoice & Bill Calculator</h2>
+            <p className="text-xs text-text-primary/60 mt-0.5">Calculate tariffs, food plans, add custom charges, and download invoice PDFs instantly.</p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-2xl font-heading font-bold text-[#1B3564]">Admin Invoice & Bill Calculator</h2>
-          <p className="text-xs text-text-primary/60 mt-0.5">Calculate tariffs, food plans, add custom charges, and download invoice PDFs instantly.</p>
-        </div>
+        
+        {/* Quick Info Badge */}
+        {selectedVillaSlug && (
+          <div className="bg-white border border-[#DAA520]/40 rounded-2xl px-4 py-2 flex items-center gap-3 shadow-xs">
+            <div className="text-right">
+              <span className="text-[10px] font-black uppercase text-slate-400 block">Selected Property</span>
+              <span className="text-xs font-bold text-[#1B3564]">
+                {villas.find(v => v.slug === selectedVillaSlug)?.name}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Form Container (Takes 2 columns) */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-6">
           
-          {/* Section 1: Guest Information */}
-          <div className="bg-white border border-border-subtle/60 rounded-2xl p-5 space-y-4">
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#1B3564]">
-              <User size={16} className="text-[#DAA520]" />
-              <span>1. Guest Details</span>
+          {/* Section 1: Guest Details */}
+          <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
+                <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">1</span>
+                <User size={16} className="text-[#DAA520]" />
+                <span>Guest Details</span>
+              </div>
+              <span className="text-[10px] font-semibold text-slate-400">Primary Contact Info</span>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Primary Guest Name</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Primary Guest Name</label>
                 <input
                   type="text"
                   placeholder="e.g. Rahul Sharma"
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50"
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 transition-colors font-medium"
                 />
               </div>
               <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Phone Number</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Phone Number</label>
                 <input
                   type="text"
                   placeholder="e.g. 9876543210"
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50"
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 transition-colors font-medium"
                 />
               </div>
               <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Email Address</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Email Address</label>
                 <input
                   type="email"
                   placeholder="e.g. rahul@gmail.com"
                   value={guestEmail}
                   onChange={(e) => setGuestEmail(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50"
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 transition-colors font-medium"
                 />
               </div>
             </div>
           </div>
 
           {/* Section 2: Stay Configuration */}
-          <div className="bg-white border border-border-subtle/60 rounded-2xl p-5 space-y-5">
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#1B3564]">
-              <Calendar size={16} className="text-[#DAA520]" />
-              <span>2. Stay Configuration</span>
+          <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
+                <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">2</span>
+                <Calendar size={16} className="text-[#DAA520]" />
+                <span>Stay Configuration & Rates</span>
+              </div>
+              <span className="text-[10px] font-semibold text-slate-400">Property & Tariff Setup</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Select Villa Location</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Select Villa Location *</label>
                 <select
                   value={selectedVillaSlug}
                   onChange={(e) => setSelectedVillaSlug(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-[#1B3564]"
                 >
-                  <option value="">-- Select Property --</option>
+                  <option value="">-- Select Villa Property --</option>
                   {villas.map((v) => (
                     <option key={v.slug} value={v.slug}>
-                      {v.name} ({v.location})
+                      {v.name} ({v.location}) - Rs. {v.price.toLocaleString("en-IN")}/n
                     </option>
                   ))}
                 </select>
@@ -525,95 +655,97 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Base Rate (Weekday)</label>
+                  <label className="text-xs font-bold text-slate-700 block mb-1.5">Weekday Rate (₹)</label>
                   <input
                     type="number"
                     value={ratePerNight}
                     onChange={(e) => setRatePerNight(Number(e.target.value))}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
+                    className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-slate-900"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Weekend Rate</label>
+                  <label className="text-xs font-bold text-slate-700 block mb-1.5">Weekend Rate (₹)</label>
                   <input
                     type="number"
                     value={weekendRatePerNight}
                     onChange={(e) => setWeekendRatePerNight(Number(e.target.value))}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
+                    className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-slate-900"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Total Nights</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={nights}
-                  onChange={(e) => setNights(Math.max(1, Number(e.target.value)))}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Weekend Nights</label>
-                <input
-                  type="number"
-                  min={0}
-                  max={nights}
-                  value={weekendNights}
-                  onChange={(e) => setWeekendNights(Math.min(nights, Math.max(0, Number(e.target.value))))}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Total Guests</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={guestsCount}
-                  onChange={(e) => setGuestsCount(Math.max(1, Number(e.target.value)))}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
+            <div className="pt-2 border-t border-slate-100">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <label className="text-[8px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Base Guests</label>
+                  <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Total Stay Nights</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={nights}
+                    onChange={(e) => setNights(Math.max(1, Number(e.target.value)))}
+                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Weekend Nights</label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={nights}
+                    value={weekendNights}
+                    onChange={(e) => setWeekendNights(Math.min(nights, Math.max(0, Number(e.target.value))))}
+                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold text-amber-700"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Total Guests Count</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={guestsCount}
+                    onChange={(e) => setGuestsCount(Math.max(1, Number(e.target.value)))}
+                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Base Included Guests</label>
                   <input
                     type="number"
                     value={baseGuests}
                     onChange={(e) => setBaseGuests(Number(e.target.value))}
-                    className="w-full text-[10px] border border-border-subtle rounded-xl px-2 py-2.5 bg-[#FAF8F5] focus:outline-none font-bold"
-                  />
-                </div>
-                <div>
-                  <label className="text-[8px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Extra Fee (Pax)</label>
-                  <input
-                    type="number"
-                    value={extraGuestFee}
-                    onChange={(e) => setExtraGuestFee(Number(e.target.value))}
-                    className="w-full text-[10px] border border-border-subtle rounded-xl px-2 py-2.5 bg-[#FAF8F5] focus:outline-none font-bold"
+                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none font-bold"
                   />
                 </div>
               </div>
+
+              {extraGuestsCount > 0 && (
+                <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex justify-between items-center text-xs text-emerald-900 font-semibold">
+                  <span>Extra Guest Tariff ({extraGuestsCount} Pax @ ₹{extraGuestFee.toLocaleString("en-IN")}/night):</span>
+                  <span className="font-bold text-emerald-950">₹{extraGuestsCost.toLocaleString("en-IN")}</span>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Section 3: Food Packages */}
-          <div className="bg-white border border-border-subtle/60 rounded-2xl p-5 space-y-4">
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#1B3564]">
-              <Sparkles size={16} className="text-[#DAA520]" />
-              <span>3. Catering Plans</span>
+          <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
+                <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">3</span>
+                <Sparkles size={16} className="text-[#DAA520]" />
+                <span>Catering & Food Plans</span>
+              </div>
+              <span className="text-[10px] font-semibold text-slate-400">Meal Package Options</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Food Package type</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Select Food Plan</label>
                 <select
                   value={foodPlan}
                   onChange={(e) => setFoodPlan(e.target.value as any)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold"
                 >
                   <option value="none">No Meal Plan</option>
                   <option value="standard">Standard Pricing (Rs. 1,200/day)</option>
@@ -623,86 +755,90 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
               </div>
 
               <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Rate per Person / Day</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Rate per Person / Day (₹)</label>
                 <input
                   type="number"
                   disabled={foodPlan === "none"}
                   value={foodRatePerPersonPerDay}
                   onChange={(e) => setFoodRatePerPersonPerDay(Number(e.target.value))}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold disabled:opacity-50"
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold disabled:opacity-50"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Total Eating Count</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Total Eating Guest Count</label>
                 <input
                   type="number"
                   min={0}
                   disabled={foodPlan === "none"}
                   value={foodGuestsCount}
                   onChange={(e) => setFoodGuestsCount(Number(e.target.value))}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold disabled:opacity-50"
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold disabled:opacity-50"
                 />
               </div>
             </div>
           </div>
 
           {/* Section 4: Extra Custom Charges */}
-          <div className="bg-white border border-border-subtle/60 rounded-2xl p-5 space-y-4">
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#1B3564]">
-              <Plus size={16} className="text-[#DAA520]" />
-              <span>4. Custom Extras & Add-ons</span>
+          <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
+                <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">4</span>
+                <Plus size={16} className="text-[#DAA520]" />
+                <span>Custom Add-ons & Extra Charges</span>
+              </div>
+              <span className="text-[10px] font-semibold text-slate-400">Pool heating, BBQ, Decor</span>
             </div>
 
-            <form onSubmit={handleAddExtra} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end bg-[#FAF8F5] p-4 rounded-xl border border-border-subtle/40">
+            <form onSubmit={handleAddExtra} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end bg-[#FAF8F5] p-4.5 rounded-2xl border border-border-subtle/40">
               <div className="md:col-span-2">
-                <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Charge Description</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Charge Description</label>
                 <input
                   type="text"
-                  placeholder="e.g. Pool Heating Charges, BBQ Setup, Hookah Set"
+                  placeholder="e.g. Pool Heating, BBQ Setup, Hookah Set"
                   value={newExtraDesc}
                   onChange={(e) => setNewExtraDesc(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-white focus:outline-none focus:border-[#1B3564]/50"
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:border-[#1B3564]/50"
                 />
               </div>
               <div className="flex gap-2">
                 <div className="flex-1">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-text-primary/50 block mb-1.5">Amount (Rs.)</label>
+                  <label className="text-xs font-bold text-slate-700 block mb-1.5">Amount (₹)</label>
                   <input
                     type="number"
                     placeholder="e.g. 3000"
                     value={newExtraAmount}
                     onChange={(e) => setNewExtraAmount(e.target.value !== "" ? Number(e.target.value) : "")}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-white focus:outline-none"
+                    className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-white focus:outline-none font-bold"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white px-4.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shrink-0 h-[38px] flex items-center justify-center cursor-pointer shadow-sm"
+                  className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shrink-0 h-[40px] flex items-center justify-center cursor-pointer shadow-sm"
                 >
-                  Add
+                  Add Charge
                 </button>
               </div>
             </form>
 
             {extraCharges.length > 0 && (
-              <div className="border border-border-subtle/30 rounded-xl overflow-hidden text-xs">
-                <div className="bg-slate-50 px-4 py-2 border-b border-border-subtle/30 flex justify-between font-bold text-[#1B3564]">
+              <div className="border border-border-subtle/30 rounded-2xl overflow-hidden text-xs">
+                <div className="bg-slate-50 px-4 py-2.5 border-b border-border-subtle/30 flex justify-between font-bold text-[#1B3564]">
                   <span>Item Description</span>
                   <span>Total Amount</span>
                 </div>
                 <div className="divide-y divide-border-subtle/20 bg-white">
                   {extraCharges.map((item) => (
-                    <div key={item.id} className="px-4 py-2.5 flex items-center justify-between">
+                    <div key={item.id} className="px-4 py-3 flex items-center justify-between">
                       <span className="font-medium text-slate-800">{item.description}</span>
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-[#1B3564]">Rs. {item.amount.toLocaleString("en-IN")}</span>
+                        <span className="font-bold text-[#1B3564]">₹{item.amount.toLocaleString("en-IN")}</span>
                         <button
                           type="button"
                           onClick={() => handleRemoveExtra(item.id)}
-                          className="text-red-500 hover:text-red-700 cursor-pointer"
+                          className="text-red-500 hover:text-red-700 cursor-pointer p-1"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={15} />
                         </button>
                       </div>
                     </div>
@@ -713,80 +849,86 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
           </div>
         </div>
 
-        {/* Invoice Summary Card Column (Takes 1 column) */}
-        <div>
-          <div className="bg-white border border-[#DAA520]/25 rounded-3xl p-6 shadow-md space-y-6 sticky top-28">
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#1b3564] border-b border-border-subtle/40 pb-4">
-              <FileText size={16} className="text-[#DAA520]" />
-              <span>Bill Breakdown Summary</span>
+        {/* Invoice Summary Card Column (Sticky & Smooth Scrollable) */}
+        <div className="lg:col-span-1">
+          <div className="bg-white border border-[#DAA520]/30 rounded-3xl shadow-lg sticky top-24 max-h-[calc(100vh-7rem)] flex flex-col overflow-hidden">
+            
+            {/* Header (Fixed at top of summary) */}
+            <div className="px-6 py-4 bg-[#1B3564] text-white flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider">
+                <FileText size={16} className="text-[#DAA520]" />
+                <span>Bill Breakdown Summary</span>
+              </div>
+              <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-widest bg-white/10 px-2 py-0.5 rounded-full">Live Calc</span>
             </div>
 
-            <div className="space-y-4 text-xs">
+            {/* Body Content (Scrollable) */}
+            <div className="p-6 space-y-5 text-xs flex-1 overflow-y-auto custom-scrollbar">
               {/* Stays Cost */}
-              <div className="flex justify-between items-start">
-                <span className="text-slate-500 font-light">Stay Cost ({nights} Nights)</span>
+              <div className="flex justify-between items-start pb-3 border-b border-slate-100">
+                <span className="text-slate-600 font-medium">Stay Tariff ({nights} Nights)</span>
                 <div className="text-right">
-                  <span className="font-bold text-slate-900 block">Rs. {totalStayCost.toLocaleString("en-IN")}</span>
+                  <span className="font-bold text-slate-900 block text-sm">₹{totalStayCost.toLocaleString("en-IN")}</span>
                   {extraGuestsCount > 0 && (
-                    <span className="text-[9px] text-[#4A5D23] block">(Incl. {extraGuestsCount} Extra Guests)</span>
+                    <span className="text-[10px] text-emerald-700 block font-semibold">(Incl. {extraGuestsCount} Extra Guests)</span>
                   )}
                 </div>
               </div>
 
               {/* Food Cost */}
               {foodPlan !== "none" && (
-                <div className="flex justify-between items-start">
-                  <span className="text-slate-500 font-light">Food Cost ({foodGuestsCount} Pax)</span>
-                  <span className="font-bold text-slate-900">Rs. {totalFoodCost.toLocaleString("en-IN")}</span>
+                <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+                  <span className="text-slate-600 font-medium">Food Package ({foodGuestsCount} Pax)</span>
+                  <span className="font-bold text-slate-900 text-sm">₹{totalFoodCost.toLocaleString("en-IN")}</span>
                 </div>
               )}
 
               {/* Extras Cost */}
               {totalExtrasCost > 0 && (
-                <div className="flex justify-between items-start">
-                  <span className="text-slate-500 font-light">Add-ons & Extras</span>
-                  <span className="font-bold text-slate-900">Rs. {totalExtrasCost.toLocaleString("en-IN")}</span>
+                <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+                  <span className="text-slate-600 font-medium">Add-ons & Extras</span>
+                  <span className="font-bold text-slate-900 text-sm">₹{totalExtrasCost.toLocaleString("en-IN")}</span>
                 </div>
               )}
 
-              {/* Summary Gross Subtotal */}
-              <div className="border-t border-dashed border-border-subtle/40 pt-4 flex justify-between font-bold text-slate-900">
+              {/* Gross Subtotal */}
+              <div className="flex justify-between items-center font-bold text-slate-900 text-sm bg-slate-50 p-3 rounded-xl border border-slate-100">
                 <span>Subtotal:</span>
-                <span>Rs. {subtotalBeforeDiscount.toLocaleString("en-IN")}</span>
+                <span>₹{subtotalBeforeDiscount.toLocaleString("en-IN")}</span>
               </div>
 
-              {/* Discounts Inputs */}
-              <div className="border-t border-border-subtle/30 pt-4 space-y-3">
-                <div className="grid grid-cols-2 gap-2">
+              {/* Discounts & Taxes Inputs */}
+              <div className="bg-[#FAF8F5] p-4 rounded-2xl border border-border-subtle/50 space-y-3.5">
+                <div className="grid grid-cols-2 gap-2.5">
                   <div>
-                    <label className="text-[8px] font-black uppercase tracking-wider text-text-primary/50 block mb-1">Discount %</label>
+                    <label className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-1">Discount %</label>
                     <input
                       type="number"
                       min={0}
                       max={100}
                       value={discountPercent}
                       onChange={(e) => setDiscountPercent(Number(e.target.value))}
-                      className="w-full text-[10px] border border-border-subtle rounded-xl px-2 py-1.5 bg-[#FAF8F5] focus:outline-none"
+                      className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-2 bg-white focus:outline-none font-bold"
                     />
                   </div>
                   <div>
-                    <label className="text-[8px] font-black uppercase tracking-wider text-text-primary/50 block mb-1">Flat Discount (Rs.)</label>
+                    <label className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-1">Flat Discount (₹)</label>
                     <input
                       type="number"
                       min={0}
                       value={discountFlat}
                       onChange={(e) => setDiscountFlat(Number(e.target.value))}
-                      className="w-full text-[10px] border border-border-subtle rounded-xl px-2 py-1.5 bg-[#FAF8F5] focus:outline-none"
+                      className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-2 bg-white focus:outline-none font-bold"
                     />
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-[#1B3564]">GST percentage</label>
+                <div className="flex justify-between items-center pt-1 border-t border-border-subtle/30">
+                  <label className="text-[10px] font-black uppercase tracking-wider text-[#1B3564]">GST Rate</label>
                   <select
                     value={gstPercent}
                     onChange={(e) => setGstPercent(Number(e.target.value))}
-                    className="text-xs border border-border-subtle rounded-lg px-2 py-1 bg-[#FAF8F5] focus:outline-none font-bold"
+                    className="text-xs border border-border-subtle rounded-xl px-2.5 py-1.5 bg-white focus:outline-none font-bold"
                   >
                     <option value={18}>18% GST (Standard)</option>
                     <option value={12}>12% GST</option>
@@ -797,66 +939,128 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
                 {/* Advance Payment Field */}
                 <div className="pt-2 border-t border-border-subtle/30 flex justify-between items-center">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-[#1B3564]">Advance Paid (Rs.)</label>
+                  <label className="text-[10px] font-black uppercase tracking-wider text-[#1B3564]">Advance Paid (₹)</label>
                   <input
                     type="number"
                     min={0}
                     value={advancePaid || ""}
                     placeholder="0"
                     onChange={(e) => setAdvancePaid(Number(e.target.value))}
-                    className="w-32 text-xs border border-border-subtle rounded-lg px-2.5 py-1 bg-[#FAF8F5] focus:outline-none font-bold text-right text-emerald-700"
+                    className="w-32 text-xs border border-emerald-300 rounded-xl px-3 py-1.5 bg-emerald-50 focus:outline-none font-bold text-right text-emerald-800"
                   />
                 </div>
               </div>
 
-              {/* Summary Taxes & final */}
-              <div className="border-t border-dashed border-border-subtle/40 pt-4 space-y-2">
-                <div className="flex justify-between text-slate-500 font-light">
+              {/* Net Taxable Value & GST Amount */}
+              <div className="space-y-1.5 text-xs text-slate-600 font-medium">
+                <div className="flex justify-between">
                   <span>Net Taxable Value:</span>
-                  <span className="font-semibold">Rs. {subtotal.toLocaleString("en-IN")}</span>
+                  <span className="font-semibold text-slate-800">₹{subtotal.toLocaleString("en-IN")}</span>
                 </div>
-                <div className="flex justify-between text-slate-500 font-light">
-                  <span>GST Amount ({gstPercent}%):</span>
-                  <span className="font-semibold">Rs. {gstAmount.toLocaleString("en-IN")}</span>
+                <div className="flex justify-between">
+                  <span>GST Tax ({gstPercent}%):</span>
+                  <span className="font-semibold text-slate-800">₹{gstAmount.toLocaleString("en-IN")}</span>
                 </div>
               </div>
 
               {/* Grand Total */}
-              <div className="bg-[#1B3564]/5 border border-[#1B3564]/10 rounded-2xl p-4 flex justify-between items-center font-bold text-[#1B3564] text-base mt-2">
-                <span className="font-heading">GRAND TOTAL:</span>
-                <span className="font-sans text-lg text-slate-900">Rs. {grandTotal.toLocaleString("en-IN")}</span>
+              <div className="bg-[#1B3564]/5 border border-[#1B3564]/15 rounded-2xl p-4 flex justify-between items-center font-bold text-[#1B3564]">
+                <span className="font-heading text-sm">GRAND TOTAL:</span>
+                <span className="font-sans text-xl text-slate-900">₹{grandTotal.toLocaleString("en-IN")}</span>
               </div>
 
               {/* Advance Paid & Remaining Balance Display */}
               {advancePaid > 0 && (
-                <div className="space-y-2 pt-3 border-t border-dashed border-border-subtle/40">
+                <div className="space-y-2 pt-2 border-t border-dashed border-border-subtle/40">
                   <div className="flex justify-between text-xs text-slate-600 font-medium">
                     <span>Advance Received:</span>
-                    <span className="font-bold text-emerald-700">Rs. {advancePaid.toLocaleString("en-IN")}</span>
+                    <span className="font-bold text-emerald-700">₹{advancePaid.toLocaleString("en-IN")}</span>
                   </div>
-                  <div className="bg-[#1B3564] text-white rounded-xl p-3.5 flex justify-between items-center font-bold text-sm shadow-sm">
+                  <div className="bg-[#1B3564] text-white rounded-2xl p-4 flex justify-between items-center font-bold shadow-sm">
                     <span className="font-heading text-[#DAA520] tracking-wider text-xs">BALANCE REMAINING:</span>
                     <span className="text-base text-white">
-                      {balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}
+                      {balanceDue <= 0 ? "PAID IN FULL" : `₹${balanceDue.toLocaleString("en-IN")}`}
                     </span>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Print/Download Actions */}
-            <div className="pt-2">
+            {/* Permanent Sticky Action Footer (Always visible) */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200 shrink-0 space-y-2.5">
+              {/* PDF Download Button */}
               <button
                 type="button"
                 disabled={!selectedVillaSlug}
                 onClick={handleDownloadPDF}
-                className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-2xl py-4.5 text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg disabled:opacity-50 disabled:pointer-events-none"
+                className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-2xl py-3.5 text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg disabled:opacity-50 disabled:pointer-events-none"
               >
                 <Download size={16} />
                 Download PDF Invoice
               </button>
+
+              {/* Email Options Grid */}
+              <div className="grid grid-cols-2 gap-2">
+                {/* Auto-Draft Mailto App Launcher */}
+                <button
+                  type="button"
+                  disabled={!selectedVillaSlug}
+                  onClick={handleDraftMailto}
+                  title="Open mail client with autowritten invoice message & guest recipient"
+                  className="bg-white hover:bg-slate-100 text-[#1B3564] border border-[#1B3564]/30 rounded-xl py-2.5 px-3 text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <Mail size={14} className="text-[#DAA520]" />
+                  Open Mail App
+                </button>
+
+                {/* Direct Server Email Dispatch */}
+                <button
+                  type="button"
+                  disabled={!selectedVillaSlug || !guestEmail || isSendingEmail}
+                  onClick={handleSendDirectEmail}
+                  title="Dispatch HTML invoice email directly via server to guest email"
+                  className="bg-[#1B3564] hover:bg-[#152a50] text-white rounded-xl py-2.5 px-3 text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  {isSendingEmail ? (
+                    <span className="animate-spin text-xs">🌀</span>
+                  ) : (
+                    <Send size={14} className="text-[#DAA520]" />
+                  )}
+                  {isSendingEmail ? "Sending..." : "Send Direct Mail"}
+                </button>
+              </div>
+
+              {/* WhatsApp Share Button */}
+              <button
+                type="button"
+                disabled={!selectedVillaSlug}
+                onClick={handleShareWhatsApp}
+                className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl py-2.5 text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
+              >
+                <Share2 size={14} />
+                Share Invoice on WhatsApp
+              </button>
+
+              {/* Feedback Alerts */}
+              {emailFeedback && (
+                <div
+                  className={`p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+                    emailFeedback.type === "success"
+                      ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                      : "bg-red-50 text-red-800 border border-red-200"
+                  }`}
+                >
+                  {emailFeedback.type === "success" ? (
+                    <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
+                  ) : (
+                    <AlertCircle size={15} className="text-red-600 shrink-0" />
+                  )}
+                  <span>{emailFeedback.msg}</span>
+                </div>
+              )}
+
               {!selectedVillaSlug && (
-                <span className="text-[10px] text-red-500 text-center block mt-2 font-semibold">Please select a property location first to enable PDF downloads.</span>
+                <span className="text-[10px] text-red-500 text-center block font-semibold">Select a villa property to enable invoice actions.</span>
               )}
             </div>
           </div>

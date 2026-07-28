@@ -13,22 +13,22 @@ interface AnimatedWillaMascotProps {
 
 export default function AnimatedWillaMascot({
   emotion = "idle",
-  size = 100,
+  size = 110,
   className = "",
 }: AnimatedWillaMascotProps) {
-  // Head Motion Parameters per Emotion
+  // Dynamic Head Rotation & Tilt based on emotion
   const headRotation = {
-    namaste: [0, 2, 0],
-    happy: [0, -5, 5, 0],
-    sad: 10,
-    thinking: -14,
-    idle: [0, -3, 3, 0],
+    namaste: [0, 1.5, 0],
+    happy: [0, -4, 4, 0],
+    sad: 12,
+    thinking: -15,
+    idle: [0, -2.5, 2.5, 0],
   }[emotion];
 
   const headY = {
-    namaste: 3,
+    namaste: 2,
     happy: [0, -5, 0],
-    sad: 5,
+    sad: 6,
     thinking: -3,
     idle: [0, -3, 0],
   }[emotion];
@@ -39,7 +39,7 @@ export default function AnimatedWillaMascot({
       style={{ width: size, height: size }}
     >
       <motion.svg
-        viewBox="0 0 120 130"
+        viewBox="0 0 140 150"
         className="w-full h-full drop-shadow-2xl overflow-visible"
         initial={false}
         animate={{
@@ -52,115 +52,139 @@ export default function AnimatedWillaMascot({
         }}
       >
         <defs>
-          {/* Skin Shading */}
-          <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFF0E0" />
-            <stop offset="60%" stopColor="#FED8B1" />
-            <stop offset="100%" stopColor="#F5C296" />
+          {/* Volumetric Skin Gradients */}
+          <linearGradient id="realSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFF2E5" />
+            <stop offset="45%" stopColor="#FCD5B5" />
+            <stop offset="85%" stopColor="#EBB388" />
+            <stop offset="100%" stopColor="#C98B60" />
           </linearGradient>
 
-          {/* Hair Color */}
-          <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#4A2E1B" />
-            <stop offset="100%" stopColor="#2C1A0E" />
+          <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#E29F74" opacity="0.6" />
+            <stop offset="100%" stopColor="#B36E44" opacity="0.9" />
           </linearGradient>
 
-          {/* Linen Resort Polo */}
-          <linearGradient id="poloGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          {/* Hair Gradient */}
+          <linearGradient id="realHair" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#5A3825" />
+            <stop offset="50%" stopColor="#3B2214" />
+            <stop offset="100%" stopColor="#1C0E07" />
+          </linearGradient>
+
+          {/* Hair Highlight */}
+          <linearGradient id="hairHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#8D5C40" opacity="0" />
+            <stop offset="50%" stopColor="#D49B74" opacity="0.5" />
+            <stop offset="100%" stopColor="#8D5C40" opacity="0" />
+          </linearGradient>
+
+          {/* Iris Gradient */}
+          <radialGradient id="irisGrad" cx="40%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="#3B82F6" />
+            <stop offset="50%" stopColor="#1B3564" />
+            <stop offset="100%" stopColor="#0B1936" />
+          </radialGradient>
+
+          {/* Linen Shirt Gradient */}
+          <linearGradient id="realLinen" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="70%" stopColor="#F4F7FA" />
+            <stop offset="60%" stopColor="#F8FAFC" />
             <stop offset="100%" stopColor="#E2E8F0" />
           </linearGradient>
 
-          {/* Navy Collar Accent */}
-          <linearGradient id="navyCollar" x1="0%" y1="0%" x2="100%" y2="100%">
+          {/* Navy Blue Lapel & Accents */}
+          <linearGradient id="navySilk" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#1B3564" />
-            <stop offset="100%" stopColor="#0F2142" />
+            <stop offset="100%" stopColor="#0A1833" />
           </linearGradient>
 
-          {/* Panama Hat Texture */}
-          <linearGradient id="panamaHat" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFF5E1" />
-            <stop offset="50%" stopColor="#F7E6C4" />
-            <stop offset="100%" stopColor="#EAD29F" />
+          {/* Panama Straw Weave Texture */}
+          <linearGradient id="realStraw" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFDF7" />
+            <stop offset="35%" stopColor="#F7E8C9" />
+            <stop offset="70%" stopColor="#EAD3A3" />
+            <stop offset="100%" stopColor="#CCA86E" />
           </linearGradient>
 
-          {/* Gold Accent */}
-          <linearGradient id="goldShine" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFE87C" />
-            <stop offset="50%" stopColor="#DAA520" />
-            <stop offset="100%" stopColor="#B8860B" />
+          {/* 24K Gold Metallic Shine */}
+          <linearGradient id="gold24k" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFF1AA" />
+            <stop offset="30%" stopColor="#FFD700" />
+            <stop offset="70%" stopColor="#DAA520" />
+            <stop offset="100%" stopColor="#996515" />
           </linearGradient>
 
           {/* Tropical Coconut Drink */}
-          <radialGradient id="coconutGrad" cx="40%" cy="40%" r="60%">
-            <stop offset="0%" stopColor="#7A5230" />
-            <stop offset="70%" stopColor="#4A2F13" />
-            <stop offset="100%" stopColor="#2E1B09" />
+          <radialGradient id="realCoconut" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stopColor="#8A5A36" />
+            <stop offset="60%" stopColor="#4E311A" />
+            <stop offset="100%" stopColor="#2A170A" />
           </radialGradient>
 
-          {/* Soft Blush */}
-          <radialGradient id="softBlush" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FF6B6B" stopOpacity="0.35" />
+          {/* Soft Cheek Blush */}
+          <radialGradient id="cheekBlush" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#FF6B6B" stopOpacity="0.4" />
             <stop offset="100%" stopColor="#FF6B6B" stopOpacity="0" />
           </radialGradient>
 
-          {/* Tropical Leaf Green */}
-          <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#2ECC71" />
-            <stop offset="100%" stopColor="#10B981" />
+          {/* Sunglasses Reflective Mirror Gradient */}
+          <linearGradient id="sunglassMirror" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#0F172A" />
+            <stop offset="30%" stopColor="#1E293B" />
+            <stop offset="60%" stopColor="#334155" />
+            <stop offset="100%" stopColor="#0F172A" />
           </linearGradient>
 
-          {/* Drop Shadows */}
-          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="4" stdDeviation="3" floodOpacity="0.18" />
+          {/* Ambient Drop Shadows */}
+          <filter id="ambientShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="5" stdDeviation="4" floodOpacity="0.22" />
+          </filter>
+
+          <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
         </defs>
 
-        {/* Grounding Glow Shadow */}
-        <ellipse cx="60" cy="122" rx="34" ry="5" fill="#1B3564" opacity="0.12" />
+        {/* Grounding Shadow */}
+        <ellipse cx="70" cy="142" rx="42" ry="6" fill="#1B3564" opacity="0.16" />
 
-        {/* --- TROPICAL PALM ACCENTS (BACKGROUND) --- */}
-        <g id="TropicalPalmBg" opacity="0.85">
+        {/* --- REALISTIC TORSO & RESORT LINEN SHIRT --- */}
+        <g id="RealisticBody" filter="url(#ambientShadow)">
+          {/* Main Torso */}
           <path
-            d="M 8 95 C 2 80, 10 65, 22 60 C 18 72, 16 82, 8 95 Z"
-            fill="url(#leafGrad)"
-            opacity="0.4"
-          />
-          <path
-            d="M 112 95 C 118 80, 110 65, 98 60 C 102 72, 104 82, 112 95 Z"
-            fill="url(#leafGrad)"
-            opacity="0.4"
-          />
-        </g>
-
-        {/* --- BODY & BRANDED LINEN POLO --- */}
-        <g id="ResortBodyGroup" filter="url(#softShadow)">
-          {/* Main Torso / Polo Shirt */}
-          <path
-            d="M 32 78 Q 60 72 88 78 L 96 122 Q 60 126 24 122 Z"
-            fill="url(#poloGrad)"
+            d="M 36 90 Q 70 82 104 90 L 112 142 Q 70 148 28 142 Z"
+            fill="url(#realLinen)"
             stroke="#CBD5E1"
             strokeWidth="1.2"
           />
 
-          {/* Navy Blue Lapel & Collar */}
+          {/* Chest & Shoulder Seams */}
+          <path d="M 36 90 Q 48 102 60 102" stroke="#CBD5E1" strokeWidth="1" fill="none" opacity="0.6" />
+          <path d="M 104 90 Q 92 102 80 102" stroke="#CBD5E1" strokeWidth="1" fill="none" opacity="0.6" />
+
+          {/* Tailored Navy Collar */}
           <path
-            d="M 44 76 L 60 92 L 76 76 L 70 76 L 60 86 L 50 76 Z"
-            fill="url(#navyCollar)"
+            d="M 48 88 L 70 106 L 92 88 L 84 88 L 70 98 L 56 88 Z"
+            fill="url(#navySilk)"
           />
 
-          {/* Button Placket */}
-          <line x1="60" y1="86" x2="60" y2="108" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="3 2" />
-          <circle cx="60" cy="94" r="1.2" fill="#DAA520" />
-          <circle cx="60" cy="102" r="1.2" fill="#DAA520" />
+          {/* Gold Button Placket & Stitches */}
+          <line x1="70" y1="98" x2="70" y2="128" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="3 2" />
+          <circle cx="70" cy="106" r="1.5" fill="url(#gold24k)" stroke="#B8860B" strokeWidth="0.4" />
+          <circle cx="70" cy="116" r="1.5" fill="url(#gold24k)" stroke="#B8860B" strokeWidth="0.4" />
 
-          {/* STAY WILLAS BRAND EMBLEM ON CHEST */}
-          <g id="BrandEmblem" transform="translate(60, 107)">
-            {/* Crown Crest */}
+          {/* Chest Pocket */}
+          <path d="M 84 105 L 98 105 L 98 120 Q 91 124 84 120 Z" fill="#F1F5F9" stroke="#E2E8F0" strokeWidth="1" />
+          <path d="M 84 105 L 98 105" stroke="url(#navySilk)" strokeWidth="2" />
+
+          {/* HIGH RESOLUTION STAY WILLAS BRAND LOGO ON CHEST */}
+          <g id="BrandLogoOnChest" transform="translate(70, 122)">
+            {/* Crown Crest Icon */}
             <path
-              d="M -5 -8 L 0 -12 L 5 -8 L 3 -4 L -3 -4 Z"
-              fill="url(#goldShine)"
+              d="M -6 -9 L 0 -14 L 6 -9 L 4 -5 L -4 -5 Z"
+              fill="url(#gold24k)"
             />
             {/* STAY WILLAS Text */}
             <text
@@ -168,22 +192,22 @@ export default function AnimatedWillaMascot({
               y="1"
               textAnchor="middle"
               fill="#1B3564"
-              fontSize="5.2"
+              fontSize="6"
               fontWeight="900"
               fontFamily="sans-serif"
-              letterSpacing="0.6"
+              letterSpacing="0.8"
             >
               STAY WILLAS
             </text>
             <text
               x="0"
-              y="5.5"
+              y="6"
               textAnchor="middle"
               fill="#DAA520"
-              fontSize="3.2"
+              fontSize="3.5"
               fontWeight="800"
               fontFamily="sans-serif"
-              letterSpacing="0.8"
+              letterSpacing="1"
             >
               LUXURY CONCIERGE
             </text>
@@ -194,37 +218,42 @@ export default function AnimatedWillaMascot({
         <AnimatePresence>
           {(emotion === "happy" || emotion === "idle") && (
             <motion.g
-              id="TropicalCoconutDrink"
-              initial={{ opacity: 0, scale: 0.5, y: 10 }}
+              id="RealisticCoconutDrink"
+              initial={{ opacity: 0, scale: 0.5, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.4 }}
-              transform="translate(94, 80)"
+              transform="translate(110, 92)"
+              filter="url(#ambientShadow)"
             >
-              {/* Coconut Body */}
-              <circle cx="0" cy="0" r="11" fill="url(#coconutGrad)" stroke="#2E1B09" strokeWidth="1" />
-              {/* White Coconut Rim */}
-              <ellipse cx="0" cy="-6" rx="9" ry="3.5" fill="#FFFFFF" />
-              <ellipse cx="0" cy="-6" rx="7" ry="2.5" fill="#FFF8F0" />
+              {/* Coconut Shell */}
+              <circle cx="0" cy="0" r="13" fill="url(#realCoconut)" stroke="#1C0E07" strokeWidth="1.2" />
+              {/* Fibrous Texture */}
+              <path d="M -8 -2 Q -4 4 -8 8" stroke="#3B2214" strokeWidth="1" fill="none" opacity="0.6" />
+              <path d="M 4 -6 Q 8 0 4 6" stroke="#3B2214" strokeWidth="1" fill="none" opacity="0.6" />
 
-              {/* Red & Yellow Mini Sun Umbrella */}
-              <path d="M 2 -7 L 12 -22 L 2 -18 L -8 -22 Z" fill="#EF4444" />
-              <path d="M 2 -7 L 7 -22 L 2 -18 L -3 -22 Z" fill="#FFD700" />
-              <line x1="2" y1="-7" x2="2" y2="-22" stroke="#DAA520" strokeWidth="1.2" />
+              {/* White Creamy Rim */}
+              <ellipse cx="0" cy="-7" rx="10.5" ry="4" fill="#FFFFFF" />
+              <ellipse cx="0" cy="-7" rx="8.5" ry="3" fill="#FFFBF5" />
 
-              {/* Drinking Straw */}
-              <path d="M -3 -6 L -8 -16 L -13 -18" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" fill="none" />
+              {/* Cocktail Umbrella */}
+              <path d="M 2 -8 L 14 -25 L 2 -20 L -9 -25 Z" fill="#EF4444" />
+              <path d="M 2 -8 L 8 -25 L 2 -20 L -4 -25 Z" fill="url(#gold24k)" />
+              <line x1="2" y1="-8" x2="2" y2="-25" stroke="#DAA520" strokeWidth="1.4" />
 
-              {/* Little Hibiscus Flower */}
-              <circle cx="7" cy="-2" r="2.5" fill="#EC4899" />
-              <circle cx="7" cy="-2" r="1" fill="#FFD700" />
+              {/* Bended Straw */}
+              <path d="M -3 -7 L -9 -19 L -15 -21" stroke="#3B82F6" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+
+              {/* Hibiscus Flower */}
+              <circle cx="8" cy="-3" r="3" fill="#F43F5E" />
+              <circle cx="8" cy="-3" r="1.2" fill="url(#gold24k)" />
             </motion.g>
           )}
         </AnimatePresence>
 
-        {/* --- DYNAMIC ARMS & GESTURES --- */}
+        {/* --- DYNAMIC HANDS & GESTURES --- */}
         <AnimatePresence mode="wait">
-          {/* NAMASTE GESTURE: Traditional Folded Hands 🙏 */}
+          {/* NAMASTE GESTURE: Realistically Folded Hands 🙏 */}
           {emotion === "namaste" && (
             <motion.g
               key="arm-namaste"
@@ -235,40 +264,43 @@ export default function AnimatedWillaMascot({
             >
               {/* Left Arm */}
               <path
-                d="M 32 80 Q 44 94 56 82"
-                stroke="url(#skinBase)"
-                strokeWidth="8"
+                d="M 38 92 Q 52 108 66 94"
+                stroke="url(#realSkin)"
+                strokeWidth="9.5"
                 strokeLinecap="round"
                 fill="none"
               />
               {/* Right Arm */}
               <path
-                d="M 88 80 Q 76 94 64 82"
-                stroke="url(#skinBase)"
-                strokeWidth="8"
+                d="M 102 92 Q 88 108 74 94"
+                stroke="url(#realSkin)"
+                strokeWidth="9.5"
                 strokeLinecap="round"
                 fill="none"
               />
               {/* Folded Hands 🙏 */}
               <path
-                d="M 54 86 Q 60 70 60 70 Q 60 70 66 86 Z"
-                fill="url(#skinBase)"
-                stroke="#E5A97D"
+                d="M 63 98 Q 70 78 70 78 Q 70 78 77 98 Z"
+                fill="url(#realSkin)"
+                stroke="#D49B74"
                 strokeWidth="1.2"
               />
-              {/* Golden Sparkle Aura */}
+              {/* Folded Fingers Details */}
+              <line x1="70" y1="78" x2="70" y2="92" stroke="#C98B60" strokeWidth="1" />
+
+              {/* Radiating Golden Sparkle Aura */}
               <motion.circle
-                cx="60"
-                cy="72"
-                r="4"
-                fill="#FFD700"
-                animate={{ scale: [1, 1.5, 1], opacity: [0.4, 0.9, 0.4] }}
+                cx="70"
+                cy="80"
+                r="5"
+                fill="url(#gold24k)"
+                animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0.9, 0.4] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               />
             </motion.g>
           )}
 
-          {/* HAPPY GESTURE: Hands up & holding drink */}
+          {/* HAPPY GESTURE: Hands up & Waving */}
           {emotion === "happy" && (
             <motion.g
               key="arm-happy"
@@ -279,26 +311,28 @@ export default function AnimatedWillaMascot({
             >
               {/* Left Arm Waving Up */}
               <path
-                d="M 32 80 Q 18 64 14 50"
-                stroke="url(#skinBase)"
-                strokeWidth="8"
+                d="M 38 92 Q 22 74 16 56"
+                stroke="url(#realSkin)"
+                strokeWidth="9.5"
                 strokeLinecap="round"
                 fill="none"
               />
-              <circle cx="14" cy="48" r="5" fill="url(#skinBase)" />
+              {/* Hand with Fingers */}
+              <circle cx="16" cy="54" r="6" fill="url(#realSkin)" />
+              <path d="M 11 50 L 14 44 M 14 48 L 18 42 M 18 49 L 22 44" stroke="#D49B74" strokeWidth="1.5" strokeLinecap="round" />
 
-              {/* Right Arm Holding Coconut */}
+              {/* Right Arm Holding Drink */}
               <path
-                d="M 88 80 Q 94 75 94 80"
-                stroke="url(#skinBase)"
-                strokeWidth="8"
+                d="M 102 92 Q 108 86 108 92"
+                stroke="url(#realSkin)"
+                strokeWidth="9.5"
                 strokeLinecap="round"
                 fill="none"
               />
             </motion.g>
           )}
 
-          {/* SAD / FAREWELL GESTURE: Sorrowful posture & drooping arms */}
+          {/* SAD / FAREWELL GESTURE: Drooping arms & sorrowful posture */}
           {emotion === "sad" && (
             <motion.g
               key="arm-sad"
@@ -308,27 +342,27 @@ export default function AnimatedWillaMascot({
             >
               {/* Left Arm Drooping */}
               <path
-                d="M 32 80 Q 24 98 22 110"
-                stroke="url(#skinBase)"
-                strokeWidth="7.5"
+                d="M 38 92 Q 28 114 26 128"
+                stroke="url(#realSkin)"
+                strokeWidth="9"
                 strokeLinecap="round"
                 fill="none"
               />
-              <circle cx="22" cy="111" r="4.5" fill="url(#skinBase)" />
+              <circle cx="26" cy="130" r="5" fill="url(#realSkin)" />
 
               {/* Right Arm Drooping */}
               <path
-                d="M 88 80 Q 96 98 98 110"
-                stroke="url(#skinBase)"
-                strokeWidth="7.5"
+                d="M 102 92 Q 112 114 114 128"
+                stroke="url(#realSkin)"
+                strokeWidth="9"
                 strokeLinecap="round"
                 fill="none"
               />
-              <circle cx="98" cy="111" r="4.5" fill="url(#skinBase)" />
+              <circle cx="114" cy="130" r="5" fill="url(#realSkin)" />
             </motion.g>
           )}
 
-          {/* THINKING GESTURE: Hand on chin pondering */}
+          {/* THINKING GESTURE: Hand on Chin Pondering */}
           {emotion === "thinking" && (
             <motion.g
               key="arm-thinking"
@@ -338,67 +372,67 @@ export default function AnimatedWillaMascot({
             >
               {/* Left Arm Resting */}
               <path
-                d="M 32 80 Q 24 96 26 108"
-                stroke="url(#skinBase)"
-                strokeWidth="7.5"
+                d="M 38 92 Q 28 112 30 125"
+                stroke="url(#realSkin)"
+                strokeWidth="9"
                 strokeLinecap="round"
                 fill="none"
               />
 
               {/* Right Arm to Chin */}
               <path
-                d="M 88 80 Q 74 80 66 64"
-                stroke="url(#skinBase)"
-                strokeWidth="7.5"
+                d="M 102 92 Q 86 92 76 74"
+                stroke="url(#realSkin)"
+                strokeWidth="9"
                 strokeLinecap="round"
                 fill="none"
               />
-              <circle cx="65" cy="62" r="5" fill="url(#skinBase)" />
+              <circle cx="75" cy="72" r="5.5" fill="url(#realSkin)" />
 
-              {/* Animated Pondering Bubbles */}
+              {/* Floating Glowing Question Bubbles */}
               <motion.g
-                animate={{ opacity: [0.3, 1, 0.3], y: [0, -4, 0] }}
+                animate={{ opacity: [0.3, 1, 0.3], y: [0, -5, 0] }}
                 transition={{ repeat: Infinity, duration: 1.6 }}
               >
-                <circle cx="82" cy="40" r="2.5" fill="#DAA520" />
-                <circle cx="90" cy="30" r="4" fill="#DAA520" />
-                <circle cx="100" cy="20" r="6" fill="#1B3564" />
-                <text x="100" y="22" textAnchor="middle" fill="#FFD700" fontSize="6.5" fontWeight="bold">?</text>
+                <circle cx="96" cy="46" r="3" fill="url(#gold24k)" />
+                <circle cx="106" cy="34" r="5" fill="url(#gold24k)" />
+                <circle cx="118" cy="22" r="7.5" fill="#1B3564" />
+                <text x="118" y="25" textAnchor="middle" fill="#FFD700" fontSize="8" fontWeight="bold">?</text>
               </motion.g>
             </motion.g>
           )}
 
-          {/* IDLE GESTURE: Friendly wave */}
+          {/* IDLE GESTURE: Warm Wave */}
           {emotion === "idle" && (
             <motion.g key="arm-idle">
               {/* Left Arm Resting */}
               <path
-                d="M 32 80 Q 24 95 26 106"
-                stroke="url(#skinBase)"
-                strokeWidth="7.5"
+                d="M 38 92 Q 28 110 30 124"
+                stroke="url(#realSkin)"
+                strokeWidth="9"
                 strokeLinecap="round"
                 fill="none"
               />
 
               {/* Right Arm Waving */}
               <motion.path
-                d="M 88 80 Q 98 70 96 58"
-                stroke="url(#skinBase)"
-                strokeWidth="7.5"
+                d="M 102 92 Q 114 80 112 66"
+                stroke="url(#realSkin)"
+                strokeWidth="9"
                 strokeLinecap="round"
                 fill="none"
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-                style={{ originX: "88px", originY: "80px" }}
+                style={{ originX: "102px", originY: "92px" }}
               />
-              <circle cx="96" cy="56" r="4.5" fill="url(#skinBase)" />
+              <circle cx="112" cy="64" r="5.5" fill="url(#realSkin)" />
             </motion.g>
           )}
         </AnimatePresence>
 
-        {/* --- HEAD & EXPRESSIONS GROUP --- */}
+        {/* --- HEAD & SCULPTED FACIAL FEATURES --- */}
         <motion.g
-          id="ResortHeadGroup"
+          id="RealisticHeadGroup"
           animate={{
             rotate: headRotation,
             y: headY,
@@ -411,131 +445,144 @@ export default function AnimatedWillaMascot({
               ease: "easeInOut",
             },
           }}
-          style={{ originX: "60px", originY: "54px" }}
-          filter="url(#softShadow)"
+          style={{ originX: "70px", originY: "62px" }}
+          filter="url(#ambientShadow)"
         >
-          {/* Neck */}
-          <rect x="53" y="60" width="14" height="15" rx="5" fill="url(#skinBase)" />
+          {/* Neck with Shading */}
+          <rect x="62" y="68" width="16" height="18" rx="6" fill="url(#realSkin)" />
+          <path d="M 62 68 Q 70 78 78 68 Z" fill="url(#skinShadow)" />
 
-          {/* Stylish Hair behind head */}
+          {/* Layered Hair (Back) */}
           <path
-            d="M 36 48 C 36 28, 84 28, 84 48 L 84 56 L 36 56 Z"
-            fill="url(#hairGrad)"
+            d="M 42 56 C 42 32, 98 32, 98 56 L 98 66 L 42 66 Z"
+            fill="url(#realHair)"
           />
 
-          {/* Head Base */}
-          <ellipse cx="60" cy="52" rx="23" ry="22" fill="url(#skinBase)" />
+          {/* Sculpted Head Base */}
+          <path
+            d="M 44 56 C 44 42, 52 38, 70 38 C 88 38, 96 42, 96 56 C 96 72, 86 82, 70 82 C 54 82, 44 72, 44 56 Z"
+            fill="url(#realSkin)"
+          />
 
-          {/* Ears with depth */}
-          <circle cx="36" cy="52" r="5" fill="url(#skinBase)" />
-          <circle cx="36" cy="52" r="2.8" fill="#F5C296" />
+          {/* Anatomical Ears with Stud Earring */}
+          <g id="Ears">
+            <ellipse cx="43" cy="58" rx="4.5" ry="7" fill="url(#realSkin)" />
+            <path d="M 43 54 Q 45 58 43 62" stroke="#D49B74" strokeWidth="1" fill="none" />
+            <circle cx="43" cy="62" r="1.2" fill="url(#gold24k)" />
 
-          <circle cx="84" cy="52" r="5" fill="url(#skinBase)" />
-          <circle cx="84" cy="52" r="2.8" fill="#F5C296" />
+            <ellipse cx="97" cy="58" rx="4.5" ry="7" fill="url(#realSkin)" />
+            <path d="M 97 54 Q 95 58 97 62" stroke="#D49B74" strokeWidth="1" fill="none" />
+            <circle cx="97" cy="62" r="1.2" fill="url(#gold24k)" />
+          </g>
 
-          {/* Rosy Cheeks */}
-          <ellipse cx="44" cy="57" rx="4.5" ry="3" fill="url(#softBlush)" />
-          <ellipse cx="76" cy="57" rx="4.5" ry="3" fill="url(#softBlush)" />
+          {/* Soft Cheek Blush */}
+          <ellipse cx="52" cy="65" rx="5" ry="3.5" fill="url(#cheekBlush)" />
+          <ellipse cx="88" cy="65" rx="5" ry="3.5" fill="url(#cheekBlush)" />
 
-          {/* --- EXPRESSIVE EYES --- */}
-          <g id="RichEyes">
-            {/* NAMASTE or HAPPY EYES: Curved joyful arcs (^ ^) */}
+          {/* Sculpted Nose Bridge & Nostrils */}
+          <path d="M 70 54 Q 72 63 67 66 Q 70 68 73 66" stroke="#D49B74" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+
+          {/* --- REALISTIC EYES EXPRESSIONS --- */}
+          <g id="RealisticEyes">
+            {/* NAMASTE or HAPPY EYES: Curved Joyful Arcs (^ ^) */}
             {(emotion === "namaste" || emotion === "happy") && (
               <>
                 <path
-                  d="M 44 51 Q 50 43 56 51"
+                  d="M 51 57 Q 58 48 65 57"
                   stroke="#1B3564"
-                  strokeWidth="3"
+                  strokeWidth="3.2"
                   strokeLinecap="round"
                   fill="none"
                 />
                 <path
-                  d="M 64 51 Q 70 43 76 51"
+                  d="M 75 57 Q 82 48 89 57"
                   stroke="#1B3564"
-                  strokeWidth="3"
+                  strokeWidth="3.2"
                   strokeLinecap="round"
                   fill="none"
                 />
               </>
             )}
 
-            {/* SAD EYES: Sorrowful eyes with dropping tear */}
+            {/* SAD EYES: Sorrowful Slanted Eyebrows & Tear Drop */}
             {emotion === "sad" && (
               <>
-                {/* Slanted Brows */}
-                <path d="M 43 43 L 55 47" stroke="#1B3564" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M 77 43 L 65 47" stroke="#1B3564" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M 50 49 L 63 53" stroke="#3B2214" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M 90 49 L 77 53" stroke="#3B2214" strokeWidth="2.5" strokeLinecap="round" />
 
-                {/* Sorrowful Pupils */}
-                <ellipse cx="49" cy="52" rx="4" ry="4.5" fill="#1B3564" />
-                <ellipse cx="71" cy="52" rx="4" ry="4.5" fill="#1B3564" />
+                <ellipse cx="57" cy="58" rx="4.5" ry="5.2" fill="url(#irisGrad)" />
+                <ellipse cx="83" cy="58" rx="4.5" ry="5.2" fill="url(#irisGrad)" />
 
-                {/* Sparkling Glistening Tear */}
+                {/* Animated Glistening Tear */}
                 <motion.path
-                  d="M 77 56 Q 79 62 77 65 Q 75 62 77 56 Z"
-                  fill="#3B82F6"
-                  animate={{ y: [0, 8, 16], opacity: [1, 0.8, 0] }}
+                  d="M 89 62 Q 91 69 89 73 Q 87 69 89 62 Z"
+                  fill="#60A5FA"
+                  animate={{ y: [0, 9, 18], opacity: [1, 0.8, 0] }}
                   transition={{ repeat: Infinity, duration: 1.4 }}
                 />
               </>
             )}
 
-            {/* THINKING EYES: Looking up-right */}
+            {/* THINKING EYES: Pondering Upward Iris */}
             {emotion === "thinking" && (
               <>
-                <path d="M 43 44 Q 49 40 55 44" stroke="#1B3564" strokeWidth="2.2" strokeLinecap="round" />
-                <path d="M 65 41 Q 71 37 77 41" stroke="#1B3564" strokeWidth="2.2" strokeLinecap="round" />
+                <path d="M 50 49 Q 57 45 64 49" stroke="#3B2214" strokeWidth="2.4" strokeLinecap="round" />
+                <path d="M 76 46 Q 83 42 90 46" stroke="#3B2214" strokeWidth="2.4" strokeLinecap="round" />
 
-                <circle cx="51" cy="49" r="4.2" fill="#1B3564" />
-                <circle cx="73" cy="49" r="4.2" fill="#1B3564" />
-                <circle cx="53" cy="47" r="1.5" fill="#FFFFFF" />
-                <circle cx="75" cy="47" r="1.5" fill="#FFFFFF" />
+                <circle cx="59" cy="54" r="4.8" fill="url(#irisGrad)" />
+                <circle cx="85" cy="54" r="4.8" fill="url(#irisGrad)" />
+                <circle cx="61" cy="52" r="1.8" fill="#FFFFFF" />
+                <circle cx="87" cy="52" r="1.8" fill="#FFFFFF" />
               </>
             )}
 
-            {/* IDLE EYES: Open sparkling pupils with double catchlights */}
+            {/* IDLE EYES: Open Sparkling Iris with Double Catchlights */}
             {emotion === "idle" && (
               <>
-                <ellipse cx="49" cy="51" rx="4.5" ry="4.8" fill="#1B3564" />
-                <ellipse cx="71" cy="51" rx="4.5" ry="4.8" fill="#1B3564" />
+                {/* Eyebrows */}
+                <path d="M 50 49 Q 57 46 64 49" stroke="#3B2214" strokeWidth="2.4" strokeLinecap="round" />
+                <path d="M 76 49 Q 83 46 90 49" stroke="#3B2214" strokeWidth="2.4" strokeLinecap="round" />
+
+                <ellipse cx="57" cy="57" rx="5" ry="5.5" fill="url(#irisGrad)" />
+                <ellipse cx="83" cy="57" rx="5" ry="5.5" fill="url(#irisGrad)" />
 
                 {/* Catchlight sparkles */}
-                <circle cx="51" cy="49" r="1.6" fill="#FFFFFF" />
-                <circle cx="47.5" cy="53" r="0.9" fill="#FFFFFF" />
+                <circle cx="59" cy="55" r="1.8" fill="#FFFFFF" />
+                <circle cx="55" cy="59" r="1" fill="#FFFFFF" />
 
-                <circle cx="73" cy="49" r="1.6" fill="#FFFFFF" />
-                <circle cx="69.5" cy="53" r="0.9" fill="#FFFFFF" />
+                <circle cx="85" cy="55" r="1.8" fill="#FFFFFF" />
+                <circle cx="81" cy="59" r="1" fill="#FFFFFF" />
               </>
             )}
           </g>
 
-          {/* --- EXPRESSIVE MOUTH --- */}
-          <g id="RichMouth">
-            {/* NAMASTE or HAPPY MOUTH: Big cheerful open smile */}
+          {/* --- REALISTIC MOUTH EXPRESSIONS --- */}
+          <g id="RealisticMouth">
+            {/* NAMASTE or HAPPY MOUTH: Big Cheerful Smile */}
             {(emotion === "namaste" || emotion === "happy") && (
               <path
-                d="M 48 60 Q 60 74 72 60 Z"
+                d="M 56 68 Q 70 82 84 68 Z"
                 fill="#E11D48"
                 stroke="#9F1239"
                 strokeWidth="1.2"
               />
             )}
 
-            {/* SAD MOUTH: Downturned sorrowful pout */}
+            {/* SAD MOUTH: Downturned Sorrowful Pout */}
             {emotion === "sad" && (
               <path
-                d="M 50 65 Q 60 58 70 65"
+                d="M 58 74 Q 70 66 82 74"
                 stroke="#1B3564"
-                strokeWidth="3"
+                strokeWidth="3.2"
                 strokeLinecap="round"
                 fill="none"
               />
             )}
 
-            {/* THINKING MOUTH: Pondering side mouth */}
+            {/* THINKING MOUTH: Side Smirk */}
             {emotion === "thinking" && (
               <path
-                d="M 52 62 Q 60 64 68 59"
+                d="M 60 70 Q 70 72 80 67"
                 stroke="#1B3564"
                 strokeWidth="2.8"
                 strokeLinecap="round"
@@ -543,56 +590,55 @@ export default function AnimatedWillaMascot({
               />
             )}
 
-            {/* IDLE MOUTH: Warm welcoming smile */}
+            {/* IDLE MOUTH: Warm Welcoming Smile */}
             {emotion === "idle" && (
               <path
-                d="M 49 60 Q 60 68 71 60"
+                d="M 57 68 Q 70 77 83 68"
                 stroke="#1B3564"
-                strokeWidth="3"
+                strokeWidth="3.2"
                 strokeLinecap="round"
                 fill="none"
               />
             )}
           </g>
 
-          {/* --- DETAILED PANAMA STRAW HAT & SUNGLASSES --- */}
-          <g id="PanamaStrawHat">
-            {/* Hat Shadow on Head */}
-            <ellipse cx="60" cy="36" rx="31" ry="5" fill="#000000" opacity="0.15" />
+          {/* --- PANAMA STRAW HAT & SUNGLASSES --- */}
+          <g id="RealisticPanamaHat">
+            {/* Ambient Hat Shadow */}
+            <ellipse cx="70" cy="39" rx="36" ry="6" fill="#000000" opacity="0.18" />
 
-            {/* Wide Panama Brim */}
-            <ellipse cx="60" cy="33" rx="33" ry="7" fill="url(#panamaHat)" stroke="#C7B282" strokeWidth="1.2" />
+            {/* Wide Woven Panama Brim */}
+            <ellipse cx="70" cy="35" rx="38" ry="8" fill="url(#realStraw)" stroke="#C7B282" strokeWidth="1.4" />
 
             {/* Crown Body */}
             <path
-              d="M 38 32 C 38 17, 46 14, 60 14 C 74 14, 82 17, 82 32 Z"
-              fill="url(#panamaHat)"
+              d="M 44 34 C 44 18, 52 14, 70 14 C 88 14, 96 18, 96 34 Z"
+              fill="url(#realStraw)"
               stroke="#C7B282"
-              strokeWidth="1.2"
+              strokeWidth="1.4"
             />
 
-            {/* Crown Top Crease */}
-            <path d="M 48 16 Q 60 19 72 16" stroke="#D1B886" strokeWidth="1.5" fill="none" />
+            {/* Crown Center Crease */}
+            <path d="M 55 17 Q 70 20 85 17" stroke="#C7A66F" strokeWidth="1.8" fill="none" />
 
-            {/* Navy Blue Ribbon */}
+            {/* Silk Navy Hat Ribbon */}
             <path
-              d="M 38.5 28.5 C 45 26.5, 75 26.5, 81.5 28.5 L 82 32.5 C 75 30.5, 45 30.5, 38 32.5 Z"
-              fill="url(#navyCollar)"
+              d="M 44.5 30 C 52 28, 88 28, 95.5 30 L 96 34 C 88 32, 52 32, 44 34 Z"
+              fill="url(#navySilk)"
             />
 
-            {/* 24K Gold Crest Badge on Ribbon */}
-            <circle cx="43" cy="29" r="2.5" fill="url(#goldShine)" stroke="#B8860B" strokeWidth="0.5" />
+            {/* 24K Gold Crest Pin on Ribbon */}
+            <circle cx="50" cy="31" r="3" fill="url(#gold24k)" stroke="#B8860B" strokeWidth="0.6" />
 
-            {/* COOL RESORT SUNGLASSES (Sitting on Hat Brim) */}
-            <g id="CoolSunglassesOnHat" transform="translate(0, -6)">
-              {/* Left Lens */}
-              <rect x="40" y="36" width="17" height="9" rx="3" fill="#0F172A" opacity="0.9" />
-              <rect x="41" y="37" width="6" height="3" rx="1" fill="#FFFFFF" opacity="0.4" />
-              {/* Right Lens */}
-              <rect x="63" y="36" width="17" height="9" rx="3" fill="#0F172A" opacity="0.9" />
-              <rect x="64" y="37" width="6" height="3" rx="1" fill="#FFFFFF" opacity="0.4" />
-              {/* Gold Bridge */}
-              <line x1="57" y1="39" x2="63" y2="39" stroke="#DAA520" strokeWidth="1.8" />
+            {/* COOL RESORT SUNGLASSES (Perched on Hat Brim) */}
+            <g id="PerchedSunglasses" transform="translate(0, -6)">
+              <rect x="47" y="38" width="20" height="10" rx="3.5" fill="url(#sunglassMirror)" stroke="#1E293B" strokeWidth="0.8" />
+              <rect x="49" y="39.5" width="7" height="3" rx="1" fill="#FFFFFF" opacity="0.45" />
+
+              <rect x="73" y="38" width="20" height="10" rx="3.5" fill="url(#sunglassMirror)" stroke="#1E293B" strokeWidth="0.8" />
+              <rect x="75" y="39.5" width="7" height="3" rx="1" fill="#FFFFFF" opacity="0.45" />
+
+              <line x1="67" y1="42" x2="73" y2="42" stroke="url(#gold24k)" strokeWidth="2" />
             </g>
           </g>
         </motion.g>
