@@ -25,6 +25,16 @@ interface ExtraCharge {
   amount: number;
 }
 
+const loadImage = (url: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = (err) => reject(err);
+    img.src = url;
+  });
+};
+
 export default function BillCalculator({ villas }: BillCalculatorProps) {
   // Guest Details
   const [guestName, setGuestName] = useState("");
@@ -42,7 +52,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   const [extraGuestFee, setExtraGuestFee] = useState(1500);
 
   // Food Settings
-  const [foodPlan, setFoodPlan] = useState<"none" | "veg" | "nonveg" | "mixed" | "custom">("none");
+  const [foodPlan, setFoodPlan] = useState<"none" | "standard" | "deluxe" | "custom">("none");
   const [foodRatePerPersonPerDay, setFoodRatePerPersonPerDay] = useState(0);
   const [foodGuestsCount, setFoodGuestsCount] = useState(0);
 
@@ -51,10 +61,11 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   const [newExtraDesc, setNewExtraDesc] = useState("");
   const [newExtraAmount, setNewExtraAmount] = useState<number | "">("");
 
-  // Adjustments & Discounts
+  // Adjustments & Discounts & Advance
   const [discountPercent, setDiscountPercent] = useState(0);
   const [discountFlat, setDiscountFlat] = useState(0);
   const [gstPercent, setGstPercent] = useState(18);
+  const [advancePaid, setAdvancePaid] = useState(0);
 
   // Prefill values when villa changes
   useEffect(() => {
@@ -74,12 +85,10 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   useEffect(() => {
     if (foodPlan === "none") {
       setFoodRatePerPersonPerDay(0);
-    } else if (foodPlan === "veg") {
+    } else if (foodPlan === "standard") {
+      setFoodRatePerPersonPerDay(1200);
+    } else if (foodPlan === "deluxe") {
       setFoodRatePerPersonPerDay(1500);
-    } else if (foodPlan === "nonveg") {
-      setFoodRatePerPersonPerDay(2000);
-    } else if (foodPlan === "mixed") {
-      setFoodRatePerPersonPerDay(1800);
     }
   }, [foodPlan]);
 
@@ -115,6 +124,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   // GST & Total
   const gstAmount = subtotal * (gstPercent / 100);
   const grandTotal = subtotal + gstAmount;
+  const balanceDue = grandTotal - advancePaid;
 
   // Add Extra Charge line
   const handleAddExtra = (e: React.FormEvent) => {
@@ -146,6 +156,14 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       format: "a4",
     });
 
+    // Load company logo for PDF header
+    let logoImg: HTMLImageElement | null = null;
+    try {
+      logoImg = await loadImage("/images/logo.png");
+    } catch (e) {
+      console.error("Could not load logo for PDF", e);
+    }
+
     const activeVillaName = villas.find((v) => v.slug === selectedVillaSlug)?.name || "Stay Willas Estate";
 
     // Colors Setup (Stay Willas theme colors)
@@ -161,24 +179,38 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
     doc.rect(0, 0, 210, 8, "F");
 
-    currentY += 12;
+    currentY += 10;
 
     // Logo & Header Info
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(26);
-    doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("STAY WILLAS", marginX, currentY);
+    if (logoImg) {
+      doc.addImage(logoImg, "PNG", marginX, currentY - 3, 16, 16);
+      const textX = marginX + 19;
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(24);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("STAY WILLAS", textX, currentY + 5);
 
-    doc.setFont("Helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(110, 110, 110);
-    doc.text("L U X U R Y   E S T A T E S", marginX, currentY + 4);
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(110, 110, 110);
+      doc.text("L U X U R Y   E S T A T E S", textX, currentY + 10);
+    } else {
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(26);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("STAY WILLAS", marginX, currentY + 4);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(110, 110, 110);
+      doc.text("L U X U R Y   E S T A T E S", marginX, currentY + 8);
+    }
 
     // Invoice Header details (Right aligned)
     doc.setFontSize(16);
     doc.setFont("Helvetica", "bold");
     doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("INVOICE SUMMARY", 145, currentY);
+    doc.text("INVOICE SUMMARY", 145, currentY + 2);
 
     doc.setFontSize(9);
     doc.setFont("Helvetica", "normal");
@@ -189,10 +221,10 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       month: "short",
       year: "numeric",
     });
-    doc.text(`Invoice ID: ${invoiceNum}`, 145, currentY + 5);
-    doc.text(`Date: ${invoiceDate}`, 145, currentY + 9);
+    doc.text(`Invoice ID: ${invoiceNum}`, 145, currentY + 7);
+    doc.text(`Date: ${invoiceDate}`, 145, currentY + 11);
 
-    currentY += 16;
+    currentY += 18;
 
     // Horizontal Rule
     doc.setDrawColor(220, 220, 220);
@@ -313,8 +345,14 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
     // Row 4: Food plan cost
     if (foodPlan !== "none") {
+      const foodPlanTitle =
+        foodPlan === "standard"
+          ? "STANDARD MENU"
+          : foodPlan === "deluxe"
+          ? "DELUXE MENU"
+          : "CUSTOM MENU";
       drawTableRow(
-        `Food Program - ${foodPlan.toUpperCase()} Menu`,
+        `Food Program - ${foodPlanTitle}`,
         `${foodGuestsCount} Pax * ${nights} Days`,
         `Rs. ${foodRatePerPersonPerDay.toLocaleString("en-IN")}`,
         `Rs. ${totalFoodCost.toLocaleString("en-IN")}`
@@ -358,6 +396,17 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     currentY += 3;
     
     drawSummaryRow("Net Payable Amount:", `Rs. ${grandTotal.toLocaleString("en-IN")}`, true);
+
+    if (advancePaid > 0) {
+      currentY += 2;
+      drawSummaryRow("Advance Paid:", `Rs. ${advancePaid.toLocaleString("en-IN")}`);
+      const balanceText = balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`;
+      doc.setDrawColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.setLineWidth(0.3);
+      doc.line(rightAlignX, currentY - 2, 210 - marginX, currentY - 2);
+      currentY += 2;
+      drawSummaryRow("Balance Remaining:", balanceText, true);
+    }
 
     // Terms & Conditions block (Left bottom side)
     let tcY = currentY - 25;
@@ -567,9 +616,8 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                   className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
                 >
                   <option value="none">No Meal Plan</option>
-                  <option value="veg">Vegetarian Plan (Rs. 1,500/day)</option>
-                  <option value="nonveg">Non-Veg Plan (Rs. 2,000/day)</option>
-                  <option value="mixed">Mixed Menu (Rs. 1,800/day)</option>
+                  <option value="standard">Standard Pricing (Rs. 1,200/day)</option>
+                  <option value="deluxe">Deluxe Pricing (Rs. 1,500/day)</option>
                   <option value="custom">Custom Rate Package</option>
                 </select>
               </div>
@@ -746,6 +794,19 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                     <option value={0}>0% (Tax Exempt)</option>
                   </select>
                 </div>
+
+                {/* Advance Payment Field */}
+                <div className="pt-2 border-t border-border-subtle/30 flex justify-between items-center">
+                  <label className="text-[10px] font-black uppercase tracking-wider text-[#1B3564]">Advance Paid (Rs.)</label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={advancePaid || ""}
+                    placeholder="0"
+                    onChange={(e) => setAdvancePaid(Number(e.target.value))}
+                    className="w-32 text-xs border border-border-subtle rounded-lg px-2.5 py-1 bg-[#FAF8F5] focus:outline-none font-bold text-right text-emerald-700"
+                  />
+                </div>
               </div>
 
               {/* Summary Taxes & final */}
@@ -765,6 +826,22 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                 <span className="font-heading">GRAND TOTAL:</span>
                 <span className="font-sans text-lg text-slate-900">Rs. {grandTotal.toLocaleString("en-IN")}</span>
               </div>
+
+              {/* Advance Paid & Remaining Balance Display */}
+              {advancePaid > 0 && (
+                <div className="space-y-2 pt-3 border-t border-dashed border-border-subtle/40">
+                  <div className="flex justify-between text-xs text-slate-600 font-medium">
+                    <span>Advance Received:</span>
+                    <span className="font-bold text-emerald-700">Rs. {advancePaid.toLocaleString("en-IN")}</span>
+                  </div>
+                  <div className="bg-[#1B3564] text-white rounded-xl p-3.5 flex justify-between items-center font-bold text-sm shadow-sm">
+                    <span className="font-heading text-[#DAA520] tracking-wider text-xs">BALANCE REMAINING:</span>
+                    <span className="text-base text-white">
+                      {balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Print/Download Actions */}

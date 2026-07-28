@@ -773,7 +773,7 @@ const AdminDashboard = ({
                 className="text-[10px] bg-[#1B3564] hover:bg-[#152A50] text-white font-black px-4 py-2.5 rounded-full tracking-widest uppercase transition-all flex items-center gap-1.5 cursor-pointer shadow-md border-none"
               >
                 <Plus size={12} />
-                {showAddBooking ? "Hide Panel" : "Record Manual Booking"}
+                {showAddBooking ? "Hide Panel" : "Booked for Villa Stay"}
               </button>
             </div>
 

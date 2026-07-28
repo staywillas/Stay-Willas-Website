@@ -488,7 +488,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
             <div>
               <h4 className="text-2xl font-heading mb-1 italic text-blue-600">Sanctuary Availability Controller</h4>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Configure room rack blocks or manual bookings for <span className="text-slate-900 font-bold">{villas.find(v => v.id === selectedCell.villaId)?.name}</span>.
+                Configure room rack blocks or villa stay bookings for <span className="text-slate-900 font-bold">{villas.find(v => v.id === selectedCell.villaId)?.name}</span>.
               </p>
             </div>
 
@@ -496,9 +496,9 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
               <div className="space-y-4">
                 <button 
                   onClick={() => setModalView("MANUAL_BOOKING")}
-                  className="w-full bg-[#1B3564] border border-[#1B3564]/30 text-slate-900 py-4 px-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-[#3B82F6] transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-md"
+                  className="w-full bg-[#3B82F6] hover:bg-blue-600 text-white py-4 px-6 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-md"
                 >
-                  <Plus size={14} /> RECORD MANUAL CALL BOOKING
+                  <Plus size={14} /> BOOKED FOR VILLA STAY
                 </button>
                 <button 
                   onClick={() => setModalView("MAINTENANCE")}
