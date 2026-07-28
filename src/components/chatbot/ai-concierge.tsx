@@ -610,7 +610,7 @@ export default function AiConcierge() {
             className="fixed top-24 right-4 md:top-auto md:bottom-10 md:right-10 z-50 w-12 h-12 md:w-16 md:h-16 bg-[#FFCC00] hover:bg-[#FFD700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.4)] transition-all duration-300 group overflow-hidden border-2 border-white/20"
           >
             <img 
-              src="/images/chatbot.png" 
+              src="/images/willa-vacation-assistant.jpg" 
               alt="Willa Assistant" 
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
@@ -633,7 +633,7 @@ export default function AiConcierge() {
             <div className="px-6 py-4 border-b border-border-subtle bg-accent-primary flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-white/10 flex items-center justify-center shrink-0">
-                  <img src="/images/chatbot.png" alt="Willa Assistant" className="w-full h-full object-cover" />
+                  <img src="/images/willa-vacation-assistant.jpg" alt="Willa Assistant" className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="text-white font-heading text-lg leading-tight">Willa Assistant</h3>
@@ -660,7 +660,7 @@ export default function AiConcierge() {
                   <div className="flex items-end gap-2 max-w-[85%]">
                     {msg.role === "bot" && (
                       <div className="w-6 h-6 rounded-full overflow-hidden border border-border-subtle bg-bg-secondary flex-shrink-0 flex items-center justify-center mb-1">
-                        <img src="/images/chatbot.png" alt="Willa Assistant" className="w-full h-full object-cover" />
+                        <img src="/images/willa-vacation-assistant.jpg" alt="Willa Assistant" className="w-full h-full object-cover" />
                       </div>
                     )}
                     
@@ -756,7 +756,7 @@ export default function AiConcierge() {
               {/* Bot Image */}
               <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-accent-primary flex items-center justify-center mb-6 relative">
                 <img 
-                  src="/images/chatbot.png" 
+                  src="/images/willa-vacation-assistant.jpg" 
                   alt="Willa Assistant" 
                   className="w-full h-full object-cover"
                 />
