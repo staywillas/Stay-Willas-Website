@@ -6,6 +6,7 @@ import { Sparkles, X, Send, Bot, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import VillaCard from "@/components/home/villa-card";
 import { getConciergeRecommendation } from "@/app/actions/villa";
+import AnimatedWillaMascot, { MascotEmotion } from "./animated-willa-mascot";
 
 type Role = "bot" | "user";
 
@@ -39,7 +40,31 @@ export default function AiConcierge() {
   const [selectedGuests, setSelectedGuests] = useState("");
   const [matchedVilla, setMatchedVilla] = useState<any>(recommendedVilla);
   const [inputValue, setInputValue] = useState("");
+  const [mascotEmotion, setMascotEmotion] = useState<MascotEmotion>("namaste");
+  const [farewellMsg, setFarewellMsg] = useState<string | null>(null);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Farewell & close handler with sad emotion
+  const handleCloseChatWindow = () => {
+    setMascotEmotion("sad");
+    setFarewellMsg("Aww, leaving so soon? We'll miss you! 💖");
+    setTimeout(() => {
+      setIsOpen(false);
+      setFarewellMsg(null);
+      setMascotEmotion("idle");
+    }, 1100);
+  };
+
+  const handleCloseWelcomePopup = () => {
+    setMascotEmotion("sad");
+    setFarewellMsg("Aww, leaving so soon? We'll miss you! 💖");
+    setTimeout(() => {
+      setShowCenterPopup(false);
+      setFarewellMsg(null);
+      setMascotEmotion("idle");
+    }, 1100);
+  };
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -61,19 +86,23 @@ export default function AiConcierge() {
     return () => clearTimeout(autoOpenTimer);
   }, [isOpen, pathname]);
 
-  // Initial greeting
+  // Initial greeting with Namaste gesture
   useEffect(() => {
     if (isOpen && messages.length === 0) {
+      setMascotEmotion("namaste");
+      setIsTyping(true);
       setTimeout(() => {
         setMessages([
           {
             id: "msg-1",
             role: "bot",
-            content: "Greetings! 🌟 I am your Stay Willas Luxury Concierge. I specialize in matching discerning travelers with our handpicked collection of premium private pool estates. Let's design your perfect getaway. Where would you like to escape next?",
+            content: "Namaste! 🙏 Welcome to Stay Willas Luxury Concierge. I am here to help you design your perfect private villa getaway. Where would you like to escape next?",
             options: ["Lonavala", "Khopoli", "Alibaug", "Karjat", "Anywhere"],
           },
         ]);
-      }, 500);
+        setIsTyping(false);
+        setMascotEmotion("happy");
+      }, 700);
     }
   }, [isOpen, messages.length]);
 
@@ -83,6 +112,8 @@ export default function AiConcierge() {
 
     const userText = inputValue.trim();
     setInputValue("");
+    setMascotEmotion("thinking");
+    setIsTyping(true);
 
     // Add user message
     setMessages((prev) => [
@@ -94,7 +125,9 @@ export default function AiConcierge() {
     setTimeout(async () => {
       const reply = await getBotReply(userText);
       setMessages((prev) => [...prev, reply]);
-    }, 600);
+      setIsTyping(false);
+      setMascotEmotion("happy");
+    }, 750);
   };
 
   const getBotReply = async (text: string): Promise<Message> => {
@@ -599,22 +632,54 @@ export default function AiConcierge() {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button with Smooth Floating & Pulsing Aura */}
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            onClick={() => setIsOpen(true)}
-            className="fixed top-24 right-4 md:top-auto md:bottom-10 md:right-10 z-50 w-12 h-12 md:w-16 md:h-16 bg-[#FFCC00] hover:bg-[#FFD700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,204,0,0.4)] transition-all duration-300 group overflow-hidden border-2 border-white/20"
-          >
-            <img 
-              src="/images/willa-vacation-assistant.jpg" 
-              alt="Willa Assistant" 
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          <div className="fixed top-24 right-4 md:top-auto md:bottom-10 md:right-10 z-50">
+            {/* Glowing Golden Aura Pulse */}
+            <motion.div
+              animate={{
+                scale: [1, 1.35, 1],
+                opacity: [0.3, 0.7, 0.3],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute inset-0 bg-[#DAA520] rounded-full blur-md"
             />
-          </motion.button>
+
+            <motion.button
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                y: [0, -8, 0],
+              }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{
+                y: {
+                  duration: 3.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+                scale: { duration: 0.3 },
+                opacity: { duration: 0.3 },
+              }}
+              onMouseEnter={() => setMascotEmotion("namaste")}
+              onMouseLeave={() => setMascotEmotion("idle")}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.92 }}
+              onClick={() => {
+                setMascotEmotion("namaste");
+                setIsOpen(true);
+              }}
+              className="relative w-18 h-18 md:w-20 md:h-20 bg-gradient-to-b from-[#1B3564] via-[#152A50] to-[#0A1833] rounded-full flex items-center justify-center shadow-[0_12px_35px_rgba(218,165,32,0.45)] transition-colors group overflow-hidden border-2 border-[#DAA520] cursor-pointer p-1"
+            >
+              <AnimatedWillaMascot emotion={mascotEmotion} size={70} />
+            </motion.button>
+          </div>
         )}
       </AnimatePresence>
 
@@ -630,23 +695,44 @@ export default function AiConcierge() {
             className="fixed bottom-28 right-6 md:bottom-10 md:right-10 z-50 w-[360px] max-w-[calc(100vw-3rem)] h-[550px] max-h-[calc(100vh-10rem)] md:max-h-[calc(100vh-6rem)] bg-bg-primary border border-border-subtle rounded-3xl shadow-[0_20px_60px_rgba(44,31,14,0.15)] flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="px-6 py-4 border-b border-border-subtle bg-accent-primary flex items-center justify-between">
+            <div className="px-6 py-4 border-b border-border-subtle bg-[#1B3564] flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-white/10 flex items-center justify-center shrink-0">
-                  <img src="/images/willa-vacation-assistant.jpg" alt="Willa Assistant" className="w-full h-full object-cover" />
-                </div>
+                <motion.div 
+                  animate={{ scale: [1, 1.06, 1] }}
+                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                  className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#DAA520] bg-white flex items-center justify-center shrink-0 shadow-md p-1"
+                >
+                  <AnimatedWillaMascot emotion={isTyping ? "thinking" : mascotEmotion} size={36} />
+                </motion.div>
                 <div>
                   <h3 className="text-white font-heading text-lg leading-tight">Willa Assistant</h3>
-                  <p className="text-[10px] text-accent-primary tracking-widest uppercase font-bold">Online</p>
+                  <p className="text-[10px] text-[#DAA520] tracking-widest uppercase font-bold">
+                    {isTyping ? "Thinking..." : mascotEmotion === "namaste" ? "Namaste! 🙏" : mascotEmotion === "sad" ? "Leaving so soon?" : "Online"}
+                  </p>
                 </div>
               </div>
               <button
-                onClick={() => setIsOpen(false)}
-                className="text-white/60 hover:text-white transition-colors"
+                onClick={handleCloseChatWindow}
+                className="text-white/60 hover:text-white transition-colors cursor-pointer"
               >
                 <X size={20} />
               </button>
             </div>
+
+            {/* Farewell Sad Overlay Message */}
+            <AnimatePresence>
+              {farewellMsg && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 text-xs text-amber-900 font-bold text-center flex items-center justify-center gap-2"
+                >
+                  <span>😢</span>
+                  <span>{farewellMsg}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 custom-scrollbar">
@@ -659,8 +745,8 @@ export default function AiConcierge() {
                 >
                   <div className="flex items-end gap-2 max-w-[85%]">
                     {msg.role === "bot" && (
-                      <div className="w-6 h-6 rounded-full overflow-hidden border border-border-subtle bg-bg-secondary flex-shrink-0 flex items-center justify-center mb-1">
-                        <img src="/images/willa-vacation-assistant.jpg" alt="Willa Assistant" className="w-full h-full object-cover" />
+                      <div className="w-7 h-7 rounded-full overflow-hidden border border-[#DAA520]/40 bg-white flex-shrink-0 flex items-center justify-center mb-1 shadow-sm p-0.5">
+                        <AnimatedWillaMascot emotion={isTyping ? "thinking" : "happy"} size={26} />
                       </div>
                     )}
                     
@@ -747,21 +833,37 @@ export default function AiConcierge() {
             >
               {/* Close Button */}
               <button
-                onClick={() => setShowCenterPopup(false)}
+                onClick={handleCloseWelcomePopup}
                 className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white border border-[#1B3564]/10 flex items-center justify-center text-[#1B3564]/60 hover:text-[#1B3564] transition-all cursor-pointer hover:scale-105"
               >
                 <X size={16} />
               </button>
 
-              {/* Bot Image */}
-              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-accent-primary flex items-center justify-center mb-6 relative">
-                <img 
-                  src="/images/willa-vacation-assistant.jpg" 
-                  alt="Willa Assistant" 
-                  className="w-full h-full object-cover"
-                />
-                <span className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
-              </div>
+              {/* Farewell Sad Banner when closing */}
+              <AnimatePresence>
+                {farewellMsg && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="mb-4 bg-amber-50 border border-amber-200 text-amber-900 px-4 py-2 rounded-full text-xs font-bold shadow-sm"
+                  >
+                    😢 {farewellMsg}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Animated Bot Mascot Figure */}
+              <motion.div 
+                animate={{ y: [0, -8, 0] }}
+                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                className="w-28 h-28 rounded-full overflow-hidden border-4 border-[#DAA520] shadow-[0_10px_30px_rgba(27,53,100,0.25)] bg-white flex items-center justify-center mb-6 relative cursor-pointer p-2"
+                onClick={() => setMascotEmotion(mascotEmotion === "namaste" ? "happy" : "namaste")}
+              >
+                <AnimatedWillaMascot emotion={mascotEmotion} size={105} />
+                <span className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full animate-ping opacity-75"></span>
+                <span className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
+              </motion.div>
 
               {/* Title & Description */}
               <span className="text-[10px] text-accent-secondary font-black uppercase tracking-[0.2em] mb-2 block">Personal Assistant</span>
@@ -777,6 +879,7 @@ export default function AiConcierge() {
                 <button
                   onClick={() => {
                     setShowCenterPopup(false);
+                    setMascotEmotion("namaste");
                     setIsOpen(true);
                   }}
                   className="flex-1 bg-[#1B3564] hover:bg-[#152A50] text-white py-3.5 rounded-full text-xs font-black tracking-wider uppercase transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer border-none font-bold"
@@ -784,7 +887,7 @@ export default function AiConcierge() {
                   Yes
                 </button>
                 <button
-                  onClick={() => setShowCenterPopup(false)}
+                  onClick={handleCloseWelcomePopup}
                   className="flex-1 bg-transparent hover:bg-slate-100 text-text-primary/60 py-3.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer border border-[#1B3564]/10"
                 >
                   No
