@@ -658,8 +658,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                   <label className="text-xs font-bold text-slate-700 block mb-1.5">Weekday Rate (₹)</label>
                   <input
                     type="number"
-                    value={ratePerNight}
-                    onChange={(e) => setRatePerNight(Number(e.target.value))}
+                    placeholder="0"
+                    value={ratePerNight || ""}
+                    onChange={(e) => setRatePerNight(e.target.value === "" ? 0 : Number(e.target.value))}
                     className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-slate-900"
                   />
                 </div>
@@ -667,8 +668,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                   <label className="text-xs font-bold text-slate-700 block mb-1.5">Weekend Rate (₹)</label>
                   <input
                     type="number"
-                    value={weekendRatePerNight}
-                    onChange={(e) => setWeekendRatePerNight(Number(e.target.value))}
+                    placeholder="0"
+                    value={weekendRatePerNight || ""}
+                    onChange={(e) => setWeekendRatePerNight(e.target.value === "" ? 0 : Number(e.target.value))}
                     className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-slate-900"
                   />
                 </div>
@@ -682,8 +684,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                   <input
                     type="number"
                     min={1}
-                    value={nights}
-                    onChange={(e) => setNights(Math.max(1, Number(e.target.value)))}
+                    placeholder="1"
+                    value={nights || ""}
+                    onChange={(e) => setNights(e.target.value === "" ? 0 : Math.max(0, Number(e.target.value)))}
                     className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
                   />
                 </div>
@@ -693,8 +696,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                     type="number"
                     min={0}
                     max={nights}
-                    value={weekendNights}
-                    onChange={(e) => setWeekendNights(Math.min(nights, Math.max(0, Number(e.target.value))))}
+                    placeholder="0"
+                    value={weekendNights || ""}
+                    onChange={(e) => setWeekendNights(e.target.value === "" ? 0 : Math.min(nights, Math.max(0, Number(e.target.value))))}
                     className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold text-amber-700"
                   />
                 </div>
@@ -703,8 +707,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                   <input
                     type="number"
                     min={1}
-                    value={guestsCount}
-                    onChange={(e) => setGuestsCount(Math.max(1, Number(e.target.value)))}
+                    placeholder="1"
+                    value={guestsCount || ""}
+                    onChange={(e) => setGuestsCount(e.target.value === "" ? 0 : Math.max(0, Number(e.target.value)))}
                     className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
                   />
                 </div>
@@ -712,8 +717,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                   <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Base Included Guests</label>
                   <input
                     type="number"
-                    value={baseGuests}
-                    onChange={(e) => setBaseGuests(Number(e.target.value))}
+                    placeholder="12"
+                    value={baseGuests || ""}
+                    onChange={(e) => setBaseGuests(e.target.value === "" ? 0 : Number(e.target.value))}
                     className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none font-bold"
                   />
                 </div>
@@ -758,9 +764,10 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">Rate per Person / Day (₹)</label>
                 <input
                   type="number"
+                  placeholder="0"
                   disabled={foodPlan === "none"}
-                  value={foodRatePerPersonPerDay}
-                  onChange={(e) => setFoodRatePerPersonPerDay(Number(e.target.value))}
+                  value={foodRatePerPersonPerDay || ""}
+                  onChange={(e) => setFoodRatePerPersonPerDay(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold disabled:opacity-50"
                 />
               </div>
@@ -770,9 +777,10 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                 <input
                   type="number"
                   min={0}
+                  placeholder="0"
                   disabled={foodPlan === "none"}
-                  value={foodGuestsCount}
-                  onChange={(e) => setFoodGuestsCount(Number(e.target.value))}
+                  value={foodGuestsCount || ""}
+                  onChange={(e) => setFoodGuestsCount(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold disabled:opacity-50"
                 />
               </div>
@@ -906,8 +914,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                       type="number"
                       min={0}
                       max={100}
-                      value={discountPercent}
-                      onChange={(e) => setDiscountPercent(Number(e.target.value))}
+                      placeholder="0"
+                      value={discountPercent || ""}
+                      onChange={(e) => setDiscountPercent(e.target.value === "" ? 0 : Number(e.target.value))}
                       className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-2 bg-white focus:outline-none font-bold"
                     />
                   </div>
@@ -916,8 +925,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                     <input
                       type="number"
                       min={0}
-                      value={discountFlat}
-                      onChange={(e) => setDiscountFlat(Number(e.target.value))}
+                      placeholder="0"
+                      value={discountFlat || ""}
+                      onChange={(e) => setDiscountFlat(e.target.value === "" ? 0 : Number(e.target.value))}
                       className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-2 bg-white focus:outline-none font-bold"
                     />
                   </div>
@@ -943,9 +953,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                   <input
                     type="number"
                     min={0}
-                    value={advancePaid || ""}
                     placeholder="0"
-                    onChange={(e) => setAdvancePaid(Number(e.target.value))}
+                    value={advancePaid || ""}
+                    onChange={(e) => setAdvancePaid(e.target.value === "" ? 0 : Number(e.target.value))}
                     className="w-32 text-xs border border-emerald-300 rounded-xl px-3 py-1.5 bg-emerald-50 focus:outline-none font-bold text-right text-emerald-800"
                   />
                 </div>
