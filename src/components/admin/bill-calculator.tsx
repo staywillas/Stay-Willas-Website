@@ -279,6 +279,75 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     setExtraCharges(extraCharges.filter((c) => c.id !== id));
   };
 
+  // Helper to trim empty transparent borders & compute crisp, un-distorted logo aspect ratio
+  const getCroppedLogoDataUrl = (img: HTMLImageElement): { dataUrl: string; aspect: number } => {
+    try {
+      const canvas = document.createElement("canvas");
+      const w = img.naturalWidth || img.width || 1000;
+      const h = img.naturalHeight || img.height || 1000;
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return { dataUrl: img.src, aspect: w / h };
+
+      ctx.drawImage(img, 0, 0);
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      let minX = w, minY = h, maxX = 0, maxY = 0;
+      let found = false;
+
+      // Scan pixels for non-transparent content (alpha > 15)
+      for (let y = 0; y < h; y += 4) {
+        for (let x = 0; x < w; x += 4) {
+          const alpha = data[(y * w + x) * 4 + 3];
+          if (alpha > 15) {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+            found = true;
+          }
+        }
+      }
+
+      if (!found || maxX <= minX || maxY <= minY) {
+        minX = 0; minY = 0; maxX = w; maxY = h;
+      }
+
+      const cropW = maxX - minX;
+      const cropH = maxY - minY;
+      const padX = Math.round(cropW * 0.02);
+      const padY = Math.round(cropH * 0.02);
+
+      const startX = Math.max(0, minX - padX);
+      const startY = Math.max(0, minY - padY);
+      const finalW = Math.min(w - startX, cropW + padX * 2);
+      const finalH = Math.min(h - startY, cropH + padY * 2);
+
+      const targetW = 600;
+      const targetH = Math.round((finalH / finalW) * targetW) || 200;
+
+      const cropCanvas = document.createElement("canvas");
+      cropCanvas.width = targetW;
+      cropCanvas.height = targetH;
+      const cropCtx = cropCanvas.getContext("2d");
+      if (cropCtx) {
+        cropCtx.imageSmoothingEnabled = true;
+        cropCtx.imageSmoothingQuality = "high";
+        cropCtx.drawImage(canvas, startX, startY, finalW, finalH, 0, 0, targetW, targetH);
+      }
+
+      return {
+        dataUrl: cropCanvas.toDataURL("image/png"),
+        aspect: targetW / targetH,
+      };
+    } catch (err) {
+      console.warn("Error cropping logo transparent borders", err);
+      return { dataUrl: img.src, aspect: (img.naturalWidth || 1) / (img.naturalHeight || 1) };
+    }
+  };
+
   // Generate & Download PDF Function (Bulletproof & Fast)
   const handleDownloadPDF = async () => {
     try {
@@ -289,23 +358,11 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
         format: "a4",
       });
 
-      // Load transparent company logo for PDF header & compress to reduce file size under 60KB
-      let logoDataUrl: string | null = null;
+      // Load transparent company logo for PDF header & auto-crop transparent padding
+      let logoData: { dataUrl: string; aspect: number } | null = null;
       try {
         const logoImg = await loadImage("/images/STAY WILLAS logo transparent.png");
-        const canvas = document.createElement("canvas");
-        // Target 500px width for crystal-clear sharp print while keeping PDF size under 60KB
-        const targetW = 500;
-        const targetH = Math.round((logoImg.height / logoImg.width) * targetW) || 160;
-        canvas.width = targetW;
-        canvas.height = targetH;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = "high";
-          ctx.drawImage(logoImg, 0, 0, targetW, targetH);
-          logoDataUrl = canvas.toDataURL("image/png");
-        }
+        logoData = getCroppedLogoDataUrl(logoImg);
       } catch (e) {
         console.warn("Could not load transparent logo for PDF, falling back to clean text header", e);
       }
@@ -331,9 +388,12 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
       currentY = 14;
 
-      // Logo & Brand Header Info (Prominent, Big & Crisp)
-      if (logoDataUrl) {
-        doc.addImage(logoDataUrl, "PNG", marginX, currentY - 2, 56, 18, undefined, "FAST");
+      // Logo & Brand Header Info (Prominent, Big & Crisp with Proportional Width/Height)
+      if (logoData) {
+        const logoH = 20; // 20mm height
+        const maxLogoW = 65; // max width
+        const logoW = Math.min(maxLogoW, logoH * logoData.aspect);
+        doc.addImage(logoData.dataUrl, "PNG", marginX, currentY - 3, logoW, logoH, undefined, "FAST");
       } else {
         doc.setFont("Helvetica", "bold");
         doc.setFontSize(24);
