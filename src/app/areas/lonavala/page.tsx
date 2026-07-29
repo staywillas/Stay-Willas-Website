@@ -660,6 +660,8 @@ export default async function LonavalaPage() {
           <div className="mt-16 p-8 bg-[#FAF8F5] rounded-3xl border border-[#DAA520]/15">
             <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Related Guides</h3>
             <ul className="space-y-3 text-sm text-slate-700 font-light">
+              <li>→ <Link href="/blog/top-7-hidden-gems-secret-viewpoints-in-lonavala" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Top 7 Hidden Gems & Secret Viewpoints in Lonavala (And Where to Stay Nearby)</Link></li>
+              <li>→ <Link href="/blog/ultimate-2-day-lonavala-weekend-itinerary" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Ultimate 2-Day Lonavala Weekend Itinerary: From Mountain Sunrises to Private Pool Barbecues</Link></li>
               <li>→ <Link href="/blog/villas-near-pawna-lake-lonavala" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Villas Near Pawna Lake, Lonavala: Your Ultimate Lakeside Retreat</Link></li>
               <li>→ <Link href="/blog/villa-near-lohagad-fort-trek-lonavala" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Choosing a Villa Near Lohagad Fort Trek, Lonavala</Link></li>
               <li>→ <Link href="/blog/lonavala-villa-monsoon-weekend-guide" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Ultimate Lonavala Villa Monsoon Weekend Guide</Link></li>
