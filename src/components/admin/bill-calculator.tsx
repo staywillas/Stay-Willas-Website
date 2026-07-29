@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Calendar, User, FileText, Plus, Trash2, Download, Calculator, Mail, Send, Share2, CheckCircle2, AlertCircle } from "lucide-react";
+import { Sparkles, Calendar, User, FileText, Plus, Trash2, Download, Calculator, Mail, Send, Share2, CheckCircle2, AlertCircle, RotateCcw } from "lucide-react";
 import { sendInvoiceEmailAction } from "@/app/actions/admin";
 
 interface Villa {
@@ -71,6 +71,32 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   // Email & Communication States
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailFeedback, setEmailFeedback] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+
+  // Reset all calculator inputs
+  const handleResetAll = () => {
+    setGuestName("");
+    setGuestPhone("");
+    setGuestEmail("");
+    setSelectedVillaSlug("");
+    setRatePerNight(0);
+    setWeekendRatePerNight(0);
+    setNights(1);
+    setWeekendNights(0);
+    setGuestsCount(1);
+    setBaseGuests(12);
+    setExtraGuestFee(1500);
+    setFoodPlan("none");
+    setFoodRatePerPersonPerDay(0);
+    setFoodGuestsCount(0);
+    setExtraCharges([]);
+    setNewExtraDesc("");
+    setNewExtraAmount("");
+    setDiscountPercent(0);
+    setDiscountFlat(0);
+    setGstPercent(18);
+    setAdvancePaid(0);
+    setEmailFeedback(null);
+  };
 
   // Auto-Draft Mailto Link Launcher (Opens client email app with pre-written text & details)
   const handleDraftMailto = () => {
@@ -263,178 +289,219 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       format: "a4",
     });
 
-    // Load company logo for PDF header
-    let logoImg: HTMLImageElement | null = null;
+    // Load transparent company logo for PDF header & compress to reduce file size from ~61MB to ~50KB
+    let logoDataUrl: string | null = null;
     try {
-      logoImg = await loadImage("/images/logo.png");
+      const logoImg = await loadImage("/images/STAY WILLAS logo transparent.png");
+      const canvas = document.createElement("canvas");
+      // Downscale to 600px width for high quality print while keeping PDF size under 100KB
+      const targetW = 600;
+      const targetH = Math.round((logoImg.height / logoImg.width) * targetW) || 600;
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(logoImg, 0, 0, targetW, targetH);
+        logoDataUrl = canvas.toDataURL("image/png");
+      }
     } catch (e) {
-      console.error("Could not load logo for PDF", e);
+      console.error("Could not load transparent logo for PDF", e);
     }
 
     const activeVillaName = villas.find((v) => v.slug === selectedVillaSlug)?.name || "Stay Willas Estate";
 
-    // Colors Setup (Stay Willas theme colors)
-    const navyColor = [27, 53, 100]; // #1B3564
-    const goldColor = [218, 165, 32]; // #DAA520
-    const darkGray = [26, 26, 26];
+    // Executive Brand Palette (Stay Willas Theme)
+    const navyColor = [27, 53, 100];   // #1B3564 Navy
+    const goldColor = [218, 165, 32];  // #DAA520 Gold
+    const darkCharcoal = [30, 41, 59]; // #1E293B Text
+    const lightBeige = [250, 248, 245]; // #FAF8F5 Card BG
+    const borderGray = [226, 232, 240]; // #E2E8F0
 
-    // Page styling & margins
+    // Page margins & baseline
     const marginX = 15;
-    let currentY = 15;
+    let currentY = 0;
 
-    // Header Background Accent Stripe
+    // Header Top Dual Accent Stripe (Navy & Gold)
     doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.rect(0, 0, 210, 8, "F");
+    doc.rect(0, 0, 210, 6, "F");
+    doc.setFillColor(goldColor[0], goldColor[1], goldColor[2]);
+    doc.rect(0, 6, 210, 1.5, "F");
 
-    currentY += 10;
+    currentY = 14;
 
-    // Logo & Header Info
-    if (logoImg) {
-      doc.addImage(logoImg, "PNG", marginX, currentY - 3, 16, 16);
-      const textX = marginX + 19;
+    // Logo & Brand Header Info (Prominent, Big & Crisp)
+    if (logoDataUrl) {
+      doc.addImage(logoDataUrl, "PNG", marginX, currentY - 2, 56, 18);
+    } else {
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(24);
       doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.text("STAY WILLAS", textX, currentY + 5);
+      doc.text("STAY WILLAS", marginX, currentY + 6);
 
-      doc.setFont("Helvetica", "normal");
-      doc.setFontSize(8);
-      doc.setTextColor(110, 110, 110);
-      doc.text("L U X U R Y   E S T A T E S", textX, currentY + 10);
-    } else {
       doc.setFont("Helvetica", "bold");
-      doc.setFontSize(26);
-      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.text("STAY WILLAS", marginX, currentY + 4);
-
-      doc.setFont("Helvetica", "normal");
-      doc.setFontSize(8);
-      doc.setTextColor(110, 110, 110);
-      doc.text("L U X U R Y   E S T A T E S", marginX, currentY + 8);
+      doc.setFontSize(7.5);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.text("L U X U R Y   E S T A T E S   &   V I L L A S", marginX, currentY + 11);
     }
 
-    // Invoice Header details (Right aligned)
-    doc.setFontSize(16);
+    // Invoice Header metadata (Right Aligned)
+    doc.setFontSize(15);
     doc.setFont("Helvetica", "bold");
     doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("INVOICE SUMMARY", 145, currentY + 2);
+    doc.text("TAX INVOICE STATEMENT", 210 - marginX, currentY + 4, { align: "right" });
 
-    doc.setFontSize(9);
+    doc.setFontSize(8.5);
     doc.setFont("Helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
+    doc.setTextColor(100, 100, 100);
     const invoiceNum = `SW-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
     const invoiceDate = new Date().toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
-    doc.text(`Invoice ID: ${invoiceNum}`, 145, currentY + 7);
-    doc.text(`Date: ${invoiceDate}`, 145, currentY + 11);
+    doc.text(`Invoice ID: ${invoiceNum}`, 210 - marginX, currentY + 9, { align: "right" });
+    doc.text(`Date Issued: ${invoiceDate}`, 210 - marginX, currentY + 13, { align: "right" });
+    doc.text(`Billing Mode: LIVE RESERVATION`, 210 - marginX, currentY + 17, { align: "right" });
 
-    currentY += 18;
+    currentY += 24;
 
-    // Horizontal Rule
-    doc.setDrawColor(220, 220, 220);
-    doc.setLineWidth(0.5);
+    // Gold Divider Line
+    doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+    doc.setLineWidth(0.4);
     doc.line(marginX, currentY, 210 - marginX, currentY);
 
-    currentY += 8;
+    currentY += 6;
 
-    // Bill To & Company Details column layout
+    // Guest Info Box (Left) & Property Operator Box (Right)
+    const cardWidth = 87;
+    const cardHeight = 26;
+
+    // Left Card: Prepared For Guest
+    doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+    doc.rect(marginX, currentY, cardWidth, cardHeight, "F");
+    doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+    doc.setLineWidth(0.2);
+    doc.rect(marginX, currentY, cardWidth, cardHeight, "S");
+
     doc.setFont("Helvetica", "bold");
-    doc.setFontSize(10);
+    doc.setFontSize(8);
     doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("PREPARED FOR GUEST:", marginX, currentY);
-    doc.text("PROPERTY OPERATOR:", 120, currentY);
-
-    doc.setFont("Helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
-    
-    // Guest info rows
-    doc.setFont("Helvetica", "bold");
-    doc.text(guestName || "Valued Guest", marginX, currentY + 5);
-    doc.setFont("Helvetica", "normal");
-    doc.setTextColor(80, 80, 80);
-    if (guestPhone) doc.text(`Phone: ${guestPhone}`, marginX, currentY + 9);
-    if (guestEmail) doc.text(`Email: ${guestEmail}`, marginX, currentY + 13);
-
-    // Operator Details
-    doc.text("Stay Willas Luxury Collections", 120, currentY + 5);
-    doc.text("Kim cottage, 14, PR Kadam Marg,", 120, currentY + 9);
-    doc.text("Maneklal Estate, Ghatkopar West,", 120, currentY + 13);
-    doc.text("Mumbai, Maharashtra 400084", 120, currentY + 17);
-    doc.text("Contact: +91-9619042310", 120, currentY + 21);
-
-    currentY += 28;
-
-    // Reservation info box
-    doc.setFillColor(250, 248, 245); // light beige matching --color-brand-beige
-    doc.rect(marginX, currentY, 210 - marginX * 2, 20, "F");
-    doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.setLineWidth(0.3);
-    doc.rect(marginX, currentY, 210 - marginX * 2, 20, "S");
+    doc.text("PREPARED FOR GUEST:", marginX + 4, currentY + 5);
 
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(9);
-    doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("RESERVATION SUMMARY:", marginX + 4, currentY + 6);
+    doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
+    doc.text(guestName || "Valued Guest", marginX + 4, currentY + 10);
 
     doc.setFont("Helvetica", "normal");
-    doc.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
-    const reservationInfo = `${activeVillaName}  |  ${nights} Nights (${weekdayNights} Weekday, ${weekendNights} Weekend)  |  ${guestsCount} Guests`;
-    doc.text(reservationInfo, marginX + 4, currentY + 12);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Contact: ${guestPhone || "N/A"}`, marginX + 4, currentY + 15);
+    doc.text(`Email: ${guestEmail || "N/A"}`, marginX + 4, currentY + 19);
 
-    currentY += 28;
+    // Right Card: Property Operator
+    const rightCardX = 210 - marginX - cardWidth;
+    doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+    doc.rect(rightCardX, currentY, cardWidth, cardHeight, "F");
+    doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+    doc.setLineWidth(0.2);
+    doc.rect(rightCardX, currentY, cardWidth, cardHeight, "S");
 
-    // Table Header
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+    doc.text("PROPERTY OPERATOR:", rightCardX + 4, currentY + 5);
+
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8.5);
+    doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
+    doc.text("Stay Willas Luxury Estates", rightCardX + 4, currentY + 10);
+
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Ghatkopar West, Mumbai, MH 400084", rightCardX + 4, currentY + 15);
+    doc.text("Concierge Hotline: +91 9619042310", rightCardX + 4, currentY + 19);
+
+    currentY += cardHeight + 6;
+
+    // Reservation Overview Banner
     doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.rect(marginX, currentY, 210 - marginX * 2, 8, "F");
+    doc.rect(marginX, currentY, 210 - marginX * 2, 14, "F");
+    doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+    doc.setLineWidth(0.4);
+    doc.rect(marginX, currentY, 210 - marginX * 2, 14, "S");
+
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+    doc.text("RESERVATION SUMMARY", marginX + 4, currentY + 5);
 
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(9);
     doc.setTextColor(255, 255, 255);
-    doc.text("ITEM DESCRIPTION", marginX + 4, currentY + 5.5);
-    doc.text("QTY / DETAILS", 100, currentY + 5.5);
-    doc.text("RATE", 145, currentY + 5.5);
-    doc.text("TOTAL TARIFF", 175, currentY + 5.5);
+    const reservationDetails = `${activeVillaName}  |  ${nights} Night(s) (${weekdayNights} Weekday, ${weekendNights} Weekend)  |  ${guestsCount} Guests`;
+    doc.text(reservationDetails, marginX + 4, currentY + 10);
 
-    currentY += 8;
+    currentY += 19;
 
-    // Table rows drawing helper
+    // Tariff Itemization Table Header
+    doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+    doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
+
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(255, 255, 255);
+    doc.text("ITEM DESCRIPTION", marginX + 4, currentY + 5);
+    doc.text("QTY / DURATION", 100, currentY + 5);
+    doc.text("RATE", 145, currentY + 5);
+    doc.text("TOTAL TARIFF", 175, currentY + 5);
+
+    currentY += 7.5;
+
+    // Table rows helper
+    let isRowEven = false;
     const drawTableRow = (desc: string, qty: string, rate: string, total: string) => {
       doc.setFont("Helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
+      doc.setFontSize(8.5);
+      doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
       
-      // Draw background stripe if row alternate
-      doc.setDrawColor(240, 240, 240);
+      if (isRowEven) {
+        doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+        doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
+      }
+
+      doc.setDrawColor(235, 235, 235);
       doc.setLineWidth(0.1);
-      doc.line(marginX, currentY + 8, 210 - marginX, currentY + 8);
+      doc.line(marginX, currentY + 7.5, 210 - marginX, currentY + 7.5);
 
-      doc.text(desc, marginX + 4, currentY + 5.5);
-      doc.text(qty, 100, currentY + 5.5);
-      doc.text(rate, 145, currentY + 5.5);
-      doc.text(total, 175, currentY + 5.5);
+      doc.text(desc, marginX + 4, currentY + 5);
+      doc.text(qty, 100, currentY + 5);
+      doc.text(rate, 145, currentY + 5);
+      doc.setFont("Helvetica", "bold");
+      doc.text(total, 175, currentY + 5);
 
-      currentY += 8;
+      isRowEven = !isRowEven;
+      currentY += 7.5;
     };
 
-    // Row 1: Stay Base Cost (Weekday Nights)
+    // Row 1: Weekday Stay
     if (weekdayNights > 0) {
       drawTableRow(
-        `Stay Tariff - Weekdays`,
-        `${weekdayNights} Nights`,
+        `Stay Tariff - Weekday Nights`,
+        `${weekdayNights} Night(s)`,
         `Rs. ${ratePerNight.toLocaleString("en-IN")}`,
         `Rs. ${weekdayStayCost.toLocaleString("en-IN")}`
       );
     }
 
-    // Row 2: Stay Base Cost (Weekend Nights)
+    // Row 2: Weekend Stay
     if (weekendNights > 0) {
       drawTableRow(
-        `Stay Tariff - Weekends`,
-        `${weekendNights} Nights`,
+        `Stay Tariff - Weekend Nights`,
+        `${weekendNights} Night(s)`,
         `Rs. ${weekendRatePerNight.toLocaleString("en-IN")}`,
         `Rs. ${weekendStayCost.toLocaleString("en-IN")}`
       );
@@ -444,7 +511,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     if (extraGuestsCount > 0) {
       drawTableRow(
         `Extra Guests Fee`,
-        `${extraGuestsCount} Guests * ${nights} Nights`,
+        `${extraGuestsCount} Pax * ${nights} Nights`,
         `Rs. ${extraGuestFee.toLocaleString("en-IN")}`,
         `Rs. ${extraGuestsCost.toLocaleString("en-IN")}`
       );
@@ -459,7 +526,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
           ? "DELUXE MENU"
           : "CUSTOM MENU";
       drawTableRow(
-        `Food Program - ${foodPlanTitle}`,
+        `Catering Package - ${foodPlanTitle}`,
         `${foodGuestsCount} Pax * ${nights} Days`,
         `Rs. ${foodRatePerPersonPerDay.toLocaleString("en-IN")}`,
         `Rs. ${totalFoodCost.toLocaleString("en-IN")}`
@@ -470,54 +537,58 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     extraCharges.forEach((c) => {
       drawTableRow(
         c.description,
-        "Custom Add-on",
+        "Add-on Service",
         `Rs. ${c.amount.toLocaleString("en-IN")}`,
         `Rs. ${c.amount.toLocaleString("en-IN")}`
       );
     });
 
-    currentY += 10;
+    currentY += 8;
 
-    // Subtotal, discounts and tax box (Right Aligned)
-    const rightAlignX = 140;
+    // Subtotal, Discounts, Tax & Grand Total (Right Aligned Summary Block)
+    const rightAlignX = 135;
 
-    const drawSummaryRow = (label: string, value: string, isBold = false) => {
+    const drawSummaryRow = (label: string, value: string, isBold = false, textColor = darkCharcoal) => {
       doc.setFont("Helvetica", isBold ? "bold" : "normal");
-      doc.setFontSize(isBold ? 10 : 9);
-      doc.setTextColor(isBold ? navyColor[0] : darkGray[0], isBold ? navyColor[1] : darkGray[1], isBold ? navyColor[2] : darkGray[2]);
+      doc.setFontSize(isBold ? 9.5 : 8.5);
+      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
       doc.text(label, rightAlignX, currentY);
       doc.text(value, 175, currentY);
-      currentY += 6;
+      currentY += 5.5;
     };
 
     drawSummaryRow("Gross Subtotal:", `Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}`);
     if (totalDiscount > 0) {
-      drawSummaryRow("Discount Applied:", `- Rs. ${totalDiscount.toLocaleString("en-IN")}`);
+      drawSummaryRow("Discount Applied:", `- Rs. ${totalDiscount.toLocaleString("en-IN")}`, false, [180, 40, 40]);
     }
-    drawSummaryRow(`GST / Taxes (${gstPercent}%):`, `Rs. ${gstAmount.toLocaleString("en-IN")}`);
+    drawSummaryRow(`Net Taxable Amount:`, `Rs. ${subtotal.toLocaleString("en-IN")}`);
+    drawSummaryRow(`GST Tax (${gstPercent}%):`, `Rs. ${gstAmount.toLocaleString("en-IN")}`);
     
-    // Draw boundary line for final total
-    doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.setLineWidth(0.5);
-    doc.line(rightAlignX, currentY - 2, 210 - marginX, currentY - 2);
-    currentY += 3;
-    
-    drawSummaryRow("Net Payable Amount:", `Rs. ${grandTotal.toLocaleString("en-IN")}`, true);
+    // Grand Total Highlight Bar
+    currentY += 1;
+    doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+    doc.rect(rightAlignX - 2, currentY - 4, 210 - marginX - (rightAlignX - 2), 9, "F");
+
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+    doc.text("NET PAYABLE AMOUNT:", rightAlignX, currentY + 1.5);
+
+    doc.setFontSize(10);
+    doc.setTextColor(255, 255, 255);
+    doc.text(`Rs. ${grandTotal.toLocaleString("en-IN")}`, 175, currentY + 1.5);
+
+    currentY += 10;
 
     if (advancePaid > 0) {
-      currentY += 2;
-      drawSummaryRow("Advance Paid:", `Rs. ${advancePaid.toLocaleString("en-IN")}`);
+      drawSummaryRow("Advance Paid:", `Rs. ${advancePaid.toLocaleString("en-IN")}`, false, [16, 122, 68]);
       const balanceText = balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`;
-      doc.setDrawColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.setLineWidth(0.3);
-      doc.line(rightAlignX, currentY - 2, 210 - marginX, currentY - 2);
-      currentY += 2;
-      drawSummaryRow("Balance Remaining:", balanceText, true);
+      drawSummaryRow("BALANCE REMAINING:", balanceText, true, balanceDue <= 0 ? [16, 122, 68] : navyColor);
     }
 
-    // Terms & Conditions block (Left bottom side)
-    let tcY = currentY - 25;
-    if (tcY < 120) tcY = 160; // safety check to prevent overlap
+    // Terms & Conditions Block (Bottom Left)
+    let tcY = currentY - 28;
+    if (tcY < 150) tcY = 175; // ensure proper position on page
 
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(8);
@@ -525,28 +596,32 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     doc.text("TERMS & BOOKING CONDITIONS:", marginX, tcY);
 
     doc.setFont("Helvetica", "normal");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7);
     doc.setTextColor(110, 110, 110);
     doc.text("1. Security deposit is refundable within 48 hours post check-out verification.", marginX, tcY + 4);
-    doc.text("2. Standard Check-in is 2:00 PM and Check-out is 11:00 AM.", marginX, tcY + 8);
-    doc.text("3. Noise limits apply inside residential zones post 10:00 PM.", marginX, tcY + 12);
-    doc.text("4. Meal plans once confirmed cannot be partially cancelled during stay.", marginX, tcY + 16);
+    doc.text("2. Standard Check-in is 2:00 PM and Check-out is 11:00 AM.", marginX, tcY + 7.5);
+    doc.text("3. Quiet hours apply in residential zones after 10:00 PM.", marginX, tcY + 11);
+    doc.text("4. Meal plans once confirmed cannot be partially cancelled during stay.", marginX, tcY + 14.5);
 
-    // Thank you message
+    // Thank you banner & Footer
     doc.setFont("Helvetica", "bold");
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.text("THANK YOU FOR CHOOSING STAY WILLAS!", marginX, tcY + 28);
+    doc.text("THANK YOU FOR CHOOSING STAY WILLAS!", marginX, tcY + 23);
 
-    // Footer signature line
+    // Footer border line
+    doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+    doc.setLineWidth(0.3);
+    doc.line(marginX, 282, 210 - marginX, 282);
+
     doc.setFont("Helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text("Stay Willas Invoice Summary  |  Automated Billing System", marginX, 280);
+    doc.setFontSize(7);
+    doc.setTextColor(140, 140, 140);
+    doc.text("Stay Willas Luxury Estates  |  www.staywillas.com  |  WhatsApp Concierge: +91 9619042310", marginX, 286);
+    doc.text("Page 1 of 1", 210 - marginX, 286, { align: "right" });
 
-    // Save PDF file
-    const safeGuestName = guestName.toLowerCase().replace(/[^a-z0-9]/g, "-") || "guest";
-    doc.save(`staywillas-bill-${safeGuestName}.pdf`);
+    // Trigger PDF download
+    doc.save(`StayWillas_Invoice_${guestName.replace(/[^a-zA-Z0-9]/g, "_") || "Guest"}.pdf`);
   };
 
   return (
@@ -859,19 +934,30 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
         {/* Invoice Summary Card Column (Sticky & Smooth Scrollable) */}
         <div className="lg:col-span-1">
-          <div className="bg-white border border-[#DAA520]/30 rounded-3xl shadow-lg sticky top-24 max-h-[calc(100vh-7rem)] flex flex-col overflow-hidden">
+          <div className="bg-white border border-[#DAA520]/40 rounded-3xl shadow-xl sticky top-20 max-h-[calc(100vh-6rem)] flex flex-col overflow-hidden transition-all duration-300">
             
             {/* Header (Fixed at top of summary) */}
-            <div className="px-6 py-4 bg-[#1B3564] text-white flex items-center justify-between shrink-0">
+            <div className="px-5 py-3.5 bg-[#1B3564] text-white flex items-center justify-between shrink-0 rounded-t-3xl">
               <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider">
                 <FileText size={16} className="text-[#DAA520]" />
                 <span>Bill Breakdown Summary</span>
               </div>
-              <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-widest bg-white/10 px-2 py-0.5 rounded-full">Live Calc</span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={handleResetAll}
+                  title="Reset calculator inputs"
+                  className="text-[10px] text-white/80 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-1 rounded-lg font-bold uppercase transition-colors flex items-center gap-1 cursor-pointer"
+                >
+                  <RotateCcw size={11} />
+                  Reset
+                </button>
+                <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-widest bg-white/10 px-2 py-1 rounded-lg">Live Calc</span>
+              </div>
             </div>
 
-            {/* Body Content (Scrollable) */}
-            <div className="p-6 space-y-5 text-xs flex-1 overflow-y-auto custom-scrollbar">
+            {/* Body Content (Scrollable with overscroll containment) */}
+            <div className="p-5 space-y-4 text-xs flex-1 overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth">
               {/* Stays Cost */}
               <div className="flex justify-between items-start pb-3 border-b border-slate-100">
                 <span className="text-slate-600 font-medium">Stay Tariff ({nights} Nights)</span>
@@ -900,14 +986,14 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
               )}
 
               {/* Gross Subtotal */}
-              <div className="flex justify-between items-center font-bold text-slate-900 text-sm bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div className="flex justify-between items-center font-bold text-slate-900 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200/80">
                 <span>Subtotal:</span>
-                <span>₹{subtotalBeforeDiscount.toLocaleString("en-IN")}</span>
+                <span className="text-sm">₹{subtotalBeforeDiscount.toLocaleString("en-IN")}</span>
               </div>
 
               {/* Discounts & Taxes Inputs */}
-              <div className="bg-[#FAF8F5] p-4 rounded-2xl border border-border-subtle/50 space-y-3.5">
-                <div className="grid grid-cols-2 gap-2.5">
+              <div className="bg-[#FAF8F5] p-3.5 rounded-2xl border border-border-subtle/50 space-y-3">
+                <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-1">Discount %</label>
                     <input
@@ -917,7 +1003,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                       placeholder="0"
                       value={discountPercent || ""}
                       onChange={(e) => setDiscountPercent(e.target.value === "" ? 0 : Number(e.target.value))}
-                      className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-2 bg-white focus:outline-none font-bold"
+                      className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-1.5 bg-white focus:outline-none font-bold text-slate-900 focus:border-[#1B3564]"
                     />
                   </div>
                   <div>
@@ -928,17 +1014,36 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                       placeholder="0"
                       value={discountFlat || ""}
                       onChange={(e) => setDiscountFlat(e.target.value === "" ? 0 : Number(e.target.value))}
-                      className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-2 bg-white focus:outline-none font-bold"
+                      className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-1.5 bg-white focus:outline-none font-bold text-slate-900 focus:border-[#1B3564]"
                     />
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-1 border-t border-border-subtle/30">
+                {/* Preset Discount Chips */}
+                <div className="flex items-center gap-1.5 pt-0.5">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase">Quick %:</span>
+                  {[0, 5, 10, 15, 20].map((pct) => (
+                    <button
+                      key={pct}
+                      type="button"
+                      onClick={() => setDiscountPercent(pct)}
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md border transition-all cursor-pointer ${
+                        discountPercent === pct
+                          ? "bg-[#1B3564] text-white border-[#1B3564]"
+                          : "bg-white text-slate-600 border-slate-200 hover:border-[#1B3564]/50"
+                      }`}
+                    >
+                      {pct === 0 ? "Off" : `${pct}%`}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex justify-between items-center pt-2 border-t border-border-subtle/30">
                   <label className="text-[10px] font-black uppercase tracking-wider text-[#1B3564]">GST Rate</label>
                   <select
                     value={gstPercent}
                     onChange={(e) => setGstPercent(Number(e.target.value))}
-                    className="text-xs border border-border-subtle rounded-xl px-2.5 py-1.5 bg-white focus:outline-none font-bold"
+                    className="text-xs border border-border-subtle rounded-xl px-2.5 py-1.5 bg-white focus:outline-none font-bold cursor-pointer"
                   >
                     <option value={18}>18% GST (Standard)</option>
                     <option value={12}>12% GST</option>
@@ -956,13 +1061,13 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                     placeholder="0"
                     value={advancePaid || ""}
                     onChange={(e) => setAdvancePaid(e.target.value === "" ? 0 : Number(e.target.value))}
-                    className="w-32 text-xs border border-emerald-300 rounded-xl px-3 py-1.5 bg-emerald-50 focus:outline-none font-bold text-right text-emerald-800"
+                    className="w-32 text-xs border border-emerald-300 rounded-xl px-3 py-1.5 bg-emerald-50 focus:outline-none font-bold text-right text-emerald-800 focus:border-emerald-500"
                   />
                 </div>
               </div>
 
               {/* Net Taxable Value & GST Amount */}
-              <div className="space-y-1.5 text-xs text-slate-600 font-medium">
+              <div className="space-y-1 text-xs text-slate-600 font-medium">
                 <div className="flex justify-between">
                   <span>Net Taxable Value:</span>
                   <span className="font-semibold text-slate-800">₹{subtotal.toLocaleString("en-IN")}</span>
@@ -974,9 +1079,9 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
               </div>
 
               {/* Grand Total */}
-              <div className="bg-[#1B3564]/5 border border-[#1B3564]/15 rounded-2xl p-4 flex justify-between items-center font-bold text-[#1B3564]">
-                <span className="font-heading text-sm">GRAND TOTAL:</span>
-                <span className="font-sans text-xl text-slate-900">₹{grandTotal.toLocaleString("en-IN")}</span>
+              <div className="bg-[#1B3564]/5 border border-[#1B3564]/15 rounded-2xl p-3.5 flex justify-between items-center font-bold text-[#1B3564]">
+                <span className="font-heading text-xs uppercase tracking-wider">GRAND TOTAL:</span>
+                <span className="font-sans text-lg text-slate-900 font-extrabold">₹{grandTotal.toLocaleString("en-IN")}</span>
               </div>
 
               {/* Advance Paid & Remaining Balance Display */}
@@ -986,7 +1091,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                     <span>Advance Received:</span>
                     <span className="font-bold text-emerald-700">₹{advancePaid.toLocaleString("en-IN")}</span>
                   </div>
-                  <div className="bg-[#1B3564] text-white rounded-2xl p-4 flex justify-between items-center font-bold shadow-sm">
+                  <div className="bg-[#1B3564] text-white rounded-2xl p-3.5 flex justify-between items-center font-bold shadow-sm">
                     <span className="font-heading text-[#DAA520] tracking-wider text-xs">BALANCE REMAINING:</span>
                     <span className="text-base text-white">
                       {balanceDue <= 0 ? "PAID IN FULL" : `₹${balanceDue.toLocaleString("en-IN")}`}
@@ -996,81 +1101,84 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
               )}
             </div>
 
-            {/* Permanent Sticky Action Footer (Always visible) */}
-            <div className="p-4 bg-slate-50 border-t border-slate-200 shrink-0 space-y-2.5">
+            {/* Permanent Compact Action Footer */}
+            <div className="p-3.5 bg-slate-50 border-t border-slate-200 shrink-0 space-y-2">
               {/* PDF Download Button */}
               <button
                 type="button"
                 disabled={!selectedVillaSlug}
                 onClick={handleDownloadPDF}
-                className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-2xl py-3.5 text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg disabled:opacity-50 disabled:pointer-events-none"
+                className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl py-2.5 text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md disabled:opacity-40 disabled:pointer-events-none"
               >
-                <Download size={16} />
+                <Download size={15} />
                 Download PDF Invoice
               </button>
 
-              {/* Email Options Grid */}
-              <div className="grid grid-cols-2 gap-2">
-                {/* Auto-Draft Mailto App Launcher */}
+              {/* Email & WhatsApp Quick Action 3-Grid */}
+              <div className="grid grid-cols-3 gap-1.5">
+                {/* WhatsApp Share */}
+                <button
+                  type="button"
+                  disabled={!selectedVillaSlug}
+                  onClick={handleShareWhatsApp}
+                  title="Share summary on WhatsApp"
+                  className="bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl py-2 px-2 text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40 shadow-xs"
+                >
+                  <Share2 size={13} />
+                  WhatsApp
+                </button>
+
+                {/* Mail App */}
                 <button
                   type="button"
                   disabled={!selectedVillaSlug}
                   onClick={handleDraftMailto}
-                  title="Open mail client with autowritten invoice message & guest recipient"
-                  className="bg-white hover:bg-slate-100 text-[#1B3564] border border-[#1B3564]/30 rounded-xl py-2.5 px-3 text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  title="Open default email client"
+                  className="bg-white hover:bg-slate-100 text-[#1B3564] border border-[#1B3564]/30 rounded-xl py-2 px-2 text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40"
                 >
-                  <Mail size={14} className="text-[#DAA520]" />
-                  Open Mail App
+                  <Mail size={13} className="text-[#DAA520]" />
+                  Mail App
                 </button>
 
-                {/* Direct Server Email Dispatch */}
+                {/* Direct Mail */}
                 <button
                   type="button"
                   disabled={!selectedVillaSlug || !guestEmail || isSendingEmail}
                   onClick={handleSendDirectEmail}
-                  title="Dispatch HTML invoice email directly via server to guest email"
-                  className="bg-[#1B3564] hover:bg-[#152a50] text-white rounded-xl py-2.5 px-3 text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  title="Send direct email via server"
+                  className="bg-[#1B3564] hover:bg-[#152a50] text-white rounded-xl py-2 px-2 text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40"
                 >
                   {isSendingEmail ? (
                     <span className="animate-spin text-xs">🌀</span>
                   ) : (
-                    <Send size={14} className="text-[#DAA520]" />
+                    <Send size={13} className="text-[#DAA520]" />
                   )}
-                  {isSendingEmail ? "Sending..." : "Send Direct Mail"}
+                  {isSendingEmail ? "Sending" : "Direct Mail"}
                 </button>
               </div>
-
-              {/* WhatsApp Share Button */}
-              <button
-                type="button"
-                disabled={!selectedVillaSlug}
-                onClick={handleShareWhatsApp}
-                className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl py-2.5 text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
-              >
-                <Share2 size={14} />
-                Share Invoice on WhatsApp
-              </button>
 
               {/* Feedback Alerts */}
               {emailFeedback && (
                 <div
-                  className={`p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+                  className={`p-2 rounded-xl text-[11px] font-semibold flex items-center gap-1.5 ${
                     emailFeedback.type === "success"
                       ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
                       : "bg-red-50 text-red-800 border border-red-200"
                   }`}
                 >
                   {emailFeedback.type === "success" ? (
-                    <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
+                    <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
                   ) : (
-                    <AlertCircle size={15} className="text-red-600 shrink-0" />
+                    <AlertCircle size={14} className="text-red-600 shrink-0" />
                   )}
-                  <span>{emailFeedback.msg}</span>
+                  <span className="truncate">{emailFeedback.msg}</span>
                 </div>
               )}
 
               {!selectedVillaSlug && (
-                <span className="text-[10px] text-red-500 text-center block font-semibold">Select a villa property to enable invoice actions.</span>
+                <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-1 text-center block font-semibold">
+                  ⚠️ Select a villa property to enable invoice actions
+                </span>
               )}
             </div>
           </div>
