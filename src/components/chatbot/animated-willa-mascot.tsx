@@ -52,17 +52,17 @@ export default function AnimatedWillaMascot({
         }}
       >
         <defs>
-          {/* Warm Brown Skin Tones */}
+          {/* Light / Fair Skin Tones */}
           <linearGradient id="warmSkin" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#D4A574" />
-            <stop offset="40%" stopColor="#C4956A" />
-            <stop offset="80%" stopColor="#B07D52" />
-            <stop offset="100%" stopColor="#8E6340" />
+            <stop offset="0%" stopColor="#FFF2E5" />
+            <stop offset="45%" stopColor="#FCD5B5" />
+            <stop offset="85%" stopColor="#EBB388" />
+            <stop offset="100%" stopColor="#C98B60" />
           </linearGradient>
 
           <linearGradient id="skinShadow2" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#A07048" opacity="0.6" />
-            <stop offset="100%" stopColor="#7A5030" opacity="0.9" />
+            <stop offset="0%" stopColor="#E29F74" opacity="0.6" />
+            <stop offset="100%" stopColor="#B36E44" opacity="0.9" />
           </linearGradient>
 
           {/* Dark Styled Hair with Fade */}
@@ -312,8 +312,8 @@ export default function AnimatedWillaMascot({
             >
               <path d="M 38 92 Q 52 108 66 94" stroke="url(#warmSkin)" strokeWidth="9.5" strokeLinecap="round" fill="none" />
               <path d="M 102 92 Q 88 108 74 94" stroke="url(#warmSkin)" strokeWidth="9.5" strokeLinecap="round" fill="none" />
-              <path d="M 63 98 Q 70 78 70 78 Q 70 78 77 98 Z" fill="url(#warmSkin)" stroke="#A07048" strokeWidth="1.2" />
-              <line x1="70" y1="78" x2="70" y2="92" stroke="#8E6340" strokeWidth="1" />
+              <path d="M 63 98 Q 70 78 70 78 Q 70 78 77 98 Z" fill="url(#warmSkin)" stroke="#D49B74" strokeWidth="1.2" />
+              <line x1="70" y1="78" x2="70" y2="92" stroke="#C98B60" strokeWidth="1" />
 
               {/* Sparkle Aura */}
               <motion.circle
@@ -336,10 +336,18 @@ export default function AnimatedWillaMascot({
               exit={{ opacity: 0 }}
               transition={{ y: { repeat: Infinity, duration: 0.6 } }}
             >
-              <path d="M 38 92 Q 22 74 16 56" stroke="url(#warmSkin)" strokeWidth="9.5" strokeLinecap="round" fill="none" />
-              <circle cx="16" cy="54" r="6" fill="url(#warmSkin)" />
-              <path d="M 11 50 L 14 44 M 14 48 L 18 42 M 18 49 L 22 44" stroke="#A07048" strokeWidth="1.5" strokeLinecap="round" />
+              {/* Left arm waving up — arm + hand + fingers all in one group */}
+              <motion.g
+                animate={{ rotate: [0, -8, 8, 0] }}
+                transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }}
+                style={{ originX: "38px", originY: "92px" }}
+              >
+                <path d="M 38 92 Q 22 74 16 56" stroke="url(#warmSkin)" strokeWidth="9.5" strokeLinecap="round" fill="none" />
+                <circle cx="16" cy="54" r="6" fill="url(#warmSkin)" />
+                <path d="M 11 50 L 14 44 M 14 48 L 18 42 M 18 49 L 22 44" stroke="#D49B74" strokeWidth="1.5" strokeLinecap="round" />
+              </motion.g>
 
+              {/* Right arm holding drink */}
               <path d="M 102 92 Q 108 86 108 92" stroke="url(#warmSkin)" strokeWidth="9.5" strokeLinecap="round" fill="none" />
             </motion.g>
           )}
@@ -384,21 +392,28 @@ export default function AnimatedWillaMascot({
             </motion.g>
           )}
 
-          {/* IDLE — Casual Wave */}
+          {/* IDLE — Casual Wave (arm + hand grouped so fist moves with arm) */}
           {emotion === "idle" && (
             <motion.g key="arm-idle">
+              {/* Left arm resting */}
               <path d="M 38 92 Q 28 110 30 124" stroke="url(#warmSkin)" strokeWidth="9" strokeLinecap="round" fill="none" />
-              <motion.path
-                d="M 102 92 Q 114 80 112 66"
-                stroke="url(#warmSkin)"
-                strokeWidth="9"
-                strokeLinecap="round"
-                fill="none"
+              <circle cx="30" cy="126" r="5" fill="url(#warmSkin)" />
+
+              {/* Right arm waving — arm + fist inside same rotating group */}
+              <motion.g
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
                 style={{ originX: "102px", originY: "92px" }}
-              />
-              <circle cx="112" cy="64" r="5.5" fill="url(#warmSkin)" />
+              >
+                <path
+                  d="M 102 92 Q 114 80 112 66"
+                  stroke="url(#warmSkin)"
+                  strokeWidth="9"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+                <circle cx="112" cy="64" r="5.5" fill="url(#warmSkin)" />
+              </motion.g>
             </motion.g>
           )}
         </AnimatePresence>
@@ -421,7 +436,7 @@ export default function AnimatedWillaMascot({
           style={{ originX: "70px", originY: "62px" }}
           filter="url(#ambientShadow2)"
         >
-          {/* Neck with Warm Skin */}
+          {/* Neck */}
           <rect x="62" y="68" width="16" height="18" rx="6" fill="url(#warmSkin)" />
           <path d="M 62 68 Q 70 78 78 68 Z" fill="url(#skinShadow2)" />
 
@@ -437,31 +452,24 @@ export default function AnimatedWillaMascot({
             fill="url(#warmSkin)"
           />
 
-          {/* Subtle Stubble / Jawline Definition */}
-          <path
-            d="M 52 70 Q 70 82 88 70"
-            fill="url(#stubblePattern)"
-            opacity="0.4"
-          />
-
           {/* Jawline Highlight */}
           <path
             d="M 48 66 Q 70 80 92 66"
-            stroke="#8E6340"
+            stroke="#D49B74"
             strokeWidth="1"
             fill="none"
-            opacity="0.3"
+            opacity="0.25"
           />
 
           {/* Ears */}
           <g id="Ears">
             <ellipse cx="43" cy="56" rx="4.5" ry="7" fill="url(#warmSkin)" />
-            <path d="M 43 52 Q 45 56 43 60" stroke="#A07048" strokeWidth="1" fill="none" />
+            <path d="M 43 52 Q 45 56 43 60" stroke="#D49B74" strokeWidth="1" fill="none" />
             {/* Gold Stud Earring */}
             <circle cx="43" cy="60" r="1.5" fill="url(#gold24k)" stroke="#B8860B" strokeWidth="0.4" />
 
             <ellipse cx="97" cy="56" rx="4.5" ry="7" fill="url(#warmSkin)" />
-            <path d="M 97 52 Q 95 56 97 60" stroke="#A07048" strokeWidth="1" fill="none" />
+            <path d="M 97 52 Q 95 56 97 60" stroke="#D49B74" strokeWidth="1" fill="none" />
             <circle cx="97" cy="60" r="1.5" fill="url(#gold24k)" stroke="#B8860B" strokeWidth="0.4" />
           </g>
 
@@ -469,8 +477,8 @@ export default function AnimatedWillaMascot({
           <ellipse cx="52" cy="64" rx="5" ry="3.5" fill="url(#warmCheek)" />
           <ellipse cx="88" cy="64" rx="5" ry="3.5" fill="url(#warmCheek)" />
 
-          {/* Nose — More Defined */}
-          <path d="M 70 52 Q 73 62 67 65 Q 70 67 73 65" stroke="#A07048" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          {/* Nose */}
+          <path d="M 70 52 Q 73 62 67 65 Q 70 67 73 65" stroke="#D49B74" strokeWidth="1.5" fill="none" strokeLinecap="round" />
 
           {/* --- EYES --- */}
           <g id="Eyes">
