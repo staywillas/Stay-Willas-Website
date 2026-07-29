@@ -29,7 +29,6 @@ interface ExtraCharge {
 const loadImage = (url: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = "Anonymous";
     img.onload = () => resolve(img);
     img.onerror = (err) => reject(err);
     img.src = url;
@@ -280,348 +279,354 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     setExtraCharges(extraCharges.filter((c) => c.id !== id));
   };
 
-  // Generate & Download PDF Function
+  // Generate & Download PDF Function (Bulletproof & Fast)
   const handleDownloadPDF = async () => {
-    const { jsPDF } = await import("jspdf");
-    const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
-
-    // Load transparent company logo for PDF header & compress to reduce file size from ~61MB to ~50KB
-    let logoDataUrl: string | null = null;
     try {
-      const logoImg = await loadImage("/images/STAY WILLAS logo transparent.png");
-      const canvas = document.createElement("canvas");
-      // Downscale to 600px width for high quality print while keeping PDF size under 100KB
-      const targetW = 600;
-      const targetH = Math.round((logoImg.height / logoImg.width) * targetW) || 600;
-      canvas.width = targetW;
-      canvas.height = targetH;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = "high";
-        ctx.drawImage(logoImg, 0, 0, targetW, targetH);
-        logoDataUrl = canvas.toDataURL("image/png");
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      // Load transparent company logo for PDF header & compress to reduce file size under 60KB
+      let logoDataUrl: string | null = null;
+      try {
+        const logoImg = await loadImage("/images/STAY WILLAS logo transparent.png");
+        const canvas = document.createElement("canvas");
+        // Target 500px width for crystal-clear sharp print while keeping PDF size under 60KB
+        const targetW = 500;
+        const targetH = Math.round((logoImg.height / logoImg.width) * targetW) || 160;
+        canvas.width = targetW;
+        canvas.height = targetH;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(logoImg, 0, 0, targetW, targetH);
+          logoDataUrl = canvas.toDataURL("image/png");
+        }
+      } catch (e) {
+        console.warn("Could not load transparent logo for PDF, falling back to clean text header", e);
       }
-    } catch (e) {
-      console.error("Could not load transparent logo for PDF", e);
-    }
 
-    const activeVillaName = villas.find((v) => v.slug === selectedVillaSlug)?.name || "Stay Willas Estate";
+      const activeVillaName = villas.find((v) => v.slug === selectedVillaSlug)?.name || "Stay Willas Estate";
 
-    // Executive Brand Palette (Stay Willas Theme)
-    const navyColor = [27, 53, 100];   // #1B3564 Navy
-    const goldColor = [218, 165, 32];  // #DAA520 Gold
-    const darkCharcoal = [30, 41, 59]; // #1E293B Text
-    const lightBeige = [250, 248, 245]; // #FAF8F5 Card BG
-    const borderGray = [226, 232, 240]; // #E2E8F0
+      // Executive Brand Palette (Stay Willas Theme)
+      const navyColor = [27, 53, 100];   // #1B3564 Navy
+      const goldColor = [218, 165, 32];  // #DAA520 Gold
+      const darkCharcoal = [30, 41, 59]; // #1E293B Text
+      const lightBeige = [250, 248, 245]; // #FAF8F5 Card BG
+      const borderGray = [226, 232, 240]; // #E2E8F0
 
-    // Page margins & baseline
-    const marginX = 15;
-    let currentY = 0;
+      // Page margins & baseline
+      const marginX = 15;
+      let currentY = 0;
 
-    // Header Top Dual Accent Stripe (Navy & Gold)
-    doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.rect(0, 0, 210, 6, "F");
-    doc.setFillColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.rect(0, 6, 210, 1.5, "F");
+      // Header Top Dual Accent Stripe (Navy & Gold)
+      doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.rect(0, 0, 210, 6, "F");
+      doc.setFillColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.rect(0, 6, 210, 1.5, "F");
 
-    currentY = 14;
+      currentY = 14;
 
-    // Logo & Brand Header Info (Prominent, Big & Crisp)
-    if (logoDataUrl) {
-      doc.addImage(logoDataUrl, "PNG", marginX, currentY - 2, 56, 18);
-    } else {
+      // Logo & Brand Header Info (Prominent, Big & Crisp)
+      if (logoDataUrl) {
+        doc.addImage(logoDataUrl, "PNG", marginX, currentY - 2, 56, 18, undefined, "FAST");
+      } else {
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(24);
+        doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+        doc.text("STAY WILLAS", marginX, currentY + 6);
+
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+        doc.text("L U X U R Y   E S T A T E S   &   V I L L A S", marginX, currentY + 11);
+      }
+
+      // Invoice Header metadata (Right Aligned)
+      doc.setFontSize(15);
       doc.setFont("Helvetica", "bold");
-      doc.setFontSize(24);
       doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.text("STAY WILLAS", marginX, currentY + 6);
+      doc.text("TAX INVOICE STATEMENT", 210 - marginX, currentY + 4, { align: "right" });
+
+      doc.setFontSize(8.5);
+      doc.setFont("Helvetica", "normal");
+      doc.setTextColor(100, 100, 100);
+      const invoiceNum = `SW-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+      const invoiceDate = new Date().toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+      doc.text(`Invoice ID: ${invoiceNum}`, 210 - marginX, currentY + 9, { align: "right" });
+      doc.text(`Date Issued: ${invoiceDate}`, 210 - marginX, currentY + 13, { align: "right" });
+      doc.text(`Billing Mode: LIVE RESERVATION`, 210 - marginX, currentY + 17, { align: "right" });
+
+      currentY += 24;
+
+      // Gold Divider Line
+      doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.setLineWidth(0.4);
+      doc.line(marginX, currentY, 210 - marginX, currentY);
+
+      currentY += 6;
+
+      // Guest Info Box (Left) & Property Operator Box (Right)
+      const cardWidth = 87;
+      const cardHeight = 26;
+
+      // Left Card: Prepared For Guest
+      doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+      doc.rect(marginX, currentY, cardWidth, cardHeight, "F");
+      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+      doc.setLineWidth(0.2);
+      doc.rect(marginX, currentY, cardWidth, cardHeight, "S");
 
       doc.setFont("Helvetica", "bold");
-      doc.setFontSize(7.5);
-      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-      doc.text("L U X U R Y   E S T A T E S   &   V I L L A S", marginX, currentY + 11);
-    }
+      doc.setFontSize(8);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("PREPARED FOR GUEST:", marginX + 4, currentY + 5);
 
-    // Invoice Header metadata (Right Aligned)
-    doc.setFontSize(15);
-    doc.setFont("Helvetica", "bold");
-    doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("TAX INVOICE STATEMENT", 210 - marginX, currentY + 4, { align: "right" });
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
+      doc.text(guestName || "Valued Guest", marginX + 4, currentY + 10);
 
-    doc.setFontSize(8.5);
-    doc.setFont("Helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    const invoiceNum = `SW-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-    const invoiceDate = new Date().toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-    doc.text(`Invoice ID: ${invoiceNum}`, 210 - marginX, currentY + 9, { align: "right" });
-    doc.text(`Date Issued: ${invoiceDate}`, 210 - marginX, currentY + 13, { align: "right" });
-    doc.text(`Billing Mode: LIVE RESERVATION`, 210 - marginX, currentY + 17, { align: "right" });
-
-    currentY += 24;
-
-    // Gold Divider Line
-    doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.setLineWidth(0.4);
-    doc.line(marginX, currentY, 210 - marginX, currentY);
-
-    currentY += 6;
-
-    // Guest Info Box (Left) & Property Operator Box (Right)
-    const cardWidth = 87;
-    const cardHeight = 26;
-
-    // Left Card: Prepared For Guest
-    doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
-    doc.rect(marginX, currentY, cardWidth, cardHeight, "F");
-    doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
-    doc.setLineWidth(0.2);
-    doc.rect(marginX, currentY, cardWidth, cardHeight, "S");
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(8);
-    doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("PREPARED FOR GUEST:", marginX + 4, currentY + 5);
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
-    doc.text(guestName || "Valued Guest", marginX + 4, currentY + 10);
-
-    doc.setFont("Helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Contact: ${guestPhone || "N/A"}`, marginX + 4, currentY + 15);
-    doc.text(`Email: ${guestEmail || "N/A"}`, marginX + 4, currentY + 19);
-
-    // Right Card: Property Operator
-    const rightCardX = 210 - marginX - cardWidth;
-    doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
-    doc.rect(rightCardX, currentY, cardWidth, cardHeight, "F");
-    doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
-    doc.setLineWidth(0.2);
-    doc.rect(rightCardX, currentY, cardWidth, cardHeight, "S");
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(8);
-    doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("PROPERTY OPERATOR:", rightCardX + 4, currentY + 5);
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(8.5);
-    doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
-    doc.text("Stay Willas Luxury Estates", rightCardX + 4, currentY + 10);
-
-    doc.setFont("Helvetica", "normal");
-    doc.setFontSize(7.5);
-    doc.setTextColor(100, 100, 100);
-    doc.text("Ghatkopar West, Mumbai, MH 400084", rightCardX + 4, currentY + 15);
-    doc.text("Concierge Hotline: +91 9619042310", rightCardX + 4, currentY + 19);
-
-    currentY += cardHeight + 6;
-
-    // Reservation Overview Banner
-    doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.rect(marginX, currentY, 210 - marginX * 2, 14, "F");
-    doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.setLineWidth(0.4);
-    doc.rect(marginX, currentY, 210 - marginX * 2, 14, "S");
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(8);
-    doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.text("RESERVATION SUMMARY", marginX + 4, currentY + 5);
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(255, 255, 255);
-    const reservationDetails = `${activeVillaName}  |  ${nights} Night(s) (${weekdayNights} Weekday, ${weekendNights} Weekend)  |  ${guestsCount} Guests`;
-    doc.text(reservationDetails, marginX + 4, currentY + 10);
-
-    currentY += 19;
-
-    // Tariff Itemization Table Header
-    doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(8);
-    doc.setTextColor(255, 255, 255);
-    doc.text("ITEM DESCRIPTION", marginX + 4, currentY + 5);
-    doc.text("QTY / DURATION", 100, currentY + 5);
-    doc.text("RATE", 145, currentY + 5);
-    doc.text("TOTAL TARIFF", 175, currentY + 5);
-
-    currentY += 7.5;
-
-    // Table rows helper
-    let isRowEven = false;
-    const drawTableRow = (desc: string, qty: string, rate: string, total: string) => {
       doc.setFont("Helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Contact: ${guestPhone || "N/A"}`, marginX + 4, currentY + 15);
+      doc.text(`Email: ${guestEmail || "N/A"}`, marginX + 4, currentY + 19);
+
+      // Right Card: Property Operator
+      const rightCardX = 210 - marginX - cardWidth;
+      doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+      doc.rect(rightCardX, currentY, cardWidth, cardHeight, "F");
+      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+      doc.setLineWidth(0.2);
+      doc.rect(rightCardX, currentY, cardWidth, cardHeight, "S");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("PROPERTY OPERATOR:", rightCardX + 4, currentY + 5);
+
+      doc.setFont("Helvetica", "bold");
       doc.setFontSize(8.5);
       doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
-      
-      if (isRowEven) {
-        doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
-        doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
+      doc.text("Stay Willas Luxury Estates", rightCardX + 4, currentY + 10);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 100, 100);
+      doc.text("Ghatkopar West, Mumbai, MH 400084", rightCardX + 4, currentY + 15);
+      doc.text("Concierge Hotline: +91 9619042310", rightCardX + 4, currentY + 19);
+
+      currentY += cardHeight + 6;
+
+      // Reservation Overview Banner
+      doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 14, "F");
+      doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.setLineWidth(0.4);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 14, "S");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.text("RESERVATION SUMMARY", marginX + 4, currentY + 5);
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(255, 255, 255);
+      const reservationDetails = `${activeVillaName}  |  ${nights} Night(s) (${weekdayNights} Weekday, ${weekendNights} Weekend)  |  ${guestsCount} Guests`;
+      doc.text(reservationDetails, marginX + 4, currentY + 10);
+
+      currentY += 19;
+
+      // Tariff Itemization Table Header
+      doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(255, 255, 255);
+      doc.text("ITEM DESCRIPTION", marginX + 4, currentY + 5);
+      doc.text("QTY / DURATION", 100, currentY + 5);
+      doc.text("RATE", 145, currentY + 5);
+      doc.text("TOTAL TARIFF", 175, currentY + 5);
+
+      currentY += 7.5;
+
+      // Table rows helper
+      let isRowEven = false;
+      const drawTableRow = (desc: string, qty: string, rate: string, total: string) => {
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
+        
+        if (isRowEven) {
+          doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+          doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
+        }
+
+        doc.setDrawColor(235, 235, 235);
+        doc.setLineWidth(0.1);
+        doc.line(marginX, currentY + 7.5, 210 - marginX, currentY + 7.5);
+
+        doc.text(desc, marginX + 4, currentY + 5);
+        doc.text(qty, 100, currentY + 5);
+        doc.text(rate, 145, currentY + 5);
+        doc.setFont("Helvetica", "bold");
+        doc.text(total, 175, currentY + 5);
+
+        isRowEven = !isRowEven;
+        currentY += 7.5;
+      };
+
+      // Row 1: Weekday Stay
+      if (weekdayNights > 0) {
+        drawTableRow(
+          `Stay Tariff - Weekday Nights`,
+          `${weekdayNights} Night(s)`,
+          `Rs. ${ratePerNight.toLocaleString("en-IN")}`,
+          `Rs. ${weekdayStayCost.toLocaleString("en-IN")}`
+        );
       }
 
-      doc.setDrawColor(235, 235, 235);
-      doc.setLineWidth(0.1);
-      doc.line(marginX, currentY + 7.5, 210 - marginX, currentY + 7.5);
+      // Row 2: Weekend Stay
+      if (weekendNights > 0) {
+        drawTableRow(
+          `Stay Tariff - Weekend Nights`,
+          `${weekendNights} Night(s)`,
+          `Rs. ${weekendRatePerNight.toLocaleString("en-IN")}`,
+          `Rs. ${weekendStayCost.toLocaleString("en-IN")}`
+        );
+      }
 
-      doc.text(desc, marginX + 4, currentY + 5);
-      doc.text(qty, 100, currentY + 5);
-      doc.text(rate, 145, currentY + 5);
+      // Row 3: Extra Guests Fee
+      if (extraGuestsCount > 0) {
+        drawTableRow(
+          `Extra Guests Fee`,
+          `${extraGuestsCount} Pax * ${nights} Nights`,
+          `Rs. ${extraGuestFee.toLocaleString("en-IN")}`,
+          `Rs. ${extraGuestsCost.toLocaleString("en-IN")}`
+        );
+      }
+
+      // Row 4: Food plan cost
+      if (foodPlan !== "none") {
+        const foodPlanTitle =
+          foodPlan === "standard"
+            ? "STANDARD MENU"
+            : foodPlan === "deluxe"
+            ? "DELUXE MENU"
+            : "CUSTOM MENU";
+        drawTableRow(
+          `Catering Package - ${foodPlanTitle}`,
+          `${foodGuestsCount} Pax * ${nights} Days`,
+          `Rs. ${foodRatePerPersonPerDay.toLocaleString("en-IN")}`,
+          `Rs. ${totalFoodCost.toLocaleString("en-IN")}`
+        );
+      }
+
+      // Custom Extras rows
+      extraCharges.forEach((c) => {
+        drawTableRow(
+          c.description,
+          "Add-on Service",
+          `Rs. ${c.amount.toLocaleString("en-IN")}`,
+          `Rs. ${c.amount.toLocaleString("en-IN")}`
+        );
+      });
+
+      currentY += 8;
+
+      // Subtotal, Discounts, Tax & Grand Total (Right Aligned Summary Block)
+      const rightAlignX = 135;
+
+      const drawSummaryRow = (label: string, value: string, isBold = false, textColor = darkCharcoal) => {
+        doc.setFont("Helvetica", isBold ? "bold" : "normal");
+        doc.setFontSize(isBold ? 9.5 : 8.5);
+        doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+        doc.text(label, rightAlignX, currentY);
+        doc.text(value, 175, currentY);
+        currentY += 5.5;
+      };
+
+      drawSummaryRow("Gross Subtotal:", `Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}`);
+      if (totalDiscount > 0) {
+        drawSummaryRow("Discount Applied:", `- Rs. ${totalDiscount.toLocaleString("en-IN")}`, false, [180, 40, 40]);
+      }
+      drawSummaryRow(`Net Taxable Amount:`, `Rs. ${subtotal.toLocaleString("en-IN")}`);
+      drawSummaryRow(`GST Tax (${gstPercent}%):`, `Rs. ${gstAmount.toLocaleString("en-IN")}`);
+      
+      // Grand Total Highlight Bar
+      currentY += 1;
+      doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.rect(rightAlignX - 2, currentY - 4, 210 - marginX - (rightAlignX - 2), 9, "F");
+
       doc.setFont("Helvetica", "bold");
-      doc.text(total, 175, currentY + 5);
+      doc.setFontSize(9);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.text("NET PAYABLE AMOUNT:", rightAlignX, currentY + 1.5);
 
-      isRowEven = !isRowEven;
-      currentY += 7.5;
-    };
+      doc.setFontSize(10);
+      doc.setTextColor(255, 255, 255);
+      doc.text(`Rs. ${grandTotal.toLocaleString("en-IN")}`, 175, currentY + 1.5);
 
-    // Row 1: Weekday Stay
-    if (weekdayNights > 0) {
-      drawTableRow(
-        `Stay Tariff - Weekday Nights`,
-        `${weekdayNights} Night(s)`,
-        `Rs. ${ratePerNight.toLocaleString("en-IN")}`,
-        `Rs. ${weekdayStayCost.toLocaleString("en-IN")}`
-      );
+      currentY += 10;
+
+      if (advancePaid > 0) {
+        drawSummaryRow("Advance Paid:", `Rs. ${advancePaid.toLocaleString("en-IN")}`, false, [16, 122, 68]);
+        const balanceText = balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`;
+        drawSummaryRow("BALANCE REMAINING:", balanceText, true, balanceDue <= 0 ? [16, 122, 68] : navyColor);
+      }
+
+      // Terms & Conditions Block (Bottom Left)
+      let tcY = currentY - 28;
+      if (tcY < 150) tcY = 175; // ensure proper position on page
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("TERMS & BOOKING CONDITIONS:", marginX, tcY);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(7);
+      doc.setTextColor(110, 110, 110);
+      doc.text("1. Security deposit is refundable within 48 hours post check-out verification.", marginX, tcY + 4);
+      doc.text("2. Standard Check-in is 2:00 PM and Check-out is 11:00 AM.", marginX, tcY + 7.5);
+      doc.text("3. Quiet hours apply in residential zones after 10:00 PM.", marginX, tcY + 11);
+      doc.text("4. Meal plans once confirmed cannot be partially cancelled during stay.", marginX, tcY + 14.5);
+
+      // Thank you banner & Footer
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.text("THANK YOU FOR CHOOSING STAY WILLAS!", marginX, tcY + 23);
+
+      // Footer border line
+      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+      doc.setLineWidth(0.3);
+      doc.line(marginX, 282, 210 - marginX, 282);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(7);
+      doc.setTextColor(140, 140, 140);
+      doc.text("Stay Willas Luxury Estates  |  www.staywillas.com  |  WhatsApp Concierge: +91 9619042310", marginX, 286);
+      doc.text("Page 1 of 1", 210 - marginX, 286, { align: "right" });
+
+      // Trigger PDF download
+      const safeGuestName = (guestName || "Guest").replace(/[^a-zA-Z0-9]/g, "_");
+      doc.save(`StayWillas_Invoice_${safeGuestName}.pdf`);
+    } catch (err) {
+      console.error("Failed to generate PDF:", err);
+      alert("Notice: PDF download encountered an issue. Check browser permissions.");
     }
-
-    // Row 2: Weekend Stay
-    if (weekendNights > 0) {
-      drawTableRow(
-        `Stay Tariff - Weekend Nights`,
-        `${weekendNights} Night(s)`,
-        `Rs. ${weekendRatePerNight.toLocaleString("en-IN")}`,
-        `Rs. ${weekendStayCost.toLocaleString("en-IN")}`
-      );
-    }
-
-    // Row 3: Extra Guests Fee
-    if (extraGuestsCount > 0) {
-      drawTableRow(
-        `Extra Guests Fee`,
-        `${extraGuestsCount} Pax * ${nights} Nights`,
-        `Rs. ${extraGuestFee.toLocaleString("en-IN")}`,
-        `Rs. ${extraGuestsCost.toLocaleString("en-IN")}`
-      );
-    }
-
-    // Row 4: Food plan cost
-    if (foodPlan !== "none") {
-      const foodPlanTitle =
-        foodPlan === "standard"
-          ? "STANDARD MENU"
-          : foodPlan === "deluxe"
-          ? "DELUXE MENU"
-          : "CUSTOM MENU";
-      drawTableRow(
-        `Catering Package - ${foodPlanTitle}`,
-        `${foodGuestsCount} Pax * ${nights} Days`,
-        `Rs. ${foodRatePerPersonPerDay.toLocaleString("en-IN")}`,
-        `Rs. ${totalFoodCost.toLocaleString("en-IN")}`
-      );
-    }
-
-    // Custom Extras rows
-    extraCharges.forEach((c) => {
-      drawTableRow(
-        c.description,
-        "Add-on Service",
-        `Rs. ${c.amount.toLocaleString("en-IN")}`,
-        `Rs. ${c.amount.toLocaleString("en-IN")}`
-      );
-    });
-
-    currentY += 8;
-
-    // Subtotal, Discounts, Tax & Grand Total (Right Aligned Summary Block)
-    const rightAlignX = 135;
-
-    const drawSummaryRow = (label: string, value: string, isBold = false, textColor = darkCharcoal) => {
-      doc.setFont("Helvetica", isBold ? "bold" : "normal");
-      doc.setFontSize(isBold ? 9.5 : 8.5);
-      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-      doc.text(label, rightAlignX, currentY);
-      doc.text(value, 175, currentY);
-      currentY += 5.5;
-    };
-
-    drawSummaryRow("Gross Subtotal:", `Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}`);
-    if (totalDiscount > 0) {
-      drawSummaryRow("Discount Applied:", `- Rs. ${totalDiscount.toLocaleString("en-IN")}`, false, [180, 40, 40]);
-    }
-    drawSummaryRow(`Net Taxable Amount:`, `Rs. ${subtotal.toLocaleString("en-IN")}`);
-    drawSummaryRow(`GST Tax (${gstPercent}%):`, `Rs. ${gstAmount.toLocaleString("en-IN")}`);
-    
-    // Grand Total Highlight Bar
-    currentY += 1;
-    doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.rect(rightAlignX - 2, currentY - 4, 210 - marginX - (rightAlignX - 2), 9, "F");
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.text("NET PAYABLE AMOUNT:", rightAlignX, currentY + 1.5);
-
-    doc.setFontSize(10);
-    doc.setTextColor(255, 255, 255);
-    doc.text(`Rs. ${grandTotal.toLocaleString("en-IN")}`, 175, currentY + 1.5);
-
-    currentY += 10;
-
-    if (advancePaid > 0) {
-      drawSummaryRow("Advance Paid:", `Rs. ${advancePaid.toLocaleString("en-IN")}`, false, [16, 122, 68]);
-      const balanceText = balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`;
-      drawSummaryRow("BALANCE REMAINING:", balanceText, true, balanceDue <= 0 ? [16, 122, 68] : navyColor);
-    }
-
-    // Terms & Conditions Block (Bottom Left)
-    let tcY = currentY - 28;
-    if (tcY < 150) tcY = 175; // ensure proper position on page
-
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(8);
-    doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-    doc.text("TERMS & BOOKING CONDITIONS:", marginX, tcY);
-
-    doc.setFont("Helvetica", "normal");
-    doc.setFontSize(7);
-    doc.setTextColor(110, 110, 110);
-    doc.text("1. Security deposit is refundable within 48 hours post check-out verification.", marginX, tcY + 4);
-    doc.text("2. Standard Check-in is 2:00 PM and Check-out is 11:00 AM.", marginX, tcY + 7.5);
-    doc.text("3. Quiet hours apply in residential zones after 10:00 PM.", marginX, tcY + 11);
-    doc.text("4. Meal plans once confirmed cannot be partially cancelled during stay.", marginX, tcY + 14.5);
-
-    // Thank you banner & Footer
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-    doc.text("THANK YOU FOR CHOOSING STAY WILLAS!", marginX, tcY + 23);
-
-    // Footer border line
-    doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
-    doc.setLineWidth(0.3);
-    doc.line(marginX, 282, 210 - marginX, 282);
-
-    doc.setFont("Helvetica", "normal");
-    doc.setFontSize(7);
-    doc.setTextColor(140, 140, 140);
-    doc.text("Stay Willas Luxury Estates  |  www.staywillas.com  |  WhatsApp Concierge: +91 9619042310", marginX, 286);
-    doc.text("Page 1 of 1", 210 - marginX, 286, { align: "right" });
-
-    // Trigger PDF download
-    doc.save(`StayWillas_Invoice_${guestName.replace(/[^a-zA-Z0-9]/g, "_") || "Guest"}.pdf`);
   };
 
   return (
@@ -1103,12 +1108,11 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
             {/* Permanent Compact Action Footer */}
             <div className="p-3.5 bg-slate-50 border-t border-slate-200 shrink-0 space-y-2">
-              {/* PDF Download Button */}
+              {/* PDF Download Button (Always active & instant) */}
               <button
                 type="button"
-                disabled={!selectedVillaSlug}
                 onClick={handleDownloadPDF}
-                className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl py-2.5 text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md disabled:opacity-40 disabled:pointer-events-none"
+                className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl py-2.5 text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md"
               >
                 <Download size={15} />
                 Download PDF Invoice
