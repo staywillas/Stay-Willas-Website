@@ -563,6 +563,8 @@ export async function sendInvoiceEmailAction(data: {
   location: string;
   nights: number;
   guestsCount: number;
+  checkInDate?: string;
+  checkOutDate?: string;
   totalStayCost: number;
   foodPlanName: string;
   totalFoodCost: number;
@@ -609,6 +611,22 @@ export async function sendInvoiceEmailAction(data: {
                   <td style="padding: 6px 0; font-size: 13px; color: #64748B;">Property Location:</td>
                   <td style="padding: 6px 0; font-size: 13px; font-weight: bold; color: #1B3564; text-align: right;">${data.villaName} (${data.location})</td>
                 </tr>
+                ${
+                  data.checkInDate
+                    ? `<tr>
+                        <td style="padding: 6px 0; font-size: 13px; color: #64748B;">Check-In Date:</td>
+                        <td style="padding: 6px 0; font-size: 13px; font-weight: bold; color: #1E293B; text-align: right;">${data.checkInDate} (2:00 PM)</td>
+                       </tr>`
+                    : ""
+                }
+                ${
+                  data.checkOutDate
+                    ? `<tr>
+                        <td style="padding: 6px 0; font-size: 13px; color: #64748B;">Check-Out Date:</td>
+                        <td style="padding: 6px 0; font-size: 13px; font-weight: bold; color: #1E293B; text-align: right;">${data.checkOutDate} (11:00 AM)</td>
+                       </tr>`
+                    : ""
+                }
                 <tr>
                   <td style="padding: 6px 0; font-size: 13px; color: #64748B;">Total Stay Duration:</td>
                   <td style="padding: 6px 0; font-size: 13px; font-weight: bold; color: #1E293B; text-align: right;">${data.nights} Night(s)</td>

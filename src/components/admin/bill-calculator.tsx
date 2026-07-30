@@ -43,6 +43,8 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
   // Stay Settings
   const [selectedVillaSlug, setSelectedVillaSlug] = useState("");
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
   const [ratePerNight, setRatePerNight] = useState(0);
   const [weekendRatePerNight, setWeekendRatePerNight] = useState(0);
   const [nights, setNights] = useState(1);
@@ -50,6 +52,32 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   const [guestsCount, setGuestsCount] = useState(1);
   const [baseGuests, setBaseGuests] = useState(12);
   const [extraGuestFee, setExtraGuestFee] = useState(1500);
+
+  // Auto calculate nights & weekend nights from dates
+  const handleDateChange = (cin: string, cout: string) => {
+    setCheckInDate(cin);
+    setCheckOutDate(cout);
+
+    if (cin && cout) {
+      const start = new Date(cin);
+      const end = new Date(cout);
+      if (end > start) {
+        const totalDays = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+        setNights(totalDays);
+
+        let wknd = 0;
+        const cur = new Date(start);
+        while (cur < end) {
+          const day = cur.getDay(); // 0 Sun, 5 Fri, 6 Sat
+          if (day === 5 || day === 6) {
+            wknd++;
+          }
+          cur.setDate(cur.getDate() + 1);
+        }
+        setWeekendNights(Math.min(totalDays, wknd));
+      }
+    }
+  };
 
   // Food Settings
   const [foodPlan, setFoodPlan] = useState<"none" | "standard" | "deluxe" | "custom">("none");
@@ -78,6 +106,8 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     setGuestPhone("");
     setGuestEmail("");
     setSelectedVillaSlug("");
+    setCheckInDate("");
+    setCheckOutDate("");
     setRatePerNight(0);
     setWeekendRatePerNight(0);
     setNights(1);
@@ -99,6 +129,13 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     setEmailFeedback(null);
   };
 
+  // Format date helper
+  const formatDateLabel = (dStr: string) => {
+    if (!dStr) return "N/A";
+    const d = new Date(dStr);
+    return isNaN(d.getTime()) ? dStr : d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  };
+
   // Auto-Draft Mailto Link Launcher (Opens client email app with pre-written text & details)
   const handleDraftMailto = () => {
     const selectedVilla = villas.find((v) => v.slug === selectedVillaSlug);
@@ -112,6 +149,8 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       `------------------------------------------\n` +
       `• Primary Guest: ${guestName || "N/A"}\n` +
       `• Contact Phone: ${guestPhone || "N/A"}\n` +
+      (checkInDate ? `• Check-In Date: ${formatDateLabel(checkInDate)} (2:00 PM)\n` : "") +
+      (checkOutDate ? `• Check-Out Date: ${formatDateLabel(checkOutDate)} (11:00 AM)\n` : "") +
       `• Total Duration: ${nights} Night(s)\n` +
       `• Guest Count: ${guestsCount} Guest(s)\n` +
       `------------------------------------------\n` +
@@ -156,6 +195,8 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       location: selectedVilla.location,
       nights,
       guestsCount,
+      checkInDate: checkInDate ? formatDateLabel(checkInDate) : undefined,
+      checkOutDate: checkOutDate ? formatDateLabel(checkOutDate) : undefined,
       totalStayCost,
       foodPlanName: foodPlan === "none" ? "No Meal Plan" : foodPlan,
       totalFoodCost,
@@ -185,6 +226,8 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       `------------------------------------------\n` +
       `🏰 *Property:* ${villaName}\n` +
       `👤 *Guest Name:* ${guestName || "Valued Guest"}\n` +
+      (checkInDate ? `📅 *Check-In:* ${formatDateLabel(checkInDate)}\n` : "") +
+      (checkOutDate ? `📅 *Check-Out:* ${formatDateLabel(checkOutDate)}\n` : "") +
       `🌙 *Stay Duration:* ${nights} Night(s)\n` +
       `👥 *Guests:* ${guestsCount} Pax\n` +
       `------------------------------------------\n` +
@@ -500,11 +543,12 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       currentY += cardHeight + 6;
 
       // Reservation Overview Banner
+      const reservationBoxHeight = (checkInDate || checkOutDate) ? 20 : 14;
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.rect(marginX, currentY, 210 - marginX * 2, 14, "F");
+      doc.rect(marginX, currentY, 210 - marginX * 2, reservationBoxHeight, "F");
       doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
       doc.setLineWidth(0.4);
-      doc.rect(marginX, currentY, 210 - marginX * 2, 14, "S");
+      doc.rect(marginX, currentY, 210 - marginX * 2, reservationBoxHeight, "S");
 
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(8);
@@ -517,7 +561,16 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       const reservationDetails = `${activeVillaName}  |  ${nights} Night(s) (${weekdayNights} Weekday, ${weekendNights} Weekend)  |  ${guestsCount} Guests`;
       doc.text(reservationDetails, marginX + 4, currentY + 10);
 
-      currentY += 19;
+      if (checkInDate || checkOutDate) {
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(218, 165, 32); // Gold color
+        const cinStr = checkInDate ? formatDateLabel(checkInDate) : "N/A";
+        const coutStr = checkOutDate ? formatDateLabel(checkOutDate) : "N/A";
+        doc.text(`Check-In: ${cinStr} (2:00 PM)   |   Check-Out: ${coutStr} (11:00 AM)`, marginX + 4, currentY + 15);
+      }
+
+      currentY += reservationBoxHeight + 5;
 
       // Tariff Itemization Table Header
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
@@ -838,6 +891,35 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
               </div>
             </div>
 
+            {/* Check-In & Check-Out Date Pickers */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+              <div>
+                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1.5">
+                  <Calendar size={13} className="text-[#DAA520]" />
+                  Check-In Date
+                </label>
+                <input
+                  type="date"
+                  value={checkInDate}
+                  onChange={(e) => handleDateChange(e.target.value, checkOutDate)}
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-[#1B3564]"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1.5">
+                  <Calendar size={13} className="text-[#DAA520]" />
+                  Check-Out Date
+                </label>
+                <input
+                  type="date"
+                  min={checkInDate || undefined}
+                  value={checkOutDate}
+                  onChange={(e) => handleDateChange(checkInDate, e.target.value)}
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-[#1B3564]"
+                />
+              </div>
+            </div>
+
             <div className="pt-2 border-t border-slate-100">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
@@ -1065,6 +1147,20 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
             {/* Body Content (Scrollable with overscroll containment) */}
             <div className="p-5 space-y-4 text-xs flex-1 overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth">
+              {/* Dates Badge */}
+              {(checkInDate || checkOutDate) && (
+                <div className="bg-[#1B3564]/5 border border-[#1B3564]/15 rounded-xl p-2.5 space-y-1 text-slate-700">
+                  <div className="flex justify-between items-center text-[11px] font-semibold">
+                    <span className="text-[#1B3564] font-bold">Check-In:</span>
+                    <span>{checkInDate ? formatDateLabel(checkInDate) : "N/A"} (2:00 PM)</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[11px] font-semibold">
+                    <span className="text-[#1B3564] font-bold">Check-Out:</span>
+                    <span>{checkOutDate ? formatDateLabel(checkOutDate) : "N/A"} (11:00 AM)</span>
+                  </div>
+                </div>
+              )}
+
               {/* Stays Cost */}
               <div className="flex justify-between items-start pb-3 border-b border-slate-100">
                 <span className="text-slate-600 font-medium">Stay Tariff ({nights} Nights)</span>

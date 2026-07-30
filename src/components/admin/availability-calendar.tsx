@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -52,6 +53,11 @@ interface AvailabilityCalendarProps {
 
 export default function AvailabilityCalendar({ villas, bookings, onBookingsChange }: AvailabilityCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Modal Overlays state
   const [selectedCell, setSelectedCell] = useState<{ villaId: string; date: Date } | null>(null);
@@ -479,230 +485,273 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         </table>
       </div>
 
-      {/* Dynamic Popups/Modals overlay */}
+      {/* Dynamic Popups/Modals overlay rendered at document.body via Portal */}
       
       {/* 1. Availability Action Block Modal */}
-      {selectedCell && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6 overflow-y-auto animate-fade-in">
-          <div className="glass border border-slate-200 rounded-[32px] p-8 max-w-lg w-full relative shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto">
-            <div>
-              <h4 className="text-2xl font-heading mb-1 italic text-blue-600">Sanctuary Availability Controller</h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Configure room rack blocks or villa stay bookings for <span className="text-slate-900 font-bold">{villas.find(v => v.id === selectedCell.villaId)?.name}</span>.
-              </p>
+      {mounted && selectedCell && createPortal(
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 animate-fade-in">
+          <div className="bg-white border border-slate-200 rounded-[28px] max-w-4xl lg:max-w-5xl w-full relative shadow-2xl flex flex-col max-h-[85vh] my-auto overflow-hidden">
+            {/* Fixed Header */}
+            <div className="shrink-0 px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
+              <div>
+                <h4 className="text-lg md:text-xl font-heading italic text-blue-600 font-bold">Sanctuary Availability Controller</h4>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Configure room rack blocks or villa stay bookings for <span className="text-slate-900 font-bold">{villas.find(v => v.id === selectedCell.villaId)?.name}</span>.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedCell(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer shrink-0"
+              >
+                ✕
+              </button>
             </div>
 
-            {modalView === "OPTIONS" && (
-              <div className="space-y-4">
-                <button 
-                  onClick={() => setModalView("MANUAL_BOOKING")}
-                  className="w-full bg-[#3B82F6] hover:bg-blue-600 text-white py-4 px-6 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-md"
-                >
-                  <Plus size={14} /> BOOKED FOR VILLA STAY
-                </button>
-                <button 
-                  onClick={() => setModalView("MAINTENANCE")}
-                  className="w-full bg-red-500/10 border border-red-500/30 text-red-700 py-4 px-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-500/20 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
-                >
-                  <Wrench size={14} /> BLOCK FOR ROUTINE MAINTENANCE
-                </button>
-                <button 
-                  onClick={() => setModalView("OWNER_USE")}
-                  className="w-full bg-purple-500/10 border border-purple-500/30 text-purple-400 py-4 px-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-purple-500/20 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
-                >
-                  <ShieldAlert size={14} /> BLOCK FOR PRIVATE OWNER USE
-                </button>
-                <button 
-                  onClick={() => setSelectedCell(null)}
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-600 py-4 px-6 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-slate-100 transition-all cursor-pointer"
-                >
-                  CANCEL OPERATION
-                </button>
-              </div>
-            )}
-
-            {modalView !== "OPTIONS" && (
-              <form onSubmit={handleFormSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Check-In Date</label>
-                    <input 
-                      type="date" 
-                      value={checkInStr}
-                      onChange={(e) => setCheckInStr(e.target.value)}
-                      required
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Check-Out Date</label>
-                    <input 
-                      type="date" 
-                      value={checkOutStr}
-                      min={checkInStr}
-                      onChange={(e) => setCheckOutStr(e.target.value)}
-                      required
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none"
-                    />
-                  </div>
+            {/* Scrollable Form Body */}
+            <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-4">
+              {modalView === "OPTIONS" && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                  <button 
+                    onClick={() => setModalView("MANUAL_BOOKING")}
+                    className="bg-[#3B82F6] hover:bg-blue-600 text-white py-5 px-6 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex flex-col items-center justify-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <Plus size={20} />
+                    <span>BOOKED FOR VILLA STAY</span>
+                  </button>
+                  <button 
+                    onClick={() => setModalView("MAINTENANCE")}
+                    className="bg-red-500/10 border border-red-500/30 text-red-700 py-5 px-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-500/20 transition-all flex flex-col items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Wrench size={20} />
+                    <span>BLOCK ROUTINE MAINTENANCE</span>
+                  </button>
+                  <button 
+                    onClick={() => setModalView("OWNER_USE")}
+                    className="bg-purple-500/10 border border-purple-500/30 text-purple-700 py-5 px-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-purple-500/20 transition-all flex flex-col items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <ShieldAlert size={20} />
+                    <span>BLOCK PRIVATE OWNER USE</span>
+                  </button>
                 </div>
+              )}
 
-                {modalView === "MANUAL_BOOKING" ? (
-                  <>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Guest Name</label>
-                        <div className="relative">
-                          <User size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              {modalView !== "OPTIONS" && (
+                <form id="availability-block-form" onSubmit={handleFormSubmit} className="space-y-4">
+                  {modalView === "MANUAL_BOOKING" ? (
+                    <div className="space-y-4">
+                      {/* Row 1: Stay Dates & Basic Rates (Horizontal 4-Column Grid) */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/60">
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-In Date *</label>
                           <input 
-                            type="text" 
-                            value={guestName}
-                            onChange={(e) => setGuestName(e.target.value)}
-                            placeholder="Full Name"
+                            type="date" 
+                            value={checkInStr}
+                            onChange={(e) => setCheckInStr(e.target.value)}
                             required
-                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-10 pr-4 py-2.5 text-xs focus:border-blue-500 outline-none"
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
                           />
                         </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Phone Number</label>
-                          <div className="relative">
-                            <Phone size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input 
-                              type="tel" 
-                              value={guestPhone}
-                              onChange={(e) => setGuestPhone(e.target.value)}
-                              placeholder="+91 XXXXX XXXXX"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-10 pr-4 py-2.5 text-xs focus:border-blue-500 outline-none"
-                            />
-                          </div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-Out Date *</label>
+                          <input 
+                            type="date" 
+                            value={checkOutStr}
+                            min={checkInStr}
+                            onChange={(e) => setCheckOutStr(e.target.value)}
+                            required
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
+                          />
                         </div>
                         <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Email Address</label>
-                          <div className="relative">
-                            <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input 
-                              type="email" 
-                              value={guestEmail}
-                              onChange={(e) => setGuestEmail(e.target.value)}
-                              placeholder="guest@domain.com"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-10 pr-4 py-2.5 text-xs focus:border-blue-500 outline-none"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/50">
-                        <div className="col-span-2 text-[9px] text-[#1B3564]/60 font-bold uppercase tracking-widest border-b border-slate-200 pb-1 mb-1">STAY PARAMETERS</div>
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Nightly Rate (₹) *</label>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Nightly Rate (₹) *</label>
                           <input 
                             type="number" 
                             value={nightlyRate || ""}
                             onChange={(e) => setNightlyRate(Number(e.target.value) || 0)}
                             required
-                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none font-semibold"
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Guest Count *</label>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Guest Count *</label>
                           <input 
                             type="number" 
                             value={numGuests || ""}
                             onChange={(e) => setNumGuests(Number(e.target.value) || 1)}
                             required
                             min="1"
-                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none font-semibold"
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
                           />
                         </div>
                       </div>
 
-                      {checkInStr && checkOutStr && (
-                        <div className="text-[11px] text-[#1B3564]/70 font-semibold bg-blue-500/5 border border-blue-500/10 px-4 py-2.5 rounded-xl">
-                          Duration: {Math.max(0, Math.round((new Date(checkOutStr).getTime() - new Date(checkInStr).getTime()) / (1000 * 60 * 60 * 24)))} Nights
-                        </div>
-                      )}
-
-                      <div className="grid grid-cols-2 gap-4">
+                      {/* Row 2: Guest Details (Horizontal 3-Column Grid) */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Total Tariff (₹)</label>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Primary Guest Name *</label>
+                          <div className="relative">
+                            <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input 
+                              type="text" 
+                              value={guestName}
+                              onChange={(e) => setGuestName(e.target.value)}
+                              placeholder="Full Name"
+                              required
+                              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-blue-500 outline-none font-medium"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Phone Number</label>
+                          <div className="relative">
+                            <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input 
+                              type="tel" 
+                              value={guestPhone}
+                              onChange={(e) => setGuestPhone(e.target.value)}
+                              placeholder="+91 XXXXX XXXXX"
+                              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-blue-500 outline-none font-medium"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Email Address</label>
+                          <div className="relative">
+                            <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input 
+                              type="email" 
+                              value={guestEmail}
+                              onChange={(e) => setGuestEmail(e.target.value)}
+                              placeholder="guest@domain.com"
+                              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-blue-500 outline-none font-medium"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Row 3: Billing, Status & Calculated Duration (Horizontal 3-Column Grid) */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Total Tariff Override (₹)</label>
                           <input 
                             type="number" 
                             value={totalPriceOverride}
                             onChange={(e) => setTotalPriceOverride(e.target.value !== "" ? Number(e.target.value) : "")}
-                            placeholder="Leave empty for base rates"
-                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none font-semibold"
+                            placeholder="Leave blank for base rates"
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Reservation Status</label>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Reservation Status</label>
                           <select 
                             value={bookingStatus}
                             onChange={(e) => setBookingStatus(e.target.value)}
-                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none font-semibold"
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
                           >
-                            <option value="CONFIRMED" className="bg-white text-slate-900">CONFIRMED</option>
-                            <option value="PENDING" className="bg-white text-slate-900">VERIFICATION PENDING</option>
+                            <option value="CONFIRMED">CONFIRMED</option>
+                            <option value="PENDING">VERIFICATION PENDING</option>
                           </select>
+                        </div>
+                        <div>
+                          {checkInStr && checkOutStr ? (
+                            <div className="text-xs text-[#1B3564] font-bold bg-blue-50 border border-blue-200 px-3.5 py-2 rounded-xl flex justify-between items-center h-[38px]">
+                              <span>Stay Duration:</span>
+                              <span className="bg-[#1B3564] text-white px-2 py-0.5 rounded-md text-[11px]">
+                                {Math.max(0, Math.round((new Date(checkOutStr).getTime() - new Date(checkInStr).getTime()) / (1000 * 60 * 60 * 24)))} Nights
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="text-xs text-slate-400 bg-slate-50 border border-slate-200 px-3.5 py-2 rounded-xl h-[38px] flex items-center">
+                              Select Dates to Calculate
+                            </div>
+                          )}
                         </div>
                       </div>
 
+                      {/* Row 4: Call Notes */}
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Special Directives / Call Notes</label>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Special Directives / Call Notes</label>
                         <div className="relative">
-                          <FileText size={14} className="absolute left-3.5 top-4 text-slate-400" />
-                          <textarea 
+                          <FileText size={14} className="absolute left-3 top-2.5 text-slate-400" />
+                          <input 
+                            type="text"
                             value={bookingNotes}
                             onChange={(e) => setBookingNotes(e.target.value)}
                             placeholder="Add payment status, specific food requests, early check-in notes, etc."
-                            rows={3}
-                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-10 pr-4 py-3 text-xs focus:border-blue-500 outline-none"
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-blue-500 outline-none font-medium"
                           />
                         </div>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <div>
-                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1.5 font-bold">Reason/Notes for Blackout</label>
-                    <input 
-                      type="text" 
-                      value={guestName}
-                      onChange={(e) => setGuestName(e.target.value)}
-                      placeholder={modalView === "MAINTENANCE" ? "e.g., Deep Cleaning / Pool Refurbishing" : "e.g., Owner Private Stays"}
-                      required
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-xs focus:border-blue-500 outline-none"
-                    />
-                  </div>
-                )}
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/60">
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-In Date</label>
+                        <input 
+                          type="date" 
+                          value={checkInStr}
+                          onChange={(e) => setCheckInStr(e.target.value)}
+                          required
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-Out Date</label>
+                        <input 
+                          type="date" 
+                          value={checkOutStr}
+                          min={checkInStr}
+                          onChange={(e) => setCheckOutStr(e.target.value)}
+                          required
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Reason/Notes for Blackout *</label>
+                        <input 
+                          type="text" 
+                          value={guestName}
+                          onChange={(e) => setGuestName(e.target.value)}
+                          placeholder={modalView === "MAINTENANCE" ? "e.g., Deep Cleaning / Pool Repair" : "e.g., Owner Private Stays"}
+                          required
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </form>
+              )}
+            </div>
 
-                <div className="flex gap-4 pt-4 border-t border-slate-100">
-                  <button 
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="flex-grow bg-[#1B3564] text-slate-900 hover:bg-[#3B82F6] py-3.5 rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
-                  >
-                    {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : "RECORD ROOM BLOCK"}
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => setModalView("OPTIONS")}
-                    className="px-6 bg-slate-50 border border-slate-200 text-slate-600 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-slate-100 transition-all cursor-pointer"
-                  >
-                    Back
-                  </button>
-                </div>
-              </form>
+            {/* Pinned Sticky Footer */}
+            {modalView !== "OPTIONS" && (
+              <div className="shrink-0 bg-slate-50 border-t border-slate-200 p-4 px-6 flex items-center justify-end gap-3 rounded-b-[28px]">
+                <button 
+                  type="button"
+                  onClick={() => setModalView("OPTIONS")}
+                  className="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-slate-100 transition-all cursor-pointer"
+                >
+                  Back
+                </button>
+                <button 
+                  type="submit"
+                  form="availability-block-form"
+                  disabled={isSubmitting}
+                  className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                >
+                  {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : "RECORD ROOM BLOCK"}
+                </button>
+              </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {/* 2. Detailed Reservation Inspector Modal */}
-      {selectedBooking && activeDetails && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6 animate-fade-in">
+      {/* 2. Detailed Reservation Inspector Modal rendered at document.body via Portal */}
+      {mounted && selectedBooking && activeDetails && createPortal(
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4 md:p-6 animate-fade-in">
           <div className="glass border border-slate-200 rounded-[32px] p-8 max-w-md w-full relative shadow-2xl space-y-6">
             
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -811,7 +860,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>
