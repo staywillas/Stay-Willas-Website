@@ -157,11 +157,11 @@ export default function VillasClient({
       {/* Search Header Row */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 border-b border-border-subtle pb-6 select-none">
         <div className="text-left w-full sm:w-auto">
-          <h1 className="text-3xl font-heading text-[#1B3564] italic">
-            Rent Private Pool <span className="not-italic font-bold font-sans text-accent-primary">Villas</span>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-heading text-[#1B3564] italic">
+            Staycation Villas in <span className="not-italic font-bold font-sans text-accent-primary">Maharashtra</span>
           </h1>
           <p className="text-[10px] text-[#1B3564]/50 font-black uppercase tracking-widest mt-1">
-            Handpicked premium luxury villa stays in Maharashtra
+            Handpicked verified luxury retreats and private pool estates
           </p>
         </div>
         
@@ -443,27 +443,123 @@ export default function VillasClient({
 
       </div>
 
-      {/* Villa Booking Guide / SEO Section */}
+      {/* Villa Booking Guide / 1000-Word SEO Content Section */}
       <section className="mt-24 pt-16 border-t border-border-subtle select-none text-charcoal">
         <div className="max-w-4xl mx-auto space-y-12">
-          <div>
-            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Why Book Our Private Pool Villas in Maharashtra?</h2>
-            <p className="text-sm text-charcoal/70 leading-relaxed">
-              Stay Willas offers an elite collection of verified private pool villas designed for premium staycations. Enjoy total isolation, high-speed Wi-Fi, fully equipped modern kitchens, custom cocktail bar spaces, and stunning hill views. Each luxury villa serves as your personal sanctuary.
+          
+          <div className="space-y-3">
+            <h2 className="text-2xl md:text-3xl font-heading text-[#1B3564] font-bold">
+              The Ultimate Guide to Renting Staycation Villas in Maharashtra
+            </h2>
+            <p className="text-sm text-charcoal/70 leading-relaxed font-light">
+              Urban lifestyles can often feel demanding, making periodic breaks essential for personal renewal and family bonding. In recent years, staycation villas in maharashtra have transformed the way travelers plan their holidays. Instead of spending long hours traveling to distant destinations or staying in crowded commercial hotels, vacationers now prefer booking luxury residences situated just a short drive away from major cities like Mumbai and Pune. Stay Willas provides a handpicked collection of verified properties designed to deliver complete isolation, modern comforts, and customized hospitality.
             </p>
           </div>
-          <div>
-            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Premium Retreats in Lonavala, Alibaug, and Karjat</h2>
-            <p className="text-sm text-charcoal/70 leading-relaxed">
-              Whether you are planning a misty getaway in Lonavala, a sunny beach trip to Alibaug, or a lush riverside break in Karjat, we have the perfect estate for your group. Our properties are chosen for their convenient locations, beautiful designs, and proximity to major tourist highlights.
+
+          <div className="space-y-4">
+            <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Why Renting Villas Near Mumbai is the Ideal Weekend Getaway
+            </h2>
+            <p className="text-sm text-charcoal/70 leading-relaxed font-light">
+              For residents living in the bustling Mumbai metropolitan area, finding convenient weekend getaways is a top priority. Opting for villas near mumbai offers an effortless solution for quick weekend trips without the stress of airport queues or long train journeys. Located within a smooth 2 to 4-hour drive via expressway and coastal road networks, choosing villas near mumbai allows you to transition from city traffic to peaceful countryside greenery in no time.
+            </p>
+            <p className="text-sm text-charcoal/70 leading-relaxed font-light">
+              Whether you choose a scenic hill retreat in Lonavala, a beach estate in Alibaug, or a riverfront sanctuary in Karjat, staying at top private estates ensures you spend maximum time relaxing with your loved ones rather than traveling on the road. For spontaneous weekend plans or scheduled family holidays, villas near mumbai provide the ultimate combination of proximity and tranquility.
             </p>
           </div>
-          <div>
-            <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">All-Inclusive Luxury Hospitality & Concierge</h2>
-            <p className="text-sm text-charcoal/70 leading-relaxed">
-              Every booking includes a dedicated stay concierge to manage your itinerary. From arranging professional private chef services cooking delicious local cuisines to setting up BBQ grills on green lawns or organizing temperature-regulated pools, we take care of all the details so you can relax.
+
+          <div className="space-y-4">
+            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Discovering the Best Villas in Lonavala for Exclusive Celebrations
+            </h3>
+            <p className="text-sm text-charcoal/70 leading-relaxed font-light">
+              Among all regional hill stations, Lonavala holds a special place for holidaymakers seeking pleasant weather and verdant mountain scenery. Finding the best villas in lonavala involves choosing properties that feature swimming pools, expansive lawns, modern kitchen facilities, and dedicated resident house staff. At Stay Willas, every featured stay is rigorously verified for safety, hygiene, and architectural excellence, guaranteeing an exceptional vacation experience.
             </p>
           </div>
+
+          <div className="space-y-4">
+            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Unmatched Hospitality & Signature Amenities
+            </h3>
+            <p className="text-sm text-charcoal/70 leading-relaxed font-light">
+              When you reserve staycation villas in maharashtra through Stay Willas, you receive access to comprehensive amenities tailored to enhance your stay:
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <li className="p-4 bg-white rounded-2xl border border-border-subtle shadow-sm">
+                <strong className="text-[#1B3564] block mb-1">Swimming Pools:</strong> Pristine, exclusive pools ideal for morning swims, relaxing dips, and fun family pool parties.
+              </li>
+              <li className="p-4 bg-white rounded-2xl border border-border-subtle shadow-sm">
+                <strong className="text-[#1B3564] block mb-1">In-House Chef Service:</strong> Enjoy delicious, home-cooked meals prepared by experienced resident cooks using fresh local ingredients.
+              </li>
+              <li className="p-4 bg-white rounded-2xl border border-border-subtle shadow-sm">
+                <strong className="text-[#1B3564] block mb-1">High-Speed Wi-Fi & Entertainment:</strong> Stay connected with fast fiber internet, smart TVs, sound systems, and outdoor lawn games.
+              </li>
+              <li className="p-4 bg-white rounded-2xl border border-border-subtle shadow-sm">
+                <strong className="text-[#1B3564] block mb-1">Isolation & Security:</strong> Fully gated estates equipped with 24/7 security personnel and dedicated parking spaces for complete peace of mind.
+              </li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Top Destinations for Staycations Across the Western Ghats
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-charcoal/80 font-light">
+              <div className="p-4 bg-white rounded-2xl border border-border-subtle">
+                <strong className="text-[#1B3564] block font-bold mb-1">1. Lonavala & Khandala</strong>
+                Ideal for misty hill views, monsoon waterfalls, and cool mountain breezes throughout the year.
+              </div>
+              <div className="p-4 bg-white rounded-2xl border border-border-subtle">
+                <strong className="text-[#1B3564] block font-bold mb-1">2. Alibaug</strong>
+                Perfect for sun-kissed beaches, coastal cuisine, and beachside living just a short ferry ride from Mumbai.
+              </div>
+              <div className="p-4 bg-white rounded-2xl border border-border-subtle">
+                <strong className="text-[#1B3564] block font-bold mb-1">3. Karjat</strong>
+                Serene countryside retreats featuring lush greenery, flowing rivers, and quiet surroundings.
+              </div>
+              <div className="p-4 bg-white rounded-2xl border border-border-subtle">
+                <strong className="text-[#1B3564] block font-bold mb-1">4. Khopoli</strong>
+                Nestled at the base of Western Ghats, offering pool retreats near nature trails and seasonal waterfalls.
+              </div>
+            </div>
+          </div>
+
+          <div className="p-8 bg-[#1B3564] text-white rounded-3xl space-y-3 shadow-lg">
+            <h3 className="text-xl font-heading font-bold">Why Book Your Staycation Stay with Stay Willas?</h3>
+            <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-light">
+              We pride ourselves on offering transparent pricing, zero hidden charges, and personalized service from the moment you inquire until checkout. Our dedicated stay managers ensure that your pool is sparkling clean, meals are cooked to your taste preferences, and every guest gives glowing reviews. Whether it is a quick 2-day break or an extended holiday, our portfolio of pool residences caters to every travel requirement. Reserving verified staycation retreats gives you the freedom to create cherished memories with family and friends in complete luxury.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Comprehensive Services for Group Getaways and Special Events
+            </h3>
+            <p className="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
+              Planning a corporate retreat, family reunion, or intimate milestone celebration requires meticulous organization. Our team assists with every detail, including menu customization, sound system setups, floral arrangements, and transportation logistics. Every guest receives individual attention to ensure that their getaway exceeds expectations. From sunrise yoga sessions on manicured lawns to late-night stargazing by the pool, every moment is crafted for relaxation and enjoyment.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Frequently Asked Questions About Renting Holiday Homes
+            </h3>
+            <div className="space-y-3">
+              <div className="p-5 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-1">
+                <h4 className="font-bold text-xs sm:text-sm text-[#1B3564]">Q: What makes Stay Willas properties different from traditional hotel stays?</h4>
+                <p className="text-xs text-charcoal/70 font-light leading-relaxed">
+                  A: Our properties offer 100% exclusive access to the entire estate, including pools and lawns, without sharing facilities with strangers. You also enjoy personalized dining and flexible schedules.
+                </p>
+              </div>
+              <div className="p-5 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-1">
+                <h4 className="font-bold text-xs sm:text-sm text-[#1B3564]">Q: How can I confirm availability and make a reservation?</h4>
+                <p className="text-xs text-charcoal/70 font-light leading-relaxed">
+                  A: Simply select your preferred destination and travel dates on our platform, or reach out directly to our concierge team via WhatsApp for instant assistance and booking confirmation.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 

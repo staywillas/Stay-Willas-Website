@@ -675,9 +675,9 @@ export default function AiConcierge() {
                 setMascotEmotion("namaste");
                 setIsOpen(true);
               }}
-              className="relative w-18 h-18 md:w-20 md:h-20 bg-gradient-to-b from-[#1B3564] via-[#152A50] to-[#0A1833] rounded-full flex items-center justify-center shadow-[0_12px_35px_rgba(218,165,32,0.45)] transition-colors group overflow-hidden border-2 border-[#DAA520] cursor-pointer p-1"
+              className="relative w-12 h-12 md:w-14 md:h-14 bg-gradient-to-b from-[#1B3564] via-[#152A50] to-[#0A1833] rounded-full flex items-center justify-center shadow-[0_8px_25px_rgba(218,165,32,0.45)] transition-colors group overflow-hidden border-2 border-[#DAA520] cursor-pointer p-0.5"
             >
-              <AnimatedWillaMascot emotion={mascotEmotion} size={70} />
+              <AnimatedWillaMascot emotion={mascotEmotion} size={44} />
             </motion.button>
           </div>
         )}
@@ -853,14 +853,13 @@ export default function AiConcierge() {
                 )}
               </AnimatePresence>
 
-              {/* Animated Bot Mascot Figure */}
               <motion.div 
-                animate={{ y: [0, -8, 0] }}
+                animate={{ y: [0, -6, 0] }}
                 transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                className="w-28 h-28 rounded-full overflow-hidden border-4 border-[#DAA520] shadow-[0_10px_30px_rgba(27,53,100,0.25)] bg-white flex items-center justify-center mb-6 relative cursor-pointer p-2"
+                className="w-20 h-20 rounded-full overflow-hidden border-3 border-[#DAA520] shadow-[0_8px_25px_rgba(27,53,100,0.25)] bg-white flex items-center justify-center mb-4 relative cursor-pointer p-1.5"
                 onClick={() => setMascotEmotion(mascotEmotion === "namaste" ? "happy" : "namaste")}
               >
-                <AnimatedWillaMascot emotion={mascotEmotion} size={105} />
+                <AnimatedWillaMascot emotion={mascotEmotion} size={72} />
                 <span className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full animate-ping opacity-75"></span>
                 <span className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
               </motion.div>

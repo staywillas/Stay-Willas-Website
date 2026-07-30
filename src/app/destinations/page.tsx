@@ -9,30 +9,30 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa Destinations | Lonavala, Khopoli & More | Stay Willas",
-  description: "Discover premium luxury villa rentals across top destinations in Maharashtra including Lonavala, Khopoli, Alibaug, and Karjat. Find your perfect getaway.",
-  keywords: ["Stay Willas destinations", "villas in lonavala", "luxury villas in khopoli"],
+  title: "Villa Destinations in Maharashtra | Luxury Stays | Stay Willas",
+  description: "Discover top villa destinations in maharashtra. Book verified villas in lonavala with private pool and luxury villas in lonavala for your next staycation getaway.",
+  keywords: ["villa destinations in maharashtra", "villas in lonavala with private pool", "luxury villas in lonavala"],
   alternates: {
     canonical: "/destinations",
   },
   openGraph: {
-    title: "Luxury Villa Destinations | Lonavala, Khopoli & More | Stay Willas",
-    description: "Discover premium luxury villa rentals across top destinations in Maharashtra including Lonavala, Khopoli, Alibaug, and Karjat. Find your perfect getaway.",
+    title: "Villa Destinations in Maharashtra | Luxury Stays | Stay Willas",
+    description: "Discover top villa destinations in maharashtra. Book verified villas in lonavala with private pool and luxury villas in lonavala for your next staycation getaway.",
     url: "https://www.staywillas.com/destinations",
     images: [
       {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Stay Willas Destinations",
+        alt: "Villa Destinations in Maharashtra",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villa Destinations | Lonavala, Khopoli & More | Stay Willas",
-    description: "Discover premium luxury villa rentals across top destinations in Maharashtra including Lonavala, Khopoli, Alibaug, and Karjat. Find your perfect getaway.",
+    title: "Villa Destinations in Maharashtra | Luxury Stays | Stay Willas",
+    description: "Discover top villa destinations in maharashtra. Book verified villas in lonavala with private pool and luxury villas in lonavala for your next staycation getaway.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -59,7 +59,7 @@ export default async function DestinationsPage() {
     {
       name: "Lonavala",
       tagline: "The Mountain Sanctuary",
-      desc: "Cool mountain breeze, misty green valleys, and spacious private pool villas perched on lush hills.",
+      desc: "Cool mountain breeze, misty green valleys, and spacious pool estates perched on lush hills.",
       image: "/assets/villas/the-angle-house/gallery-11.webp",
       count: lonavalaCount,
       isLaunchingSoon: lonavalaCount === 0
@@ -67,7 +67,7 @@ export default async function DestinationsPage() {
     {
       name: "Khopoli",
       tagline: "The Nature Escape",
-      desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet private pool getaways.",
+      desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet pool retreats.",
       image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
       count: khopoliCount,
       isLaunchingSoon: khopoliCount === 0
@@ -75,7 +75,7 @@ export default async function DestinationsPage() {
     {
       name: "Alibaug",
       tagline: "The Coastal Getaway",
-      desc: "Beautiful coconut trees, quiet sandy beaches, and modern villas just a scenic catamaran ferry ride away from Mumbai.",
+      desc: "Beautiful coconut palms, quiet sandy shores, and modern estates just a scenic catamaran ferry ride away from Mumbai.",
       image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
       count: alibaugCount,
       isLaunchingSoon: alibaugCount === 0
@@ -83,7 +83,7 @@ export default async function DestinationsPage() {
     {
       name: "Karjat",
       tagline: "The Riverside Escape",
-      desc: "Lovely green valleys, quiet flowing streams, and peaceful villas built for complete relaxation in nature.",
+      desc: "Lovely green valleys, quiet flowing streams, and peaceful sanctuaries built for complete relaxation in nature.",
       image: "/assets/villas/heritage-villa/main.jpg",
       count: karjatCount,
       isLaunchingSoon: karjatCount === 0
@@ -91,7 +91,7 @@ export default async function DestinationsPage() {
     {
       name: "Goa",
       tagline: "The Beach Paradise",
-      desc: "Sunny beaches, beautiful old Portuguese-style homes, and warm private pool villas.",
+      desc: "Sunny beaches, beautiful old Portuguese-style homes, and warm pool retreats.",
       image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000",
       count: "LAUNCHING SOON",
       isLaunchingSoon: true
@@ -99,7 +99,7 @@ export default async function DestinationsPage() {
     {
       name: "Igatpuri",
       tagline: "The Misty Hills",
-      desc: "Gorgeous lake views, foggy mountain peaks, and peaceful hillside villas.",
+      desc: "Gorgeous lake views, foggy mountain peaks, and peaceful hillside sanctuaries.",
       image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
       count: "LAUNCHING SOON",
       isLaunchingSoon: true
@@ -112,14 +112,14 @@ export default async function DestinationsPage() {
       
       {/* Header */}
       <section className="relative pt-32 pb-10 sm:pt-36 sm:pb-12 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto text-center flex flex-col items-center overflow-hidden">
-        {/* Background Soft Glow for Premium Aesthetic - Optimized for mobile GPU */}
+        {/* Background Soft Glow for Premium Aesthetic */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-gradient-to-tr from-[#1B3564]/10 to-[#2563EB]/10 rounded-full blur-2xl md:blur-[80px] pointer-events-none -z-10" />
         
         <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-3 block">
           Our Stays
         </span>
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-heading leading-tight mb-1 tracking-tight">
-          Luxury Villa <span className="italic text-accent-primary font-serif">Destinations</span>
+          Villa Destinations in <span className="italic text-accent-primary font-serif">Maharashtra</span>
         </h1>
         
         {/* Custom Luxury Elegant Divider */}
@@ -130,7 +130,7 @@ export default async function DestinationsPage() {
         </div>
         
         <p className="text-text-primary/70 text-xs sm:text-base leading-relaxed max-w-2xl font-light">
-          We choose our locations very carefully. Every place we offer is selected to give you a perfect and relaxing getaway.
+          We select each location with great care. Every luxury escape we offer is crafted to give you an unforgettable holiday experience.
         </p>
       </section>
 
@@ -217,7 +217,136 @@ export default async function DestinationsPage() {
         ))}
       </section>
 
+      {/* 1000-Word SEO Optimized Content Section */}
+      <section className="bg-white/60 border-t border-border-subtle py-20 px-6 md:px-16 lg:px-24">
+        <div className="max-w-5xl mx-auto space-y-12 text-text-primary">
+          
+          <div className="space-y-4">
+            <h2 className="text-2xl md:text-3xl font-heading text-[#1B3564] font-bold leading-snug">
+              Exploring Premier Villa Destinations in Maharashtra for Unforgettable Holiday Stays
+            </h2>
+            <p className="text-sm md:text-base text-text-primary/75 leading-relaxed font-light">
+              Finding the ideal holiday escape requires a balance of scenic natural surroundings, exclusive solitude, and world-class hospitality. Across the Western Ghats and coastal stretches, villa destinations in maharashtra have emerged as the leading choice for discerning travelers seeking luxury holiday rentals. Whether you are planning a weekend getaway with family, celebrating a milestone anniversary, or organizing a peaceful corporate retreat, Stay Willas offers handpicked luxury sanctuaries across top regional locations. From mountain sanctuaries perched high in hill stations to tranquil coastal retreats near the Arabian Sea, our curated collection provides an unmatched hospitality experience tailored to your precise desires.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+            <div className="bg-bg-primary p-8 rounded-3xl border border-[#1B3564]/10 space-y-4">
+              <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+                Villas in Lonavala with Private Pool for Corporate & Family Breaks
+              </h2>
+              <p className="text-xs sm:text-sm text-text-primary/70 leading-relaxed font-light">
+                When travelers plan a mountain getaway from Mumbai or Pune, Lonavala remains the undisputed favorite destination. Booking villas in lonavala with private pool provides complete solitude away from crowded commercial resorts, allowing families and friend groups to unwind in total comfort. Our properties in Lonavala feature temperature-regulated swimming pools, expansive manicured lawns, open-air dining pavilions, and dedicated house staff. Guests can start their morning with a warm cup of freshly brewed coffee while looking over misty Sahyadri valleys, spend afternoons relaxing by their swimming pool, and enjoy evening barbecues under starry skies.
+              </p>
+              <p className="text-xs sm:text-sm text-text-primary/70 leading-relaxed font-light">
+                Furthermore, these exclusive properties are situated in quiet, secure residential enclaves close to popular sightseeing spots like Tiger Point, Bhushi Dam, and Karla Caves. This proximity ensures effortless access to local attractions while keeping your getaway completely secluded from city noise and tourist traffic.
+              </p>
+            </div>
+
+            <div className="bg-bg-primary p-8 rounded-3xl border border-[#1B3564]/10 space-y-4">
+              <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+                Discovering Luxury Villas in Lonavala with Customized Concierge Service
+              </h3>
+              <p className="text-xs sm:text-sm text-text-primary/70 leading-relaxed font-light">
+                For those seeking an elevated vacation experience, luxury villas in lonavala deliver an extraordinary blend of modern architectural design and personalized hospitality. Every luxury property in our collection is outfitted with plush designer furnishings, floor-to-ceiling glass windows framing panoramic mountain views, high-speed fiber-optic internet, en-suite bathrooms, and state-of-the-art entertainment systems.
+              </p>
+              <p className="text-xs sm:text-sm text-text-primary/70 leading-relaxed font-light">
+                To ensure complete peace of mind, every booking at our premier retreats includes a dedicated stay concierge who oversees every aspect of your staycation. From organizing resident chef services preparing authentic local cuisine to coordinating airport transfers, bonfire arrangements, and poolside setup, our goal is to deliver five-star hotel luxury combined with the intimacy of a dedicated home.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4 pt-4">
+            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Why Choose Coastal & Mountain Stays Across Regional Destinations?
+            </h3>
+            <p className="text-xs sm:text-sm text-text-primary/75 leading-relaxed font-light">
+              The Western Ghats and coastal regions of Maharashtra offer a rich diversity of geography, making this region one of India's most attractive choices for luxury rentals. Exploring different holiday destinations in maharashtra allows travelers to experience distinct microclimates and landscapes throughout the year:
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-text-primary/80 pt-2 font-light">
+              <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm">
+                <strong className="text-[#1B3564] block font-bold mb-1">1. Lonavala & Khandala</strong>
+                Renowned for green hillsides, monsoon waterfalls, and cool mountain air throughout the year. Perfect for quick drive-away getaways from Mumbai.
+              </li>
+              <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm">
+                <strong className="text-[#1B3564] block font-bold mb-1">2. Khopoli</strong>
+                Nestled at the foothills of the Sahyadri range, offering secluded green valleys, cascading streams, and close proximity to popular theme parks and nature trails.
+              </li>
+              <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm">
+                <strong className="text-[#1B3564] block font-bold mb-1">3. Alibaug</strong>
+                The preferred coastal paradise for beach lovers. Accessible via a short 20-minute speed boat or Ro-Ro ferry ride from Bhaucha Dhakka in Mumbai, featuring palm-fringed estates near quiet beaches.
+              </li>
+              <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm">
+                <strong className="text-[#1B3564] block font-bold mb-1">4. Karjat & Igatpuri</strong>
+                Serene countryside locations surrounded by flowing rivers, misty mountain peaks, and quiet sanctuaries for yoga retreats and nature walks.
+              </li>
+            </ul>
+          </div>
+
+          <div className="space-y-4 pt-4">
+            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Essential Amenities Included in Every Luxury Sanctuary
+            </h3>
+            <p className="text-xs sm:text-sm text-text-primary/75 leading-relaxed font-light">
+              When you book an exclusive estate through Stay Willas, you enjoy top-tier amenities designed for comfort, safety, and convenience:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2">
+              <div className="p-5 rounded-2xl bg-bg-primary border border-border-subtle">
+                <h4 className="font-bold text-[#1B3564] text-sm mb-1">Private Swimming Pools</h4>
+                <p className="text-xs text-text-primary/70 font-light">Clean, well-maintained pools reserved exclusively for your group, complete with lounger decks and pool floaters.</p>
+              </div>
+              <div className="p-5 rounded-2xl bg-bg-primary border border-border-subtle">
+                <h4 className="font-bold text-[#1B3564] text-sm mb-1">In-House Chef Options</h4>
+                <p className="text-xs text-text-primary/70 font-light">Talented resident cooks capable of preparing custom meal plans, including vegetarian delicacies, seafood specialties, and kids' menus.</p>
+              </div>
+              <div className="p-5 rounded-2xl bg-bg-primary border border-border-subtle">
+                <h4 className="font-bold text-[#1B3564] text-sm mb-1">24/7 Power & Security</h4>
+                <p className="text-xs text-text-primary/70 font-light">Gated premises with round-the-clock security personnel, safe parking facilities, and high-capacity power backup.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#1B3564] text-white p-8 md:p-10 rounded-3xl space-y-4 shadow-xl">
+            <h3 className="text-xl md:text-2xl font-heading font-bold">
+              Plan Your Escape Across Top Regional Holiday Spots
+            </h3>
+            <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-light">
+              Whether you are seeking a weekend retreat surrounded by monsoon waterfalls or a sun-drenched beach home, our platform makes finding your dream vacation simple and transparent. Browse through verified listings, view detailed photo galleries, check available dates, and speak directly with our concierge team to reserve your stay. Every stay is managed with extreme care to guarantee safety, privacy, and seamless comfort for you and your guests. Selecting from curated villa destinations in maharashtra ensures that every getaway feels unique, refreshing, and deeply memorable.
+            </p>
+          </div>
+
+          {/* Frequently Asked Questions */}
+          <div className="space-y-6 pt-6">
+            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Frequently Asked Questions About Planning Luxury Stays
+            </h3>
+            <div className="space-y-4">
+              <div className="p-6 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-2">
+                <h4 className="font-bold text-sm text-[#1B3564]">Q: How do I book an exclusive stay through Stay Willas?</h4>
+                <p className="text-xs text-text-primary/70 font-light leading-relaxed">
+                  A: You can browse our verified listings online, select your preferred location and dates, and connect directly with our reservations team via WhatsApp or phone call for instant booking confirmation and personalized assistance.
+                </p>
+              </div>
+              <div className="p-6 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-2">
+                <h4 className="font-bold text-sm text-[#1B3564]">Q: Are pool properties suitable for large family gatherings and events?</h4>
+                <p className="text-xs text-text-primary/70 font-light leading-relaxed">
+                  A: Yes! Our luxury properties range from cozy 3 BHK retreats to expansive 5+ BHK estates capable of hosting intimate celebrations, pre-wedding gatherings, and corporate team outings comfortably.
+                </p>
+              </div>
+              <div className="p-6 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-2">
+                <h4 className="font-bold text-sm text-[#1B3564]">Q: What safety and cleanliness measures are maintained?</h4>
+                <p className="text-xs text-text-primary/70 font-light leading-relaxed">
+                  A: Every property undergoes thorough cleaning, sanitization, and linen replacement before guest arrival. Swimming pool water parameters are checked daily to ensure optimal hygiene.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       <Footer />
     </main>
   );
 }
+

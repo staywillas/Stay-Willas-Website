@@ -61,7 +61,8 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   const [newExtraDesc, setNewExtraDesc] = useState("");
   const [newExtraAmount, setNewExtraAmount] = useState<number | "">("");
 
-  // Adjustments & Discounts & Advance
+  // Adjustments & Discounts & Advance & Security Deposit
+  const [securityDeposit, setSecurityDeposit] = useState<number>(0);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [discountFlat, setDiscountFlat] = useState(0);
   const [gstPercent, setGstPercent] = useState(18);
@@ -90,6 +91,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
     setExtraCharges([]);
     setNewExtraDesc("");
     setNewExtraAmount("");
+    setSecurityDeposit(0);
     setDiscountPercent(0);
     setDiscountFlat(0);
     setGstPercent(18);
@@ -105,7 +107,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
     const mailSubject = `Stay Willas Booking Invoice - ${villaName} (${guestName || "Guest"})`;
     const mailBody = `Dear ${guestName || "Valued Guest"},\n\n` +
-      `Thank you for choosing Stay Willas Luxury Estates!\n\n` +
+      `Thank you for choosing Stay Willas!\n\n` +
       `Below is your reservation invoice summary for your stay at ${villaName} (${villaLoc}):\n` +
       `------------------------------------------\n` +
       `• Primary Guest: ${guestName || "N/A"}\n` +
@@ -116,16 +118,17 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       `• Stay Accommodation Tariff: Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
       (foodPlan !== "none" ? `• Catering Plan (${foodPlan}): Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
       (totalExtrasCost > 0 ? `• Add-ons & Custom Extras: Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
+      (securityDeposit > 0 ? `• Refundable Security Deposit: Rs. ${securityDeposit.toLocaleString("en-IN")}\n` : "") +
       `• Subtotal: Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}\n` +
       `• GST Tax (${gstPercent}%): Rs. ${gstAmount.toLocaleString("en-IN")}\n` +
-      `• NET PAYABLE GRAND TOTAL: Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
+      `• NET PAYABLE GRAND TOTAL: Rs. ${(grandTotal + securityDeposit).toLocaleString("en-IN")}\n` +
       `------------------------------------------\n` +
       `• Advance Received: Rs. ${advancePaid.toLocaleString("en-IN")}\n` +
-      `• BALANCE REMAINING: ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
+      `• BALANCE REMAINING: ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${(balanceDue + securityDeposit).toLocaleString("en-IN")}`}\n` +
       `------------------------------------------\n\n` +
       `Please find your detailed invoice statement PDF attached.\n\n` +
       `Warm regards,\n` +
-      `Stay Willas Luxury Estates Concierge\n` +
+      `Stay Willas Concierge\n` +
       `WhatsApp / Call: +91 9619042310 | www.staywillas.com`;
 
     const mailtoUrl = `mailto:${encodeURIComponent(guestEmail || "")}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
@@ -388,12 +391,20 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
       currentY = 14;
 
-      // Logo & Brand Header Info (Prominent, Big & Crisp with Proportional Width/Height)
-      if (logoData) {
-        const logoH = 20; // 20mm height
-        const maxLogoW = 65; // max width
-        const logoW = Math.min(maxLogoW, logoH * logoData.aspect);
-        doc.addImage(logoData.dataUrl, "PNG", marginX, currentY - 3, logoW, logoH, undefined, "FAST");
+      // Logo & Brand Header Info (Crisp, Natural Aspect Ratio without distortion)
+      if (logoData && logoData.aspect) {
+        const maxLogoW = 62; // max width in mm
+        const maxLogoH = 16.5; // max height in mm
+        
+        let logoW = maxLogoW;
+        let logoH = logoW / logoData.aspect;
+
+        if (logoH > maxLogoH) {
+          logoH = maxLogoH;
+          logoW = logoH * logoData.aspect;
+        }
+
+        doc.addImage(logoData.dataUrl, "PNG", marginX, currentY - 2, logoW, logoH, undefined, "FAST");
       } else {
         doc.setFont("Helvetica", "bold");
         doc.setFontSize(24);
@@ -470,14 +481,15 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       doc.rect(rightCardX, currentY, cardWidth, cardHeight, "S");
 
       doc.setFont("Helvetica", "bold");
+      doc.setFont("Helvetica", "bold");
       doc.setFontSize(8);
       doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
       doc.text("PROPERTY OPERATOR:", rightCardX + 4, currentY + 5);
 
       doc.setFont("Helvetica", "bold");
-      doc.setFontSize(8.5);
+      doc.setFontSize(9.5);
       doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
-      doc.text("Stay Willas Luxury Estates", rightCardX + 4, currentY + 10);
+      doc.text("Stay Willas", rightCardX + 4, currentY + 10);
 
       doc.setFont("Helvetica", "normal");
       doc.setFontSize(7.5);
@@ -623,11 +635,16 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       }
       drawSummaryRow(`Net Taxable Amount:`, `Rs. ${subtotal.toLocaleString("en-IN")}`);
       drawSummaryRow(`GST Tax (${gstPercent}%):`, `Rs. ${gstAmount.toLocaleString("en-IN")}`);
+      if (securityDeposit > 0) {
+        drawSummaryRow("Security Deposit (Refundable):", `Rs. ${securityDeposit.toLocaleString("en-IN")}`, false, [180, 100, 20]);
+      }
       
       // Grand Total Highlight Bar
       currentY += 1;
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
       doc.rect(rightAlignX - 2, currentY - 4, 210 - marginX - (rightAlignX - 2), 9, "F");
+
+      const finalNetPayable = grandTotal + securityDeposit;
 
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(9);
@@ -636,14 +653,15 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
 
       doc.setFontSize(10);
       doc.setTextColor(255, 255, 255);
-      doc.text(`Rs. ${grandTotal.toLocaleString("en-IN")}`, 175, currentY + 1.5);
+      doc.text(`Rs. ${finalNetPayable.toLocaleString("en-IN")}`, 175, currentY + 1.5);
 
       currentY += 10;
 
       if (advancePaid > 0) {
         drawSummaryRow("Advance Paid:", `Rs. ${advancePaid.toLocaleString("en-IN")}`, false, [16, 122, 68]);
-        const balanceText = balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`;
-        drawSummaryRow("BALANCE REMAINING:", balanceText, true, balanceDue <= 0 ? [16, 122, 68] : navyColor);
+        const finalBalance = finalNetPayable - advancePaid;
+        const balanceText = finalBalance <= 0 ? "PAID IN FULL" : `Rs. ${finalBalance.toLocaleString("en-IN")}`;
+        drawSummaryRow("BALANCE REMAINING:", balanceText, true, finalBalance <= 0 ? [16, 122, 68] : navyColor);
       }
 
       // Terms & Conditions Block (Bottom Left)
@@ -658,7 +676,10 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       doc.setFont("Helvetica", "normal");
       doc.setFontSize(7);
       doc.setTextColor(110, 110, 110);
-      doc.text("1. Security deposit is refundable within 48 hours post check-out verification.", marginX, tcY + 4);
+      const depCond = securityDeposit > 0
+        ? `1. Refundable Security Deposit of Rs. ${securityDeposit.toLocaleString("en-IN")} is refunded within 48 hours post check-out.`
+        : "1. Security deposit is refundable within 48 hours post check-out verification.";
+      doc.text(depCond, marginX, tcY + 4);
       doc.text("2. Standard Check-in is 2:00 PM and Check-out is 11:00 AM.", marginX, tcY + 7.5);
       doc.text("3. Quiet hours apply in residential zones after 10:00 PM.", marginX, tcY + 11);
       doc.text("4. Meal plans once confirmed cannot be partially cancelled during stay.", marginX, tcY + 14.5);
@@ -677,7 +698,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       doc.setFont("Helvetica", "normal");
       doc.setFontSize(7);
       doc.setTextColor(140, 140, 140);
-      doc.text("Stay Willas Luxury Estates  |  www.staywillas.com  |  WhatsApp Concierge: +91 9619042310", marginX, 286);
+      doc.text("Stay Willas  |  www.staywillas.com  |  WhatsApp Concierge: +91 9619042310", marginX, 286);
       doc.text("Page 1 of 1", 210 - marginX, 286, { align: "right" });
 
       // Trigger PDF download
@@ -927,19 +948,40 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
             </div>
           </div>
 
-          {/* Section 4: Extra Custom Charges */}
+          {/* Section 4: Extra Custom Charges & Security Deposit */}
           <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-5">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
                 <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">4</span>
                 <Plus size={16} className="text-[#DAA520]" />
-                <span>Custom Add-ons & Extra Charges</span>
+                <span>Custom Add-ons & Security Deposit</span>
               </div>
-              <span className="text-[10px] font-semibold text-slate-400">Pool heating, BBQ, Decor</span>
+              <span className="text-[10px] font-semibold text-slate-400">Pool heating, BBQ, Security Deposit</span>
             </div>
 
-            <form onSubmit={handleAddExtra} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end bg-[#FAF8F5] p-4.5 rounded-2xl border border-border-subtle/40">
-              <div className="md:col-span-2">
+            {/* Refundable Security Deposit Field */}
+            <div className="bg-amber-50/60 border border-amber-200/80 rounded-2xl p-4.5 space-y-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <label className="text-xs font-bold text-[#1B3564] block">Refundable Security Deposit (₹)</label>
+                  <p className="text-[11px] text-slate-500 font-light">100% refunded within 48 hours post check-out inspection.</p>
+                </div>
+                <div className="w-full sm:w-48">
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="e.g. 5000"
+                    value={securityDeposit || ""}
+                    onChange={(e) => setSecurityDeposit(e.target.value === "" ? 0 : Math.max(0, Number(e.target.value)))}
+                    className="w-full text-xs border border-amber-300 rounded-xl px-4 py-2.5 bg-white focus:outline-none font-bold text-[#1B3564]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Add-on Charges Form with WIDER input boxes */}
+            <form onSubmit={handleAddExtra} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end bg-[#FAF8F5] p-4.5 rounded-2xl border border-border-subtle/40">
+              <div className="sm:col-span-6">
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">Charge Description</label>
                 <input
                   type="text"
@@ -949,20 +991,20 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                   className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:border-[#1B3564]/50"
                 />
               </div>
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <label className="text-xs font-bold text-slate-700 block mb-1.5">Amount (₹)</label>
-                  <input
-                    type="number"
-                    placeholder="e.g. 3000"
-                    value={newExtraAmount}
-                    onChange={(e) => setNewExtraAmount(e.target.value !== "" ? Number(e.target.value) : "")}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-white focus:outline-none font-bold"
-                  />
-                </div>
+              <div className="sm:col-span-3">
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">Amount (₹)</label>
+                <input
+                  type="number"
+                  placeholder="e.g. 3000"
+                  value={newExtraAmount}
+                  onChange={(e) => setNewExtraAmount(e.target.value !== "" ? Number(e.target.value) : "")}
+                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-white focus:outline-none font-bold text-slate-900"
+                />
+              </div>
+              <div className="sm:col-span-3">
                 <button
                   type="submit"
-                  className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shrink-0 h-[40px] flex items-center justify-center cursor-pointer shadow-sm"
+                  className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider transition-colors shrink-0 flex items-center justify-center cursor-pointer shadow-sm"
                 >
                   Add Charge
                 </button>
@@ -1047,6 +1089,14 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
                 <div className="flex justify-between items-center pb-3 border-b border-slate-100">
                   <span className="text-slate-600 font-medium">Add-ons & Extras</span>
                   <span className="font-bold text-slate-900 text-sm">₹{totalExtrasCost.toLocaleString("en-IN")}</span>
+                </div>
+              )}
+
+              {/* Security Deposit Badge */}
+              {securityDeposit > 0 && (
+                <div className="flex justify-between items-center pb-3 border-b border-slate-100 text-amber-900 bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/80">
+                  <span className="font-bold text-xs">Security Deposit (Refundable)</span>
+                  <span className="font-extrabold text-sm">₹{securityDeposit.toLocaleString("en-IN")}</span>
                 </div>
               )}
 

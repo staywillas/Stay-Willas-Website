@@ -6,7 +6,7 @@ import { Phone } from "lucide-react";
 
 const CallSticky = () => {
   return (
-    <div className="fixed bottom-24 right-5 z-[8000] md:hidden flex items-center">
+    <div className="fixed bottom-24 left-5 z-[8000] md:hidden flex items-center">
       <motion.a
         href="tel:+919619042310"
         initial={{ scale: 0, opacity: 0 }}

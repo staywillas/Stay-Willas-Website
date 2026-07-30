@@ -193,9 +193,10 @@ export default async function BlogDetailsPage({ params }: PageProps) {
 
         {/* Article Content */}
         <article className="prose max-w-none text-left mb-20 font-sans">
-          <p className="text-slate-700 text-lg md:text-xl leading-relaxed italic border-l-4 border-[#DAA520] pl-6 mb-10 font-light">
-            {blog.intro}
-          </p>
+          <p 
+            className="text-slate-700 text-lg md:text-xl leading-relaxed italic border-l-4 border-[#DAA520] pl-6 mb-10 font-light"
+            dangerouslySetInnerHTML={{ __html: blog.intro }}
+          />
 
           {blog.sections.map((section, idx) => (
             <div key={idx} className="my-10">
