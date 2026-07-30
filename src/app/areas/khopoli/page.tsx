@@ -9,15 +9,15 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Villas in Khopoli & Khopoli Private Pool Villa | Luxury Villa in Khopoli on Rent & Private Mountain View Villa in Khopoli",
-  description: "Book premium villas in khopoli and your favorite khopoli private pool villa. Rent a luxury villa in khopoli on rent or a private mountain view villa in khopoli with chef service.",
+  title: "Villas in Khopoli | Private Pool Villa | Stay Willas",
+  description: "Rent verified villas in khopoli with chef service. Book your khopoli private pool villa with mountain views for a peaceful weekend staycation.",
   keywords: ["villas in khopoli", "khopoli private pool villa", "luxury villa in khopoli on rent", "private mountain view villa in khopoli"],
   alternates: {
     canonical: "https://www.staywillas.com/areas/khopoli",
   },
   openGraph: {
-    title: "Villas in Khopoli & Khopoli Private Pool Villa | Luxury Villa in Khopoli on Rent & Private Mountain View Villa in Khopoli",
-    description: "Book premium villas in khopoli and your favorite khopoli private pool villa. Rent a luxury villa in khopoli on rent or a private mountain view villa in khopoli with chef service.",
+    title: "Villas in Khopoli | Private Pool Villa | Stay Willas",
+    description: "Rent verified villas in khopoli with chef service. Book your khopoli private pool villa with mountain views for a peaceful weekend staycation.",
     url: "https://www.staywillas.com/areas/khopoli",
     images: [
       {
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villas in Khopoli & Khopoli Private Pool Villa | Luxury Villa in Khopoli on Rent & Private Mountain View Villa in Khopoli",
-    description: "Book premium villas in khopoli and your favorite khopoli private pool villa. Rent a luxury villa in khopoli on rent or a private mountain view villa in khopoli with chef service.",
+    title: "Villas in Khopoli | Private Pool Villa | Stay Willas",
+    description: "Rent verified villas in khopoli with chef service. Book your khopoli private pool villa with mountain views for a peaceful weekend staycation.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

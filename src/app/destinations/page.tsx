@@ -9,15 +9,15 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Villa Destinations in Maharashtra | Luxury Stays | Stay Willas",
-  description: "Discover top villa destinations in maharashtra. Book verified villas in lonavala with private pool and luxury villas in lonavala for your next staycation getaway.",
+  title: "Villa Destinations in Maharashtra | Stay Willas",
+  description: "Discover top villa destinations in maharashtra. Reserve verified villas in lonavala with private pool & chef service for a memorable staycation.",
   keywords: ["villa destinations in maharashtra", "villas in lonavala with private pool", "luxury villas in lonavala"],
   alternates: {
     canonical: "/destinations",
   },
   openGraph: {
-    title: "Villa Destinations in Maharashtra | Luxury Stays | Stay Willas",
-    description: "Discover top villa destinations in maharashtra. Book verified villas in lonavala with private pool and luxury villas in lonavala for your next staycation getaway.",
+    title: "Villa Destinations in Maharashtra | Stay Willas",
+    description: "Discover top villa destinations in maharashtra. Reserve verified villas in lonavala with private pool & chef service for a memorable staycation.",
     url: "https://www.staywillas.com/destinations",
     images: [
       {
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villa Destinations in Maharashtra | Luxury Stays | Stay Willas",
-    description: "Discover top villa destinations in maharashtra. Book verified villas in lonavala with private pool and luxury villas in lonavala for your next staycation getaway.",
+    title: "Villa Destinations in Maharashtra | Stay Willas",
+    description: "Discover top villa destinations in maharashtra. Reserve verified villas in lonavala with private pool & chef service for a memorable staycation.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

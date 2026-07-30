@@ -8,14 +8,14 @@ import { Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
-  description: "Read luxury villa guest stories, watch guest video vlogs, and explore testimonials from verified families who stayed at our private pool estates.",
+  description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool estates near Mumbai & Pune.",
   keywords: ["luxury villa guest stories"],
   alternates: {
     canonical: "/stories",
   },
   openGraph: {
     title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
-    description: "Read luxury villa guest stories, watch guest video vlogs, and explore testimonials from verified families who stayed at our private pool estates.",
+    description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool estates near Mumbai & Pune.",
     url: "https://www.staywillas.com/stories",
     images: [
       {
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
-    description: "Read luxury villa guest stories, watch guest video vlogs, and explore testimonials from verified families who stayed at our private pool estates.",
+    description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool estates near Mumbai & Pune.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

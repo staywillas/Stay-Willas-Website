@@ -6,15 +6,15 @@ import Footer from "@/components/layout/footer";
 import { Sparkles, Calendar, Heart, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa Experiences | Lonavala & Khopoli | Stay Willas",
-  description: "Discover premium luxury villa experiences in Lonavala and Khopoli. Enjoy wellness retreats, tailored staycation activities, and premium dining at our verified villas.",
+  title: "Luxury Villa Experiences | Stay Willas",
+  description: "Discover luxury villa experiences in Lonavala & Khopoli. Enjoy customized staycation activities, in-villa chef dining & private pool wellness.",
   keywords: ["Stay Willas experiences", "luxury villas in lonavala and khopoli", "corporate offsite villas"],
   alternates: {
     canonical: "/experiences",
   },
   openGraph: {
-    title: "Luxury Villa Experiences | Lonavala & Khopoli | Stay Willas",
-    description: "Discover premium luxury villa experiences in Lonavala and Khopoli. Enjoy wellness retreats, tailored staycation activities, and premium dining at our verified villas.",
+    title: "Luxury Villa Experiences | Stay Willas",
+    description: "Discover luxury villa experiences in Lonavala & Khopoli. Enjoy customized staycation activities, in-villa chef dining & private pool wellness.",
     url: "https://www.staywillas.com/experiences",
     images: [
       {
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villa Experiences | Lonavala & Khopoli | Stay Willas",
-    description: "Discover premium luxury villa experiences in Lonavala and Khopoli. Enjoy wellness retreats, tailored staycation activities, and premium dining at our verified villas.",
+    title: "Luxury Villa Experiences | Stay Willas",
+    description: "Discover luxury villa experiences in Lonavala & Khopoli. Enjoy customized staycation activities, in-villa chef dining & private pool wellness.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

@@ -8,15 +8,15 @@ import VillasClient from "@/components/villas/villas-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Staycation Villas in Maharashtra | Villas Near Mumbai & Best Villas in Lonavala | Stay Willas",
-  description: "Book verified staycation villas in maharashtra. Explore handpicked villas near mumbai and the best villas in lonavala with private pools, in-house chef, and luxury amenities.",
+  title: "Staycation Villas Near Mumbai & Lonavala | Stay Willas",
+  description: "Book staycation villas near mumbai with private pools and chefs. Explore verified villas in lonavala for your next luxury weekend trip with family.",
   keywords: ["staycation villas in maharashtra", "villas near mumbai", "best villas in lonavala"],
   alternates: {
     canonical: "https://www.staywillas.com/villas",
   },
   openGraph: {
-    title: "Staycation Villas in Maharashtra | Villas Near Mumbai & Best Villas in Lonavala | Stay Willas",
-    description: "Book verified staycation villas in maharashtra. Explore handpicked villas near mumbai and the best villas in lonavala with private pools, in-house chef, and luxury amenities.",
+    title: "Staycation Villas Near Mumbai & Lonavala | Stay Willas",
+    description: "Book staycation villas near mumbai with private pools and chefs. Explore verified villas in lonavala for your next luxury weekend trip with family.",
     url: "https://www.staywillas.com/villas",
     images: [
       {
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Staycation Villas in Maharashtra | Villas Near Mumbai & Best Villas in Lonavala | Stay Willas",
-    description: "Book verified staycation villas in maharashtra. Explore handpicked villas near mumbai and the best villas in lonavala with private pools, in-house chef, and luxury amenities.",
+    title: "Staycation Villas Near Mumbai & Lonavala | Stay Willas",
+    description: "Book staycation villas near mumbai with private pools and chefs. Explore verified villas in lonavala for your next luxury weekend trip with family.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

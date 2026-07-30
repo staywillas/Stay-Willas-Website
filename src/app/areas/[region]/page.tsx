@@ -78,36 +78,36 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  let titleText = `Luxury Villas in ${area.name} with Private Pool | Stay Willas`;
-  let descText = `Rent luxury villas in ${area.name} with private pool, scenic views & chef service. Ideal for family weekend getaways. Check availability and book now.`;
+  let titleText = `Villas in ${area.name} with Private Pool | Stay Willas`;
+  let descText = `Rent luxury villas in ${area.name} with private pool & chef service. Ideal for family weekend getaways. Check availability and book online now.`;
   let keywordList = [`luxury villas in ${area.name} with private pool`, `private pool villa in ${area.name}`];
   let indexRobots = true;
 
   if (regionKey === "lonavala") {
     titleText = `Luxury Villa in Lonavala with Private Pool | Stay Willas`;
-    descText = "Rent a luxury villa in lonavala with private pool, scenic mountain views & chef. Ideal for a lonavala villa staycation and group trips. Check availability now.";
+    descText = "Rent a luxury villa in lonavala with private pool & chef. Ideal for a lonavala villa staycation & group trips. Check availability & book now.";
     keywordList = ["luxury villa in lonavala with private pool", "lonavala villa staycation"];
   } else if (regionKey === "alibaug") {
-    titleText = "Alibaug Villas Coming Soon | Join the Waitlist – Stay Willas";
-    descText = "Join the Stay Willas waitlist for our upcoming luxury private pool villas in Alibaug. Be the first to get notified when these premium properties launch.";
+    titleText = "Alibaug Villas Coming Soon | Stay Willas";
+    descText = "Join the waitlist for luxury private pool villas in Alibaug. Be first to know when these verified beach staycation retreats launch.";
     keywordList = ["luxury villa in alibaug with private pool", "villa on rent in alibaug"];
     indexRobots = false;
   } else if (regionKey === "karjat") {
-    titleText = "Karjat Villas Coming Soon | Join the Waitlist – Stay Willas";
-    descText = "Join the Stay Willas waitlist for our upcoming luxury private pool villas in Karjat. Be the first to get notified when these premium properties launch.";
+    titleText = "Karjat Villas Coming Soon | Stay Willas";
+    descText = "Join the waitlist for luxury private pool villas in Karjat. Be first to know when these riverfront staycation retreats launch.";
     keywordList = ["private pool villa in karjat", "karjat villa on rent"];
     indexRobots = false;
   } else if (regionKey === "khopoli") {
-    titleText = `Khopoli Private Pool Villa | Luxury Villa in Khopoli on Rent`;
-    descText = "Book a premium khopoli private pool villa nestled in green mountains. Escape to a private mountain view villa in khopoli on rent with customized chef service.";
+    titleText = "Khopoli Private Pool Villa | Stay Willas";
+    descText = "Book a khopoli private pool villa nestled in green hills. Rent a luxury villa in khopoli on rent with customized chef service for your group.";
     keywordList = ["khopoli private pool villa", "villa in khopoli on rent"];
   } else if (regionKey === "goa") {
     titleText = `Luxury Villa in Goa with Private Pool | Goa Villa Rental`;
     descText = "Book an exquisite luxury villa in goa with private pool, beach views, and fully serviced hospitality. Explore premier goa villa rental options with Stay Willas.";
     keywordList = ["luxury villa in goa with private pool", "goa villa rental"];
   } else if (regionKey === "igatpuri") {
-    titleText = `Private Pool Villa in Igatpuri | Luxury Villa in Igatpuri`;
-    descText = "Escape to a scenic private pool villa in igatpuri. Rent premium luxury villa in igatpuri properties with stunning mountain views, private chef, and top amenities. Book today!";
+    titleText = "Private Pool Villa in Igatpuri | Stay Willas";
+    descText = "Escape to a scenic private pool villa in igatpuri. Rent luxury villa in igatpuri retreats with mountain views, private chef & top amenities.";
     keywordList = ["private pool villa in igatpuri", "luxury villa in igatpuri"];
   }
 

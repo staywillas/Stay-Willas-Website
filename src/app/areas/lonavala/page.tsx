@@ -9,15 +9,15 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Villas in Lonavala & Lonavala Villa Booking | Villas in Lonavala with Private Pool & Lonavala Villa Staycation",
-  description: "Complete your lonavala villa booking for exclusive villas in lonavala. Enjoy a relaxing lonavala villa staycation in our verified villas in lonavala with private pool and chef.",
+  title: "Villas in Lonavala with Private Pool | Stay Willas",
+  description: "Book villas in lonavala with private pool for family staycations. Fast lonavala villa booking with verified private chef & scenic mountain views.",
   keywords: ["lonavala villa booking", "villas in lonavala", "lonavala villa staycation", "villas in lonavala with private pool"],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",
   },
   openGraph: {
-    title: "Villas in Lonavala & Lonavala Villa Booking | Villas in Lonavala with Private Pool & Lonavala Villa Staycation",
-    description: "Complete your lonavala villa booking for exclusive villas in lonavala. Enjoy a relaxing lonavala villa staycation in our verified villas in lonavala with private pool and chef.",
+    title: "Villas in Lonavala with Private Pool | Stay Willas",
+    description: "Book villas in lonavala with private pool for family staycations. Fast lonavala villa booking with verified private chef & scenic mountain views.",
     url: "https://www.staywillas.com/areas/lonavala",
     images: [
       {
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villas in Lonavala & Lonavala Villa Booking | Villas in Lonavala with Private Pool & Lonavala Villa Staycation",
-    description: "Complete your lonavala villa booking for exclusive villas in lonavala. Enjoy a relaxing lonavala villa staycation in our verified villas in lonavala with private pool and chef.",
+    title: "Villas in Lonavala with Private Pool | Stay Willas",
+    description: "Book villas in lonavala with private pool for family staycations. Fast lonavala villa booking with verified private chef & scenic mountain views.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

@@ -9,8 +9,8 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Weekend Getaway Villas & Private Pool Rentals | Villas Near Mumbai & Villas Near Pune",
-  description: "Explore premium weekend getaway villas and private pool rentals. Rent handpicked villas near mumbai and villas near pune in Lonavala and Khopoli with private chef service.",
+  title: "Weekend Getaway Villas Near Mumbai | Stay Willas",
+  description: "Explore weekend getaway villas near mumbai with private pool rentals. Book handpicked luxury villas in Lonavala & Khopoli with chef service now.",
   keywords: ["weekend getaway villas", "private pool rentals", "villas near mumbai", "villas near pune"],
   alternates: {
     canonical: "https://www.staywillas.com/areas",

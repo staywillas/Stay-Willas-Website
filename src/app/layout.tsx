@@ -35,8 +35,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Luxury Villas in Maharashtra | Staycations with Private Pools | Stay Willas",
-  description: "Experience premium luxury villas in Maharashtra with private pools and chefs. Book handpicked verified staycations in Lonavala, Alibaug, and Karjat.",
+  title: "Luxury Villas in Maharashtra | Stay Willas",
+  description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Alibaug today.",
   metadataBase: new URL("https://www.staywillas.com"),
   keywords: ["luxury villas in maharashtra"],
   authors: [{ name: "Stay Willas" }],
@@ -44,8 +44,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Stay Willas",
-    title: "Luxury Villas & Staycations in Maharashtra | Stay Willas",
-    description: "Experience world-class luxury staycations in Maharashtra. Rent handpicked private pool villas in Lonavala and Alibaug with chefs. Book your stay now.",
+    title: "Luxury Villas in Maharashtra | Stay Willas",
+    description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Alibaug today.",
     url: "https://www.staywillas.com",
     images: [
       {
@@ -58,8 +58,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villas & Staycations in Maharashtra | Stay Willas",
-    description: "Experience world-class luxury staycations in Maharashtra. Rent handpicked private pool villas in Lonavala and Alibaug with chefs. Book your stay now.",
+    title: "Luxury Villas in Maharashtra | Stay Willas",
+    description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Alibaug today.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
   verification: {

@@ -9,14 +9,14 @@ import ContactForm from "@/components/contact/contact-form";
 
 export const metadata: Metadata = {
   title: "Stay Willas Contact | Customer Support & Villa Bookings",
-  description: "Reach out to the Stay Willas contact team for luxury villa bookings and guest support. Our concierge team is here to assist you with your booking requests for Lonavala, Khopoli and more.",
+  description: "Get in touch via Stay Willas contact for fast support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist your stay.",
   keywords: ["stay willas contact", "villas in lonavala booking", "luxury villas in khopoli booking"],
   alternates: {
     canonical: "/contact",
   },
   openGraph: {
     title: "Stay Willas Contact | Customer Support & Villa Bookings",
-    description: "Reach out to the Stay Willas contact team for luxury villa bookings and guest support. Our concierge team is here to assist you with your booking requests for Lonavala, Khopoli and more.",
+    description: "Get in touch via Stay Willas contact for fast support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist your stay.",
     url: "https://www.staywillas.com/contact",
     images: [
       {
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Stay Willas Contact | Customer Support & Villa Bookings",
-    description: "Reach out to the Stay Willas contact team for luxury villa bookings and guest support. Our concierge team is here to assist you with your booking requests for Lonavala, Khopoli and more.",
+    description: "Get in touch via Stay Willas contact for fast support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist your stay.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

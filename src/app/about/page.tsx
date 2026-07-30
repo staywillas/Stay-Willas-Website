@@ -6,15 +6,15 @@ import Footer from "@/components/layout/footer";
 import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Stay Willas | Luxury Villa Rentals in Lonavala & Beyond",
-  description: "Learn about Stay Willas, our story, values, and curation process. We offer premium luxury private villa rentals with warm local hospitality in Lonavala, Khopoli and more.",
+  title: "About Stay Willas | Luxury Villa Rentals",
+  description: "Learn about Stay Willas, our story & quality standards. We offer handpicked luxury villa rentals in Lonavala & Khopoli with warm hospitality.",
   keywords: ["about Stay Willas", "luxury villas in lonavala and khopoli", "premium villa management"],
   alternates: {
     canonical: "/about",
   },
   openGraph: {
-    title: "About Stay Willas | Luxury Villa Rentals in Lonavala & Beyond",
-    description: "Learn about Stay Willas, our story, values, and curation process. We offer premium luxury private villa rentals with warm local hospitality in Lonavala, Khopoli and more.",
+    title: "About Stay Willas | Luxury Villa Rentals",
+    description: "Learn about Stay Willas, our story & quality standards. We offer handpicked luxury villa rentals in Lonavala & Khopoli with warm hospitality.",
     url: "https://www.staywillas.com/about",
     images: [
       {
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Stay Willas | Luxury Villa Rentals in Lonavala & Beyond",
-    description: "Learn about Stay Willas, our story, values, and curation process. We offer premium luxury private villa rentals with warm local hospitality in Lonavala, Khopoli and more.",
+    title: "About Stay Willas | Luxury Villa Rentals",
+    description: "Learn about Stay Willas, our story & quality standards. We offer handpicked luxury villa rentals in Lonavala & Khopoli with warm hospitality.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
