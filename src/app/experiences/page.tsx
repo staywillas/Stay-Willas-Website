@@ -8,9 +8,9 @@ import { Sparkles, Calendar, Heart, Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: "Luxury Villa Experiences | Stay Willas",
   description: "Discover luxury villa experiences in Lonavala & Khopoli. Enjoy customized staycation activities, in-villa chef dining & private pool wellness.",
-  keywords: ["Stay Willas experiences", "luxury villas in lonavala and khopoli", "corporate offsite villas"],
+  keywords: ["luxury villa experiences", "luxury villas in lonavala and khopoli", "corporate offsite villas"],
   alternates: {
-    canonical: "/experiences",
+    canonical: "https://www.staywillas.com/experiences",
   },
   openGraph: {
     title: "Luxury Villa Experiences | Stay Willas",

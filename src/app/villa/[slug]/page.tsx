@@ -175,17 +175,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const city = villa.location.split(",")[0].trim();
-  let titleText = `${villa.name} | ${villa.bedrooms} BHK Villa in ${city} | Stay Willas`;
-  let descText = `Book ${villa.name}, a luxury villa in ${city} with private pool & ${villa.bedrooms} bhk villa amenities. Reserve your private staycation today!`;
+  let titleText = `${villa.name} | ${villa.bedrooms} BHK Private Pool Villa in ${city} | Stay Willas`;
+  let descText = `Book ${villa.name}, a luxury ${villa.bedrooms} bhk private pool villa in ${city} with private chef and premium staycation amenities. Reserve today!`;
   let keywordsList = [`luxury villa in ${city} with private pool`, `private pool villa in ${city}`, `${villa.bedrooms} bhk villa in ${city}`];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "The Angle House | 4 BHK Private Pool Villa Lonavala";
-    descText = "Book The Angle House Lonavala, a 4 bhk villa in lonavala & pet friendly villa in lonavala with private pool, scenic mountain views & chef service.";
+    titleText = "The Angle House | 4 BHK Private Pool Villa in Lonavala | Stay Willas";
+    descText = "Book The Angle House Lonavala, a 4 bhk private pool villa in lonavala with pet friendly lawn, scenic mountain views & chef service.";
     keywordsList = ["the angle house lonavala", "luxury villa in lonavala with private pool", "4 bhk villa in lonavala", "pet friendly villa in lonavala"];
   } else if (villa.slug === "canopy-crest") {
-    titleText = "Canopy Crest Khopoli | 3 BHK Private Pool Villa";
-    descText = "Reserve Canopy Crest Khopoli, a 3 bhk villa in khopoli & khopoli private pool villa on rent with private chef service and panoramic views.";
+    titleText = "Canopy Crest | 3 BHK Private Pool Villa in Khopoli | Stay Willas";
+    descText = "Book Canopy Crest Khopoli, a 3 bhk private pool villa in khopoli with private chef service and panoramic valley views.";
     keywordsList = ["canopy crest khopoli", "khopoli private pool villa", "3 bhk villa in khopoli", "luxury villa in khopoli on rent"];
   }
 

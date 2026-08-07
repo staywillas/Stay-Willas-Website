@@ -6,9 +6,23 @@ import { XCircle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Cancellation & Refund Policy Guidelines | Stay Willas",
-  description: "Read the Stay Willas cancellation and refund policy for your peace of mind. Learn about cancellation slabs, refunds, and rescheduling. Read details.",
+  description: "Read the Stay Willas cancellation and refund policy for your peace of mind. Learn about cancellation slabs, refunds, and rescheduling.",
+  keywords: ["cancellation and refund policy", "stay willas cancellation"],
   alternates: {
     canonical: "https://www.staywillas.com/cancellation-policy",
+  },
+  openGraph: {
+    title: "Cancellation & Refund Policy Guidelines | Stay Willas",
+    description: "Read the Stay Willas cancellation and refund policy for your peace of mind. Learn about cancellation slabs, refunds, and rescheduling.",
+    url: "https://www.staywillas.com/cancellation-policy",
+    images: [{ url: "https://www.staywillas.com/images/hero-villa.png" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cancellation & Refund Policy Guidelines | Stay Willas",
+    description: "Read the Stay Willas cancellation and refund policy for your peace of mind. Learn about cancellation slabs, refunds, and rescheduling.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 

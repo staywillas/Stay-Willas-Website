@@ -5,10 +5,24 @@ import Footer from "@/components/layout/footer";
 import { FileText } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions for Guests & Bookings | Stay Willas",
-  description: "Read the terms and conditions for guests and villa bookings with Stay Willas. Learn about payment policies, house rules, and safety terms. Read today.",
+  title: "Terms & Conditions for Villa Bookings | Stay Willas",
+  description: "Read the terms and conditions for villa bookings with Stay Willas. Learn about payment policies, house rules, and safety terms.",
+  keywords: ["terms and conditions for villa bookings", "stay willas terms"],
   alternates: {
     canonical: "https://www.staywillas.com/terms",
+  },
+  openGraph: {
+    title: "Terms & Conditions for Villa Bookings | Stay Willas",
+    description: "Read the terms and conditions for villa bookings with Stay Willas. Learn about payment policies, house rules, and safety terms.",
+    url: "https://www.staywillas.com/terms",
+    images: [{ url: "https://www.staywillas.com/images/hero-villa.png" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms & Conditions for Villa Bookings | Stay Willas",
+    description: "Read the terms and conditions for villa bookings with Stay Willas. Learn about payment policies, house rules, and safety terms.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 

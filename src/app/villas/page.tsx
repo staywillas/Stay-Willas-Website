@@ -95,6 +95,8 @@ export default async function VillasPage({ searchParams }: PageProps) {
         {/* Spacing below Navbar */}
         <div className="pt-44" />
 
+        <h1 className="sr-only">Staycation Villas Near Mumbai & Lonavala | Stay Willas</h1>
+
         {/* Highly Interactive, Real-Time Client Filter and Grid Section */}
         <VillasClient 
           initialVillas={villas} 

@@ -107,17 +107,52 @@ export default function RootLayout({
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify({
                   "@context": "https://schema.org",
-                  "@type": "Organization",
-                  "name": "Stay Willas",
-                  "alternateName": ["StayWillas", "Stay Willas", "Stay Willas Luxury Collection"],
-                  "url": "https://www.staywillas.com",
-                  "logo": "https://www.staywillas.com/icon.png",
-                  "description": "Experience world-class luxury staycations in Maharashtra. Curated premium villas in Lonavala, Alibaug, Karjat and more.",
-                  "contactPoint": {
-                    "@type": "ContactPoint",
-                    "telephone": "+91-9619042310",
-                    "contactType": "customer service"
-                  }
+                  "@graph": [
+                    {
+                      "@type": "Organization",
+                      "@id": "https://www.staywillas.com/#organization",
+                      "name": "Stay Willas",
+                      "alternateName": ["StayWillas", "Stay Willas Luxury Collection"],
+                      "url": "https://www.staywillas.com",
+                      "logo": "https://www.staywillas.com/icon.png",
+                      "image": "https://www.staywillas.com/images/hero-villa.png",
+                      "description": "Stay Willas is a luxury villa rental brand in Maharashtra, specializing in handpicked private pool villas in Lonavala, Khopoli, Karjat, Alibaug, and Igatpuri.",
+                      "telephone": "+91-9619042310",
+                      "email": "bookings@staywillas.com",
+                      "sameAs": [
+                        "https://www.instagram.com/staywillas"
+                      ],
+                      "contactPoint": {
+                        "@type": "ContactPoint",
+                        "telephone": "+91-9619042310",
+                        "contactType": "customer service",
+                        "availableLanguage": ["English", "Hindi", "Marathi"]
+                      }
+                    },
+                    {
+                      "@type": "LodgingBusiness",
+                      "@id": "https://www.staywillas.com/#lodging",
+                      "name": "Stay Willas Luxury Villa Collection",
+                      "url": "https://www.staywillas.com",
+                      "priceRange": "₹₹₹",
+                      "telephone": "+91-9619042310",
+                      "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "Kim Cottage, 14 PR Kadam Marg, Maneklal Estate, Ghatkopar West",
+                        "addressLocality": "Mumbai",
+                        "addressRegion": "Maharashtra",
+                        "postalCode": "400084",
+                        "addressCountry": "IN"
+                      },
+                      "areaServed": [
+                        { "@type": "Place", "name": "Lonavala" },
+                        { "@type": "Place", "name": "Khopoli" },
+                        { "@type": "Place", "name": "Karjat" },
+                        { "@type": "Place", "name": "Alibaug" },
+                        { "@type": "Place", "name": "Igatpuri" }
+                      ]
+                    }
+                  ]
                 })
               }}
             />

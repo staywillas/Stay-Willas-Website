@@ -9,14 +9,14 @@ import ContactForm from "@/components/contact/contact-form";
 
 export const metadata: Metadata = {
   title: "Stay Willas Contact | Customer Support & Villa Bookings",
-  description: "Get in touch via Stay Willas contact for fast support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist your stay.",
+  description: "Get in touch via Stay Willas contact for fast customer support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist.",
   keywords: ["stay willas contact", "villas in lonavala booking", "luxury villas in khopoli booking"],
   alternates: {
-    canonical: "/contact",
+    canonical: "https://www.staywillas.com/contact",
   },
   openGraph: {
     title: "Stay Willas Contact | Customer Support & Villa Bookings",
-    description: "Get in touch via Stay Willas contact for fast support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist your stay.",
+    description: "Get in touch via Stay Willas contact for fast customer support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist.",
     url: "https://www.staywillas.com/contact",
     images: [
       {
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Stay Willas Contact | Customer Support & Villa Bookings",
-    description: "Get in touch via Stay Willas contact for fast support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist your stay.",
+    description: "Get in touch via Stay Willas contact for fast customer support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
-      <h1 className="sr-only">Contact Us for Luxury Villa Bookings - Stay Willas</h1>
+      <h1 className="sr-only">Stay Willas Contact | Customer Support & Villa Bookings</h1>
       <Navbar />
       
       {/* Hero */}

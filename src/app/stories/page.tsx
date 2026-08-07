@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool estates near Mumbai & Pune.",
   keywords: ["luxury villa guest stories"],
   alternates: {
-    canonical: "/stories",
+    canonical: "https://www.staywillas.com/stories",
   },
   openGraph: {
     title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",

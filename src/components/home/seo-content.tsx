@@ -11,6 +11,18 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
   {
+    question: "What is the best private pool villa in Lonavala for a family or group?",
+    answer: "The Angle House by Stay Willas is widely rated as the top private pool villa in Lonavala. It features a 4 BHK modern architectural design, a 24x12 ft private swimming pool with mountain views, a fenced pet-friendly lawn, double-height glass living spaces, and a dedicated in-house chef for fresh gourmet dining."
+  },
+  {
+    question: "What are the best villas in Khopoli for corporate offsites or large groups?",
+    answer: "Canopy Crest by Stay Willas is the leading 3 BHK private pool villa in Khopoli. Ideal for up to 15-20 guests, it offers sprawling private lawns, valley views, gazebo lounges, customizable chef meal packages, and close proximity to Adlabs Imagica and Zenith Waterfall."
+  },
+  {
+    question: "Does Stay Willas offer private pool villas in Karjat?",
+    answer: "Yes, Stay Willas offers verified riverside and mountain-view private pool villas in Karjat for peaceful weekend getaways, family staycations, and group trips within a 90-minute drive from Mumbai and Pune."
+  },
+  {
     question: "Do you have pet friendly luxury private pool villas near Mumbai?",
     answer: "Absolutely. Many of our handpicked private estates feature large, fully fenced lawns and safe layouts designed specifically to welcome your furry friends. When booking, you can filter for our pet-friendly sanctuaries which are located just a short 2-hour drive from Mumbai."
   },
@@ -20,15 +32,11 @@ const faqs: FAQItem[] = [
   },
   {
     question: "Which destinations are closest for a weekend getaway drive?",
-    answer: "Our luxury pool villas are located in Maharashtra's best scenic spots, with a strong focus on Lonavala and Khopoli. Lonavala is just about a 2-hour drive via the Expressway, offering misty valleys, while Khopoli provides absolute serene nature near Imagica. We also have properties in Karjat and Alibaug."
+    answer: "Our luxury pool villas are located in Maharashtra's best scenic spots, with a strong focus on Lonavala, Khopoli, Karjat, and Alibaug. Lonavala is just about a 2-hour drive via the Expressway, offering misty valleys, while Khopoli provides serene nature near Imagica."
   },
   {
     question: "How do you guarantee the hygiene and safety of the private swimming pools?",
     answer: "Every private pool undergoes a rigorous chlorine filtration cycle and chemical water balance check before each guest's check-in. Our dedicated on-site estate managers perform daily maintenance to ensure maximum hygiene and safety throughout your stay."
-  },
-  {
-    question: "Can I host group get-togethers or corporate retreats at Stay Willas?",
-    answer: "Yes, our properties like Canopy Crest (up to 20 guests) and The Angle House (up to 16 guests) are perfect for family reunions, milestone birthdays, and corporate offsites. They offer spacious living halls, lawns, music systems, board games, and bonfire set-ups."
   },
   {
     question: "Why the spelling 'Stay Willas' with a 'W' instead of 'Stay Villas'?",

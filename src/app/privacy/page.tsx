@@ -6,9 +6,23 @@ import { Shield } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Privacy Policy & Guest Data Protection | Stay Willas",
-  description: "Read the Stay Willas privacy policy & guest data protection standards. Learn how we handle your personal information and transaction security. Read now.",
+  description: "Read the Stay Willas privacy policy & guest data protection standards. Learn how we handle your personal information and transaction security.",
+  keywords: ["privacy policy", "guest data protection", "stay willas privacy"],
   alternates: {
     canonical: "https://www.staywillas.com/privacy",
+  },
+  openGraph: {
+    title: "Privacy Policy & Guest Data Protection | Stay Willas",
+    description: "Read the Stay Willas privacy policy & guest data protection standards. Learn how we handle your personal information and transaction security.",
+    url: "https://www.staywillas.com/privacy",
+    images: [{ url: "https://www.staywillas.com/images/hero-villa.png" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy & Guest Data Protection | Stay Willas",
+    description: "Read the Stay Willas privacy policy & guest data protection standards. Learn how we handle your personal information and transaction security.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 

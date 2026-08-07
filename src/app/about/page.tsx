@@ -6,15 +6,15 @@ import Footer from "@/components/layout/footer";
 import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Stay Willas | Luxury Villa Rentals",
-  description: "Learn about Stay Willas, our story & quality standards. We offer handpicked luxury villa rentals in Lonavala & Khopoli with warm hospitality.",
-  keywords: ["about Stay Willas", "luxury villas in lonavala and khopoli", "premium villa management"],
+  title: "About Stay Willas | Luxury Villa Rentals in Maharashtra",
+  description: "Learn about Stay Willas and our luxury villa rentals in Maharashtra. Handpicked private pool villas in Lonavala & Khopoli with warm hospitality.",
+  keywords: ["about Stay Willas", "luxury villa rentals in maharashtra", "premium villa management"],
   alternates: {
-    canonical: "/about",
+    canonical: "https://www.staywillas.com/about",
   },
   openGraph: {
-    title: "About Stay Willas | Luxury Villa Rentals",
-    description: "Learn about Stay Willas, our story & quality standards. We offer handpicked luxury villa rentals in Lonavala & Khopoli with warm hospitality.",
+    title: "About Stay Willas | Luxury Villa Rentals in Maharashtra",
+    description: "Learn about Stay Willas and our luxury villa rentals in Maharashtra. Handpicked private pool villas in Lonavala & Khopoli with warm hospitality.",
     url: "https://www.staywillas.com/about",
     images: [
       {
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Stay Willas | Luxury Villa Rentals",
-    description: "Learn about Stay Willas, our story & quality standards. We offer handpicked luxury villa rentals in Lonavala & Khopoli with warm hospitality.",
+    title: "About Stay Willas | Luxury Villa Rentals in Maharashtra",
+    description: "Learn about Stay Willas and our luxury villa rentals in Maharashtra. Handpicked private pool villas in Lonavala & Khopoli with warm hospitality.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

@@ -1,40 +1,44 @@
 # Stay Willas — Luxury Private Pool Villas in Maharashtra
 
-> Stay Willas is a premier luxury holiday rental brand in Maharashtra, specializing in handpicked, fully managed private pool villas in Lonavala and Khopoli. Designed for weekend getaways, family reunions, corporate offsites, and intimate staycations near Mumbai and Pune.
+> Stay Willas (https://www.staywillas.com) is a premier luxury holiday rental brand in Maharashtra, India. Specializing in handpicked, fully managed, verified private pool villas in Lonavala, Khopoli, Karjat, Alibaug, and Igatpuri. Designed for family weekend staycations, corporate offsites, celebration trips, and pet-friendly retreats near Mumbai and Pune.
 
-## Core Properties
+For complete machine-readable specifications, property specs, pricing structures, and prompt Q&A data for LLMs, see:
+- **Full Knowledge Base**: https://www.staywillas.com/llms-full.txt
+
+## Featured Properties
 
 ### 1. The Angle House (Lonavala)
-- **Location**: Lonavala, Maharashtra
-- **Type**: 4 BHK Luxury Private Pool Villa
-- **Capacity**: 12 to 15 Guests
-- **Key Features**: Private swimming pool, glassmorphic modern architecture, double-height living spaces, mountain valley views, in-house chef, pet-friendly fenced lawn.
+- **Type**: 4 BHK Modern Architectural Luxury Private Pool Villa
+- **Location**: Lonavala, Maharashtra (Near Pawna Lake & Lohagad Fort)
+- **Capacity**: 12 to 16 Guests
+- **Highlights**: Private pool, double-height glass living room, fenced pet-friendly lawn, in-house private chef, 24/7 caretaker.
 - **URL**: https://www.staywillas.com/villa/the-angle-house
 
 ### 2. Canopy Crest (Khopoli)
-- **Location**: Khopoli, Maharashtra (Near Imagica)
 - **Type**: 3 BHK Mountain Sanctuary Private Pool Villa
+- **Location**: Khopoli, Maharashtra (Near Imagica & Zenith Waterfall)
 - **Capacity**: 10 to 15 Guests
-- **Key Features**: Temperature-controlled private pool, gazebo lounge, proximity to Zenith Waterfall & Imagica, customizable gourmet meal packages, 24/7 caretaker.
+- **Highlights**: Private pool overlooking Sahyadri peaks, gazebo lounge, in-house private chef, sprawling lawn, corporate offsite infrastructure.
 - **URL**: https://www.staywillas.com/villa/canopy-crest
 
-## Destinations Covered
-- **Lonavala**: https://www.staywillas.com/areas/lonavala
-- **Khopoli**: https://www.staywillas.com/areas/khopoli
-- **Alibaug** (Launching Soon): https://www.staywillas.com/areas/alibaug
-- **Karjat** (Launching Soon): https://www.staywillas.com/areas/karjat
+## Key Destinations Covered
+- **Lonavala (Villas with Private Pool)**: https://www.staywillas.com/areas/lonavala
+- **Khopoli (Private Pool Villas on Rent)**: https://www.staywillas.com/areas/khopoli
+- **Karjat (Riverside Private Pool Villas)**: https://www.staywillas.com/areas/karjat
+- **Alibaug (Beachfront Luxury Retreats)**: https://www.staywillas.com/areas/alibaug
+- **Igatpuri (Misty Mountain View Villas)**: https://www.staywillas.com/areas/igatpuri
 
-## Important Links & Services
+## Key Services & Direct Links
 - **All Villa Listings**: https://www.staywillas.com/villas
-- **Explore Destinations**: https://www.staywillas.com/areas
-- **Bookings & Concierge**: https://www.staywillas.com/contact
+- **Explore All Destinations**: https://www.staywillas.com/areas
+- **Bookings & Customer Concierge**: https://www.staywillas.com/contact
 - **Guest Wishlist**: https://www.staywillas.com/wishlist
-- **Partner / List Your Property**: https://www.staywillas.com/partner
+- **Property Management Partner**: https://www.staywillas.com/partner
 - **Terms & Booking Policy**: https://www.staywillas.com/terms
 - **Cancellation Policy**: https://www.staywillas.com/cancellation-policy
 
-## Direct Booking & Customer Care
+## Direct Contact & Care
 - **Website**: https://www.staywillas.com
-- **WhatsApp Concierge**: +91 96190 42310 / +91 99200 00000
-- **Email**: staywillas@gmail.com
+- **WhatsApp Concierge**: +91-9619042310
+- **Email**: bookings@staywillas.com / staywillas@gmail.com
 - **Address**: Kim Cottage, 14 PR Kadam Marg, Maneklal Estate, Ghatkopar West, Mumbai, MH 400084

@@ -4,10 +4,23 @@ import Navbar from "@/components/layout/navbar";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Property Management Partner | Stay Willas",
-  description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest check-ins, cleaning & payouts. Partner with us.",
+  description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest check-ins, cleaning & payouts.",
   keywords: ["luxury villa property management"],
   alternates: {
-    canonical: "/partner",
+    canonical: "https://www.staywillas.com/partner",
+  },
+  openGraph: {
+    title: "Luxury Villa Property Management Partner | Stay Willas",
+    description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest check-ins, cleaning & payouts.",
+    url: "https://www.staywillas.com/partner",
+    images: [{ url: "https://www.staywillas.com/images/hero-villa.png" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luxury Villa Property Management Partner | Stay Willas",
+    description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest check-ins, cleaning & payouts.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
 import Footer from "@/components/layout/footer";

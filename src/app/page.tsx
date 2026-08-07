@@ -3,14 +3,14 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Staycation Villas in Maharashtra | Stay Willas",
+  title: "Staycation Villas in Maharashtra | Private Pool Stays | Stay Willas",
   description: "Book staycation villas in maharashtra with private pools & chef service. Discover verified luxury villas near mumbai for family weekend getaways.",
   keywords: ["staycation villas in maharashtra", "villas in lonavala", "weekend getaway villas near mumbai", "luxury private pool villas"],
   alternates: {
     canonical: "https://www.staywillas.com",
   },
   openGraph: {
-    title: "Staycation Villas in Maharashtra | Stay Willas",
+    title: "Staycation Villas in Maharashtra | Private Pool Stays | Stay Willas",
     description: "Book staycation villas in maharashtra with private pools & chef service. Discover verified luxury villas near mumbai for family weekend getaways.",
     url: "https://www.staywillas.com",
     images: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Staycation Villas in Maharashtra | Stay Willas",
+    title: "Staycation Villas in Maharashtra | Private Pool Stays | Stay Willas",
     description: "Book staycation villas in maharashtra with private pools & chef service. Discover verified luxury villas near mumbai for family weekend getaways.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
@@ -85,7 +85,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-bg-primary">
-      <h1 className="sr-only">Luxury Private Pool Villas Near Mumbai & Pune | Stay Willas</h1>
+      <h1 className="sr-only">Staycation Villas in Maharashtra | Stay Willas</h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

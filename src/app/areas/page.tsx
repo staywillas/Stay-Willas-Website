@@ -15,6 +15,19 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.staywillas.com/areas",
   },
+  openGraph: {
+    title: "Weekend Getaway Villas Near Mumbai | Stay Willas",
+    description: "Explore weekend getaway villas near mumbai with private pool rentals. Book handpicked luxury villas in Lonavala & Khopoli with chef service now.",
+    url: "https://www.staywillas.com/areas",
+    images: [{ url: "https://www.staywillas.com/images/hero-villa.png" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Weekend Getaway Villas Near Mumbai | Stay Willas",
+    description: "Explore weekend getaway villas near mumbai with private pool rentals. Book handpicked luxury villas in Lonavala & Khopoli with chef service now.",
+    images: ["https://www.staywillas.com/images/hero-villa.png"],
+  },
 };
 
 export default async function AreasPage() {

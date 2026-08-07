@@ -34,9 +34,9 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
   karjat: {
     name: "Karjat",
     tagline: "The Riverside Escape",
-    desc: "Lovely green valleys, quiet flowing streams, and peaceful villas built for complete relaxation in nature.",
+    desc: "Explore luxury villas in Karjat with private pools, serene riverfront views, and green Sahyadri valley staycations near Mumbai and Pune.",
     image: "/assets/villas/heritage-villa/main.jpg",
-    isLaunchingSoon: true
+    isLaunchingSoon: false
   },
   khopoli: {
     name: "Khopoli",
@@ -88,15 +88,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     descText = "Rent a luxury villa in lonavala with private pool & chef. Ideal for a lonavala villa staycation & group trips. Check availability & book now.";
     keywordList = ["luxury villa in lonavala with private pool", "lonavala villa staycation"];
   } else if (regionKey === "alibaug") {
-    titleText = "Alibaug Villas Coming Soon | Stay Willas";
-    descText = "Join the waitlist for luxury private pool villas in Alibaug. Be first to know when these verified beach staycation retreats launch.";
+    titleText = "Luxury Villa in Alibaug with Private Pool | Stay Willas";
+    descText = "Book a luxury villa in alibaug with private pool. Join waitlist for verified beach staycation retreats launching soon with chef service.";
     keywordList = ["luxury villa in alibaug with private pool", "villa on rent in alibaug"];
     indexRobots = false;
   } else if (regionKey === "karjat") {
-    titleText = "Karjat Villas Coming Soon | Stay Willas";
-    descText = "Join the waitlist for luxury private pool villas in Karjat. Be first to know when these riverfront staycation retreats launch.";
-    keywordList = ["private pool villa in karjat", "karjat villa on rent"];
-    indexRobots = false;
+    titleText = "Luxury Villas in Karjat with Private Pool | Stay Willas";
+    descText = "Book luxury villas in karjat with private pool & riverfront views. Explore top rated karjat villa staycations on rent with chef service.";
+    keywordList = ["luxury villas in karjat with private pool", "karjat private pool villa on rent", "pet friendly villas in karjat"];
+    indexRobots = true;
   } else if (regionKey === "khopoli") {
     titleText = "Khopoli Private Pool Villa | Stay Willas";
     descText = "Book a khopoli private pool villa nestled in green hills. Rent a luxury villa in khopoli on rent with customized chef service for your group.";
