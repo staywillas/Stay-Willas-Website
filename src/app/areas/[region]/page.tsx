@@ -78,37 +78,48 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  let titleText = `Villas in ${area.name} with Private Pool | Stay Willas`;
-  let descText = `Rent luxury villas in ${area.name} with private pool & chef service. Ideal for family weekend getaways. Check availability and book online now.`;
-  let keywordList = [`luxury villas in ${area.name} with private pool`, `private pool villa in ${area.name}`];
+  let titleText = `Private Pool Villa in ${area.name} | ${area.name} Luxury Stays | Stay Willas`;
+  let descText = `Book a private pool villa in ${area.name} with chef service. Discover verified ${area.name} luxury stays for family getaways and group staycations.`;
+  let keywordList = [`private pool villa in ${area.name}`, `${area.name} luxury stays`];
   let indexRobots = true;
 
   if (regionKey === "lonavala") {
-    titleText = `Luxury Villa in Lonavala with Private Pool | Stay Willas`;
-    descText = "Rent a luxury villa in lonavala with private pool & chef. Ideal for a lonavala villa staycation & group trips. Check availability & book now.";
-    keywordList = ["luxury villa in lonavala with private pool", "lonavala villa staycation"];
+    titleText = "Luxury Villa Lonavala with Private Pool | Lonavala Villa Staycation";
+    descText = "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family getaways & birthday party celebrations.";
+    keywordList = [
+      "lonavala villa staycation",
+      "luxury villa stays in lonavala",
+      "luxury villa Lonavala with private pool",
+      "villa in Lonavala for birthday party",
+      "villa in Lonavala for family"
+    ];
   } else if (regionKey === "alibaug") {
-    titleText = "Luxury Villa in Alibaug with Private Pool | Stay Willas";
-    descText = "Book a luxury villa in alibaug with private pool. Join waitlist for verified beach staycation retreats launching soon with chef service.";
-    keywordList = ["luxury villa in alibaug with private pool", "villa on rent in alibaug"];
+    titleText = "Alibaug Private Pool Villa & Luxury Beach Stays | Stay Willas";
+    descText = "Explore Alibaug private pool villa options and upcoming luxury beach stays with in-house chef service.";
+    keywordList = ["alibaug private pool villa", "luxury beach stays"];
     indexRobots = false;
   } else if (regionKey === "karjat") {
-    titleText = "Luxury Villas in Karjat with Private Pool | Stay Willas";
-    descText = "Book luxury villas in karjat with private pool & riverfront views. Explore top rated karjat villa staycations on rent with chef service.";
-    keywordList = ["luxury villas in karjat with private pool", "karjat private pool villa on rent", "pet friendly villas in karjat"];
+    titleText = "Karjat Private Pool Villa & Riverfront Stays | Stay Willas";
+    descText = "Book a Karjat private pool villa with riverfront stays and scenic mountain views. Verified retreats with in-house chef options.";
+    keywordList = ["karjat private pool villa", "riverfront stays"];
     indexRobots = true;
   } else if (regionKey === "khopoli") {
-    titleText = "Khopoli Private Pool Villa | Stay Willas";
-    descText = "Book a khopoli private pool villa nestled in green hills. Rent a luxury villa in khopoli on rent with customized chef service for your group.";
-    keywordList = ["khopoli private pool villa", "villa in khopoli on rent"];
+    titleText = "Khopoli Villa Staycation | Large Group Villa Khopoli | Stay Willas";
+    descText = "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli bookings.";
+    keywordList = [
+      "khopoli villa staycation",
+      "weekend getaway villa Khopoli",
+      "corporate offsite villa Khopoli",
+      "large group villa khopoli"
+    ];
   } else if (regionKey === "goa") {
-    titleText = `Luxury Villa in Goa with Private Pool | Goa Villa Rental`;
-    descText = "Book an exquisite luxury villa in goa with private pool, beach views, and fully serviced hospitality. Explore premier goa villa rental options with Stay Willas.";
-    keywordList = ["luxury villa in goa with private pool", "goa villa rental"];
+    titleText = "Goa Private Pool Villa & Beach Rentals | Stay Willas";
+    descText = "Book a Goa private pool villa with beach rentals and fully serviced hospitality. Check availability and book online.";
+    keywordList = ["goa private pool villa", "beach rentals"];
   } else if (regionKey === "igatpuri") {
-    titleText = "Private Pool Villa in Igatpuri | Stay Willas";
-    descText = "Escape to a scenic private pool villa in igatpuri. Rent luxury villa in igatpuri retreats with mountain views, private chef & top amenities.";
-    keywordList = ["private pool villa in igatpuri", "luxury villa in igatpuri"];
+    titleText = "Igatpuri Private Pool Villa & Mountain Retreats | Stay Willas";
+    descText = "Escape to an Igatpuri private pool villa with mountain retreats, scenic hill views, and in-house chef options.";
+    keywordList = ["igatpuri private pool villa", "mountain retreats"];
   }
 
   return {
@@ -411,7 +422,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
                   Want us to help you book in {area.name} or recommend an active villa nearby?
                 </p>
                 <a 
-                  href={`https://wa.me/919920000000?text=${encodeURIComponent(`Hi Stay Willas concierge, I'm interested in booking a villa in ${area.name}`)}`} 
+                  href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas concierge, I'm interested in booking a villa in ${area.name}`)}`} 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] font-bold text-xs uppercase tracking-wider text-center py-3.5 rounded-xl transition-colors"

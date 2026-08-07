@@ -3,15 +3,15 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Staycation Villas in Maharashtra | Private Pool Stays | Stay Willas",
-  description: "Book staycation villas in maharashtra with private pools & chef service. Discover verified luxury villas near mumbai for family weekend getaways.",
-  keywords: ["staycation villas in maharashtra", "villas in lonavala", "weekend getaway villas near mumbai", "luxury private pool villas"],
+  title: "Staycation Villas in Maharashtra with Private Pool | Stay Willas",
+  description: "Book staycation villas in Maharashtra with private pool and in-house chef service. Discover verified private pool staycations near Mumbai in Lonavala and Khopoli.",
+  keywords: ["staycation villas in maharashtra with private pool", "private pool staycations near mumbai"],
   alternates: {
     canonical: "https://www.staywillas.com",
   },
   openGraph: {
-    title: "Staycation Villas in Maharashtra | Private Pool Stays | Stay Willas",
-    description: "Book staycation villas in maharashtra with private pools & chef service. Discover verified luxury villas near mumbai for family weekend getaways.",
+    title: "Staycation Villas in Maharashtra with Private Pool | Stay Willas",
+    description: "Book staycation villas in Maharashtra with private pool and in-house chef service. Discover verified private pool staycations near Mumbai in Lonavala and Khopoli.",
     url: "https://www.staywillas.com",
     images: [
       {
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Staycation Villas in Maharashtra | Private Pool Stays | Stay Willas",
-    description: "Book staycation villas in maharashtra with private pools & chef service. Discover verified luxury villas near mumbai for family weekend getaways.",
+    title: "Staycation Villas in Maharashtra with Private Pool | Stay Willas",
+    description: "Book staycation villas in Maharashtra with private pool and in-house chef service. Discover verified private pool staycations near Mumbai in Lonavala and Khopoli.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

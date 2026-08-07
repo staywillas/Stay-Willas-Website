@@ -9,23 +9,23 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Weekend Getaway Villas Near Mumbai | Stay Willas",
-  description: "Explore weekend getaway villas near mumbai with private pool rentals. Book handpicked luxury villas in Lonavala & Khopoli with chef service now.",
-  keywords: ["weekend getaway villas", "private pool rentals", "villas near mumbai", "villas near pune"],
+  title: "Weekend Getaway Villas Near Mumbai | Private Pool Destinations | Stay Willas",
+  description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala & Khopoli. Book verified luxury staycations with in-house chef service.",
+  keywords: ["weekend getaway villas near mumbai", "private pool destinations"],
   alternates: {
     canonical: "https://www.staywillas.com/areas",
   },
   openGraph: {
-    title: "Weekend Getaway Villas Near Mumbai | Stay Willas",
-    description: "Explore weekend getaway villas near mumbai with private pool rentals. Book handpicked luxury villas in Lonavala & Khopoli with chef service now.",
+    title: "Weekend Getaway Villas Near Mumbai | Private Pool Destinations | Stay Willas",
+    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala & Khopoli. Book verified luxury staycations with in-house chef service.",
     url: "https://www.staywillas.com/areas",
     images: [{ url: "https://www.staywillas.com/images/hero-villa.png" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Weekend Getaway Villas Near Mumbai | Stay Willas",
-    description: "Explore weekend getaway villas near mumbai with private pool rentals. Book handpicked luxury villas in Lonavala & Khopoli with chef service now.",
+    title: "Weekend Getaway Villas Near Mumbai | Private Pool Destinations | Stay Willas",
+    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala & Khopoli. Book verified luxury staycations with in-house chef service.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -318,7 +318,7 @@ export default async function AreasPage() {
 
                 <div className="pt-2 border-t border-[#DAA520]/15">
                   <a 
-                    href="https://wa.me/919920000000?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20a%20private%20pool%20villa" 
+                    href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20a%20private%20pool%20villa" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] text-center text-xs font-bold uppercase tracking-wider py-3.5 rounded-2xl shadow-sm transition-all"
@@ -355,7 +355,7 @@ export default async function AreasPage() {
                     </select>
                   </div>
                   <a 
-                    href="https://wa.me/919920000000?text=Hi%20Stay%20Willas,%20I%20need%20a%20villa%20recommendation" 
+                    href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20need%20a%20villa%20recommendation" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full bg-[#1B3564] hover:bg-[#0F2142] text-white font-bold text-xs uppercase tracking-wider text-center py-3.5 rounded-xl transition-colors"

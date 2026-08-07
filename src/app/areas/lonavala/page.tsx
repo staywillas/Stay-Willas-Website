@@ -9,30 +9,38 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Villas in Lonavala with Private Pool | Stay Willas",
-  description: "Book villas in lonavala with private pool for family staycations. Fast lonavala villa booking with verified private chef & scenic mountain views.",
-  keywords: ["lonavala villa booking", "villas in lonavala", "lonavala villa staycation", "villas in lonavala with private pool"],
+  title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
+  description: "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+  keywords: [
+    "lonavala villa staycation",
+    "luxury villa stays in lonavala",
+    "luxury villa Lonavala with private pool",
+    "villa in Lonavala for birthday party",
+    "villa in Lonavala for family"
+  ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",
   },
   openGraph: {
-    title: "Villas in Lonavala with Private Pool | Stay Willas",
-    description: "Book villas in lonavala with private pool for family staycations. Fast lonavala villa booking with verified private chef & scenic mountain views.",
+    title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
+    description: "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
     url: "https://www.staywillas.com/areas/lonavala",
+    siteName: "Stay Willas",
+    locale: "en_IN",
     images: [
       {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Stay Willas Luxury Villas in Lonavala",
+        alt: "Stay Willas Luxury Villa Lonavala with Private Pool",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villas in Lonavala with Private Pool | Stay Willas",
-    description: "Book villas in lonavala with private pool for family staycations. Fast lonavala villa booking with verified private chef & scenic mountain views.",
+    title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
+    description: "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -71,33 +79,91 @@ export default async function LonavalaPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
       <div>
+        {/* Technical SEO: Multi-Schema Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LodgingBusiness",
-              "name": "Stay Willas — Lonavala Villas",
-              "description": "Premium luxury private pool villas for rent in Lonavala, Maharashtra. Pet-friendly, Jain food chef, ideal for family getaways and birthday celebrations.",
-              "url": "https://www.staywillas.com/areas/lonavala",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Lonavala",
-                "addressRegion": "Maharashtra",
-                "addressCountry": "IN"
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "LodgingBusiness",
+                "name": "Stay Willas — Lonavala Villas",
+                "description": "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+                "url": "https://www.staywillas.com/areas/lonavala",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Lonavala",
+                  "addressRegion": "Maharashtra",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": "18.7546",
+                  "longitude": "73.4062"
+                },
+                "priceRange": "₹₹₹",
+                "amenityFeature": [
+                  { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
+                  { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true },
+                  { "@type": "LocationFeatureSpecification", "name": "Pet Friendly Lawns", "value": true },
+                  { "@type": "LocationFeatureSpecification", "name": "Master Jacuzzi Suite", "value": true }
+                ]
               },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": "18.7546",
-                "longitude": "73.4062"
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.staywillas.com"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Areas",
+                    "item": "https://www.staywillas.com/areas"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": "Lonavala",
+                    "item": "https://www.staywillas.com/areas/lonavala"
+                  }
+                ]
               },
-              "priceRange": "₹₹₹",
-              "amenityFeature": [
-                { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
-                { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true },
-                { "@type": "LocationFeatureSpecification", "name": "Pet Friendly", "value": true }
-              ]
-            })
+              {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "How is the private pool cleaned and maintained?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Every private pool undergoes complete filtration and sanitization cycles prior to guest arrival. On-site staff perform daily water quality checks to guarantee safety and clarity."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Can we request pure vegetarian or Jain catering?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes. Our in-house chefs cater to specific dietary requirements including pure-veg and Jain preparations using dedicated cookware and fresh ingredients."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Are pets allowed at the property?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes, pets are welcome. The Angle House features fully fenced lawns and safe outdoor spaces where pets can play freely."
+                    }
+                  }
+                ]
+              }
+            ])
           }}
         />
         <script
@@ -181,13 +247,13 @@ export default async function LonavalaPage() {
             </div>
 
             <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-3 block">
-              The Mountain Sanctuary
+              Boutique Mountain Sanctuary
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              Luxury Villa <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span> with Private Pool
+              Glass-House Villa in <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span>
             </h1>
             <p className="text-text-primary/80 text-sm md:text-base leading-relaxed max-w-2xl font-light">
-              Just a short drive away from the chaos of Mumbai and Pune lies Lonavala—a misty, green paradise. Discover our handpicked selection of premium private pool villas designed for unforgettable weekend getaways.
+              A scenic 2-hour drive from Mumbai and Pune. Discover our architectural sanctuary featuring dramatic glass facades, private waterfall pools, pet-friendly lawns, and tailored in-villa culinary experiences.
             </p>
           </div>
         </section>
@@ -363,72 +429,88 @@ export default async function LonavalaPage() {
               </div>
             </aside>
 
-            {/* CENTER COLUMN: Main SEO Article with Larger Text */}
+            {/* CENTER COLUMN: Main Editorial Article with Natural Typography */}
             <main className="lg:col-span-6 bg-white/95 rounded-3xl p-6 sm:p-10 md:p-12 border border-[#DAA520]/15 shadow-sm">
               <article className="prose prose-lg md:prose-xl max-w-none text-left select-text prose-p:text-slate-800 prose-p:text-lg md:prose-p:text-xl prose-p:leading-relaxed md:prose-p:leading-loose prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-h3:text-accent-secondary prose-h3:font-heading prose-h3:text-xl prose-a:text-accent-primary">
-              <h2>Renting a Luxury <strong>villas in lonavala with private pool</strong>: The Ultimate Weekend Escape</h2>
+              <h2>The Lonavala Mountain Escape, Reimagined</h2>
               <p>
-                We’ve all been there. It’s Thursday afternoon in Mumbai, the traffic on the Western Express Highway is at a standstill, and you’re staring out the window dreaming of breathing actual fresh air. Selecting a premium <strong>villas in lonavala with private pool</strong> isn't just a destination choice; for anyone living in western Maharashtra, it’s a necessary pressure valve. When the monsoon hits and the Sahyadri mountains turn a green shade, nothing beats an exclusive <strong>lonavala villa staycation</strong>.
+                We have all felt it: Friday afternoon in Mumbai or Pune, watching city traffic crawl while yearning for the cool, mist-laden air of the Sahyadri mountains. For travelers across western Maharashtra, escaping to the hills isn't just a leisure activity—it is a vital reset. When monsoon clouds roll over Khandala ghats and carpet the valleys in emerald green, planning a lonavala villa staycation becomes the ultimate weekend remedy.
               </p>
               <p>
-                But let's be honest—the days of cramming into a crowded hotel room are over. You work hard, and when you take a break, you want space, privacy, and absolute comfort. That is exactly why choosing luxury properties has completely changed how we experience this classic hill station. For city dwellers, renting a quality <strong>villas in lonavala with private pool</strong> represents a hassle-free journey to natural rejuvenation. It is the easiest way to swap concrete skylines for mist-laden valleys when you select from our exclusive premium retreats.
+                Yet traditional resort experiences frequently fall short of expectations. Shared hotel swimming pools overflowing with crowds, long lines at breakfast buffets, and noisy corridors undermine the peace you traveled to find. At Stay Willas, we reimagine hill station hospitality by offering private architectural sanctuaries where your group enjoys total seclusion, sprawling green lawns, and full control over your itinerary.
               </p>
 
-              <h2>The Premium Luxury <strong>villas in lonavala with private pool</strong> Experience</h2>
+              <h2>Why Choose a Private Estate Over Traditional Hotels</h2>
               <p>
-                Imagine waking up to the sound of rain hitting the large French windows of your bedroom. You step out onto a massive private deck, cup of hot chai in hand, looking out over a valley shrouded in mist. Our luxury holiday homes are designed around this exact feeling of uninterrupted peace. There's no rush to hit the breakfast buffet before 10 AM, no fighting for a lounge chair by a shared pool, and zero noisy neighbors when you book a private pool estate here.
+                When searching for luxury villa stays in lonavala, guests are increasingly prioritizing true privacy over standard hotel accommodations. Booking an independent home gives your group exclusive access to living areas, gardens, and swimming decks without having to share amenities with strangers.
               </p>
               <p>
-                If you seek a private pool getaway, our handpicked vacation rentals feature temperature-controlled private pools, meaning even in the cool December winter or rainy July monsoon, you can take a comfortable dip. Many modern travelers prefer independent <strong>villas in lonavala</strong> over hotels because they provide complete freedom. When you compare standard resorts with our private sanctuaries, the difference in quality and personal space is striking.
+                If you are reserving a villa in Lonavala for family gatherings across multiple generations, having ground-floor suites for grandparents and expansive lawns for kids makes all the difference. Everyone stays comfortably under one roof while maintaining their own personal space and privacy.
+              </p>
+
+              <h2>Architectural Distinction — The Angle House Spotlight</h2>
+              <p>
+                Waking up to misty mountain views through floor-to-ceiling glass walls is an experience unmatched by conventional hotels. Our signature Lonavala property, <Link href="/villa/the-angle-house" className="underline text-accent-primary font-bold">The Angle House</Link>, was specifically designed for guests who appreciate contemporary architecture paired with raw natural landscapes.
               </p>
               <p>
-                We’ve noticed a massive shift in how families travel. Instead of booking multiple separate hotel rooms, families are pooling their budgets to rent a spacious private villa. You get a massive living room to play board games, a private garden for the kids to run around in, and a kitchen where a private chef can cook authentic meals. If you prefer to travel with your pets, we offer pet-friendly exclusive villas options, so you never have to leave your furry family members behind.
+                Featuring an impressive double-height glass facade, a temperature-filtered private pool with a soothing waterfall cascade, and a master suite jacuzzi, the property sets a high standard for any luxury villa Lonavala with private pool reservation. The estate is fully pet-friendly, featuring boundary-fenced grassy lawns where your dogs can safely run and play.
               </p>
 
               <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">
                 <Image 
                   src="/assets/villas/the-angle-house/gallery-3.webp" 
-                  alt="Luxury private pool villa in Lonavala by StayWillas" 
+                  alt="The Angle House private waterfall pool deck in Lonavala" 
                   fill 
                   className="object-cover"
                 />
               </div>
 
-              <h2>Choosing a Property for Every Occasion</h2>
+              <h2>Milestones & Special Gatherings in the Hills</h2>
               <p>
-                We host a massive variety of groups here at Stay Willas. Geographically, our villa properties are perfectly positioned, making them the ideal choice for a weekend retreat. From family reunions to corporate gatherings, renting a private <strong>lonavala villa booking</strong> ensures that your group has the space it needs to connect and unwind. If you want to check out our primary listing, you can visit <Link href="/villa/the-angle-house" className="underline text-accent-primary font-bold">The Angle House</Link> directly.
+                Finding an ideal venue for life's celebrations requires a balance of atmosphere, capacity, and freedom. Reserving a villa in Lonavala for birthday party events allows host families to create personalized experiences that public venues simply cannot support.
+              </p>
+              <p>
+                Whether organizing a milestone 30th birthday, an intimate anniversary dinner under string lights, or a relaxed family reunion, private estates offer the flexibility to curate your own music, decor, and dining schedules without strict hotel curfews.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-10 not-prose">
                 <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Family & Group Reunions</h4>
+                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Family & Multi-Gen Reunions</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Sprawling estates that act as a spacious group home with ground-floor bedrooms for grandparents. Our getaway retreats make <strong>lonavala villa booking</strong> simple. Our getaway rentals cater to all generations for a <strong>lonavala villa staycation</strong>. We invite you to experience a premium <strong>lonavala villa staycation</strong>.
-                  </p>
-                </div>
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Corporate Getaways</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Escape the office environment by arranging a <strong>lonavala villa booking</strong>. Escape the office environment by booking our Lonavala properties to run collaborative offsites, workshops, and build team bonding around a cozy bonfire for a <strong>lonavala villa staycation</strong>.
-                  </p>
-                </div>
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Intimate Escapes</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Tucked away in quiet corners of the hills, perfect if you are looking for a romantic <strong>lonavala villa booking</strong>. Tucked away in quiet corners of the hills, perfect if you are looking for romantic escape options for your getaway in luxury private estates with heated pools.
+                    Thoughtfully designed layouts featuring accessible ground-floor bedrooms, large common living lounges for indoor games, and secure grassy lawns for kids.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
                   <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Milestone Celebrations</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Celebrate birthdays by initiating a <strong>lonavala villa booking</strong>. Celebrate birthdays or get-togethers by booking party-friendly properties in Lonavala with private chefs and custom event spaces with a custom <strong>lonavala villa staycation</strong>.
+                    Host memorable events with custom outdoor lighting setups, pool deck lounge seating, and tailored multi-course meals prepared live by on-site chefs.
+                  </p>
+                </div>
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Corporate Leadership Offsites</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    High-speed fiber internet, quiet meeting zones, and evening campfire sit-outs designed to facilitate team alignment and strategic focus.
+                  </p>
+                </div>
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Pet-Friendly Staycations</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    Fully fenced boundary lawns, pet-friendly caretakers, and open green spaces mean your pets travel and relax right alongside you.
                   </p>
                 </div>
               </div>
 
-              <h2>Comprehensive Lonavala Weather & Seasonality Guide</h2>
+              <h2>In-Villa Chef Hospitality & Custom Dining</h2>
               <p>
-                Plan your Lonavala trip today.
+                Culinary quality is central to an exceptional staycation. Driving through weekend town traffic or waiting for table openings at crowded restaurants can diminish your weekend rest. Our dedicated in-house culinary staff prepares freshly cooked meals right inside the estate kitchen.
+              </p>
+              <p>
+                Guests enjoy customized menus ranging from authentic regional Maharashtrian breakfast spreads like hot Kanda Poha and Misal to poolside evening barbecues. For families with specific dietary preferences, our chefs provide dedicated pure-vegetarian and Jain meal preparations using separate kitchenware.
+              </p>
+
+              <h2>Micro-Climates & Seasonal Travel Guide</h2>
+              <p>
+                Lonavala's geography creates distinct micro-climates depending on elevation and location. Higher altitude neighborhoods like Tungarli enjoy cooler mountain breezes and sweeping valley views, while areas closer to Khandala offer easy access from the Mumbai-Pune Expressway.
               </p>
 
               <div className="my-8 overflow-hidden rounded-2xl border border-[#DAA520]/15 not-prose">
@@ -437,125 +519,69 @@ export default async function LonavalaPage() {
                     <tr>
                       <th className="px-6 py-4 font-bold text-[#1B3564]">Season</th>
                       <th className="px-6 py-4 font-bold text-[#1B3564]">Months</th>
-                      <th className="px-6 py-4 font-bold text-[#1B3564]">Vibe & Experience</th>
+                      <th className="px-6 py-4 font-bold text-[#1B3564]">Atmosphere & Experience</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#DAA520]/15 bg-white">
                     <tr>
                       <td className="px-6 py-4 font-semibold">Monsoon Peak</td>
-                      <td className="px-6 py-4">June to September</td>
-                      <td className="px-6 py-4">Foggy mornings, heavy rains, lush green valleys, and rushing waterfalls. High demand for our <strong>villas in lonavala with private pool</strong>. Foggy mornings make it perfect for a <strong>lonavala villa staycation</strong>.</td>
+                      <td className="px-6 py-4">June – September</td>
+                      <td className="px-6 py-4">Rolling fog, waterfall streams, and green hillsides. Ideal for enjoying warm tea behind glass walls as rain washes over the valley.</td>
                     </tr>
                     <tr>
                       <td className="px-6 py-4 font-semibold">Crisp Winter</td>
-                      <td className="px-6 py-4">October to February</td>
-                      <td className="px-6 py-4">Cool nights, pleasant sunny days, outdoor barbecues, and campfire gatherings at our premium retreats. Cool nights make winter the perfect season for a <strong>lonavala villa booking</strong>.</td>
+                      <td className="px-6 py-4">October – February</td>
+                      <td className="px-6 py-4">Cool mountain air, clear skies, outdoor barbecues on the pool deck, and evening gatherings around open fires.</td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 font-semibold">Warm Summer</td>
-                      <td className="px-6 py-4">March to May</td>
-                      <td className="px-6 py-4">Warm afternoons, cool evening breezes. Excellent season to lounge in the pools of our holiday homes. Excellent season to complete a <strong>lonavala villa booking</strong>.</td>
+                      <td className="px-6 py-4 font-semibold">Breezy Summer</td>
+                      <td className="px-6 py-4">March – May</td>
+                      <td className="px-6 py-4">Pleasant morning breezes and cool evening temperatures, perfect for night swims in your private pool.</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <h2>Beyond the Chikki: Things to Do near holiday homes</h2>
+              <h2>Local Insights & Travel Recommendations</h2>
               <p>
-                Yes, you have to buy Maganlal chikki and walnut fudge from Cooper's—it's practically the law when you visit. But if you manage to leave the comfort of your private pool, the area surrounding your villa is packed with things to explore. Tiger Point at sunrise is stunning. The ancient Karla and Bhaja Buddhist caves offer a surreal step back in time, cut directly into the mountainside close to several popular <strong>villas in lonavala with private pool</strong>.
+                When taking a break from relaxation by the pool, explore nearby natural attractions. Take an early morning drive to Tiger Point for sunrise vistas, visit the historical rock-cut Karla and Bhaja Caves, or trek up Lohagad Fort during the monsoon season. For tranquil waters, Pawna Lake is easily accessible for sunset drives.
               </p>
               <p>
-                For the adventurous, a trek up to Lohagad Fort during the monsoons is spectacular. The stone steps get slippery, but the view from the top is worth every drop of sweat. Speaking of Pawna, a short drive from most <strong>lonavala villa booking</strong> options will take you to the lake, which is perfect for a quiet afternoon picnic away from the main town crowds.
-              </p>
-
-              <h2>Planning Your Next <strong>lonavala villa staycation</strong> in private sanctuaries</h2>
-              <p>
-                Choose the perfect timing now.
-              </p>
-              <p>
-                Location matters too. Villas closer to Khandala tend to offer dramatic valley views and a bit more quiet. Properties closer to the main market are brilliant if you want the convenience of walking to restaurants and shops. Further out towards Pawna, you trade convenience for absolute, undisturbed wilderness. Whatever your preference, we have the pool estates ready for your arrival. Choose our verified <strong>villas in lonavala</strong> today.
+                Planning your travel times is key to a smooth journey. Leaving Mumbai or Pune by 7:30 AM on Friday lets you beat the Expressway traffic rush, arriving at your villa just in time for lunch.
               </p>
 
               <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">
                 <Image 
                   src="/assets/villas/the-angle-house/gallery-4.webp" 
-                  alt="Scenic valley view from private pool villa in Lonavala by StayWillas" 
+                  alt="Scenic mountain valley view from The Angle House in Lonavala" 
                   fill 
                   className="object-cover"
                 />
               </div>
 
-              <h2>Curated 2-Day Luxury Itinerary</h2>
-              <p>
-                Here is our recommended plan.
-              </p>
-
-              <div className="my-10 space-y-6 not-prose">
-                <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 rounded-full bg-[#1B3564] text-white flex items-center justify-center font-bold flex-shrink-0 text-sm">1</div>
-                  <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15 flex-1">
-                    <h5 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Day 1: Arrival & Unwinding</h5>
-                    <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                      Check-in at one of our signature getaway rentals at 1:00 PM. Enjoy a traditional Maharashtrian lunch prepared in-house by your private chef. Spend the afternoon lounging in the pool. As night falls, light up the barbecue.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 rounded-full bg-[#1B3564] text-white flex items-center justify-center font-bold flex-shrink-0 text-sm">2</div>
-                  <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15 flex-1">
-                    <h5 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Day 2: Sunrise Trek & Heritage Exploration</h5>
-                    <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                      Start early for a guided trek up to Lohagad Fort. Return to your pool estate for a heavy breakfast. In the afternoon, visit the historic Karla Caves. Wrap up your day with board games and a customized gourmet dinner inside your private estate.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <h2>Frequently Asked Questions About Staying in Lonavala</h2>
-              <p>
-                To address common questions from travelers looking to rent properties, we have structured the most essential information into this quick FAQ guide:
-              </p>
+              <h2>Frequently Asked Questions</h2>
 
               <div className="my-8 space-y-4 not-prose text-left">
                 <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Are the private pools in <strong>villas in lonavala with private pool</strong> safe and hygienic?</h4>
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">How is the private pool cleaned and maintained?</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Yes. All private pools in our private estates undergo a strict chlorine filtration cycle before every arrival. Our estate managers test the water quality daily to ensure absolute safety and hygiene. Our <strong>lonavala villa staycation</strong> properties follow these rules.
+                    Every private pool undergoes complete filtration and sanitization cycles prior to guest arrival. On-site staff perform daily water quality checks to guarantee safety and clarity.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Do your villas provide in-house chef options?</h4>
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Can we request pure vegetarian or Jain catering?</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Absolutely. We offer customizable meal packages where professional in-house chefs cook fresh multi-cuisine meals directly inside your private estate. This is a standard <strong>lonavala villa booking</strong> feature in our premium luxury properties.
+                    Yes. Our in-house chefs cater to specific dietary requirements including pure-veg and Jain preparations using dedicated cookware and fresh ingredients.
+                  </p>
+                </div>
+                <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Are pets allowed at the property?</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    Yes, pets are welcome. The Angle House features fully fenced lawns and safe outdoor spaces where pets can play freely.
                   </p>
                 </div>
               </div>
-
-              <h2>A Deep Dive into Lonavala's Micro-Climates and Local Neighborhoods</h2>
-              <p>
-                The geographical diversity of Lonavala means that different neighborhoods offer completely different environments. Gold Valley and Tungarli are located at higher elevations, offering cooler temperatures and panoramic valley views. On the other hand, Kune and Khandala offer closer proximity to the highway, making travel logistics easier but still maintaining scenic beauty. If you are planning to book a getaway, selecting the right locality is crucial. For those seeking absolute wilderness, estates located further out near Pawna Lake provide quiet lakefront settings surrounded by hills. Vetting these areas helps you select the perfect backdrop for your holiday. Tungarli offer excellent <strong>lonavala villa staycation</strong> retreats. We suggest choosing premium <strong>villas in lonavala</strong> for your group.
-              </p>
-
-              <h2>Key Security and Safety Checklist for Villa Bookings</h2>
-              <p>
-                When renting an independent villa, ensuring the safety of your family or group is paramount. A high-quality estate should offer perimeter security cameras, professional on-site caretakers, and robust boundary fencing. It is also important to verify that the property has power backup systems, as hill stations are prone to power fluctuations during heavy monsoon rains. Checking for fire safety equipment, well-stocked first aid kits, and secure locking systems on all doors and windows will give your group complete peace of mind, allowing you to relax and enjoy the amenities. Verify before making a <strong>lonavala villa booking</strong> when booking independent <strong>villas in lonavala</strong> for your family.
-              </p>
-
-              <h2>A Guide to Bypassing the Weekend Expressway Traffic</h2>
-              <p>
-                Navigating the Mumbai-Pune Expressway on Friday evenings can be incredibly challenging due to heavy weekend traffic. To ensure your weekend gets off to a smooth start, we highly recommend planning your departure. If possible, leave early on Friday morning or choose a late Thursday night drive. This simple adjustment ensures that you bypass the worst bottle-necks at the toll plazas. For travelers planning a <strong>lonavala villa booking</strong>, arriving at your private estate before lunch means you can enjoy a full afternoon pool session. When returning to the city on Sunday, plan your checkout for early afternoon or late evening to avoid the standard 5 PM peak traffic window. By scheduling your travel times around these peak windows, you can ensure a stress-free journey to your holiday destination. Check if you need <strong>villas in lonavala with private pool</strong> options.
-              </p>
-
-              <h2>Insider Tips for Vetting Your Holiday Villa Amenities</h2>
-              <p>
-                Not all rental properties are created equal, and verifying key amenities before you complete your <strong>lonavala villa booking</strong> is essential. Start by checking the dimensions and filtration schedule of the private pool. If you are traveling with children, ensure the pool has a shallow partition or safety fence. Next, confirm the capacity of the power backup system. Hill stations like Lonavala frequently experience power outages, and a high-capacity generator is critical to keep the air conditioning and high-speed internet running. Finally, ask about the details of the culinary packages. Standard kitchen rentals are great, but having a dedicated in-house chef who specializes in regional and multi-cuisine preparations elevates your stay to a true five-star resort experience. Check the dimensions and filtration schedule of the <strong>villas in lonavala with private pool</strong>.
-              </p>
-
-              <h2>Selecting the Perfect Group Estate for Celebrations</h2>
-              <p>
-                If you are coordinating a large group retreat, space layout is just as important as the total bedroom count. Look for properties that offer expansive, double-height living rooms and large outdoor lawns where your entire group can gather together. Having separate seating zones or a games room with table tennis is also highly beneficial, as it allows smaller subgroups to enjoy different activities without crowding each other. By selecting a fully managed estate, you can guarantee that event coordination, food menus, and caretakers are aligned to your expectations. Booking your stay well in advance ensures that you get access to the premier properties in Lonavala's most scenic hills. Vetting properties helps before confirming your <strong>lonavala villa booking</strong>.
-              </p>
-            </article>
+              </article>
             </main>
 
             {/* RIGHT SIDEBAR: Area Villa Booking & Inquiry Panel */}
@@ -610,7 +636,7 @@ export default async function LonavalaPage() {
                   </Link>
 
                   <a 
-                    href="https://wa.me/919920000000?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20a%20villa%20in%20Lonavala" 
+                    href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20a%20villa%20in%20Lonavala" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white text-center text-sm font-bold uppercase tracking-wider py-3 rounded-2xl shadow-sm transition-all"
@@ -642,7 +668,7 @@ export default async function LonavalaPage() {
                     <input type="text" readOnly value="Lonavala, MH" className="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 font-bold" />
                   </div>
                   <a 
-                    href="https://wa.me/919920000000?text=Hi%20Stay%20Willas,%20I%20need%20a%20quote%20for%20a%20Lonavala%20villa" 
+                    href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20need%20a%20quote%20for%20a%20Lonavala%20villa" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] font-bold text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-colors"

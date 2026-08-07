@@ -24,6 +24,23 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', '@clerk/nextjs', 'date-fns', 'swiper'],
   },
+  redirects: async () => [
+    {
+      source: '/villa/lonavala-anglehouse',
+      destination: '/villa/the-angle-house',
+      permanent: true,
+    },
+    {
+      source: '/villa/lonavala-estate',
+      destination: '/villa/the-angle-house',
+      permanent: true,
+    },
+    {
+      source: '/villa/khopoli-canopy-crest',
+      destination: '/villa/canopy-crest',
+      permanent: true,
+    },
+  ],
   headers: async () => [
     {
       source: '/:path*',

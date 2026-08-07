@@ -9,30 +9,37 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Villas in Khopoli | Khopoli Private Pool Villa | Stay Willas",
-  description: "Rent verified villas in khopoli with chef service. Book your khopoli private pool villa with mountain views for a peaceful weekend staycation.",
-  keywords: ["villas in khopoli", "khopoli private pool villa", "luxury villa in khopoli on rent", "private mountain view villa in khopoli"],
+  title: "Khopoli Villa Staycation & Group Estates | Stay Willas",
+  description: "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli.",
+  keywords: [
+    "khopoli villa staycation",
+    "weekend getaway villa Khopoli",
+    "corporate offsite villa Khopoli",
+    "large group villa khopoli"
+  ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/khopoli",
   },
   openGraph: {
-    title: "Villas in Khopoli | Khopoli Private Pool Villa | Stay Willas",
-    description: "Rent verified villas in khopoli with chef service. Book your khopoli private pool villa with mountain views for a peaceful weekend staycation.",
+    title: "Khopoli Villa Staycation & Group Estates | Stay Willas",
+    description: "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli.",
     url: "https://www.staywillas.com/areas/khopoli",
+    siteName: "Stay Willas",
+    locale: "en_IN",
     images: [
       {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Stay Willas Luxury Villas in Khopoli",
+        alt: "Stay Willas Luxury Khopoli Villa Staycation",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villas in Khopoli | Khopoli Private Pool Villa | Stay Willas",
-    description: "Rent verified villas in khopoli with chef service. Book your khopoli private pool villa with mountain views for a peaceful weekend staycation.",
+    title: "Khopoli Villa Staycation & Group Estates | Stay Willas",
+    description: "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -71,33 +78,91 @@ export default async function KhopoliPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
       <div>
+        {/* Technical SEO: Multi-Schema Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LodgingBusiness",
-              "name": "Stay Willas — Khopoli Villas",
-              "description": "Premium private pool villas near Imagica in Khopoli, Maharashtra. Spacious estates for corporate offsites, family weekends, and adventure getaways.",
-              "url": "https://www.staywillas.com/areas/khopoli",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Khopoli",
-                "addressRegion": "Maharashtra",
-                "addressCountry": "IN"
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "LodgingBusiness",
+                "name": "Stay Willas — Khopoli Villas",
+                "description": "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli.",
+                "url": "https://www.staywillas.com/areas/khopoli",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Khopoli",
+                  "addressRegion": "Maharashtra",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": "18.7830",
+                  "longitude": "73.3430"
+                },
+                "priceRange": "₹₹₹",
+                "amenityFeature": [
+                  { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
+                  { "@type": "LocationFeatureSpecification", "name": "Charpai Lawns", "value": true },
+                  { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true },
+                  { "@type": "LocationFeatureSpecification", "name": "High-Speed Fiber Wi-Fi", "value": true }
+                ]
               },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": "18.7830",
-                "longitude": "73.3430"
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.staywillas.com"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Areas",
+                    "item": "https://www.staywillas.com/areas"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": "Khopoli",
+                    "item": "https://www.staywillas.com/areas/khopoli"
+                  }
+                ]
               },
-              "priceRange": "₹₹₹",
-              "amenityFeature": [
-                { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
-                { "@type": "LocationFeatureSpecification", "name": "Near Imagica", "value": true },
-                { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true }
-              ]
-            })
+              {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "How many guests can Canopy Crest accommodate?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Canopy Crest comfortably accommodates up to 20 guests across 4 spacious BHK suites with extra mattresses provided."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Is there high-speed Wi-Fi for work offsites?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes, the estate is equipped with high-speed fiber internet suitable for video conferencing and remote work."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Can we order pure vegetarian or Jain food?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes. Our in-house chefs cater dedicated pure-veg and Jain meals using separate cookware."
+                    }
+                  }
+                ]
+              }
+            ])
           }}
         />
         <script
@@ -366,33 +431,77 @@ export default async function KhopoliPage() {
             {/* CENTER COLUMN: Main SEO Article with Larger Text */}
             <main className="lg:col-span-6 bg-white/95 rounded-3xl p-6 sm:p-10 md:p-12 border border-[#DAA520]/15 shadow-sm">
               <article className="prose prose-lg md:prose-xl max-w-none text-left select-text prose-p:text-slate-800 prose-p:text-lg md:prose-p:text-xl prose-p:leading-relaxed md:prose-p:leading-loose prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-h3:text-accent-secondary prose-h3:font-heading prose-h3:text-xl prose-a:text-accent-primary">
-              <h2>The Undiscovered Charm of a Khopoli Private Pool Villa</h2>
+              <h2>The Undiscovered Sanctuary at the Base of the Ghats</h2>
               <p>
-                When people think of driving out of Mumbai on the expressway, Lonavala is usually the default answer. But right before you begin the steep climb up the ghats, sitting quietly at the base of the majestic Sahyadri mountain range, is Khopoli. If you want to escape the crowded commercial areas, choosing a <strong>khopoli private pool villa</strong> is a refreshing alternative. Exploring luxury holiday options by finding a premium <strong>villa in khopoli on rent</strong> allows you to connect with nature without distraction.
+                When planning a drive out of Mumbai or Pune along the Expressway, Lonavala is usually the first destination that comes to mind. Yet right before the steep, traffic-congested climb up the ghats lies Khopoli—a tranquil valley nestled against the base of the Sahyadri mountains. For travelers seeking nature without highway gridlock, choosing a khopoli villa staycation offers a peaceful, refreshing alternative.
               </p>
               <p>
-                Why? Because it offers something increasingly rare: untouched nature. The deep valleys here catch the heavy monsoon clouds, creating seasonal waterfalls that flow right through the backyards of some of our most exclusive holiday homes. If you want the dramatic views of the mountains without the tourist traffic jams of the more famous hill stations, renting spacious vacation rentals is the smartest decision you can make for your next weekend getaway.
+                Khopoli's location provides a distinct advantage: expansive plot sizes surrounded by lush forest cover. Heavy monsoon rains create seasonal streams that flow right past private estate lawns, providing dramatic mountain scenery without the tourist crowds of higher hill stations.
+              </p>
+
+              <h2>The Travel Time Advantage: Skipping Ghat Traffic</h2>
+              <p>
+                A major reason families and corporate groups are selecting a weekend getaway villa Khopoli location is convenience. Driving up the Khandala ghats during weekend rush hours can add up to 90 minutes of stressful bumper-to-bumper traffic.
+              </p>
+              <p>
+                By taking the Khalapur exit directly off the Mumbai-Pune Expressway, guests arrive at their private villa within 15 minutes of leaving the highway. You save significant travel time, allowing your group to start relaxing in the pool while others are still stuck in traffic.
+              </p>
+
+              <h2>Spacious Estates for Large Group Gatherings</h2>
+              <p>
+                Finding luxury accommodations that comfortably house 15 to 20 guests under one roof can be challenging. Standard hotels require booking multiple separated rooms, breaking up the togetherness of a group vacation.
+              </p>
+              <p>
+                Reserving a large group villa khopoli property like <Link href="/villa/canopy-crest" className="underline text-accent-primary font-bold">Canopy Crest</Link> solves this problem. Featuring a 4 BHK layout with 5 bathrooms, massive common living rooms, charpai lawns, and a large private swimming pool, everyone stays together comfortably.
               </p>
 
               <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">
                 <Image 
                   src="/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg" 
-                  alt="Luxury private pool villa in Khopoli by StayWillas" 
+                  alt="Canopy Crest 4 BHK large group private pool estate in Khopoli" 
                   fill 
                   className="object-cover"
                 />
               </div>
 
-              <div className="my-10 border-l-4 border-accent-primary bg-[#FAF8F5] p-6 rounded-r-2xl text-left">
-                <p className="text-[#1B3564] font-serif italic text-lg leading-relaxed mb-2">
-                  "Khopoli offers a unique climate and massive plots, allowing for expansive villa layouts that let you experience nature from your doorstep."
-                </p>
-                <span className="text-[10px] tracking-wider uppercase font-bold text-accent-secondary">- Stay Willas Concierge</span>
+              <h2>Corporate Offsites & Strategic Team Retreats</h2>
+              <p>
+                Modern corporate teams are moving away from sterile city hotel conference rooms. Booking a corporate offsite villa Khopoli location provides the ideal balance of productivity and relaxation.
+              </p>
+              <p>
+                Equipped with high-speed fiber internet, quiet indoor lounge areas for breakout sessions, and expansive outdoor lawns for team-building exercises, private estates foster genuine connection. In the evenings, teams gather around the outdoor bonfire pit or poolside barbecue deck to unwind and build camaraderie.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-10 not-prose">
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Corporate Strategy Offsites</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    Fiber Wi-Fi, air-conditioned meeting lounges, quiet break-out zones, and full chef catering to keep your team energized and focused.
+                  </p>
+                </div>
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Multi-Family Reunions</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    Spacious 4 BHK layouts with accessible ground-floor bedrooms, safe swimming pools, and manicured grassy lawns for kids.
+                  </p>
+                </div>
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Milestone Celebrations</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    Host milestone birthdays and anniversaries with pool deck seating, bonfire pits, and live barbecue catering.
+                  </p>
+                </div>
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Weekend Wellness Escapes</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    Clean mountain air, morning yoga on charpai lawns, and quiet valley views free from urban noise pollution.
+                  </p>
+                </div>
               </div>
 
-              <h2>Seasonality & Weather Guide for premium retreats</h2>
+              <h2>Seasonality & Climate Guide</h2>
               <p>
-                Before scheduling your stay, it is helpful to understand how Khopoli's seasonal dynamics affect the surrounding landscape. Monsoons bring spectacular greenery, while summers are perfect for pool lounging at our holiday homes. We suggest planning ahead because peak dates for luxury vacation rentals fill up fast.
+                Khopoli's valley geography offers distinct seasonal appeal throughout the year:
               </p>
 
               <div className="my-8 overflow-hidden rounded-2xl border border-[#DAA520]/15 not-prose">
@@ -401,107 +510,82 @@ export default async function KhopoliPage() {
                     <tr>
                       <th className="px-6 py-4 font-bold text-[#1B3564]">Season</th>
                       <th className="px-6 py-4 font-bold text-[#1B3564]">Months</th>
-                      <th className="px-6 py-4 font-bold text-[#1B3564]">Landscape & Vibe</th>
+                      <th className="px-6 py-4 font-bold text-[#1B3564]">Atmosphere & Highlights</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#DAA520]/15 bg-white">
                     <tr>
-                      <td className="px-6 py-4 font-semibold">Monsoon Splendor</td>
-                      <td className="px-6 py-4">June to September</td>
-                      <td className="px-6 py-4">Heavy tropical downpours. Waterfalls spring up across the hills. Pool sessions are incredibly scenic at our private sanctuaries.</td>
+                      <td className="px-6 py-4 font-semibold">Monsoon Magic</td>
+                      <td className="px-6 py-4">June – September</td>
+                      <td className="px-6 py-4">Vibrant green valley cover, nearby Zenith waterfalls in full flow, and refreshing rain showers over the pool.</td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 font-semibold">Mild Winter</td>
-                      <td className="px-6 py-4">October to February</td>
-                      <td className="px-6 py-4">Cool and comfortable mornings. Ideal for visiting Adlabs Imagica and organizing outdoor barbecue parties at our exclusive villas.</td>
+                      <td className="px-6 py-4 font-semibold">Pleasant Winter</td>
+                      <td className="px-6 py-4">October – February</td>
+                      <td className="px-6 py-4">Crisp morning air, sunny afternoons, and cool evenings ideal for outdoor bonfires and barbecue dinners.</td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 font-semibold">Summertime Pool Chill</td>
-                      <td className="px-6 py-4">March to May</td>
-                      <td className="px-6 py-4">Warm afternoons. Perfect season to book private villa properties and take refreshing midnight dips.</td>
+                      <td className="px-6 py-4 font-semibold">Summer Pool Retreat</td>
+                      <td className="px-6 py-4">March – May</td>
+                      <td className="px-6 py-4">Warm sunny weather perfect for spending all day in the pool with evening valley breezes.</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <h3>The Proximity Advantage of getaway rentals</h3>
+              <h2>Gourmet Catering & In-Villa Dining</h2>
               <p>
-                Perhaps the best part about choosing a holiday in private estates is the travel time. You don't have to navigate the winding ghat roads, which can be a blessing if you have elderly family members or children. You simply cruise down the Mumbai-Pune Expressway, take the Khalapur toll exit, and within 15 minutes, you are pulling into the driveway of your private sanctuary. Renting a villa here cuts your travel time by almost 45 minutes compared to driving all the way up to Lonavala.
+                A great group trip requires great food. Our in-house culinary staff handles all meal preparation right inside the estate kitchen, serving fresh, multi-cuisine meals so you never have to worry about cooking or finding restaurants.
               </p>
               <p>
-                This easy drive makes Khopoli the absolute perfect choice for short weekend getaways. You get to spend more time swimming in your private pool and less time stuck in highway traffic when you choose our luxury pool retreats. Feel free to browse our <Link href="/areas" className="underline text-accent-primary font-bold">other holiday locations</Link> also.
+                From authentic Maharashtrian breakfast spreads to live poolside barbecues and specialized pure-veg or Jain menus, our chefs customize meals to your group's exact preferences.
               </p>
 
-              <h2>Things to Do Around Your Villas in Khopoli</h2>
+              <h2>Local Attractions Near Khopoli Estates</h2>
               <p>
-                While the point of a luxury staycation is to do absolutely nothing, the region around our properties offers some brilliant nearby attractions if your group gets restless.
+                If your group wishes to explore the surrounding region, several popular attractions are located close by:
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-10 not-prose">
                 <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Adlabs Imagica</h4>
+                  <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Imagicaa Theme Park</h4>
                   <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                    One of India's biggest theme parks is right here. Many of our guests rent our properties as a basecamp, spending the day riding coasters and returning to their private pool.
+                    Located just 10 minutes away, making our estates the ideal basecamp for family thrill-seekers.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
                   <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Zenith Waterfall</h4>
                   <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                    During the monsoons, this is a spectacular sight. A short trek will take you to this massive cascade of water, located close to several of our estates.
+                    A popular monsoon trekking destination featuring a dramatic waterfall cascade through lush forest trails.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Ghat Viewpoints</h4>
+                  <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Khandala Viewpoints</h4>
                   <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                    You are just a 20-minute drive from the famous viewpoints of Khandala if you want to catch the sunset from the top of the mountains near our estates.
+                    A short 20-minute drive up the ghats to take in panoramic sunset views across the valley.
                   </p>
                 </div>
               </div>
 
-              <h2>Booking Your Khopoli Private Pool Villa Escape</h2>
-              <p>
-                When browsing our inventory, pay attention to the amenities that suit your group. If you're coming with a large group of friends to celebrate, you can rent party-friendly villas equipped with outdoor barbecue pits, massive music systems, and poolside bars.
-              </p>
-              <p>
-                If it's a quiet family retreat, we have beautiful farmhouses surrounded by mango orchards. We also offer options for teams searching for a corporate retreat to run collaborative offsites. Whatever your vibe, you'll find the perfect escape. Browse our curated selection of luxury properties below, select your dates, and let our concierge team handle the rest.
-              </p>
-
-              <h2>Curated 2-Day Luxury Itinerary</h2>
-              <p>
-                If you are planning your upcoming weekend trip, here is a structured timeline suggesting how to spend it at our premium properties:
-              </p>
-
-              <div className="my-10 space-y-6 not-prose">
-                <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 rounded-full bg-[#1B3564] text-white flex items-center justify-center font-bold flex-shrink-0 text-sm">1</div>
-                  <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15 flex-1">
-                    <h5 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Day 1: Arrival & Oasis Chill</h5>
-                    <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                      Check-in at your private pool estate at 1:00 PM. Enjoy a heavy lunch with local Konkani flavors. Relax in the massive lawns of your choice of Villas in Khopoli or jump into the private pool. In the evening, arrange a customized bonfire session at your luxury retreat.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 rounded-full bg-[#1B3564] text-white flex items-center justify-center font-bold flex-shrink-0 text-sm">2</div>
-                  <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15 flex-1">
-                    <h5 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Day 2: Theme Park Thrills or Waterfall Hikes</h5>
-                    <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                      If traveling during the monsoon, take an early trek to Zenith Waterfall. For families, plan a full day at Adlabs Imagica theme park, which is just 10 minutes away from our Villas in Khopoli. Return to your estate for a relaxing hot bath, followed by a chef-prepared dinner.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <h2>Frequently Asked Questions About Staying in Khopoli</h2>
-              <p>
-                We have compiled the most common queries from travelers planning their luxury retreats in our Villas in Khopoli:
-              </p>
+              <h2>Frequently Asked Questions</h2>
 
               <div className="my-8 space-y-4 not-prose text-left">
                 <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Are your private estates suitable for hosting events?</h4>
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">How many guests can Canopy Crest accommodate?</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Yes, absolutely. Many of our Villas in Khopoli have massive lawns and poolside bars built specifically for events. Our team can help organize catering, basic sound set-ups, and custom decorations.
+                    Canopy Crest comfortably accommodates up to 20 guests across 4 spacious BHK suites with extra mattresses provided.
+                  </p>
+                </div>
+                <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Is there high-speed Wi-Fi for work offsites?</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    Yes, the estate is equipped with high-speed fiber internet suitable for video conferencing and remote work.
+                  </p>
+                </div>
+                <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Can we order pure vegetarian or Jain food?</h4>
+                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                    Yes. Our in-house chefs cater dedicated pure-veg and Jain meals using separate cookware.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
@@ -566,7 +650,7 @@ export default async function KhopoliPage() {
                   </Link>
 
                   <a 
-                    href="https://wa.me/919920000000?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20a%20villa%20in%20Khopoli" 
+                    href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20a%20villa%20in%20Khopoli" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white text-center text-sm font-bold uppercase tracking-wider py-3 rounded-2xl shadow-sm transition-all"
@@ -598,7 +682,7 @@ export default async function KhopoliPage() {
                     <input type="text" readOnly value="Khopoli, MH" className="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 font-bold" />
                   </div>
                   <a 
-                    href="https://wa.me/919920000000?text=Hi%20Stay%20Willas,%20I%20need%20a%20quote%20for%20a%20Khopoli%20villa" 
+                    href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20need%20a%20quote%20for%20a%20Khopoli%20villa" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] font-bold text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-colors"

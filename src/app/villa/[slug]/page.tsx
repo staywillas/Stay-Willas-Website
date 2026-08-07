@@ -176,17 +176,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const city = villa.location.split(",")[0].trim();
   let titleText = `${villa.name} | ${villa.bedrooms} BHK Private Pool Villa in ${city} | Stay Willas`;
-  let descText = `Book ${villa.name}, a luxury ${villa.bedrooms} bhk private pool villa in ${city} with private chef and premium staycation amenities. Reserve today!`;
-  let keywordsList = [`luxury villa in ${city} with private pool`, `private pool villa in ${city}`, `${villa.bedrooms} bhk villa in ${city}`];
+  let descText = `Book ${villa.name}, a ${villa.bedrooms} BHK private pool villa in ${city} with in-house chef service and luxury staycation amenities.`;
+  let keywordsList = [`${villa.bedrooms} BHK private pool villa in ${city}`, `${villa.name.toLowerCase()}`];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "The Angle House | 4 BHK Private Pool Villa in Lonavala | Stay Willas";
-    descText = "Book The Angle House Lonavala, a 4 bhk private pool villa in lonavala with pet friendly lawn, scenic mountain views & chef service.";
-    keywordsList = ["the angle house lonavala", "luxury villa in lonavala with private pool", "4 bhk villa in lonavala", "pet friendly villa in lonavala"];
+    titleText = "The Angle House | 3 BHK Glass House Villa in Lonavala with Private Pool | Stay Willas";
+    descText = "Book The Angle House in Lonavala, a 3 BHK glass house villa in Lonavala with private pool, pet friendly lawn, and in-house chef service.";
+    keywordsList = ["the angle house in lonavala", "3 BHK glass house villa in lonavala with private pool"];
   } else if (villa.slug === "canopy-crest") {
-    titleText = "Canopy Crest | 3 BHK Private Pool Villa in Khopoli | Stay Willas";
-    descText = "Book Canopy Crest Khopoli, a 3 bhk private pool villa in khopoli with private chef service and panoramic valley views.";
-    keywordsList = ["canopy crest khopoli", "khopoli private pool villa", "3 bhk villa in khopoli", "luxury villa in khopoli on rent"];
+    titleText = "Canopy Crest | 4 BHK Private Pool Estate in Khopoli for Groups | Stay Willas";
+    descText = "Book Canopy Crest in Khopoli, a 4 BHK private pool estate in Khopoli for groups with sprawling lawns and in-house chef service.";
+    keywordsList = ["canopy crest in khopoli", "4 BHK private pool estate in khopoli for groups"];
   }
 
   const ogImageUrl = villa.images[0] ? `https://www.staywillas.com${villa.images[0]}` : "https://www.staywillas.com/images/hero-villa.png";
