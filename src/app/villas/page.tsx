@@ -90,6 +90,47 @@ export default async function VillasPage({ searchParams }: PageProps) {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between">
       <div>
+        {/* Structured Data: ItemList & BreadcrumbList for SERP Carousel & Hierarchy */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "Luxury Staycation Villas in Maharashtra | Stay Willas",
+                "description": "Browse handpicked staycation villas near Mumbai in Lonavala, Khopoli, Karjat, and Alibaug with private pool & chef service.",
+                "numberOfItems": villas.length,
+                "itemListElement": villas.map((villa, idx) => ({
+                  "@type": "ListItem",
+                  "position": idx + 1,
+                  "name": villa.name,
+                  "url": `https://www.staywillas.com/villa/${villa.slug}`,
+                  "image": villa.image.startsWith("http") ? villa.image : `https://www.staywillas.com${villa.image}`
+                }))
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.staywillas.com"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Villas",
+                    "item": "https://www.staywillas.com/villas"
+                  }
+                ]
+              }
+            ])
+          }}
+        />
+
         <Navbar />
         
         {/* Spacing below Navbar */}

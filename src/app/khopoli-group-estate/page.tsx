@@ -21,6 +21,53 @@ import {
   Gamepad2,
   Trees
 } from "lucide-react";
+import VillaFeatureMarquee, { FeatureMarqueeItem } from "@/components/villas/villa-feature-marquee";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+
+const canopyCrestFeatures: FeatureMarqueeItem[] = [
+  {
+    id: 1,
+    title: "22x12 Ft Private Swimming Pool",
+    badge: "Massive Pool",
+    description: "Expansive private swimming pool designed for large group staycations & pool parties.",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+  },
+  {
+    id: 2,
+    title: "Sprawling Charpai Green Lawns",
+    badge: "Multi-Acre Lawn",
+    description: "Open manicured lawns with traditional charpai seating for cricket & outdoor sports.",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg",
+  },
+  {
+    id: 3,
+    title: "4 Master BHK Bedroom Suites",
+    badge: "Group Capacity",
+    description: "Spacious master suites accommodating up to 20 to 25+ guests with 5 bathrooms.",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg",
+  },
+  {
+    id: 4,
+    title: "Outdoor Gazebo & Evening Lounge",
+    badge: "Outdoor Lounge",
+    description: "Shaded gazebo lounge & dedicated bonfire pit for evening gatherings under the stars.",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg",
+  },
+  {
+    id: 5,
+    title: "Indoor Games & Music Lounge",
+    badge: "Entertainment",
+    description: "Carrom board, indoor games & sound system for corporate offsites and family games.",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
+  },
+  {
+    id: 6,
+    title: "In-House Dedicated Chef Dining",
+    badge: "Fresh Dining",
+    description: "Freshly cooked multi-cuisine meal packages for large group celebrations.",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
+  },
+];
 
 export const metadata: Metadata = {
   title: "4 BHK Large Group Villa in Khopoli | Stay Willas",
@@ -161,9 +208,12 @@ export default async function KhopoliGroupEstatePage() {
             <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-3 block">
               Sprawling Multi-Acre Sanctuary
             </span>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              4 BHK Private Pool Estate in <span className="italic text-accent-primary font-serif font-light">Khopoli</span>
-            </h1>
+            <h1 className="sr-only">4 BHK Private Pool Estate in Khopoli</h1>
+            <TextGenerateEffect 
+              words="4 BHK Private Pool Estate in Khopoli"
+              highlightWords={["Khopoli"]}
+              className="text-4xl md:text-6xl lg:text-7xl mb-6"
+            />
             <p className="text-text-primary/80 text-base md:text-lg leading-relaxed max-w-2xl font-light mb-8">
               Designed for large family reunions, milestone celebrations & corporate offsites at <strong className="font-semibold text-[#1B3564]">Canopy Crest</strong>. Accommodates up to 20 guests with 4 master BHK suites, 5 bathrooms, private pool & charpai lawns.
             </p>
@@ -186,6 +236,13 @@ export default async function KhopoliGroupEstatePage() {
             </div>
           </div>
         </section>
+
+        {/* Feature Image Marquee Section (Below Hero) */}
+        <VillaFeatureMarquee 
+          heading="Canopy Crest — Estate Highlights" 
+          subheading="Discover sprawling multi-acre private estate features in Khopoli for large groups & offsites."
+          items={canopyCrestFeatures} 
+        />
 
         {/* Feature Grid Spotlight */}
         <section className="py-16 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">

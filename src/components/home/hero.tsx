@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+
 const Hero = () => {
   return (
     <section className="relative h-[85vh] lg:h-screen min-h-[650px] w-full overflow-hidden flex items-center">
@@ -44,15 +46,12 @@ const Hero = () => {
         </motion.span>
         
         {/* Main Heading */}
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.7 }}
-          className="text-4xl md:text-6xl lg:text-[5.5rem] font-heading text-white leading-[1.05] mb-6 font-normal tracking-tight"
-        >
-          The <br />
-          <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans">Angle House</span>
-        </motion.h2>
+        <TextGenerateEffect 
+          words="The Angle House"
+          highlightWords={["Angle", "House"]}
+          highlightClass="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent font-sans"
+          className="text-4xl md:text-6xl lg:text-[5.5rem] text-white font-normal mb-6"
+        />
         
         {/* Subtitle */}
         <motion.p 

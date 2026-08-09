@@ -2,18 +2,14 @@
 
 import { ReactLenis, useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
-// Synchronizes Next.js App Router navigation with the Lenis scroller
-// to ensure standard page transitions start smoothly at the top.
 function ScrollRestorer() {
   const pathname = usePathname();
   const lenis = useLenis();
 
   useEffect(() => {
     if (lenis) {
-      // Force instantaneous scroll reset to top of viewport on path changes.
-      // Doing this immediately on path resolution prevents browser/Next.js scroll-snap flashes.
       lenis.scrollTo(0, { immediate: true });
     }
   }, [pathname, lenis]);
@@ -22,15 +18,37 @@ function ScrollRestorer() {
 }
 
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
+  const [isTouchOrMobile, setIsTouchOrMobile] = useState(false);
+
+  useEffect(() => {
+    const checkTouchOrMobile = () => {
+      const isMobileScreen = window.innerWidth < 1024;
+      const hasTouchSupport =
+        "ontouchstart" in window ||
+        navigator.maxTouchPoints > 0 ||
+        (window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+      setIsTouchOrMobile(isMobileScreen || hasTouchSupport);
+    };
+
+    checkTouchOrMobile();
+    window.addEventListener("resize", checkTouchOrMobile);
+    return () => window.removeEventListener("resize", checkTouchOrMobile);
+  }, []);
+
+  // For mobile and touch devices, bypass JS scroll hijacking to guarantee 100% native, lag-free scrolling
+  if (isTouchOrMobile) {
+    return <>{children}</>;
+  }
+
   return (
     <ReactLenis 
       root 
       options={{ 
-        lerp: 0.08,             // Very smooth frame-by-frame interpolation
+        lerp: 0.12,             // Snappy, responsive interpolation
         smoothWheel: true, 
         syncTouch: false,       // Prevent touch lag
-        touchMultiplier: 1.0,   // Native touch swipe speed
-        wheelMultiplier: 1.0,   // Native wheel response
+        wheelMultiplier: 1.0,   
+        touchMultiplier: 1.0,   
         infinite: false,
       }}
     >

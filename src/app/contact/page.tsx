@@ -8,30 +8,36 @@ import { Mail, Phone, MapPin, MessageSquare, ArrowRight } from "lucide-react";
 import ContactForm from "@/components/contact/contact-form";
 
 export const metadata: Metadata = {
-  title: "Stay Willas Contact | Customer Support & Villa Bookings",
-  description: "Get in touch via Stay Willas contact for fast customer support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist.",
-  keywords: ["stay willas contact", "villas in lonavala booking", "luxury villas in khopoli booking"],
+  title: "Contact Stay Willas | Book Lonavala Villa with Pool",
+  description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or Khopoli staycation estate. 24/7 WhatsApp customer support available.",
+  keywords: [
+    "stay willas contact", 
+    "lonavala villa with pool booking", 
+    "best villa in lonavala", 
+    "khopoli villa staycation",
+    "private pool villa near mumbai"
+  ],
   alternates: {
     canonical: "https://www.staywillas.com/contact",
   },
   openGraph: {
-    title: "Stay Willas Contact | Customer Support & Villa Bookings",
-    description: "Get in touch via Stay Willas contact for fast customer support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist.",
+    title: "Contact Stay Willas | Book Lonavala Villa with Pool",
+    description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or Khopoli staycation estate. 24/7 WhatsApp customer support available.",
     url: "https://www.staywillas.com/contact",
     images: [
       {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Contact Stay Willas",
+        alt: "Contact Stay Willas Concierge",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Stay Willas Contact | Customer Support & Villa Bookings",
-    description: "Get in touch via Stay Willas contact for fast customer support & luxury villa bookings in Lonavala and Khopoli. Our team is ready to assist.",
+    title: "Contact Stay Willas | Book Lonavala Villa with Pool",
+    description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or Khopoli staycation estate. 24/7 WhatsApp customer support available.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -40,6 +46,29 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
       <h1 className="sr-only">Stay Willas Contact | Customer Support & Villa Bookings</h1>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.staywillas.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Contact Us",
+                "item": "https://www.staywillas.com/contact"
+              }
+            ]
+          })
+        }}
+      />
       <Navbar />
       
       {/* Hero */}
@@ -165,6 +194,52 @@ export default function ContactPage() {
             <ContactForm />
           </div>
 
+        </div>
+      </section>
+
+      {/* Rich SEO Contact & Booking Information Section */}
+      <section className="py-20 bg-[#FAF8F5] border-t border-[#DAA520]/20 px-6 md:px-12 lg:px-24">
+        <div className="max-w-7xl mx-auto space-y-12">
+          <div className="text-center max-w-3xl mx-auto">
+            <span className="text-accent-secondary font-semibold tracking-[0.3em] uppercase text-xs mb-3 block">
+              Reservations & Guest Support
+            </span>
+            <h2 className="text-3xl md:text-5xl font-heading font-bold text-[#1B3564] mb-4">
+              Planning Your Next <span className="italic text-accent-primary font-serif font-light">Luxury Staycation?</span>
+            </h2>
+            <p className="text-text-primary/75 text-sm md:text-base leading-relaxed font-light">
+              Our reservation concierge is standing by to help you choose the perfect private pool villa in Lonavala or sprawling group estate in Khopoli.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm space-y-3">
+              <h3 className="text-xl font-heading font-bold text-[#1B3564]">
+                Lonavala Villa with Pool Desk
+              </h3>
+              <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
+                Interested in reserving <a href="/lonavala-glass-house-staycation" className="underline font-semibold text-accent-primary">The Angle House</a>—voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Get instant availability checks, tariff details, and private waterfall pool customization via WhatsApp.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm space-y-3">
+              <h3 className="text-xl font-heading font-bold text-[#1B3564]">
+                Khopoli Group Offsite Booking
+              </h3>
+              <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
+                Need a <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> for large family reunions or corporate retreats? Contact us for custom stay packages at <a href="/khopoli-group-estate" className="underline font-semibold text-accent-primary">Canopy Crest</a> with charpai lawns & swimming pools.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm space-y-3">
+              <h3 className="text-xl font-heading font-bold text-[#1B3564]">
+                Chef & Concierge Services
+              </h3>
+              <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
+                We organize in-house chef meal packages (including dedicated Jain & vegetarian setups), pet-friendly arrangements, barbecue grilles, and outdoor bonfire setups tailored to your trip preferences.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

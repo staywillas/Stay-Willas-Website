@@ -42,22 +42,42 @@ export default function AboutPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "LocalBusiness",
-            "name": "Stay Willas",
-            "description": "Premium luxury villa rentals in Maharashtra. Handpicked private pool villas near Mumbai and Pune with chef services, pet-friendly options, and concierge support.",
-            "url": "https://www.staywillas.com",
-            "telephone": "+91-9619042310",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "Kim cottage, 14, PR Kadam Marg, Maneklal Estate, Ghatkopar West",
-              "addressLocality": "Mumbai",
-              "addressRegion": "Maharashtra",
-              "postalCode": "400084",
-              "addressCountry": "IN"
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "Stay Willas",
+              "description": "Premium luxury villa rentals in Maharashtra. Handpicked private pool villas near Mumbai and Pune with chef services, pet-friendly options, and concierge support.",
+              "url": "https://www.staywillas.com",
+              "telephone": "+91-9619042310",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Kim cottage, 14, PR Kadam Marg, Maneklal Estate, Ghatkopar West",
+                "addressLocality": "Mumbai",
+                "addressRegion": "Maharashtra",
+                "postalCode": "400084",
+                "addressCountry": "IN"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.staywillas.com"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "About Us",
+                  "item": "https://www.staywillas.com/about"
+                }
+              ]
             }
-          })
+          ])
         }}
       />
       
@@ -132,6 +152,82 @@ export default function AboutPage() {
             <div className="text-left">
               <p className="font-bold tracking-widest text-xs uppercase">The Stay Willas Team</p>
               <p className="text-text-primary/40 text-[10px] uppercase tracking-widest">Curation Specialists</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Rich SEO Content Section */}
+      <section className="py-24 bg-[#FAF8F5] border-t border-[#DAA520]/20 px-6 md:px-12 lg:px-24">
+        <div className="max-w-7xl mx-auto space-y-12">
+          <div className="text-center max-w-3xl mx-auto">
+            <span className="text-accent-secondary font-semibold tracking-[0.3em] uppercase text-xs mb-3 block">
+              Maharashtra's Premier Villa Management
+            </span>
+            <h2 className="text-3xl md:text-5xl font-heading font-bold text-[#1B3564] mb-4">
+              Redefining <span className="italic text-accent-primary font-serif font-light">Luxury Villa Rentals</span> in Maharashtra
+            </h2>
+            <p className="text-text-primary/75 text-sm md:text-base leading-relaxed font-light">
+              At Stay Willas, we curate extraordinary private staycation experiences for families, corporate teams, and celebration groups seeking uncompromised comfort near Mumbai and Pune.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* SEO Pillar 1: Lonavala */}
+            <div className="bg-white p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm space-y-4">
+              <h3 className="text-xl font-heading font-bold text-[#1B3564]">
+                Lonavala Villa with Pool
+              </h3>
+              <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
+                Looking for the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Our handpicked collection features signature architectural icons like <a href="/lonavala-glass-house-staycation" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">The Angle House</a>. Enjoy a private waterfall swimming pool, master suite Jacuzzi, double-height glass facades, and pet-friendly fenced lawns.
+              </p>
+              <a href="/areas/lonavala" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
+                Explore Lonavala Villas &rarr;
+              </a>
+            </div>
+
+            {/* SEO Pillar 2: Khopoli */}
+            <div className="bg-white p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm space-y-4">
+              <h3 className="text-xl font-heading font-bold text-[#1B3564]">
+                Khopoli Villa Staycation
+              </h3>
+              <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
+                Plan a memorable <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> with sprawling multi-acre grounds like <a href="/khopoli-group-estate" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">Canopy Crest</a>. Ideal for large group gatherings up to 25+ guests, corporate offsites, charpai green lawns, and dedicated in-house chef services.
+              </p>
+              <a href="/areas/khopoli" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
+                Explore Khopoli Estates &rarr;
+              </a>
+            </div>
+
+            {/* SEO Pillar 3: Signature Hospitality */}
+            <div className="bg-white p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm space-y-4">
+              <h3 className="text-xl font-heading font-bold text-[#1B3564]">
+                Luxury Villa Rentals Maharashtra
+              </h3>
+              <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
+                Whether you need a <strong className="font-semibold text-[#1B3564]">pet friendly villa in Lonavala</strong>, a private pool villa near Mumbai, or a luxury retreat in Karjat, Alibaug, Pawna, or Goa, Stay Willas offers 100% verified properties with 24/7 concierge support and customized dining.
+              </p>
+              <a href="/villas" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
+                View Full Villa Catalog &rarr;
+              </a>
+            </div>
+          </div>
+
+          <div className="bg-white p-8 md:p-12 rounded-3xl border border-[#DAA520]/20 space-y-6 text-left">
+            <h3 className="text-2xl font-heading font-bold text-[#1B3564]">
+              Why Travelers Choose Stay Willas for Private Villa Bookings
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs md:text-sm text-text-primary/80 font-light leading-relaxed">
+              <ul className="space-y-3 list-disc pl-5">
+                <li><strong className="font-semibold text-[#1B3564]">Handpicked Luxury Properties:</strong> Every villa is personally inspected for safety, privacy, clean water filtration, and premium bedding.</li>
+                <li><strong className="font-semibold text-[#1B3564]">In-House Chef & Dining:</strong> Freshly prepared Maharashtrian specialties, continental menus, and dedicated Jain meal preparation.</li>
+                <li><strong className="font-semibold text-[#1B3564]">Pet-Friendly Havens:</strong> Securely fenced private gardens allowing your furry companions to run freely.</li>
+              </ul>
+              <ul className="space-y-3 list-disc pl-5">
+                <li><strong className="font-semibold text-[#1B3564]">Corporate Offsites & Events:</strong> Spacious multi-acre estates equipped with high-speed Wi-Fi, audio setups, and outdoor gazebos.</li>
+                <li><strong className="font-semibold text-[#1B3564]">Direct WhatsApp Concierge:</strong> Instant booking assistance with zero hidden reservation fees or surprise charges.</li>
+                <li><strong className="font-semibold text-[#1B3564]">Prime Western Ghats Locations:</strong> Conveniently located within 2 hours of drive time from Mumbai and Pune.</li>
+              </ul>
             </div>
           </div>
         </div>

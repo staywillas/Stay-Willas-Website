@@ -21,22 +21,71 @@ import {
   Bath
 } from "lucide-react";
 
+import VillaFeatureMarquee, { FeatureMarqueeItem } from "@/components/villas/villa-feature-marquee";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+
+const angleHouseFeatures: FeatureMarqueeItem[] = [
+  {
+    id: 1,
+    title: "Private Waterfall Swimming Pool",
+    badge: "Private Pool",
+    description: "Temperature-filtered pool with cascading waterfall feature & evening deck lighting.",
+    image: "/assets/villas/the-angle-house/gallery-13.webp",
+  },
+  {
+    id: 2,
+    title: "Double-Height Glass Facade",
+    badge: "Architecture",
+    description: "Floor-to-ceiling glass walls offering panoramic Sahyadri mountain views.",
+    image: "/assets/villas/the-angle-house/gallery-11.webp",
+  },
+  {
+    id: 3,
+    title: "Master Suite Jacuzzi Bath",
+    badge: "Jacuzzi Suite",
+    description: "Private master suite with luxury Jacuzzi setup and tranquil forest outlook.",
+    image: "/assets/villas/the-angle-house/gallery-19.webp",
+  },
+  {
+    id: 4,
+    title: "Pet-Friendly Fenced Lawns",
+    badge: "Pet Friendly",
+    description: "Lush green manicured lawns with secure boundary fencing for pets & children.",
+    image: "/assets/villas/the-angle-house/gallery-5.webp",
+  },
+  {
+    id: 5,
+    title: "In-House Gourmet Chef Dining",
+    badge: "Chef Service",
+    description: "Fresh multi-cuisine meals, Maharashtrian specialties, vegetarian & Jain menus.",
+    image: "/assets/villas/the-angle-house/gallery-16.webp",
+  },
+  {
+    id: 6,
+    title: "Spacious Living Lounge",
+    badge: "Spacious Lounge",
+    description: "Double-height central hall designed for family board games & storytelling.",
+    image: "/assets/villas/the-angle-house/gallery-18.webp",
+  },
+];
+
 export const metadata: Metadata = {
-  title: "Glass House Villa in Lonavala with Private Pool | Stay Willas",
-  description: "Book The Angle House, a luxury villa Lonavala with private pool. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+  title: "Lonavala Villa with Pool | Best Villa in Lonavala",
+  description: "Book the best villa in Lonavala. Enjoy a luxury Lonavala villa with pool featuring private chef service, jacuzzi & mountain views for your staycation.",
   keywords: [
-    "lonavala villa staycation",
-    "luxury villa stays in lonavala",
-    "luxury villa Lonavala with private pool",
-    "villa in Lonavala for birthday party",
-    "villa in Lonavala for family"
+    "lonavala villa with pool",
+    "best villa in lonavala",
+    "luxury villa in lonavala",
+    "private pool villa in lonavala",
+    "staycation villa in lonavala with pool",
+    "top villa in lonavala"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/lonavala-glass-house-staycation",
   },
   openGraph: {
-    title: "Glass House Villa in Lonavala with Private Pool | Stay Willas",
-    description: "Book The Angle House, a luxury villa Lonavala with private pool. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+    title: "Lonavala Villa with Pool | Best Villa in Lonavala",
+    description: "Book the best villa in Lonavala. Enjoy a luxury Lonavala villa with pool featuring private chef service, jacuzzi & mountain views for your staycation.",
     url: "https://www.staywillas.com/lonavala-glass-house-staycation",
     siteName: "Stay Willas",
     locale: "en_IN",
@@ -45,15 +94,15 @@ export const metadata: Metadata = {
         url: "https://www.staywillas.com/assets/villas/the-angle-house/gallery-11.webp",
         width: 1200,
         height: 630,
-        alt: "The Angle House Glass House Villa Lonavala with Private Pool",
+        alt: "The Angle House - Lonavala Villa with Pool",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Glass House Villa in Lonavala with Private Pool | Stay Willas",
-    description: "Book The Angle House, a luxury villa Lonavala with private pool. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+    title: "Lonavala Villa with Pool | Best Villa in Lonavala",
+    description: "Book the best villa in Lonavala. Enjoy a luxury Lonavala villa with pool featuring private chef service, jacuzzi & mountain views for your staycation.",
     images: ["https://www.staywillas.com/assets/villas/the-angle-house/gallery-11.webp"],
   },
 };
@@ -74,8 +123,8 @@ export default async function LonavalaGlassHousePage() {
               {
                 "@context": "https://schema.org",
                 "@type": "VacationRental",
-                "name": "The Angle House — Glass House Villa in Lonavala",
-                "description": "Boutique 3 BHK glass house villa in Lonavala featuring a private waterfall pool, master suite jacuzzi, pet-friendly fenced lawns, and in-house chef service.",
+                "name": "The Angle House — Premier Lonavala Villa with Pool",
+                "description": "Book the best villa in Lonavala featuring a private waterfall pool, luxury villa in Lonavala amenities, master suite jacuzzi, pet-friendly lawns, and chef service.",
                 "url": "https://www.staywillas.com/lonavala-glass-house-staycation",
                 "address": {
                   "@type": "PostalAddress",
@@ -103,7 +152,7 @@ export default async function LonavalaGlassHousePage() {
                   {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Lonavala Glass House",
+                    "name": "Lonavala Villa with Pool",
                     "item": "https://www.staywillas.com/lonavala-glass-house-staycation"
                   }
                 ]
@@ -114,18 +163,18 @@ export default async function LonavalaGlassHousePage() {
                 "mainEntity": [
                   {
                     "@type": "Question",
-                    "name": "Is the villa suitable for pets?",
+                    "name": "Why is The Angle House considered the best villa in Lonavala?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Yes, The Angle House features fully fenced green lawns and safe open areas where pets can play safely."
+                      "text": "The Angle House combines modern luxury villa in Lonavala architecture, a private waterfall pool, master suite jacuzzi, 24/7 concierge, pet-friendly lawns, and dedicated in-house chef dining."
                     }
                   },
                   {
                     "@type": "Question",
-                    "name": "What is the total guest capacity of The Angle House?",
+                    "name": "Does this Lonavala villa with pool feature private dining?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "The villa comfortably accommodates 12 to 16 guests across 3 spacious BHK master suites and additional extra bedding setups."
+                      "text": "Yes, our on-site culinary team prepares fresh multi-cuisine, vegetarian, and Jain meals tailored to your taste."
                     }
                   }
                 ]
@@ -141,7 +190,7 @@ export default async function LonavalaGlassHousePage() {
           <div className="absolute inset-0 -z-10">
             <Image 
               src="/assets/villas/the-angle-house/gallery-11.webp" 
-              alt="The Angle House glass facade illuminated at night in Lonavala"
+              alt="The Angle House luxury Lonavala villa with pool illuminated at night"
               fill
               priority
               className="object-cover opacity-25 filter blur-[1px]"
@@ -149,23 +198,26 @@ export default async function LonavalaGlassHousePage() {
             <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/80 via-bg-primary/95 to-bg-primary" />
           </div>
 
-          <div className="max-w-4xl mx-auto flex flex-col items-center">
+          <div className="max-w-4xl mx-auto flex flex-col items-center relative z-20">
             <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-text-primary/50 tracking-wider uppercase font-semibold mb-6">
               <Link href="/" className="hover:text-accent-primary transition-colors">Home</Link>
               <ChevronRight size={10} />
               <Link href="/areas/lonavala" className="hover:text-accent-primary transition-colors">Lonavala</Link>
               <ChevronRight size={10} />
-              <span className="text-text-primary font-bold">Glass House Feature</span>
+              <span className="text-text-primary font-bold">Lonavala Villa with Pool</span>
             </div>
 
             <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-3 block">
-              Architectural Flagship Retreat
+              Exclusive Private Retreat
             </span>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              3 BHK Glass House Villa in <span className="italic text-accent-primary font-serif font-light">Lonavala</span>
-            </h1>
+            <h1 className="sr-only">Luxury Lonavala Villa with Pool</h1>
+            <TextGenerateEffect 
+              words="Luxury Lonavala Villa with Pool"
+              highlightWords={["Lonavala"]}
+              className="text-4xl md:text-6xl lg:text-7xl mb-6"
+            />
             <p className="text-text-primary/80 text-base md:text-lg leading-relaxed max-w-2xl font-light mb-8">
-              Experience modern architectural luxury at <strong className="font-semibold text-[#1B3564]">The Angle House</strong>. Floor-to-ceiling glass walls, private waterfall pool, master suite jacuzzi, fenced pet lawns, and dedicated in-house chef dining.
+              Discover <strong className="font-semibold text-[#1B3564]">The Angle House</strong>, widely rated as the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>. Featuring a private waterfall pool, master jacuzzi, pet-friendly green lawns, and customized chef service.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md">
@@ -173,10 +225,10 @@ export default async function LonavalaGlassHousePage() {
                 href="/villa/the-angle-house" 
                 className="bg-[#1B3564] hover:bg-[#0F2142] text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all text-center"
               >
-                View Full Villa Specs
+                View Villa Specifications
               </Link>
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20The%20Angle%20House%20Glass%20House%20in%20Lonavala" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20the%20best%20Lonavala%20villa%20with%20pool%20-%20The%20Angle%20House" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="bg-[#25D366] hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
@@ -187,31 +239,38 @@ export default async function LonavalaGlassHousePage() {
           </div>
         </section>
 
+        {/* Feature Image Marquee Section (Below Hero) */}
+        <VillaFeatureMarquee 
+          heading="The Angle House — Estate Highlights" 
+          subheading="Experience modern architectural luxury with private waterfall pool, jacuzzi & in-house chef service."
+          items={angleHouseFeatures} 
+        />
+
         {/* Feature Grid Spotlight */}
         <section className="py-16 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#1B3564] mb-3">
-              Why Stay at The Angle House?
+              Why We Are Voted the Best Villa in Lonavala
             </h2>
             <p className="text-text-primary/70 text-sm md:text-base font-light max-w-2xl mx-auto">
-              Crafted specifically for families, pet parents, and groups seeking modern architectural design and absolute privacy.
+              Designed for families, pet parents, and groups seeking a luxury villa in Lonavala with absolute privacy and top-tier hospitality.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 space-y-4 hover:shadow-md transition-shadow">
-              <Sparkles className="w-8 h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-lg">Angular Glass Facade</h3>
+              <Waves className="w-8 h-8 text-accent-primary" />
+              <h3 className="font-heading font-bold text-[#1B3564] text-lg">Private Waterfall Pool</h3>
               <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Double-height floor-to-ceiling glass windows allowing uninterrupted views of misty hillscapes from every room.
+                Enjoy your own Lonavala villa with pool complete with a soothing waterfall feature, sun lounge deck, and evening mood lights.
               </p>
             </div>
 
             <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 space-y-4 hover:shadow-md transition-shadow">
-              <Waves className="w-8 h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-lg">Private Waterfall Pool</h3>
+              <Sparkles className="w-8 h-8 text-accent-primary" />
+              <h3 className="font-heading font-bold text-[#1B3564] text-lg">Luxury Villa Architecture</h3>
               <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Temperature-filtered private pool complete with a soothing waterfall cascade feature and sun lounge deck.
+                Expansive glass panels and high ceilings make this a flagship luxury villa in Lonavala offering panoramic mountain views.
               </p>
             </div>
 
@@ -219,15 +278,15 @@ export default async function LonavalaGlassHousePage() {
               <Dog className="w-8 h-8 text-accent-primary" />
               <h3 className="font-heading font-bold text-[#1B3564] text-lg">Pet-Friendly Fenced Lawns</h3>
               <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Secure boundary-fenced green lawns so your furry family members can run freely and safely.
+                Fully secure boundary fencing ensures your pets and children can play freely in safety across lush green gardens.
               </p>
             </div>
 
             <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 space-y-4 hover:shadow-md transition-shadow">
               <Utensils className="w-8 h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-lg">In-House Chef Dining</h3>
+              <h3 className="font-heading font-bold text-[#1B3564] text-lg">In-House Chef Service</h3>
               <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Fresh multi-cuisine meals cooked on site, with dedicated pure-vegetarian and Jain culinary options.
+                Fresh gourmet meals cooked on-site by dedicated chefs, featuring authentic local dishes as well as vegetarian and Jain menus.
               </p>
             </div>
           </div>
@@ -239,7 +298,7 @@ export default async function LonavalaGlassHousePage() {
             <div className="relative h-72 rounded-3xl overflow-hidden shadow-md group">
               <Image 
                 src="/assets/villas/the-angle-house/gallery-11.webp" 
-                alt="Glass House exterior illuminated at twilight" 
+                alt="Exterior view of the best villa in Lonavala illuminated at dusk" 
                 fill 
                 className="object-cover group-hover:scale-105 transition-transform duration-500" 
               />
@@ -248,7 +307,7 @@ export default async function LonavalaGlassHousePage() {
             <div className="relative h-72 rounded-3xl overflow-hidden shadow-md group">
               <Image 
                 src="/assets/villas/the-angle-house/gallery-3.webp" 
-                alt="Private waterfall swimming pool deck" 
+                alt="Private waterfall swimming pool deck at Lonavala villa with pool" 
                 fill 
                 className="object-cover group-hover:scale-105 transition-transform duration-500" 
               />
@@ -257,7 +316,7 @@ export default async function LonavalaGlassHousePage() {
             <div className="relative h-72 rounded-3xl overflow-hidden shadow-md group">
               <Image 
                 src="/assets/villas/the-angle-house/gallery-19.webp" 
-                alt="Master suite jacuzzi bath setup" 
+                alt="Master suite jacuzzi bath setup at luxury villa in Lonavala" 
                 fill 
                 className="object-cover group-hover:scale-105 transition-transform duration-500" 
               />
@@ -265,77 +324,52 @@ export default async function LonavalaGlassHousePage() {
           </div>
         </section>
 
-        {/* Comprehensive Editorial Guide Section (~1500 words) */}
+        {/* Comprehensive Editorial Guide Section */}
         <section className="py-16 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <article className="prose prose-lg md:prose-xl max-w-none text-left bg-white/90 p-8 sm:p-12 rounded-3xl border border-[#DAA520]/20 shadow-sm prose-p:text-slate-800 prose-p:text-lg md:prose-p:text-xl prose-p:leading-relaxed md:prose-p:leading-loose prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-a:text-accent-primary">
-            <h2>Architectural Innovation at The Angle House</h2>
+            <h2>Why The Angle House is the Best Villa in Lonavala for Your Staycation</h2>
             <p>
-              When planning a lonavala villa staycation, travelers are often met with standard suburban home layouts that feel disconnected from the surrounding landscape. The Angle House breaks that convention. Designed as a modern glass-and-steel sanctuary in the Tungarli hills, this 3 BHK property offers an immersive experience where floor-to-ceiling glass panels blur the boundaries between indoors and out.
+              When planning a weekend getaway from Mumbai or Pune, travelers seek privacy, comfort, and premium amenities. The Angle House has established itself as the <strong>best villa in Lonavala</strong> for discerning guests who desire an upscale private estate experience. Set in the quiet heights of Tungarli, this property combines state-of-the-art architecture with serene natural surroundings.
             </p>
             <p>
-              Whether watching morning fog drift across the Sahyadri mountains from the double-height living lounge or swimming in your private waterfall pool, the architecture creates an immediate sense of spaciousness and tranquility.
-            </p>
-
-            <h2>Why Private Pool Estates Elevate Your Weekend Experience</h2>
-            <p>
-              Reserving a luxury villa Lonavala with private pool gives guests total control over their schedule and leisure. Unlike hotel pools with restricted operating hours and crowded decks, your private pool at The Angle House features temperature-filtered water, a soothing waterfall feature, and ambient pool lighting for evening dips under the stars.
-            </p>
-            <p>
-              Families traveling with children appreciate having a safe, clean swimming environment, while adults can relax on sun loungers on the adjacent teakwood deck without interruption.
+              Whether you are relaxing in the spacious living hall or enjoying a sunset swim, staying at a premier <strong>luxury villa in Lonavala</strong> ensures your family and friends experience uncompromised relaxation throughout your trip.
             </p>
 
-            <h2>Designing the Perfect Family Vacation</h2>
+            <h2>Unwind at a Premier Lonavala Villa with Pool and Waterfall</h2>
             <p>
-              Finding a suitable villa in Lonavala for family getaways means balancing comfort across different age groups. Grandparents require accessible ground-floor bedroom suites without steep staircases, parents seek quiet corners for reading and relaxation, and children need open, safe grassy lawns to play.
+              A major highlight of booking a <strong>Lonavala villa with pool</strong> is having absolute control over your leisure time. Unlike public resort pools with operating restrictions and crowded decks, your private waterfall pool at The Angle House is exclusively yours.
             </p>
             <p>
-              The Angle House accommodates up to 16 guests with ease. Its 3 spacious master BHK suites feature plush mattresses, ensuite bathrooms, and split air conditioning, while the sprawling living hall acts as a central gathering hub for board games, family storytelling, and group meals.
-            </p>
-
-            <h2>Milestone Celebrations & Intimate Event Planning</h2>
-            <p>
-              If you are organizing a special event, choosing a villa in Lonavala for birthday party gatherings provides a level of personalization that public venues cannot match. From milestone 30th or 50th birthdays to intimate family anniversaries, having exclusive access to a private estate lets host families design custom dining setups, curated playlist music, and themed lighting decorations.
-            </p>
-            <p>
-              Our on-site estate staff assist with setup, food service, and cleanup, allowing hosts to focus entirely on enjoying the celebration with their guests.
+              Featuring temperature-filtered water, clean sun loungers, and nighttime deck lighting, guests can enjoy refreshing morning laps or serene late-night dips surrounded by misty hills.
             </p>
 
-            <h2>Boutique Hospitality vs Conventional Resorts</h2>
+            <h2>Experience Modern Elegance at a Luxury Villa in Lonavala</h2>
             <p>
-              When evaluating luxury villa stays in lonavala, service quality makes all the difference. Traditional resorts rely on standardized buffets and automated desk services. Stay Willas pairs architectural distinction with warm, attentive hospitality.
-            </p>
-            <p>
-              From personalized check-ins to dedicated in-villa chefs who customize meals to your exact taste, your group experiences the warmth of home combined with the refinement of a luxury retreat.
+              As a signature <strong>luxury villa in Lonavala</strong>, The Angle House boasts 3 oversized master BHK suites with plush mattresses, split air conditioning, private balconies, and an luxurious master suite jacuzzi bath. Double-height floor-to-ceiling windows bring natural sunlight and panoramic views of the Sahyadri mountains straight into your living space.
             </p>
 
-            <h2>Gourmet Dining: Custom Meals & Dedicated Jain Kitchens</h2>
+            <h2>Family Getaways, Milestones & Celebrations</h2>
             <p>
-              Food is often the highlight of a memorable getaway. Our in-house culinary service eliminates the stress of searching for restaurants or ordering delivery. Dedicated estate chefs prepare hot, freshly cooked meals on site.
-            </p>
-            <p>
-              Enjoy authentic regional Maharashtrian specialties, crisp evening appetizers by the pool, or multi-course dinner spreads. For families with specific dietary preferences, our culinary staff provides dedicated pure-vegetarian and Jain meal preparation using separate cookware and fresh, locally sourced ingredients.
+              Whether hosting a milestone birthday party, family reunion, or intimate gathering, booking the <strong>best villa in Lonavala</strong> provides a personalized setting impossible to replicate at standard hotels. With total capacity for up to 16 guests, spacious indoor games, and secure pet-friendly green lawns, every member of your group stays entertained and relaxed.
             </p>
 
-            <h2>Micro-Climates, Travel Tips & Weather Guide</h2>
+            <h2>Gourmet Culinary Services: Chef-Curated Meals & Jain Kitchens</h2>
             <p>
-              Located in the quiet heights of Tungarli, The Angle House enjoys a cooler micro-climate than lower Lonavala town center. Fog frequently settles over the estate during monsoon mornings, while winter evenings bring crisp mountain air perfect for outdoor gatherings.
-            </p>
-            <p>
-              To avoid weekend traffic along the Mumbai-Pune Expressway, we recommend departing early Friday morning (around 7:30 AM). This ensures a smooth 2-hour drive from Mumbai or Pune, arriving at the villa just as lunch is served on the terrace.
+              Dining at your private <strong>Lonavala villa with pool</strong> is completely hassle-free. Dedicated in-house culinary staff prepare hot, customized meals using fresh local ingredients. Enjoy savory Maharashtrian specialties, poolside barbecues, and specialized pure-vegetarian and Jain menus prepared in separate clean cookware.
             </p>
 
             <h2>Frequently Asked Questions</h2>
             <div className="my-8 space-y-4 not-prose text-left">
               <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Is the villa suitable for pets?</h4>
+                <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Why is The Angle House considered the best villa in Lonavala?</h4>
                 <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                  Yes, The Angle House features fully fenced green lawns and safe open areas where pets can play safely.
+                  The Angle House combines modern architectural design, a private waterfall pool, master suite jacuzzi, 24/7 concierge, pet-friendly lawns, and dedicated in-house chef dining.
                 </p>
               </div>
               <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">What is the total guest capacity of The Angle House?</h4>
+                <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Does this Lonavala villa with pool feature private dining?</h4>
                 <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                  The villa comfortably accommodates 12 to 16 guests across 3 spacious BHK master suites and additional extra bedding setups.
+                  Yes, our on-site culinary team prepares fresh multi-cuisine, vegetarian, and Jain meals tailored to your taste.
                 </p>
               </div>
             </div>
@@ -347,10 +381,10 @@ export default async function LonavalaGlassHousePage() {
           <div className="bg-[#FAF8F5] border border-[#DAA520]/30 rounded-3xl p-8 md:p-12 shadow-lg flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="space-y-4 text-left max-w-xl">
               <span className="text-accent-secondary text-xs font-bold uppercase tracking-widest block">
-                Property Specifications
+                Property Overview
               </span>
               <h3 className="font-heading text-3xl font-bold text-[#1B3564]">
-                The Angle House — Key Details
+                The Angle House — Lonavala Villa with Pool
               </h3>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
@@ -402,7 +436,7 @@ export default async function LonavalaGlassHousePage() {
               </Link>
 
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20check%20availability%20for%20The%20Angle%20House%20in%20Lonavala" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20the%20best%20Lonavala%20villa%20with%20pool" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-all"
@@ -418,3 +452,4 @@ export default async function LonavalaGlassHousePage() {
     </main>
   );
 }
+

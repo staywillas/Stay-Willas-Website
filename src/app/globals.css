@@ -477,3 +477,43 @@ img {
     scroll-behavior: auto !important;
   }
 }
+
+/* GPU-accelerated Performance-Friendly Card Orbit Animation */
+@keyframes orbitCard {
+  0% {
+    transform: rotate(var(--orbit-start-angle, 0deg)) translate(430px, 0) rotate(calc(-1 * var(--orbit-start-angle, 0deg))) scale(0.95);
+  }
+  25% {
+    transform: rotate(calc(var(--orbit-start-angle, 0deg) + 90deg)) translate(430px, 0) rotate(calc(-1 * (var(--orbit-start-angle, 0deg) + 90deg))) scale(1.05);
+  }
+  50% {
+    transform: rotate(calc(var(--orbit-start-angle, 0deg) + 180deg)) translate(430px, 0) rotate(calc(-1 * (var(--orbit-start-angle, 0deg) + 180deg))) scale(0.95);
+  }
+  75% {
+    transform: rotate(calc(var(--orbit-start-angle, 0deg) + 270deg)) translate(430px, 0) rotate(calc(-1 * (var(--orbit-start-angle, 0deg) + 270deg))) scale(0.85);
+  }
+  100% {
+    transform: rotate(calc(var(--orbit-start-angle, 0deg) + 360deg)) translate(430px, 0) rotate(calc(-1 * (var(--orbit-start-angle, 0deg) + 360deg))) scale(0.95);
+  }
+}
+
+.animate-orbit-card {
+  animation: orbitCard 38s linear infinite;
+  will-change: transform;
+}
+
+/* Infinite Feature Marquee Animation (GPU Composited) */
+@keyframes marquee {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}

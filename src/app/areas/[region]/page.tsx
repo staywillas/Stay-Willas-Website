@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -7,6 +8,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import VillaCard from "@/components/home/villa-card";
 import { MapPin, ChevronRight, ArrowLeft, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 interface AreaDetails {
   name: string;
@@ -44,6 +46,13 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
     desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet private pool getaways.",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
     isLaunchingSoon: false
+  },
+  pawna: {
+    name: "Pawna Lake",
+    tagline: "The Lakeside Oasis",
+    desc: "Tranquil waters, scenic mountain views, and serene private pool villas near Pawna Lake.",
+    image: "/assets/villas/the-angle-house/gallery-4.webp",
+    isLaunchingSoon: true
   },
   goa: {
     name: "Goa",
@@ -112,6 +121,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "corporate offsite villa Khopoli",
       "large group villa khopoli"
     ];
+  } else if (regionKey === "pawna") {
+    titleText = "Pawna Lake Villas & Private Pool Stays | Stay Willas";
+    descText = "Book private pool villas near Pawna Lake Lonavala with serene lake views and in-house chef service.";
+    keywordList = ["pawna lake villas", "villas near pawna lake lonavala"];
+    indexRobots = true;
   } else if (regionKey === "goa") {
     titleText = "Goa Private Pool Villa & Beach Rentals | Stay Willas";
     descText = "Book a Goa private pool villa with beach rentals and fully serviced hospitality. Check availability and book online.";
@@ -162,21 +176,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
   const area = AREA_DATA[regionKey];
 
   if (!area) {
-    return (
-      <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between">
-        <div>
-          <Navbar />
-          <div className="pt-48 pb-24 text-center">
-            <h1 className="text-3xl font-heading mb-4">Luxury Villa Location Not Found</h1>
-            <p className="text-text-primary/60 mb-6">The location you are looking for does not exist.</p>
-            <Link href="/areas" className="text-[#1B3564] hover:text-accent-primary font-bold uppercase tracking-wider text-xs inline-flex items-center gap-2">
-              <ArrowLeft size={16} /> Back to all areas
-            </Link>
-          </div>
-        </div>
-        <Footer />
-      </main>
-    );
+    notFound();
   }
 
   // Fetch villas belonging to this region
@@ -201,35 +201,103 @@ export default async function AreaRegionPage({ params }: PageProps) {
     bathrooms: villa.bathrooms,
   }));
 
+  // Region FAQs map
+  const regionalFaqsMap: Record<string, { question: string; answer: string }[]> = {
+    lonavala: [
+      {
+        question: "What is the best time to book a private pool villa in Lonavala?",
+        answer: "Monsoon season (June to September) offers lush green views and mountain waterfalls, while winter (October to February) brings pleasant, cool weather ideal for outdoor pool gatherings."
+      },
+      {
+        question: "Are Stay Willas properties in Lonavala pet-friendly?",
+        answer: "Yes, signature properties like The Angle House feature fully fenced green lawns so your pets can run and play safely."
+      },
+      {
+        question: "What dining options are available at your Lonavala villas?",
+        answer: "Dedicated on-site chefs prepare fresh, customized multi-cuisine meals, poolside barbecues, and pure-vegetarian & Jain menus prepared in separate cookware."
+      }
+    ],
+    khopoli: [
+      {
+        question: "How far is Khopoli from Mumbai and Pune?",
+        answer: "Khopoli is located approximately 75 km from Mumbai (around a 1.5-hour drive via the Mumbai-Pune Expressway) and 80 km from Pune."
+      },
+      {
+        question: "Is Canopy Crest in Khopoli suitable for large group staycations?",
+        answer: "Yes, Canopy Crest comfortably accommodates 20 to 25+ guests across 4 spacious master BHK suites, featuring a massive 22x12 ft private pool and sprawling lawns."
+      }
+    ],
+    karjat: [
+      {
+        question: "What amenities do Karjat private pool villas include?",
+        answer: "Our Karjat staycation villas feature private swimming pools, riverfront decks, lush gardens, air conditioning, and full in-house chef dining options."
+      }
+    ]
+  };
+
+  const currentFaqs = regionalFaqsMap[regionKey] || [
+    {
+      question: `What amenities are included in Stay Willas ${area.name} properties?`,
+      answer: `Our ${area.name} villas feature private swimming pools, air-conditioned master bedrooms, high-speed Wi-Fi, and optional in-house chef culinary services.`
+    }
+  ];
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between">
+      {/* Structured Data: ItemList, BreadcrumbList & FAQPage */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              {
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "ItemList",
+              "name": `Luxury Villas in ${area.name} with Private Pool | Stay Willas`,
+              "numberOfItems": villas.length,
+              "itemListElement": villas.map((v, idx) => ({
                 "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://www.staywillas.com"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Areas",
-                "item": "https://www.staywillas.com/areas"
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": area.name,
-                "item": `https://www.staywillas.com/areas/${regionKey}`
-              }
-            ]
-          })
+                "position": idx + 1,
+                "name": v.name,
+                "url": `https://www.staywillas.com/villa/${v.id}`
+              }))
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.staywillas.com"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Areas",
+                  "item": "https://www.staywillas.com/areas"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": area.name,
+                  "item": `https://www.staywillas.com/areas/${regionKey}`
+                }
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": currentFaqs.map(f => ({
+                "@type": "Question",
+                "name": f.question,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": f.answer
+                }
+              }))
+            }
+          ])
         }}
       />
       <div>
@@ -261,9 +329,12 @@ export default async function AreaRegionPage({ params }: PageProps) {
             <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-3 block">
               {area.tagline}
             </span>
-            <h1 className="text-4xl md:text-6xl font-heading leading-none tracking-tight mb-4">
-              Luxury Villas in <span className="italic text-accent-primary font-serif font-light">{area.name}</span> with Private Pool
-            </h1>
+            <h1 className="sr-only">Luxury Villas in {area.name} with Private Pool</h1>
+            <TextGenerateEffect 
+              words={`Luxury Villas in ${area.name} with Private Pool`}
+              highlightWords={[area.name]}
+              className="text-4xl md:text-6xl mb-4"
+            />
             <p className="text-text-primary/75 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               {area.desc}
             </p>
@@ -377,6 +448,21 @@ export default async function AreaRegionPage({ params }: PageProps) {
                         bathrooms={villa.bathrooms}
                       />
                     ))}
+                  </div>
+
+                  {/* Frequently Asked Questions */}
+                  <div className="bg-[#FAF8F5] border border-[#DAA520]/20 rounded-3xl p-6 sm:p-8 mt-12 space-y-4">
+                    <h3 className="font-heading text-2xl font-bold text-[#1B3564] mb-4">
+                      Frequently Asked Questions — {area.name} Staycations
+                    </h3>
+                    <div className="space-y-4">
+                      {currentFaqs.map((faq, idx) => (
+                        <div key={idx} className="bg-white p-5 rounded-2xl border border-[#DAA520]/15 space-y-2">
+                          <h4 className="font-heading font-bold text-[#1B3564] text-base">{faq.question}</h4>
+                          <p className="text-text-primary/70 text-xs font-light leading-relaxed">{faq.answer}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}

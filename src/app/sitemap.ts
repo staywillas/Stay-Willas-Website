@@ -97,22 +97,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    {
-      url: `${BASE_URL}/llms.txt`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
-      url: `${BASE_URL}/llms-full.txt`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
   ];
 
   // Dynamic area routes
-  const regions = ["lonavala", "khopoli", "karjat", "alibaug", "goa", "igatpuri"];
+  const regions = ["lonavala", "khopoli", "karjat", "alibaug", "goa", "igatpuri", "pawna"];
   const areaRoutes: MetadataRoute.Sitemap = regions.map((region) => ({
     url: `${BASE_URL}/areas/${region}`,
     lastModified: new Date(),

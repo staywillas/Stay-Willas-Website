@@ -93,7 +93,7 @@ export default function RootLayout({
         <Script
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="tL823LIpA1b/wcL/aWHL1Q"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </head>
       <body
