@@ -20,7 +20,7 @@ const Hero = () => {
       <div className="absolute inset-0 z-0 select-none pointer-events-none">
         <Image
           src="/assets/villas/the-angle-house/gallery-11.webp"
-          alt="The Angle House Lonavala - premium private pool villas near Mumbai"
+          alt="Luxury villas near Mumbai - The Angle House private pool villas in Lonavala"
           fill
           priority
           sizes="100vw"
@@ -60,7 +60,7 @@ const Hero = () => {
           transition={{ delay: 0.5, duration: 0.8 }}
           className="text-sm md:text-base text-slate-200/90 font-medium max-w-md mb-8 leading-relaxed"
         >
-          Lonavala&apos;s premier private pool estate. Experience a bold statement of slow luxury, where dramatic geometry meets raw forest serenity.
+          Discover premier <strong>luxury villas near Mumbai</strong>. Experience signature <strong>private pool villas in Lonavala</strong> and exclusive <strong>villas near mumbai</strong> for slow luxury staycations.
         </motion.p>
 
         {/* Highlights Info */}
