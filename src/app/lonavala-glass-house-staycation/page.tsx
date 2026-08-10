@@ -7,22 +7,17 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { 
   ChevronRight, 
-  MapPin, 
-  ShieldCheck, 
-  CheckCircle2, 
   PhoneCall, 
-  Calendar, 
-  Dog, 
-  Utensils, 
   Sparkles, 
   Waves, 
+  Dog, 
+  Utensils, 
   Users, 
   BedDouble, 
   Bath
 } from "lucide-react";
 
 import VillaFeatureMarquee, { FeatureMarqueeItem } from "@/components/villas/villa-feature-marquee";
-import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 const angleHouseFeatures: FeatureMarqueeItem[] = [
   {
@@ -70,22 +65,19 @@ const angleHouseFeatures: FeatureMarqueeItem[] = [
 ];
 
 export const metadata: Metadata = {
-  title: "Lonavala Villa with Pool | Best Villa in Lonavala",
-  description: "Book the best villa in Lonavala. Enjoy a luxury Lonavala villa with pool featuring private chef service, jacuzzi & mountain views for your staycation.",
+  title: "Villas in Lonavala with Private Pool | Best Villa in Lonavala",
+  description: "Book premier villas in lonavala with private pool at The Angle House. Voted the best villa in lonavala & top villa for rent in lonavala with chef & jacuzzi.",
   keywords: [
-    "lonavala villa with pool",
+    "villas in lonavala with private pool",
     "best villa in lonavala",
-    "luxury villa in lonavala",
-    "private pool villa in lonavala",
-    "staycation villa in lonavala with pool",
-    "top villa in lonavala"
+    "villa for rent in lonavala"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/lonavala-glass-house-staycation",
   },
   openGraph: {
-    title: "Lonavala Villa with Pool | Best Villa in Lonavala",
-    description: "Book the best villa in Lonavala. Enjoy a luxury Lonavala villa with pool featuring private chef service, jacuzzi & mountain views for your staycation.",
+    title: "Villas in Lonavala with Private Pool | Best Villa in Lonavala",
+    description: "Book premier villas in lonavala with private pool at The Angle House. Voted the best villa in lonavala & top villa for rent in lonavala with chef & jacuzzi.",
     url: "https://www.staywillas.com/lonavala-glass-house-staycation",
     siteName: "Stay Willas",
     locale: "en_IN",
@@ -94,15 +86,15 @@ export const metadata: Metadata = {
         url: "https://www.staywillas.com/assets/villas/the-angle-house/gallery-11.webp",
         width: 1200,
         height: 630,
-        alt: "The Angle House - Lonavala Villa with Pool",
+        alt: "The Angle House - Villas in Lonavala with Private Pool",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lonavala Villa with Pool | Best Villa in Lonavala",
-    description: "Book the best villa in Lonavala. Enjoy a luxury Lonavala villa with pool featuring private chef service, jacuzzi & mountain views for your staycation.",
+    title: "Villas in Lonavala with Private Pool | Best Villa in Lonavala",
+    description: "Book premier villas in lonavala with private pool at The Angle House. Voted the best villa in lonavala & top villa for rent in lonavala with chef & jacuzzi.",
     images: ["https://www.staywillas.com/assets/villas/the-angle-house/gallery-11.webp"],
   },
 };
@@ -123,8 +115,8 @@ export default async function LonavalaGlassHousePage() {
               {
                 "@context": "https://schema.org",
                 "@type": "VacationRental",
-                "name": "The Angle House — Premier Lonavala Villa with Pool",
-                "description": "Book the best villa in Lonavala featuring a private waterfall pool, luxury villa in Lonavala amenities, master suite jacuzzi, pet-friendly lawns, and chef service.",
+                "name": "The Angle House — Premier Villas in Lonavala with Private Pool",
+                "description": "Book the best villa in Lonavala featuring a waterfall pool, master suite jacuzzi, pet-friendly lawns, and chef service. An exclusive villa for rent in Lonavala for staycations.",
                 "url": "https://www.staywillas.com/lonavala-glass-house-staycation",
                 "address": {
                   "@type": "PostalAddress",
@@ -152,7 +144,7 @@ export default async function LonavalaGlassHousePage() {
                   {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Lonavala Villa with Pool",
+                    "name": "Villas in Lonavala with Private Pool",
                     "item": "https://www.staywillas.com/lonavala-glass-house-staycation"
                   }
                 ]
@@ -163,18 +155,26 @@ export default async function LonavalaGlassHousePage() {
                 "mainEntity": [
                   {
                     "@type": "Question",
-                    "name": "Why is The Angle House considered the best villa in Lonavala?",
+                    "name": "What makes The Angle House one of the top villas in Lonavala with private pool?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "The Angle House combines modern luxury villa in Lonavala architecture, a private waterfall pool, master suite jacuzzi, 24/7 concierge, pet-friendly lawns, and dedicated in-house chef dining."
+                      "text": "The Angle House stands out among villas in Lonavala with private pool due to its signature glass architecture, waterfall pool, master suite jacuzzi, 24/7 concierge, and in-house chef service."
                     }
                   },
                   {
                     "@type": "Question",
-                    "name": "Does this Lonavala villa with pool feature private dining?",
+                    "name": "Why is The Angle House considered the best villa in Lonavala for families?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Yes, our on-site culinary team prepares fresh multi-cuisine, vegetarian, and Jain meals tailored to your taste."
+                      "text": "It is widely recognized as the best villa in Lonavala because it offers full privacy, secure pet-friendly green lawns, spacious 3 BHK suites, and tailored meal options."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How can I book this villa for rent in Lonavala?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "You can book this villa for rent in Lonavala directly online or by contacting our Stay Willas concierge on WhatsApp for instant dates and tariff confirmation."
                     }
                   }
                 ]
@@ -190,7 +190,7 @@ export default async function LonavalaGlassHousePage() {
           <div className="absolute inset-0 -z-10">
             <Image 
               src="/assets/villas/the-angle-house/gallery-11.webp" 
-              alt="The Angle House luxury Lonavala villa with pool illuminated at night"
+              alt="The Angle House - Luxury villas in Lonavala with private pool"
               fill
               priority
               className="object-cover opacity-25 filter blur-[1px]"
@@ -204,20 +204,19 @@ export default async function LonavalaGlassHousePage() {
               <ChevronRight size={10} />
               <Link href="/areas/lonavala" className="hover:text-accent-primary transition-colors">Lonavala</Link>
               <ChevronRight size={10} />
-              <span className="text-text-primary font-bold">Lonavala Villa with Pool</span>
+              <span className="text-text-primary font-bold">Villas in Lonavala with Private Pool</span>
             </div>
 
             <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-3 block">
               Exclusive Private Retreat
             </span>
-            <h1 className="sr-only">Luxury Lonavala Villa with Pool</h1>
-            <TextGenerateEffect 
-              words="Luxury Lonavala Villa with Pool"
-              highlightWords={["Lonavala"]}
-              className="text-4xl md:text-6xl lg:text-7xl mb-6"
-            />
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-[#1B3564] mb-6">
+              Villas in Lonavala with Private Pool
+            </h1>
+
             <p className="text-text-primary/80 text-base md:text-lg leading-relaxed max-w-2xl font-light mb-8">
-              Discover <strong className="font-semibold text-[#1B3564]">The Angle House</strong>, widely rated as the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>. Featuring a private waterfall pool, master jacuzzi, pet-friendly green lawns, and customized chef service.
+              Discover <strong className="font-semibold text-[#1B3564]">The Angle House</strong>, widely rated as the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>. If you are searching for a premium <strong className="font-semibold text-[#1B3564]">villa for rent in Lonavala</strong>, enjoy our private waterfall pool, master jacuzzi, pet-friendly lawns, and in-house chef service.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md">
@@ -228,7 +227,7 @@ export default async function LonavalaGlassHousePage() {
                 View Villa Specifications
               </Link>
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20the%20best%20Lonavala%20villa%20with%20pool%20-%20The%20Angle%20House" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20the%20best%20villa%20in%20Lonavala%20-%20The%20Angle%20House" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="bg-[#25D366] hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
@@ -242,204 +241,242 @@ export default async function LonavalaGlassHousePage() {
         {/* Feature Image Marquee Section (Below Hero) */}
         <VillaFeatureMarquee 
           heading="The Angle House — Estate Highlights" 
-          subheading="Experience modern architectural luxury with private waterfall pool, jacuzzi & in-house chef service."
+          subheading="Experience modern architectural luxury among top villas in Lonavala with private pool, jacuzzi & in-house chef service."
           items={angleHouseFeatures} 
         />
 
         {/* Feature Grid Spotlight */}
-        <section className="py-16 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#1B3564] mb-3">
+        <section className="py-12 sm:py-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-[#1B3564] mb-3">
               Why We Are Voted the Best Villa in Lonavala
             </h2>
-            <p className="text-text-primary/70 text-sm md:text-base font-light max-w-2xl mx-auto">
-              Designed for families, pet parents, and groups seeking a luxury villa in Lonavala with absolute privacy and top-tier hospitality.
+            <p className="text-text-primary/70 text-xs sm:text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
+              Designed for families, pet parents, and groups looking for an exclusive villa for rent in Lonavala with total privacy and signature hospitality.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 space-y-4 hover:shadow-md transition-shadow">
-              <Waves className="w-8 h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-lg">Private Waterfall Pool</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
+              <Waves className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
+              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Private Waterfall Pool</h3>
               <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Enjoy your own Lonavala villa with pool complete with a soothing waterfall feature, sun lounge deck, and evening mood lights.
+                Enjoy your own sanctuary among villas in Lonavala with private pool, complete with a cascading waterfall, sun loungers, and ambient lights.
               </p>
             </div>
 
-            <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 space-y-4 hover:shadow-md transition-shadow">
-              <Sparkles className="w-8 h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-lg">Luxury Villa Architecture</h3>
+            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
+              <Sparkles className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
+              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Architectural Masterpiece</h3>
               <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Expansive glass panels and high ceilings make this a flagship luxury villa in Lonavala offering panoramic mountain views.
+                Expansive double-height glass panels make this the best villa in Lonavala for capturing panoramic mountain and valley views.
               </p>
             </div>
 
-            <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 space-y-4 hover:shadow-md transition-shadow">
-              <Dog className="w-8 h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-lg">Pet-Friendly Fenced Lawns</h3>
+            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
+              <Dog className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
+              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Pet-Friendly Fenced Lawns</h3>
               <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Fully secure boundary fencing ensures your pets and children can play freely in safety across lush green gardens.
+                Fully secure boundary fencing ensures your pets and children can play freely across lush manicured gardens.
               </p>
             </div>
 
-            <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 space-y-4 hover:shadow-md transition-shadow">
-              <Utensils className="w-8 h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-lg">In-House Chef Service</h3>
+            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
+              <Utensils className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
+              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">In-House Chef Service</h3>
               <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Fresh gourmet meals cooked on-site by dedicated chefs, featuring authentic local dishes as well as vegetarian and Jain menus.
+                Fresh gourmet meals prepared on-site when you choose this villa for rent in Lonavala, featuring local and Jain specialties.
               </p>
             </div>
           </div>
         </section>
 
         {/* Gallery Preview Grid */}
-        <section className="py-12 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="relative h-72 rounded-3xl overflow-hidden shadow-md group">
+        <section className="py-8 sm:py-12 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
               <Image 
                 src="/assets/villas/the-angle-house/gallery-11.webp" 
                 alt="Exterior view of the best villa in Lonavala illuminated at dusk" 
                 fill 
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-500" 
               />
             </div>
 
-            <div className="relative h-72 rounded-3xl overflow-hidden shadow-md group">
+            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
               <Image 
                 src="/assets/villas/the-angle-house/gallery-3.webp" 
-                alt="Private waterfall swimming pool deck at Lonavala villa with pool" 
+                alt="Private waterfall swimming pool deck at top villas in Lonavala with private pool" 
                 fill 
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-500" 
               />
             </div>
 
-            <div className="relative h-72 rounded-3xl overflow-hidden shadow-md group">
+            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
               <Image 
                 src="/assets/villas/the-angle-house/gallery-19.webp" 
-                alt="Master suite jacuzzi bath setup at luxury villa in Lonavala" 
+                alt="Master suite jacuzzi bath setup at luxury villa for rent in Lonavala" 
                 fill 
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-500" 
               />
             </div>
           </div>
+
+          {/* Action Callout Button under Gallery */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link 
+              href="/villa/the-angle-house" 
+              className="w-full sm:w-auto bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white text-xs sm:text-sm font-bold uppercase tracking-wider py-3.5 sm:py-4 px-8 rounded-2xl shadow-lg transition-all text-center"
+            >
+              View Villa Specifications
+            </Link>
+            <a 
+              href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20the%20best%20villa%20in%20Lonavala%20-%20The%20Angle%20House" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-full sm:w-auto bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-bold uppercase tracking-wider py-3.5 sm:py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+            >
+              <PhoneCall size={16} /> WhatsApp Concierge
+            </a>
+          </div>
         </section>
 
         {/* Comprehensive Editorial Guide Section */}
-        <section className="py-16 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <article className="prose prose-lg md:prose-xl max-w-none text-left bg-white/90 p-8 sm:p-12 rounded-3xl border border-[#DAA520]/20 shadow-sm prose-p:text-slate-800 prose-p:text-lg md:prose-p:text-xl prose-p:leading-relaxed md:prose-p:leading-loose prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-a:text-accent-primary">
+        <section className="py-12 sm:py-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+          <article className="prose prose-base sm:prose-lg md:prose-xl max-w-none text-left bg-white/90 p-5 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 shadow-sm prose-p:text-slate-800 prose-p:text-base sm:prose-p:text-lg md:prose-p:text-xl prose-p:leading-relaxed md:prose-p:leading-loose prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-2xl sm:prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-4 sm:prose-h2:mb-6 prose-h2:mt-8 sm:prose-h2:mt-12 prose-h3:text-[#1B3564] prose-h3:font-heading prose-h3:text-xl sm:prose-h3:text-2xl prose-h3:mb-3 sm:prose-h3:mb-4 prose-h3:mt-6 sm:prose-h3:mt-8 prose-a:text-accent-primary">
+            
+            <h2>Discover Premier Villas in Lonavala with Private Pool</h2>
+            <p>
+              When planning a weekend getaway from Mumbai or Pune, travelers seek absolute privacy, comfort, and top-tier amenities. Out of all the available <strong>villas in lonavala with private pool</strong>, <strong className="font-semibold text-[#1B3564]">The Angle House</strong> stands out for its modern design, lush surroundings, and exclusive features. Set in the peaceful heights of Tungarli, this estate provides an unmatched vacation environment.
+            </p>
+            <p>
+              Having access to a secluded waterfall pool lets you swim and relax at any time of day, making your stay genuinely refreshing and private.
+            </p>
+
             <h2>Why The Angle House is the Best Villa in Lonavala for Your Staycation</h2>
             <p>
-              When planning a weekend getaway from Mumbai or Pune, travelers seek privacy, comfort, and premium amenities. The Angle House has established itself as the <strong>best villa in Lonavala</strong> for discerning guests who desire an upscale private estate experience. Set in the quiet heights of Tungarli, this property combines state-of-the-art architecture with serene natural surroundings.
+              Consistently recognized as the <strong>best villa in lonavala</strong>, The Angle House boasts 3 oversized master BHK suites with plush bedding, split air conditioning, private balconies, and an indulgent master suite jacuzzi bath. Double-height floor-to-ceiling glass facades allow natural sunlight to flood the living hall while offering sweeping views of the Sahyadri mountains.
             </p>
             <p>
-              Whether you are relaxing in the spacious living hall or enjoying a sunset swim, staying at a premier <strong>luxury villa in Lonavala</strong> ensures your family and friends experience uncompromised relaxation throughout your trip.
-            </p>
-
-            <h2>Unwind at a Premier Lonavala Villa with Pool and Waterfall</h2>
-            <p>
-              A major highlight of booking a <strong>Lonavala villa with pool</strong> is having absolute control over your leisure time. Unlike public resort pools with operating restrictions and crowded decks, your private waterfall pool at The Angle House is exclusively yours.
-            </p>
-            <p>
-              Featuring temperature-filtered water, clean sun loungers, and nighttime deck lighting, guests can enjoy refreshing morning laps or serene late-night dips surrounded by misty hills.
+              Whether you are hosting a milestone family reunion, a corporate retreat, or a quiet celebration, choosing the <strong>best villa in lonavala</strong> guarantees personalized hospitality tailored to your preferences.
             </p>
 
-            <h2>Experience Modern Elegance at a Luxury Villa in Lonavala</h2>
+            <h2>Choosing the Perfect Villa for Rent in Lonavala</h2>
             <p>
-              As a signature <strong>luxury villa in Lonavala</strong>, The Angle House boasts 3 oversized master BHK suites with plush mattresses, split air conditioning, private balconies, and an luxurious master suite jacuzzi bath. Double-height floor-to-ceiling windows bring natural sunlight and panoramic views of the Sahyadri mountains straight into your living space.
+              If you are searching for a premier <strong>villa for rent in lonavala</strong> that accommodates groups up to 16 guests, The Angle House is meticulously equipped to deliver total convenience:
             </p>
 
-            <h2>Family Getaways, Milestones & Celebrations</h2>
+            <h3>Exclusive Private Amenities</h3>
             <p>
-              Whether hosting a milestone birthday party, family reunion, or intimate gathering, booking the <strong>best villa in Lonavala</strong> provides a personalized setting impossible to replicate at standard hotels. With total capacity for up to 16 guests, spacious indoor games, and secure pet-friendly green lawns, every member of your group stays entertained and relaxed.
+              Unlike crowded resort properties, renting this <strong>villa for rent in lonavala</strong> grants your group sole access to manicured pet-friendly lawns, indoor lounge games, and a private waterfall pool.
             </p>
 
-            <h2>Gourmet Culinary Services: Chef-Curated Meals & Jain Kitchens</h2>
+            <h3>Gourmet Culinary Services & Customized Dining</h3>
             <p>
-              Dining at your private <strong>Lonavala villa with pool</strong> is completely hassle-free. Dedicated in-house culinary staff prepare hot, customized meals using fresh local ingredients. Enjoy savory Maharashtrian specialties, poolside barbecues, and specialized pure-vegetarian and Jain menus prepared in separate clean cookware.
+              Dining at our <strong>villas in lonavala with private pool</strong> is effortless. Dedicated in-house culinary staff prepare fresh, hot meals right on site. Enjoy local Maharashtrian delicacies, poolside barbecues, and specialized pure-vegetarian or Jain options cooked in separate dedicated cookware.
             </p>
 
             <h2>Frequently Asked Questions</h2>
-            <div className="my-8 space-y-4 not-prose text-left">
-              <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Why is The Angle House considered the best villa in Lonavala?</h4>
-                <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                  The Angle House combines modern architectural design, a private waterfall pool, master suite jacuzzi, 24/7 concierge, pet-friendly lawns, and dedicated in-house chef dining.
+            <div className="my-6 sm:my-8 space-y-3 sm:space-y-4 not-prose text-left">
+              <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#DAA520]/15">
+                <h3 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">What makes The Angle House one of the top villas in Lonavala with private pool?</h3>
+                <p className="text-text-primary/70 text-xs sm:text-sm font-light leading-relaxed">
+                  The Angle House stands out among villas in Lonavala with private pool due to its signature glass architecture, waterfall pool, master suite jacuzzi, 24/7 concierge, and in-house chef service.
                 </p>
               </div>
-              <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Does this Lonavala villa with pool feature private dining?</h4>
+              <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#DAA520]/15">
+                <h3 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">Why is The Angle House considered the best villa in Lonavala for families?</h3>
                 <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                  Yes, our on-site culinary team prepares fresh multi-cuisine, vegetarian, and Jain meals tailored to your taste.
+                  It is widely recognized as the best villa in Lonavala because it offers full privacy, secure pet-friendly green lawns, spacious 3 BHK suites, and tailored meal options.
                 </p>
               </div>
+              <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#DAA520]/15">
+                <h3 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">How can I book this villa for rent in Lonavala?</h3>
+                <p className="text-text-primary/70 text-xs sm:text-sm font-light leading-relaxed">
+                  You can book this villa for rent in Lonavala directly online or by contacting our Stay Willas concierge on WhatsApp for instant dates and tariff confirmation.
+                </p>
+              </div>
+            </div>
+
+            {/* Additional CTA inside article */}
+            <div className="mt-8 not-prose text-center pt-4 border-t border-slate-100">
+              <Link 
+                href="/villa/the-angle-house" 
+                className="inline-block bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white text-xs sm:text-sm font-bold uppercase tracking-wider py-3.5 px-8 rounded-2xl shadow transition-all"
+              >
+                View Villa Specifications
+              </Link>
             </div>
           </article>
         </section>
 
         {/* Specs Bar & Direct Booking Section */}
-        <section className="py-16 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="bg-[#FAF8F5] border border-[#DAA520]/30 rounded-3xl p-8 md:p-12 shadow-lg flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div className="space-y-4 text-left max-w-xl">
+        <section className="py-12 sm:py-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
+          <div className="bg-[#FAF8F5] border border-[#DAA520]/30 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 shadow-lg flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
+            <div className="space-y-4 text-left max-w-xl w-full">
               <span className="text-accent-secondary text-xs font-bold uppercase tracking-widest block">
                 Property Overview
               </span>
-              <h3 className="font-heading text-3xl font-bold text-[#1B3564]">
-                The Angle House — Lonavala Villa with Pool
-              </h3>
+              <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#1B3564]">
+                The Angle House — Villas in Lonavala with Private Pool
+              </h2>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-                <div className="bg-white p-4 rounded-2xl border border-[#DAA520]/15 flex items-center gap-3">
-                  <Users className="text-accent-primary w-5 h-5 flex-shrink-0" />
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-2">
+                <div className="bg-white p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-[#DAA520]/15 flex items-center gap-2.5 sm:gap-3">
+                  <Users className="text-accent-primary w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Capacity</span>
+                    <span className="text-[9px] sm:text-[10px] text-slate-400 block uppercase">Capacity</span>
                     <span className="font-bold text-xs text-[#1B3564]">12-16 Guests</span>
                   </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-2xl border border-[#DAA520]/15 flex items-center gap-3">
-                  <BedDouble className="text-accent-primary w-5 h-5 flex-shrink-0" />
+                <div className="bg-white p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-[#DAA520]/15 flex items-center gap-2.5 sm:gap-3">
+                  <BedDouble className="text-accent-primary w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Bedrooms</span>
+                    <span className="text-[9px] sm:text-[10px] text-slate-400 block uppercase">Bedrooms</span>
                     <span className="font-bold text-xs text-[#1B3564]">3 BHK Suites</span>
                   </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-2xl border border-[#DAA520]/15 flex items-center gap-3">
-                  <Bath className="text-accent-primary w-5 h-5 flex-shrink-0" />
+                <div className="bg-white p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-[#DAA520]/15 flex items-center gap-2.5 sm:gap-3">
+                  <Bath className="text-accent-primary w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Bathrooms</span>
+                    <span className="text-[9px] sm:text-[10px] text-slate-400 block uppercase">Bathrooms</span>
                     <span className="font-bold text-xs text-[#1B3564]">3 Modern Baths</span>
                   </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-2xl border border-[#DAA520]/15 flex items-center gap-3">
-                  <Waves className="text-accent-primary w-5 h-5 flex-shrink-0" />
+                <div className="bg-white p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-[#DAA520]/15 flex items-center gap-2.5 sm:gap-3">
+                  <Waves className="text-accent-primary w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                   <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Pool</span>
+                    <span className="text-[9px] sm:text-[10px] text-slate-400 block uppercase">Pool</span>
                     <span className="font-bold text-xs text-[#1B3564]">Private Waterfall</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="w-full lg:w-80 bg-white p-6 rounded-3xl border border-slate-200 shadow-md space-y-4 text-center">
+            <div className="w-full lg:w-80 bg-white p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-md space-y-3.5 sm:space-y-4 text-center">
               <div className="border-b border-slate-100 pb-3">
                 <span className="text-xs text-slate-500 uppercase tracking-wider block">Starting Rate</span>
-                <span className="text-2xl font-bold text-[#1B3564]">₹13,000 <span className="text-xs font-normal text-slate-500">/ night</span></span>
+                <span className="text-xl sm:text-2xl font-bold text-[#1B3564]">₹13,000 <span className="text-xs font-normal text-slate-500">/ night</span></span>
               </div>
 
               <Link 
                 href="/villa/the-angle-house" 
-                className="block w-full bg-[#1B3564] hover:bg-[#0F2142] text-white font-bold text-xs uppercase tracking-wider text-center py-3.5 rounded-xl shadow transition-all"
+                className="block w-full bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center py-3.5 rounded-xl shadow transition-all"
               >
-                Reserve Property Online
+                View Villa Specifications
               </Link>
 
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20the%20best%20Lonavala%20villa%20with%20pool" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20the%20best%20villa%20in%20Lonavala" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-all"
+                className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-all"
               >
                 <PhoneCall size={14} /> Quick WhatsApp Quote
               </a>
@@ -452,4 +489,3 @@ export default async function LonavalaGlassHousePage() {
     </main>
   );
 }
-
