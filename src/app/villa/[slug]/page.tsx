@@ -379,14 +379,17 @@ export default async function VillaDetailPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "LodgingBusiness",
+            "@type": "VacationRental",
             "name": villaData.name,
             "description": villaData.description,
             "image": villaData.images,
             "url": `https://www.staywillas.com/villa/${villaData.slug}`,
+            "priceRange": `₹${villaData.price.toLocaleString("en-IN")}`,
             "address": {
               "@type": "PostalAddress",
-              "addressLocality": villaData.location
+              "addressLocality": villaData.location,
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
             },
             "numberOfRooms": villaData.bedrooms,
             "occupancy": {
@@ -398,11 +401,17 @@ export default async function VillaDetailPage({ params }: PageProps) {
               "name": a.name,
               "value": true
             })),
-            "aggregateRating": villaData.reviews > 0 ? {
-              "@type": "AggregateRating",
-              "ratingValue": villaData.rating,
-              "reviewCount": villaData.reviews
-            } : undefined
+            ...(villaData.reviews > 0 ? {
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": villaData.rating,
+                "reviewCount": villaData.reviews,
+                "itemReviewed": {
+                  "@type": "VacationRental",
+                  "name": villaData.name
+                }
+              }
+            } : {})
           })
         }}
       />

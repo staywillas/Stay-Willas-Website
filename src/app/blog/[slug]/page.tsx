@@ -85,6 +85,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     "description": blog.description,
     "image": `https://www.staywillas.com${blog.image}`,
     "datePublished": new Date(blog.date).toISOString(),
+    "dateModified": new Date(blog.date).toISOString(),
     "author": {
       "@type": "Organization",
       "name": "Stay Willas",

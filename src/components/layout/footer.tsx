@@ -85,6 +85,7 @@ const Footer = () => {
             <ul className="flex flex-col gap-4">
               {[
                 { name: "All Stays", href: "/villas" },
+                { name: "Destinations", href: "/destinations" },
                 { name: "Villas in Lonavala", href: "/areas/lonavala" },
                 { name: "Alibaug Villas", href: "/areas/alibaug" },
                 { name: "Karjat Villas", href: "/areas/karjat" },
