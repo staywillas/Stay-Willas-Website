@@ -49,7 +49,7 @@ const Hero = () => {
         <TextGenerateEffect 
           words="The Angle House"
           highlightWords={["Angle", "House"]}
-          highlightClass="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent font-sans"
+          highlightClass="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent font-sans pr-3 py-1 inline-block"
           className="text-4xl md:text-6xl lg:text-[5.5rem] text-white font-normal mb-6"
         />
         

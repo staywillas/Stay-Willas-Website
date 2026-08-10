@@ -52,7 +52,7 @@ export default function BlogIndexPage() {
               <Sparkles size={12} className="text-[#DAA520]" /> Stay Willas Blog
             </span>
             <h1 className="text-4xl md:text-6xl font-heading text-[#1B3564] leading-tight mb-6">
-              Curated <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans">Luxury Villa Guides & Stories</span>
+              Curated <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans pr-2 inline-block">Luxury Villa Guides & Stories</span>
             </h1>
             <p className="text-sm md:text-base text-slate-600/90 max-w-xl mx-auto leading-relaxed">
               Explore expert tips on booking the best private pool villas, planning corporate offsites, hosting events, and getting the most out of your weekend staycations near Mumbai and Pune.

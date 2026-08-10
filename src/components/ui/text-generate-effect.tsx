@@ -51,7 +51,7 @@ export const TextGenerateEffect = ({
             <motion.span
               key={word + idx}
               className={cn(
-                "word-span opacity-0 inline-block transition-colors duration-300",
+                "word-span opacity-0 inline-block transition-colors duration-300 pr-[0.15em] py-0.5",
                 isHighlighted && highlightClass
               )}
               style={{
