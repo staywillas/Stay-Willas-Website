@@ -384,7 +384,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
             "description": villaData.description,
             "image": villaData.images,
             "url": `https://www.staywillas.com/villa/${villaData.slug}`,
-            "priceRange": `₹${villaData.price.toLocaleString("en-IN")}`,
+            "priceRange": `₹${villaData.price}`,
             "address": {
               "@type": "PostalAddress",
               "addressLocality": villaData.location,
