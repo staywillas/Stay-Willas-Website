@@ -218,7 +218,7 @@ export default function ContactPage() {
                 Lonavala Villa with Pool Desk
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Interested in reserving <a href="/lonavala-glass-house-staycation" className="underline font-semibold text-accent-primary">The Angle House</a>—voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Get instant availability checks, tariff details, and private waterfall pool customization via WhatsApp.
+                Interested in reserving <a href="/villas-in-lonavala-with-private-pool" className="underline font-semibold text-accent-primary">The Angle House</a>—voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Get instant availability checks, tariff details, and private waterfall pool customization via WhatsApp.
               </p>
             </div>
 
@@ -227,7 +227,7 @@ export default function ContactPage() {
                 Khopoli Group Offsite Booking
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Need a <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> for large family reunions or corporate retreats? Contact us for custom stay packages at <a href="/khopoli-group-estate" className="underline font-semibold text-accent-primary">Canopy Crest</a> with charpai lawns & swimming pools.
+                Need a <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> for large family reunions or corporate retreats? Contact us for custom stay packages at <a href="/khopoli-villas" className="underline font-semibold text-accent-primary">Canopy Crest</a> with charpai lawns & swimming pools.
               </p>
             </div>
 

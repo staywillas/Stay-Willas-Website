@@ -108,8 +108,8 @@ const Footer = () => {
               {[
                 { name: "The Angle House", href: "/villa/the-angle-house" },
                 { name: "Canopy Crest", href: "/villa/canopy-crest" },
-                { name: "Lonavala Glass House", href: "/lonavala-glass-house-staycation" },
-                { name: "Khopoli Group Estate", href: "/khopoli-group-estate" }
+                { name: "Lonavala Villa Pool", href: "/villas-in-lonavala-with-private-pool" },
+                { name: "Khopoli Villas", href: "/khopoli-villas" }
               ].map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">

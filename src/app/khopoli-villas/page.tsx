@@ -72,12 +72,12 @@ export const metadata: Metadata = {
     "large group villa khopoli"
   ],
   alternates: {
-    canonical: "https://www.staywillas.com/khopoli-group-estate",
+    canonical: "https://www.staywillas.com/khopoli-villas",
   },
   openGraph: {
     title: "Khopoli Villas | Villas in Khopoli for Groups",
     description: "Discover premier khopoli villas at Canopy Crest. Book top villas in khopoli with private pool, chef service & spacious large group villa khopoli options.",
-    url: "https://www.staywillas.com/khopoli-group-estate",
+    url: "https://www.staywillas.com/khopoli-villas",
     siteName: "Stay Willas",
     locale: "en_IN",
     images: [
@@ -116,7 +116,7 @@ export default async function KhopoliGroupEstatePage() {
                 "@type": "VacationRental",
                 "name": "Canopy Crest — Premier Khopoli Villas with Private Pool",
                 "description": "Sprawling estate among top khopoli villas accommodating up to 20 guests. Features a private pool, charpai lawns, bonfire sit-outs, and in-house chef service. The ideal large group villa khopoli destination.",
-                "url": "https://www.staywillas.com/khopoli-group-estate",
+                "url": "https://www.staywillas.com/khopoli-villas",
                 "address": {
                   "@type": "PostalAddress",
                   "addressLocality": "Khopoli",
@@ -144,7 +144,7 @@ export default async function KhopoliGroupEstatePage() {
                     "@type": "ListItem",
                     "position": 2,
                     "name": "Khopoli Villas",
-                    "item": "https://www.staywillas.com/khopoli-group-estate"
+                    "item": "https://www.staywillas.com/khopoli-villas"
                   }
                 ]
               },

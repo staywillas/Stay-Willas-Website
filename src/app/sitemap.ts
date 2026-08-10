@@ -86,13 +86,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
     },
     {
-      url: `${BASE_URL}/lonavala-glass-house-staycation`,
+      url: `${BASE_URL}/villas-in-lonavala-with-private-pool`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/khopoli-group-estate`,
+      url: `${BASE_URL}/khopoli-villas`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,

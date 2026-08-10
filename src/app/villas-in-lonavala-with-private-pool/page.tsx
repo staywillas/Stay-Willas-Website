@@ -73,12 +73,12 @@ export const metadata: Metadata = {
     "villa for rent in lonavala"
   ],
   alternates: {
-    canonical: "https://www.staywillas.com/lonavala-glass-house-staycation",
+    canonical: "https://www.staywillas.com/villas-in-lonavala-with-private-pool",
   },
   openGraph: {
     title: "Villas in Lonavala with Private Pool | Best Villa in Lonavala",
     description: "Book premier villas in lonavala with private pool at The Angle House. Voted the best villa in lonavala & top villa for rent in lonavala with chef & jacuzzi.",
-    url: "https://www.staywillas.com/lonavala-glass-house-staycation",
+    url: "https://www.staywillas.com/villas-in-lonavala-with-private-pool",
     siteName: "Stay Willas",
     locale: "en_IN",
     images: [
@@ -117,7 +117,7 @@ export default async function LonavalaGlassHousePage() {
                 "@type": "VacationRental",
                 "name": "The Angle House — Premier Villas in Lonavala with Private Pool",
                 "description": "Book the best villa in Lonavala featuring a waterfall pool, master suite jacuzzi, pet-friendly lawns, and chef service. An exclusive villa for rent in Lonavala for staycations.",
-                "url": "https://www.staywillas.com/lonavala-glass-house-staycation",
+                "url": "https://www.staywillas.com/villas-in-lonavala-with-private-pool",
                 "address": {
                   "@type": "PostalAddress",
                   "addressLocality": "Lonavala",
@@ -145,7 +145,7 @@ export default async function LonavalaGlassHousePage() {
                     "@type": "ListItem",
                     "position": 2,
                     "name": "Villas in Lonavala with Private Pool",
-                    "item": "https://www.staywillas.com/lonavala-glass-house-staycation"
+                    "item": "https://www.staywillas.com/villas-in-lonavala-with-private-pool"
                   }
                 ]
               },
@@ -186,7 +186,7 @@ export default async function LonavalaGlassHousePage() {
         <Navbar />
 
         {/* Hero Section */}
-        <section className="relative pt-36 pb-20 md:pt-48 md:pb-28 px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/15 text-center flex flex-col items-center">
+        <section className="relative pt-36 pb-20 md:pt-48 md:pb-28 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/15 text-center flex flex-col items-center">
           <div className="absolute inset-0 -z-10">
             <Image 
               src="/assets/villas/the-angle-house/gallery-11.webp" 
@@ -211,18 +211,18 @@ export default async function LonavalaGlassHousePage() {
               Exclusive Private Retreat
             </span>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-[#1B3564] mb-6">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-[#1B3564] mb-6">
               Villas in Lonavala with Private Pool
             </h1>
 
-            <p className="text-text-primary/80 text-base md:text-lg leading-relaxed max-w-2xl font-light mb-8">
+            <p className="text-text-primary/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl font-light mb-8">
               Discover <strong className="font-semibold text-[#1B3564]">The Angle House</strong>, widely rated as the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>. If you are searching for a premium <strong className="font-semibold text-[#1B3564]">villa for rent in Lonavala</strong>, enjoy our private waterfall pool, master jacuzzi, pet-friendly lawns, and in-house chef service.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md">
               <Link 
                 href="/villa/the-angle-house" 
-                className="bg-[#1B3564] hover:bg-[#0F2142] text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all text-center"
+                className="bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all text-center"
               >
                 View Villa Specifications
               </Link>
@@ -230,7 +230,7 @@ export default async function LonavalaGlassHousePage() {
                 href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20the%20best%20villa%20in%20Lonavala%20-%20The%20Angle%20House" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="bg-[#25D366] hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                className="bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 <PhoneCall size={14} /> WhatsApp Concierge
               </a>
