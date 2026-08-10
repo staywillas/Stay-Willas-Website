@@ -8,30 +8,34 @@ import VillasClient from "@/components/villas/villas-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Staycation Villas Near Mumbai & Lonavala | Stay Willas",
-  description: "Book staycation villas near mumbai with private pools and chefs. Explore verified villas in lonavala for your next luxury weekend trip with family.",
-  keywords: ["staycation villas in maharashtra", "villas near mumbai", "best villas in lonavala"],
+  title: "Villas for Rent in Lonavala | Luxury Villas Near Mumbai",
+  description: "Discover handpicked villas for rent in Lonavala with private pools & chef services. Book luxury villas near Mumbai & spacious 4 BHK villa in Lonavala properties.",
+  keywords: [
+    "villas for rent in Lonavala",
+    "luxury villas near Mumbai",
+    "4 BHK villa in Lonavala"
+  ],
   alternates: {
     canonical: "https://www.staywillas.com/villas",
   },
   openGraph: {
-    title: "Staycation Villas Near Mumbai & Lonavala | Stay Willas",
-    description: "Book staycation villas near mumbai with private pools and chefs. Explore verified villas in lonavala for your next luxury weekend trip with family.",
+    title: "Villas for Rent in Lonavala | Luxury Villas Near Mumbai",
+    description: "Discover handpicked villas for rent in Lonavala with private pools & chef services. Book luxury villas near Mumbai & spacious 4 BHK villa in Lonavala properties.",
     url: "https://www.staywillas.com/villas",
     images: [
       {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Staycation Villas in Maharashtra",
+        alt: "Villas for rent in Lonavala - Stay Willas Collection",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Staycation Villas Near Mumbai & Lonavala | Stay Willas",
-    description: "Book staycation villas near mumbai with private pools and chefs. Explore verified villas in lonavala for your next luxury weekend trip with family.",
+    title: "Villas for Rent in Lonavala | Luxury Villas Near Mumbai",
+    description: "Discover handpicked villas for rent in Lonavala with private pools & chef services. Book luxury villas near Mumbai & spacious 4 BHK villa in Lonavala properties.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -98,8 +102,8 @@ export default async function VillasPage({ searchParams }: PageProps) {
               {
                 "@context": "https://schema.org",
                 "@type": "ItemList",
-                "name": "Luxury Staycation Villas in Maharashtra | Stay Willas",
-                "description": "Browse handpicked staycation villas near Mumbai in Lonavala, Khopoli, Karjat, and Alibaug with private pool & chef service.",
+                "name": "Villas for Rent in Lonavala | Luxury Villas Near Mumbai",
+                "description": "Browse handpicked villas for rent in Lonavala and luxury villas near Mumbai with private pool & chef service.",
                 "numberOfItems": villas.length,
                 "itemListElement": villas.map((villa, idx) => ({
                   "@type": "ListItem",
@@ -122,7 +126,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
                   {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Villas",
+                    "name": "Villas for Rent in Lonavala",
                     "item": "https://www.staywillas.com/villas"
                   }
                 ]
@@ -136,7 +140,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
         {/* Spacing below Navbar */}
         <div className="pt-44" />
 
-        <h1 className="sr-only">Staycation Villas Near Mumbai & Lonavala | Stay Willas</h1>
+        <h1 className="sr-only">Villas for Rent in Lonavala | Stay Willas</h1>
 
         {/* Highly Interactive, Real-Time Client Filter and Grid Section */}
         <VillasClient 

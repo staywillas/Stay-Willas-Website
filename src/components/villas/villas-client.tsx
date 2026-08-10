@@ -443,118 +443,87 @@ export default function VillasClient({
 
       </div>
 
-      {/* Villa Booking Guide / 1000-Word SEO Content Section */}
+      {/* Villa Booking Guide / SEO Content Section */}
       <section className="mt-24 pt-16 border-t border-border-subtle select-none text-charcoal">
         <div className="max-w-4xl mx-auto space-y-12">
           
           <div className="space-y-3">
             <h2 className="text-2xl md:text-3xl font-heading text-[#1B3564] font-bold">
-              The Ultimate Guide to Renting Staycation Villas in Maharashtra
+              The Ultimate Guide to Finding Villas for Rent in Lonavala
             </h2>
             <p className="text-sm text-charcoal/70 leading-relaxed font-light">
-              Urban lifestyles can often feel demanding, making periodic breaks essential for personal renewal and family bonding. In recent years, staycation villas in maharashtra have transformed the way travelers plan their holidays. Instead of spending long hours traveling to distant destinations or staying in crowded commercial hotels, vacationers now prefer booking luxury residences situated just a short drive away from major cities like Mumbai and Pune. Stay Willas provides a handpicked collection of verified properties designed to deliver complete isolation, modern comforts, and customized hospitality.
+              Planning a weekend getaway from the city has never been easier. When searching for <strong className="font-semibold text-[#1B3564]">villas for rent in Lonavala</strong>, holidaymakers look for properties that combine seclusion, modern comfort, and premium hospitality. Instead of staying at commercial hotels with crowded common areas, booking private holiday residences gives your group exclusive access to swimming pools, manicured lawns, and customized dining. Stay Willas provides a verified portfolio of handpicked estates designed to deliver a slow luxury experience.
             </p>
           </div>
 
           <div className="space-y-4">
             <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-              Why Renting Villas Near Mumbai is the Ideal Weekend Getaway
+              Why Booking Luxury Villas Near Mumbai is the Perfect Weekend Escape
             </h2>
             <p className="text-sm text-charcoal/70 leading-relaxed font-light">
-              For residents living in the bustling Mumbai metropolitan area, finding convenient weekend getaways is a top priority. Opting for villas near mumbai offers an effortless solution for quick weekend trips without the stress of airport queues or long train journeys. Located within a smooth 2 to 4-hour drive via expressway and coastal road networks, choosing villas near mumbai allows you to transition from city traffic to peaceful countryside greenery in no time.
+              For travelers residing in the Mumbai metropolitan area, finding accessible getaway destinations is essential. Reserving <strong className="font-semibold text-[#1B3564]">luxury villas near Mumbai</strong> allows you to bypass airport delays and long train journeys. Situated within a smooth 2-hour drive via the Mumbai-Pune Expressway, these estates let you transition quickly from city traffic into tranquil green valleys.
             </p>
             <p className="text-sm text-charcoal/70 leading-relaxed font-light">
-              Whether you choose a scenic hill retreat in Lonavala, a beach estate in Alibaug, or a riverfront sanctuary in Karjat, staying at top private estates ensures you spend maximum time relaxing with your loved ones rather than traveling on the road. For spontaneous weekend plans or scheduled family holidays, villas near mumbai provide the ultimate combination of proximity and tranquility.
+              Whether you are planning a family reunion, a couple&apos;s retreat, or a group staycation, staying at our <strong className="font-semibold text-[#1B3564]">luxury villas near Mumbai</strong> guarantees total privacy, temperature-filtered swimming pools, and dedicated concierge care.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Experience Space & Comfort at a 4 BHK Villa in Lonavala
+            </h2>
+            <p className="text-sm text-charcoal/70 leading-relaxed font-light">
+              When traveling with larger groups of 12 to 16+ guests, spacious accommodations are key. Renting a <strong className="font-semibold text-[#1B3564]">4 BHK villa in Lonavala</strong> ensures that everyone enjoys privacy while staying together under one roof. Properties like The Angle House feature oversized master suites, ensuite bathrooms, double-height glass lounges, and expansive pet-friendly lawns.
+            </p>
+            <p className="text-sm text-charcoal/70 leading-relaxed font-light">
+              Booking a spacious <strong className="font-semibold text-[#1B3564]">4 BHK villa in Lonavala</strong> provides common entertainment zones for board games and storytelling, while allowing family members peaceful corners for morning relaxation.
             </p>
           </div>
 
           <div className="space-y-4">
             <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-              Discovering the Best Villas in Lonavala for Exclusive Celebrations
+              Top Amenities at Our Villas for Rent in Lonavala
             </h3>
             <p className="text-sm text-charcoal/70 leading-relaxed font-light">
-              Among all regional hill stations, Lonavala holds a special place for holidaymakers seeking pleasant weather and verdant mountain scenery. Finding the best villas in lonavala involves choosing properties that feature swimming pools, expansive lawns, modern kitchen facilities, and dedicated resident house staff. At Stay Willas, every featured stay is rigorously verified for safety, hygiene, and architectural excellence, guaranteeing an exceptional vacation experience.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-              Unmatched Hospitality & Signature Amenities
-            </h3>
-            <p className="text-sm text-charcoal/70 leading-relaxed font-light">
-              When you reserve staycation villas in maharashtra through Stay Willas, you receive access to comprehensive amenities tailored to enhance your stay:
+              Every property listed under our <strong className="font-semibold text-[#1B3564]">villas for rent in Lonavala</strong> collection comes equipped with premier amenities:
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <li className="p-4 bg-white rounded-2xl border border-border-subtle shadow-sm">
-                <strong className="text-[#1B3564] block mb-1">Swimming Pools:</strong> Pristine, exclusive pools ideal for morning swims, relaxing dips, and fun family pool parties.
+                <strong className="text-[#1B3564] block mb-1">Private Swimming Pools:</strong> Exclusive pools with waterfall features and ambient evening deck lighting.
               </li>
               <li className="p-4 bg-white rounded-2xl border border-border-subtle shadow-sm">
-                <strong className="text-[#1B3564] block mb-1">In-House Chef Service:</strong> Enjoy delicious, home-cooked meals prepared by experienced resident cooks using fresh local ingredients.
+                <strong className="text-[#1B3564] block mb-1">In-House Chef Service:</strong> Freshly prepared gourmet meals, Maharashtrian specialties, barbecues, and Jain cookware.
               </li>
               <li className="p-4 bg-white rounded-2xl border border-border-subtle shadow-sm">
-                <strong className="text-[#1B3564] block mb-1">High-Speed Wi-Fi & Entertainment:</strong> Stay connected with fast fiber internet, smart TVs, sound systems, and outdoor lawn games.
+                <strong className="text-[#1B3564] block mb-1">Pet-Friendly Lawns:</strong> Fully fenced manicured gardens for safe outdoor games with pets.
               </li>
               <li className="p-4 bg-white rounded-2xl border border-border-subtle shadow-sm">
-                <strong className="text-[#1B3564] block mb-1">Isolation & Security:</strong> Fully gated estates equipped with 24/7 security personnel and dedicated parking spaces for complete peace of mind.
+                <strong className="text-[#1B3564] block mb-1">24/7 Security & Concierge:</strong> Dedicated resident stay managers ensuring absolute safety and hygiene.
               </li>
             </ul>
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-              Top Destinations for Staycations Across the Western Ghats
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-charcoal/80 font-light">
-              <div className="p-4 bg-white rounded-2xl border border-border-subtle">
-                <strong className="text-[#1B3564] block font-bold mb-1">1. Lonavala & Khandala</strong>
-                Ideal for misty hill views, monsoon waterfalls, and cool mountain breezes throughout the year.
-              </div>
-              <div className="p-4 bg-white rounded-2xl border border-border-subtle">
-                <strong className="text-[#1B3564] block font-bold mb-1">2. Alibaug</strong>
-                Perfect for sun-kissed beaches, coastal cuisine, and beachside living just a short ferry ride from Mumbai.
-              </div>
-              <div className="p-4 bg-white rounded-2xl border border-border-subtle">
-                <strong className="text-[#1B3564] block font-bold mb-1">3. Karjat</strong>
-                Serene countryside retreats featuring lush greenery, flowing rivers, and quiet surroundings.
-              </div>
-              <div className="p-4 bg-white rounded-2xl border border-border-subtle">
-                <strong className="text-[#1B3564] block font-bold mb-1">4. Khopoli</strong>
-                Nestled at the base of Western Ghats, offering pool retreats near nature trails and seasonal waterfalls.
-              </div>
-            </div>
-          </div>
-
-          <div className="p-8 bg-[#1B3564] text-white rounded-3xl space-y-3 shadow-lg">
-            <h3 className="text-xl font-heading font-bold">Why Book Your Staycation Stay with Stay Willas?</h3>
-            <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-light">
-              We pride ourselves on offering transparent pricing, zero hidden charges, and personalized service from the moment you inquire until checkout. Our dedicated stay managers ensure that your pool is sparkling clean, meals are cooked to your taste preferences, and every guest gives glowing reviews. Whether it is a quick 2-day break or an extended holiday, our portfolio of pool residences caters to every travel requirement. Reserving verified staycation retreats gives you the freedom to create cherished memories with family and friends in complete luxury.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-              Comprehensive Services for Group Getaways and Special Events
-            </h3>
-            <p className="text-xs sm:text-sm text-charcoal/70 leading-relaxed font-light">
-              Planning a corporate retreat, family reunion, or intimate milestone celebration requires meticulous organization. Our team assists with every detail, including menu customization, sound system setups, floral arrangements, and transportation logistics. Every guest receives individual attention to ensure that their getaway exceeds expectations. From sunrise yoga sessions on manicured lawns to late-night stargazing by the pool, every moment is crafted for relaxation and enjoyment.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-              Frequently Asked Questions About Renting Holiday Homes
-            </h3>
+            <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
+              Frequently Asked Questions About Villas for Rent in Lonavala
+            </h2>
             <div className="space-y-3">
               <div className="p-5 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-1">
-                <h4 className="font-bold text-xs sm:text-sm text-[#1B3564]">Q: What makes Stay Willas properties different from traditional hotel stays?</h4>
+                <h3 className="font-bold text-xs sm:text-sm text-[#1B3564]">Q: What are the best villas for rent in Lonavala with private pools?</h3>
                 <p className="text-xs text-charcoal/70 font-light leading-relaxed">
-                  A: Our properties offer 100% exclusive access to the entire estate, including pools and lawns, without sharing facilities with strangers. You also enjoy personalized dining and flexible schedules.
+                  A: The Angle House is widely recognized as one of the best villas for rent in Lonavala. It features a private waterfall swimming pool, master suite jacuzzi, 3-4 BHK suites, and in-house chef dining.
                 </p>
               </div>
               <div className="p-5 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-1">
-                <h4 className="font-bold text-xs sm:text-sm text-[#1B3564]">Q: How can I confirm availability and make a reservation?</h4>
+                <h3 className="font-bold text-xs sm:text-sm text-[#1B3564]">Q: Are your luxury villas near Mumbai pet-friendly?</h3>
                 <p className="text-xs text-charcoal/70 font-light leading-relaxed">
-                  A: Simply select your preferred destination and travel dates on our platform, or reach out directly to our concierge team via WhatsApp for instant assistance and booking confirmation.
+                  A: Yes, our luxury villas near Mumbai feature secure, fully fenced lawns so your pets can run and play freely while you relax.
+                </p>
+              </div>
+              <div className="p-5 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-1">
+                <h3 className="font-bold text-xs sm:text-sm text-[#1B3564]">Q: How do I reserve a 4 BHK villa in Lonavala for a group getaway?</h3>
+                <p className="text-xs text-charcoal/70 font-light leading-relaxed">
+                  A: You can book directly online through Stay Willas or connect with our concierge team on WhatsApp for instant date availability and custom meal package quotes.
                 </p>
               </div>
             </div>
