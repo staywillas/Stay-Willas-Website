@@ -618,10 +618,16 @@ export default async function VillaDetailPage({ params }: PageProps) {
               </svg>
             </a>
             <a
+              href="#booking-card-section"
+              className="bg-[#1B3564] hover:bg-[#0F2142] text-white font-extrabold px-4 py-3.5 rounded-xl text-xs tracking-wider uppercase transition-all duration-300 shadow-[0_0_15px_rgba(27,53,100,0.3)] flex items-center justify-center active:scale-95 whitespace-nowrap"
+            >
+              Check Availability
+            </a>
+            <a
               href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🏰 I would love to book a luxury stay at *${villaData.name}* in ${villaData.location}. Could you please help me with availability, custom packages, and pricing for my group?`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-accent-primary hover:bg-accent-secondary text-white font-extrabold px-6 sm:px-8 py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(27,53,100,0.3)] flex items-center justify-center active:scale-95 whitespace-nowrap"
+              className="bg-accent-primary hover:bg-accent-secondary text-white font-extrabold px-4 sm:px-6 py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(27,53,100,0.3)] flex items-center justify-center active:scale-95 whitespace-nowrap"
             >
               BOOK NOW
             </a>

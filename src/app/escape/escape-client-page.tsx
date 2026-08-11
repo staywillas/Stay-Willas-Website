@@ -698,16 +698,16 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 <div className="grid grid-cols-2 gap-4">
                   <button 
                     onClick={() => handleSelectVillaForCalculator("the-angle-house")}
-                    className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold py-3 rounded-xl text-xs tracking-widest uppercase transition-all shadow-md hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] active:translate-y-0.5 hover:-translate-y-0.5 hover:brightness-110 cursor-pointer"
+                    className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold py-3 rounded-xl text-xs tracking-widest uppercase transition-all shadow-md hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] active:translate-y-0.5 hover:-translate-y-0.5 hover:brightness-110 cursor-pointer flex items-center justify-center gap-1"
                   >
-                    Select & Quote
+                    Check Availability
                   </button>
                   <Link 
-                    href={`/villa/${angleHouse.slug}`}
+                    href={`/villa/${angleHouse.slug}#booking-card-section`}
                     target="_blank"
                     className="w-full border border-[#DAA520]/20 hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 text-white py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all text-center flex items-center justify-center"
                   >
-                    View Villa
+                    View Villa & Dates
                   </Link>
                 </div>
               </div>
@@ -782,16 +782,16 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 <div className="grid grid-cols-2 gap-4">
                   <button 
                     onClick={() => handleSelectVillaForCalculator("canopy-crest")}
-                    className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold py-3 rounded-xl text-xs tracking-widest uppercase transition-all shadow-md hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] active:translate-y-0.5 hover:-translate-y-0.5 hover:brightness-110 cursor-pointer"
+                    className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold py-3 rounded-xl text-xs tracking-widest uppercase transition-all shadow-md hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] active:translate-y-0.5 hover:-translate-y-0.5 hover:brightness-110 cursor-pointer flex items-center justify-center gap-1"
                   >
-                    Select & Quote
+                    Check Availability
                   </button>
                   <Link 
-                    href={`/villa/${canopyCrest.slug}`}
+                    href={`/villa/${canopyCrest.slug}#booking-card-section`}
                     target="_blank"
                     className="w-full border border-[#DAA520]/20 hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 text-white py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all text-center flex items-center justify-center"
                   >
-                    View Villa
+                    View Villa & Dates
                   </Link>
                 </div>
               </div>

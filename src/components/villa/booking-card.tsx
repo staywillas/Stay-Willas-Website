@@ -424,6 +424,15 @@ We are so excited about this getaway! Could you please check availability and he
       </div>
 
       <div className="space-y-4 mb-8">
+        {/* Live Admin Panel Sync Status Badge */}
+        <div className="flex items-center justify-between bg-slate-100/90 px-3.5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider border border-slate-200/80">
+          <span className="flex items-center gap-1.5 text-[#1B3564]">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Admin Calendar Live Sync
+          </span>
+          <span className="text-[#DAA520] font-black">100% Real-Time</span>
+        </div>
+
         {/* Date picker pair */}
         <div className={`grid grid-cols-2 gap-px bg-[#E2E8F0] border rounded-2xl overflow-hidden relative transition-all duration-300 ${
           showCalendar ? 'border-[#1B3564] shadow-sm' : 'border-border-subtle'
@@ -453,6 +462,19 @@ We are so excited about this getaway! Could you please check availability and he
             </div>
           </div>
         </div>
+
+        {/* Dedicated Check Availability Trigger Button */}
+        <button
+          type="button"
+          onClick={() => {
+            setShowCalendar(!showCalendar);
+            if (!showCalendar) setCalendarTarget("checkIn");
+          }}
+          className="w-full bg-[#1B3564] hover:bg-[#0F2142] text-white font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-md cursor-pointer tracking-wider uppercase border border-[#DAA520]/30"
+        >
+          <CalendarIcon size={15} className="text-[#DAA520]" />
+          <span>{showCalendar ? "Close Calendar View" : "Check Property Availability"}</span>
+        </button>
 
         {/* Breathtakingly Premium Inline Calendar Picker */}
         {showCalendar && (
@@ -555,13 +577,23 @@ We are so excited about this getaway! Could you please check availability and he
           </div>
         )}
 
-        {isOverlapping && (
-          <div className="bg-red-50 border border-red-250 text-red-800 rounded-3xl p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500">
+        {isOverlapping ? (
+          <div className="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500">
             <Info className="text-red-500 shrink-0 mt-0.5" size={16} />
             <div>
-              <h5 className="font-bold text-xs uppercase tracking-wider text-red-800">Dates Reserved</h5>
+              <h5 className="font-bold text-xs uppercase tracking-wider text-red-800">Dates Reserved (Unavailable)</h5>
               <p className="text-[11px] text-red-750 leading-relaxed mt-0.5">
-                These dates overlap with an existing reservation. Please select available sanctuary dates using the calendar.
+                These dates overlap with an existing reservation in our admin calendar. Please select open dates using the availability calendar above.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl p-3.5 flex items-center gap-3 text-left select-none shadow-sm border-l-4 border-l-emerald-500">
+            <CheckCircle2 className="text-emerald-600 shrink-0" size={18} />
+            <div>
+              <h5 className="font-bold text-xs uppercase tracking-wider text-emerald-900">100% Available for Your Dates</h5>
+              <p className="text-[11px] text-emerald-750 font-medium leading-normal mt-0.5">
+                Checked against live admin calendar. Proceed to lock in your reservation!
               </p>
             </div>
           </div>
