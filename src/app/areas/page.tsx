@@ -35,19 +35,11 @@ export default async function AreasPage() {
   const lonavalaCount = await prisma.villa.count({
     where: { location: { contains: "Lonavala", mode: "insensitive" } }
   });
-  
-  const alibaugCount = await prisma.villa.count({
-    where: { location: { contains: "Alibaug", mode: "insensitive" } }
-  });
-
-  const karjatCount = await prisma.villa.count({
-    where: { location: { contains: "Karjat", mode: "insensitive" } }
-  });
 
   const khopoliCount = await prisma.villa.count({
     where: { location: { contains: "Khopoli", mode: "insensitive" } }
   });
-
+  
   const areas = [
     {
       slug: "lonavala",
@@ -66,42 +58,6 @@ export default async function AreasPage() {
       image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
       count: khopoliCount,
       isLaunchingSoon: khopoliCount === 0
-    },
-    {
-      slug: "alibaug",
-      name: "Alibaug",
-      tagline: "The Coastal Getaway",
-      desc: "Beautiful coconut trees, quiet sandy beaches, and modern villas just a scenic catamaran ferry ride away from Mumbai.",
-      image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
-      count: alibaugCount,
-      isLaunchingSoon: alibaugCount === 0
-    },
-    {
-      slug: "karjat",
-      name: "Karjat",
-      tagline: "The Riverside Escape",
-      desc: "Lovely green valleys, quiet flowing streams, and peaceful villas built for complete relaxation in nature.",
-      image: "/assets/villas/heritage-villa/main.jpg",
-      count: karjatCount,
-      isLaunchingSoon: karjatCount === 0
-    },
-    {
-      slug: "goa",
-      name: "Goa",
-      tagline: "The Beach Paradise",
-      desc: "Sunny beaches, beautiful old Portuguese-style homes, and warm private pool villas.",
-      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000",
-      count: 0,
-      isLaunchingSoon: true
-    },
-    {
-      slug: "igatpuri",
-      name: "Igatpuri",
-      tagline: "The Misty Hills",
-      desc: "Gorgeous lake views, foggy mountain peaks, and peaceful hillside villas.",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
-      count: 0,
-      isLaunchingSoon: true
     }
   ];
 
@@ -232,11 +188,7 @@ export default async function AreasPage() {
                   </Link>
 
                   {[
-                    { name: "Alibaug", slug: "alibaug" },
-                    { name: "Karjat", slug: "karjat" },
-                    { name: "Pawna Lake", slug: "pawna" },
-                    { name: "Igatpuri", slug: "igatpuri" },
-                    { name: "Goa", slug: "goa" }
+                    { name: "Pawna Lake", slug: "pawna" }
                   ].map((area) => (
                     <Link key={area.slug} href={`/areas/${area.slug}`} className="flex items-center justify-between p-3 rounded-2xl bg-white/60 hover:bg-white text-slate-600 font-normal text-sm transition-all border border-slate-200/60">
                       <span>{area.name}</span>
@@ -342,8 +294,6 @@ export default async function AreasPage() {
                     <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 font-medium focus:outline-none focus:border-[#1B3564]">
                       <option>Lonavala (1 Villa Available)</option>
                       <option>Khopoli (1 Villa Available)</option>
-                      <option>Alibaug (Coming Soon)</option>
-                      <option>Karjat (Coming Soon)</option>
                     </select>
                   </div>
                   <div>

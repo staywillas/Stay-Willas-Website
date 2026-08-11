@@ -100,7 +100,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic area routes
-  const regions = ["lonavala", "khopoli", "karjat", "alibaug", "goa", "igatpuri", "pawna"];
+  const regions = ["lonavala", "khopoli", "pawna"];
   const areaRoutes: MetadataRoute.Sitemap = regions.map((region) => ({
     url: `${BASE_URL}/areas/${region}`,
     lastModified: new Date(),

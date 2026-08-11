@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, HelpCircle, Shield, Award, MapPin } from "lucide-react";
 
@@ -15,24 +16,24 @@ const faqs: FAQItem[] = [
     answer: "Stay Willas provides handpicked luxury villas near Mumbai featuring private swimming pools, architectural design, lush green lawns, and dedicated in-house chef services for unmatched privacy and relaxation."
   },
   {
-    question: "Why should I book private pool villas in Lonavala?",
-    answer: "Our private pool villas in Lonavala like The Angle House offer complete seclusion, temperature-filtered private pools, mountain valley views, master suite jacuzzis, and pet-friendly fenced grounds."
+    question: "Why choose a private villa stay over a hotel?",
+    answer: "Our private villa stays offer total seclusion, private swimming pools, mountain valley views, master suite jacuzzis, dedicated concierge support, and pet-friendly fenced grounds without sharing amenities with strangers."
   },
   {
-    question: "How far are your villas near mumbai for a weekend trip?",
-    answer: "All our villas near mumbai are located within a scenic 90-minute to 2-hour drive via the Mumbai-Pune Expressway, giving you fast access to Lonavala, Khopoli, and Karjat without heavy travel."
+    question: "How far are your weekend villas from Mumbai and Pune?",
+    answer: "All our holiday villas are located within a scenic 90-minute to 2-hour drive via the Mumbai-Pune Expressway, giving you fast access to Lonavala and Khopoli without long, exhausting travel."
   },
   {
     question: "Are your luxury villas near Mumbai pet-friendly?",
     answer: "Yes, many of our luxury villas near Mumbai feature secure, fully fenced lawns and safe open layouts designed so your pets can run freely while you relax by the pool."
   },
   {
-    question: "Do private pool villas in Lonavala include in-house chef dining?",
-    answer: "Yes, our private pool villas in Lonavala offer customized culinary services with on-site chefs who prepare fresh multi-cuisine spreads, local Maharashtrian dishes, poolside barbecues, and Jain meals."
+    question: "Do your private pool retreats include in-house chef dining?",
+    answer: "Yes, our private villa retreats offer customized culinary services with on-site chefs who prepare fresh multi-cuisine spreads, local Maharashtrian dishes, poolside barbecues, and dedicated Jain meals."
   },
   {
-    question: "How do I book villas near mumbai with Stay Willas?",
-    answer: "You can easily browse real-time availability and book villas near mumbai directly through our website or connect with our Stay Willas concierge team on WhatsApp for custom quotes."
+    question: "How do I book a private villa stay with Stay Willas?",
+    answer: "You can easily browse real-time availability and book your stay directly through our website or connect with our Stay Willas concierge team on WhatsApp for custom quotes."
   }
 ];
 
@@ -82,60 +83,50 @@ export default function SEOContent() {
             {/* Section 1 */}
             <div className="space-y-4">
               <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
-                Why Choose Luxury Villas Near Mumbai for Staycations
+                Why Choose Luxury Villas Near Mumbai for Weekend Getaways
               </h3>
               <p>
-                When planning a peaceful weekend retreat, booking <strong className="text-[#1B3564]">luxury villas near Mumbai</strong> offers an ideal blend of luxury, convenience, and privacy. Located within a comfortable 2-hour drive, these exclusive estates provide city dwellers with a serene escape from urban routines. Rather than staying at crowded hotels with shared amenities, choosing private <strong className="text-[#1B3564]">villas near mumbai</strong> guarantees your family and friends full access to secluded gardens, sun lounges, and dedicated hospitality.
+                Stay Willas curates luxury private villas near Mumbai and Pune, featuring private pools, spacious stays, premium amenities and personalized experiences. Located within a comfortable 2-hour drive, these exclusive holiday homes provide city dwellers with a serene escape from urban routines. Rather than staying at crowded hotels with shared amenities, choosing private villa stays guarantees your family and friends full access to secluded gardens, sun lounges, and dedicated hospitality.
               </p>
             </div>
 
             {/* Section 2 */}
             <div className="space-y-4">
               <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
-                Unwind at Signature Private Pool Villas in Lonavala
+                Explore Destinations Across Maharashtra
               </h3>
               <p>
-                A major favorite for weekend travelers is our collection of <strong className="text-[#1B3564]">private pool villas in Lonavala</strong>. Set against the misty Sahyadri mountains, these properties feature temperature-filtered swimming pools, cascading waterfalls, and master suite jacuzzis. Whether swimming laps in the morning or enjoying late-night poolside conversations, staying at our <strong className="text-[#1B3564]">private pool villas in Lonavala</strong> turns every weekend trip into a memorable retreat.
+                Whether you are seeking misty hill station views or quiet nature sanctuaries, our collection spans top destinations across the Sahyadri ranges. Discover handpicked <Link href="/areas/lonavala" className="text-[#1B3564] font-semibold underline hover:text-[#DAA520] transition-colors">luxury villas in Lonavala</Link>, including specialized <Link href="/villas-in-lonavala-with-private-pool" className="text-[#1B3564] font-semibold underline hover:text-[#DAA520] transition-colors">villas in Lonavala with private pool</Link> setups, as well as tranquil group estates among <Link href="/areas/khopoli" className="text-[#1B3564] font-semibold underline hover:text-[#DAA520] transition-colors">luxury villas in Khopoli</Link>. Each property is personally verified to ensure absolute privacy and high standards of cleanliness.
               </p>
             </div>
 
             {/* Section 3 */}
             <div className="space-y-4">
               <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
-                Customized Culinary Services at Luxury Villas Near Mumbai
+                Customized Culinary Services & Private Chef Dining
               </h3>
               <p>
-                Dining at our <strong className="text-[#1B3564]">luxury villas near Mumbai</strong> is completely customized to your taste. Dedicated on-site chefs prepare fresh meals directly inside your villa kitchen. From authentic Maharashtrian specialties and poolside barbecues to customized Jain meals, our culinary team caters to every preference. Combined with the privacy of our <strong className="text-[#1B3564]">villas near mumbai</strong>, your staycation becomes effortless and deeply relaxing.
+                Dining at our luxury stays is completely tailored to your preferences. Dedicated on-site chefs prepare fresh meals directly inside your villa kitchen. From authentic Maharashtrian spreads and poolside barbecues to customized Jain and pure-vegetarian preparations, our culinary team caters to every guest. Combined with the privacy of premium holiday homes, your weekend getaway becomes effortless and deeply rejuvenating.
               </p>
             </div>
 
             {/* Section 4 */}
             <div className="space-y-4">
               <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
-                Effortless Travel to Villas Near Mumbai
+                Seamless Road Access & Pet-Friendly Comfort
               </h3>
               <p>
-                Quick road accessibility is a major reason why families and corporate groups prefer our <strong className="text-[#1B3564]">villas near mumbai</strong>. Smooth highway connectivity via the Mumbai-Pune Expressway lets you reach your destination without long, exhausting journeys. You can easily head out on Friday evening and arrive at our <strong className="text-[#1B3564]">private pool villas in Lonavala</strong> or nearby estates in time for dinner.
+                Quick road accessibility via the Mumbai-Pune Expressway makes spontaneous weekend trips effortless. Families and corporate groups can depart after work on Friday and reach their private pool villa in time for dinner. Furthermore, our pet-friendly properties feature secure, manicured green lawns so your furry companions can travel and relax right alongside you.
               </p>
             </div>
 
             {/* Section 5 */}
             <div className="space-y-4">
               <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
-                Pet-Friendly Comfort at Private Pool Villas in Lonavala
+                Reserve Your Ideal Weekend Getaway
               </h3>
               <p>
-                Leaving your pets behind during vacation is no longer a worry. Many of our <strong className="text-[#1B3564]">luxury villas near Mumbai</strong> and <strong className="text-[#1B3564]">private pool villas in Lonavala</strong> are designed to be pet-friendly. Fully secure, manicured green lawns give your pets plenty of room to play safely while you enjoy the poolside deck with your family.
-              </p>
-            </div>
-
-            {/* Section 6 */}
-            <div className="space-y-4">
-              <h3 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold">
-                Book Your Next Escape at Luxury Villas Near Mumbai
-              </h3>
-              <p>
-                Experience slow luxury with Stay Willas. Browse our handpicked catalog of <strong className="text-[#1B3564]">luxury villas near Mumbai</strong>, explore verified <strong className="text-[#1B3564]">private pool villas in Lonavala</strong>, and reserve your ideal <strong className="text-[#1B3564]">villas near mumbai</strong> for your upcoming weekend getaway.
+                Experience slow luxury with Stay Willas. Browse our handpicked catalog of private villa stays, explore verified mountain retreats, and reserve your ideal holiday home for an unforgettable staycation near Mumbai and Pune.
               </p>
             </div>
           </div>

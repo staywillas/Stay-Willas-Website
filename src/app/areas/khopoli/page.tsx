@@ -9,20 +9,21 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Khopoli Villa Staycation & Group Estates | Stay Willas",
-  description: "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli.",
+  title: "Luxury Villas in Khopoli | Private Weekend Getaways | Stay Willas",
+  description: "Discover luxury villas in Khopoli with Stay Willas. Sprawling group estates, private pools, and nature retreats near Mumbai and Pune for weekend staycations.",
   keywords: [
-    "khopoli villa staycation",
+    "luxury villas in Khopoli",
+    "villas in Khopoli",
+    "Khopoli villa staycation",
     "weekend getaway villa Khopoli",
-    "corporate offsite villa Khopoli",
-    "large group villa khopoli"
+    "corporate offsite villa Khopoli"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/khopoli",
   },
   openGraph: {
-    title: "Khopoli Villa Staycation & Group Estates | Stay Willas",
-    description: "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli.",
+    title: "Luxury Villas in Khopoli | Private Weekend Getaways | Stay Willas",
+    description: "Discover luxury villas in Khopoli with Stay Willas. Sprawling group estates, private pools, and nature retreats near Mumbai and Pune for weekend staycations.",
     url: "https://www.staywillas.com/areas/khopoli",
     siteName: "Stay Willas",
     locale: "en_IN",
@@ -31,15 +32,15 @@ export const metadata: Metadata = {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Stay Willas Luxury Khopoli Villa Staycation",
+        alt: "Luxury Villas in Khopoli - Stay Willas Collection",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Khopoli Villa Staycation & Group Estates | Stay Willas",
-    description: "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli.",
+    title: "Luxury Villas in Khopoli | Private Weekend Getaways | Stay Willas",
+    description: "Discover luxury villas in Khopoli with Stay Willas. Sprawling group estates, private pools, and nature retreats near Mumbai and Pune for weekend staycations.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -249,7 +250,7 @@ export default async function KhopoliPage() {
               The Nature Escape
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              Khopoli Private Pool Villa <span className="italic text-accent-primary font-serif font-light font-normal">Rentals</span>
+              Luxury Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Khopoli</span>
             </h1>
             <p className="text-text-primary/80 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               Tucked at the base of the Sahyadri mountains, Khopoli is Maharashtra's best-kept secret for luxury nature escapes. Discover premium private pool villas hidden amidst waterfalls and lush forests.
@@ -396,11 +397,7 @@ export default async function KhopoliPage() {
                   </Link>
 
                   {[
-                    { name: "Alibaug", slug: "alibaug" },
-                    { name: "Karjat", slug: "karjat" },
-                    { name: "Pawna Lake", slug: "pawna" },
-                    { name: "Igatpuri", slug: "igatpuri" },
-                    { name: "Goa", slug: "goa" }
+                    { name: "Pawna Lake", slug: "pawna" }
                   ].map((area) => (
                     <Link key={area.slug} href={`/areas/${area.slug}`} className="flex items-center justify-between p-3 rounded-2xl bg-white/60 hover:bg-white text-slate-600 font-normal text-sm transition-all border border-slate-200/60">
                       <span>{area.name}</span>
@@ -723,8 +720,6 @@ export default async function KhopoliPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <Link href="/areas/lonavala" className="bg-[#FAF8F5] hover:bg-[#1B3564] border border-[#DAA520]/20 hover:border-[#1B3564] text-[#1B3564] hover:text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all">Lonavala</Link>
-              <Link href="/areas/alibaug" className="bg-[#FAF8F5] hover:bg-[#1B3564] border border-[#DAA520]/20 hover:border-[#1B3564] text-[#1B3564] hover:text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all">Alibaug</Link>
-              <Link href="/areas/karjat" className="bg-[#FAF8F5] hover:bg-[#1B3564] border border-[#DAA520]/20 hover:border-[#1B3564] text-[#1B3564] hover:text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all">Karjat</Link>
             </div>
           </div>
         </section>

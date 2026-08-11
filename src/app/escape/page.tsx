@@ -4,30 +4,40 @@ import { prisma } from "@/lib/db";
 import EscapeClientPage from "./escape-client-page";
 
 export const metadata: Metadata = {
-  title: "Villa Rentals in Lonavala & Khopoli | Stay Willas",
-  description: "Plan a friends villa vacation with luxury villa rentals in lonavala & Khopoli. Enjoy private pool staycations in Maharashtra with chef service.",
-  keywords: ["villa rentals in lonavala", "villas in khopoli", "friends villa vacation", "staycation villas in maharashtra"],
+  title: "Villas for Groups in Lonavala | Private Pool Stays | Stay Willas",
+  description: "Find private villas for groups in Lonavala with pools, spacious rooms and premium amenities. Perfect for friends, families and weekend getaways.",
+  keywords: [
+    "villas for groups in Lonavala",
+    "group villas in Lonavala",
+    "villa for group in Lonavala",
+    "Lonavala villas for groups",
+    "villa for friends in Lonavala",
+    "private villa for groups in Lonavala",
+    "villas for family groups in Lonavala",
+    "weekend villa in Lonavala",
+    "large group villa in Lonavala"
+  ],
   alternates: {
     canonical: "https://www.staywillas.com/escape",
   },
   openGraph: {
-    title: "Villa Rentals in Lonavala & Khopoli | Stay Willas",
-    description: "Plan a friends villa vacation with luxury villa rentals in lonavala & Khopoli. Enjoy private pool staycations in Maharashtra with chef service.",
+    title: "Villas for Groups in Lonavala | Private Pool Stays | Stay Willas",
+    description: "Find private villas for groups in Lonavala with pools, spacious rooms and premium amenities. Perfect for friends, families and weekend getaways.",
     url: "https://www.staywillas.com/escape",
     images: [
       {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Friends Villa Vacation in Lonavala & Khopoli",
+        alt: "Villas for Groups in Lonavala - Stay Willas Collection",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villa Rentals in Lonavala & Khopoli | Stay Willas",
-    description: "Plan a friends villa vacation with luxury villa rentals in lonavala & Khopoli. Enjoy private pool staycations in Maharashtra with chef service.",
+    title: "Villas for Groups in Lonavala | Private Pool Stays | Stay Willas",
+    description: "Find private villas for groups in Lonavala with pools, spacious rooms and premium amenities. Perfect for friends, families and weekend getaways.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };

@@ -60,7 +60,7 @@ const Hero = () => {
           transition={{ delay: 0.5, duration: 0.8 }}
           className="text-sm md:text-base text-slate-200/90 font-medium max-w-md mb-8 leading-relaxed"
         >
-          Discover premier <strong>luxury villas near Mumbai</strong>. Experience signature <strong>private pool villas in Lonavala</strong> and exclusive <strong>villas near mumbai</strong> for slow luxury staycations.
+          Discover premier <strong>luxury villas near Mumbai</strong>. Experience signature private pool stays, personalized chef service, and quiet weekend getaways across Lonavala and Khopoli.
         </motion.p>
 
         {/* Highlights Info */}

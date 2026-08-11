@@ -187,8 +187,6 @@ Could you please share the options available and help us plan our perfect getawa
                 >
                   <option value="Lonavala">Lonavala</option>
                   <option value="Khopoli">Khopoli</option>
-                  <option value="Alibaug">Alibaug</option>
-                  <option value="Karjat">Karjat</option>
                 </select>
                 <ChevronDown size={14} className="absolute right-0 text-[#1B3564]/50 pointer-events-none" />
               </div>
@@ -281,8 +279,6 @@ Could you please share the options available and help us plan our perfect getawa
                   >
                     <option value="Lonavala">Lonavala</option>
                     <option value="Khopoli">Khopoli</option>
-                    <option value="Alibaug">Alibaug</option>
-                    <option value="Karjat">Karjat</option>
                   </select>
                   <ChevronDown size={12} className="absolute right-0 text-[#1B3564]/50 pointer-events-none" />
                 </div>

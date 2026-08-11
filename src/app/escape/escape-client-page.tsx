@@ -348,16 +348,36 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           {/* Header text container */}
           <div className="space-y-6 max-w-3xl mx-auto">
             <span className="text-[#DAA520] font-semibold tracking-[0.4em] uppercase text-xs sm:text-sm block animate-pulse">
-              🍻 crew getaway activated
+              🍻 GROUP ESCAPE SPECIAL • CODE: ESCAPE10
             </span>
             
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight leading-[1.08] text-balance bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-              Accidentally clicked? Or did your crew just demand a <span className="italic text-[#B497CF] underline decoration-[#DAA520]/40">villa vacation in Lonavala or Khopoli</span>?
+              Villas for Groups in <span className="italic text-[#B497CF] underline decoration-[#DAA520]/40">Lonavala</span>
             </h1>
             
             <p className="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg md:text-xl font-light leading-relaxed">
-              Stop pretending to work. Scratch the cards below to reveal your secret 10% discount on premium villa rentals in Lonavala and Khopoli. Gather your friends, fire up the BBQ, and book the ultimate pool retreat.
+              Private pool villas for friends, families and celebrations, with spacious stays, premium amenities and everything your group needs for a memorable weekend.
             </p>
+
+            <p className="text-xs sm:text-sm text-[#B497CF] font-medium tracking-wide italic">
+              "Accidentally clicked? Or did your crew just demand a villa vacation in Lonavala?"
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-wrap justify-center gap-4 pt-2">
+              <button
+                onClick={() => scrollToSection("properties-section")}
+                className="bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold px-8 py-4 rounded-full text-xs tracking-widest uppercase transition-all shadow-lg hover:shadow-[0_0_20px_rgba(218,165,32,0.4)] hover:scale-105 active:scale-100 cursor-pointer"
+              >
+                Explore Group Villas
+              </button>
+              <button
+                onClick={() => scrollToSection("calculator-section")}
+                className="border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 text-white font-bold px-8 py-4 rounded-full text-xs tracking-widest uppercase transition-all duration-300 backdrop-blur-md cursor-pointer"
+              >
+                Check Availability
+              </button>
+            </div>
           </div>
           {/* SCRATCHCARDS GRID */}
           <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 px-4">
@@ -480,6 +500,67 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
         </div>
       </section>
 
+      {/* GROUP-FIT USE CASES SECTION */}
+      <section id="group-fit-section" className="py-20 px-6 md:px-12 max-w-7xl mx-auto relative z-10">
+        <div className="text-center space-y-4 mb-16">
+          <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
+            Tailored Group Experience
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white">
+            Built for Group Getaways
+          </h2>
+          <p className="max-w-xl mx-auto text-slate-300 text-sm font-light">
+            Whether reuniting with old friends or celebrating a family milestone, our estates are designed to bring groups together in complete privacy.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {[
+            {
+              title: "Friends' Weekend",
+              icon: Users,
+              desc: "Unwind by your private pool, enjoy outdoor BBQ spreads, and enjoy late-night music under starry mountain skies."
+            },
+            {
+              title: "Family Getaway",
+              icon: Home,
+              desc: "Multi-generational family stays featuring ground-floor suites for elders, manicured lawns for kids, and custom chef meals."
+            },
+            {
+              title: "Birthday Celebration",
+              icon: Sparkles,
+              desc: "Host milestone birthday gatherings with private pool deck setups, custom lighting, and dedicated in-house caretakers."
+            },
+            {
+              title: "Bachelor / Bachelorette",
+              icon: Flame,
+              desc: "Exclusive pre-wedding retreats offering complete privacy, high-decibel audio setups, and absolute freedom with zero hotel curfews."
+            },
+            {
+              title: "Couple & Friends Trip",
+              icon: Heart,
+              desc: "Multi-couple weekend escapes featuring separate private master suites alongside expansive double-height common lounges."
+            },
+            {
+              title: "Corporate Retreat",
+              icon: Briefcase,
+              desc: "Offsite team strategy sessions with high-speed Wi-Fi, quiet lawn brainstorming zones, and customized multi-course dining."
+            }
+          ].map((card, idx) => (
+            <div 
+              key={idx} 
+              className="bg-[#0D0A14]/80 border border-[#DAA520]/20 rounded-3xl p-6 md:p-8 space-y-4 hover:border-[#DAA520]/50 transition-all duration-300 shadow-xl group hover:-translate-y-1"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-[#DAA520]/10 border border-[#DAA520]/30 flex items-center justify-center text-[#DAA520] group-hover:scale-110 transition-transform">
+                <card.icon size={22} />
+              </div>
+              <h3 className="text-xl font-heading font-bold text-white group-hover:text-[#DAA520] transition-colors">{card.title}</h3>
+              <p className="text-xs text-slate-300 leading-relaxed font-light">{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* 3. IMMERSIVE ROW (THE PHILOSOPHY) */}
       <section id="philosophy-section" className="py-24 md:py-32 px-6 md:px-12 lg:px-24 border-y border-white/5 relative overflow-hidden z-10 bg-transparent">
         <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-[#B497CF]/5 blur-[120px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
@@ -537,13 +618,13 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       <section id="properties-section" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto space-y-16 z-10 relative">
         <div className="text-center space-y-4">
           <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
-            Our Sanctuaries
+            Handpicked Group Sanctuaries
           </span>
           <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white">
-            Two Main Flagship Properties
+            Best Villas for Groups in Lonavala
           </h2>
           <p className="max-w-2xl mx-auto text-slate-300 text-md font-light">
-            We list only the most premium, fully private estates. Here are our top two properties, available for direct booking.
+            Discover our premier group-friendly properties featuring exclusive private pools, generous living spaces, and dedicated chef hospitality.
           </p>
         </div>
 
@@ -717,6 +798,169 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* WHY CHOOSE A VILLA FOR GROUPS */}
+      <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/5 relative z-10">
+        <div className="text-center space-y-4 mb-16">
+          <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
+            Group Living Advantages
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white">
+            Why Choose a Villa for Your Group Stay?
+          </h2>
+          <p className="max-w-xl mx-auto text-slate-300 text-sm font-light">
+            Skip cramped hotel corridors and shared amenities. Private villas offer the freedom and togetherness your group deserves.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-[#0D0A14]/75 border border-white/10 p-8 rounded-3xl space-y-3">
+            <ShieldCheck className="text-[#DAA520] w-8 h-8" />
+            <h3 className="text-lg font-heading font-bold text-white">Absolute Seclusion</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Your group gets an entire private property with dedicated staff rather than separate hotel rooms spread across floors.
+            </p>
+          </div>
+          <div className="bg-[#0D0A14]/75 border border-white/10 p-8 rounded-3xl space-y-3">
+            <Home className="text-[#DAA520] w-8 h-8" />
+            <h3 className="text-lg font-heading font-bold text-white">Generous Living Spaces</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Double-height central lounges, manicured green lawns, and dining tables designed specifically for everyone to gather.
+            </p>
+          </div>
+          <div className="bg-[#0D0A14]/75 border border-white/10 p-8 rounded-3xl space-y-3">
+            <Sparkles className="text-[#DAA520] w-8 h-8" />
+            <h3 className="text-lg font-heading font-bold text-white">Exclusive Swimming Pools</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Enjoy private swimming pools with waterfall cascades and lounge decks reserved exclusively for your group&apos;s stay.
+            </p>
+          </div>
+          <div className="bg-[#0D0A14]/75 border border-white/10 p-8 rounded-3xl space-y-3">
+            <Utensils className="text-[#DAA520] w-8 h-8" />
+            <h3 className="text-lg font-heading font-bold text-white">In-Villa Chef Hospitality</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Freshly prepared Maharashtrian spreads, outdoor barbecues, and Jain meals cooked directly in the villa kitchen.
+            </p>
+          </div>
+          <div className="bg-[#0D0A14]/75 border border-white/10 p-8 rounded-3xl space-y-3">
+            <Music className="text-[#DAA520] w-8 h-8" />
+            <h3 className="text-lg font-heading font-bold text-white">Shared Games & Music</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Play board games, outdoor lawn sports, or listen to music on high-decibel speaker systems without hotel curfews.
+            </p>
+          </div>
+          <div className="bg-[#0D0A14]/75 border border-white/10 p-8 rounded-3xl space-y-3">
+            <Calendar className="text-[#DAA520] w-8 h-8" />
+            <h3 className="text-lg font-heading font-bold text-white">Flexible Weekend Schedules</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Set your own breakfast times, enjoy midnight pool dips, and relax at your group&apos;s natural pace.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* GROUP SIZE CAPACITY SECTION */}
+      <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/5 relative z-10">
+        <div className="text-center space-y-4 mb-16">
+          <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
+            Capacity Guide
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white">
+            What Size Group Can Stay?
+          </h2>
+          <p className="max-w-xl mx-auto text-slate-300 text-sm font-light">
+            We offer properties tailored to small family groups, medium-sized friend gatherings, and large corporate retreats.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-[#0D0A14]/80 border border-[#DAA520]/20 p-8 rounded-3xl space-y-4 text-center">
+            <span className="text-3xl font-heading font-black text-[#DAA520]">6 – 8 Guests</span>
+            <h3 className="text-lg font-bold text-white">Intimate Family & Friend Groups</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Ideal for small family reunions or double-date getaways wanting private 3 BHK luxury with a private waterfall pool.
+            </p>
+            <div className="pt-2 text-xs font-semibold text-[#B497CF]">Recommended: The Angle House (Lonavala)</div>
+          </div>
+
+          <div className="bg-[#0D0A14]/80 border border-[#DAA520]/20 p-8 rounded-3xl space-y-4 text-center">
+            <span className="text-3xl font-heading font-black text-[#DAA520]">8 – 12 Guests</span>
+            <h3 className="text-lg font-bold text-white">Standard Group Staycations</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Comfortably fits within the base guest allocation for both of our flagship estates with no extra guest fees required.
+            </p>
+            <div className="pt-2 text-xs font-semibold text-[#B497CF]">Recommended: The Angle House or Canopy Crest</div>
+          </div>
+
+          <div className="bg-[#0D0A14]/80 border border-[#DAA520]/20 p-8 rounded-3xl space-y-4 text-center">
+            <span className="text-3xl font-heading font-black text-[#DAA520]">12 – 20 Guests</span>
+            <h3 className="text-lg font-bold text-white">Large Group Celebrations</h3>
+            <p className="text-xs text-slate-300 font-light leading-relaxed">
+              Sprawling 4 BHK estate setup featuring large grassy lawns, multi-bath suites, and capacity for up to 20 guests.
+            </p>
+            <div className="pt-2 text-xs font-semibold text-[#B497CF]">Recommended: Canopy Crest (Khopoli)</div>
+          </div>
+        </div>
+      </section>
+
+      {/* PRIVATE POOL SECTION */}
+      <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/5 relative z-10">
+        <div className="bg-gradient-to-r from-[#120a24] via-[#1a0f35] to-[#120a24] border border-[#DAA520]/30 rounded-3xl p-8 sm:p-12 text-center max-w-4xl mx-auto space-y-6">
+          <span className="text-xs uppercase font-bold tracking-[0.3em] text-[#DAA520]">
+            Exclusive Pool Comfort
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-heading font-bold text-white">
+            Private Pool Villas for Groups
+          </h2>
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-light">
+            Having your own temperature-filtered swimming pool transforms a standard weekend trip into a memorable celebration. Whether swimming morning laps or hosting evening deck barbecues, our pool setups belong exclusively to your crew.
+          </p>
+          <div className="pt-2">
+            <Link 
+              href="/villas-in-lonavala-with-private-pool"
+              className="inline-flex items-center gap-2 text-sm font-bold text-[#DAA520] hover:text-white underline transition-colors"
+            >
+              Explore villas in Lonavala with private pools <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* WEEKEND GETAWAY & LONAVALA DESTINATION SECTION */}
+      <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto border-t border-white/5 relative z-10 space-y-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Box 1 */}
+          <div className="bg-[#0D0A14]/80 border border-white/10 p-8 md:p-10 rounded-3xl space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-white">
+              Plan a Weekend Villa Getaway in Lonavala
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+              Planning a weekend villa in Lonavala is the fastest way to reset after a hectic work week in Mumbai or Pune. Located just a scenic 2-hour drive via the Expressway, Lonavala allows groups to escape the city noise without spending half their weekend stuck in transit.
+            </p>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+              From Friday evening arrival to Sunday afternoon poolside brunch, spending a weekend villa staycation with your favorite people creates lasting memories.
+            </p>
+          </div>
+
+          {/* Box 2 */}
+          <div className="bg-[#0D0A14]/80 border border-white/10 p-8 md:p-10 rounded-3xl space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-white">
+              Why Lonavala Works for a Group Getaway
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+              Lonavala combines cool Sahyadri mountain breezes, mist-laden valleys, and convenient highway access. Groups can easily explore local viewpoints like Tiger Point, visit Pawna Lake, or trek up Lohagad Fort before returning to their private villa.
+            </p>
+            <div className="pt-2">
+              <Link 
+                href="/areas/lonavala"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#DAA520] hover:text-white underline transition-colors"
+              >
+                Explore luxury villas in Lonavala <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1033,27 +1277,166 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       <section className="py-28 md:py-36 px-6 text-center relative overflow-hidden bg-transparent z-10">
         <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-[#B497CF]/5 blur-[150px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
         
-        <div className="max-w-3xl mx-auto space-y-10 z-10 relative">
+        <div className="max-w-3xl mx-auto space-y-8 z-10 relative">
           <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
-            Make the Detour Count
+            Make Your Group Escape Happen
           </span>
           
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading font-black text-white tracking-tight leading-tight">
-            What if this wasn&apos;t a wrong click?
+            Ready for Your Group Escape?
           </h2>
           
           <p className="max-w-xl mx-auto text-slate-300 text-lg font-light leading-relaxed">
-            Maybe this is exactly where you were supposed to land. Browse our complete handpicked selection of premium luxury private estates and start planning your escape.
+            Bring your friends, family or crew and make your next Lonavala weekend a private villa experience.
           </p>
 
-          <div className="pt-4">
-            <Link 
-              href="/villas"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-[#DAA520] to-[#C9A84C] text-black px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase shadow-lg hover:scale-105 active:scale-100 transition-all duration-300"
+          <div className="flex flex-wrap justify-center gap-4 pt-4">
+            <button
+              onClick={() => scrollToSection("properties-section")}
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-[#DAA520] to-[#C9A84C] text-black px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase shadow-lg hover:scale-105 active:scale-100 transition-all duration-300 cursor-pointer"
             >
-              Explore Handpicked Villas
+              Explore Group Villas
               <ArrowRight size={16} />
-            </Link>
+            </button>
+            <button
+              onClick={() => scrollToSection("calculator-section")}
+              className="inline-flex items-center gap-3 border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 text-white px-8 py-4 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer"
+            >
+              Check Availability
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* GROUP FAQs SECTION WITH STRUCTURED DATA */}
+      <section className="py-24 px-6 md:px-12 bg-[#090613] border-t border-white/5 relative z-10">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What are the best villas for groups in Lonavala?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "StayWillas offers premier villas for groups in Lonavala including The Angle House (3 BHK, up to 16 guests with private waterfall pool) and Canopy Crest (4 BHK, up to 20 guests with sprawling lawns and private pool)."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How many guests can stay in a StayWillas group villa?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our group villas comfortably accommodate groups ranging from 6 to 20 guests depending on the property selected. Canopy Crest accommodates up to 20 guests, while The Angle House accommodates up to 16 guests."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do the group villas feature private swimming pools?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, 100% of our featured group villas include exclusive, temperature-filtered private swimming pools with sun loungers and deck spaces reserved solely for your group."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Are StayWillas villas suitable for family groups and reunions?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Absolutely. Our properties feature ground-floor bedrooms for elders, manicured grassy lawns for children, spacious common lounges, and dedicated caretaker support for family gatherings."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I book a weekend villa in Lonavala for my group?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, you can easily check weekend availability and reserve group stays via our website or directly with our StayWillas concierge team on WhatsApp."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Are group celebrations allowed at the villas?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Gatherings and celebrations for registered guests are welcome. Dedicated caretakers and on-site chefs can help set up poolside barbecues and dining spreads."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How far are the group villas from Mumbai and Pune?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "All StayWillas villas are located within a 90-minute to 2-hour drive from Mumbai and Pune via the Mumbai-Pune Expressway."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can we arrange food or an in-house chef for our group?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, customized meals, live barbeques, and pure-vegetarian or Jain preparations are prepared fresh by on-site culinary staff inside the villa kitchen."
+                  }
+                }
+              ]
+            })
+          }}
+        />
+
+        <div className="max-w-4xl mx-auto space-y-12">
+          <div className="text-center space-y-3">
+            <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">FAQs</span>
+            <h2 className="text-3xl sm:text-4xl font-heading font-bold text-white">Frequently Asked Questions</h2>
+            <div className="w-12 h-0.5 bg-[#DAA520]/40 mx-auto" />
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                q: "What are the best villas for groups in Lonavala?",
+                a: "StayWillas offers premier villas for groups in Lonavala including The Angle House (3 BHK, up to 16 guests with private waterfall pool) and Canopy Crest (4 BHK, up to 20 guests with sprawling lawns and private pool)."
+              },
+              {
+                q: "How many guests can stay in a StayWillas group villa?",
+                a: "Our group villas comfortably accommodate groups ranging from 6 to 20 guests depending on the property selected. Canopy Crest accommodates up to 20 guests, while The Angle House accommodates up to 16 guests."
+              },
+              {
+                q: "Do the group villas feature private swimming pools?",
+                a: "Yes, 100% of our featured group villas include exclusive, temperature-filtered private swimming pools with sun loungers and deck spaces reserved solely for your group."
+              },
+              {
+                q: "Are StayWillas villas suitable for family groups and reunions?",
+                a: "Absolutely. Our properties feature ground-floor bedrooms for elders, manicured grassy lawns for children, spacious common lounges, and dedicated caretaker support for family gatherings."
+              },
+              {
+                q: "Can I book a weekend villa in Lonavala for my group?",
+                a: "Yes, you can easily check weekend availability and reserve group stays via our website or directly with our StayWillas concierge team on WhatsApp."
+              },
+              {
+                q: "Are group celebrations allowed at the villas?",
+                a: "Gatherings and celebrations for registered guests are welcome. Dedicated caretakers and on-site chefs can help set up poolside barbecues and dining spreads."
+              },
+              {
+                q: "How far are the group villas from Mumbai and Pune?",
+                a: "All StayWillas villas are located within a 90-minute to 2-hour drive from Mumbai and Pune via the Mumbai-Pune Expressway."
+              },
+              {
+                q: "Can we arrange food or an in-house chef for our group?",
+                a: "Yes, customized meals, live barbeques, and pure-vegetarian or Jain preparations are prepared fresh by on-site culinary staff inside the villa kitchen."
+              }
+            ].map((faq, idx) => (
+              <div key={idx} className="bg-[#120a24]/80 border border-white/10 rounded-2xl p-6 space-y-2">
+                <h3 className="text-base font-heading font-bold text-white flex items-center gap-2">
+                  <span className="text-[#DAA520]">Q:</span> {faq.q}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed pl-6">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1064,43 +1447,40 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           
           <div>
             <h2 className="text-2xl md:text-3xl font-heading font-black text-white mb-4 tracking-tight">
-              The Ultimate Guide to Luxury Group Escapes: Lonavala & Khopoli Villa Vacations
+              The Ultimate Guide to Booking Villas for Groups in Lonavala
             </h2>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-6">
-              The concept of weekend getaways near Mumbai and Pune has undergone a massive evolution. Instead of booking multiple detached hotel rooms where groups are separated, travelers are seeking cohesive, private sanctuaries. Selecting premium <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> provides the space, freedom, and exclusivity required for memorable group getaways. From infinity pools overlooking deep green valley panoramas to customized gourmet meals prepared by dedicated in-house chefs, private estates represent a complete shift in leisure travel. The monsoons turn the surrounding Sahyadri hills into a misty playground, making the quick drive up the ghats an absolute pleasure for friend reunions and family milestone celebrations.
+              The concept of weekend getaways near Mumbai and Pune has undergone a massive evolution. Instead of booking multiple detached hotel rooms where groups are separated, travelers are seeking cohesive, private sanctuaries. Selecting private <strong className="text-[#DAA520] font-semibold">villas for groups in Lonavala</strong> provides the space, freedom, and exclusivity required for memorable group getaways. From infinity pools overlooking deep green valley panoramas to customized gourmet meals prepared by dedicated in-house chefs, private estates represent a complete shift in leisure travel.
             </p>
           </div>
 
           <div>
             <h3 className="text-xl font-heading font-bold text-white mb-4">
-              Why Lonavala Remains the Flagship Mountain Retreat
+              Why Lonavala Works Best for Group Stays
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-6">
-              Lonavala has always been the primary choice for weekenders. Whether it is trekking up the historic Lohagad Fort, enjoying picnics at Pawna Lake, or buying local chikki, there is something for everyone. However, the true luxury experience lies in checking into one of the elite <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> such as The Angle House. These private pool villas seamlessly combine cutting-edge modern architecture with high-end hospitality services. When planning an escape with friends, features like temperature-controlled pools, spacious deck spaces, and custom sound systems make a massive difference. Opting for modern <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> ensures your group enjoys complete freedom without hotel curfews or sharing facilities with strangers.
+              Lonavala has always been the primary choice for weekenders. Whether it is trekking up the historic Lohagad Fort, enjoying picnics at Pawna Lake, or buying local chikki, there is something for everyone. Checking into premier <strong className="text-[#DAA520] font-semibold">group villas in Lonavala</strong> like The Angle House seamlessly combines modern architecture with high-end hospitality services. When planning an escape with friends, features like temperature-filtered pools, spacious deck spaces, and custom sound systems make a massive difference. Opting for a private <strong className="text-[#DAA520] font-semibold">villa for friends in Lonavala</strong> ensures your group enjoys complete freedom without hotel curfews or sharing facilities with strangers.
             </p>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light">
-              Furthermore, the proximity of Lonavala makes it incredibly easy to coordinate travel logistics for large groups. Whether your friends are arriving from different parts of Mumbai or Pune, Lonavala serves as a central meeting point. Many high-end <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> also offer specialized workspaces and high-speed internet connectivity, making them popular for creative retreats and brainstorming sessions.
+              Furthermore, the proximity of Lonavala makes it incredibly easy to coordinate travel logistics for large groups. Whether your friends are arriving from different parts of Mumbai or Pune, Lonavala serves as a central meeting point. Many high-end <strong className="text-[#DAA520] font-semibold">villas for family groups in Lonavala</strong> also offer specialized workspaces and high-speed internet connectivity, making them popular for corporate offsites and family reunions.
             </p>
           </div>
 
           <div>
             <h3 className="text-xl font-heading font-bold text-white mb-4">
-              Discovering Khopoli: The Scenic Forest Sanctuary
+              Discovering Nearby Group Estates in Khopoli
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-6">
-              For groups seeking absolute peace away from tourist crowds, Khopoli is a rising favorite. Situated at the base of Bhor Ghat, it offers pristine scenery, raw forests, and beautiful seasonal waterfalls. If you want a sanctuary where you only hear bird calls and the rustle of leaves, booking premium <strong className="text-[#DAA520] font-semibold">villas in khopoli</strong> is highly recommended. Estates like Canopy Crest offer a dramatic escape from urban density, providing gorgeous mountain-view infinity pools and glass-front layouts that immerse you in nature. The peaceful environment surrounding these <strong className="text-[#DAA520] font-semibold font-bold">villas in khopoli</strong> makes them perfect for nature lovers and groups who want to disconnect from corporate screens.
-            </p>
-            <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light">
-              Staying at luxury <strong className="text-[#DAA520] font-semibold font-bold">villas in khopoli</strong> also places you close to thrilling outdoor attractions like Adlabs Imagicaa, making it easy to plan day trips before returning to your private sanctuary. The absolute isolation of these properties ensures your friends can party late into the night on the pool deck without disturbing any neighbors, which is a major advantage when choosing <strong className="text-[#DAA520] font-semibold font-bold">villas in khopoli</strong> for reunions.
+              For groups seeking absolute peace away from tourist crowds, Khopoli is a rising favorite. Situated at the base of Bhor Ghat, it offers pristine scenery, raw forests, and beautiful seasonal waterfalls. If you want a sanctuary where you only hear bird calls and the rustle of leaves, booking a <strong className="text-[#DAA520] font-semibold">large group villa in Lonavala</strong> or nearby Khopoli is highly recommended. Estates like Canopy Crest offer a dramatic escape from urban density, providing gorgeous mountain-view pools and glass-front layouts that immerse your group in nature.
             </p>
           </div>
 
           <div>
             <h3 className="text-xl font-heading font-bold text-white mb-4">
-              Key Amenities to Vette for a Perfect Group Getaway
+              Essential Amenities for Your Group Villa Experience
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-4">
-              When reviewing potential properties for your group stay, certain amenities are non-negotiable. Whether you are looking at spacious <strong className="text-[#DAA520] font-semibold">villa rentals in lonavala</strong> or quiet <strong className="text-[#DAA520] font-semibold">villas in khopoli</strong>, ensure the property offers:
+              When reviewing potential properties for your <strong className="text-[#DAA520] font-semibold">group stay in Lonavala</strong>, ensure the property offers:
             </p>
             <ul className="text-xs md:text-sm text-slate-300 space-y-3 pl-5 list-disc font-light">
               <li>
@@ -1110,7 +1490,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 <strong className="text-white font-semibold">In-house Chef Services:</strong> Authentic home-style meals, live barbeques, and late-night snacks prepared fresh on call.
               </li>
               <li>
-                <strong className="text-white font-semibold">Entertainment Zones:</strong> Poker tables, pool tables, board games, and home theatre setups.
+                <strong className="text-white font-semibold">Entertainment & Games:</strong> Board games, outdoor lawn sports, and high-decibel audio setups.
               </li>
               <li>
                 <strong className="text-white font-semibold">High-speed Wi-Fi:</strong> Critical for streaming music, sharing photos, or running remote team meetings.
@@ -1120,10 +1500,10 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
 
           <div>
             <h3 className="text-xl font-heading font-bold text-white mb-4">
-              Booking Your Next Staycation with Stay Willas
+              Booking Your Next Group Getaway with Stay Willas
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light">
-              Planning a group getaway should be exciting, not stressful. Vetting caretakers, coordinating food menus, and verifying pool cleanliness are details we handle directly at Stay Willas. Booking verified luxury <strong className="text-[#DAA520] font-semibold font-bold font-heading">villas in khopoli</strong> or Lonavala guarantees that your weekend plays out exactly as shown in photographs. Secure your dates well in advance, particularly during the monsoon and winter seasons when the Sahyadri mountains are at their most beautiful, and let us build the perfect group retreat for you and your friends.
+              Planning a group getaway should be exciting, not stressful. Vetting caretakers, coordinating food menus, and verifying pool cleanliness are details we handle directly at Stay Willas. Booking verified <strong className="text-[#DAA520] font-semibold">villas for groups in Lonavala</strong> guarantees that your weekend plays out exactly as expected. Secure your dates well in advance and let us build the perfect group retreat for you.
             </p>
           </div>
 

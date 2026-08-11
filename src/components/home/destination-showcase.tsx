@@ -32,42 +32,6 @@ const destinations = [
     desc: "Scenic foothills, waterfalls, and green valleys near the hills.",
     isLaunchingSoon: false,
     link: "/areas/khopoli"
-  },
-  {
-    name: "Karjat",
-    image: "/assets/villas/heritage-villa/main.jpg",
-    count: "LAUNCHING SOON",
-    tag: "Riverside Views",
-    desc: "Green valleys, quiet rivers, and pure relaxation.",
-    isLaunchingSoon: true,
-    link: "/areas/karjat"
-  },
-  {
-    name: "Igatpuri",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
-    count: "LAUNCHING SOON",
-    tag: "Mountain Views",
-    desc: "Mist-laden Western Ghats, waterfalls, and peaceful retreats.",
-    isLaunchingSoon: true,
-    link: "/areas/igatpuri"
-  },
-  {
-    name: "Alibaug",
-    image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
-    count: "LAUNCHING SOON",
-    tag: "Beachside Stays",
-    desc: "Golden sand beaches, pools, and beautiful sunsets.",
-    isLaunchingSoon: true,
-    link: "/areas/alibaug"
-  },
-  {
-    name: "Goa",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000",
-    count: "LAUNCHING SOON",
-    tag: "Coastal Paradise",
-    desc: "Boho-chic beach villas, Portuguese architecture, and ocean breezes.",
-    isLaunchingSoon: true,
-    link: "/areas/goa"
   }
 ];
 

@@ -9,21 +9,24 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
-  description: "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+  title: "Luxury Villas in Lonavala | Private Villa Stays | Stay Willas",
+  description: "Book luxury villas in Lonavala with Stay Willas. Featuring private pool stays, dedicated chef services, and scenic mountain views for family and group getaways.",
   keywords: [
-    "lonavala villa staycation",
-    "luxury villa stays in lonavala",
-    "luxury villa Lonavala with private pool",
-    "villa in Lonavala for birthday party",
-    "villa in Lonavala for family"
+    "luxury villas in Lonavala",
+    "villas in Lonavala",
+    "luxury villa Lonavala",
+    "private villas in Lonavala",
+    "luxury stay in Lonavala",
+    "Lonavala villas for weekend",
+    "villas for families in Lonavala",
+    "villas for groups in Lonavala"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",
   },
   openGraph: {
-    title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
-    description: "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+    title: "Luxury Villas in Lonavala | Private Villa Stays | Stay Willas",
+    description: "Book luxury villas in Lonavala with Stay Willas. Featuring private pool stays, dedicated chef services, and scenic mountain views for family and group getaways.",
     url: "https://www.staywillas.com/areas/lonavala",
     siteName: "Stay Willas",
     locale: "en_IN",
@@ -32,15 +35,15 @@ export const metadata: Metadata = {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Stay Willas Luxury Villa Lonavala with Private Pool",
+        alt: "Luxury Villas in Lonavala - Stay Willas Collection",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villa Lonavala with Private Pool | Stay Willas",
-    description: "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+    title: "Luxury Villas in Lonavala | Private Villa Stays | Stay Willas",
+    description: "Book luxury villas in Lonavala with Stay Willas. Featuring private pool stays, dedicated chef services, and scenic mountain views for family and group getaways.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -87,8 +90,8 @@ export default async function LonavalaPage() {
               {
                 "@context": "https://schema.org",
                 "@type": "LodgingBusiness",
-                "name": "Stay Willas — Lonavala Villas",
-                "description": "Book a luxury villa Lonavala with private pool at The Angle House. Ideal lonavala villa staycation & luxury villa stays in lonavala for family & birthday party.",
+                "name": "Stay Willas — Luxury Villas in Lonavala",
+                "description": "Book luxury villas in Lonavala with Stay Willas. Featuring private pool stays, dedicated chef services, and scenic mountain views for family and group getaways.",
                 "url": "https://www.staywillas.com/areas/lonavala",
                 "address": {
                   "@type": "PostalAddress",
@@ -166,62 +169,6 @@ export default async function LonavalaPage() {
             ])
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": "Home",
-                  "item": "https://www.staywillas.com"
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "name": "Areas",
-                  "item": "https://www.staywillas.com/areas"
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 3,
-                  "name": "Lonavala",
-                  "item": "https://www.staywillas.com/areas/lonavala"
-                }
-              ]
-            })
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Are the private pools in Lonavala villas safe and hygienic?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes. All private pools in our private estates undergo a strict chlorine filtration cycle before every arrival. Our estate managers test the water quality daily to ensure absolute safety and hygiene."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Do your villas provide in-house chef options?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Absolutely. We offer customizable meal packages where professional in-house chefs cook fresh multi-cuisine meals directly inside your private estate. This is a standard luxury feature in our premium luxury properties."
-                  }
-                }
-              ]
-            })
-          }}
-        />
         <Navbar />
         
         {/* Banner Section */}
@@ -250,7 +197,7 @@ export default async function LonavalaPage() {
               Boutique Mountain Sanctuary
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              Glass-House Villa in <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span>
+              Luxury Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span>
             </h1>
             <p className="text-text-primary/80 text-sm md:text-base leading-relaxed max-w-2xl font-light">
               A scenic 2-hour drive from Mumbai and Pune. Discover our architectural sanctuary featuring dramatic glass facades, private waterfall pools, pet-friendly lawns, and tailored in-villa culinary experiences.
@@ -397,11 +344,7 @@ export default async function LonavalaPage() {
                   </Link>
 
                   {[
-                    { name: "Alibaug", slug: "alibaug" },
-                    { name: "Karjat", slug: "karjat" },
-                    { name: "Pawna Lake", slug: "pawna" },
-                    { name: "Igatpuri", slug: "igatpuri" },
-                    { name: "Goa", slug: "goa" }
+                    { name: "Pawna Lake", slug: "pawna" }
                   ].map((area) => (
                     <Link key={area.slug} href={`/areas/${area.slug}`} className="flex items-center justify-between p-3 rounded-2xl bg-white/60 hover:bg-white text-slate-600 font-normal text-sm transition-all border border-slate-200/60">
                       <span>{area.name}</span>
@@ -453,13 +396,13 @@ export default async function LonavalaPage() {
                 Waking up to misty mountain views through floor-to-ceiling glass walls is an experience unmatched by conventional hotels. Our signature Lonavala property, <Link href="/villa/the-angle-house" className="underline text-accent-primary font-bold">The Angle House</Link>, was specifically designed for guests who appreciate contemporary architecture paired with raw natural landscapes.
               </p>
               <p>
-                Featuring an impressive double-height glass facade, a temperature-filtered private pool with a soothing waterfall cascade, and a master suite jacuzzi, the property sets a high standard for any luxury villa Lonavala with private pool reservation. The estate is fully pet-friendly, featuring boundary-fenced grassy lawns where your dogs can safely run and play.
+                Featuring an impressive double-height glass facade, a temperature-filtered private pool with a soothing waterfall cascade, and a master suite jacuzzi, the property sets a high benchmark among premier <Link href="/villas-in-lonavala-with-private-pool" className="underline text-accent-primary font-bold">villas in Lonavala with private pool</Link> amenities. The estate is fully pet-friendly, featuring boundary-fenced grassy lawns where your dogs can safely run and play.
               </p>
 
               <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">
                 <Image 
                   src="/assets/villas/the-angle-house/gallery-3.webp" 
-                  alt="The Angle House private waterfall pool deck in Lonavala" 
+                  alt="The Angle House private waterfall swimming pool deck surrounded by Lonavala hills" 
                   fill 
                   className="object-cover"
                 />
@@ -711,8 +654,6 @@ export default async function LonavalaPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <Link href="/areas/khopoli" className="bg-[#FAF8F5] hover:bg-[#1B3564] border border-[#DAA520]/20 hover:border-[#1B3564] text-[#1B3564] hover:text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all">Khopoli</Link>
-              <Link href="/areas/alibaug" className="bg-[#FAF8F5] hover:bg-[#1B3564] border border-[#DAA520]/20 hover:border-[#1B3564] text-[#1B3564] hover:text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all">Alibaug</Link>
-              <Link href="/areas/karjat" className="bg-[#FAF8F5] hover:bg-[#1B3564] border border-[#DAA520]/20 hover:border-[#1B3564] text-[#1B3564] hover:text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all">Karjat</Link>
             </div>
           </div>
         </section>

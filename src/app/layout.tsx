@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Luxury Villas in Maharashtra | Stay Willas",
-  description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Alibaug today.",
+  description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Khopoli today.",
   metadataBase: new URL("https://www.staywillas.com"),
   keywords: ["luxury villas in maharashtra"],
   authors: [{ name: "Stay Willas" }],
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Stay Willas",
     title: "Luxury Villas in Maharashtra | Stay Willas",
-    description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Alibaug today.",
+    description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Khopoli today.",
     url: "https://www.staywillas.com",
     images: [
       {
@@ -116,7 +116,7 @@ export default function RootLayout({
                       "url": "https://www.staywillas.com",
                       "logo": "https://www.staywillas.com/icon.png",
                       "image": "https://www.staywillas.com/images/hero-villa.png",
-                      "description": "Stay Willas is a luxury villa rental brand in Maharashtra, specializing in handpicked private pool villas in Lonavala, Khopoli, Karjat, Alibaug, and Igatpuri.",
+                      "description": "Stay Willas is a luxury villa rental brand in Maharashtra, specializing in handpicked private pool villas in Lonavala and Khopoli.",
                       "telephone": "+91-9619042310",
                       "email": "bookings@staywillas.com",
                       "sameAs": [
@@ -146,10 +146,7 @@ export default function RootLayout({
                       },
                       "areaServed": [
                         { "@type": "Place", "name": "Lonavala" },
-                        { "@type": "Place", "name": "Khopoli" },
-                        { "@type": "Place", "name": "Karjat" },
-                        { "@type": "Place", "name": "Alibaug" },
-                        { "@type": "Place", "name": "Igatpuri" }
+                        { "@type": "Place", "name": "Khopoli" }
                       ]
                     }
                   ]

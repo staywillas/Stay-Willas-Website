@@ -205,7 +205,7 @@ export default function AboutPage() {
                 Luxury Villa Rentals Maharashtra
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Whether you need a <strong className="font-semibold text-[#1B3564]">pet friendly villa in Lonavala</strong>, a private pool villa near Mumbai, or a luxury retreat in Karjat, Alibaug, Pawna, or Goa, Stay Willas offers 100% verified properties with 24/7 concierge support and customized dining.
+                Whether you need a <strong className="font-semibold text-[#1B3564]">pet friendly villa in Lonavala</strong> or a private pool retreat in Khopoli, Stay Willas offers 100% verified properties with 24/7 concierge support and customized dining.
               </p>
               <a href="/villas" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
                 View Full Villa Catalog &rarr;

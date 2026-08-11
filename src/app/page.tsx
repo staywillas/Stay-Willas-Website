@@ -3,19 +3,22 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Luxury Villas Near Mumbai | Private Pool Villas in Lonavala",
-  description: "Book premier luxury villas near Mumbai at Stay Willas. Experience signature private pool villas in Lonavala & exclusive villas near mumbai with private chef service.",
+  title: "Luxury Villas Near Mumbai with Private Pools | Stay Willas",
+  description: "Discover premier luxury villas near Mumbai with private pools, signature hospitality & chef services in Lonavala and Khopoli. Ideal for weekend getaways.",
   keywords: [
     "luxury villas near Mumbai",
-    "private pool villas in Lonavala",
-    "villas near mumbai"
+    "luxury villas near Mumbai with private pools",
+    "private pool villas near Mumbai",
+    "villas near Mumbai for weekend",
+    "luxury villas in Maharashtra",
+    "weekend villas near Mumbai"
   ],
   alternates: {
     canonical: "https://www.staywillas.com",
   },
   openGraph: {
-    title: "Luxury Villas Near Mumbai | Private Pool Villas in Lonavala",
-    description: "Book premier luxury villas near Mumbai at Stay Willas. Experience signature private pool villas in Lonavala & exclusive villas near mumbai with private chef service.",
+    title: "Luxury Villas Near Mumbai with Private Pools | Stay Willas",
+    description: "Discover premier luxury villas near Mumbai with private pools, signature hospitality & chef services in Lonavala and Khopoli. Ideal for weekend getaways.",
     url: "https://www.staywillas.com",
     images: [
       {
@@ -29,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villas Near Mumbai | Private Pool Villas in Lonavala",
-    description: "Book premier luxury villas near Mumbai at Stay Willas. Experience signature private pool villas in Lonavala & exclusive villas near mumbai with private chef service.",
+    title: "Luxury Villas Near Mumbai with Private Pools | Stay Willas",
+    description: "Discover premier luxury villas near Mumbai with private pools, signature hospitality & chef services in Lonavala and Khopoli. Ideal for weekend getaways.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -89,7 +92,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-bg-primary">
-      <h1 className="sr-only">Luxury Villas Near Mumbai | Stay Willas</h1>
+      <h1 className="sr-only">Luxury Villas Near Mumbai for Private Getaways</h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -136,8 +139,6 @@ export default async function Home() {
             },
             "areaServed": [
               { "@type": "Place", "name": "Lonavala" },
-              { "@type": "Place", "name": "Alibaug" },
-              { "@type": "Place", "name": "Karjat" },
               { "@type": "Place", "name": "Khopoli" }
             ],
             "priceRange": "₹₹₹",

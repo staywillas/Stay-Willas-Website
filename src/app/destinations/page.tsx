@@ -42,19 +42,11 @@ export default async function DestinationsPage() {
   const lonavalaCount = await prisma.villa.count({
     where: { location: { contains: "Lonavala", mode: "insensitive" } }
   });
-  
-  const alibaugCount = await prisma.villa.count({
-    where: { location: { contains: "Alibaug", mode: "insensitive" } }
-  });
-
-  const karjatCount = await prisma.villa.count({
-    where: { location: { contains: "Karjat", mode: "insensitive" } }
-  });
 
   const khopoliCount = await prisma.villa.count({
     where: { location: { contains: "Khopoli", mode: "insensitive" } }
   });
-
+  
   const destinations = [
     {
       name: "Lonavala",
@@ -71,38 +63,6 @@ export default async function DestinationsPage() {
       image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
       count: khopoliCount,
       isLaunchingSoon: khopoliCount === 0
-    },
-    {
-      name: "Alibaug",
-      tagline: "The Coastal Getaway",
-      desc: "Beautiful coconut palms, quiet sandy shores, and modern estates just a scenic catamaran ferry ride away from Mumbai.",
-      image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
-      count: alibaugCount,
-      isLaunchingSoon: alibaugCount === 0
-    },
-    {
-      name: "Karjat",
-      tagline: "The Riverside Escape",
-      desc: "Lovely green valleys, quiet flowing streams, and peaceful sanctuaries built for complete relaxation in nature.",
-      image: "/assets/villas/heritage-villa/main.jpg",
-      count: karjatCount,
-      isLaunchingSoon: karjatCount === 0
-    },
-    {
-      name: "Goa",
-      tagline: "The Beach Paradise",
-      desc: "Sunny beaches, beautiful old Portuguese-style homes, and warm pool retreats.",
-      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000",
-      count: "LAUNCHING SOON",
-      isLaunchingSoon: true
-    },
-    {
-      name: "Igatpuri",
-      tagline: "The Misty Hills",
-      desc: "Gorgeous lake views, foggy mountain peaks, and peaceful hillside sanctuaries.",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
-      count: "LAUNCHING SOON",
-      isLaunchingSoon: true
     }
   ];
 
@@ -271,14 +231,6 @@ export default async function DestinationsPage() {
               <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm">
                 <strong className="text-[#1B3564] block font-bold mb-1">2. Khopoli</strong>
                 Nestled at the foothills of the Sahyadri range, offering secluded green valleys, cascading streams, and close proximity to popular theme parks and nature trails.
-              </li>
-              <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm">
-                <strong className="text-[#1B3564] block font-bold mb-1">3. Alibaug</strong>
-                The preferred coastal paradise for beach lovers. Accessible via a short 20-minute speed boat or Ro-Ro ferry ride from Bhaucha Dhakka in Mumbai, featuring palm-fringed estates near quiet beaches.
-              </li>
-              <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm">
-                <strong className="text-[#1B3564] block font-bold mb-1">4. Karjat & Igatpuri</strong>
-                Serene countryside locations surrounded by flowing rivers, misty mountain peaks, and quiet sanctuaries for yoga retreats and nature walks.
               </li>
             </ul>
           </div>

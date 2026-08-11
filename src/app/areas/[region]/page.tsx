@@ -26,20 +26,6 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
     image: "/assets/villas/the-angle-house/gallery-11.webp",
     isLaunchingSoon: false
   },
-  alibaug: {
-    name: "Alibaug",
-    tagline: "The Coastal Getaway",
-    desc: "Beautiful coconut trees, quiet sandy beaches, and modern villas just a scenic catamaran ferry ride away from Mumbai.",
-    image: "/assets/villas/alibaug-palms-beachhouse/main.jpg",
-    isLaunchingSoon: true
-  },
-  karjat: {
-    name: "Karjat",
-    tagline: "The Riverside Escape",
-    desc: "Explore luxury villas in Karjat with private pools, serene riverfront views, and green Sahyadri valley staycations near Mumbai and Pune.",
-    image: "/assets/villas/heritage-villa/main.jpg",
-    isLaunchingSoon: false
-  },
   khopoli: {
     name: "Khopoli",
     tagline: "The Nature Escape",
@@ -52,20 +38,6 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
     tagline: "The Lakeside Oasis",
     desc: "Tranquil waters, scenic mountain views, and serene private pool villas near Pawna Lake.",
     image: "/assets/villas/the-angle-house/gallery-4.webp",
-    isLaunchingSoon: true
-  },
-  goa: {
-    name: "Goa",
-    tagline: "The Beach Paradise",
-    desc: "Sunny beaches, beautiful old Portuguese-style homes, and warm private pool villas.",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000",
-    isLaunchingSoon: true
-  },
-  igatpuri: {
-    name: "Igatpuri",
-    tagline: "The Misty Hills",
-    desc: "Gorgeous lake views, foggy mountain peaks, and peaceful hillside villas.",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000",
     isLaunchingSoon: true
   }
 };
@@ -102,16 +74,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "villa in Lonavala for birthday party",
       "villa in Lonavala for family"
     ];
-  } else if (regionKey === "alibaug") {
-    titleText = "Alibaug Private Pool Villa & Luxury Beach Stays | Stay Willas";
-    descText = "Explore Alibaug private pool villa options and upcoming luxury beach stays with in-house chef service.";
-    keywordList = ["alibaug private pool villa", "luxury beach stays"];
-    indexRobots = false;
-  } else if (regionKey === "karjat") {
-    titleText = "Karjat Private Pool Villa & Riverfront Stays | Stay Willas";
-    descText = "Book a Karjat private pool villa with riverfront stays and scenic mountain views. Verified retreats with in-house chef options.";
-    keywordList = ["karjat private pool villa", "riverfront stays"];
-    indexRobots = true;
   } else if (regionKey === "khopoli") {
     titleText = "Khopoli Villa Staycation | Large Group Villa Khopoli | Stay Willas";
     descText = "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli bookings.";
@@ -126,14 +88,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     descText = "Book private pool villas near Pawna Lake Lonavala with serene lake views and in-house chef service.";
     keywordList = ["pawna lake villas", "villas near pawna lake lonavala"];
     indexRobots = true;
-  } else if (regionKey === "goa") {
-    titleText = "Goa Private Pool Villa & Beach Rentals | Stay Willas";
-    descText = "Book a Goa private pool villa with beach rentals and fully serviced hospitality. Check availability and book online.";
-    keywordList = ["goa private pool villa", "beach rentals"];
-  } else if (regionKey === "igatpuri") {
-    titleText = "Igatpuri Private Pool Villa & Mountain Retreats | Stay Willas";
-    descText = "Escape to an Igatpuri private pool villa with mountain retreats, scenic hill views, and in-house chef options.";
-    keywordList = ["igatpuri private pool villa", "mountain retreats"];
   }
 
   return {
@@ -369,13 +323,9 @@ export default async function AreaRegionPage({ params }: PageProps) {
                   </Link>
 
                   {[
-                    { name: "Alibaug", slug: "alibaug" },
-                    { name: "Karjat", slug: "karjat" },
-                    { name: "Pawna Lake", slug: "pawna" },
-                    { name: "Igatpuri", slug: "igatpuri" },
-                    { name: "Goa", slug: "goa" }
+                    { name: "Pawna Lake", slug: "pawna" }
                   ].map((a) => (
-                    <Link key={a.slug} href={`/areas/${a.slug}`} className={`flex items-center justify-between p-3 rounded-2xl transition-all border ${regionKey === a.slug ? 'bg-[#1B3564] text-white font-bold' : 'bg-white/60 hover:bg-white text-slate-600 border-slate-200/60'}`}>
+                    <Link key={a.slug} href={`/areas/${a.slug}`} className={`flex items-center justify-between p-3 rounded-2xl transition-all border ${regionKey === a.slug ? 'bg-[#1B3564] text-[#FAF8F3] font-bold' : 'bg-white/60 hover:bg-white text-slate-600 border-slate-200/60'}`}>
                       <span>{a.name}</span>
                       <span className="text-[10px] uppercase font-semibold bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200/60">Coming Soon</span>
                     </Link>
