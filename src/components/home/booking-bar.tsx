@@ -111,18 +111,19 @@ const BookingBar = () => {
   // Helper: check if a calendar date is fully booked across all villas in the region
   const isDateFullyBooked = (date: Date) => {
     if (totalVillas === 0) return false;
-    const targetDay = startOfDay(date);
+    const targetDay = startOfDay(date).getTime();
     
-    const activeBookingsCount = bookingsData.filter(booking => {
-      const checkInDate = startOfDay(parseISO(booking.checkIn));
-      const checkOutDate = startOfDay(parseISO(booking.checkOut));
-      return (
-        (checkInDate.getTime() <= targetDay.getTime()) && 
-        (targetDay.getTime() < checkOutDate.getTime())
-      );
-    }).length;
+    // Count unique villas that have a booking covering this date
+    const bookedVillaIds = new Set<string>();
+    bookingsData.forEach(booking => {
+      const checkInDate = startOfDay(parseISO(booking.checkIn)).getTime();
+      const checkOutDate = startOfDay(parseISO(booking.checkOut)).getTime();
+      if (checkInDate <= targetDay && targetDay < checkOutDate) {
+        bookedVillaIds.add(booking.villaId);
+      }
+    });
     
-    return activeBookingsCount >= totalVillas;
+    return bookedVillaIds.size >= totalVillas;
   };
 
   // Select Date handler
@@ -164,10 +165,19 @@ const BookingBar = () => {
     setIsCalendarOpen(false);
     setIsCheckingAvailability(true);
     try {
+      // Send dates as YYYY-MM-DD strings to avoid timezone offset issues
+      // (toISOString() shifts IST midnight to previous day in UTC)
+      const formatDateOnly = (d: Date) => {
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      };
+
       const res = await checkAvailableVillasForDates({
         destination,
-        checkIn: checkIn ? checkIn.toISOString() : undefined,
-        checkOut: checkOut ? checkOut.toISOString() : undefined,
+        checkIn: checkIn ? formatDateOnly(checkIn) : undefined,
+        checkOut: checkOut ? formatDateOnly(checkOut) : undefined,
         guests: Number(guests) || 1,
       });
       if (res.success && res.villas) {

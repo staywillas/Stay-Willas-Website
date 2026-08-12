@@ -214,6 +214,8 @@ export async function createCheckoutSession(formData: {
  */
 export async function getDestinationAvailability(region: string) {
   try {
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+
     const villas = await prisma.villa.findMany({
       where: {
         location: {
@@ -223,6 +225,19 @@ export async function getDestinationAvailability(region: string) {
       },
       select: {
         id: true,
+        bookings: {
+          where: {
+            OR: [
+              { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+              { status: "HELD", createdAt: { gte: tenMinutesAgo } }
+            ]
+          },
+          select: {
+            checkIn: true,
+            checkOut: true,
+            villaId: true,
+          },
+        },
       },
     });
 
@@ -231,31 +246,12 @@ export async function getDestinationAvailability(region: string) {
       return { success: true, bookings: [], totalVillas: 0 };
     }
 
-    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-    const bookings = await prisma.booking.findMany({
-      where: {
-        status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] },
-        OR: [
-          { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
-          { status: "HELD", createdAt: { gte: tenMinutesAgo } }
-        ],
-        villa: {
-          location: {
-            contains: region,
-            mode: "insensitive",
-          },
-        },
-      },
-      select: {
-        checkIn: true,
-        checkOut: true,
-        villaId: true,
-      },
-    });
+    // Flatten all bookings from all villas
+    const allBookings = villas.flatMap(v => v.bookings);
 
     return { 
       success: true, 
-      bookings: bookings.map(b => ({
+      bookings: allBookings.map(b => ({
         checkIn: b.checkIn.toISOString(),
         checkOut: b.checkOut.toISOString(),
         villaId: b.villaId
@@ -359,9 +355,6 @@ export async function cancelBooking(bookingId: string) {
   }
 }
 
-/**
- * Checks and returns available villas for specific dates, destination, and guest count
- */
 export async function checkAvailableVillasForDates(data: {
   destination: string;
   checkIn?: string;
@@ -370,16 +363,17 @@ export async function checkAvailableVillasForDates(data: {
 }) {
   try {
     const region = data.destination || "Lonavala";
-    const guestsNeeded = data.guests || 1;
-
-    const isGlobal = !region || region.toLowerCase().includes("all") || region.toLowerCase().includes("anywhere");
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 
-    // 1. Query villas matching region & guest capacity
+    // Helper: extract UTC date-only stamp (ignoring time/timezone)
+    const toUTCDay = (d: Date) => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+
+    console.log("[Availability] Search request:", { region, checkIn: data.checkIn, checkOut: data.checkOut, guests: data.guests });
+
+    // 1. Query ALL villas matching region (no guest filter — let user see all options)
     let villas = await prisma.villa.findMany({
       where: {
-        ...(isGlobal ? {} : { location: { contains: region, mode: "insensitive" } }),
-        guests: { gte: guestsNeeded }
+        location: { contains: region, mode: "insensitive" }
       },
       select: {
         id: true,
@@ -399,42 +393,16 @@ export async function checkAvailableVillasForDates(data: {
           },
           select: {
             checkIn: true,
-            checkOut: true
+            checkOut: true,
+            status: true
           }
         }
       }
     });
 
-    // Fallback 1: If 0 villas match high guest count, search by region
-    if (villas.length === 0) {
-      villas = await prisma.villa.findMany({
-        where: isGlobal ? {} : { location: { contains: region, mode: "insensitive" } },
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          price: true,
-          bedrooms: true,
-          guests: true,
-          location: true,
-          images: true,
-          bookings: {
-            where: {
-              OR: [
-                { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
-                { status: "HELD", createdAt: { gte: tenMinutesAgo } }
-              ]
-            },
-            select: {
-              checkIn: true,
-              checkOut: true
-            }
-          }
-        }
-      });
-    }
+    console.log("[Availability] Villas found for region:", villas.length, "region:", region);
 
-    // Fallback 2: If still 0, fetch all active villas
+    // Fallback: If no villas match the region, fetch all villas
     if (villas.length === 0) {
       villas = await prisma.villa.findMany({
         select: {
@@ -455,41 +423,61 @@ export async function checkAvailableVillasForDates(data: {
             },
             select: {
               checkIn: true,
-              checkOut: true
+              checkOut: true,
+              status: true
             }
           }
         }
       });
+      console.log("[Availability] Fallback: fetched ALL villas:", villas.length);
     }
 
-    let cinDate = data.checkIn ? new Date(data.checkIn) : null;
-    let coutDate = data.checkOut ? new Date(data.checkOut) : null;
+    // 2. If no dates provided, return all villas
+    if (!data.checkIn || !data.checkOut) {
+      console.log("[Availability] No dates provided, returning all", villas.length, "villas");
+      return {
+        success: true,
+        villas: villas.map(v => ({
+          id: v.id,
+          name: v.name,
+          slug: v.slug,
+          price: v.price,
+          bedrooms: v.bedrooms,
+          guests: v.guests,
+          location: v.location,
+          image: v.images[0] || "/images/hero-villa.png"
+        }))
+      };
+    }
 
+    // 3. Parse user dates and normalize to UTC day boundaries
+    const userCheckIn = new Date(data.checkIn);
+    const userCheckOut = new Date(data.checkOut);
+    const userCinDay = toUTCDay(userCheckIn);
+    const userCoutDay = toUTCDay(userCheckOut);
+
+    console.log("[Availability] User dates (UTC days):", { userCinDay: new Date(userCinDay).toISOString(), userCoutDay: new Date(userCoutDay).toISOString() });
+
+    // 4. Filter: keep villas that have NO overlapping active bookings
     const availableVillas = villas.filter(v => {
-      if (!cinDate || !coutDate) return true;
-
-      const userCin = new Date(cinDate.getFullYear(), cinDate.getMonth(), cinDate.getDate()).getTime();
-      const userCout = new Date(coutDate.getFullYear(), coutDate.getMonth(), coutDate.getDate()).getTime();
-
       const hasOverlap = v.bookings.some(b => {
-        const bCinDate = new Date(b.checkIn);
-        const bCoutDate = new Date(b.checkOut);
-
-        const bCin = new Date(bCinDate.getFullYear(), bCinDate.getMonth(), bCinDate.getDate()).getTime();
-        const bCout = new Date(bCoutDate.getFullYear(), bCoutDate.getMonth(), bCoutDate.getDate()).getTime();
-
-        return userCin < bCout && userCout > bCin;
+        const bCinDay = toUTCDay(new Date(b.checkIn));
+        const bCoutDay = toUTCDay(new Date(b.checkOut));
+        // Standard interval overlap: [userCin, userCout) overlaps [bCin, bCout)
+        const overlaps = userCinDay < bCoutDay && userCoutDay > bCinDay;
+        if (overlaps) {
+          console.log(`[Availability] Villa "${v.name}" blocked by booking: ${new Date(bCinDay).toISOString().split('T')[0]} - ${new Date(bCoutDay).toISOString().split('T')[0]} (${b.status})`);
+        }
+        return overlaps;
       });
-
       return !hasOverlap;
     });
 
-    // Fallback 3: If date filter excluded all properties, return region villas so user can explore or inquire
-    const finalVillas = availableVillas.length > 0 ? availableVillas : villas;
+    console.log("[Availability] Available villas after date filter:", availableVillas.length, "/", villas.length);
 
     return {
       success: true,
-      villas: finalVillas.map(v => ({
+      villas: availableVillas.map(v => ({
         id: v.id,
         name: v.name,
         slug: v.slug,
@@ -501,7 +489,7 @@ export async function checkAvailableVillasForDates(data: {
       }))
     };
   } catch (error: any) {
-    console.error("Failed to check villa availability:", error);
+    console.error("[Availability] FATAL ERROR:", error);
     return { success: false, error: "Failed to check availability" };
   }
 }
