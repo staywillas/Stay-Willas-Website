@@ -23,7 +23,19 @@ import {
   Copy,
   Loader2,
   Wrench,
-  AlertTriangle
+  AlertTriangle,
+  X,
+  Receipt,
+  User,
+  Phone,
+  CalendarDays,
+  FileText,
+  CheckCircle2,
+  Trash2,
+  Eye,
+  CreditCard,
+  Edit3,
+  Save
 } from "lucide-react";
 import Image from "next/image";
 import AvailabilityCalendar from "@/components/admin/availability-calendar";
@@ -35,7 +47,9 @@ import {
   updateChannelConfig, 
   syncExternalChannels,
   createManualBooking,
-  deleteBooking
+  deleteBooking,
+  updateBookingPayment,
+  updateBookingFullDetails
 } from "@/app/actions/admin";
 
 interface SeasonalPrice {
@@ -84,6 +98,11 @@ interface Booking {
   status: string;
   userId: string;
   villa: Villa;
+  addOns?: any;
+  kycName?: string | null;
+  kycGuests?: any;
+  kycIdUrl?: string | null;
+  createdAt?: Date;
 }
 
 interface Inquiry {
@@ -117,6 +136,93 @@ const AdminDashboard = ({
   const [villas, setVillas] = useState<Villa[]>(initialVillas);
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
 
+  // Selected Booking details modal state & invoice prefill
+  const [selectedBookingDetails, setSelectedBookingDetails] = useState<Booking | null>(null);
+  const [calculatorPrefill, setCalculatorPrefill] = useState<any>(null);
+
+  // Inline Payment Editing States inside Modal
+  const [isEditingPayment, setIsEditingPayment] = useState(false);
+  const [paymentAdvanceInput, setPaymentAdvanceInput] = useState<number | "">("");
+  const [isSavingPayment, setIsSavingPayment] = useState(false);
+
+  // Full Reservation & Bill Editing States
+  const [isEditingFullBill, setIsEditingFullBill] = useState(false);
+  const [editBillNightlyRate, setEditBillNightlyRate] = useState<number>(0);
+  const [editBillFoodPlan, setEditBillFoodPlan] = useState<string>("none");
+  const [editBillFoodRate, setEditBillFoodRate] = useState<number>(0);
+  const [editBillExtraCharges, setEditBillExtraCharges] = useState<Array<{ id: string; description: string; amount: number }>>([]);
+  const [editBillNewExtraDesc, setEditBillNewExtraDesc] = useState("");
+  const [editBillNewExtraAmount, setEditBillNewExtraAmount] = useState<number | "">("");
+  const [editBillDiscountFlat, setEditBillDiscountFlat] = useState<number>(0);
+  const [editBillDiscountPercent, setEditBillDiscountPercent] = useState<number>(0);
+  const [editBillGstPercent, setEditBillGstPercent] = useState<number>(0);
+  const [editBillSecurityDeposit, setEditBillSecurityDeposit] = useState<number>(0);
+  const [editBillAdvancePaid, setEditBillAdvancePaid] = useState<number>(0);
+  const [isSavingFullBill, setIsSavingFullBill] = useState(false);
+
+  const handleOpenInCalculator = (booking: Booking) => {
+    let guestName = "";
+    let guestEmail = "";
+    let guestPhone = "";
+    let ratePerNight = booking.villa?.price || 0;
+    let foodPlan = "none";
+    let foodRate = 0;
+    let extraCharges: any[] = [];
+    let discountFlat = 0;
+    let discountPercent = 0;
+    let gstPercent = 18;
+    let advancePaid = 0;
+    let securityDeposit = 0;
+
+    try {
+      if (booking.userId && booking.userId.startsWith("{")) {
+        const parsed = JSON.parse(booking.userId);
+        guestName = parsed.name || "";
+        guestEmail = parsed.email || "";
+        guestPhone = parsed.phone || "";
+        if (parsed.nightlyRate) ratePerNight = parsed.nightlyRate;
+        if (parsed.food) {
+          foodPlan = parsed.food.plan || "none";
+          foodRate = parsed.food.ratePerPersonPerDay || 0;
+        }
+        if (Array.isArray(parsed.extraCharges)) extraCharges = parsed.extraCharges;
+        if (parsed.discount) {
+          discountFlat = parsed.discount.flat || 0;
+          discountPercent = parsed.discount.percent || 0;
+        }
+        if (parsed.gst) gstPercent = parsed.gst.percent || 0;
+        if (parsed.advancePaid) advancePaid = parsed.advancePaid;
+        if (parsed.securityDeposit) securityDeposit = parsed.securityDeposit;
+      } else {
+        guestName = booking.userId || "";
+      }
+    } catch (e) {}
+
+    const cin = new Date(booking.checkIn).toISOString().split("T")[0];
+    const cout = new Date(booking.checkOut).toISOString().split("T")[0];
+
+    setCalculatorPrefill({
+      villaSlug: booking.villa?.slug || "",
+      checkIn: cin,
+      checkOut: cout,
+      guestName,
+      guestEmail,
+      guestPhone,
+      ratePerNight,
+      foodPlan,
+      foodRate,
+      extraCharges,
+      discountFlat,
+      discountPercent,
+      gstPercent,
+      advancePaid,
+      securityDeposit,
+    });
+
+    setSelectedBookingDetails(null);
+    setActiveTab("calculator");
+  };
+
   // Manual Booking Form States
   const [showAddBooking, setShowAddBooking] = useState(false);
   const [newBookingVillaId, setNewBookingVillaId] = useState("");
@@ -133,6 +239,30 @@ const AdminDashboard = ({
 
   const [newBookingNightlyRate, setNewBookingNightlyRate] = useState(0);
   const [newBookingGuests, setNewBookingGuests] = useState(1);
+
+  // Food & Dining Package States
+  const [newBookingFoodPlan, setNewBookingFoodPlan] = useState<"none" | "standard" | "deluxe" | "custom">("none");
+  const [newBookingFoodRate, setNewBookingFoodRate] = useState<number>(0);
+
+  // Extra Charges List
+  const [newBookingExtraCharges, setNewBookingExtraCharges] = useState<Array<{ id: string; description: string; amount: number }>>([]);
+  const [newExtraDesc, setNewExtraDesc] = useState("");
+  const [newExtraAmount, setNewExtraAmount] = useState<number | "">("");
+
+  // Discounts & Adjustments
+  const [newBookingDiscountFlat, setNewBookingDiscountFlat] = useState<number>(0);
+  const [newBookingDiscountPercent, setNewBookingDiscountPercent] = useState<number>(0);
+  const [newBookingGstPercent, setNewBookingGstPercent] = useState<number>(0);
+  const [newBookingAdvancePaid, setNewBookingAdvancePaid] = useState<number>(0);
+  const [newBookingSecurityDeposit, setNewBookingSecurityDeposit] = useState<number>(0);
+
+  // Auto food rate helper when plan changes
+  const handleFoodPlanChange = (plan: "none" | "standard" | "deluxe" | "custom") => {
+    setNewBookingFoodPlan(plan);
+    if (plan === "none") setNewBookingFoodRate(0);
+    else if (plan === "standard") setNewBookingFoodRate(1000);
+    else if (plan === "deluxe") setNewBookingFoodRate(1500);
+  };
 
   // Prefill base nightly rate and guests limit when villa is selected
   useEffect(() => {
@@ -151,9 +281,35 @@ const AdminDashboard = ({
       const inDate = new Date(newBookingCheckIn);
       const outDate = new Date(newBookingCheckOut);
       const nights = Math.max(0, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
-      setNewBookingPrice(nights * newBookingNightlyRate);
+      
+      const stayTotal = nights * newBookingNightlyRate;
+      const foodTotal = newBookingFoodPlan !== "none" ? (newBookingFoodRate * newBookingGuests * nights) : 0;
+      const extrasTotal = newBookingExtraCharges.reduce((acc, c) => acc + (c.amount || 0), 0);
+      const subtotal = stayTotal + foodTotal + extrasTotal;
+      
+      const discFlat = newBookingDiscountFlat || 0;
+      const discPct = newBookingDiscountPercent || 0;
+      const discountVal = discFlat + (subtotal * (discPct / 100));
+      
+      const taxable = Math.max(0, subtotal - discountVal);
+      const gstTotal = taxable * ((newBookingGstPercent || 0) / 100);
+      const grandTotal = Math.round(taxable + gstTotal + (newBookingSecurityDeposit || 0));
+
+      setNewBookingPrice(grandTotal);
     }
-  }, [newBookingCheckIn, newBookingCheckOut, newBookingNightlyRate]);
+  }, [
+    newBookingCheckIn, 
+    newBookingCheckOut, 
+    newBookingNightlyRate, 
+    newBookingFoodPlan, 
+    newBookingFoodRate, 
+    newBookingGuests, 
+    newBookingExtraCharges, 
+    newBookingDiscountFlat, 
+    newBookingDiscountPercent, 
+    newBookingGstPercent, 
+    newBookingSecurityDeposit
+  ]);
 
   const handleManualBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -166,18 +322,46 @@ const AdminDashboard = ({
 
     setIsSavingBooking(true);
     try {
+      const inDate = new Date(newBookingCheckIn);
+      const outDate = new Date(newBookingCheckOut);
+      const nights = Math.max(1, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
+      const stayTotal = nights * newBookingNightlyRate;
+      const foodTotal = newBookingFoodPlan !== "none" ? (newBookingFoodRate * newBookingGuests * nights) : 0;
+      const extrasTotal = newBookingExtraCharges.reduce((acc, c) => acc + (c.amount || 0), 0);
+      const subtotal = stayTotal + foodTotal + extrasTotal;
+      const discFlat = newBookingDiscountFlat || 0;
+      const discPct = newBookingDiscountPercent || 0;
+      const discountVal = discFlat + (subtotal * (discPct / 100));
+      const taxable = Math.max(0, subtotal - discountVal);
+      const gstTotal = taxable * ((newBookingGstPercent || 0) / 100);
+      const grandTotal = Math.round(taxable + gstTotal + (newBookingSecurityDeposit || 0));
+      const balanceDue = Math.max(0, grandTotal - (newBookingAdvancePaid || 0));
+
       const result = await createManualBooking({
         villaId: newBookingVillaId,
-        checkIn: new Date(newBookingCheckIn).toISOString(),
-        checkOut: new Date(newBookingCheckOut).toISOString(),
+        checkIn: inDate.toISOString(),
+        checkOut: outDate.toISOString(),
         guestName: newBookingGuestName,
         guestEmail: newBookingGuestEmail,
         guestPhone: newBookingGuestPhone,
-        totalPrice: newBookingPrice,
+        totalPrice: newBookingPrice || grandTotal,
         status: newBookingStatus,
         type: newBookingType,
         guests: newBookingGuests,
         nightlyRate: newBookingNightlyRate,
+        foodPlan: newBookingFoodPlan,
+        foodRatePerPersonPerDay: newBookingFoodRate,
+        foodGuestsCount: newBookingGuests,
+        foodTotal,
+        extraCharges: newBookingExtraCharges.map(e => ({ description: e.description, amount: e.amount })),
+        discountFlat: newBookingDiscountFlat,
+        discountPercent: newBookingDiscountPercent,
+        discountTotal: discountVal,
+        gstPercent: newBookingGstPercent,
+        gstTotal,
+        advancePaid: newBookingAdvancePaid,
+        securityDeposit: newBookingSecurityDeposit,
+        balanceDue,
       });
 
       if (result.success && result.booking) {
@@ -188,7 +372,7 @@ const AdminDashboard = ({
           villaId: newBookingVillaId,
           checkIn: new Date(newBookingCheckIn),
           checkOut: new Date(newBookingCheckOut),
-          totalPrice: newBookingPrice,
+          totalPrice: newBookingPrice || grandTotal,
           status: newBookingStatus,
           userId: result.booking.userId,
           addOns: null,
@@ -197,9 +381,7 @@ const AdminDashboard = ({
           kycIdUrl: null,
           createdAt: new Date(),
           updatedAt: new Date(),
-          villa: {
-            name: selectedVilla ? selectedVilla.name : "Property"
-          }
+          villa: selectedVilla || { name: "Property", slug: "", price: newBookingNightlyRate, images: [] }
         };
 
         setBookings([newBookingRecord, ...bookings]);
@@ -215,6 +397,14 @@ const AdminDashboard = ({
         setNewBookingPrice(0);
         setNewBookingNightlyRate(0);
         setNewBookingGuests(1);
+        setNewBookingFoodPlan("none");
+        setNewBookingFoodRate(0);
+        setNewBookingExtraCharges([]);
+        setNewBookingDiscountFlat(0);
+        setNewBookingDiscountPercent(0);
+        setNewBookingGstPercent(0);
+        setNewBookingAdvancePaid(0);
+        setNewBookingSecurityDeposit(0);
       } else {
         setBookingFormError(result.error || "Failed to save booking.");
       }
@@ -588,7 +778,7 @@ const AdminDashboard = ({
 
       {/* Tab Contents */}
       {activeTab === "calculator" && (
-        <BillCalculator villas={villas as any} />
+        <BillCalculator villas={villas as any} prefillData={calculatorPrefill} />
       )}
 
       {activeTab === "pricing" && (
@@ -612,7 +802,10 @@ const AdminDashboard = ({
             {/* Recent Activity Bookings */}
             <div className="glass border border-slate-200 rounded-[32px] p-8 lg:col-span-2">
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-xl font-cormorant font-bold italic">Recent Reservations</h3>
+                <div>
+                  <h3 className="text-xl font-cormorant font-bold italic">Recent Reservations</h3>
+                  <p className="text-[11px] text-slate-400">Click any reservation to view full bill statement & stay info</p>
+                </div>
                 <button 
                   onClick={() => setActiveTab("bookings")}
                   className="text-blue-400 text-xs uppercase tracking-widest font-bold hover:underline cursor-pointer flex items-center gap-1"
@@ -621,24 +814,34 @@ const AdminDashboard = ({
                 </button>
               </div>
 
-              {initialBookings.length === 0 ? (
+              {bookings.length === 0 ? (
                 <div className="text-center py-12 text-slate-400 text-sm">No reservations logged yet.</div>
               ) : (
-                <div className="space-y-6">
-                  {initialBookings.slice(0, 3).map((booking) => (
-                    <div key={booking.id} className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-200">
+                <div className="space-y-4">
+                  {bookings.slice(0, 3).map((booking) => (
+                    <div 
+                      key={booking.id} 
+                      onClick={() => setSelectedBookingDetails(booking)}
+                      className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-blue-400/60 hover:bg-blue-50/40 hover:shadow-md transition-all cursor-pointer group"
+                      title="Click to view reservation & bill details"
+                    >
                       <div className="flex items-center gap-4">
-                        <div className="relative w-16 h-12 rounded-xl overflow-hidden bg-slate-50 border border-slate-100">
+                        <div className="relative w-16 h-12 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0">
                           <Image 
                             src={booking.villa.images[0] || "/images/hero-villa.png"} 
                             alt={booking.villa.name} 
                             fill
-                            className="object-cover"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
                         <div>
-                          <h4 className="font-cormorant font-bold text-sm text-blue-400">{booking.villa.name}</h4>
-                          <p className="text-slate-500 text-xs">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-cormorant font-bold text-sm text-[#1B3564] group-hover:text-blue-600 transition-colors">{booking.villa.name}</h4>
+                            <span className="text-[10px] text-blue-500 font-bold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
+                              <Eye size={10} /> View Bill
+                            </span>
+                          </div>
+                          <p className="text-slate-500 text-xs mt-0.5">
                             {new Date(booking.checkIn).toLocaleDateString("en-IN", { month: "short", day: "numeric" })} - {new Date(booking.checkOut).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}
                           </p>
                         </div>
@@ -837,21 +1040,30 @@ const AdminDashboard = ({
                             </span>
                           </td>
                           <td className="py-5 text-right">
-                            <button
-                              onClick={async () => {
-                                if (confirm("Are you sure you want to cancel and remove this reservation? This will instantly release these dates on the calendars.")) {
-                                  const res = await deleteBooking(booking.id);
-                                  if (res.success) {
-                                    setBookings(bookings.filter(b => b.id !== booking.id));
-                                  } else {
-                                    alert(res.error || "Failed to remove stay block.");
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => setSelectedBookingDetails(booking)}
+                                className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors flex items-center gap-1 border border-blue-200 cursor-pointer uppercase tracking-wider"
+                              >
+                                <Eye size={11} />
+                                View Bill
+                              </button>
+                              <button
+                                onClick={async () => {
+                                  if (confirm("Are you sure you want to cancel and remove this reservation? This will instantly release these dates on the calendars.")) {
+                                    const res = await deleteBooking(booking.id);
+                                    if (res.success) {
+                                      setBookings(bookings.filter(b => b.id !== booking.id));
+                                    } else {
+                                      alert(res.error || "Failed to remove stay block.");
+                                    }
                                   }
-                                }
-                              }}
-                              className="text-[9px] text-red-500/80 hover:text-red-600 hover:underline tracking-widest uppercase font-bold cursor-pointer transition-colors"
-                            >
-                              Cancel Stays
-                            </button>
+                                }}
+                                className="text-[9px] text-red-500/80 hover:text-red-600 hover:underline tracking-widest uppercase font-bold cursor-pointer transition-colors ml-1"
+                              >
+                                Cancel Stays
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -1009,23 +1221,173 @@ const AdminDashboard = ({
                   </div>
                 )}
 
-                {newBookingCheckIn && newBookingCheckOut && (
-                  <div className="text-[11px] text-[#1B3564]/70 font-semibold bg-blue-500/5 border border-blue-500/10 px-4 py-2.5 rounded-xl">
-                    Duration: {Math.max(0, Math.round((new Date(newBookingCheckOut).getTime() - new Date(newBookingCheckIn).getTime()) / (1000 * 60 * 60 * 24)))} Nights
-                  </div>
+                {newBookingType === "GUEST" && (
+                  <>
+                    {/* Food & Meals Package Section */}
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 space-y-3">
+                      <span className="text-[9px] text-[#1B3564]/60 font-bold uppercase tracking-widest block border-b border-slate-200 pb-1">
+                        FOOD & DINING PACKAGE
+                      </span>
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <div className="flex flex-col gap-1 col-span-2 sm:col-span-1">
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Food Plan</label>
+                          <select
+                            value={newBookingFoodPlan}
+                            onChange={(e) => handleFoodPlanChange(e.target.value as any)}
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                          >
+                            <option value="none">None (Self Cook / Outside)</option>
+                            <option value="standard">Standard (₹1,000/person/day)</option>
+                            <option value="deluxe">Deluxe (₹1,500/person/day)</option>
+                            <option value="custom">Custom Daily Rate</option>
+                          </select>
+                        </div>
+                        {newBookingFoodPlan !== "none" && (
+                          <div className="flex flex-col gap-1 col-span-2 sm:col-span-1">
+                            <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Rate/Person/Day (₹)</label>
+                            <input
+                              type="number"
+                              value={newBookingFoodRate || ""}
+                              onChange={(e) => setNewBookingFoodRate(parseInt(e.target.value) || 0)}
+                              placeholder="e.g. 1500"
+                              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Extra Charges Section */}
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 space-y-3">
+                      <span className="text-[9px] text-[#1B3564]/60 font-bold uppercase tracking-widest block border-b border-slate-200 pb-1">
+                        EXTRA CHARGES & SERVICES
+                      </span>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="e.g. Pool Heating / Chef"
+                          value={newExtraDesc}
+                          onChange={(e) => setNewExtraDesc(e.target.value)}
+                          className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none"
+                        />
+                        <input
+                          type="number"
+                          placeholder="₹ Amount"
+                          value={newExtraAmount}
+                          onChange={(e) => setNewExtraAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                          className="w-24 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (newExtraDesc && newExtraAmount !== "") {
+                              setNewBookingExtraCharges([
+                                ...newBookingExtraCharges,
+                                { id: Date.now().toString(), description: newExtraDesc, amount: Number(newExtraAmount) }
+                              ]);
+                              setNewExtraDesc("");
+                              setNewExtraAmount("");
+                            }
+                          }}
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] px-3 rounded-xl border-none cursor-pointer"
+                        >
+                          + Add
+                        </button>
+                      </div>
+
+                      {newBookingExtraCharges.length > 0 && (
+                        <div className="space-y-1.5 pt-1">
+                          {newBookingExtraCharges.map((item) => (
+                            <div key={item.id} className="flex justify-between items-center bg-white px-3 py-1.5 rounded-lg text-xs border border-slate-200">
+                              <span className="text-slate-700">{item.description}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-slate-900">₹{item.amount.toLocaleString("en-IN")}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setNewBookingExtraCharges(newBookingExtraCharges.filter(x => x.id !== item.id))}
+                                  className="text-red-500 hover:text-red-700 text-xs cursor-pointer border-none bg-none font-bold"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Discounts, Taxes & Payments */}
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 space-y-3">
+                      <span className="text-[9px] text-[#1B3564]/60 font-bold uppercase tracking-widest block border-b border-slate-200 pb-1">
+                        DISCOUNTS, GST & PAYMENTS
+                      </span>
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Discount (Flat ₹)</label>
+                          <input
+                            type="number"
+                            value={newBookingDiscountFlat || ""}
+                            onChange={(e) => setNewBookingDiscountFlat(parseInt(e.target.value) || 0)}
+                            placeholder="e.g. 2000"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Discount (%)</label>
+                          <input
+                            type="number"
+                            value={newBookingDiscountPercent || ""}
+                            onChange={(e) => setNewBookingDiscountPercent(parseInt(e.target.value) || 0)}
+                            placeholder="e.g. 10"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">GST Tax (%)</label>
+                          <input
+                            type="number"
+                            value={newBookingGstPercent || ""}
+                            onChange={(e) => setNewBookingGstPercent(parseInt(e.target.value) || 0)}
+                            placeholder="e.g. 18"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Security Deposit (₹)</label>
+                          <input
+                            type="number"
+                            value={newBookingSecurityDeposit || ""}
+                            onChange={(e) => setNewBookingSecurityDeposit(parseInt(e.target.value) || 0)}
+                            placeholder="e.g. 5000"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                          />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Advance Paid Received (₹)</label>
+                          <input
+                            type="number"
+                            value={newBookingAdvancePaid || ""}
+                            onChange={(e) => setNewBookingAdvancePaid(parseInt(e.target.value) || 0)}
+                            placeholder="e.g. 15000"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </>
                 )}
 
                 {/* Net Price & Booking Status */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Total Tariff (INR) *</label>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Total Bill Payable (INR) *</label>
                     <input
                       type="number"
                       value={newBookingPrice || ""}
                       onChange={(e) => setNewBookingPrice(parseInt(e.target.value) || 0)}
                       required
                       placeholder="e.g. 45000"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold outline-none focus:border-slate-800"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-slate-800"
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
@@ -1417,6 +1779,641 @@ const AdminDashboard = ({
           </div>
         </div>
       )}
+      {/* Reservation & Bill Details Modal */}
+      {selectedBookingDetails && (() => {
+        const b = selectedBookingDetails;
+        let parsedName = "Guest Traveler";
+        let parsedEmail = "N/A";
+        let parsedPhone = "N/A";
+        let parsedGuests = 1;
+        let parsedNightlyRate = 0;
+        let parsedType = "GUEST";
+        let parsedReason = "";
+
+        let parsedFoodPlan = "none";
+        let parsedFoodRate = 0;
+        let parsedFoodTotal = 0;
+        let parsedExtraCharges: Array<{ description: string; amount: number }> = [];
+        let parsedDiscountTotal = 0;
+        let parsedGstPercent = 0;
+        let parsedGstTotal = 0;
+        let parsedAdvancePaid = 0;
+        let parsedSecurityDeposit = 0;
+        let parsedBalanceDue = 0;
+
+        try {
+          if (b.userId && b.userId.startsWith("{")) {
+            const parsed = JSON.parse(b.userId);
+            if (parsed.name) parsedName = parsed.name;
+            if (parsed.email) parsedEmail = parsed.email;
+            if (parsed.phone) parsedPhone = parsed.phone;
+            if (parsed.guests) parsedGuests = parsed.guests;
+            if (parsed.nightlyRate) parsedNightlyRate = parsed.nightlyRate;
+            if (parsed.type) parsedType = parsed.type;
+            if (parsed.reason) parsedReason = parsed.reason;
+
+            if (parsed.food) {
+              parsedFoodPlan = parsed.food.plan || "none";
+              parsedFoodRate = parsed.food.ratePerPersonPerDay || 0;
+              parsedFoodTotal = parsed.food.total || 0;
+            }
+            if (Array.isArray(parsed.extraCharges)) {
+              parsedExtraCharges = parsed.extraCharges;
+            }
+            if (parsed.discount) {
+              parsedDiscountTotal = parsed.discount.total || 0;
+            }
+            if (parsed.gst) {
+              parsedGstPercent = parsed.gst.percent || 0;
+              parsedGstTotal = parsed.gst.total || 0;
+            }
+            if (parsed.advancePaid) parsedAdvancePaid = parsed.advancePaid;
+            if (parsed.securityDeposit) parsedSecurityDeposit = parsed.securityDeposit;
+            if (parsed.balanceDue) parsedBalanceDue = parsed.balanceDue;
+          } else {
+            parsedName = b.userId || "Guest Traveler";
+          }
+        } catch (e) {}
+
+        const cin = new Date(b.checkIn);
+        const cout = new Date(b.checkOut);
+        const nights = Math.max(1, Math.round((cout.getTime() - cin.getTime()) / (1000 * 60 * 60 * 24)));
+        const computedNightly = parsedNightlyRate || (b.villa?.price) || (b.totalPrice / nights);
+        const baseStayTotal = computedNightly * nights;
+
+        let addOnsList: any[] = [];
+        if (Array.isArray(b.addOns)) {
+          addOnsList = b.addOns;
+        }
+
+        const calculatedBalance = parsedBalanceDue > 0 ? parsedBalanceDue : Math.max(0, b.totalPrice - parsedAdvancePaid);
+
+        return (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+            <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-8">
+              
+              {/* Header */}
+              <div className="bg-[#1B3564] text-white p-6 relative flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center border border-white/20">
+                    <Receipt className="w-5 h-5 text-amber-400" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-cormorant font-bold text-xl tracking-wide">Reservation & Bill Details</h3>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                        b.status === "CONFIRMED"
+                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"
+                          : b.status === "BLOCKED"
+                          ? "bg-red-500/20 text-red-300 border border-red-400/30"
+                          : "bg-amber-500/20 text-amber-300 border border-amber-400/30"
+                      }`}>
+                        {b.status}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 font-mono mt-0.5">Ref ID: {b.id}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!isEditingFullBill) {
+                        setEditBillNightlyRate(computedNightly);
+                        setEditBillFoodPlan(parsedFoodPlan);
+                        setEditBillFoodRate(parsedFoodRate);
+                        setEditBillExtraCharges(parsedExtraCharges.map((x, idx) => ({ id: idx.toString(), description: x.description, amount: x.amount })));
+                        setEditBillDiscountFlat(parsedDiscountTotal);
+                        setEditBillDiscountPercent(0);
+                        setEditBillGstPercent(parsedGstPercent);
+                        setEditBillSecurityDeposit(parsedSecurityDeposit);
+                        setEditBillAdvancePaid(parsedAdvancePaid);
+                      }
+                      setIsEditingFullBill(!isEditingFullBill);
+                    }}
+                    className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer border-none transition-colors flex items-center gap-1.5"
+                  >
+                    <Edit3 size={13} />
+                    {isEditingFullBill ? "Close Editor" : "Edit Bill & Info"}
+                  </button>
+                  <button 
+                    onClick={() => setSelectedBookingDetails(null)}
+                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer text-slate-200 border-none"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto text-slate-800 font-sans">
+
+                {/* Inline Full Bill Editor Box */}
+                {isEditingFullBill ? (
+                  <div className="p-5 rounded-3xl bg-amber-50/40 border-2 border-amber-300 space-y-5 animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between border-b border-amber-200 pb-3">
+                      <div>
+                        <h4 className="font-bold text-amber-900 text-sm flex items-center gap-1.5">
+                          <Edit3 size={16} className="text-amber-600" />
+                          Edit Reservation Tariff & Financial Charges
+                        </h4>
+                        <p className="text-[11px] text-amber-700">Modify nightly rates, meal plans, extra charges, discounts, taxes, or advance paid.</p>
+                      </div>
+                      <span className="text-[10px] bg-amber-500 text-slate-950 px-2.5 py-1 rounded-full font-bold uppercase">Editing Mode</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-slate-600 block mb-1">Nightly Villa Rate (₹)</label>
+                        <input
+                          type="number"
+                          value={editBillNightlyRate}
+                          onChange={(e) => setEditBillNightlyRate(Number(e.target.value))}
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-slate-600 block mb-1">Food / Dining Package</label>
+                        <select
+                          value={editBillFoodPlan}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setEditBillFoodPlan(val);
+                            if (val === "standard") setEditBillFoodRate(1000);
+                            else if (val === "deluxe") setEditBillFoodRate(1500);
+                            else if (val === "none") setEditBillFoodRate(0);
+                          }}
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                        >
+                          <option value="none">No Food Package (₹0)</option>
+                          <option value="standard">Standard Catering (₹1,000 / person / day)</option>
+                          <option value="deluxe">Deluxe Gourmet (₹1,500 / person / day)</option>
+                          <option value="custom">Custom Food Rate</option>
+                        </select>
+                      </div>
+
+                      {editBillFoodPlan !== "none" && (
+                        <div>
+                          <label className="text-[10px] uppercase font-bold text-slate-600 block mb-1">Food Rate / Person / Day (₹)</label>
+                          <input
+                            type="number"
+                            value={editBillFoodRate}
+                            onChange={(e) => setEditBillFoodRate(Number(e.target.value))}
+                            className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                          />
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-slate-600 block mb-1">Flat Discount (₹)</label>
+                        <input
+                          type="number"
+                          value={editBillDiscountFlat}
+                          onChange={(e) => setEditBillDiscountFlat(Number(e.target.value))}
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-slate-600 block mb-1">GST Tax (%)</label>
+                        <input
+                          type="number"
+                          value={editBillGstPercent}
+                          onChange={(e) => setEditBillGstPercent(Number(e.target.value))}
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-slate-600 block mb-1">Refundable Security Deposit (₹)</label>
+                        <input
+                          type="number"
+                          value={editBillSecurityDeposit}
+                          onChange={(e) => setEditBillSecurityDeposit(Number(e.target.value))}
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-slate-600 block mb-1">Advance Paid Received (₹)</label>
+                        <input
+                          type="number"
+                          value={editBillAdvancePaid}
+                          onChange={(e) => setEditBillAdvancePaid(Number(e.target.value))}
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Extra Itemized Charges Editor */}
+                    <div className="space-y-2 pt-2 border-t border-amber-200">
+                      <label className="text-[10px] uppercase font-bold text-slate-700 block">Itemized Extra Services & Food Bills</label>
+                      {editBillExtraCharges.map((item) => (
+                        <div key={item.id} className="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200 text-xs">
+                          <span className="flex-1 font-semibold text-slate-800">{item.description}</span>
+                          <span className="font-bold text-slate-900">₹{item.amount.toLocaleString("en-IN")}</span>
+                          <button
+                            type="button"
+                            onClick={() => setEditBillExtraCharges(editBillExtraCharges.filter(x => x.id !== item.id))}
+                            className="p-1 text-red-500 hover:text-red-700 cursor-pointer border-none bg-none"
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      ))}
+
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="e.g. Additional Food Bill / Pool Heating"
+                          value={editBillNewExtraDesc}
+                          onChange={(e) => setEditBillNewExtraDesc(e.target.value)}
+                          className="flex-grow bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs outline-none"
+                        />
+                        <input
+                          type="number"
+                          placeholder="Amount ₹"
+                          value={editBillNewExtraAmount}
+                          onChange={(e) => setEditBillNewExtraAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                          className="w-24 bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!editBillNewExtraDesc || !editBillNewExtraAmount) return;
+                            setEditBillExtraCharges([
+                              ...editBillExtraCharges,
+                              { id: Date.now().toString(), description: editBillNewExtraDesc, amount: Number(editBillNewExtraAmount) }
+                            ]);
+                            setEditBillNewExtraDesc("");
+                            setEditBillNewExtraAmount("");
+                          }}
+                          className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs cursor-pointer border-none"
+                        >
+                          + Add
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 pt-3 border-t border-amber-200">
+                      <button
+                        type="button"
+                        disabled={isSavingFullBill}
+                        onClick={async () => {
+                          setIsSavingFullBill(true);
+                          const stayTotal = nights * editBillNightlyRate;
+                          const foodTotal = editBillFoodPlan !== "none" ? (editBillFoodRate * parsedGuests * nights) : 0;
+                          const extrasTotal = editBillExtraCharges.reduce((a, b) => a + (b.amount || 0), 0);
+                          const subtotal = stayTotal + foodTotal + extrasTotal;
+                          const discountVal = editBillDiscountFlat + (subtotal * (editBillDiscountPercent / 100));
+                          const taxable = Math.max(0, subtotal - discountVal);
+                          const gstTotal = taxable * (editBillGstPercent / 100);
+                          const grandTotal = Math.round(taxable + gstTotal + editBillSecurityDeposit);
+                          const balanceDue = Math.max(0, grandTotal - editBillAdvancePaid);
+
+                          const res = await updateBookingFullDetails({
+                            bookingId: b.id,
+                            guests: parsedGuests,
+                            nightlyRate: editBillNightlyRate,
+                            foodPlan: editBillFoodPlan,
+                            foodRatePerPersonPerDay: editBillFoodRate,
+                            foodTotal,
+                            extraCharges: editBillExtraCharges.map(x => ({ description: x.description, amount: x.amount })),
+                            discountFlat: editBillDiscountFlat,
+                            discountPercent: editBillDiscountPercent,
+                            discountTotal: discountVal,
+                            gstPercent: editBillGstPercent,
+                            gstTotal,
+                            totalPrice: grandTotal,
+                            advancePaid: editBillAdvancePaid,
+                            securityDeposit: editBillSecurityDeposit,
+                            balanceDue,
+                          });
+
+                          setIsSavingFullBill(false);
+                          if (res.success && res.booking) {
+                            setIsEditingFullBill(false);
+                            setSelectedBookingDetails(res.booking as any);
+                            setBookings(bookings.map(x => x.id === b.id ? (res.booking as any) : x));
+                          } else {
+                            alert(res.error || "Failed to update reservation details.");
+                          }
+                        }}
+                        className="flex-1 bg-[#1B3564] hover:bg-[#2A4985] text-white py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider cursor-pointer border-none shadow-md flex items-center justify-center gap-2"
+                      >
+                        {isSavingFullBill ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                        Save Reservation & Bill Changes
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsEditingFullBill(false)}
+                        className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs cursor-pointer border-none"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+                
+                {/* Villa Banner */}
+                <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <div className="relative w-20 h-16 rounded-xl overflow-hidden bg-slate-200 border border-slate-200 flex-shrink-0">
+                    <Image 
+                      src={b.villa?.images?.[0] || "/images/hero-villa.png"} 
+                      alt={b.villa?.name || "Villa"} 
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-cormorant font-bold text-lg text-[#1B3564] truncate">{b.villa?.name}</h4>
+                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                      <MapPin size={12} className="text-slate-400" />
+                      {b.villa?.location || "Luxury Estate"} • {b.villa?.bedrooms || 4} Bedrooms
+                    </p>
+                    <p className="text-xs text-slate-600 font-medium mt-1">
+                      Base Rate: <span className="font-bold text-slate-900">₹{(b.villa?.price || computedNightly).toLocaleString("en-IN")}</span> / night
+                    </p>
+                  </div>
+                </div>
+
+                {/* Dates & Duration Card */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-blue-500 tracking-wider">Check-In</p>
+                      <p className="text-xs font-bold text-slate-900 mt-0.5">
+                        {cin.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-blue-500 tracking-wider">Check-Out</p>
+                      <p className="text-xs font-bold text-slate-900 mt-0.5">
+                        {cout.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/60 flex items-center gap-3">
+                    <Clock className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-amber-600 tracking-wider">Duration</p>
+                      <p className="text-xs font-bold text-slate-900 mt-0.5">{nights} {nights === 1 ? "Night" : "Nights"} Stay</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Guest Details */}
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                    <User size={14} className="text-[#1B3564]" />
+                    Guest / Booker Information
+                  </h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <span className="text-[11px] text-slate-400 block">Primary Guest Name</span>
+                      <span className="font-semibold text-slate-900">{parsedName}</span>
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-slate-400 block">Email Address</span>
+                      <span className="font-semibold text-slate-900">{parsedEmail}</span>
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-slate-400 block">Phone Number</span>
+                      <span className="font-semibold text-slate-900">{parsedPhone}</span>
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-slate-400 block">Capacity / Booking Type</span>
+                      <span className="font-semibold text-slate-900">{parsedGuests} Guests ({parsedType})</span>
+                    </div>
+                  </div>
+                  {parsedReason && (
+                    <div className="pt-2 border-t border-slate-200 text-xs text-slate-600">
+                      <span className="font-bold text-slate-700">Note / Reason: </span>{parsedReason}
+                    </div>
+                  )}
+                </div>
+
+                {/* Itemized Bill / Financial Breakdown */}
+                <div className="p-5 rounded-2xl bg-slate-900 text-white space-y-4 shadow-inner">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h5 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                      <IndianRupee size={14} />
+                      Itemized Financial Bill Statement
+                    </h5>
+                    <span className="text-[10px] text-slate-400 uppercase font-mono">Detailed Invoice Breakdown</span>
+                  </div>
+
+                  <div className="space-y-2 text-xs text-slate-300">
+                    <div className="flex justify-between items-center text-sm">
+                      <span>Stay Nightly Charge (₹{computedNightly.toLocaleString("en-IN")} × {nights} {nights === 1 ? "night" : "nights"})</span>
+                      <span className="font-semibold text-white">₹{baseStayTotal.toLocaleString("en-IN")}</span>
+                    </div>
+
+                    {parsedFoodPlan !== "none" && (
+                      <div className="flex justify-between items-center">
+                        <span>Food Package ({parsedFoodPlan.toUpperCase()}: ₹{parsedFoodRate.toLocaleString("en-IN")}/person/day × {parsedGuests} guests × {nights} days)</span>
+                        <span className="font-semibold text-emerald-300">₹{(parsedFoodTotal || (parsedFoodRate * parsedGuests * nights)).toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+
+                    {parsedExtraCharges.length > 0 && parsedExtraCharges.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-center">
+                        <span>Extra Charge: {item.description}</span>
+                        <span className="font-semibold text-slate-200">₹{item.amount.toLocaleString("en-IN")}</span>
+                      </div>
+                    ))}
+
+                    {addOnsList.length > 0 && addOnsList.map((addon, idx) => (
+                      <div key={idx} className="flex justify-between items-center text-xs text-slate-400">
+                        <span>Add-on Package: {addon.name || addon.title || "Extra Service"}</span>
+                        <span className="text-slate-200 font-medium">₹{(addon.price || 0).toLocaleString("en-IN")}</span>
+                      </div>
+                    ))}
+
+                    {parsedDiscountTotal > 0 && (
+                      <div className="flex justify-between items-center text-emerald-400 font-semibold pt-1 border-t border-slate-800/60">
+                        <span>Special Discount Deduction</span>
+                        <span>- ₹{parsedDiscountTotal.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+
+                    {parsedGstPercent > 0 && (
+                      <div className="flex justify-between items-center text-slate-300">
+                        <span>GST Tax ({parsedGstPercent}%)</span>
+                        <span className="font-semibold text-slate-200">₹{parsedGstTotal.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+
+                    {parsedSecurityDeposit > 0 && (
+                      <div className="flex justify-between items-center text-amber-300">
+                        <span>Refundable Security Deposit</span>
+                        <span className="font-semibold">₹{parsedSecurityDeposit.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Summary Totals & Payments */}
+                  <div className="border-t border-slate-800 pt-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Total Bill Payable</p>
+                        <p className="text-2xl font-bold font-cormorant text-amber-400">₹{b.totalPrice.toLocaleString("en-IN")}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                          <CheckCircle2 size={12} />
+                          Status: {b.status}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs">
+                      <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 flex flex-col justify-between">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] uppercase text-slate-400 font-bold">Advance Paid Received</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsEditingPayment(!isEditingPayment);
+                              setPaymentAdvanceInput(parsedAdvancePaid);
+                            }}
+                            className="text-[10px] text-amber-400 hover:underline font-bold cursor-pointer border-none bg-none flex items-center gap-1"
+                          >
+                            <CreditCard size={11} />
+                            {isEditingPayment ? "Cancel" : "Update Paid"}
+                          </button>
+                        </div>
+                        <span className="font-bold text-emerald-400 text-lg mt-1">₹{parsedAdvancePaid.toLocaleString("en-IN")}</span>
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 text-right flex flex-col justify-between">
+                        <span className="text-[10px] uppercase text-slate-400 font-bold block">Net Balance Due</span>
+                        <span className="font-bold text-amber-400 text-lg mt-1">₹{calculatedBalance.toLocaleString("en-IN")}</span>
+                      </div>
+                    </div>
+
+                    {/* Inline Payment Editor */}
+                    {isEditingPayment && (
+                      <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2.5 animate-in fade-in duration-200">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">Record / Update Amount Paid by Customer</span>
+                          <span className="text-[10px] text-slate-400">Total Bill: ₹{b.totalPrice.toLocaleString("en-IN")}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="relative flex-1">
+                            <span className="absolute left-3 top-2.5 text-xs text-slate-400 font-bold">₹</span>
+                            <input
+                              type="number"
+                              value={paymentAdvanceInput}
+                              onChange={(e) => setPaymentAdvanceInput(e.target.value === "" ? "" : Number(e.target.value))}
+                              placeholder="e.g. 20000"
+                              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl pl-7 pr-3 py-2 text-xs font-bold outline-none focus:border-amber-400"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setPaymentAdvanceInput(b.totalPrice)}
+                            className="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-[10px] font-bold border border-slate-700 cursor-pointer whitespace-nowrap"
+                          >
+                            Mark Full Paid
+                          </button>
+                          <button
+                            type="button"
+                            disabled={isSavingPayment}
+                            onClick={async () => {
+                              setIsSavingPayment(true);
+                              const val = Number(paymentAdvanceInput) || 0;
+                              const res = await updateBookingPayment(b.id, val);
+                              setIsSavingPayment(false);
+                              if (res.success && res.booking) {
+                                setIsEditingPayment(false);
+                                setSelectedBookingDetails(res.booking as any);
+                                setBookings(bookings.map(x => x.id === b.id ? (res.booking as any) : x));
+                              } else {
+                                alert(res.error || "Failed to update payment record.");
+                              }
+                            }}
+                            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer border-none shadow-md flex items-center gap-1"
+                          >
+                            {isSavingPayment ? <Loader2 size={12} className="animate-spin" /> : "Save"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* KYC Information if available */}
+                {(b.kycName || b.kycIdUrl) && (
+                  <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/60 space-y-2 text-xs">
+                    <h5 className="font-bold text-amber-800 uppercase tracking-wider text-[10px]">Verified KYC Identification</h5>
+                    {b.kycName && <p className="text-slate-800"><strong>Registered KYC Name:</strong> {b.kycName}</p>}
+                    {b.kycIdUrl && (
+                      <a 
+                        href={b.kycIdUrl} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="text-blue-600 hover:underline font-bold inline-flex items-center gap-1"
+                      >
+                        <ExternalLink size={12} /> View Uploaded Identity Document
+                      </a>
+                    )}
+                  </div>
+                )}
+
+              </div>
+
+              {/* Footer Actions */}
+              <div className="p-5 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 font-sans">
+                <button
+                  onClick={() => handleOpenInCalculator(b)}
+                  className="px-4 py-2.5 rounded-xl bg-[#1B3564] hover:bg-[#152A50] text-white text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-2 shadow-sm cursor-pointer border-none"
+                >
+                  <FileText size={14} className="text-amber-400" />
+                  Open in Invoice Calculator & Export
+                </button>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={async () => {
+                      if (confirm("Are you sure you want to cancel and remove this reservation? This will release dates on calendars immediately.")) {
+                        const res = await deleteBooking(b.id);
+                        if (res.success) {
+                          setBookings(bookings.filter(x => x.id !== b.id));
+                          setSelectedBookingDetails(null);
+                        } else {
+                          alert(res.error || "Failed to remove reservation.");
+                        }
+                      }
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 cursor-pointer border border-red-200"
+                  >
+                    <Trash2 size={14} />
+                    Cancel Stays
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedBookingDetails(null)}
+                    className="px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold tracking-wider uppercase transition-all cursor-pointer border-none"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

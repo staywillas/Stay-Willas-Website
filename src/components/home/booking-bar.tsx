@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { 
   ChevronRight, 
   ChevronLeft, 
@@ -10,7 +11,13 @@ import {
   MapPin,
   ChevronDown,
   ArrowRight,
-  Users
+  Users,
+  MessageCircle,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  X,
+  Sparkles
 } from "lucide-react";
 import { 
   format, 
@@ -26,7 +33,7 @@ import {
   subMonths, 
   parseISO 
 } from "date-fns";
-import { getDestinationAvailability } from "@/app/actions/booking";
+import { getDestinationAvailability, checkAvailableVillasForDates } from "@/app/actions/booking";
 import { AnimatePresence, motion } from "framer-motion";
 
 const BookingBar = () => {
@@ -42,6 +49,11 @@ const BookingBar = () => {
   const [bookingsData, setBookingsData] = useState<any[]>([]);
   const [totalVillas, setTotalVillas] = useState<number>(0);
   const [isLoadingBookings, setIsLoadingBookings] = useState(false);
+
+  // Availability Search Results Modal State
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+  const [availabilityModalOpen, setAvailabilityModalOpen] = useState(false);
+  const [availableVillasList, setAvailableVillasList] = useState<any[]>([]);
 
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -93,7 +105,6 @@ const BookingBar = () => {
     const activeBookingsCount = bookingsData.filter(booking => {
       const checkInDate = startOfDay(parseISO(booking.checkIn));
       const checkOutDate = startOfDay(parseISO(booking.checkOut));
-      // Overlap condition: booking.checkIn <= targetDay < booking.checkOut
       return (
         (checkInDate.getTime() <= targetDay.getTime()) && 
         (targetDay.getTime() < checkOutDate.getTime())
@@ -103,7 +114,7 @@ const BookingBar = () => {
     return activeBookingsCount >= totalVillas;
   };
 
-  // Select Date handler with premium validation rules
+  // Select Date handler
   const handleDateSelect = (day: Date) => {
     if (!checkIn || (checkIn && checkOut)) {
       setCheckIn(day);
@@ -115,7 +126,6 @@ const BookingBar = () => {
       } else if (isSameDay(day, checkIn)) {
         setCheckIn(null);
       } else {
-        // Enforce range safety: No fully booked night between checkIn and checkOut
         let hasBookedDayInRange = false;
         let temp = new Date(checkIn);
         while (isBefore(temp, day)) {
@@ -131,32 +141,54 @@ const BookingBar = () => {
           setCheckOut(null);
         } else {
           setCheckOut(day);
-          // Smooth closing delay for premium user feedback
           setTimeout(() => setIsCalendarOpen(false), 200);
         }
       }
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  // Option 1: On-site Check Availability (Queries DB and displays matching villas in a modal)
+  const handleCheckAvailability = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setIsCheckingAvailability(true);
+    try {
+      const res = await checkAvailableVillasForDates({
+        destination,
+        checkIn: checkIn ? checkIn.toISOString() : undefined,
+        checkOut: checkOut ? checkOut.toISOString() : undefined,
+        guests: Number(guests) || 1,
+      });
+      if (res.success && res.villas) {
+        setAvailableVillasList(res.villas);
+      } else {
+        setAvailableVillasList([]);
+      }
+    } catch (err) {
+      console.error("Availability search failed:", err);
+      setAvailableVillasList([]);
+    } finally {
+      setIsCheckingAvailability(false);
+      setAvailabilityModalOpen(true);
+    }
+  };
+
+  // Option 2: Direct WhatsApp Inquiry
+  const handleWhatsAppInquiry = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
     const checkInStr = checkIn ? format(checkIn, "dd MMM yyyy") : "Not specified";
     const checkOutStr = checkOut ? format(checkOut, "dd MMM yyyy") : "Not specified";
     const guestCount = guests.trim() || "2";
     const guestLabel = guestCount === "1" ? "guest" : "guests";
     
-    const msg = `Hello Stay Willas! 🌟 I am planning a luxury villa staycation in *${destination}* and would love to check your availability. 
+    const msg = `Hello Stay Willas! 🌟 I am planning a luxury staycation in *${destination}* and would like to check villa availability. 
 
-Here are our details:
-👥 *Guest Count:* ${guestCount} ${guestLabel}
-📅 *Preferred Dates:* ${checkInStr} to ${checkOutStr}
+👥 *Guests:* ${guestCount} ${guestLabel}
+📅 *Dates:* ${checkInStr} to ${checkOutStr}
 
-Could you please share the options available and help us plan our perfect getaway? Thank you so much! ✨`;
+Could you please share available villas and assist us with our booking? Thank you! ✨`;
 
     const encodedMsg = encodeURIComponent(msg);
     const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
-    
     window.open(whatsappUrl, "_blank");
   };
 
@@ -168,7 +200,7 @@ Could you please share the options available and help us plan our perfect getawa
         transition={{ duration: 0.8, delay: 0.2 }}
         className="bg-white rounded-[2rem] md:rounded-full p-4 md:p-3.5 pl-4 md:pl-8 pr-4 md:pr-4 shadow-[0_25px_60px_rgba(27,53,100,0.15)] border border-[#DAA520]/25"
       >
-        <form onSubmit={handleSearch} className="relative z-30">
+        <form onSubmit={handleCheckAvailability} className="relative z-30">
           {/* Desktop Layout */}
           <div className="hidden md:flex items-center justify-between gap-1">
             
@@ -249,15 +281,34 @@ Could you please share the options available and help us plan our perfect getawa
               </div>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              aria-label="Check Availability"
-              className="bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-[10px] tracking-widest uppercase rounded-full px-6 py-3.5 shadow-lg shadow-yellow-500/10 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2 shrink-0 self-center"
-            >
-              <span>Check Availability</span>
-              <ArrowRight size={12} className="stroke-[2.5]" />
-            </button>
+            {/* Action Buttons: Option 1 (Check Availability) & Option 2 (WhatsApp) */}
+            <div className="flex items-center gap-2 shrink-0 self-center">
+              <button
+                type="submit"
+                disabled={isCheckingAvailability}
+                aria-label="Check Availability"
+                className="bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-[10px] tracking-widest uppercase rounded-full px-5 py-3.5 shadow-lg shadow-yellow-500/10 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2"
+              >
+                {isCheckingAvailability ? (
+                  <Loader2 size={13} className="animate-spin text-[#1B3564]" />
+                ) : (
+                  <>
+                    <span>Check Availability</span>
+                    <ArrowRight size={12} className="stroke-[2.5]" />
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleWhatsAppInquiry}
+                aria-label="Direct to WhatsApp"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] tracking-widest uppercase rounded-full px-5 py-3.5 shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2"
+              >
+                <MessageCircle size={13} className="fill-white/20 stroke-[2.5]" />
+                <span>WhatsApp Inquiry</span>
+              </button>
+            </div>
           </div>
 
           {/* Mobile Layout */}
@@ -315,7 +366,7 @@ Could you please share the options available and help us plan our perfect getawa
 
               {/* GUESTS ROW */}
               <div className="flex items-center justify-between bg-slate-50/50 p-2.5 rounded-xl border border-slate-100">
-                <div className="flex flex-col gap-1 text-left flex-1 mr-3">
+                <div className="flex flex-col gap-1 text-left flex-1 mr-2">
                   <label className="text-[8px] font-extrabold text-[#1B3564]/50 uppercase tracking-widest flex items-center gap-1">
                     <Users size={8} className="text-[#DAA520]" />
                     GUESTS
@@ -333,14 +384,34 @@ Could you please share the options available and help us plan our perfect getawa
                     />
                   </div>
                 </div>
+              </div>
 
+              {/* Action Buttons Row */}
+              <div className="grid grid-cols-2 gap-2 pt-1">
                 <button
                   type="submit"
+                  disabled={isCheckingAvailability}
                   aria-label="Check Availability"
-                  className="bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-[9px] tracking-widest uppercase rounded-full px-4.5 py-2.5 shadow-lg shadow-yellow-500/10 hover:shadow-xl transition-all duration-300 cursor-pointer border-none flex items-center gap-1 shrink-0"
+                  className="bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-[9px] tracking-widest uppercase rounded-full py-3 px-2 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-none flex items-center justify-center gap-1.5"
                 >
-                  <span>Check Availability</span>
-                  <ArrowRight size={10} className="stroke-[2.5]" />
+                  {isCheckingAvailability ? (
+                    <Loader2 size={12} className="animate-spin text-[#1B3564]" />
+                  ) : (
+                    <>
+                      <span>Check Dates</span>
+                      <ArrowRight size={10} className="stroke-[2.5]" />
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleWhatsAppInquiry}
+                  aria-label="WhatsApp Inquiry"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[9px] tracking-widest uppercase rounded-full py-3 px-2 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-none flex items-center justify-center gap-1.5"
+                >
+                  <MessageCircle size={12} />
+                  <span>WhatsApp</span>
                 </button>
               </div>
 
@@ -355,28 +426,23 @@ Could you please share the options available and help us plan our perfect getawa
           <AnimatePresence>
             {isCalendarOpen && (
               <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
-                {/* Dark blur backdrop */}
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-0" onClick={() => setIsCalendarOpen(false)} />
-                {/* Centered Modal Content Card */}
                 <div 
                   onClick={(e) => e.stopPropagation()} 
                   className="relative z-10 w-full max-w-[350px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left"
                 >
-                  {/* Calendar Header */}
                   <div className="flex items-center justify-between mb-4">
                     <button type="button" aria-label="Previous month" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
                     <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
                     <button type="button" aria-label="Next month" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
                   </div>
                   
-                  {/* Weekdays */}
                   <div className="grid grid-cols-7 text-center mb-1.5">
                     {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
                       <span key={idx} className="text-[9px] font-extrabold text-[#E2A63B] uppercase tracking-widest">{day}</span>
                     ))}
                   </div>
 
-                  {/* Days */}
                   <div className="grid grid-cols-7 gap-0.5">
                     {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => <div key={`empty-${i}`} />)}
                     {eachDayOfInterval({ start: startOfMonth(calendarViewMonth), end: endOfMonth(calendarViewMonth) }).map((day) => {
@@ -423,21 +489,18 @@ Could you please share the options available and help us plan our perfect getawa
                 onClick={(e) => e.stopPropagation()} 
                 className="absolute top-full left-1/2 -translate-x-1/2 translate-y-0 mt-4 z-50 w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left"
               >
-                {/* Calendar Header */}
                 <div className="flex items-center justify-between mb-4">
                   <button type="button" aria-label="Previous month" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
                   <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
                   <button type="button" aria-label="Next month" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
                 </div>
                 
-                {/* Weekdays */}
                 <div className="grid grid-cols-7 text-center mb-1.5">
                   {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
                     <span key={idx} className="text-[9px] font-extrabold text-[#E2A63B] uppercase tracking-widest">{day}</span>
                   ))}
                 </div>
 
-                {/* Days */}
                 <div className="grid grid-cols-7 gap-0.5">
                   {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => <div key={`empty-${i}`} />)}
                   {eachDayOfInterval({ start: startOfMonth(calendarViewMonth), end: endOfMonth(calendarViewMonth) }).map((day) => {
@@ -474,6 +537,125 @@ Could you please share the options available and help us plan our perfect getawa
           )}
         </AnimatePresence>
       )}
+
+      {/* Availability Results Modal */}
+      <AnimatePresence>
+        {availabilityModalOpen && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <div 
+              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" 
+              onClick={() => setAvailabilityModalOpen(false)} 
+            />
+            <div className="relative z-10 w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden text-left animate-in fade-in duration-200 my-6">
+              
+              {/* Modal Header */}
+              <div className="bg-[#1B3564] text-white p-5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400">
+                    <Sparkles size={18} />
+                  </div>
+                  <div>
+                    <h3 className="font-cormorant font-bold text-lg text-amber-400">Villa Availability Results</h3>
+                    <p className="text-[11px] text-slate-300">
+                      {destination} • {checkIn ? format(checkIn, "MMM dd") : "Flex Dates"} {checkOut ? `- ${format(checkOut, "MMM dd, yyyy")}` : ""} • {guests} Guests
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAvailabilityModalOpen(false)}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white border-none cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 max-h-[65vh] overflow-y-auto space-y-4">
+                {availableVillasList.length > 0 ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-600">
+                      <span>{availableVillasList.length} {availableVillasList.length === 1 ? "Sanctuary" : "Sanctuaries"} Available</span>
+                      <span className="text-emerald-600 flex items-center gap-1">
+                        <CheckCircle2 size={13} /> Direct Online Booking Ready
+                      </span>
+                    </div>
+
+                    {availableVillasList.map((villa) => (
+                      <div 
+                        key={villa.id} 
+                        className="flex flex-col sm:flex-row items-center gap-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-amber-400/60 transition-all group"
+                      >
+                        <div className="relative w-full sm:w-28 h-20 rounded-xl overflow-hidden bg-slate-200 shrink-0">
+                          <Image
+                            src={villa.image}
+                            alt={villa.name}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0 text-left w-full">
+                          <h4 className="font-cormorant font-bold text-base text-[#1B3564] truncate">{villa.name}</h4>
+                          <p className="text-[11px] text-slate-500 mt-0.5">
+                            {villa.location} • {villa.bedrooms} Bedrooms • Up to {villa.guests} Guests
+                          </p>
+                          <p className="text-xs font-bold text-slate-900 mt-1">
+                            ₹{villa.price?.toLocaleString("en-IN")} <span className="text-[10px] font-normal text-slate-500">/ night</span>
+                          </p>
+                        </div>
+                        <div className="flex sm:flex-col gap-2 w-full sm:w-auto shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAvailabilityModalOpen(false);
+                              router.push(`/villa/${villa.slug}`);
+                            }}
+                            className="flex-1 sm:flex-initial px-4 py-2 bg-[#1B3564] hover:bg-[#2A4985] text-white text-[11px] font-bold rounded-xl cursor-pointer border-none shadow-md transition-colors whitespace-nowrap"
+                          >
+                            View Sanctuary →
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-6 text-center space-y-4 bg-amber-50/50 rounded-2xl border border-amber-200/60">
+                    <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 mx-auto">
+                      <AlertCircle size={24} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-amber-950 text-sm">No Properties Available for Exact Dates</h4>
+                      <p className="text-xs text-amber-800 mt-1 max-w-sm mx-auto leading-relaxed">
+                        All properties in <strong>{destination}</strong> are booked for these dates or exceed guest capacity. Try selecting alternate dates or inquire directly on WhatsApp.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="bg-slate-50 p-4 border-t border-slate-200 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={handleWhatsAppInquiry}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-xl cursor-pointer border-none shadow-md flex items-center justify-center gap-2"
+                >
+                  <MessageCircle size={14} />
+                  Inquire on WhatsApp
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAvailabilityModalOpen(false)}
+                  className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl cursor-pointer border-none"
+                >
+                  Close
+                </button>
+              </div>
+
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

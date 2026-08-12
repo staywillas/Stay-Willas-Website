@@ -359,3 +359,76 @@ export async function cancelBooking(bookingId: string) {
   }
 }
 
+/**
+ * Checks and returns available villas for specific dates, destination, and guest count
+ */
+export async function checkAvailableVillasForDates(data: {
+  destination: string;
+  checkIn?: string;
+  checkOut?: string;
+  guests?: number;
+}) {
+  try {
+    const region = data.destination || "Lonavala";
+    const guestsNeeded = data.guests || 1;
+
+    const villas = await prisma.villa.findMany({
+      where: {
+        location: { contains: region, mode: "insensitive" },
+        guests: { gte: guestsNeeded }
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        price: true,
+        bedrooms: true,
+        guests: true,
+        location: true,
+        images: true,
+        bookings: {
+          where: {
+            status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] }
+          },
+          select: {
+            checkIn: true,
+            checkOut: true
+          }
+        }
+      }
+    });
+
+    let cinDate = data.checkIn ? new Date(data.checkIn) : null;
+    let coutDate = data.checkOut ? new Date(data.checkOut) : null;
+
+    const availableVillas = villas.filter(v => {
+      if (!cinDate || !coutDate) return true;
+
+      const hasOverlap = v.bookings.some(b => {
+        const bCin = new Date(b.checkIn);
+        const bCout = new Date(b.checkOut);
+        return cinDate! < bCout && coutDate! > bCin;
+      });
+
+      return !hasOverlap;
+    });
+
+    return {
+      success: true,
+      villas: availableVillas.map(v => ({
+        id: v.id,
+        name: v.name,
+        slug: v.slug,
+        price: v.price,
+        bedrooms: v.bedrooms,
+        guests: v.guests,
+        location: v.location,
+        image: v.images[0] || "/images/hero-villa.png"
+      }))
+    };
+  } catch (error: any) {
+    console.error("Failed to check villa availability:", error);
+    return { success: false, error: "Failed to check availability" };
+  }
+}
+

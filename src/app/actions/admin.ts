@@ -23,6 +23,19 @@ export async function createManualBooking(formData: {
   type?: "GUEST" | "MAINTENANCE" | "OWNER_USE";
   guests?: number;
   nightlyRate?: number;
+  foodPlan?: string;
+  foodRatePerPersonPerDay?: number;
+  foodGuestsCount?: number;
+  foodTotal?: number;
+  extraCharges?: Array<{ description: string; amount: number }>;
+  discountFlat?: number;
+  discountPercent?: number;
+  discountTotal?: number;
+  gstPercent?: number;
+  gstTotal?: number;
+  advancePaid?: number;
+  securityDeposit?: number;
+  balanceDue?: number;
 }) {
   try {
     const checkInDate = new Date(formData.checkIn);
@@ -78,6 +91,25 @@ export async function createManualBooking(formData: {
         notes: formData.notes || "",
         guests: formData.guests || 1,
         nightlyRate: formData.nightlyRate || 0,
+        food: {
+          plan: formData.foodPlan || "none",
+          ratePerPersonPerDay: formData.foodRatePerPersonPerDay || 0,
+          guestsCount: formData.foodGuestsCount || 0,
+          total: formData.foodTotal || 0,
+        },
+        extraCharges: formData.extraCharges || [],
+        discount: {
+          flat: formData.discountFlat || 0,
+          percent: formData.discountPercent || 0,
+          total: formData.discountTotal || 0,
+        },
+        gst: {
+          percent: formData.gstPercent || 0,
+          total: formData.gstTotal || 0,
+        },
+        advancePaid: formData.advancePaid || 0,
+        securityDeposit: formData.securityDeposit || 0,
+        balanceDue: formData.balanceDue || 0,
       });
     }
 
@@ -110,6 +142,51 @@ export async function deleteBooking(bookingId: string) {
   } catch (error: any) {
     console.error("Failed to cancel/delete booking:", error);
     return { success: false, error: error.message || "Failed to remove block." };
+  }
+}
+
+export async function updateBookingPayment(bookingId: string, advancePaid: number) {
+  try {
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) {
+      return { success: false, error: "Booking record not found." };
+    }
+
+    let parsedPayload: any = {};
+    try {
+      if (booking.userId && booking.userId.startsWith("{")) {
+        parsedPayload = JSON.parse(booking.userId);
+      } else {
+        parsedPayload = { name: booking.userId };
+      }
+    } catch (e) {
+      parsedPayload = { name: booking.userId };
+    }
+
+    const grandTotal = booking.totalPrice || 0;
+    const newBalanceDue = Math.max(0, grandTotal - advancePaid);
+
+    parsedPayload.advancePaid = advancePaid;
+    parsedPayload.balanceDue = newBalanceDue;
+
+    const updatedBooking = await prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        userId: JSON.stringify(parsedPayload),
+      },
+      include: {
+        villa: true,
+      },
+    });
+
+    revalidatePath("/admin");
+    return { success: true, booking: updatedBooking };
+  } catch (error: any) {
+    console.error("Failed to update booking payment:", error);
+    return { success: false, error: error.message || "Failed to update payment record." };
   }
 }
 
@@ -555,6 +632,101 @@ export async function deleteDailyPriceRange(
 // 4. Email Invoice Action
 // -------------------------------------------------------------------------
 
+export async function updateBookingFullDetails(formData: {
+  bookingId: string;
+  checkIn?: string;
+  checkOut?: string;
+  guestName?: string;
+  guestEmail?: string;
+  guestPhone?: string;
+  guests?: number;
+  nightlyRate?: number;
+  foodPlan?: string;
+  foodRatePerPersonPerDay?: number;
+  foodTotal?: number;
+  extraCharges?: Array<{ description: string; amount: number }>;
+  discountFlat?: number;
+  discountPercent?: number;
+  discountTotal?: number;
+  gstPercent?: number;
+  gstTotal?: number;
+  totalPrice: number;
+  advancePaid?: number;
+  securityDeposit?: number;
+  balanceDue?: number;
+  status?: string;
+}) {
+  try {
+    const booking = await prisma.booking.findUnique({
+      where: { id: formData.bookingId },
+    });
+
+    if (!booking) {
+      return { success: false, error: "Booking record not found." };
+    }
+
+    let parsedPayload: any = {};
+    try {
+      if (booking.userId && booking.userId.startsWith("{")) {
+        parsedPayload = JSON.parse(booking.userId);
+      } else {
+        parsedPayload = { name: booking.userId };
+      }
+    } catch (e) {
+      parsedPayload = { name: booking.userId };
+    }
+
+    if (formData.guestName) parsedPayload.name = formData.guestName;
+    if (formData.guestEmail !== undefined) parsedPayload.email = formData.guestEmail;
+    if (formData.guestPhone !== undefined) parsedPayload.phone = formData.guestPhone;
+    if (formData.guests) parsedPayload.guests = formData.guests;
+    if (formData.nightlyRate) parsedPayload.nightlyRate = formData.nightlyRate;
+
+    parsedPayload.food = {
+      plan: formData.foodPlan || "none",
+      ratePerPersonPerDay: formData.foodRatePerPersonPerDay || 0,
+      guestsCount: formData.guests || 1,
+      total: formData.foodTotal || 0,
+    };
+    parsedPayload.extraCharges = formData.extraCharges || [];
+    parsedPayload.discount = {
+      flat: formData.discountFlat || 0,
+      percent: formData.discountPercent || 0,
+      total: formData.discountTotal || 0,
+    };
+    parsedPayload.gst = {
+      percent: formData.gstPercent || 0,
+      total: formData.gstTotal || 0,
+    };
+    parsedPayload.advancePaid = formData.advancePaid || 0;
+    parsedPayload.securityDeposit = formData.securityDeposit || 0;
+    parsedPayload.balanceDue = formData.balanceDue || 0;
+
+    const checkInDate = formData.checkIn ? new Date(formData.checkIn) : booking.checkIn;
+    const checkOutDate = formData.checkOut ? new Date(formData.checkOut) : booking.checkOut;
+
+    const updatedBooking = await prisma.booking.update({
+      where: { id: formData.bookingId },
+      data: {
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        totalPrice: formData.totalPrice,
+        status: formData.status || booking.status,
+        userId: JSON.stringify(parsedPayload),
+      },
+      include: {
+        villa: true,
+      },
+    });
+
+    revalidatePath("/admin");
+    return { success: true, booking: updatedBooking };
+  } catch (error: any) {
+    console.error("Failed to update booking details:", error);
+    return { success: false, error: error.message || "Failed to update reservation details." };
+  }
+}
+
 export async function sendInvoiceEmailAction(data: {
   guestName: string;
   guestEmail: string;
@@ -574,6 +746,7 @@ export async function sendInvoiceEmailAction(data: {
   gstAmount: number;
   grandTotal: number;
   advancePaid: number;
+  securityDeposit?: number;
   balanceDue: number;
 }) {
   try {
@@ -672,6 +845,14 @@ export async function sendInvoiceEmailAction(data: {
                   <td style="color: #64748B;">GST (${data.gstPercent}%)</td>
                   <td align="right" style="color: #0F172A;">₹${data.gstAmount.toLocaleString("en-IN")}</td>
                 </tr>
+                ${
+                  data.securityDeposit && data.securityDeposit > 0
+                    ? `<tr style="border-bottom: 1px solid #E2E8F0;">
+                        <td style="color: #64748B;">Refundable Security Deposit</td>
+                        <td align="right" style="color: #0F172A; font-weight: bold;">₹${data.securityDeposit.toLocaleString("en-IN")}</td>
+                       </tr>`
+                    : ""
+                }
                 <tr style="background-color: #FEF3C7;">
                   <td style="font-weight: bold; color: #92400E; font-size: 15px;">NET PAYABLE AMOUNT</td>
                   <td align="right" style="font-weight: bold; color: #92400E; font-size: 16px;">₹${data.grandTotal.toLocaleString("en-IN")}</td>
@@ -682,9 +863,9 @@ export async function sendInvoiceEmailAction(data: {
               <table width="100%" border="0" cellpadding="12" cellspacing="0" style="background-color: #1B3564; border-radius: 12px; color: #ffffff; margin-top: 10px;">
                 <tr>
                   <td>
-                    <div style="font-size: 12px; color: #DAA520; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Advance Paid: ₹${data.advancePaid.toLocaleString("en-IN")}</div>
+                    <div style="font-size: 12px; color: #DAA520; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Advance Paid Received: ₹${data.advancePaid.toLocaleString("en-IN")}</div>
                     <div style="font-size: 16px; font-weight: bold; margin-top: 4px;">
-                      BALANCE REMAINING: ${data.balanceDue <= 0 ? "PAID IN FULL" : `₹${data.balanceDue.toLocaleString("en-IN")}`}
+                      NET BALANCE DUE: ${data.balanceDue <= 0 ? "PAID IN FULL" : `₹${data.balanceDue.toLocaleString("en-IN")}`}
                     </div>
                   </td>
                 </tr>

@@ -18,6 +18,23 @@ interface Villa {
 
 interface BillCalculatorProps {
   villas: Villa[];
+  prefillData?: {
+    villaSlug?: string;
+    checkIn?: string;
+    checkOut?: string;
+    guestName?: string;
+    guestEmail?: string;
+    guestPhone?: string;
+    ratePerNight?: number;
+    foodPlan?: string;
+    foodRate?: number;
+    extraCharges?: ExtraCharge[];
+    discountFlat?: number;
+    discountPercent?: number;
+    gstPercent?: number;
+    advancePaid?: number;
+    securityDeposit?: number;
+  } | null;
 }
 
 interface ExtraCharge {
@@ -35,7 +52,7 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
   });
 };
 
-export default function BillCalculator({ villas }: BillCalculatorProps) {
+export default function BillCalculator({ villas, prefillData }: BillCalculatorProps) {
   // Guest Details
   const [guestName, setGuestName] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
@@ -99,6 +116,28 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
   // Email & Communication States
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailFeedback, setEmailFeedback] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+
+  // Auto-populate when launched from Reservation Details modal
+  useEffect(() => {
+    if (prefillData) {
+      if (prefillData.guestName) setGuestName(prefillData.guestName);
+      if (prefillData.guestPhone) setGuestPhone(prefillData.guestPhone);
+      if (prefillData.guestEmail) setGuestEmail(prefillData.guestEmail);
+      if (prefillData.villaSlug) setSelectedVillaSlug(prefillData.villaSlug);
+      if (prefillData.checkIn && prefillData.checkOut) {
+        handleDateChange(prefillData.checkIn, prefillData.checkOut);
+      }
+      if (prefillData.ratePerNight) setRatePerNight(prefillData.ratePerNight);
+      if (prefillData.foodPlan) setFoodPlan(prefillData.foodPlan as any);
+      if (prefillData.foodRate) setFoodRatePerPersonPerDay(prefillData.foodRate);
+      if (Array.isArray(prefillData.extraCharges)) setExtraCharges(prefillData.extraCharges);
+      if (prefillData.discountFlat !== undefined) setDiscountFlat(prefillData.discountFlat);
+      if (prefillData.discountPercent !== undefined) setDiscountPercent(prefillData.discountPercent);
+      if (prefillData.gstPercent !== undefined) setGstPercent(prefillData.gstPercent);
+      if (prefillData.advancePaid !== undefined) setAdvancePaid(prefillData.advancePaid);
+      if (prefillData.securityDeposit !== undefined) setSecurityDeposit(prefillData.securityDeposit);
+    }
+  }, [prefillData]);
 
   // Reset all calculator inputs
   const handleResetAll = () => {
@@ -206,6 +245,7 @@ export default function BillCalculator({ villas }: BillCalculatorProps) {
       gstAmount,
       grandTotal,
       advancePaid,
+      securityDeposit,
       balanceDue,
     });
 
