@@ -411,54 +411,56 @@ We are so excited about this getaway! Could you please check availability and he
   };
 
   return (
-    <div className="bg-bg-primary border border-border-subtle rounded-3xl p-6 md:p-8 sticky top-32 shadow-[0_10px_40px_rgba(44,31,14,0.1)]">
-      <div className="flex items-end justify-between mb-8">
+    <div className="bg-white border border-border-subtle/80 rounded-3xl p-5 sm:p-7 lg:p-8 sticky top-28 shadow-[0_12px_48px_rgba(27,53,100,0.08)] w-full transition-all duration-300">
+      <div className="flex items-end justify-between mb-6 pb-4 border-b border-border-subtle/50">
         <div>
-          <span className="text-3xl font-heading text-text-primary">₹{price}</span>
-          <span className="text-text-primary/40 text-sm ml-2">/ night</span>
+          <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">₹{price}</span>
+          <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">/ night</span>
         </div>
-        <div className={`flex items-center gap-1 text-xs font-medium uppercase tracking-wider ${isOverlapping ? 'text-red-500' : 'text-accent-secondary'}`}>
-          <span className={`w-2 h-2 rounded-full ${isOverlapping ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`} />
-          {isOverlapping ? 'Reserved' : 'Available'}
+        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${
+          isOverlapping ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+        }`}>
+          <span className={`w-2 h-2 rounded-full ${isOverlapping ? 'bg-red-500' : 'bg-emerald-500 animate-pulse'}`} />
+          {isOverlapping ? 'Reserved' : 'Slots Open'}
         </div>
       </div>
 
-      <div className="space-y-4 mb-8">
+      <div className="space-y-4 mb-6">
         {/* Live Admin Panel Sync Status Badge */}
-        <div className="flex items-center justify-between bg-slate-100/90 px-3.5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider border border-slate-200/80">
-          <span className="flex items-center gap-1.5 text-[#1B3564]">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Admin Calendar Live Sync
+        <div className="flex items-center justify-between bg-slate-100/90 px-4 py-2.5 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-slate-200/80">
+          <span className="flex items-center gap-2 text-[#1B3564]">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            Admin Calendar Sync
           </span>
           <span className="text-[#DAA520] font-black">100% Real-Time</span>
         </div>
 
         {/* Date picker pair */}
         <div className={`grid grid-cols-2 gap-px bg-[#E2E8F0] border rounded-2xl overflow-hidden relative transition-all duration-300 ${
-          showCalendar ? 'border-[#1B3564] shadow-sm' : 'border-border-subtle'
+          showCalendar ? 'border-[#1B3564] shadow-md ring-2 ring-[#1B3564]/10' : 'border-border-subtle hover:border-[#1B3564]/40'
         }`}>
           <div 
             onClick={handleCheckInClick}
-            className={`relative p-4 text-left cursor-pointer transition-colors ${
-              showCalendar && calendarTarget === 'checkIn' ? 'bg-[#1B3564]/5' : 'bg-white hover:bg-bg-primary'
+            className={`relative p-3.5 sm:p-4 text-left cursor-pointer transition-colors ${
+              showCalendar && calendarTarget === 'checkIn' ? 'bg-[#1B3564]/5' : 'bg-white hover:bg-slate-50'
             }`}
           >
-            <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">Check-in</span>
-            <div className="flex items-center justify-between text-text-primary text-sm">
-              <span className="font-bold">{format(checkIn, "MMM dd, yyyy")}</span>
-              <CalendarIcon size={14} className="text-accent-secondary" />
+            <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block font-bold mb-1">Check-in</span>
+            <div className="flex items-center justify-between text-text-primary text-xs sm:text-sm">
+              <span className="font-extrabold text-[#1B3564]">{format(checkIn, "MMM dd, yyyy")}</span>
+              <CalendarIcon size={16} className="text-[#DAA520] shrink-0 ml-1" />
             </div>
           </div>
           <div 
             onClick={handleCheckOutClick}
-            className={`relative p-4 text-left border-l border-border-subtle cursor-pointer transition-colors ${
-              showCalendar && calendarTarget === 'checkOut' ? 'bg-[#1B3564]/5' : 'bg-white hover:bg-bg-primary'
+            className={`relative p-3.5 sm:p-4 text-left border-l border-border-subtle cursor-pointer transition-colors ${
+              showCalendar && calendarTarget === 'checkOut' ? 'bg-[#1B3564]/5' : 'bg-white hover:bg-slate-50'
             }`}
           >
-            <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">Check-out</span>
-            <div className="flex items-center justify-between text-text-primary text-sm">
-              <span className="font-bold">{format(checkOut, "MMM dd, yyyy")}</span>
-              <CalendarIcon size={14} className="text-accent-secondary" />
+            <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block font-bold mb-1">Check-out</span>
+            <div className="flex items-center justify-between text-text-primary text-xs sm:text-sm">
+              <span className="font-extrabold text-[#1B3564]">{format(checkOut, "MMM dd, yyyy")}</span>
+              <CalendarIcon size={16} className="text-[#DAA520] shrink-0 ml-1" />
             </div>
           </div>
         </div>
@@ -470,15 +472,15 @@ We are so excited about this getaway! Could you please check availability and he
             setShowCalendar(!showCalendar);
             if (!showCalendar) setCalendarTarget("checkIn");
           }}
-          className="w-full bg-[#1B3564] hover:bg-[#0F2142] text-white font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-md cursor-pointer tracking-wider uppercase border border-[#DAA520]/30"
+          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white font-black text-xs sm:text-sm py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer tracking-wider uppercase border border-[#DAA520]/40"
         >
-          <CalendarIcon size={15} className="text-[#DAA520]" />
-          <span>{showCalendar ? "Close Calendar View" : "Check Property Availability"}</span>
+          <CalendarIcon size={17} className="text-[#DAA520]" />
+          <span>{showCalendar ? "Close Calendar" : "Check Date Availability"}</span>
         </button>
 
         {/* Breathtakingly Premium Inline Calendar Picker */}
         {showCalendar && (
-          <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 shadow-inner animate-fade-in space-y-4">
+          <div className="bg-slate-50 border border-slate-200 rounded-3xl p-4 sm:p-5 shadow-inner animate-fade-in space-y-4">
             <div className="flex items-center justify-between">
               <button 
                 type="button"
@@ -487,7 +489,7 @@ We are so excited about this getaway! Could you please check availability and he
               >
                 <ChevronLeft size={16} />
               </button>
-              <span className="text-xs font-sans font-black uppercase tracking-widest text-[#1B3564]">
+              <span className="text-xs sm:text-sm font-sans font-black uppercase tracking-widest text-[#1B3564]">
                 {currentCalendarMonth.toLocaleString("en-US", { month: "long", year: "numeric" })}
               </span>
               <button 
@@ -577,23 +579,24 @@ We are so excited about this getaway! Could you please check availability and he
           </div>
         )}
 
+        {/* Real-time Status Response Banner */}
         {isOverlapping ? (
-          <div className="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500">
-            <Info className="text-red-500 shrink-0 mt-0.5" size={16} />
+          <div className="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500 animate-fade-in">
+            <Info className="text-red-500 shrink-0 mt-0.5" size={18} />
             <div>
-              <h5 className="font-bold text-xs uppercase tracking-wider text-red-800">Dates Reserved (Unavailable)</h5>
-              <p className="text-[11px] text-red-750 leading-relaxed mt-0.5">
-                These dates overlap with an existing reservation in our admin calendar. Please select open dates using the availability calendar above.
+              <h5 className="font-extrabold text-xs uppercase tracking-wider text-red-900">Dates Unavailable (Already Reserved)</h5>
+              <p className="text-[11px] text-red-800 leading-relaxed mt-0.5 font-medium">
+                The range <strong className="font-bold">{format(checkIn, "dd MMM")} – {format(checkOut, "dd MMM yyyy")}</strong> overlaps with an active reservation. Please choose open dates on the calendar above.
               </p>
             </div>
           </div>
         ) : (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl p-3.5 flex items-center gap-3 text-left select-none shadow-sm border-l-4 border-l-emerald-500">
-            <CheckCircle2 className="text-emerald-600 shrink-0" size={18} />
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-950 rounded-2xl p-4 flex items-start gap-3 text-left select-none shadow-sm border-l-4 border-l-emerald-500 animate-fade-in">
+            <CheckCircle2 className="text-emerald-600 shrink-0 mt-0.5" size={20} />
             <div>
-              <h5 className="font-bold text-xs uppercase tracking-wider text-emerald-900">100% Available for Your Dates</h5>
-              <p className="text-[11px] text-emerald-750 font-medium leading-normal mt-0.5">
-                Checked against live admin calendar. Proceed to lock in your reservation!
+              <h5 className="font-extrabold text-xs uppercase tracking-wider text-emerald-950">100% Available for Your Dates!</h5>
+              <p className="text-[11px] text-emerald-800 font-medium leading-relaxed mt-0.5">
+                Verified live against our reservation calendar for <strong className="font-bold">{format(checkIn, "dd MMM")} – {format(checkOut, "dd MMM")} ({nights} nights)</strong>. Proceed below to reserve!
               </p>
             </div>
           </div>
@@ -765,10 +768,10 @@ We are so excited about this getaway! Could you please check availability and he
       <Button 
         onClick={handleBooking}
         disabled={isLoading || nights <= 0 || isOverlapping}
-        className={`w-full text-white rounded-full py-6 text-[10px] md:text-xs font-black tracking-[0.2em] mb-4 flex items-center justify-center gap-2 transition-all duration-300 whitespace-nowrap cursor-pointer ${
+        className={`w-full text-white rounded-full py-6 text-xs sm:text-sm font-black tracking-[0.18em] mb-3 flex items-center justify-center gap-2 transition-all duration-300 whitespace-nowrap cursor-pointer border border-[#DAA520]/30 ${
           isOverlapping 
-            ? "bg-red-500 hover:bg-red-600 shadow-[0_0_20px_rgba(239,68,68,0.25)] cursor-not-allowed" 
-            : "bg-[#1B3564] hover:bg-[#152A50] shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)]"
+            ? "bg-red-500 hover:bg-red-600 shadow-md cursor-not-allowed" 
+            : "bg-[#1B3564] hover:bg-[#152A50] shadow-[0_8px_25px_rgba(27,53,100,0.3)] hover:shadow-[0_12px_35px_rgba(27,53,100,0.45)] hover:scale-[1.01] active:scale-[0.98]"
         }`}
       >
         {isLoading ? (
@@ -776,7 +779,7 @@ We are so excited about this getaway! Could you please check availability and he
         ) : isOverlapping ? (
           "DATES UNAVAILABLE DUE TO RESERVATION"
         ) : (
-          "RESERVE NOW & SECURE STAY"
+          "PROCEED TO RESERVE & SECURE STAY"
         )}
       </Button>
       

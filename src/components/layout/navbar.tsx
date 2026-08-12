@@ -29,10 +29,12 @@ const Navbar = () => {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const lenisRef = useRef<any>(null);
   const { isSignedIn } = useUser();
   const pathname = usePathname();
 
   useLenis((lenis) => {
+    lenisRef.current = lenis;
     if (lenis) {
       setIsScrolled(lenis.scroll > 30);
     }
@@ -83,15 +85,18 @@ const Navbar = () => {
     };
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll and stop Lenis when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
+      try { lenisRef.current?.stop(); } catch {}
     } else {
       document.body.style.overflow = "";
+      try { lenisRef.current?.start(); } catch {}
     }
     return () => {
       document.body.style.overflow = "";
+      try { lenisRef.current?.start(); } catch {}
     };
   }, [isMobileMenuOpen]);
 
@@ -131,22 +136,22 @@ const Navbar = () => {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-          <div className="relative w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
+          <div className="relative w-8 h-8 sm:w-11 sm:h-11 md:w-13 md:h-13 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
             <img 
               src="/images/logo.png" 
               alt="Stay Willas Logo" 
-              width="56"
-              height="56"
+              width="52"
+              height="52"
               className="w-full h-full object-cover scale-[1.6]" 
             />
           </div>
           <div className="flex flex-col">
             <span className={cn(
-              "font-heading text-sm sm:text-xl md:text-2xl tracking-widest leading-tight transition-colors duration-500 whitespace-nowrap",
+              "font-heading text-xs sm:text-lg md:text-2xl tracking-widest leading-tight transition-colors duration-500 whitespace-nowrap font-bold",
               isDarkTheme ? "text-brand-navy" : "text-white"
             )}>STAY WILLAS</span>
             <span className={cn(
-              "font-sans text-[7px] sm:text-[11px] md:text-[12px] tracking-[0.14em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
+              "font-sans text-[7px] sm:text-[10px] md:text-[11px] tracking-[0.14em] uppercase font-extrabold transition-colors duration-500 whitespace-nowrap hidden sm:block",
               isDarkTheme ? "text-brand-navy/70" : "text-white/70"
             )}>stay ! Relax ! Repeat !</span>
           </div>
@@ -269,14 +274,14 @@ const Navbar = () => {
             <UserButton
               appearance={{
                 elements: {
-                  avatarBox: "w-8.5 h-8.5 border border-[#DAA520]/40 rounded-full",
+                  avatarBox: "w-8 h-8 border-2 border-[#DAA520] rounded-full shadow-sm",
                 },
               }}
             />
           ) : (
             <SignInButton mode="modal">
               <button
-                className="px-3 py-1.5 border border-[#1B3564]/15 hover:border-[#DAA520] text-[#1B3564] hover:text-[#DAA520] text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-full bg-[#FAF8F5]/80 hover:bg-[#DAA520]/10 whitespace-nowrap cursor-pointer shadow-sm"
+                className="px-3 py-1 border border-[#1B3564]/20 hover:border-[#DAA520] text-[#1B3564] hover:text-[#DAA520] text-[10px] font-black uppercase tracking-widest transition-all duration-300 rounded-full bg-white/90 hover:bg-[#DAA520]/10 whitespace-nowrap cursor-pointer shadow-sm hidden sm:inline-flex"
                 aria-label="Login"
               >
                 Login
@@ -285,10 +290,10 @@ const Navbar = () => {
           )}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1B3564]/5 border border-[#DAA520]/40 hover:border-[#DAA520] flex items-center justify-center text-[#1B3564] hover:bg-[#DAA520]/10 transition-all duration-300 shadow-md active:scale-90 cursor-pointer"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1B3564] border border-[#DAA520] flex items-center justify-center text-[#DAA520] hover:bg-[#152A50] hover:scale-105 active:scale-95 transition-all duration-300 shadow-md cursor-pointer"
             aria-label="Open Navigation Menu"
           >
-            <Menu size={18} className="stroke-[2.5]" />
+            <Menu size={19} className="stroke-[2.5]" />
           </button>
         </div>
       </div>
@@ -319,18 +324,11 @@ const Navbar = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.2}
-            onDragEnd={(_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-              if (info.offset.x > 100 || info.velocity.x > 500) {
-                setIsMobileMenuOpen(false);
-              }
-            }}
-            className="absolute top-0 right-0 bottom-0 w-[85%] max-w-[380px] bg-[#0E1B35] border-l border-[#DAA520]/20 shadow-2xl flex flex-col"
+            className="fixed top-0 right-0 bottom-0 h-full max-h-screen w-[85%] max-w-[380px] bg-[#0E1B35] border-l border-[#DAA520]/20 shadow-2xl flex flex-col z-[100001]"
+            data-lenis-prevent
           >
             {/* Panel Header */}
-            <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-[#DAA520]/15">
+            <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-[#DAA520]/15 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="relative w-9 h-9 rounded-full overflow-hidden border border-[#DAA520]/35">
                   <img src="/images/logo.png" alt="Stay Willas" width="36" height="36" className="w-full h-full object-cover scale-[1.6]" />
@@ -348,7 +346,12 @@ const Navbar = () => {
             </div>
 
             {/* Scrollable Navigation Content */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-6">
+            <div 
+              className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden py-6 px-6 custom-scrollbar touch-pan-y overscroll-contain" 
+              data-lenis-prevent
+              onWheel={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
+            >
               <motion.div
                 initial="hidden"
                 animate="visible"
@@ -528,7 +531,7 @@ const Navbar = () => {
             </div>
 
             {/* Panel Footer — CTA + Contact */}
-            <div className="px-6 pb-6 pt-3 border-t border-[#DAA520]/15 flex flex-col gap-4">
+            <div className="px-6 pb-6 pt-3 border-t border-[#DAA520]/15 flex flex-col gap-4 shrink-0">
               <a
                 href={`https://wa.me/919619042310?text=${encodeURIComponent("Hello Stay Willas Concierge! ✨ I am browsing your mobile app and would love to book a luxury staycation. Could you help us find the perfect private estate?")}`}
                 target="_blank"

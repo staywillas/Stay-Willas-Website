@@ -31,6 +31,8 @@ const cormorant = Cormorant_Garamond({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   themeColor: "#FFFFFF",
 };
 
@@ -97,7 +99,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} antialiased font-sans`}
+        className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} antialiased font-sans overflow-x-hidden max-w-full w-full relative`}
         suppressHydrationWarning
       >
         <ClerkProvider>
@@ -153,7 +155,9 @@ export default function RootLayout({
                 })
               }}
             />
-            {children}
+            <div className="overflow-x-hidden w-full max-w-full relative">
+              {children}
+            </div>
             <FloatingWidgets />
             <MobileBottomNav />
           </SmoothScrollProvider>

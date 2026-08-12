@@ -454,8 +454,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
         {/* Cinematic, Interactive Property Gallery & Lightbox */}
         <PropertyGallery images={villaData.images} propertyName={villaData.name} villaId={villaData.slug} />
 
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-12 lg:gap-16 mb-24">
-          <div className="order-2 lg:order-1 lg:col-span-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12 mb-24">
+          <div className="order-2 lg:order-1 lg:col-span-7">
             {/* 1. Guests, Bedrooms & Bathrooms Specs Capsule (Moved under photos) */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-slate-900 text-xs uppercase tracking-widest mb-8 bg-white border border-[#DAA520]/20 px-6 py-4 rounded-2xl max-w-fit shadow-sm">
               <span className="flex items-center gap-2 font-bold"><Users size={14} className="text-accent-secondary" />{villaData.guests} Guests</span>
@@ -574,7 +574,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
 
           </div>
 
-          <div className="order-1 lg:order-2 lg:col-span-4 relative" id="booking-card-section">
+          <div className="order-1 lg:order-2 lg:col-span-5 relative w-full" id="booking-card-section">
             <BookingCard
               villaId={villaData.id}
               villaName={villaData.name}
