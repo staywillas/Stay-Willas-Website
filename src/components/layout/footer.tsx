@@ -185,7 +185,7 @@ const Footer = () => {
             © {new Date().getFullYear()} Stay Willas. All Rights Reserved.
           </p>
           
-          <div className="flex flex-wrap gap-x-8 gap-y-3 justify-center">
+          <div className="flex flex-wrap gap-x-6 gap-y-3 justify-center items-center">
             <Link href="/privacy" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
               Privacy Policy
             </Link>
@@ -195,6 +195,16 @@ const Footer = () => {
             <Link href="/cancellation-policy" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
               Cancellation Policy
             </Link>
+            <span className="text-white/20">|</span>
+            <a href="https://www.staywillas.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs tracking-wider font-medium">
+              staywillas.com
+            </a>
+            <a href="https://aanganshobha.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs tracking-wider font-medium">
+              aanganshobha.com
+            </a>
+            <a href="https://kannikabangles.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs tracking-wider font-medium">
+              kannikabangles.com
+            </a>
           </div>
 
           <button

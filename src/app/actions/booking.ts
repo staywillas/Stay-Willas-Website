@@ -372,9 +372,13 @@ export async function checkAvailableVillasForDates(data: {
     const region = data.destination || "Lonavala";
     const guestsNeeded = data.guests || 1;
 
-    const villas = await prisma.villa.findMany({
+    const isGlobal = !region || region.toLowerCase().includes("all") || region.toLowerCase().includes("anywhere");
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+
+    // 1. Query villas matching region & guest capacity
+    let villas = await prisma.villa.findMany({
       where: {
-        location: { contains: region, mode: "insensitive" },
+        ...(isGlobal ? {} : { location: { contains: region, mode: "insensitive" } }),
         guests: { gte: guestsNeeded }
       },
       select: {
@@ -388,7 +392,10 @@ export async function checkAvailableVillasForDates(data: {
         images: true,
         bookings: {
           where: {
-            status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] }
+            OR: [
+              { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+              { status: "HELD", createdAt: { gte: tenMinutesAgo } }
+            ]
           },
           select: {
             checkIn: true,
@@ -398,24 +405,91 @@ export async function checkAvailableVillasForDates(data: {
       }
     });
 
+    // Fallback 1: If 0 villas match high guest count, search by region
+    if (villas.length === 0) {
+      villas = await prisma.villa.findMany({
+        where: isGlobal ? {} : { location: { contains: region, mode: "insensitive" } },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          bedrooms: true,
+          guests: true,
+          location: true,
+          images: true,
+          bookings: {
+            where: {
+              OR: [
+                { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+                { status: "HELD", createdAt: { gte: tenMinutesAgo } }
+              ]
+            },
+            select: {
+              checkIn: true,
+              checkOut: true
+            }
+          }
+        }
+      });
+    }
+
+    // Fallback 2: If still 0, fetch all active villas
+    if (villas.length === 0) {
+      villas = await prisma.villa.findMany({
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          bedrooms: true,
+          guests: true,
+          location: true,
+          images: true,
+          bookings: {
+            where: {
+              OR: [
+                { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+                { status: "HELD", createdAt: { gte: tenMinutesAgo } }
+              ]
+            },
+            select: {
+              checkIn: true,
+              checkOut: true
+            }
+          }
+        }
+      });
+    }
+
     let cinDate = data.checkIn ? new Date(data.checkIn) : null;
     let coutDate = data.checkOut ? new Date(data.checkOut) : null;
 
     const availableVillas = villas.filter(v => {
       if (!cinDate || !coutDate) return true;
 
+      const userCin = new Date(cinDate.getFullYear(), cinDate.getMonth(), cinDate.getDate()).getTime();
+      const userCout = new Date(coutDate.getFullYear(), coutDate.getMonth(), coutDate.getDate()).getTime();
+
       const hasOverlap = v.bookings.some(b => {
-        const bCin = new Date(b.checkIn);
-        const bCout = new Date(b.checkOut);
-        return cinDate! < bCout && coutDate! > bCin;
+        const bCinDate = new Date(b.checkIn);
+        const bCoutDate = new Date(b.checkOut);
+
+        const bCin = new Date(bCinDate.getFullYear(), bCinDate.getMonth(), bCinDate.getDate()).getTime();
+        const bCout = new Date(bCoutDate.getFullYear(), bCoutDate.getMonth(), bCoutDate.getDate()).getTime();
+
+        return userCin < bCout && userCout > bCin;
       });
 
       return !hasOverlap;
     });
 
+    // Fallback 3: If date filter excluded all properties, return region villas so user can explore or inquire
+    const finalVillas = availableVillas.length > 0 ? availableVillas : villas;
+
     return {
       success: true,
-      villas: availableVillas.map(v => ({
+      villas: finalVillas.map(v => ({
         id: v.id,
         name: v.name,
         slug: v.slug,

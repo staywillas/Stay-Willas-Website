@@ -89,6 +89,30 @@ export default function PrivacyPage() {
             <p>
               By using our website, you hereby consent to our Privacy Policy and agree to its terms. We protect your personal data using standard secure protocols, databases, and encryption. We do not sell or rent guest information to third-party brokers.
             </p>
+
+            <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold pt-4 border-b border-[#DAA520]/20 pb-2">
+              4. Partner Network & External Links
+            </h2>
+            <p>
+              Our privacy commitment extends across our brand portfolio. For information regarding our partner platforms and network services, please visit:
+            </p>
+            <ul className="list-disc list-inside space-y-2 pl-4">
+              <li>
+                <a href="https://www.staywillas.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
+                  Stay Willas (staywillas.com)
+                </a> — Official luxury villa booking portal and vacation stays.
+              </li>
+              <li>
+                <a href="https://aanganshobha.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
+                  Aangan Shobha (aanganshobha.com)
+                </a> — Fine living, luxury garden decor, and home aesthetics.
+              </li>
+              <li>
+                <a href="https://kannikabangles.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
+                  Kannika Bangles (kannikabangles.com)
+                </a> — Artisanal traditional jewelry, bridal collections, and heritage bangles.
+              </li>
+            </ul>
           </div>
         </section>
       </div>
