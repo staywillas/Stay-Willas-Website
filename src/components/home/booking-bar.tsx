@@ -68,6 +68,17 @@ const BookingBar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    if (availabilityModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [availabilityModalOpen]);
+
   // Sync destination with live Prisma database availability
   useEffect(() => {
     let active = true;
@@ -150,6 +161,7 @@ const BookingBar = () => {
   // Option 1: On-site Check Availability (Queries DB and displays matching villas in a modal)
   const handleCheckAvailability = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsCalendarOpen(false);
     setIsCheckingAvailability(true);
     try {
       const res = await checkAvailableVillasForDates({
@@ -539,123 +551,135 @@ Could you please share available villas and assist us with our booking? Thank yo
       )}
 
       {/* Availability Results Modal */}
-      <AnimatePresence>
-        {availabilityModalOpen && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-            <div 
-              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" 
-              onClick={() => setAvailabilityModalOpen(false)} 
-            />
-            <div className="relative z-10 w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden text-left animate-in fade-in duration-200 my-6">
-              
-              {/* Modal Header */}
-              <div className="bg-[#1B3564] text-white p-5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400">
-                    <Sparkles size={18} />
-                  </div>
-                  <div>
-                    <h3 className="font-cormorant font-bold text-lg text-amber-400">Villa Availability Results</h3>
-                    <p className="text-[11px] text-slate-300">
-                      {destination} • {checkIn ? format(checkIn, "MMM dd") : "Flex Dates"} {checkOut ? `- ${format(checkOut, "MMM dd, yyyy")}` : ""} • {guests} Guests
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setAvailabilityModalOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white border-none cursor-pointer"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-
-              {/* Modal Body */}
-              <div className="p-6 max-h-[65vh] overflow-y-auto space-y-4">
-                {availableVillasList.length > 0 ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-xs font-bold text-slate-600">
-                      <span>{availableVillasList.length} {availableVillasList.length === 1 ? "Sanctuary" : "Sanctuaries"} Available</span>
-                      <span className="text-emerald-600 flex items-center gap-1">
-                        <CheckCircle2 size={13} /> Direct Online Booking Ready
-                      </span>
-                    </div>
-
-                    {availableVillasList.map((villa) => (
-                      <div 
-                        key={villa.id} 
-                        className="flex flex-col sm:flex-row items-center gap-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-amber-400/60 transition-all group"
-                      >
-                        <div className="relative w-full sm:w-28 h-20 rounded-xl overflow-hidden bg-slate-200 shrink-0">
-                          <Image
-                            src={villa.image}
-                            alt={villa.name}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0 text-left w-full">
-                          <h4 className="font-cormorant font-bold text-base text-[#1B3564] truncate">{villa.name}</h4>
-                          <p className="text-[11px] text-slate-500 mt-0.5">
-                            {villa.location} • {villa.bedrooms} Bedrooms • Up to {villa.guests} Guests
-                          </p>
-                          <p className="text-xs font-bold text-slate-900 mt-1">
-                            ₹{villa.price?.toLocaleString("en-IN")} <span className="text-[10px] font-normal text-slate-500">/ night</span>
-                          </p>
-                        </div>
-                        <div className="flex sm:flex-col gap-2 w-full sm:w-auto shrink-0">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setAvailabilityModalOpen(false);
-                              router.push(`/villa/${villa.slug}`);
-                            }}
-                            className="flex-1 sm:flex-initial px-4 py-2 bg-[#1B3564] hover:bg-[#2A4985] text-white text-[11px] font-bold rounded-xl cursor-pointer border-none shadow-md transition-colors whitespace-nowrap"
-                          >
-                            View Sanctuary →
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-6 text-center space-y-4 bg-amber-50/50 rounded-2xl border border-amber-200/60">
-                    <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 mx-auto">
-                      <AlertCircle size={24} />
+      {mounted && createPortal(
+        <AnimatePresence>
+          {availabilityModalOpen && (
+            <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-slate-900/70 backdrop-blur-md" 
+                onClick={() => setAvailabilityModalOpen(false)} 
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="relative z-10 w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden text-left my-6"
+              >
+                
+                {/* Modal Header */}
+                <div className="bg-[#1B3564] text-white p-5 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400">
+                      <Sparkles size={18} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-amber-950 text-sm">No Properties Available for Exact Dates</h4>
-                      <p className="text-xs text-amber-800 mt-1 max-w-sm mx-auto leading-relaxed">
-                        All properties in <strong>{destination}</strong> are booked for these dates or exceed guest capacity. Try selecting alternate dates or inquire directly on WhatsApp.
+                      <h3 className="font-cormorant font-bold text-lg text-amber-400">Villa Availability Results</h3>
+                      <p className="text-[11px] text-slate-300">
+                        {destination} • {checkIn ? format(checkIn, "MMM dd") : "Flex Dates"} {checkOut ? `- ${format(checkOut, "MMM dd, yyyy")}` : ""} • {guests} Guests
                       </p>
                     </div>
                   </div>
-                )}
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => setAvailabilityModalOpen(false)}
+                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white border-none cursor-pointer"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
 
-              {/* Modal Footer */}
-              <div className="bg-slate-50 p-4 border-t border-slate-200 flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={handleWhatsAppInquiry}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-xl cursor-pointer border-none shadow-md flex items-center justify-center gap-2"
-                >
-                  <MessageCircle size={14} />
-                  Inquire on WhatsApp
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAvailabilityModalOpen(false)}
-                  className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl cursor-pointer border-none"
-                >
-                  Close
-                </button>
-              </div>
+                {/* Modal Body */}
+                <div className="p-6 max-h-[65vh] overflow-y-auto space-y-4">
+                  {availableVillasList.length > 0 ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-xs font-bold text-slate-600">
+                        <span>{availableVillasList.length} {availableVillasList.length === 1 ? "Sanctuary" : "Sanctuaries"} Available</span>
+                        <span className="text-emerald-600 flex items-center gap-1">
+                          <CheckCircle2 size={13} /> Direct Online Booking Ready
+                        </span>
+                      </div>
 
+                      {availableVillasList.map((villa) => (
+                        <div 
+                          key={villa.id} 
+                          className="flex flex-col sm:flex-row items-center gap-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-amber-400/60 transition-all group"
+                        >
+                          <div className="relative w-full sm:w-28 h-20 rounded-xl overflow-hidden bg-slate-200 shrink-0">
+                            <img
+                              src={villa.image || "/images/hero-villa.png"}
+                              alt={villa.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0 text-left w-full">
+                            <h4 className="font-cormorant font-bold text-base text-[#1B3564] truncate">{villa.name}</h4>
+                            <p className="text-[11px] text-slate-500 mt-0.5">
+                              {villa.location} • {villa.bedrooms} Bedrooms • Up to {villa.guests} Guests
+                            </p>
+                            <p className="text-xs font-bold text-slate-900 mt-1">
+                              ₹{villa.price?.toLocaleString("en-IN")} <span className="text-[10px] font-normal text-slate-500">/ night</span>
+                            </p>
+                          </div>
+                          <div className="flex sm:flex-col gap-2 w-full sm:w-auto shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setAvailabilityModalOpen(false);
+                                router.push(`/villa/${villa.slug}`);
+                              }}
+                              className="flex-1 sm:flex-initial px-4 py-2 bg-[#1B3564] hover:bg-[#2A4985] text-white text-[11px] font-bold rounded-xl cursor-pointer border-none shadow-md transition-colors whitespace-nowrap"
+                            >
+                              View Sanctuary →
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-6 text-center space-y-4 bg-amber-50/50 rounded-2xl border border-amber-200/60">
+                      <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 mx-auto">
+                        <AlertCircle size={24} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-amber-950 text-sm">No Properties Available for Exact Dates</h4>
+                        <p className="text-xs text-amber-800 mt-1 max-w-sm mx-auto leading-relaxed">
+                          All properties in <strong>{destination}</strong> are booked for these dates or exceed guest capacity. Try selecting alternate dates or inquire directly on WhatsApp.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Modal Footer */}
+                <div className="bg-slate-50 p-4 border-t border-slate-200 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppInquiry}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-xl cursor-pointer border-none shadow-md flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle size={14} />
+                    Inquire on WhatsApp
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAvailabilityModalOpen(false)}
+                    className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl cursor-pointer border-none"
+                  >
+                    Close
+                  </button>
+                </div>
+
+              </motion.div>
             </div>
-          </div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 };
