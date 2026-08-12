@@ -5,9 +5,12 @@ import { prisma } from "@/lib/db";
 import { parseICal } from "@/lib/ical-sync";
 import { startOfDay, parseISO } from "date-fns";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-04-22.dahlia",
-});
+function getStripe() {
+  const apiKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder_build_key_0000000000000000";
+  return new Stripe(apiKey, {
+    apiVersion: "2026-04-22.dahlia",
+  });
+}
 
 /**
  * Calculates weighted stay pricing night-by-night applying seasonal dates, weekend rates, and defaults
@@ -169,6 +172,7 @@ export async function createCheckoutSession(formData: {
     // 5. STAGE E: Generate Stripe Session mapped to holdBooking.id
     let checkoutUrl = "";
     try {
+      const stripe = getStripe();
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: [
