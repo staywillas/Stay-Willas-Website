@@ -35,7 +35,8 @@ import {
   Eye,
   CreditCard,
   Edit3,
-  Save
+  Save,
+  Calculator
 } from "lucide-react";
 import Image from "next/image";
 import AvailabilityCalendar from "@/components/admin/availability-calendar";
@@ -158,7 +159,62 @@ const AdminDashboard = ({
   const [editBillGstPercent, setEditBillGstPercent] = useState<number>(0);
   const [editBillSecurityDeposit, setEditBillSecurityDeposit] = useState<number>(0);
   const [editBillAdvancePaid, setEditBillAdvancePaid] = useState<number>(0);
+  const [editBillBalanceDue, setEditBillBalanceDue] = useState<number | "">("");
   const [isSavingFullBill, setIsSavingFullBill] = useState(false);
+
+  // Inline Net Balance Editing States inside Modal
+  const [isEditingBalance, setIsEditingBalance] = useState(false);
+  const [balanceInput, setBalanceInput] = useState<number | "">("");
+  const [isSavingBalance, setIsSavingBalance] = useState(false);
+
+  // Quick Popover Calculator Widget States
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [calcDisplay, setCalcDisplay] = useState("0");
+  const [calcHistory, setCalcHistory] = useState("");
+
+  const evaluateMath = (expr: string): string => {
+    try {
+      const sanitized = expr.replace(/[^0-9+\-*/%.()]/g, '');
+      if (!sanitized) return "0";
+      const fn = new Function(`return (${sanitized});`);
+      const res = fn();
+      if (typeof res === "number" && !isNaN(res) && isFinite(res)) {
+        return Number.isInteger(res) ? res.toString() : parseFloat(res.toFixed(4)).toString();
+      }
+      return "Error";
+    } catch (e) {
+      return "Error";
+    }
+  };
+
+  const handleCalcPress = (btn: string) => {
+    if (btn === "C") {
+      setCalcDisplay("0");
+      setCalcHistory("");
+    } else if (btn === "CE") {
+      setCalcDisplay("0");
+    } else if (btn === "⌫") {
+      if (calcDisplay.length <= 1 || calcDisplay === "Error") {
+        setCalcDisplay("0");
+      } else {
+        setCalcDisplay(calcDisplay.slice(0, -1));
+      }
+    } else if (btn === "=") {
+      const res = evaluateMath(calcDisplay);
+      setCalcHistory(`${calcDisplay} =`);
+      setCalcDisplay(res);
+    } else {
+      if (calcDisplay === "0" || calcDisplay === "Error") {
+        if (["+", "-", "*", "/", "%"].includes(btn)) {
+          setCalcDisplay("0" + btn);
+        } else {
+          setCalcDisplay(btn);
+        }
+      } else {
+        setCalcDisplay(calcDisplay + btn);
+      }
+    }
+  };
 
   const handleOpenInCalculator = (booking: Booking) => {
     let guestName = "";
@@ -626,11 +682,21 @@ const AdminDashboard = ({
         </div>
 
         {/* Clerk User Button & Branding */}
-        <div className="flex items-center gap-6 mt-6 md:mt-0 glass border border-slate-200 rounded-full px-6 py-3">
+        <div className="flex items-center gap-4 sm:gap-6 mt-6 md:mt-0 glass border border-slate-200 rounded-full px-5 py-2.5">
           <div className="text-right">
             <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Logged In As</p>
             <p className="text-sm font-medium text-blue-400 font-cormorant font-bold italic">Stay Willas Admin</p>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setIsCalculatorOpen(!isCalculatorOpen)}
+            className="flex items-center gap-1.5 text-xs bg-amber-500/10 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/30 text-amber-500 px-3.5 py-1.5 rounded-full font-bold transition-all duration-300 cursor-pointer shadow-sm"
+          >
+            <Calculator size={13} />
+            <span>CALCULATOR</span>
+          </button>
+
           <button
             onClick={async () => {
               if (confirm("Are you sure you want to sign out?")) {
@@ -1046,7 +1112,17 @@ const AdminDashboard = ({
                                 className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors flex items-center gap-1 border border-blue-200 cursor-pointer uppercase tracking-wider"
                               >
                                 <Eye size={11} />
-                                View Bill
+                                View Details
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSelectedBookingDetails(booking);
+                                  setIsEditingFullBill(true);
+                                }}
+                                className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 transition-colors flex items-center gap-1 border-none cursor-pointer uppercase tracking-wider shadow-sm"
+                              >
+                                <Edit3 size={11} />
+                                Edit
                               </button>
                               <button
                                 onClick={async () => {
@@ -1849,19 +1925,19 @@ const AdminDashboard = ({
         const calculatedBalance = parsedBalanceDue > 0 ? parsedBalanceDue : Math.max(0, b.totalPrice - parsedAdvancePaid);
 
         return (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-            <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-8">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200">
+            <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
               
               {/* Header */}
-              <div className="bg-[#1B3564] text-white p-6 relative flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center border border-white/20">
-                    <Receipt className="w-5 h-5 text-amber-400" />
+              <div className="bg-[#1B3564] text-white px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between flex-shrink-0 border-b border-white/10">
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/10 flex items-center justify-center border border-white/20 flex-shrink-0">
+                    <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-cormorant font-bold text-xl tracking-wide">Reservation & Bill Details</h3>
-                      <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-cormorant font-bold text-lg sm:text-xl tracking-wide truncate">Reservation & Bill Details</h3>
+                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
                         b.status === "CONFIRMED"
                           ? "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"
                           : b.status === "BLOCKED"
@@ -1871,11 +1947,11 @@ const AdminDashboard = ({
                         {b.status}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-300 font-mono mt-0.5">Ref ID: {b.id}</p>
+                    <p className="text-[11px] text-slate-300 font-mono">Ref ID: {b.id}</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => {
@@ -1889,10 +1965,11 @@ const AdminDashboard = ({
                         setEditBillGstPercent(parsedGstPercent);
                         setEditBillSecurityDeposit(parsedSecurityDeposit);
                         setEditBillAdvancePaid(parsedAdvancePaid);
+                        setEditBillBalanceDue(parsedBalanceDue || calculatedBalance);
                       }
                       setIsEditingFullBill(!isEditingFullBill);
                     }}
-                    className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer border-none transition-colors flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs cursor-pointer border-none transition-colors flex items-center gap-1.5 shadow-sm"
                   >
                     <Edit3 size={13} />
                     {isEditingFullBill ? "Close Editor" : "Edit Bill & Info"}
@@ -1907,30 +1984,30 @@ const AdminDashboard = ({
               </div>
 
               {/* Modal Body */}
-              <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto text-slate-800 font-sans">
+              <div className="p-3.5 sm:p-4 space-y-3 flex-1 overflow-y-auto text-slate-800 font-sans">
 
                 {/* Inline Full Bill Editor Box */}
                 {isEditingFullBill ? (
-                  <div className="p-5 rounded-3xl bg-amber-50/40 border-2 border-amber-300 space-y-5 animate-in fade-in duration-200">
-                    <div className="flex items-center justify-between border-b border-amber-200 pb-3">
+                  <div className="p-4 rounded-2xl bg-amber-50/50 border-2 border-amber-300 space-y-4 animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between border-b border-amber-200 pb-2.5">
                       <div>
-                        <h4 className="font-bold text-amber-900 text-sm flex items-center gap-1.5">
-                          <Edit3 size={16} className="text-amber-600" />
+                        <h4 className="font-bold text-amber-900 text-xs sm:text-sm flex items-center gap-1.5">
+                          <Edit3 size={15} className="text-amber-600" />
                           Edit Reservation Tariff & Financial Charges
                         </h4>
-                        <p className="text-[11px] text-amber-700">Modify nightly rates, meal plans, extra charges, discounts, taxes, or advance paid.</p>
+                        <p className="text-[10px] text-amber-700">Modify nightly rates, meal plans, extra charges, discounts, taxes, advance paid, or net balance due.</p>
                       </div>
-                      <span className="text-[10px] bg-amber-500 text-slate-950 px-2.5 py-1 rounded-full font-bold uppercase">Editing Mode</span>
+                      <span className="text-[9px] bg-amber-500 text-slate-950 px-2 py-0.5 rounded-full font-bold uppercase">Editing Mode</span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                       <div>
                         <label className="text-[10px] uppercase font-bold text-slate-600 block mb-1">Nightly Villa Rate (₹)</label>
                         <input
                           type="number"
                           value={editBillNightlyRate}
                           onChange={(e) => setEditBillNightlyRate(Number(e.target.value))}
-                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
                         />
                       </div>
 
@@ -1945,7 +2022,7 @@ const AdminDashboard = ({
                             else if (val === "deluxe") setEditBillFoodRate(1500);
                             else if (val === "none") setEditBillFoodRate(0);
                           }}
-                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
                         >
                           <option value="none">No Food Package (₹0)</option>
                           <option value="standard">Standard Catering (₹1,000 / person / day)</option>
@@ -1961,7 +2038,7 @@ const AdminDashboard = ({
                             type="number"
                             value={editBillFoodRate}
                             onChange={(e) => setEditBillFoodRate(Number(e.target.value))}
-                            className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                            className="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
                           />
                         </div>
                       )}
@@ -1972,7 +2049,7 @@ const AdminDashboard = ({
                           type="number"
                           value={editBillDiscountFlat}
                           onChange={(e) => setEditBillDiscountFlat(Number(e.target.value))}
-                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
                         />
                       </div>
 
@@ -1982,7 +2059,7 @@ const AdminDashboard = ({
                           type="number"
                           value={editBillGstPercent}
                           onChange={(e) => setEditBillGstPercent(Number(e.target.value))}
-                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
                         />
                       </div>
 
@@ -1992,7 +2069,7 @@ const AdminDashboard = ({
                           type="number"
                           value={editBillSecurityDeposit}
                           onChange={(e) => setEditBillSecurityDeposit(Number(e.target.value))}
-                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
                         />
                       </div>
 
@@ -2002,7 +2079,18 @@ const AdminDashboard = ({
                           type="number"
                           value={editBillAdvancePaid}
                           onChange={(e) => setEditBillAdvancePaid(Number(e.target.value))}
-                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-amber-800 block mb-1">Override Net Balance Due (₹)</label>
+                        <input
+                          type="number"
+                          value={editBillBalanceDue}
+                          onChange={(e) => setEditBillBalanceDue(e.target.value === "" ? "" : Number(e.target.value))}
+                          placeholder="e.g. 15000"
+                          className="w-full bg-white border border-amber-300 rounded-xl px-3 py-1.5 text-xs font-bold text-amber-900 focus:border-amber-500 outline-none"
                         />
                       </div>
                     </div>
@@ -2058,7 +2146,7 @@ const AdminDashboard = ({
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3 pt-3 border-t border-amber-200">
+                    <div className="flex gap-3 pt-2.5 border-t border-amber-200">
                       <button
                         type="button"
                         disabled={isSavingFullBill}
@@ -2072,7 +2160,7 @@ const AdminDashboard = ({
                           const taxable = Math.max(0, subtotal - discountVal);
                           const gstTotal = taxable * (editBillGstPercent / 100);
                           const grandTotal = Math.round(taxable + gstTotal + editBillSecurityDeposit);
-                          const balanceDue = Math.max(0, grandTotal - editBillAdvancePaid);
+                          const balanceDue = editBillBalanceDue !== "" ? Number(editBillBalanceDue) : Math.max(0, grandTotal - editBillAdvancePaid);
 
                           const res = await updateBookingFullDetails({
                             bookingId: b.id,
@@ -2118,115 +2206,106 @@ const AdminDashboard = ({
                   </div>
                 ) : null}
                 
-                {/* Villa Banner */}
-                <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
-                  <div className="relative w-20 h-16 rounded-xl overflow-hidden bg-slate-200 border border-slate-200 flex-shrink-0">
-                    <Image 
-                      src={b.villa?.images?.[0] || "/images/hero-villa.png"} 
-                      alt={b.villa?.name || "Villa"} 
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-cormorant font-bold text-lg text-[#1B3564] truncate">{b.villa?.name}</h4>
-                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                      <MapPin size={12} className="text-slate-400" />
-                      {b.villa?.location || "Luxury Estate"} • {b.villa?.bedrooms || 4} Bedrooms
-                    </p>
-                    <p className="text-xs text-slate-600 font-medium mt-1">
-                      Base Rate: <span className="font-bold text-slate-900">₹{(b.villa?.price || computedNightly).toLocaleString("en-IN")}</span> / night
-                    </p>
-                  </div>
-                </div>
-
-                {/* Dates & Duration Card */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                    <div>
-                      <p className="text-[10px] uppercase font-bold text-blue-500 tracking-wider">Check-In</p>
-                      <p className="text-xs font-bold text-slate-900 mt-0.5">
-                        {cin.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
+                {/* Villa Banner & Dates Header Combined */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200 items-center">
+                  <div className="sm:col-span-5 flex items-center gap-3">
+                    <div className="relative w-14 h-12 rounded-lg overflow-hidden bg-slate-200 border border-slate-200 flex-shrink-0">
+                      <Image 
+                        src={b.villa?.images?.[0] || "/images/hero-villa.png"} 
+                        alt={b.villa?.name || "Villa"} 
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-cormorant font-bold text-base text-[#1B3564] truncate leading-tight">{b.villa?.name}</h4>
+                      <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                        {b.villa?.location || "Luxury Estate"} • {b.villa?.bedrooms || 4} BHK
+                      </p>
+                      <p className="text-[11px] text-slate-600 font-medium">
+                        Base: <span className="font-bold text-slate-900">₹{(b.villa?.price || computedNightly).toLocaleString("en-IN")}</span>/night
                       </p>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                    <div>
-                      <p className="text-[10px] uppercase font-bold text-blue-500 tracking-wider">Check-Out</p>
-                      <p className="text-xs font-bold text-slate-900 mt-0.5">
-                        {cout.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
+                  <div className="sm:col-span-7 grid grid-cols-3 gap-2">
+                    <div className="p-2 rounded-xl bg-blue-50/60 border border-blue-100/80">
+                      <p className="text-[9px] uppercase font-bold text-blue-600 tracking-wider">Check-In</p>
+                      <p className="text-xs font-bold text-slate-900 mt-0.5 truncate">
+                        {cin.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
                       </p>
                     </div>
-                  </div>
 
-                  <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/60 flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                    <div>
-                      <p className="text-[10px] uppercase font-bold text-amber-600 tracking-wider">Duration</p>
-                      <p className="text-xs font-bold text-slate-900 mt-0.5">{nights} {nights === 1 ? "Night" : "Nights"} Stay</p>
+                    <div className="p-2 rounded-xl bg-blue-50/60 border border-blue-100/80">
+                      <p className="text-[9px] uppercase font-bold text-blue-600 tracking-wider">Check-Out</p>
+                      <p className="text-xs font-bold text-slate-900 mt-0.5 truncate">
+                        {cout.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
+                      </p>
+                    </div>
+
+                    <div className="p-2 rounded-xl bg-amber-50/80 border border-amber-200/60">
+                      <p className="text-[9px] uppercase font-bold text-amber-700 tracking-wider">Duration</p>
+                      <p className="text-xs font-bold text-slate-900 mt-0.5 truncate">{nights} {nights === 1 ? "Night" : "Nights"}</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Guest Details */}
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                    <User size={14} className="text-[#1B3564]" />
+                {/* Guest Details Card */}
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                  <h5 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                    <User size={13} className="text-[#1B3564]" />
                     Guest / Booker Information
                   </h5>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                     <div>
-                      <span className="text-[11px] text-slate-400 block">Primary Guest Name</span>
-                      <span className="font-semibold text-slate-900">{parsedName}</span>
+                      <span className="text-[10px] text-slate-400 block">Primary Guest</span>
+                      <span className="font-semibold text-slate-900 truncate block">{parsedName}</span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-slate-400 block">Email Address</span>
-                      <span className="font-semibold text-slate-900">{parsedEmail}</span>
+                      <span className="text-[10px] text-slate-400 block">Email Address</span>
+                      <span className="font-semibold text-slate-900 truncate block">{parsedEmail}</span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-slate-400 block">Phone Number</span>
-                      <span className="font-semibold text-slate-900">{parsedPhone}</span>
+                      <span className="text-[10px] text-slate-400 block">Phone Number</span>
+                      <span className="font-semibold text-slate-900 truncate block">{parsedPhone}</span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-slate-400 block">Capacity / Booking Type</span>
-                      <span className="font-semibold text-slate-900">{parsedGuests} Guests ({parsedType})</span>
+                      <span className="text-[10px] text-slate-400 block">Guests & Type</span>
+                      <span className="font-semibold text-slate-900 truncate block">{parsedGuests} Guests ({parsedType})</span>
                     </div>
                   </div>
                   {parsedReason && (
-                    <div className="pt-2 border-t border-slate-200 text-xs text-slate-600">
-                      <span className="font-bold text-slate-700">Note / Reason: </span>{parsedReason}
+                    <div className="pt-1.5 border-t border-slate-200 text-xs text-slate-600 truncate">
+                      <span className="font-bold text-slate-700">Note: </span>{parsedReason}
                     </div>
                   )}
                 </div>
 
                 {/* Itemized Bill / Financial Breakdown */}
-                <div className="p-5 rounded-2xl bg-slate-900 text-white space-y-4 shadow-inner">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <h5 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                      <IndianRupee size={14} />
+                <div className="p-3.5 rounded-2xl bg-slate-900 text-white space-y-2.5 shadow-inner">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <h5 className="text-[11px] font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                      <IndianRupee size={13} />
                       Itemized Financial Bill Statement
                     </h5>
-                    <span className="text-[10px] text-slate-400 uppercase font-mono">Detailed Invoice Breakdown</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-mono">Invoice Breakdown</span>
                   </div>
 
-                  <div className="space-y-2 text-xs text-slate-300">
-                    <div className="flex justify-between items-center text-sm">
+                  <div className="space-y-1.5 text-xs text-slate-300">
+                    <div className="flex justify-between items-center text-xs sm:text-sm">
                       <span>Stay Nightly Charge (₹{computedNightly.toLocaleString("en-IN")} × {nights} {nights === 1 ? "night" : "nights"})</span>
                       <span className="font-semibold text-white">₹{baseStayTotal.toLocaleString("en-IN")}</span>
                     </div>
 
                     {parsedFoodPlan !== "none" && (
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center text-xs">
                         <span>Food Package ({parsedFoodPlan.toUpperCase()}: ₹{parsedFoodRate.toLocaleString("en-IN")}/person/day × {parsedGuests} guests × {nights} days)</span>
                         <span className="font-semibold text-emerald-300">₹{(parsedFoodTotal || (parsedFoodRate * parsedGuests * nights)).toLocaleString("en-IN")}</span>
                       </div>
                     )}
 
                     {parsedExtraCharges.length > 0 && parsedExtraCharges.map((item, idx) => (
-                      <div key={idx} className="flex justify-between items-center">
+                      <div key={idx} className="flex justify-between items-center text-xs">
                         <span>Extra Charge: {item.description}</span>
                         <span className="font-semibold text-slate-200">₹{item.amount.toLocaleString("en-IN")}</span>
                       </div>
@@ -2240,21 +2319,21 @@ const AdminDashboard = ({
                     ))}
 
                     {parsedDiscountTotal > 0 && (
-                      <div className="flex justify-between items-center text-emerald-400 font-semibold pt-1 border-t border-slate-800/60">
+                      <div className="flex justify-between items-center text-emerald-400 font-semibold text-xs pt-1 border-t border-slate-800/60">
                         <span>Special Discount Deduction</span>
                         <span>- ₹{parsedDiscountTotal.toLocaleString("en-IN")}</span>
                       </div>
                     )}
 
                     {parsedGstPercent > 0 && (
-                      <div className="flex justify-between items-center text-slate-300">
+                      <div className="flex justify-between items-center text-slate-300 text-xs">
                         <span>GST Tax ({parsedGstPercent}%)</span>
                         <span className="font-semibold text-slate-200">₹{parsedGstTotal.toLocaleString("en-IN")}</span>
                       </div>
                     )}
 
                     {parsedSecurityDeposit > 0 && (
-                      <div className="flex justify-between items-center text-amber-300">
+                      <div className="flex justify-between items-center text-amber-300 text-xs">
                         <span>Refundable Security Deposit</span>
                         <span className="font-semibold">₹{parsedSecurityDeposit.toLocaleString("en-IN")}</span>
                       </div>
@@ -2262,69 +2341,74 @@ const AdminDashboard = ({
                   </div>
 
                   {/* Summary Totals & Payments */}
-                  <div className="border-t border-slate-800 pt-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Total Bill Payable</p>
-                        <p className="text-2xl font-bold font-cormorant text-amber-400">₹{b.totalPrice.toLocaleString("en-IN")}</p>
+                  <div className="border-t border-slate-800 pt-2 space-y-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                      <div className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700/60">
+                        <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Total Bill Payable</p>
+                        <p className="text-xl font-bold font-cormorant text-amber-400 mt-0.5">₹{b.totalPrice.toLocaleString("en-IN")}</p>
                       </div>
-                      <div className="text-right">
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                          <CheckCircle2 size={12} />
-                          Status: {b.status}
-                        </span>
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-800/80 text-xs">
-                      <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 flex flex-col justify-between">
+                      <div className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700/60 flex flex-col justify-between">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] uppercase text-slate-400 font-bold">Advance Paid Received</span>
+                          <span className="text-[9px] uppercase text-slate-400 font-bold">Advance Received</span>
                           <button
                             type="button"
                             onClick={() => {
                               setIsEditingPayment(!isEditingPayment);
                               setPaymentAdvanceInput(parsedAdvancePaid);
                             }}
-                            className="text-[10px] text-amber-400 hover:underline font-bold cursor-pointer border-none bg-none flex items-center gap-1"
+                            className="text-[9px] text-amber-400 hover:underline font-bold cursor-pointer border-none bg-none flex items-center gap-0.5"
                           >
-                            <CreditCard size={11} />
-                            {isEditingPayment ? "Cancel" : "Update Paid"}
+                            <CreditCard size={10} />
+                            {isEditingPayment ? "Cancel" : "Update"}
                           </button>
                         </div>
-                        <span className="font-bold text-emerald-400 text-lg mt-1">₹{parsedAdvancePaid.toLocaleString("en-IN")}</span>
+                        <span className="font-bold text-emerald-400 text-base mt-0.5">₹{parsedAdvancePaid.toLocaleString("en-IN")}</span>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 text-right flex flex-col justify-between">
-                        <span className="text-[10px] uppercase text-slate-400 font-bold block">Net Balance Due</span>
-                        <span className="font-bold text-amber-400 text-lg mt-1">₹{calculatedBalance.toLocaleString("en-IN")}</span>
+                      <div className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700/60 text-right flex flex-col justify-between">
+                        <div className="flex items-center justify-between">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsEditingBalance(!isEditingBalance);
+                              setBalanceInput(calculatedBalance);
+                            }}
+                            className="text-[9px] text-amber-400 hover:underline font-bold cursor-pointer border-none bg-none flex items-center gap-0.5"
+                          >
+                            <Edit3 size={10} />
+                            {isEditingBalance ? "Cancel" : "Update"}
+                          </button>
+                          <span className="text-[9px] uppercase text-slate-400 font-bold block">Net Balance Due</span>
+                        </div>
+                        <span className="font-bold text-amber-400 text-base mt-0.5">₹{calculatedBalance.toLocaleString("en-IN")}</span>
                       </div>
                     </div>
 
                     {/* Inline Payment Editor */}
                     {isEditingPayment && (
-                      <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2.5 animate-in fade-in duration-200">
+                      <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-2 animate-in fade-in duration-200">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">Record / Update Amount Paid by Customer</span>
-                          <span className="text-[10px] text-slate-400">Total Bill: ₹{b.totalPrice.toLocaleString("en-IN")}</span>
+                          <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider">Update Amount Paid by Customer</span>
+                          <span className="text-[9px] text-slate-400">Total: ₹{b.totalPrice.toLocaleString("en-IN")}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="relative flex-1">
-                            <span className="absolute left-3 top-2.5 text-xs text-slate-400 font-bold">₹</span>
+                            <span className="absolute left-2.5 top-2 text-xs text-slate-400 font-bold">₹</span>
                             <input
                               type="number"
                               value={paymentAdvanceInput}
                               onChange={(e) => setPaymentAdvanceInput(e.target.value === "" ? "" : Number(e.target.value))}
                               placeholder="e.g. 20000"
-                              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl pl-7 pr-3 py-2 text-xs font-bold outline-none focus:border-amber-400"
+                              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl pl-6 pr-2 py-1.5 text-xs font-bold outline-none focus:border-amber-400"
                             />
                           </div>
                           <button
                             type="button"
                             onClick={() => setPaymentAdvanceInput(b.totalPrice)}
-                            className="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-[10px] font-bold border border-slate-700 cursor-pointer whitespace-nowrap"
+                            className="px-2 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-[10px] font-bold border border-slate-700 cursor-pointer whitespace-nowrap"
                           >
-                            Mark Full Paid
+                            Full Paid
                           </button>
                           <button
                             type="button"
@@ -2342,9 +2426,56 @@ const AdminDashboard = ({
                                 alert(res.error || "Failed to update payment record.");
                               }
                             }}
-                            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer border-none shadow-md flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer border-none shadow-md flex items-center gap-1"
                           >
                             {isSavingPayment ? <Loader2 size={12} className="animate-spin" /> : "Save"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Inline Net Balance Editor */}
+                    {isEditingBalance && (
+                      <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-2 animate-in fade-in duration-200">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider">Override Net Balance Due Amount</span>
+                          <span className="text-[9px] text-slate-400">Total: ₹{b.totalPrice.toLocaleString("en-IN")}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="relative flex-1">
+                            <span className="absolute left-2.5 top-2 text-xs text-slate-400 font-bold">₹</span>
+                            <input
+                              type="number"
+                              value={balanceInput}
+                              onChange={(e) => setBalanceInput(e.target.value === "" ? "" : Number(e.target.value))}
+                              placeholder="e.g. 15000"
+                              className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl pl-6 pr-2 py-1.5 text-xs font-bold outline-none focus:border-amber-400"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            disabled={isSavingBalance}
+                            onClick={async () => {
+                              setIsSavingBalance(true);
+                              const val = Number(balanceInput) || 0;
+                              const res = await updateBookingFullDetails({
+                                bookingId: b.id,
+                                totalPrice: b.totalPrice,
+                                advancePaid: parsedAdvancePaid,
+                                balanceDue: val,
+                              });
+                              setIsSavingBalance(false);
+                              if (res.success && res.booking) {
+                                setIsEditingBalance(false);
+                                setSelectedBookingDetails(res.booking as any);
+                                setBookings(bookings.map(x => x.id === b.id ? (res.booking as any) : x));
+                              } else {
+                                alert(res.error || "Failed to update net balance.");
+                              }
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer border-none shadow-md flex items-center gap-1"
+                          >
+                            {isSavingBalance ? <Loader2 size={12} className="animate-spin" /> : "Save"}
                           </button>
                         </div>
                       </div>
@@ -2354,15 +2485,15 @@ const AdminDashboard = ({
 
                 {/* KYC Information if available */}
                 {(b.kycName || b.kycIdUrl) && (
-                  <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/60 space-y-2 text-xs">
-                    <h5 className="font-bold text-amber-800 uppercase tracking-wider text-[10px]">Verified KYC Identification</h5>
+                  <div className="p-3 rounded-xl bg-amber-50/50 border border-amber-200/60 space-y-1 text-xs">
+                    <h5 className="font-bold text-amber-800 uppercase tracking-wider text-[9px]">Verified KYC Identification</h5>
                     {b.kycName && <p className="text-slate-800"><strong>Registered KYC Name:</strong> {b.kycName}</p>}
                     {b.kycIdUrl && (
                       <a 
                         href={b.kycIdUrl} 
                         target="_blank" 
                         rel="noreferrer" 
-                        className="text-blue-600 hover:underline font-bold inline-flex items-center gap-1"
+                        className="text-blue-600 hover:underline font-bold inline-flex items-center gap-1 text-xs"
                       >
                         <ExternalLink size={12} /> View Uploaded Identity Document
                       </a>
@@ -2373,16 +2504,38 @@ const AdminDashboard = ({
               </div>
 
               {/* Footer Actions */}
-              <div className="p-5 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 font-sans">
+              <div className="px-4 py-3 sm:px-5 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2.5 flex-shrink-0 font-sans">
                 <button
                   onClick={() => handleOpenInCalculator(b)}
-                  className="px-4 py-2.5 rounded-xl bg-[#1B3564] hover:bg-[#152A50] text-white text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-2 shadow-sm cursor-pointer border-none"
+                  className="px-3.5 py-2 rounded-xl bg-[#1B3564] hover:bg-[#152A50] text-white text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 shadow-sm cursor-pointer border-none"
                 >
                   <FileText size={14} className="text-amber-400" />
                   Open in Invoice Calculator & Export
                 </button>
 
                 <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!isEditingFullBill) {
+                        setEditBillNightlyRate(computedNightly);
+                        setEditBillFoodPlan(parsedFoodPlan);
+                        setEditBillFoodRate(parsedFoodRate);
+                        setEditBillExtraCharges(parsedExtraCharges.map((x, idx) => ({ id: idx.toString(), description: x.description, amount: x.amount })));
+                        setEditBillDiscountFlat(parsedDiscountTotal);
+                        setEditBillDiscountPercent(0);
+                        setEditBillGstPercent(parsedGstPercent);
+                        setEditBillSecurityDeposit(parsedSecurityDeposit);
+                        setEditBillAdvancePaid(parsedAdvancePaid);
+                      }
+                      setIsEditingFullBill(!isEditingFullBill);
+                    }}
+                    className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 cursor-pointer border-none shadow-sm"
+                  >
+                    <Edit3 size={14} />
+                    {isEditingFullBill ? "Close Editor" : "Edit Bill & Tariff"}
+                  </button>
+
                   <button
                     onClick={async () => {
                       if (confirm("Are you sure you want to cancel and remove this reservation? This will release dates on calendars immediately.")) {
@@ -2395,7 +2548,7 @@ const AdminDashboard = ({
                         }
                       }
                     }}
-                    className="px-4 py-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 cursor-pointer border border-red-200"
+                    className="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 cursor-pointer border border-red-200"
                   >
                     <Trash2 size={14} />
                     Cancel Stays
@@ -2403,7 +2556,7 @@ const AdminDashboard = ({
 
                   <button
                     onClick={() => setSelectedBookingDetails(null)}
-                    className="px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold tracking-wider uppercase transition-all cursor-pointer border-none"
+                    className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold tracking-wider uppercase transition-all cursor-pointer border-none"
                   >
                     Close
                   </button>
@@ -2414,6 +2567,92 @@ const AdminDashboard = ({
           </div>
         );
       })()}
+
+      {/* Floating Quick Calculator Widget */}
+      {isCalculatorOpen && (
+        <div className="fixed top-20 right-6 z-50 w-72 bg-slate-900 border-2 border-slate-700 rounded-3xl shadow-2xl p-4 text-white animate-in slide-in-from-top-4 duration-200">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+              <Calculator size={14} /> Quick Calculator
+            </span>
+            <button 
+              onClick={() => setIsCalculatorOpen(false)}
+              className="w-6 h-6 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center border-none cursor-pointer"
+            >
+              <X size={14} />
+            </button>
+          </div>
+
+          {/* Display */}
+          <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800 text-right mb-3">
+            <p className="text-[10px] text-slate-400 font-mono min-h-[14px] truncate">{calcHistory}</p>
+            <p className="text-2xl font-bold font-mono text-amber-400 truncate mt-0.5">{calcDisplay}</p>
+          </div>
+
+          {/* Keypad */}
+          <div className="grid grid-cols-4 gap-1.5 font-mono text-xs">
+            {["C", "CE", "⌫", "/"].map((btn) => (
+              <button
+                key={btn}
+                onClick={() => handleCalcPress(btn)}
+                className={`p-2.5 rounded-xl font-bold border-none cursor-pointer transition-colors ${
+                  btn === "C" ? "bg-red-500/20 text-red-400 hover:bg-red-500/30" : "bg-slate-800 text-amber-300 hover:bg-slate-700"
+                }`}
+              >
+                {btn}
+              </button>
+            ))}
+
+            {["7", "8", "9", "*"].map((btn) => (
+              <button
+                key={btn}
+                onClick={() => handleCalcPress(btn)}
+                className={`p-2.5 rounded-xl font-bold border-none cursor-pointer transition-colors ${
+                  ["*"].includes(btn) ? "bg-slate-800 text-amber-300 hover:bg-slate-700" : "bg-slate-800/60 text-white hover:bg-slate-700"
+                }`}
+              >
+                {btn}
+              </button>
+            ))}
+
+            {["4", "5", "6", "-"].map((btn) => (
+              <button
+                key={btn}
+                onClick={() => handleCalcPress(btn)}
+                className={`p-2.5 rounded-xl font-bold border-none cursor-pointer transition-colors ${
+                  ["-"].includes(btn) ? "bg-slate-800 text-amber-300 hover:bg-slate-700" : "bg-slate-800/60 text-white hover:bg-slate-700"
+                }`}
+              >
+                {btn}
+              </button>
+            ))}
+
+            {["1", "2", "3", "+"].map((btn) => (
+              <button
+                key={btn}
+                onClick={() => handleCalcPress(btn)}
+                className={`p-2.5 rounded-xl font-bold border-none cursor-pointer transition-colors ${
+                  ["+"].includes(btn) ? "bg-slate-800 text-amber-300 hover:bg-slate-700" : "bg-slate-800/60 text-white hover:bg-slate-700"
+                }`}
+              >
+                {btn}
+              </button>
+            ))}
+
+            {["0", ".", "%", "="].map((btn) => (
+              <button
+                key={btn}
+                onClick={() => handleCalcPress(btn)}
+                className={`p-2.5 rounded-xl font-bold border-none cursor-pointer transition-colors ${
+                  btn === "=" ? "bg-amber-500 text-slate-950 hover:bg-amber-400 font-extrabold" : "bg-slate-800/60 text-white hover:bg-slate-700"
+                }`}
+              >
+                {btn}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
