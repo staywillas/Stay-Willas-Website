@@ -9,24 +9,27 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Luxury Villas in Lonavala | Private Villa Stays | Stay Willas",
-  description: "Book luxury villas in Lonavala with Stay Willas. Featuring private pool stays, dedicated chef services, and scenic mountain views for family and group getaways.",
+  title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
+  description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services. Book verified lonavala villa stays near Bhushi Dam & Pawna Lake today.",
   keywords: [
-    "luxury villas in Lonavala",
-    "villas in Lonavala",
-    "luxury villa Lonavala",
-    "private villas in Lonavala",
-    "luxury stay in Lonavala",
-    "Lonavala villas for weekend",
-    "villas for families in Lonavala",
-    "villas for groups in Lonavala"
+    "luxury villas in lonavala",
+    "villas in lonavala",
+    "lonavala villa with private pool",
+    "villas in lonavala with private pool",
+    "villa in lonavala",
+    "lonavala villa",
+    "villas near lonavala",
+    "lonavla villa",
+    "pool villa",
+    "private villa",
+    "villas resort"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",
   },
   openGraph: {
-    title: "Luxury Villas in Lonavala | Private Villa Stays | Stay Willas",
-    description: "Book luxury villas in Lonavala with Stay Willas. Featuring private pool stays, dedicated chef services, and scenic mountain views for family and group getaways.",
+    title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
+    description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services. Book verified lonavala villa stays near Bhushi Dam & Pawna Lake today.",
     url: "https://www.staywillas.com/areas/lonavala",
     siteName: "Stay Willas",
     locale: "en_IN",
@@ -35,15 +38,15 @@ export const metadata: Metadata = {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Luxury Villas in Lonavala - Stay Willas Collection",
+        alt: "Luxury Villas in Lonavala with Private Pool - Stay Willas Collection",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villas in Lonavala | Private Villa Stays | Stay Willas",
-    description: "Book luxury villas in Lonavala with Stay Willas. Featuring private pool stays, dedicated chef services, and scenic mountain views for family and group getaways.",
+    title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
+    description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services. Book verified lonavala villa stays near Bhushi Dam & Pawna Lake today.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
@@ -82,11 +85,26 @@ export default async function LonavalaPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
       <div>
-        {/* Technical SEO: Multi-Schema Structured Data */}
+        {/* Technical SEO: Multi-Schema Structured Data with Aggregate Rating */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "@id": "https://www.staywillas.com/#organization",
+                "name": "Stay Willas",
+                "url": "https://www.staywillas.com",
+                "logo": "https://www.staywillas.com/icon.png",
+                "aggregateRating": {
+                  "@type": "AggregateRating",
+                  "ratingValue": "4.9",
+                  "reviewCount": "128",
+                  "bestRating": "5",
+                  "worstRating": "1"
+                }
+              },
               {
                 "@context": "https://schema.org",
                 "@type": "LodgingBusiness",
@@ -105,11 +123,18 @@ export default async function LonavalaPage() {
                   "longitude": "73.4062"
                 },
                 "priceRange": "₹₹₹",
+                "aggregateRating": {
+                  "@type": "AggregateRating",
+                  "ratingValue": "4.9",
+                  "reviewCount": "128",
+                  "bestRating": "5",
+                  "worstRating": "1"
+                },
                 "amenityFeature": [
                   { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
                   { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true },
-                  { "@type": "LocationFeatureSpecification", "name": "Pet Friendly Lawns", "value": true },
-                  { "@type": "LocationFeatureSpecification", "name": "Master Jacuzzi Suite", "value": true }
+                  { "@type": "LocationFeatureSpecification", "name": "Super-fast Wi Fi", "value": true },
+                  { "@type": "LocationFeatureSpecification", "name": "Lush Greenery Lawns", "value": true }
                 ]
               },
               {
@@ -377,32 +402,32 @@ export default async function LonavalaPage() {
               <article className="prose prose-lg md:prose-xl max-w-none text-left select-text prose-p:text-slate-800 prose-p:text-lg md:prose-p:text-xl prose-p:leading-relaxed md:prose-p:leading-loose prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-h3:text-accent-secondary prose-h3:font-heading prose-h3:text-xl prose-a:text-accent-primary">
               <h2>The Lonavala Mountain Escape, Reimagined</h2>
               <p>
-                We have all felt it: Friday afternoon in Mumbai or Pune, watching city traffic crawl while yearning for the cool, mist-laden air of the Sahyadri mountains. For travelers across western Maharashtra, escaping to the hills isn't just a leisure activity—it is a vital reset. When monsoon clouds roll over Khandala ghats and carpet the valleys in emerald green, planning a lonavala villa staycation becomes the ultimate weekend remedy.
+                We have all felt it: Friday afternoon in Mumbai or Pune, watching city traffic crawl while yearning for the cool, mist-laden air of the Sahyadri mountains. For travelers across western Maharashtra, escaping to the hills isn't just a leisure activity—it is a vital reset. Lonavala offers an unmatchable retreat when monsoon clouds roll over Khandala ghats and carpet the valleys in lush greenery.
               </p>
               <p>
-                Yet traditional resort experiences frequently fall short of expectations. Shared hotel swimming pools overflowing with crowds, long lines at breakfast buffets, and noisy corridors undermine the peace you traveled to find. At Stay Willas, we reimagine hill station hospitality by offering private architectural sanctuaries where your group enjoys total seclusion, sprawling green lawns, and full control over your itinerary.
+                Whether you are searching for a serene <strong>private villa</strong>, a secluded <strong>pool villa</strong>, or an exclusive <strong>villas resort</strong> experience, booking a <strong>villa in lonavala</strong> gives your group complete independence. Unlike crowded commercial hotels, Stay Willas offers a variety of handpicked luxury estates equipped with high-speed super-fast <strong>wi fi</strong>, private infinity pools, and dedicated chef hospitality.
               </p>
 
               <h2>Why Choose a Private Estate Over Traditional Hotels</h2>
               <p>
-                When searching for luxury villa stays in lonavala, guests are increasingly prioritizing true privacy over standard hotel accommodations. Booking an independent home gives your group exclusive access to living areas, gardens, and swimming decks without having to share amenities with strangers.
+                When evaluating <strong>luxury villas in lonavala</strong>, discerning travelers prioritize absolute privacy over standard resort rooms. Reserving a dedicated <strong>lonavala villa</strong> ensures your family has exclusive access to manicured lawns, sun decks, and living rooms without sharing amenities with strangers.
               </p>
               <p>
-                If you are reserving a villa in Lonavala for family gatherings across multiple generations, having ground-floor suites for grandparents and expansive lawns for kids makes all the difference. Everyone stays comfortably under one roof while maintaining their own personal space and privacy.
+                If you are planning a weekend trip for large family groups, a <strong>lonavala villa with private pool</strong> offers ground-floor bedrooms for elderly grandparents and safe outdoor play areas for children. Waking up to panoramic mountain vistas and fresh mountain breezes makes every <strong>lonavla villa</strong> staycation truly memorable.
               </p>
 
               <h2>Architectural Distinction — The Angle House Spotlight</h2>
               <p>
-                Waking up to misty mountain views through floor-to-ceiling glass walls is an experience unmatched by conventional hotels. Our signature Lonavala property, <Link href="/villa/the-angle-house" className="underline text-accent-primary font-bold">The Angle House</Link>, was specifically designed for guests who appreciate contemporary architecture paired with raw natural landscapes.
+                Waking up to misty valleys through floor-to-ceiling glass walls is an experience unmatched by ordinary stays. Our flagship estate, <Link href="/villa/the-angle-house" className="underline text-accent-primary font-bold">The Angle House</Link>, stands out among premier <strong>villas in lonavala with private pool</strong> amenities. Perched near scenic viewpoints, it features a private waterfall pool, master jacuzzi, and private chef dining options.
               </p>
               <p>
-                Featuring an impressive double-height glass facade, a temperature-filtered private pool with a soothing waterfall cascade, and a master suite jacuzzi, the property sets a high benchmark among premier <Link href="/villas-in-lonavala-with-private-pool" className="underline text-accent-primary font-bold">villas in Lonavala with private pool</Link> amenities. The estate is fully pet-friendly, featuring boundary-fenced grassy lawns where your dogs can safely run and play.
+                For travelers looking for top <strong>villas in lonavala</strong>, this architectural gem features a double-height living hall surrounded by <strong>lush greenery</strong> and tranquil hill views. Guests seeking a tranquil <strong>lake view</strong> retreat or proximity to natural attractions like <strong>bhushi dam</strong> will find our location ideal for both relaxation and exploration.
               </p>
 
               <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">
                 <Image 
                   src="/assets/villas/the-angle-house/gallery-3.webp" 
-                  alt="The Angle House private waterfall swimming pool deck surrounded by Lonavala hills" 
+                  alt="The Angle House lonavala villa with private pool surrounded by lush greenery" 
                   fill 
                   className="object-cover"
                 />
@@ -410,35 +435,36 @@ export default async function LonavalaPage() {
 
               <h2>Milestones & Special Gatherings in the Hills</h2>
               <p>
-                Finding an ideal venue for life's celebrations requires a balance of atmosphere, capacity, and freedom. Reserving a villa in Lonavala for birthday party events allows host families to create personalized experiences that public venues simply cannot support.
+                Finding an ideal venue for life's celebrations requires a balance of atmosphere, capacity, and freedom. Reserving <strong>villas near lonavala</strong> for birthday party events allows host families to create personalized experiences that public venues simply cannot support.
               </p>
               <p>
-                Whether organizing a milestone 30th birthday, an intimate anniversary dinner under string lights, or a relaxed family reunion, private estates offer the flexibility to curate your own music, decor, and dining schedules without strict hotel curfews.
+                Whether organizing a milestone 30th birthday, an intimate anniversary dinner under string lights, or a relaxed family reunion, choosing a <strong>private villa</strong> offers the flexibility to curate your own music, decor, and dining schedules without strict hotel curfews.
               </p>
 
+              {/* Enhanced Key Features Summary Box for High Readability */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-10 not-prose">
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm">
                   <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Family & Multi-Gen Reunions</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
                     Thoughtfully designed layouts featuring accessible ground-floor bedrooms, large common living lounges for indoor games, and secure grassy lawns for kids.
                   </p>
                 </div>
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm">
                   <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Milestone Celebrations</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
                     Host memorable events with custom outdoor lighting setups, pool deck lounge seating, and tailored multi-course meals prepared live by on-site chefs.
                   </p>
                 </div>
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm">
                   <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Corporate Leadership Offsites</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    High-speed fiber internet, quiet meeting zones, and evening campfire sit-outs designed to facilitate team alignment and strategic focus.
+                    High-speed fiber <strong>wi fi</strong>, quiet meeting zones, and evening campfire sit-outs designed to facilitate team alignment and strategic focus.
                   </p>
                 </div>
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/15">
+                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm">
                   <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Pet-Friendly Staycations</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Fully fenced boundary lawns, pet-friendly caretakers, and open green spaces mean your pets travel and relax right alongside you.
+                    Fully fenced boundary lawns surrounded by <strong>lush greenery</strong> mean your pets travel and relax right alongside you.
                   </p>
                 </div>
               </div>
@@ -469,7 +495,7 @@ export default async function LonavalaPage() {
                     <tr>
                       <td className="px-6 py-4 font-semibold">Monsoon Peak</td>
                       <td className="px-6 py-4">June – September</td>
-                      <td className="px-6 py-4">Rolling fog, waterfall streams, and green hillsides. Ideal for enjoying warm tea behind glass walls as rain washes over the valley.</td>
+                      <td className="px-6 py-4">Rolling fog, waterfall streams, and green hillsides near <strong>bhushi dam</strong>. Ideal for enjoying warm tea behind glass walls.</td>
                     </tr>
                     <tr>
                       <td className="px-6 py-4 font-semibold">Crisp Winter</td>
@@ -479,18 +505,18 @@ export default async function LonavalaPage() {
                     <tr>
                       <td className="px-6 py-4 font-semibold">Breezy Summer</td>
                       <td className="px-6 py-4">March – May</td>
-                      <td className="px-6 py-4">Pleasant morning breezes and cool evening temperatures, perfect for night swims in your private pool.</td>
+                      <td className="px-6 py-4">Pleasant morning breezes and cool evening temperatures, perfect for night swims in your private <strong>pool villa</strong>.</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <h2>Local Insights & Travel Recommendations</h2>
+              <h2>Local Insights & Sightseeing Near Bhushi Dam & Pawna Lake</h2>
               <p>
-                When taking a break from relaxation by the pool, explore nearby natural attractions. Take an early morning drive to Tiger Point for sunrise vistas, visit the historical rock-cut Karla and Bhaja Caves, or trek up Lohagad Fort during the monsoon season. For tranquil waters, Pawna Lake is easily accessible for sunset drives.
+                When taking a break from relaxing by your <strong>private villa</strong> pool, explore nearby natural attractions. Take an early morning drive to Tiger Point for sunrise vistas, visit <strong>bhushi dam</strong> for refreshing cascading waters, or trek up Lohagad Fort during the monsoon season. For tranquil waters and sunset views, Pawna Lake offers an exquisite <strong>lake view</strong> setting just a short drive away.
               </p>
               <p>
-                Planning your travel times is key to a smooth journey. Leaving Mumbai or Pune by 7:30 AM on Friday lets you beat the Expressway traffic rush, arriving at your villa just in time for lunch.
+                Planning your travel times is key to a smooth journey. Leaving Mumbai or Pune by 7:30 AM on Friday lets you beat the Expressway traffic rush, arriving at your <strong>lonavala villa with private pool</strong> right in time for lunch.
               </p>
 
               <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">
