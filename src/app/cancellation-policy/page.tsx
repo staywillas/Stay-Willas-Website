@@ -101,29 +101,7 @@ export default function CancellationPolicyPage() {
               Approved refunds will be processed within <strong>7 to 10 working days</strong> back to the original payment source (credit card, bank account, or UPI handle).
             </p>
 
-            <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold pt-4 border-b border-[#DAA520]/20 pb-2">
-              4. Network Websites & Partner Portals
-            </h2>
-            <p>
-              Explore our affiliated network portals and corporate websites:
-            </p>
-            <ul className="list-disc list-inside space-y-2 pl-4">
-              <li>
-                <a href="https://www.staywillas.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
-                  Stay Willas (staywillas.com)
-                </a> — Premium Villa Staycations & Luxury Retreats.
-              </li>
-              <li>
-                <a href="https://aanganshobha.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
-                  Aangan Shobha (aanganshobha.com)
-                </a> — Heritage Living, Home Aesthetics & Garden Styling.
-              </li>
-              <li>
-                <a href="https://kannikabangles.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
-                  Kannika Bangles (kannikabangles.com)
-                </a> — Traditional Handcrafted Jewelry & Heritage Bangles.
-              </li>
-            </ul>
+
           </div>
         </section>
       </div>

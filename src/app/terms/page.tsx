@@ -84,29 +84,7 @@ export default function TermsPage() {
               Stay Willas acts as a listing and concierge agent. We are not liable for accidental injuries, natural disasters, utility failures (water/electricity cuts by municipal boards), or personal property loss during your stay. We recommend guests lock valuables in bedroom drawers.
             </p>
 
-            <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold pt-4 border-b border-[#DAA520]/20 pb-2">
-              4. Affiliated Websites & Partner Network
-            </h2>
-            <p>
-              Stay Willas is part of an integrated luxury lifestyle and brand network. Please review the terms and policies of our official network portals:
-            </p>
-            <ul className="list-disc list-inside space-y-2 pl-4">
-              <li>
-                <a href="https://www.staywillas.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
-                  Stay Willas (staywillas.com)
-                </a> — Official luxury villa staycation & holiday rentals portal in Maharashtra.
-              </li>
-              <li>
-                <a href="https://aanganshobha.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
-                  Aangan Shobha (aanganshobha.com)
-                </a> — Premium heritage home decor, garden aesthetics, and boutique estate styling.
-              </li>
-              <li>
-                <a href="https://kannikabangles.com" target="_blank" rel="noopener noreferrer" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">
-                  Kannika Bangles (kannikabangles.com)
-                </a> — Authentic handcrafted traditional jewelry, bangles, and heritage fashion accessories.
-              </li>
-            </ul>
+
           </div>
         </section>
       </div>
