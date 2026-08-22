@@ -17,6 +17,9 @@ import {
   Trees
 } from "lucide-react";
 import VillaFeatureMarquee, { FeatureMarqueeItem } from "@/components/villas/villa-feature-marquee";
+import QuickMobileLeadForm from "@/components/common/quick-mobile-lead-form";
+import MegaDiscountAdBanner from "@/components/common/mega-discount-ad-banner";
+import AdLandingShowcase from "@/components/villas/ad-landing-showcase";
 
 const canopyCrestFeatures: FeatureMarqueeItem[] = [
   {
@@ -61,6 +64,50 @@ const canopyCrestFeatures: FeatureMarqueeItem[] = [
     description: "Freshly cooked multi-cuisine meal packages for large group celebrations.",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
   },
+];
+
+const canopyCrestShowcaseImages = [
+  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg", title: "22x12 Ft Private Swimming Pool", tag: "Massive Pool" },
+  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg", title: "Charpai Green Lawns", tag: "Multi-Acre" },
+  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg", title: "Spacious 4 BHK Master Suites", tag: "Capacity 20+" },
+  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg", title: "Outdoor Gazebo & Bonfire Pit", tag: "Evening Lounge" },
+  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg", title: "Indoor Games & Music Lounge", tag: "Entertainment" },
+  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg", title: "In-House Gourmet Dining", tag: "Chef Service" },
+];
+
+const canopyCrestReviews = [
+  {
+    name: "Anand & Shweta Joshi",
+    location: "Dadar, Mumbai",
+    rating: 5,
+    date: "Stayed July 2026",
+    comment: "Massive 2-acre lawn and huge swimming pool. We hosted a family reunion of 18 people and everyone had ample bedroom space.",
+    highlight: "Large Family Reunion"
+  },
+  {
+    name: "Rahul Verma (Tech Mahindra)",
+    location: "Hinjawadi, Pune",
+    rating: 5,
+    date: "Stayed June 2026",
+    comment: "Organized our startup leadership offsite here. High-speed Wi-Fi, great indoor games, and the direct WhatsApp booking with 28% discount was seamless.",
+    highlight: "Corporate Offsite"
+  },
+  {
+    name: "Deepak Sharma",
+    location: "Navi Mumbai",
+    rating: 5,
+    date: "Stayed May 2026",
+    comment: "Hardly 1 hour drive from Mumbai via the Expressway. The mountain views and fresh barbecue by the pool made our weekend unforgettable.",
+    highlight: "Quick Expressway Access"
+  },
+  {
+    name: "Pooja Hegde",
+    location: "Andheri West, Mumbai",
+    rating: 5,
+    date: "Stayed August 2026",
+    comment: "Cleanest bathrooms, powerful air conditioning, and absolute seclusion without noisy neighbors. We are coming back every monsoon!",
+    highlight: "100% Privacy"
+  }
 ];
 
 export const metadata: Metadata = {
@@ -184,8 +231,18 @@ export default async function KhopoliGroupEstatePage() {
 
         <Navbar />
 
+        {/* 28% Mega Weekday Offer Floating Ads & Countdown Strip */}
+        <MegaDiscountAdBanner 
+          pageName="khopoli"
+          villaName="Canopy Crest (Khopoli)"
+          location="Khopoli, Maharashtra"
+          couponCode="KHOPOLI28"
+          discountPercent={28}
+          villaLink="/villa/canopy-crest"
+        />
+
         {/* Hero Section */}
-        <section className="relative pt-32 pb-16 md:pt-48 md:pb-28 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/15 text-center flex flex-col items-center">
+        <section className="relative pt-36 pb-16 md:pt-52 md:pb-28 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/15 text-center flex flex-col items-center">
           <div className="absolute inset-0 -z-10">
             <Image 
               src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" 
@@ -218,21 +275,38 @@ export default async function KhopoliGroupEstatePage() {
               Experience the best of <strong className="font-semibold text-[#1B3564]">khopoli villas</strong> at <strong className="font-semibold text-[#1B3564]">Canopy Crest</strong>. If you are comparing <strong className="font-semibold text-[#1B3564]">villas in khopoli</strong> for reunions or retreats, our <strong className="font-semibold text-[#1B3564]">large group villa khopoli</strong> accommodates up to 20 guests with private pool, charpai lawns, and chef service.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md">
+            <div className="flex flex-wrap items-center justify-center gap-3 w-full max-w-xl mb-8">
               <Link 
                 href="/villa/canopy-crest" 
-                className="bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all text-center"
+                className="bg-white hover:bg-slate-100 border-2 border-[#1B3564]/30 text-[#1B3564] font-black text-xs uppercase tracking-wider py-3.5 px-6 rounded-2xl shadow-md transition-all active:scale-95 text-center flex items-center gap-1.5"
               >
-                View Villa Specifications
+                <span>View Villa Gallery & Specs</span>
+                <ChevronRight size={14} />
+              </Link>
+              <Link 
+                href="/villa/canopy-crest" 
+                className="bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-[#DAA520] hover:text-white text-xs font-black uppercase tracking-wider py-3.5 px-6 rounded-2xl shadow-lg transition-all text-center"
+              >
+                Book with 28% Off
               </Link>
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20Canopy%20Crest%20Khopoli%20Villas" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20Canopy%20Crest%20in%20Khopoli%20with%20the%2028%%20discount%20coupon%20KHOPOLI28" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                className="bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs font-black uppercase tracking-wider py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
               >
-                <PhoneCall size={14} /> WhatsApp Concierge
+                <PhoneCall size={14} /> WhatsApp 28% Deal
               </a>
+            </div>
+
+            {/* Quick 1-Field Mobile Lead Form */}
+            <div className="w-full max-w-2xl">
+              <QuickMobileLeadForm
+                villaName="Canopy Crest (Khopoli)"
+                location="Khopoli, Maharashtra"
+                defaultCoupon="KHOPOLI28"
+                discountPercent={28}
+              />
             </div>
           </div>
         </section>
@@ -255,92 +329,49 @@ export default async function KhopoliGroupEstatePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
-              <Users className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Up to 20 Guests</h3>
-              <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                4 spacious BHK suites and 5 ensuite bathrooms crafted specifically for comfortable stays at premier khopoli villas.
-              </p>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
+                <Users className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
+              </div>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">Up to 20 Guests</h3>
             </div>
 
-            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
-              <Trees className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Charpai Green Lawns</h3>
-              <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Expansive manicured lawns featuring traditional charpai lounge setups setting this apart from other villas in khopoli.
-              </p>
+            <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
+                <Trees className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
+              </div>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">Charpai Green Lawns</h3>
             </div>
 
-            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
-              <Flame className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Bonfire & Barbecue Deck</h3>
-              <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Cozy evening outdoor bonfire pit and poolside barbecue grill for late-night stargazing at your large group villa khopoli.
-              </p>
+            <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
+                <Flame className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
+              </div>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">Bonfire & Barbecue Deck</h3>
             </div>
 
-            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
-              <Utensils className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">In-House Chef Service</h3>
-              <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Dedicated on-site culinary team serving fresh group buffets, live barbecues, and Jain meals on request.
-              </p>
+            <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
+                <Utensils className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
+              </div>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">In-House Chef Service</h3>
             </div>
           </div>
         </section>
 
-        {/* Gallery Preview Grid */}
-        <section className="py-8 sm:py-12 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
-              <Image 
-                src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" 
-                alt="Canopy Crest private pool and lawn at top khopoli villas" 
-                fill 
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-500" 
-              />
-            </div>
-
-            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
-              <Image 
-                src="/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg" 
-                alt="Spacious living hall for groups booking villas in khopoli" 
-                fill 
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-500" 
-              />
-            </div>
-
-            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
-              <Image 
-                src="/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg" 
-                alt="Mountain backdrop view at large group villa khopoli" 
-                fill 
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-500" 
-              />
-            </div>
-          </div>
-
-          {/* Action Callout Buttons under Gallery */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link 
-              href="/villa/canopy-crest" 
-              className="w-full sm:w-auto bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white text-xs sm:text-sm font-bold uppercase tracking-wider py-3.5 sm:py-4 px-8 rounded-2xl shadow-lg transition-all text-center"
-            >
-              View Villa Specifications
-            </Link>
-            <a 
-              href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20Canopy%20Crest%20Khopoli%20Villas" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="w-full sm:w-auto bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-bold uppercase tracking-wider py-3.5 sm:py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
-            >
-              <PhoneCall size={16} /> WhatsApp Concierge
-            </a>
-          </div>
+        {/* Ad Conversion Suite: Comparison Matrix, Photo Tour, Reviews, and Sticky Mobile Bar */}
+        <section className="py-10 sm:py-16">
+          <AdLandingShowcase
+            villaSlug="canopy-crest"
+            villaName="Canopy Crest"
+            location="Khopoli, Maharashtra"
+            originalPrice={villa?.price || 15000}
+            discountedPrice={Math.round((villa?.price || 15000) * 0.72)}
+            couponCode="KHOPOLI28"
+            images={canopyCrestShowcaseImages}
+            reviews={canopyCrestReviews}
+          />
         </section>
 
         {/* Comprehensive Editorial Guide Section */}
@@ -458,26 +489,37 @@ export default async function KhopoliGroupEstatePage() {
               </div>
             </div>
 
-            <div className="w-full lg:w-80 bg-white p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-md space-y-3.5 sm:space-y-4 text-center">
-              <div className="border-b border-slate-100 pb-3">
-                <span className="text-xs text-slate-500 uppercase tracking-wider block">Starting Rate</span>
-                <span className="text-xl sm:text-2xl font-bold text-[#1B3564]">₹15,000 <span className="text-xs font-normal text-slate-500">/ night</span></span>
+            <div className="w-full lg:w-80 bg-white p-5 sm:p-6 rounded-2xl sm:rounded-3xl border-2 border-[#DAA520]/40 shadow-xl space-y-3.5 sm:space-y-4 text-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-[#DAA520] text-[#1B3564] text-[9px] font-black uppercase tracking-wider px-3 py-0.5 rounded-bl-lg">
+                28% OFF APPLIED
+              </div>
+
+              <div className="border-b border-slate-100 pb-3 pt-2">
+                <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider block">Special Direct Offer</span>
+                <div className="flex items-center justify-center gap-2 mt-1">
+                  <span className="text-sm line-through text-slate-400 font-medium">₹15,000</span>
+                  <span className="text-2xl sm:text-3xl font-black text-[#1B3564]">₹10,800</span>
+                  <span className="text-xs font-normal text-slate-500">/ night</span>
+                </div>
+                <span className="inline-block mt-1 text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                  Coupon: <strong className="text-[#1B3564]">KHOPOLI28</strong>
+                </span>
               </div>
 
               <Link 
                 href="/villa/canopy-crest" 
-                className="block w-full bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center py-3.5 rounded-xl shadow transition-all"
+                className="block w-full bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-[#DAA520] hover:text-white font-black text-xs uppercase tracking-wider text-center py-3.5 rounded-xl shadow transition-all"
               >
-                View Villa Specifications
+                Claim 28% Off & Book
               </Link>
 
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20get%20a%20group%20quote%20for%20Canopy%20Crest%20Khopoli%20Villas" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20Canopy%20Crest%20in%20Khopoli%20with%2028%%20Discount%20(Coupon:%20KHOPOLI28)" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-all"
+                className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white font-black text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-all shadow-md"
               >
-                <PhoneCall size={14} /> Quick WhatsApp Quote
+                <PhoneCall size={14} /> WhatsApp 28% Quote
               </a>
             </div>
           </div>

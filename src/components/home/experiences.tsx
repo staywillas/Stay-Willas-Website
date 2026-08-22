@@ -220,21 +220,30 @@ const Experiences = () => {
                 </motion.p>
 
                 {/* Interactive Action Row */}
-                <motion.div variants={itemVariants} className="pt-2 sm:pt-6 flex flex-row items-center gap-2 sm:gap-4">
+                <motion.div variants={itemVariants} className="pt-2 sm:pt-6 flex flex-wrap items-center gap-2 sm:gap-3">
                   <Link
                     href={activeExperience.link}
-                    className="group bg-[#1B3564] hover:bg-[#152A50] text-white font-extrabold px-4 py-2.5 sm:px-8 sm:py-4 rounded-full text-[10px] sm:text-xs tracking-widest uppercase flex items-center gap-1.5 shadow-lg shadow-[#1B3564]/15 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 whitespace-nowrap"
+                    className="group bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] hover:text-white font-black px-5 py-3 sm:px-7 sm:py-3.5 rounded-full text-[10px] sm:text-xs tracking-wider uppercase flex items-center gap-1.5 shadow-lg shadow-[#1B3564]/15 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 whitespace-nowrap"
                   >
-                    Explore villas
-                    <ArrowRight size={12} className="transition-transform group-hover:translate-x-1.5" />
+                    <span>Browse Matching Villas</span>
+                    <ArrowRight size={13} className="transition-transform group-hover:translate-x-1.5 stroke-[2.5]" />
                   </Link>
+
+                  <a
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I'm looking at your *${activeExperience.title}* on the website. Could you suggest the best villas for our stay?`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold px-4 py-3 sm:px-5 sm:py-3.5 rounded-full text-[10px] sm:text-xs tracking-wider uppercase flex items-center gap-1.5 transition-all duration-300 whitespace-nowrap"
+                  >
+                    <span>Custom Request</span>
+                  </a>
 
                   <button
                     onClick={handleNextCard}
                     disabled={swiping}
-                    className="group flex items-center gap-1.5 px-3.5 py-2.5 sm:px-6 sm:py-4 rounded-full border border-[#1B3564]/15 hover:border-[#1B3564]/40 text-[#1B3564] text-[9px] sm:text-[10px] font-black tracking-widest uppercase transition-all duration-300 cursor-pointer hover:bg-[#1B3564]/5 disabled:opacity-50 whitespace-nowrap"
+                    className="group flex items-center gap-1 px-3 py-3 sm:px-4 sm:py-3.5 rounded-full border border-slate-200 hover:border-slate-400 text-slate-600 text-[9px] sm:text-[10px] font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer hover:bg-slate-50 disabled:opacity-50 whitespace-nowrap"
                   >
-                    Next Experience
+                    <span>Next</span>
                     <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </motion.div>

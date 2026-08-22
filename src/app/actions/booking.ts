@@ -216,17 +216,17 @@ export async function createCheckoutSession(formData: {
 /**
  * Retrieves dynamic availability, filtering out cancelled stays and expired checkouts (HELD > 10m)
  */
-export async function getDestinationAvailability(region: string) {
+export async function getDestinationAvailability(region?: string) {
   try {
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 
     const villas = await prisma.villa.findMany({
-      where: {
+      where: region && region !== "all" ? {
         location: {
           contains: region,
           mode: "insensitive",
         },
-      },
+      } : {},
       select: {
         id: true,
         bookings: {
@@ -360,33 +360,39 @@ export async function cancelBooking(bookingId: string) {
 }
 
 export async function checkAvailableVillasForDates(data: {
-  destination: string;
+  destination?: string;
   checkIn?: string;
   checkOut?: string;
   guests?: number;
 }) {
   try {
-    const region = data.destination || "Lonavala";
+    const region = data.destination && data.destination !== "all" ? data.destination.trim() : "";
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 
     // Helper: extract UTC date-only stamp (ignoring time/timezone)
     const toUTCDay = (d: Date) => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
 
-    console.log("[Availability] Search request:", { region, checkIn: data.checkIn, checkOut: data.checkOut, guests: data.guests });
+    console.log("[Availability] Search request:", { region: region || "ALL", checkIn: data.checkIn, checkOut: data.checkOut, guests: data.guests });
 
-    // 1. Query ALL villas matching region (no guest filter — let user see all options)
-    let villas = await prisma.villa.findMany({
-      where: {
-        location: { contains: region, mode: "insensitive" }
-      },
+    // 1. Query ALL villas (filtered by location only if specific destination is passed)
+    const whereClause: any = {};
+    if (region) {
+      whereClause.location = { contains: region, mode: "insensitive" };
+    }
+
+    const rawVillas = await prisma.villa.findMany({
+      where: whereClause,
       select: {
         id: true,
         name: true,
         slug: true,
         price: true,
         bedrooms: true,
+        bathrooms: true,
         guests: true,
         location: true,
+        category: true,
+        amenities: true,
         images: true,
         bookings: {
           where: {
@@ -404,41 +410,19 @@ export async function checkAvailableVillasForDates(data: {
       }
     });
 
-    console.log("[Availability] Villas found for region:", villas.length, "region:", region);
+    // Sort to prioritize The Angle House and Canopy Crest
+    const villas = [...rawVillas].sort((a, b) => {
+      if (a.slug === "the-angle-house" && b.slug !== "the-angle-house") return -1;
+      if (b.slug === "the-angle-house" && a.slug !== "the-angle-house") return 1;
+      if (a.slug === "canopy-crest" && b.slug !== "canopy-crest") return -1;
+      if (b.slug === "canopy-crest" && a.slug !== "canopy-crest") return 1;
+      return 0;
+    });
 
-    // Fallback: If no villas match the region, fetch all villas
-    if (villas.length === 0) {
-      villas = await prisma.villa.findMany({
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          price: true,
-          bedrooms: true,
-          guests: true,
-          location: true,
-          images: true,
-          bookings: {
-            where: {
-              OR: [
-                { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
-                { status: "HELD", createdAt: { gte: tenMinutesAgo } }
-              ]
-            },
-            select: {
-              checkIn: true,
-              checkOut: true,
-              status: true
-            }
-          }
-        }
-      });
-      console.log("[Availability] Fallback: fetched ALL villas:", villas.length);
-    }
+    console.log("[Availability] Villas found:", villas.length);
 
-    // 2. If no dates provided, return all villas
+    // 2. If no dates provided, return all sorted villas
     if (!data.checkIn || !data.checkOut) {
-      console.log("[Availability] No dates provided, returning all", villas.length, "villas");
       return {
         success: true,
         villas: villas.map(v => ({
@@ -447,8 +431,11 @@ export async function checkAvailableVillasForDates(data: {
           slug: v.slug,
           price: v.price,
           bedrooms: v.bedrooms,
+          bathrooms: v.bathrooms,
           guests: v.guests,
           location: v.location,
+          category: v.category,
+          amenities: v.amenities,
           image: v.images[0] || "/images/hero-villa.png"
         }))
       };
@@ -460,18 +447,12 @@ export async function checkAvailableVillasForDates(data: {
     const userCinDay = toUTCDay(userCheckIn);
     const userCoutDay = toUTCDay(userCheckOut);
 
-    console.log("[Availability] User dates (UTC days):", { userCinDay: new Date(userCinDay).toISOString(), userCoutDay: new Date(userCoutDay).toISOString() });
-
     // 4. Filter: keep villas that have NO overlapping active bookings
     const availableVillas = villas.filter(v => {
       const hasOverlap = v.bookings.some(b => {
         const bCinDay = toUTCDay(new Date(b.checkIn));
         const bCoutDay = toUTCDay(new Date(b.checkOut));
-        // Standard interval overlap: [userCin, userCout) overlaps [bCin, bCout)
         const overlaps = userCinDay < bCoutDay && userCoutDay > bCinDay;
-        if (overlaps) {
-          console.log(`[Availability] Villa "${v.name}" blocked by booking: ${new Date(bCinDay).toISOString().split('T')[0]} - ${new Date(bCoutDay).toISOString().split('T')[0]} (${b.status})`);
-        }
         return overlaps;
       });
       return !hasOverlap;
@@ -487,13 +468,16 @@ export async function checkAvailableVillasForDates(data: {
         slug: v.slug,
         price: v.price,
         bedrooms: v.bedrooms,
+        bathrooms: v.bathrooms,
         guests: v.guests,
         location: v.location,
+        category: v.category,
+        amenities: v.amenities,
         image: v.images[0] || "/images/hero-villa.png"
       }))
     };
   } catch (error: any) {
-    console.error("[Availability] FATAL ERROR:", error);
+    console.error("[Availability] Error:", error);
     return { success: false, error: "Failed to check availability" };
   }
 }

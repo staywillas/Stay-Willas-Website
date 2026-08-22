@@ -595,41 +595,32 @@ export default async function VillaDetailPage({ params }: PageProps) {
       </section>
 
       {/* Mobile Sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg-primary/90 backdrop-blur-xl border-t border-border-subtle px-6 py-4 shadow-[0_-8px_30px_rgba(44,31,14,0.12)]">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <span className="text-[10px] text-accent-secondary block uppercase tracking-wider font-bold">Starts from</span>
-            <span className="text-text-primary font-semibold text-base sm:text-lg">₹{villaData.price} <span className="text-[10px] font-normal text-text-primary/50">/ night</span></span>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[8px] text-green-600 font-bold uppercase tracking-wider">✓ Free Cancellation</span>
-              <span className="text-[8px] text-[#DAA520] font-bold uppercase tracking-wider">✓ Best Price</span>
-            </div>
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-[#DAA520]/25 px-4 py-3 shadow-[0_-8px_30px_rgba(27,53,100,0.15)]">
+        <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
+          <div className="flex flex-col text-left shrink-0">
+            <span className="text-[8px] text-[#DAA520] block uppercase tracking-widest font-black">Direct Best Rate</span>
+            <span className="text-[#1B3564] font-black text-base leading-tight">₹{villaData.price} <span className="text-[9px] font-normal text-slate-500 font-sans">/ night</span></span>
+            <span className="text-[7.5px] text-emerald-600 font-bold uppercase tracking-wider">✓ 0% Platform Fee</span>
           </div>
-          <div className="flex items-center gap-2">
-            <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas Concierge! 🌿 I am absolutely in love with *${villaData.name}* in ${villaData.location}. I would love to enquire about its availability and details for my next escape.`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-12 h-12 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white flex items-center justify-center transition-all duration-300 shadow-[0_0_15px_rgba(37,211,102,0.3)] shrink-0 active:scale-95 cursor-pointer"
-              aria-label="Enquire on WhatsApp"
-            >
-              <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white">
-                <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
-              </svg>
-            </a>
+
+          <div className="flex items-center gap-2 flex-1 justify-end">
             <a
               href="#booking-card-section"
-              className="bg-[#1B3564] hover:bg-[#0F2142] text-white font-extrabold px-4 py-3.5 rounded-xl text-xs tracking-wider uppercase transition-all duration-300 shadow-[0_0_15px_rgba(27,53,100,0.3)] flex items-center justify-center active:scale-95 whitespace-nowrap"
+              className="bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] hover:text-white font-black px-3.5 py-3 rounded-xl text-[10px] tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-center active:scale-95 whitespace-nowrap"
             >
-              Check Availability
+              Dates & Rates
             </a>
+            
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🏰 I would love to book a luxury stay at *${villaData.name}* in ${villaData.location}. Could you please help me with availability, custom packages, and pricing for my group?`)}`}
+              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I would love to book *${villaData.name}* in ${villaData.location}. Could you please check available dates and share your best direct offer?`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-accent-primary hover:bg-accent-secondary text-white font-extrabold px-4 sm:px-6 py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_15px_rgba(27,53,100,0.3)] flex items-center justify-center active:scale-95 whitespace-nowrap"
+              className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black px-4 py-3 rounded-xl text-[10px] tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-center gap-1.5 active:scale-95 whitespace-nowrap"
             >
-              BOOK NOW
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-white shrink-0">
+                <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
+              </svg>
+              <span>Book WhatsApp</span>
             </a>
           </div>
         </div>

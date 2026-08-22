@@ -11,6 +11,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import GhostCursor from "@/components/ui/GhostCursor";
 import WarpLines from "@/components/ui/WarpLines";
 import Navbar from "@/components/layout/navbar";
+import QuickMobileLeadForm from "@/components/common/quick-mobile-lead-form";
+import MegaDiscountAdBanner from "@/components/common/mega-discount-ad-banner";
 
 interface VillaData {
   id: string;
@@ -240,15 +242,15 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   const extraGuestsTotal = extraGuestsCount * extraGuestFee * nights;
   const estimatedTotal = baseStayTotal + extraGuestsTotal;
 
-  // 10% discount on weekdays, 0% on weekends
-  const discountPercent = (stayType === "weekday" && isDiscountApplied) ? 0.1 : 0;
-  const discountAmount = estimatedTotal * discountPercent;
-  const finalTotal = estimatedTotal - discountAmount;
+  // 28% discount with promo coupon
+  const discountPercent = isDiscountApplied ? 0.28 : 0;
+  const discountAmount = Math.round(estimatedTotal * discountPercent);
+  const finalTotal = Math.max(0, estimatedTotal - discountAmount);
 
   // WhatsApp prefilled message link builder
   const whatsappNumber = "919619042310";
-  const whatsappText = (stayType === "weekday" && isDiscountApplied)
-    ? `Hello Stay Willas! 🌟 I scratched the Escape card and unlocked my 10% Promo discount!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location} for a Weekday stay.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (10% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and apply my discount?`
+  const whatsappText = isDiscountApplied
+    ? `Hello Stay Willas! 🌟 I unlocked the special *28% OFF* Promo discount (Coupon: *ESCAPE28*)!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (28% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Discounted Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and confirm our 28% discount?`
     : `Hello Stay Willas! 🌟 I am interested in booking an exclusive getaway at *${selectedVilla.name}* in ${selectedVilla.location} for a ${stayType === "weekday" ? "Weekday" : "Weekend"} stay.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Estimated Total: ₹${estimatedTotal.toLocaleString("en-IN")}\n\nCan you please check availability for our group?`;
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`;
 
@@ -321,8 +323,18 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
 
       <Navbar />
 
+      {/* 28% Mega Weekday Offer Floating Ads & Countdown Strip */}
+      <MegaDiscountAdBanner 
+        pageName="escape"
+        villaName="Group Luxury Villas"
+        location="Lonavala & Khopoli"
+        couponCode="ESCAPE28"
+        discountPercent={28}
+        villaLink="#properties-section"
+      />
+
       {/* 2. HERO / PSYCHOLOGICAL COPY HOOK */}
-      <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-36 sm:pt-48 pb-16 px-6 text-center overflow-hidden z-10">
+      <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-40 sm:pt-52 pb-16 px-6 text-center overflow-hidden z-10">
         
         {/* Subtle Background Image of The Angle House */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none opacity-25 mix-blend-overlay">
@@ -348,7 +360,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           {/* Header text container */}
           <div className="space-y-6 max-w-3xl mx-auto">
             <span className="text-[#DAA520] font-semibold tracking-[0.4em] uppercase text-xs sm:text-sm block animate-pulse">
-              🍻 GROUP ESCAPE SPECIAL • CODE: ESCAPE10
+              🍻 GROUP ESCAPE SPECIAL • 28% OFF CODE: ESCAPE28
             </span>
             
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight leading-[1.08] text-balance bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
@@ -364,21 +376,39 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap justify-center gap-4 pt-2">
+            <div className="flex flex-wrap justify-center gap-3 pt-2">
               <button
                 onClick={() => scrollToSection("properties-section")}
-                className="bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold px-8 py-4 rounded-full text-xs tracking-widest uppercase transition-all shadow-lg hover:shadow-[0_0_20px_rgba(218,165,32,0.4)] hover:scale-105 active:scale-100 cursor-pointer"
+                className="bg-white hover:bg-slate-100 border-2 border-white/40 text-black font-black px-7 py-3.5 rounded-full text-xs tracking-wider uppercase transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+              >
+                <span>View Villas Specs & Photos</span>
+                <ArrowRight size={13} />
+              </button>
+              <button
+                onClick={() => scrollToSection("properties-section")}
+                className="bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold px-7 py-3.5 rounded-full text-xs tracking-widest uppercase transition-all shadow-lg hover:shadow-[0_0_20px_rgba(218,165,32,0.4)] hover:scale-105 active:scale-100 cursor-pointer"
               >
                 Explore Group Villas
               </button>
               <button
                 onClick={() => scrollToSection("calculator-section")}
-                className="border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 text-white font-bold px-8 py-4 rounded-full text-xs tracking-widest uppercase transition-all duration-300 backdrop-blur-md cursor-pointer"
+                className="border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 text-white font-bold px-7 py-3.5 rounded-full text-xs tracking-widest uppercase transition-all duration-300 backdrop-blur-md cursor-pointer"
               >
-                Check Availability
+                Check Rates & 28% Off
               </button>
             </div>
           </div>
+
+          {/* Quick 1-Field Mobile Contact Form */}
+          <div className="w-full max-w-3xl px-4">
+            <QuickMobileLeadForm 
+              villaName="Group Luxury Villas" 
+              location="Lonavala & Khopoli" 
+              defaultCoupon="ESCAPE28" 
+              discountPercent={28} 
+            />
+          </div>
+
           {/* SCRATCHCARDS GRID */}
           <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 px-4">
             {/* Card 1: The Angle House Promo */}
@@ -394,7 +424,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               <ScratchCard 
                 id="card-angle-house"
                 title="The Angle House Secret"
-                subtitle="Scratch to reveal 10% Lonavala discount"
+                subtitle="Scratch to reveal 28% Lonavala discount"
                 isUnlocked={isCard1Scratched}
                 onScratchComplete={() => {
                   setIsCard1Scratched(true);
@@ -415,7 +445,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               <ScratchCard 
                 id="card-canopy-crest"
                 title="Canopy Crest Secret"
-                subtitle="Scratch to reveal 10% Khopoli discount"
+                subtitle="Scratch to reveal 28% Khopoli discount"
                 isUnlocked={isCard2Scratched}
                 onScratchComplete={() => {
                   setIsCard2Scratched(true);
@@ -434,13 +464,13 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             >
               <div className="space-y-2">
                 <span className="text-xs uppercase font-bold tracking-[0.25em] text-[#DAA520] bg-[#DAA520]/10 px-4 py-1.5 rounded-full inline-block border border-[#DAA520]/20">
-                  🎉 10% DISCOUNT ACTIVATED (ESCAPE10)
+                  🎉 28% DISCOUNT ACTIVATED (ESCAPE28)
                 </span>
                 <h3 className="text-2xl font-heading font-extrabold text-white">
                   Your Luxury Escape Awaits!
                 </h3>
                 <p className="text-xs text-slate-300 max-w-md mx-auto font-light">
-                  Select your private villa below to automatically apply the 10% discount and start chatting on WhatsApp instantly.
+                  Select your private villa below to automatically apply the 28% discount and start chatting on WhatsApp instantly.
                 </p>
               </div>
 
@@ -1177,45 +1207,49 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                         <span className="font-semibold text-white">₹{extraGuestsTotal.toLocaleString("en-IN")}</span>
                       </div>
                     )}
-                    {isDiscountApplied && stayType === "weekday" && (
-                      <div className="flex justify-between text-[#DAA520] font-semibold bg-[#DAA520]/5 p-2 rounded-lg border border-[#DAA520]/25 animate-pulse">
-                        <span className="flex items-center gap-1">
-                          <Sparkles size={12} className="text-[#DAA520]" />
-                          Escape 10% Weekday Discount:
+                    {isDiscountApplied && (
+                      <div className="flex justify-between text-emerald-400 font-semibold bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/30">
+                        <span className="flex items-center gap-1.5">
+                          <Sparkles size={13} className="text-[#DAA520]" />
+                          Special 28% Promo Discount:
                         </span>
-                        <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
-                      </div>
-                    )}
-                    {isDiscountApplied && stayType === "weekend" && (
-                      <div className="flex justify-between text-slate-400 font-semibold bg-white/5 p-2 rounded-lg border border-white/10">
-                        <span className="flex items-center gap-1 text-[11px]">
-                          <AlertCircle size={12} className="text-slate-400" />
-                          Promo active (No weekend discount)
-                        </span>
-                        <span>₹0</span>
+                        <span className="font-black text-emerald-300">-₹{discountAmount.toLocaleString("en-IN")}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-[11px] opacity-60">
                       <span>Base Villa Tariff includes up to {baseGuestsLimit} guests.</span>
+                    </div>
+
+                    {/* Coupon Apply Box */}
+                    <div className="bg-[#120d1c] p-3 rounded-xl border border-[#DAA520]/25 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 flex-1">
+                        <span className="text-xs">🏷️</span>
+                        <span className="text-xs text-slate-300 font-bold uppercase">Code: <strong className="text-[#DAA520]">ESCAPE28</strong></span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsCard1Scratched(true);
+                          setIsCard2Scratched(true);
+                        }}
+                        className="bg-[#DAA520] hover:bg-[#c4941a] text-black px-3.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
+                      >
+                        {isDiscountApplied ? "✓ 28% Applied" : "Apply 28% Off"}
+                      </button>
                     </div>
                   </div>
 
                   <div className="bg-[#120d1c] p-4 rounded-2xl flex items-center justify-between border border-[#DAA520]/25 shadow-lg">
                     <div>
                       <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                        {isDiscountApplied && stayType === "weekday" ? "Est. Discounted Total" : "Est. Base Total"}
+                        {isDiscountApplied ? "Est. 28% Discounted Total" : "Est. Base Total"}
                       </span>
                       <div className="text-2xl md:text-3xl font-black text-white font-heading">
                         ₹{finalTotal.toLocaleString("en-IN")}
                       </div>
-                      {isDiscountApplied && stayType === "weekday" && (
+                      {isDiscountApplied && (
                         <span className="text-[9px] text-[#DAA520] font-bold uppercase tracking-wider block mt-0.5 animate-pulse">
-                          Code ESCAPE10 applied
-                        </span>
-                      )}
-                      {isDiscountApplied && stayType === "weekend" && (
-                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-0.5">
-                          ESCAPE10 not applicable on weekends
+                          Code ESCAPE28 applied (28% OFF)
                         </span>
                       )}
                     </div>

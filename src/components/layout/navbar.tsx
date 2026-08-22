@@ -41,6 +41,7 @@ const Navbar = () => {
   });
 
   const isHomePage = pathname === "/";
+  const hasTopPromoBanner = ["/khopoli-villas", "/villas-in-lonavala-with-private-pool", "/escape"].includes(pathname);
 
   const isDarkTheme = true;
 
@@ -116,11 +117,15 @@ const Navbar = () => {
         "fixed transition-all duration-500 ease-in-out",
         isScrolled 
           ? "top-0 left-0 right-0 w-full px-0 py-0" 
-          : "top-0 left-0 right-0 w-full px-4 md:px-8 lg:px-12 py-4 md:py-6",
+          : hasTopPromoBanner
+            ? "top-11 sm:top-12 left-0 right-0 w-full px-4 md:px-8 lg:px-12 py-2 md:py-3"
+            : "top-0 left-0 right-0 w-full px-4 md:px-8 lg:px-12 py-4 md:py-6",
         // Mobile override: always float like a card at the top
-        "max-xl:top-4 max-xl:left-4 max-xl:right-4 max-xl:w-auto max-xl:p-0",
+        hasTopPromoBanner
+          ? "max-xl:top-12 max-xl:left-3 max-xl:right-3 max-xl:w-auto max-xl:p-0"
+          : "max-xl:top-4 max-xl:left-4 max-xl:right-4 max-xl:w-auto max-xl:p-0",
         // Scroll-direction-aware mobile hide/show
-        !isNavVisible && !isMobileMenuOpen ? "max-xl:-translate-y-[calc(100%+2rem)] max-xl:opacity-0" : "max-xl:translate-y-0 max-xl:opacity-100"
+        !isNavVisible && !isMobileMenuOpen ? "max-xl:-translate-y-[calc(100%+4rem)] max-xl:opacity-0" : "max-xl:translate-y-0 max-xl:opacity-100"
       )}
       style={{ zIndex: 99999 }}
     >
@@ -259,17 +264,28 @@ const Navbar = () => {
             )}
 
             <a 
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas Concierge! 🏡 I'm browsing your mobile menu and would love to book a luxury staycation. Could you guide me to the perfect private estate?")}`}
+              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas Concierge! 🏡 I would love to check availability and book a luxury villa near Mumbai. Could you share details and best direct pricing?")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-4 lg:px-6 py-2.5 lg:py-3 text-[11px] xl:text-[12px] font-black tracking-widest transition-all duration-300 flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+              className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-5 lg:px-6 py-2.5 lg:py-3 text-[11px] xl:text-[12px] font-black tracking-widest transition-all duration-300 flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
             >
-              BOOK NOW
+              BOOK DIRECT
             </a>
           </div>
         </div>
-        {/* Mobile Hamburger Menu Toggle & Auth Toggle */}
+        {/* Mobile Header Quick Actions */}
         <div className="xl:hidden flex items-center gap-2 shrink-0">
+          {/* Quick WhatsApp Action Button */}
+          <a
+            href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I am browsing your villas and would love to check dates and rates.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Direct WhatsApp Concierge"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white flex items-center justify-center shadow-sm active:scale-95 transition-all"
+          >
+            <WhatsAppIcon size={18} className="fill-white" />
+          </a>
+
           {isSignedIn ? (
             <UserButton
               appearance={{

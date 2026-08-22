@@ -782,13 +782,14 @@ const AdminDashboard = ({
         </button>
         <button
           onClick={() => setActiveTab("calendar")}
-          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
+          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap flex items-center gap-2 ${
             activeTab === "calendar" 
               ? "border-[#1B3564] text-[#1B3564]" 
               : "border-transparent text-slate-400 hover:text-[#1B3564]"
           }`}
         >
-          Availability Scheduler
+          <Calendar size={14} />
+          <span>Availability & Invoicing</span>
         </button>
         <button
           onClick={() => setActiveTab("pricing")}

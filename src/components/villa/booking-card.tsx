@@ -345,8 +345,24 @@ const BookingCard = ({
   };
 
   const serviceFee = 0; // Removed luxury service fee
-  const discount = isCouponApplied && couponCode.toUpperCase() === "STAY5" ? Math.round((subtotal + totalExtraGuestsCost) * 0.05) : 0;
-  const total = subtotal + totalExtraGuestsCost + serviceFee + addOnsCost - discount;
+
+  const getDiscountRate = (code: string): number => {
+    const clean = code.trim().toUpperCase();
+    if (clean.includes("28") || clean === "ESCAPE28" || clean === "FLASH28" || clean === "STAY28" || clean === "WILLAS28" || clean === "OFFER28" || clean === "LONAVALA28" || clean === "KHOPOLI28" || clean === "SUMMER28" || clean === "DIRECT28") {
+      return 0.28;
+    }
+    if (clean === "STAY5") {
+      return 0.05;
+    }
+    if (clean.length > 0) {
+      return 0.28; // Standard 28% promo discount
+    }
+    return 0;
+  };
+
+  const discountRate = isCouponApplied ? getDiscountRate(couponCode) : 0;
+  const discount = Math.round((subtotal + totalExtraGuestsCost) * discountRate);
+  const total = Math.max(0, subtotal + totalExtraGuestsCost + serviceFee + addOnsCost - discount);
 
   const handleCheckInClick = () => {
     setCalendarTarget("checkIn");
@@ -408,6 +424,13 @@ We are so excited about this getaway! Could you please check availability and he
       alert("Failed to initiate WhatsApp redirection. Please try again.");
       setIsLoading(false);
     }
+  };
+
+  const handleQuickWhatsAppQuote = () => {
+    const formattedCheckIn = format(checkIn, "dd MMM yyyy");
+    const formattedCheckOut = format(checkOut, "dd MMM yyyy");
+    const msg = `Hi Stay Willas Concierge! 🌟 I'm looking at *${villaName}* for ${guests} guest(s) from ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights, ~₹${total.toLocaleString("en-IN")}). Could you please share your best direct offer and confirm availability?`;
+    window.open(`https://wa.me/919619042310?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
   return (
@@ -638,14 +661,14 @@ We are so excited about this getaway! Could you please check availability and he
         </div>
 
         {/* Coupon Code Section */}
-        <div className="w-full bg-gradient-to-r from-emerald-50/50 to-green-50/30 border border-emerald-500/20 rounded-2xl p-4 text-left shadow-sm space-y-3">
+        <div className="w-full bg-gradient-to-r from-amber-50 to-emerald-50/50 border border-[#DAA520]/40 rounded-2xl p-4 text-left shadow-sm space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-start sm:items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold shrink-0">🏷️</span>
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#DAA520]/20 text-[#1B3564] text-xs font-black shrink-0">🎁</span>
               <div>
-                <span className="text-[10px] text-emerald-800 uppercase tracking-wider font-bold block">Featured Offer</span>
-                <p className="text-xs text-text-primary/80 font-medium mt-0.5 leading-tight">
-                  Save 5% with coupon <strong className="text-emerald-750 font-extrabold select-all">STAY5</strong>
+                <span className="text-[10px] text-[#DAA520] uppercase tracking-wider font-black block">Special Direct Offer</span>
+                <p className="text-xs text-slate-800 font-bold mt-0.5 leading-tight">
+                  Flat <span className="text-emerald-600 font-black">28% OFF</span> with coupon <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all">ESCAPE28</strong>
                 </p>
               </div>
             </div>
@@ -654,15 +677,15 @@ We are so excited about this getaway! Could you please check availability and he
                 type="button"
                 onClick={() => {
                   setIsCouponApplied(true);
-                  setCouponCode("STAY5");
+                  setCouponCode("ESCAPE28");
                 }}
-                className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-bold uppercase transition-all duration-200 cursor-pointer shrink-0"
+                className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 shadow-xs"
               >
-                Apply
+                Apply 28% Off
               </button>
             ) : (
-              <span className="text-[10px] font-extrabold text-emerald-700 uppercase flex items-center gap-1 w-full sm:w-auto shrink-0">
-                <Check size={12} className="stroke-[3]" /> Applied
+              <span className="text-[10px] font-black text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-full uppercase flex items-center gap-1 w-full sm:w-auto shrink-0 justify-center">
+                <Check size={12} className="stroke-[3]" /> 28% Applied (-₹{discount.toLocaleString("en-IN")})
               </span>
             )}
           </div>
@@ -670,8 +693,8 @@ We are so excited about this getaway! Could you please check availability and he
           <div className="flex gap-2 w-full">
             <input
               type="text"
-              placeholder="Enter coupon code"
-              className="flex-1 min-w-0 bg-white border border-border-subtle rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wider placeholder:text-text-primary/20 placeholder:normal-case outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
+              placeholder="Enter coupon code (e.g. ESCAPE28)"
+              className="flex-1 min-w-0 bg-white border border-border-subtle rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wider placeholder:text-text-primary/30 placeholder:normal-case outline-none focus:border-[#DAA520] focus:ring-1 focus:ring-[#DAA520]/20"
               value={couponCode}
               onChange={(e) => {
                 setCouponCode(e.target.value.toUpperCase());
@@ -687,21 +710,18 @@ We are so excited about this getaway! Could you please check availability and he
                   setIsCouponApplied(false);
                   setCouponCode("");
                 } else {
-                  if (couponCode.trim().toUpperCase() === "STAY5") {
+                  if (couponCode.trim().length > 0) {
                     setIsCouponApplied(true);
-                    setCouponCode("STAY5");
-                  } else if (couponCode.trim() === "") {
-                    setIsCouponApplied(false);
                   } else {
-                    alert("Invalid coupon code. Please use coupon code STAY5 for a 5% discount.");
+                    alert("Please enter a valid coupon code or click Apply 28% Off.");
                     setIsCouponApplied(false);
                   }
                 }
               }}
-              className={`px-3 py-2 border text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
+              className={`px-4 py-2 border text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
                 isCouponApplied 
                   ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-100" 
-                  : "border-border-subtle bg-white hover:bg-slate-50 text-text-primary"
+                  : "border-border-subtle bg-white hover:bg-slate-50 text-text-primary font-black"
               }`}
             >
               {isCouponApplied ? "Remove" : "Apply"}
@@ -765,26 +785,41 @@ We are so excited about this getaway! Could you please check availability and he
         </div>
       </div>
 
-      <Button 
-        onClick={handleBooking}
-        disabled={isLoading || nights <= 0 || isOverlapping}
-        className={`w-full text-white rounded-full py-6 text-xs sm:text-sm font-black tracking-[0.18em] mb-3 flex items-center justify-center gap-2 transition-all duration-300 whitespace-nowrap cursor-pointer border border-[#DAA520]/30 ${
-          isOverlapping 
-            ? "bg-red-500 hover:bg-red-600 shadow-md cursor-not-allowed" 
-            : "bg-[#1B3564] hover:bg-[#152A50] shadow-[0_8px_25px_rgba(27,53,100,0.3)] hover:shadow-[0_12px_35px_rgba(27,53,100,0.45)] hover:scale-[1.01] active:scale-[0.98]"
-        }`}
-      >
-        {isLoading ? (
-          <Loader2 className="animate-spin" />
-        ) : isOverlapping ? (
-          "DATES UNAVAILABLE DUE TO RESERVATION"
-        ) : (
-          "PROCEED TO RESERVE & SECURE STAY"
-        )}
-      </Button>
+      <div className="space-y-2.5 mb-4">
+        <Button 
+          onClick={handleBooking}
+          disabled={isLoading || nights <= 0 || isOverlapping}
+          className={`w-full text-white rounded-2xl py-6 text-xs sm:text-sm font-black tracking-[0.16em] flex items-center justify-center gap-2 transition-all duration-300 whitespace-nowrap cursor-pointer border border-[#DAA520]/40 ${
+            isOverlapping 
+              ? "bg-red-500 hover:bg-red-600 shadow-md cursor-not-allowed" 
+              : "bg-[#1B3564] hover:bg-[#152A50] shadow-[0_8px_25px_rgba(27,53,100,0.3)] hover:shadow-[0_12px_35px_rgba(27,53,100,0.45)] hover:scale-[1.01] active:scale-[0.98]"
+          }`}
+        >
+          {isLoading ? (
+            <Loader2 className="animate-spin" />
+          ) : isOverlapping ? (
+            "DATES UNAVAILABLE DUE TO RESERVATION"
+          ) : (
+            "CONFIRM RESERVATION VIA WHATSAPP"
+          )}
+        </Button>
+
+        {/* Fast-Track 1-Click WhatsApp Quote */}
+        <button
+          type="button"
+          onClick={handleQuickWhatsAppQuote}
+          disabled={nights <= 0 || isOverlapping}
+          className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs font-black tracking-wider uppercase transition-all duration-300 shadow-sm flex items-center justify-center gap-2 cursor-pointer border-none active:scale-[0.98]"
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white shrink-0">
+            <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
+          </svg>
+          <span>1-CLICK INSTANT WHATSAPP QUOTE</span>
+        </button>
+      </div>
       
-      <p className="text-center text-text-primary/40 text-[10px] uppercase tracking-widest mb-6 select-none">
-        Secure checkout & temporary 10-minute hold
+      <p className="text-center text-slate-500 text-[10px] uppercase tracking-widest mb-4 font-semibold select-none flex items-center justify-center gap-1.5">
+        <span>🔒 Best Direct Price Guarantee • 0% Platform Fee</span>
       </p>
 
       {nights > 0 && (
@@ -826,8 +861,8 @@ We are so excited about this getaway! Could you please check availability and he
           )}
 
           {discount > 0 && (
-            <div className="flex justify-between text-sm text-emerald-600 font-semibold">
-              <span>Coupon Discount (5% Off)</span>
+            <div className="flex justify-between text-sm text-emerald-600 font-bold bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+              <span className="flex items-center gap-1">🎁 Promo ({Math.round(discountRate * 100)}% Off)</span>
               <span>-₹{discount.toLocaleString("en-IN")}</span>
             </div>
           )}

@@ -17,9 +17,36 @@ import {
   Mail,
   FileText,
   Loader2,
-  AlertTriangle
+  AlertTriangle,
+  Download,
+  Send,
+  Share2,
+  Trash2,
+  DollarSign,
+  Receipt,
+  UtensilsCrossed,
+  Sparkles,
+  CheckCircle2,
+  RotateCcw,
+  Eye
 } from "lucide-react";
-import { createManualBooking, deleteBooking } from "@/app/actions/admin";
+import { createManualBooking, deleteBooking, sendInvoiceEmailAction } from "@/app/actions/admin";
+
+interface SeasonalPrice {
+  id: string;
+  villaId: string;
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  label?: string | null;
+}
+
+interface DailyPrice {
+  id: string;
+  villaId: string;
+  date: Date;
+  price: number;
+}
 
 interface Villa {
   id: string;
@@ -30,6 +57,12 @@ interface Villa {
   category: string;
   bedrooms: number;
   guests: number;
+  baseGuests?: number | null;
+  extraGuestFee?: number | null;
+  weekendPrice?: number | null;
+  fridayPrice?: number | null;
+  saturdayPrice?: number | null;
+  sundayPrice?: number | null;
   images: string[];
   description: string;
 }
@@ -43,6 +76,17 @@ interface Booking {
   status: string;
   userId: string;
   villa: Villa;
+  addOns?: any;
+  kycName?: string | null;
+  kycGuests?: any;
+  kycIdUrl?: string | null;
+  createdAt?: Date;
+}
+
+interface ExtraCharge {
+  id: string;
+  description: string;
+  amount: number;
 }
 
 interface AvailabilityCalendarProps {
@@ -50,6 +94,15 @@ interface AvailabilityCalendarProps {
   bookings: Booking[];
   onBookingsChange: (newBookings: Booking[]) => void;
 }
+
+const loadImage = (url: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = (err) => reject(err);
+    img.src = url;
+  });
+};
 
 export default function AvailabilityCalendar({ villas, bookings, onBookingsChange }: AvailabilityCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -60,43 +113,170 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   }, []);
   
   // Modal Overlays state
-  const [selectedCell, setSelectedCell] = useState<{ villaId: string; date: Date } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [modalView, setModalView] = useState<"OPTIONS" | "MANUAL_BOOKING" | "MAINTENANCE" | "OWNER_USE">("OPTIONS");
+  const [modalMode, setModalMode] = useState<"GUEST_BOOKING" | "MAINTENANCE" | "OWNER_USE">("GUEST_BOOKING");
 
-  // Form Fields states
+  // Selected Villa in Modal
+  const [selectedVillaId, setSelectedVillaId] = useState<string>("");
+
+  // Section 1: Guest Information
   const [guestName, setGuestName] = useState("");
-  const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
-  const [totalPriceOverride, setTotalPriceOverride] = useState<number | "">("");
-  const [bookingNotes, setBookingNotes] = useState("");
-  const [bookingStatus, setBookingStatus] = useState("CONFIRMED");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestCount, setGuestCount] = useState<number>(2);
+
+  // Section 2: Stay Dates & Rates
   const [checkInStr, setCheckInStr] = useState("");
   const [checkOutStr, setCheckOutStr] = useState("");
+  const [ratePerNight, setRatePerNight] = useState<number>(0);
+  const [weekendRatePerNight, setWeekendRatePerNight] = useState<number>(0);
+  const [nights, setNights] = useState<number>(1);
+  const [weekendNights, setWeekendNights] = useState<number>(0);
+  const [baseGuests, setBaseGuests] = useState<number>(12);
+  const [extraGuestFee, setExtraGuestFee] = useState<number>(1500);
 
-  const [nightlyRate, setNightlyRate] = useState(0);
-  const [numGuests, setNumGuests] = useState(1);
+  // Section 3: Dining / Meal Plan
+  const [foodPlan, setFoodPlan] = useState<"none" | "standard" | "deluxe" | "custom">("none");
+  const [foodRatePerPersonPerDay, setFoodRatePerPersonPerDay] = useState<number>(0);
+  const [foodGuestsCount, setFoodGuestsCount] = useState<number>(2);
 
+  // Section 4: Add-on Services / Extras
+  const [extraCharges, setExtraCharges] = useState<ExtraCharge[]>([]);
+  const [newExtraDesc, setNewExtraDesc] = useState("");
+  const [newExtraAmount, setNewExtraAmount] = useState<number | "">("");
+
+  // Section 5: Discounts, Taxes, Deposits & Advance
+  const [discountFlat, setDiscountFlat] = useState<number>(0);
+  const [discountPercent, setDiscountPercent] = useState<number>(0);
+  const [gstPercent, setGstPercent] = useState<number>(18);
+  const [securityDeposit, setSecurityDeposit] = useState<number>(0);
+  const [advancePaid, setAdvancePaid] = useState<number>(0);
+  const [bookingNotes, setBookingNotes] = useState("");
+  const [bookingStatus, setBookingStatus] = useState<string>("CONFIRMED");
+
+  // Loading and Feedback states
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [emailFeedback, setEmailFeedback] = useState<{ type: "success" | "error"; msg: string } | null>(null);
 
-  // Recalculate price override automatically when dates or nightly rate changes
-  React.useEffect(() => {
-    if (checkInStr && checkOutStr) {
-      const inDate = new Date(checkInStr);
-      const outDate = new Date(checkOutStr);
-      const nights = Math.max(0, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
-      setTotalPriceOverride(nights * nightlyRate);
+  // When villa changes in the modal, populate standard rates and limits
+  useEffect(() => {
+    if (!selectedVillaId) return;
+    const villa = villas.find((v) => v.id === selectedVillaId);
+    if (villa) {
+      setRatePerNight(villa.price);
+      setWeekendRatePerNight(villa.weekendPrice || villa.saturdayPrice || Math.round(villa.price * 1.2));
+      setBaseGuests(villa.baseGuests ?? 12);
+      setExtraGuestFee(villa.extraGuestFee ?? 1500);
+      if (guestCount < 1) {
+        setGuestCount(villa.guests || 2);
+        setFoodGuestsCount(villa.guests || 2);
+      }
     }
-  }, [checkInStr, checkOutStr, nightlyRate]);
+  }, [selectedVillaId, villas]);
+
+  // Adjust food rate based on plan type
+  useEffect(() => {
+    if (foodPlan === "none") {
+      setFoodRatePerPersonPerDay(0);
+    } else if (foodPlan === "standard") {
+      setFoodRatePerPersonPerDay(1200);
+    } else if (foodPlan === "deluxe") {
+      setFoodRatePerPersonPerDay(1500);
+    }
+  }, [foodPlan]);
+
+  // Auto calculate nights & weekend nights from dates
+  const handleDateChange = (cin: string, cout: string) => {
+    setCheckInStr(cin);
+    setCheckOutStr(cout);
+
+    if (cin && cout) {
+      const start = new Date(cin);
+      const end = new Date(cout);
+      if (end > start) {
+        const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
+        setNights(totalDays);
+
+        let wknd = 0;
+        const cur = new Date(start);
+        while (cur < end) {
+          const day = cur.getDay(); // 0 Sun, 5 Fri, 6 Sat
+          if (day === 5 || day === 6) {
+            wknd++;
+          }
+          cur.setDate(cur.getDate() + 1);
+        }
+        setWeekendNights(Math.min(totalDays, wknd));
+      }
+    }
+  };
+
+  // Add Extra Charge line
+  const handleAddExtra = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newExtraDesc || !newExtraAmount || Number(newExtraAmount) <= 0) return;
+    const newCharge: ExtraCharge = {
+      id: "extra-" + Date.now(),
+      description: newExtraDesc.trim(),
+      amount: Number(newExtraAmount),
+    };
+    setExtraCharges([...extraCharges, newCharge]);
+    setNewExtraDesc("");
+    setNewExtraAmount("");
+  };
+
+  // Remove Extra Charge
+  const handleRemoveExtra = (id: string) => {
+    setExtraCharges(extraCharges.filter((c) => c.id !== id));
+  };
+
+  // Financial Calculations
+  const weekdayNights = Math.max(0, nights - weekendNights);
+  const weekdayStayCost = weekdayNights * ratePerNight;
+  const weekendStayCost = weekendNights * weekendRatePerNight;
+  const totalBaseStayCost = weekdayStayCost + weekendStayCost;
+
+  // Extra guests calculation
+  const extraGuestsCount = Math.max(0, guestCount - baseGuests);
+  const extraGuestsCost = extraGuestsCount * extraGuestFee * nights;
+
+  // Total Stay Accommodation Cost
+  const totalStayCost = modalMode === "GUEST_BOOKING" ? (totalBaseStayCost + extraGuestsCost) : 0;
+
+  // Total Food Cost
+  const totalFoodCost = modalMode === "GUEST_BOOKING" && foodPlan !== "none" 
+    ? (foodRatePerPersonPerDay * foodGuestsCount * nights) 
+    : 0;
+
+  // Total Extras
+  const totalExtrasCost = modalMode === "GUEST_BOOKING" 
+    ? extraCharges.reduce((acc, curr) => acc + curr.amount, 0) 
+    : 0;
+
+  // Subtotal before discount
+  const subtotalBeforeDiscount = totalStayCost + totalFoodCost + totalExtrasCost;
+
+  // Calculate discount
+  const calculatedPercentDiscount = subtotalBeforeDiscount * (discountPercent / 100);
+  const totalDiscount = calculatedPercentDiscount + discountFlat;
+
+  // Subtotal after discount
+  const subtotal = Math.max(0, subtotalBeforeDiscount - totalDiscount);
+
+  // GST & Total
+  const gstAmount = subtotal * (gstPercent / 100);
+  const grandTotal = modalMode === "GUEST_BOOKING" ? (subtotal + gstAmount) : 0;
+  const balanceDue = Math.max(0, (grandTotal + securityDeposit) - advancePaid);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
   // Get number of days in the current selected month
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  
-  // Generate list of days
   const days = Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1));
 
   const handlePrevMonth = () => {
@@ -107,25 +287,20 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     setCurrentDate(new Date(year, month + 1, 1));
   };
 
-  // Helper to format month name
   const monthName = currentDate.toLocaleString("en-US", { month: "long" });
 
   // Get status of a specific day for a specific villa from the real DB bookings prop
   const getDayStatus = (villaId: string, date: Date) => {
-    // Check if booked or blocked
     const booking = bookings.find(b => {
       if (b.villaId !== villaId) return false;
       const start = new Date(b.checkIn);
       const end = new Date(b.checkOut);
       
-      // Normalize to midnight for accurate day comparison
       const check = new Date(date);
       check.setHours(0, 0, 0, 0);
       start.setHours(0, 0, 0, 0);
       end.setHours(0, 0, 0, 0);
       
-      // A booking covers checkIn day up to (but not including) checkOut day.
-      // This is standard hotel room rack behavior.
       return check >= start && check < end;
     });
 
@@ -136,93 +311,547 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     return { status: "AVAILABLE", data: null };
   };
 
+  // Reset form states
+  const resetFormState = (initialVillaId?: string, initialDate?: Date) => {
+    const targetVillaId = initialVillaId || villas[0]?.id || "";
+    setSelectedVillaId(targetVillaId);
+
+    const villa = villas.find((v) => v.id === targetVillaId);
+    if (villa) {
+      setRatePerNight(villa.price);
+      setWeekendRatePerNight(villa.weekendPrice || villa.saturdayPrice || Math.round(villa.price * 1.2));
+      setBaseGuests(villa.baseGuests ?? 12);
+      setExtraGuestFee(villa.extraGuestFee ?? 1500);
+      setGuestCount(villa.guests || 2);
+      setFoodGuestsCount(villa.guests || 2);
+    }
+
+    if (initialDate) {
+      const inDate = new Date(initialDate);
+      const outDate = new Date(initialDate);
+      outDate.setDate(outDate.getDate() + 1);
+      handleDateChange(inDate.toISOString().split("T")[0], outDate.toISOString().split("T")[0]);
+    } else {
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      handleDateChange(today.toISOString().split("T")[0], tomorrow.toISOString().split("T")[0]);
+    }
+
+    setGuestName("");
+    setGuestPhone("");
+    setGuestEmail("");
+    setFoodPlan("none");
+    setFoodRatePerPersonPerDay(0);
+    setExtraCharges([]);
+    setNewExtraDesc("");
+    setNewExtraAmount("");
+    setDiscountFlat(0);
+    setDiscountPercent(0);
+    setGstPercent(18);
+    setSecurityDeposit(0);
+    setAdvancePaid(0);
+    setBookingNotes("");
+    setBookingStatus("CONFIRMED");
+    setModalMode("GUEST_BOOKING");
+    setEmailFeedback(null);
+  };
+
+  // Open modal from top button or grid cell
+  const handleOpenCreateModal = (villaId?: string, date?: Date) => {
+    setSelectedBooking(null);
+    resetFormState(villaId, date);
+    setIsModalOpen(true);
+  };
+
   const handleCellClick = (villaId: string, date: Date, statusInfo: { status: string; data: any }) => {
     if (statusInfo.status === "CONFIRMED" || statusInfo.status === "PENDING" || statusInfo.status === "BLOCKED") {
       setSelectedBooking(statusInfo.data);
-      setSelectedCell(null);
+      setIsModalOpen(false);
     } else {
-      setSelectedCell({ villaId, date });
-      setSelectedBooking(null);
-      setModalView("OPTIONS");
-      
-      // Reset form states
-      setGuestName("");
-      setGuestEmail("");
-      setGuestPhone("");
-      setTotalPriceOverride("");
-      setBookingNotes("");
-      setBookingStatus("CONFIRMED");
-
-      const selectedVilla = villas.find(v => v.id === villaId);
-      setNightlyRate(selectedVilla ? selectedVilla.price : 0);
-      setNumGuests(selectedVilla ? selectedVilla.guests : 1);
-
-      // Set default dates strings (YYYY-MM-DD)
-      const inDate = new Date(date);
-      const outDate = new Date(date);
-      outDate.setDate(outDate.getDate() + 1);
-
-      setCheckInStr(inDate.toISOString().split("T")[0]);
-      setCheckOutStr(outDate.toISOString().split("T")[0]);
+      handleOpenCreateModal(villaId, date);
     }
   };
 
-  // Handle saving manual bookings or date blackouts
-  const handleFormSubmit = async (e: React.FormEvent) => {
+  // Helper to trim empty transparent borders & compute crisp logo aspect ratio
+  const getCroppedLogoDataUrl = (img: HTMLImageElement): { dataUrl: string; aspect: number } => {
+    try {
+      const canvas = document.createElement("canvas");
+      const w = img.naturalWidth || img.width || 1000;
+      const h = img.naturalHeight || img.height || 1000;
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return { dataUrl: img.src, aspect: w / h };
+
+      ctx.drawImage(img, 0, 0);
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      let minX = w, minY = h, maxX = 0, maxY = 0;
+      let found = false;
+
+      for (let y = 0; y < h; y += 4) {
+        for (let x = 0; x < w; x += 4) {
+          const alpha = data[(y * w + x) * 4 + 3];
+          if (alpha > 15) {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+            found = true;
+          }
+        }
+      }
+
+      if (!found || maxX <= minX || maxY <= minY) {
+        minX = 0; minY = 0; maxX = w; maxY = h;
+      }
+
+      const cropW = maxX - minX;
+      const cropH = maxY - minY;
+      const padX = Math.round(cropW * 0.02);
+      const padY = Math.round(cropH * 0.02);
+
+      const startX = Math.max(0, minX - padX);
+      const startY = Math.max(0, minY - padY);
+      const finalW = Math.min(w - startX, cropW + padX * 2);
+      const finalH = Math.min(h - startY, cropH + padY * 2);
+
+      const targetW = 600;
+      const targetH = Math.round((finalH / finalW) * targetW) || 200;
+
+      const cropCanvas = document.createElement("canvas");
+      cropCanvas.width = targetW;
+      cropCanvas.height = targetH;
+      const cropCtx = cropCanvas.getContext("2d");
+      if (cropCtx) {
+        cropCtx.imageSmoothingEnabled = true;
+        cropCtx.imageSmoothingQuality = "high";
+        cropCtx.drawImage(canvas, startX, startY, finalW, finalH, 0, 0, targetW, targetH);
+      }
+
+      return {
+        dataUrl: cropCanvas.toDataURL("image/png"),
+        aspect: targetW / targetH,
+      };
+    } catch (err) {
+      console.warn("Error cropping logo", err);
+      return { dataUrl: img.src, aspect: (img.naturalWidth || 1) / (img.naturalHeight || 1) };
+    }
+  };
+
+  // Generate & Download Tax Invoice PDF
+  const generateAndDownloadInvoicePDF = async (customBookingData?: any) => {
+    try {
+      setIsDownloadingPDF(true);
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      let logoData: { dataUrl: string; aspect: number } | null = null;
+      try {
+        const logoImg = await loadImage("/images/STAY WILLAS logo transparent.png");
+        logoData = getCroppedLogoDataUrl(logoImg);
+      } catch (e) {
+        console.warn("Could not load transparent logo for PDF", e);
+      }
+
+      const targetVilla = customBookingData?.villa || villas.find((v) => v.id === selectedVillaId);
+      const activeVillaName = targetVilla?.name || "Stay Willas Sanctuary";
+      const targetGuestName = customBookingData?.guestName || guestName || "Valued Guest";
+      const targetGuestPhone = customBookingData?.guestPhone || guestPhone || "N/A";
+      const targetGuestEmail = customBookingData?.guestEmail || guestEmail || "N/A";
+      const targetCheckIn = customBookingData?.checkIn || checkInStr;
+      const targetCheckOut = customBookingData?.checkOut || checkOutStr;
+      const targetNights = customBookingData?.nights || nights;
+      const targetWeekdayNights = customBookingData?.weekdayNights !== undefined ? customBookingData.weekdayNights : weekdayNights;
+      const targetWeekendNights = customBookingData?.weekendNights !== undefined ? customBookingData.weekendNights : weekendNights;
+      const targetGuestsCount = customBookingData?.guestsCount || guestCount;
+      const targetRatePerNight = customBookingData?.ratePerNight || ratePerNight;
+      const targetWeekendRatePerNight = customBookingData?.weekendRatePerNight || weekendRatePerNight;
+      const targetWeekdayStayCost = customBookingData?.weekdayStayCost || weekdayStayCost;
+      const targetWeekendStayCost = customBookingData?.weekendStayCost || weekendStayCost;
+      const targetExtraGuestsCost = customBookingData?.extraGuestsCost || extraGuestsCost;
+      const targetExtraGuestsCount = customBookingData?.extraGuestsCount || extraGuestsCount;
+      const targetExtraGuestFee = customBookingData?.extraGuestFee || extraGuestFee;
+      const targetFoodPlan = customBookingData?.foodPlan || foodPlan;
+      const targetFoodRate = customBookingData?.foodRate || foodRatePerPersonPerDay;
+      const targetFoodGuests = customBookingData?.foodGuests || foodGuestsCount;
+      const targetTotalFoodCost = customBookingData?.totalFoodCost !== undefined ? customBookingData.totalFoodCost : totalFoodCost;
+      const targetExtras: ExtraCharge[] = customBookingData?.extraCharges || extraCharges;
+      const targetSubtotalBeforeDiscount = customBookingData?.subtotalBeforeDiscount !== undefined ? customBookingData.subtotalBeforeDiscount : subtotalBeforeDiscount;
+      const targetTotalDiscount = customBookingData?.totalDiscount !== undefined ? customBookingData.totalDiscount : totalDiscount;
+      const targetSubtotal = customBookingData?.subtotal !== undefined ? customBookingData.subtotal : subtotal;
+      const targetGstPercent = customBookingData?.gstPercent !== undefined ? customBookingData.gstPercent : gstPercent;
+      const targetGstAmount = customBookingData?.gstAmount !== undefined ? customBookingData.gstAmount : gstAmount;
+      const targetSecurityDeposit = customBookingData?.securityDeposit !== undefined ? customBookingData.securityDeposit : securityDeposit;
+      const targetGrandTotal = customBookingData?.grandTotal !== undefined ? customBookingData.grandTotal : grandTotal;
+      const targetAdvancePaid = customBookingData?.advancePaid !== undefined ? customBookingData.advancePaid : advancePaid;
+      const targetBalanceDue = customBookingData?.balanceDue !== undefined ? customBookingData.balanceDue : balanceDue;
+
+      const navyColor = [27, 53, 100];   // #1B3564 Navy
+      const goldColor = [218, 165, 32];  // #DAA520 Gold
+      const darkCharcoal = [30, 41, 59]; // #1E293B Text
+      const lightBeige = [250, 248, 245]; // #FAF8F5 Card BG
+      const borderGray = [226, 232, 240]; // #E2E8F0
+
+      const marginX = 15;
+      let currentY = 0;
+
+      // Header Top Dual Accent Stripe (Navy & Gold)
+      doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.rect(0, 0, 210, 6, "F");
+      doc.setFillColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.rect(0, 6, 210, 1.5, "F");
+
+      currentY = 14;
+
+      if (logoData && logoData.aspect) {
+        const maxLogoW = 62;
+        const maxLogoH = 16.5;
+        let logoW = maxLogoW;
+        let logoH = logoW / logoData.aspect;
+        if (logoH > maxLogoH) {
+          logoH = maxLogoH;
+          logoW = logoH * logoData.aspect;
+        }
+        doc.addImage(logoData.dataUrl, "PNG", marginX, currentY - 2, logoW, logoH, undefined, "FAST");
+      } else {
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(22);
+        doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+        doc.text("STAY WILLAS", marginX, currentY + 6);
+      }
+
+      // Invoice Header metadata
+      doc.setFontSize(14);
+      doc.setFont("Helvetica", "bold");
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("TAX INVOICE STATEMENT", 210 - marginX, currentY + 4, { align: "right" });
+
+      doc.setFontSize(8.5);
+      doc.setFont("Helvetica", "normal");
+      doc.setTextColor(100, 100, 100);
+      const invoiceNum = `SW-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+      const invoiceDate = new Date().toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+      doc.text(`Invoice ID: ${invoiceNum}`, 210 - marginX, currentY + 9, { align: "right" });
+      doc.text(`Date Issued: ${invoiceDate}`, 210 - marginX, currentY + 13, { align: "right" });
+      doc.text(`Status: CONFIRMED RESERVATION`, 210 - marginX, currentY + 17, { align: "right" });
+
+      currentY += 24;
+
+      // Gold Divider Line
+      doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.setLineWidth(0.4);
+      doc.line(marginX, currentY, 210 - marginX, currentY);
+
+      currentY += 6;
+
+      // Guest & Operator Cards
+      const cardWidth = 87;
+      const cardHeight = 26;
+
+      doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+      doc.rect(marginX, currentY, cardWidth, cardHeight, "F");
+      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+      doc.setLineWidth(0.2);
+      doc.rect(marginX, currentY, cardWidth, cardHeight, "S");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("PREPARED FOR GUEST:", marginX + 4, currentY + 5);
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
+      doc.text(targetGuestName, marginX + 4, currentY + 10);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Contact: ${targetGuestPhone}`, marginX + 4, currentY + 15);
+      doc.text(`Email: ${targetGuestEmail}`, marginX + 4, currentY + 19);
+
+      // Right Card: Property Operator
+      const rightCardX = 210 - marginX - cardWidth;
+      doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+      doc.rect(rightCardX, currentY, cardWidth, cardHeight, "F");
+      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+      doc.setLineWidth(0.2);
+      doc.rect(rightCardX, currentY, cardWidth, cardHeight, "S");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("PROPERTY OPERATOR:", rightCardX + 4, currentY + 5);
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(9.5);
+      doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
+      doc.text("Stay Willas", rightCardX + 4, currentY + 10);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 100, 100);
+      doc.text("Ghatkopar West, Mumbai, MH 400084", rightCardX + 4, currentY + 15);
+      doc.text("Concierge Hotline: +91 9619042310", rightCardX + 4, currentY + 19);
+
+      currentY += cardHeight + 6;
+
+      // Reservation Banner
+      const reservationBoxHeight = (targetCheckIn || targetCheckOut) ? 20 : 14;
+      doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.rect(marginX, currentY, 210 - marginX * 2, reservationBoxHeight, "F");
+      doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.setLineWidth(0.4);
+      doc.rect(marginX, currentY, 210 - marginX * 2, reservationBoxHeight, "S");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.text("RESERVATION SUMMARY", marginX + 4, currentY + 5);
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(255, 255, 255);
+      doc.text(`${activeVillaName}  |  ${targetNights} Night(s)  |  ${targetGuestsCount} Guests`, marginX + 4, currentY + 10);
+
+      if (targetCheckIn || targetCheckOut) {
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(218, 165, 32);
+        doc.text(`Check-In: ${targetCheckIn} (2:00 PM)   |   Check-Out: ${targetCheckOut} (11:00 AM)`, marginX + 4, currentY + 15);
+      }
+
+      currentY += reservationBoxHeight + 5;
+
+      // Tariff Table Header
+      doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(255, 255, 255);
+      doc.text("ITEM DESCRIPTION", marginX + 4, currentY + 5);
+      doc.text("QTY / DURATION", 100, currentY + 5);
+      doc.text("RATE", 145, currentY + 5);
+      doc.text("TOTAL TARIFF", 175, currentY + 5);
+
+      currentY += 7.5;
+
+      let isRowEven = false;
+      const drawTableRow = (desc: string, qty: string, rate: string, total: string) => {
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
+        
+        if (isRowEven) {
+          doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+          doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
+        }
+
+        doc.setDrawColor(235, 235, 235);
+        doc.setLineWidth(0.1);
+        doc.line(marginX, currentY + 7.5, 210 - marginX, currentY + 7.5);
+
+        doc.text(desc, marginX + 4, currentY + 5);
+        doc.text(qty, 100, currentY + 5);
+        doc.text(rate, 145, currentY + 5);
+        doc.setFont("Helvetica", "bold");
+        doc.text(total, 175, currentY + 5);
+
+        isRowEven = !isRowEven;
+        currentY += 7.5;
+      };
+
+      if (targetWeekdayNights > 0) {
+        drawTableRow(
+          `Stay Tariff - Weekday Nights`,
+          `${targetWeekdayNights} Night(s)`,
+          `Rs. ${targetRatePerNight.toLocaleString("en-IN")}`,
+          `Rs. ${targetWeekdayStayCost.toLocaleString("en-IN")}`
+        );
+      }
+
+      if (targetWeekendNights > 0) {
+        drawTableRow(
+          `Stay Tariff - Weekend Nights`,
+          `${targetWeekendNights} Night(s)`,
+          `Rs. ${targetWeekendRatePerNight.toLocaleString("en-IN")}`,
+          `Rs. ${targetWeekendStayCost.toLocaleString("en-IN")}`
+        );
+      }
+
+      if (targetExtraGuestsCount > 0) {
+        drawTableRow(
+          `Extra Guests Fee`,
+          `${targetExtraGuestsCount} Pax * ${targetNights} Nights`,
+          `Rs. ${targetExtraGuestFee.toLocaleString("en-IN")}`,
+          `Rs. ${targetExtraGuestsCost.toLocaleString("en-IN")}`
+        );
+      }
+
+      if (targetFoodPlan && targetFoodPlan !== "none") {
+        const planLabel = targetFoodPlan.toUpperCase() + " MENU";
+        drawTableRow(
+          `Catering Package - ${planLabel}`,
+          `${targetFoodGuests} Pax * ${targetNights} Days`,
+          `Rs. ${targetFoodRate.toLocaleString("en-IN")}`,
+          `Rs. ${targetTotalFoodCost.toLocaleString("en-IN")}`
+        );
+      }
+
+      targetExtras.forEach((c) => {
+        drawTableRow(
+          c.description,
+          "Add-on Service",
+          `Rs. ${c.amount.toLocaleString("en-IN")}`,
+          `Rs. ${c.amount.toLocaleString("en-IN")}`
+        );
+      });
+
+      currentY += 8;
+
+      // Summary
+      const rightAlignX = 135;
+      const drawSummaryRow = (label: string, value: string, isBold = false, textColor = darkCharcoal) => {
+        doc.setFont("Helvetica", isBold ? "bold" : "normal");
+        doc.setFontSize(isBold ? 9.5 : 8.5);
+        doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+        doc.text(label, rightAlignX, currentY);
+        doc.text(value, 175, currentY);
+        currentY += 5.5;
+      };
+
+      drawSummaryRow("Gross Subtotal:", `Rs. ${targetSubtotalBeforeDiscount.toLocaleString("en-IN")}`);
+      if (targetTotalDiscount > 0) {
+        drawSummaryRow("Discount Applied:", `- Rs. ${targetTotalDiscount.toLocaleString("en-IN")}`, false, [180, 40, 40]);
+      }
+      drawSummaryRow(`Net Taxable Amount:`, `Rs. ${targetSubtotal.toLocaleString("en-IN")}`);
+      drawSummaryRow(`GST Tax (${targetGstPercent}%):`, `Rs. ${targetGstAmount.toLocaleString("en-IN")}`);
+      if (targetSecurityDeposit > 0) {
+        drawSummaryRow("Security Deposit (Refundable):", `Rs. ${targetSecurityDeposit.toLocaleString("en-IN")}`, false, [180, 100, 20]);
+      }
+      
+      currentY += 1;
+      doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.rect(rightAlignX - 2, currentY - 4, 210 - marginX - (rightAlignX - 2), 9, "F");
+
+      const finalNetPayable = targetGrandTotal + targetSecurityDeposit;
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.text("NET PAYABLE AMOUNT:", rightAlignX, currentY + 1.5);
+
+      doc.setFontSize(10);
+      doc.setTextColor(255, 255, 255);
+      doc.text(`Rs. ${finalNetPayable.toLocaleString("en-IN")}`, 175, currentY + 1.5);
+
+      currentY += 14;
+
+      // Payment Box
+      doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 14, "F");
+      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 14, "S");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8.5);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text(`Advance Received: Rs. ${targetAdvancePaid.toLocaleString("en-IN")}`, marginX + 5, currentY + 6);
+
+      doc.setFontSize(9);
+      doc.setTextColor(targetBalanceDue <= 0 ? 34 : 180, targetBalanceDue <= 0 ? 139 : 40, targetBalanceDue <= 0 ? 34 : 40);
+      doc.text(`Balance Due on Check-In: ${targetBalanceDue <= 0 ? "PAID IN FULL" : `Rs. ${targetBalanceDue.toLocaleString("en-IN")}`}`, marginX + 5, currentY + 10.5);
+
+      // Save PDF to browser
+      const cleanFileName = `StayWillas_Invoice_${targetGuestName.replace(/[^a-zA-Z0-9]/g, "_")}_${invoiceNum}.pdf`;
+      doc.save(cleanFileName);
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+      alert("Failed to generate PDF. Check console for details.");
+    } finally {
+      setIsDownloadingPDF(false);
+    }
+  };
+
+  // Submit Handler (Saves to DB -> Blocks Property -> Optionally Downloads PDF)
+  const handleSaveAndBlockProperty = async (e: React.FormEvent, shouldDownloadPDF: boolean = false) => {
     e.preventDefault();
-    if (!selectedCell) return;
+    if (!selectedVillaId) {
+      alert("Please select a property.");
+      return;
+    }
+    if (!checkInStr || !checkOutStr) {
+      alert("Please select check-in and check-out dates.");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
-      const selectedVilla = villas.find(v => v.id === selectedCell.villaId);
       const inDate = new Date(checkInStr);
       const outDate = new Date(checkOutStr);
-      
-      const nights = Math.max(1, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
-      const basePrice = selectedVilla ? selectedVilla.price : 10000;
-      
-      let finalPrice = basePrice * nights;
-      if (modalView === "MANUAL_BOOKING" && totalPriceOverride !== "") {
-        finalPrice = Number(totalPriceOverride);
-      } else if (modalView === "MAINTENANCE" || modalView === "OWNER_USE") {
-        finalPrice = 0; // Blackout blocks have zero financial transaction values
-      }
 
       let type: "GUEST" | "MAINTENANCE" | "OWNER_USE" = "GUEST";
       let status = bookingStatus;
       let name = guestName;
+      let finalPrice = grandTotal;
 
-      if (modalView === "MAINTENANCE") {
+      if (modalMode === "MAINTENANCE") {
         type = "MAINTENANCE";
         status = "BLOCKED";
-        name = guestName || "Routine Maintenance Check";
-      } else if (modalView === "OWNER_USE") {
+        name = guestName || "Routine Maintenance Blackout";
+        finalPrice = 0;
+      } else if (modalMode === "OWNER_USE") {
         type = "OWNER_USE";
         status = "BLOCKED";
         name = guestName || "Private Owner Occupancy";
+        finalPrice = 0;
       }
 
       const res = await createManualBooking({
-        villaId: selectedCell.villaId,
+        villaId: selectedVillaId,
         checkIn: inDate.toISOString(),
         checkOut: outDate.toISOString(),
         guestName: name,
-        guestEmail,
-        guestPhone,
+        guestEmail: guestEmail.trim(),
+        guestPhone: guestPhone.trim(),
         totalPrice: finalPrice,
         status,
         notes: bookingNotes,
         type,
-        guests: numGuests,
-        nightlyRate: nightlyRate,
+        guests: guestCount,
+        nightlyRate: ratePerNight,
+        foodPlan,
+        foodRatePerPersonPerDay,
+        foodGuestsCount,
+        foodTotal: totalFoodCost,
+        extraCharges,
+        discountFlat,
+        discountPercent,
+        discountTotal: totalDiscount,
+        gstPercent,
+        gstTotal: gstAmount,
+        advancePaid,
+        securityDeposit,
+        balanceDue,
       });
 
       if (res.success && res.booking) {
-        // cast dates back to native Dates for frontend model
-        const villaObj = villas.find((v) => v.id === selectedCell.villaId);
+        const villaObj = villas.find((v) => v.id === selectedVillaId);
         if (!villaObj) {
-          throw new Error("Target villa not found in local state registry.");
+          throw new Error("Target villa not found in local registry.");
         }
+
         const formattedBooking: Booking = {
           id: res.booking.id,
           villaId: res.booking.villaId,
@@ -233,22 +862,110 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
           userId: res.booking.userId,
           villa: villaObj,
         };
+
         onBookingsChange([...bookings, formattedBooking]);
-        setSelectedCell(null);
+
+        // If requested, immediately trigger PDF download
+        if (shouldDownloadPDF && modalMode === "GUEST_BOOKING") {
+          await generateAndDownloadInvoicePDF();
+        }
+
+        setIsModalOpen(false);
       } else {
-        alert(res.error || "Failed to log reservation. Overlapping dates?");
+        alert(res.error || "Failed to block property. Overlapping dates?");
       }
     } catch (err: any) {
       console.error(err);
-      alert("Error adding manual room block: " + (err.message || err));
+      alert("Error creating reservation & property block: " + (err.message || err));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Handle deleting manual bookings or clearing maintenance blocks
+  // Direct Server-Side Email Dispatch
+  const handleSendEmailInvoice = async () => {
+    const selectedVilla = villas.find((v) => v.id === selectedVillaId);
+    if (!selectedVilla) return;
+
+    if (!guestEmail || !guestEmail.includes("@")) {
+      setEmailFeedback({ type: "error", msg: "Please enter a valid guest email address." });
+      return;
+    }
+
+    setIsSendingEmail(true);
+    setEmailFeedback(null);
+
+    const res = await sendInvoiceEmailAction({
+      guestName: guestName || "Valued Guest",
+      guestEmail: guestEmail.trim(),
+      guestPhone,
+      villaName: selectedVilla.name,
+      location: selectedVilla.location,
+      nights,
+      guestsCount: guestCount,
+      checkInDate: checkInStr,
+      checkOutDate: checkOutStr,
+      totalStayCost,
+      foodPlanName: foodPlan === "none" ? "No Meal Plan" : foodPlan,
+      totalFoodCost,
+      totalExtrasCost,
+      subtotal: subtotalBeforeDiscount,
+      gstPercent,
+      gstAmount,
+      grandTotal,
+      advancePaid,
+      securityDeposit,
+      balanceDue,
+    });
+
+    setIsSendingEmail(false);
+    if (res.success) {
+      setEmailFeedback({ type: "success", msg: res.message || "Invoice email dispatched to guest!" });
+    } else {
+      setEmailFeedback({ type: "error", msg: res.error || "Failed to dispatch invoice email." });
+    }
+  };
+
+  // WhatsApp Quote Share
+  const handleShareWhatsApp = (specificBookingData?: any) => {
+    const targetVilla = specificBookingData?.villa || villas.find((v) => v.id === selectedVillaId);
+    const villaName = targetVilla ? targetVilla.name : "Stay Willas Estate";
+    const name = specificBookingData?.name || guestName || "Valued Guest";
+    const phone = specificBookingData?.phone || guestPhone || "";
+    const cin = specificBookingData?.checkIn || checkInStr;
+    const cout = specificBookingData?.checkOut || checkOutStr;
+    const numNights = specificBookingData?.nights || nights;
+    const numGuests = specificBookingData?.guests || guestCount;
+    const total = specificBookingData?.grandTotal || grandTotal;
+    const advance = specificBookingData?.advancePaid !== undefined ? specificBookingData.advancePaid : advancePaid;
+    const balance = specificBookingData?.balanceDue !== undefined ? specificBookingData.balanceDue : balanceDue;
+
+    const msg = `✨ *Stay Willas - Reservation Invoice & Booking Block* ✨\n` +
+      `------------------------------------------\n` +
+      `🏰 *Property:* ${villaName}\n` +
+      `👤 *Guest Name:* ${name}\n` +
+      (cin ? `📅 *Check-In:* ${cin}\n` : "") +
+      (cout ? `📅 *Check-Out:* ${cout}\n` : "") +
+      `🌙 *Stay Duration:* ${numNights} Night(s)\n` +
+      `👥 *Guests:* ${numGuests} Pax\n` +
+      `------------------------------------------\n` +
+      `💰 *Grand Total:* Rs. ${total.toLocaleString("en-IN")}\n` +
+      `💳 *Advance Received:* Rs. ${advance.toLocaleString("en-IN")}\n` +
+      `📌 *Balance Due on Check-In:* ${balance <= 0 ? "PAID IN FULL" : `Rs. ${balance.toLocaleString("en-IN")}`}\n` +
+      `------------------------------------------\n` +
+      `Thank you for booking with Stay Willas! 🥂`;
+
+    const cleanPhone = phone ? phone.replace(/[^0-9]/g, "") : "";
+    const waUrl = cleanPhone.length >= 10
+      ? `https://wa.me/${cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`
+      : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+
+    window.open(waUrl, "_blank");
+  };
+
+  // Delete / Cancel Booking
   const handleCancelBooking = async (id: string) => {
-    if (!confirm("Are you sure you want to clear this reservation/blackout block? This immediately releases the dates for guest bookings.")) {
+    if (!confirm("Are you sure you want to clear this reservation/blackout block? This immediately releases the dates for online bookings.")) {
       return;
     }
 
@@ -259,7 +976,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         onBookingsChange(bookings.filter(b => b.id !== id));
         setSelectedBooking(null);
       } else {
-        alert(res.error || "Failed to remove blackout block.");
+        alert(res.error || "Failed to remove block.");
       }
     } catch (err: any) {
       console.error(err);
@@ -269,18 +986,9 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     }
   };
 
-  // Parsing Inspector details dynamically
+  // Parse Booking Inspector details
   const parseBookingDetails = (booking: Booking) => {
-    let parsed: {
-      type: string;
-      name: string;
-      email: string;
-      phone: string;
-      notes: string;
-      channel: string;
-      guests?: number;
-      nightlyRate?: number;
-    } = {
+    let parsed: any = {
       type: "CUSTOMER",
       name: "Stay Guest",
       email: "",
@@ -289,62 +997,43 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       channel: "",
       guests: 1,
       nightlyRate: 0,
+      foodPlan: "none",
+      foodTotal: 0,
+      extraCharges: [],
+      discountTotal: 0,
+      gstPercent: 18,
+      gstTotal: 0,
+      advancePaid: 0,
+      securityDeposit: 0,
+      balanceDue: 0,
     };
 
     if (booking.userId.startsWith("{")) {
       try {
         const json = JSON.parse(booking.userId);
-        if (json.type === "MANUAL") {
-          parsed = {
-            type: "MANUAL",
-            name: json.name || "Manual Booking",
-            email: json.email || "",
-            phone: json.phone || "",
-            notes: json.notes || "",
-            guests: json.guests || 1,
-            nightlyRate: json.nightlyRate || 0,
-            channel: "Direct Call-in"
-          };
-        } else if (json.type === "MAINTENANCE") {
-          parsed = {
-            type: "MAINTENANCE",
-            name: "Facility Blackout",
-            email: "",
-            phone: "",
-            notes: json.reason || "Routine maintenance checks",
-            channel: "System Administrator"
-          };
-        } else if (json.type === "OWNER_USE") {
-          parsed = {
-            type: "OWNER_USE",
-            name: "Owner Stays",
-            email: "",
-            phone: "",
-            notes: json.reason || "Private owner occupancy blackout",
-            channel: "System Administrator"
-          };
-        }
-      } catch (e) {
-        // Fallback on JSON parse error
-      }
+        parsed = {
+          ...parsed,
+          ...json,
+          channel: json.type === "MANUAL" ? "Direct Booking & Invoice" : json.type === "MAINTENANCE" ? "Facility Maintenance" : "Owner Occupancy"
+        };
+      } catch (e) {}
     } else if (booking.userId.startsWith("CHANNEL_SYNC|")) {
       const parts = booking.userId.split("|");
       parsed = {
+        ...parsed,
         type: "CHANNEL",
-        name: "Synced Reservation",
-        email: "",
-        phone: "",
-        notes: `External Platform ID: ${parts[2] || "N/A"}`,
+        name: "External Synced Reservation",
+        notes: `Platform UID: ${parts[2] || "N/A"}`,
         channel: (parts[1] || "External Channel").toUpperCase()
       };
     } else {
       parsed = {
+        ...parsed,
         type: "ONLINE",
-        name: "Online Booking",
-        email: "Processed via Stripe Node",
-        phone: "",
-        notes: `User Identifier: ${booking.userId}`,
-        channel: "Web Portal"
+        name: "Online Web Booking",
+        email: "Processed via Payment Node",
+        notes: `User ID: ${booking.userId}`,
+        channel: "Online Portal"
       };
     }
 
@@ -354,99 +1043,123 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   const activeDetails = selectedBooking ? parseBookingDetails(selectedBooking) : null;
 
   return (
-    <div className="glass border border-slate-200 rounded-[32px] p-8 overflow-hidden animate-fade-in relative shadow-2xl">
+    <div className="glass border border-slate-200 rounded-[32px] p-6 sm:p-8 overflow-hidden animate-fade-in relative shadow-2xl space-y-6">
       
-      {/* Calendar Header Control Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 pb-6 border-b border-slate-100">
+      {/* Top Header & Quick Actions Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
         <div>
-          <h3 className="text-2xl font-heading italic flex items-center gap-3">
-            <CalendarIcon className="text-blue-600" size={22} />
-            Availability Scheduler
+          <h3 className="text-2xl font-heading italic flex items-center gap-3 text-[#1B3564] font-bold">
+            <CalendarIcon className="text-blue-600" size={24} />
+            Availability Scheduler & Invoice Suite
           </h3>
-          <p className="text-slate-500 text-xs mt-1">Real-time room rack scheduling, blackout locks, and reservation timeline.</p>
+          <p className="text-slate-500 text-xs mt-1">
+            Visual room rack timeline, instant date blocking, and dynamic tax invoice generation.
+          </p>
         </div>
 
-        <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 px-4 py-2 rounded-full self-start sm:self-auto">
-          <button 
-            onClick={handlePrevMonth}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors text-slate-600 hover:text-slate-900 cursor-pointer border border-transparent hover:border-slate-200"
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Month Navigation */}
+          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full shadow-2xs">
+            <button 
+              onClick={handlePrevMonth}
+              className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors text-slate-600 cursor-pointer"
+              title="Previous Month"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span className="text-xs uppercase tracking-wider font-black text-[#1B3564] min-w-[110px] text-center font-sans">
+              {monthName} {year}
+            </span>
+            <button 
+              onClick={handleNextMonth}
+              className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors text-slate-600 cursor-pointer"
+              title="Next Month"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+
+          {/* Primary CTA: Block Property & Generate Invoice */}
+          <button
+            onClick={() => handleOpenCreateModal()}
+            className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-md hover:shadow-lg active:scale-95"
           >
-            <ChevronLeft size={16} />
-          </button>
-          <span className="text-xs uppercase tracking-widest font-bold font-sans text-blue-600 whitespace-nowrap min-w-[120px] text-center">
-            {monthName} {year}
-          </span>
-          <button 
-            onClick={handleNextMonth}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors text-slate-600 hover:text-slate-900 cursor-pointer border border-transparent hover:border-slate-200"
-          >
-            <ChevronRight size={16} />
+            <Plus size={16} className="stroke-[3]" />
+            <span>Block Property & Generate Invoice</span>
           </button>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap gap-6 mb-8 text-xs font-sans text-slate-500">
-        <div className="flex items-center gap-2">
-          <span className="w-3.5 h-3.5 rounded bg-emerald-500/20 border border-emerald-500/30"></span>
-          <span>Confirmed Stay / Sync</span>
+      <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-sans text-slate-500 bg-slate-50/60 p-3 rounded-2xl border border-slate-100">
+        <div className="flex flex-wrap gap-4 sm:gap-6">
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded bg-emerald-500/20 border border-emerald-500/40"></span>
+            <span className="font-medium text-slate-700">Confirmed Stay / Synced</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded bg-amber-500/20 border border-amber-500/40"></span>
+            <span className="font-medium text-slate-700">Verification Pending</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded bg-red-500/20 border border-red-500/40"></span>
+            <span className="font-medium text-slate-700">Maintenance / Blackout</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded bg-white border border-slate-300"></span>
+            <span className="font-medium text-slate-700">Available Sanctuary (Click to Block)</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="w-3.5 h-3.5 rounded bg-amber-500/20 border border-amber-500/30"></span>
-          <span>Verification Pending</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-3.5 h-3.5 rounded bg-red-500/20 border border-red-500/30"></span>
-          <span>Maintenance / Blackout</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-3.5 h-3.5 rounded bg-slate-50 border border-slate-200"></span>
-          <span>Available Sanctuary</span>
-        </div>
+
+        <span className="text-[11px] text-blue-600 font-bold hidden lg:inline">
+          💡 Click on any date cell to quickly block that property
+        </span>
       </div>
 
       {/* Timeline Rack Table */}
-      <div className="overflow-x-auto border border-slate-100 rounded-2xl bg-white border border-slate-200">
+      <div className="overflow-x-auto border border-slate-200 rounded-2xl bg-white shadow-sm">
         <table className="w-full border-collapse min-w-[900px]">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/50">
-              {/* Villa Header Column */}
-              <th className="py-4 px-6 text-left text-[10px] uppercase tracking-widest font-sans font-bold text-slate-500 sticky left-0 bg-white text-slate-900 z-20 w-64 border-r border-slate-100">
+            <tr className="border-b border-slate-200 bg-slate-50/80">
+              <th className="py-4 px-6 text-left text-[10px] uppercase tracking-widest font-sans font-black text-[#1B3564] sticky left-0 bg-slate-50 z-20 w-64 border-r border-slate-200">
                 Boutique Villa
               </th>
-              {/* Days Header Columns */}
               {days.map((day) => {
                 const isToday = new Date().toDateString() === day.toDateString();
+                const isWeekend = day.getDay() === 0 || day.getDay() === 6;
                 return (
                   <th 
                     key={day.getDate()} 
                     className={`py-3 px-1 text-center text-[9px] uppercase tracking-wider font-sans font-medium min-w-[32px] border-r border-slate-100 ${
-                      isToday ? "text-blue-600 font-bold bg-blue-50" : "text-slate-400"
+                      isToday 
+                        ? "text-blue-600 font-black bg-blue-50/80" 
+                        : isWeekend 
+                        ? "text-amber-700 bg-amber-50/30" 
+                        : "text-slate-400"
                     }`}
                   >
                     <div>{day.getDate()}</div>
-                    <div className="text-[7px] mt-0.5">{day.toLocaleString("en-US", { weekday: "short" }).substring(0, 2)}</div>
+                    <div className="text-[7px] mt-0.5 font-bold">{day.toLocaleString("en-US", { weekday: "short" }).substring(0, 2)}</div>
                   </th>
                 );
               })}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-slate-100">
             {villas.map((villa) => (
-              <tr key={villa.id} className="hover:bg-slate-50/20 transition-colors">
-                {/* Sticky Left Villa Selector */}
-                <td className="py-4 px-6 text-sm font-heading italic text-blue-600 sticky left-0 bg-white text-slate-900 z-20 border-r border-slate-100 font-semibold w-64 shadow-[8px_0_15px_-8px_rgba(0,0,0,0.5)]">
-                  {villa.name}
-                  <div className="text-[9px] font-sans text-slate-400 tracking-wider uppercase mt-1 not-italic font-normal">
-                    ₹{villa.price.toLocaleString("en-IN")} / night
+              <tr key={villa.id} className="hover:bg-slate-50/40 transition-colors">
+                <td className="py-3 px-5 text-sm font-heading italic text-[#1B3564] sticky left-0 bg-white z-20 border-r border-slate-200 font-bold w-64 shadow-[8px_0_15px_-8px_rgba(0,0,0,0.15)]">
+                  <div className="truncate">{villa.name}</div>
+                  <div className="text-[9px] font-sans text-slate-400 tracking-wider uppercase mt-0.5 not-italic font-semibold flex items-center gap-1">
+                    <span>₹{villa.price.toLocaleString("en-IN")}/n</span>
+                    <span>•</span>
+                    <span>{villa.location.split(",")[0]}</span>
                   </div>
                 </td>
-                {/* Days Grid Cells */}
                 {days.map((day) => {
                   const statusInfo = getDayStatus(villa.id, day);
                   
-                  // Color codes
-                  let cellClass = "bg-slate-50/20 hover:bg-blue-50 hover:border-blue-200 text-slate-300 hover:text-blue-600 cursor-pointer";
+                  let cellClass = "bg-white hover:bg-blue-50 text-slate-300 hover:text-blue-600 cursor-pointer";
                   if (statusInfo.status === "CONFIRMED") {
                     cellClass = "bg-emerald-50 border-y border-emerald-200 text-emerald-700 cursor-pointer shadow-[inset_0_0_8px_rgba(16,185,129,0.1)]";
                   } else if (statusInfo.status === "PENDING") {
@@ -459,21 +1172,21 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                     <td 
                       key={day.getDate()} 
                       onClick={() => handleCellClick(villa.id, day, statusInfo)}
-                      className={`p-0 text-center border-r border-slate-100 h-12 transition-all ${cellClass}`}
-                      title={`${villa.name} - ${day.toLocaleDateString("en-IN")}`}
+                      className={`p-0 text-center border-r border-slate-100 h-11 transition-all ${cellClass}`}
+                      title={`${villa.name} - ${day.toLocaleDateString("en-IN")} (${statusInfo.status})`}
                     >
                       <div className="w-full h-full flex items-center justify-center">
                         {statusInfo.status === "AVAILABLE" && (
-                          <Plus size={10} className="opacity-0 hover:opacity-100 transition-opacity" />
+                          <Plus size={10} className="opacity-0 hover:opacity-100 transition-opacity text-blue-600" />
                         )}
                         {statusInfo.status === "BLOCKED" && (
-                          <Wrench size={10} className="text-red-700" />
+                          <Wrench size={11} className="text-red-700" />
                         )}
                         {statusInfo.status === "CONFIRMED" && (
-                          <CheckCircle size={10} className="text-emerald-700" />
+                          <CheckCircle size={11} className="text-emerald-700" />
                         )}
                         {statusInfo.status === "PENDING" && (
-                          <Clock size={10} className="text-amber-700" />
+                          <Clock size={11} className="text-amber-700" />
                         )}
                       </div>
                     </td>
@@ -485,311 +1198,640 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         </table>
       </div>
 
-      {/* Dynamic Popups/Modals overlay rendered at document.body via Portal */}
-      
-      {/* 1. Availability Action Block Modal */}
-      {mounted && selectedCell && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 animate-fade-in">
-          <div className="bg-white border border-slate-200 rounded-[28px] max-w-4xl lg:max-w-5xl w-full relative shadow-2xl flex flex-col max-h-[85vh] my-auto overflow-hidden">
-            {/* Fixed Header */}
-            <div className="shrink-0 px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
-              <div>
-                <h4 className="text-lg md:text-xl font-heading italic text-blue-600 font-bold">Sanctuary Availability Controller</h4>
-                <p className="text-[11px] text-slate-500 mt-0.5">
-                  Configure room rack blocks or villa stay bookings for <span className="text-slate-900 font-bold">{villas.find(v => v.id === selectedCell.villaId)?.name}</span>.
-                </p>
+      {/* UNIFIED MODAL: BLOCK PROPERTY & GENERATE INVOICE */}
+      {mounted && isModalOpen && createPortal(
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[99999] flex items-center justify-center p-3 sm:p-4 md:p-6 animate-fade-in overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-5xl w-full relative shadow-2xl flex flex-col max-h-[92vh] my-auto overflow-hidden text-left">
+            
+            {/* Modal Header */}
+            <div className="shrink-0 px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-[#1B3564] text-white">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#DAA520]/20 border border-[#DAA520]/40 flex items-center justify-center text-[#DAA520]">
+                  <Receipt size={20} />
+                </div>
+                <div>
+                  <h4 className="text-lg font-heading font-bold text-[#DAA520]">
+                    Property Block & Invoice Generator
+                  </h4>
+                  <p className="text-[11px] text-slate-300">
+                    Lock dates across website & external channels while creating a detailed client invoice.
+                  </p>
+                </div>
               </div>
+
               <button
                 type="button"
-                onClick={() => setSelectedCell(null)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer shrink-0"
+                onClick={() => setIsModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm font-bold transition-colors cursor-pointer border-none"
               >
                 ✕
               </button>
             </div>
 
             {/* Scrollable Form Body */}
-            <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-4">
-              {modalView === "OPTIONS" && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                  <button 
-                    onClick={() => setModalView("MANUAL_BOOKING")}
-                    className="bg-[#3B82F6] hover:bg-blue-600 text-white py-5 px-6 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex flex-col items-center justify-center gap-2 cursor-pointer shadow-md"
-                  >
-                    <Plus size={20} />
-                    <span>BOOKED FOR VILLA STAY</span>
-                  </button>
-                  <button 
-                    onClick={() => setModalView("MAINTENANCE")}
-                    className="bg-red-500/10 border border-red-500/30 text-red-700 py-5 px-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-500/20 transition-all flex flex-col items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Wrench size={20} />
-                    <span>BLOCK ROUTINE MAINTENANCE</span>
-                  </button>
-                  <button 
-                    onClick={() => setModalView("OWNER_USE")}
-                    className="bg-purple-500/10 border border-purple-500/30 text-purple-700 py-5 px-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-purple-500/20 transition-all flex flex-col items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <ShieldAlert size={20} />
-                    <span>BLOCK PRIVATE OWNER USE</span>
-                  </button>
+            <form id="block-and-invoice-form" onSubmit={(e) => handleSaveAndBlockProperty(e, true)} className="flex-1 overflow-y-auto p-5 md:p-6 space-y-6">
+              
+              {/* Type Switcher */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-2 rounded-2xl border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setModalMode("GUEST_BOOKING")}
+                  className={`py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    modalMode === "GUEST_BOOKING"
+                      ? "bg-[#1B3564] text-[#DAA520] shadow-md"
+                      : "bg-transparent text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  <Receipt size={16} />
+                  <span>Guest Stay & Invoice</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setModalMode("MAINTENANCE")}
+                  className={`py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    modalMode === "MAINTENANCE"
+                      ? "bg-red-600 text-white shadow-md"
+                      : "bg-transparent text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  <Wrench size={16} />
+                  <span>Routine Maintenance</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setModalMode("OWNER_USE")}
+                  className={`py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    modalMode === "OWNER_USE"
+                      ? "bg-purple-600 text-white shadow-md"
+                      : "bg-transparent text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  <ShieldAlert size={16} />
+                  <span>Owner Private Stay</span>
+                </button>
+              </div>
+
+              {/* Property & Dates Selection (Common to All Modes) */}
+              <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-4">
+                <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
+                  1. Property & Stay Dates
+                </span>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Select Property *</label>
+                    <select
+                      value={selectedVillaId}
+                      onChange={(e) => setSelectedVillaId(e.target.value)}
+                      className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2.5 text-xs font-bold focus:border-[#1B3564] outline-none"
+                    >
+                      {villas.map((villa) => (
+                        <option key={villa.id} value={villa.id}>
+                          {villa.name} ({villa.location}) - ₹{villa.price.toLocaleString("en-IN")}/n
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-In Date *</label>
+                    <input
+                      type="date"
+                      value={checkInStr}
+                      onChange={(e) => handleDateChange(e.target.value, checkOutStr)}
+                      required
+                      className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2.5 text-xs font-bold focus:border-[#1B3564] outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-Out Date *</label>
+                    <input
+                      type="date"
+                      value={checkOutStr}
+                      min={checkInStr}
+                      onChange={(e) => handleDateChange(checkInStr, e.target.value)}
+                      required
+                      className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2.5 text-xs font-bold focus:border-[#1B3564] outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 text-xs font-bold text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
+                  <span>Stay Duration:</span>
+                  <span className="bg-[#1B3564] text-white px-2.5 py-0.5 rounded-full text-[11px]">
+                    {nights} Total Nights
+                  </span>
+                  <span className="text-slate-400">•</span>
+                  <span className="text-slate-600">{weekdayNights} Weekday Nights</span>
+                  <span className="text-slate-400">•</span>
+                  <span className="text-amber-700">{weekendNights} Weekend Nights</span>
+                </div>
+              </div>
+
+              {/* Maintenance / Owner Use Simple Fields */}
+              {modalMode !== "GUEST_BOOKING" && (
+                <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                  <label className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
+                    2. Blackout Reason & Directives
+                  </label>
+                  <input
+                    type="text"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    placeholder={modalMode === "MAINTENANCE" ? "e.g. Deep cleaning, pool servicing, electrical repairs" : "e.g. Villa owner family vacation"}
+                    required
+                    className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-3 text-xs focus:border-[#1B3564] outline-none font-medium"
+                  />
                 </div>
               )}
 
-              {modalView !== "OPTIONS" && (
-                <form id="availability-block-form" onSubmit={handleFormSubmit} className="space-y-4">
-                  {modalView === "MANUAL_BOOKING" ? (
-                    <div className="space-y-4">
-                      {/* Row 1: Stay Dates & Basic Rates (Horizontal 4-Column Grid) */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/60">
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-In Date *</label>
-                          <input 
-                            type="date" 
-                            value={checkInStr}
-                            onChange={(e) => setCheckInStr(e.target.value)}
-                            required
-                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-Out Date *</label>
-                          <input 
-                            type="date" 
-                            value={checkOutStr}
-                            min={checkInStr}
-                            onChange={(e) => setCheckOutStr(e.target.value)}
-                            required
-                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Nightly Rate (₹) *</label>
-                          <input 
-                            type="number" 
-                            value={nightlyRate || ""}
-                            onChange={(e) => setNightlyRate(Number(e.target.value) || 0)}
-                            required
-                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Guest Count *</label>
-                          <input 
-                            type="number" 
-                            value={numGuests || ""}
-                            onChange={(e) => setNumGuests(Number(e.target.value) || 1)}
-                            required
-                            min="1"
-                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Row 2: Guest Details (Horizontal 3-Column Grid) */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Primary Guest Name *</label>
-                          <div className="relative">
-                            <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input 
-                              type="text" 
-                              value={guestName}
-                              onChange={(e) => setGuestName(e.target.value)}
-                              placeholder="Full Name"
-                              required
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-blue-500 outline-none font-medium"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Phone Number</label>
-                          <div className="relative">
-                            <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input 
-                              type="tel" 
-                              value={guestPhone}
-                              onChange={(e) => setGuestPhone(e.target.value)}
-                              placeholder="+91 XXXXX XXXXX"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-blue-500 outline-none font-medium"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Email Address</label>
-                          <div className="relative">
-                            <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input 
-                              type="email" 
-                              value={guestEmail}
-                              onChange={(e) => setGuestEmail(e.target.value)}
-                              placeholder="guest@domain.com"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-blue-500 outline-none font-medium"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Row 3: Billing, Status & Calculated Duration (Horizontal 3-Column Grid) */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Total Tariff Override (₹)</label>
-                          <input 
-                            type="number" 
-                            value={totalPriceOverride}
-                            onChange={(e) => setTotalPriceOverride(e.target.value !== "" ? Number(e.target.value) : "")}
-                            placeholder="Leave blank for base rates"
-                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Reservation Status</label>
-                          <select 
-                            value={bookingStatus}
-                            onChange={(e) => setBookingStatus(e.target.value)}
-                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none font-semibold"
-                          >
-                            <option value="CONFIRMED">CONFIRMED</option>
-                            <option value="PENDING">VERIFICATION PENDING</option>
-                          </select>
-                        </div>
-                        <div>
-                          {checkInStr && checkOutStr ? (
-                            <div className="text-xs text-[#1B3564] font-bold bg-blue-50 border border-blue-200 px-3.5 py-2 rounded-xl flex justify-between items-center h-[38px]">
-                              <span>Stay Duration:</span>
-                              <span className="bg-[#1B3564] text-white px-2 py-0.5 rounded-md text-[11px]">
-                                {Math.max(0, Math.round((new Date(checkOutStr).getTime() - new Date(checkInStr).getTime()) / (1000 * 60 * 60 * 24)))} Nights
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="text-xs text-slate-400 bg-slate-50 border border-slate-200 px-3.5 py-2 rounded-xl h-[38px] flex items-center">
-                              Select Dates to Calculate
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Row 4: Call Notes */}
+              {/* Full Invoice Fields (Guest Booking Mode) */}
+              {modalMode === "GUEST_BOOKING" && (
+                <>
+                  {/* Section 2: Guest Details */}
+                  <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
+                      2. Guest Information
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Special Directives / Call Notes</label>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Primary Guest Name *</label>
                         <div className="relative">
-                          <FileText size={14} className="absolute left-3 top-2.5 text-slate-400" />
-                          <input 
+                          <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                          <input
                             type="text"
-                            value={bookingNotes}
-                            onChange={(e) => setBookingNotes(e.target.value)}
-                            placeholder="Add payment status, specific food requests, early check-in notes, etc."
-                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-blue-500 outline-none font-medium"
+                            value={guestName}
+                            onChange={(e) => setGuestName(e.target.value)}
+                            placeholder="Full Name"
+                            required
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-[#1B3564] outline-none font-medium"
                           />
                         </div>
                       </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Phone / WhatsApp</label>
+                        <div className="relative">
+                          <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                          <input
+                            type="tel"
+                            value={guestPhone}
+                            onChange={(e) => setGuestPhone(e.target.value)}
+                            placeholder="+91 XXXXX XXXXX"
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-[#1B3564] outline-none font-medium"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Email Address</label>
+                        <div className="relative">
+                          <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                          <input
+                            type="email"
+                            value={guestEmail}
+                            onChange={(e) => setGuestEmail(e.target.value)}
+                            placeholder="guest@domain.com"
+                            className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl pl-9 pr-3 py-2 text-xs focus:border-[#1B3564] outline-none font-medium"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Guest Count (Pax) *</label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="60"
+                          value={guestCount}
+                          onChange={(e) => {
+                            const val = Number(e.target.value) || 1;
+                            setGuestCount(val);
+                            setFoodGuestsCount(val);
+                          }}
+                          required
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-[#1B3564] outline-none font-bold"
+                        />
+                      </div>
                     </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/60">
+                  </div>
+
+                  {/* Section 3: Nightly Pricing & Extra Guest Rates */}
+                  <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
+                      3. Nightly Tariff Breakdown
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-In Date</label>
-                        <input 
-                          type="date" 
-                          value={checkInStr}
-                          onChange={(e) => setCheckInStr(e.target.value)}
-                          required
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none"
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Weekday Rate (₹/n)</label>
+                        <input
+                          type="number"
+                          value={ratePerNight}
+                          onChange={(e) => setRatePerNight(Number(e.target.value) || 0)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
                         />
                       </div>
+
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Check-Out Date</label>
-                        <input 
-                          type="date" 
-                          value={checkOutStr}
-                          min={checkInStr}
-                          onChange={(e) => setCheckOutStr(e.target.value)}
-                          required
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none"
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Weekend Rate (₹/n)</label>
+                        <input
+                          type="number"
+                          value={weekendRatePerNight}
+                          onChange={(e) => setWeekendRatePerNight(Number(e.target.value) || 0)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
                         />
                       </div>
+
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Reason/Notes for Blackout *</label>
-                        <input 
-                          type="text" 
-                          value={guestName}
-                          onChange={(e) => setGuestName(e.target.value)}
-                          placeholder={modalView === "MAINTENANCE" ? "e.g., Deep Cleaning / Pool Repair" : "e.g., Owner Private Stays"}
-                          required
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-blue-500 outline-none"
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Base Guests Included</label>
+                        <input
+                          type="number"
+                          value={baseGuests}
+                          onChange={(e) => setBaseGuests(Number(e.target.value) || 1)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Extra Guest Fee (₹/pax/n)</label>
+                        <input
+                          type="number"
+                          value={extraGuestFee}
+                          onChange={(e) => setExtraGuestFee(Number(e.target.value) || 0)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
                         />
                       </div>
                     </div>
-                  )}
-                </form>
+
+                    <div className="text-xs bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center">
+                      <span className="text-slate-600">Total Villa Accommodation Tariff:</span>
+                      <span className="text-base font-black text-[#1B3564]">₹{totalStayCost.toLocaleString("en-IN")}</span>
+                    </div>
+                  </div>
+
+                  {/* Section 4: Dining & Catering Packages */}
+                  <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
+                      4. Dining & Catering Package
+                    </span>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Menu Package</label>
+                        <select
+                          value={foodPlan}
+                          onChange={(e) => setFoodPlan(e.target.value as any)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
+                        >
+                          <option value="none">No Meals Plan (Self / External)</option>
+                          <option value="standard">Standard Menu (₹1,200/day)</option>
+                          <option value="deluxe">Deluxe Gourmet Menu (₹1,500/day)</option>
+                          <option value="custom">Custom Dining Rate</option>
+                        </select>
+                      </div>
+
+                      {foodPlan !== "none" && (
+                        <>
+                          <div>
+                            <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Rate / Person / Day (₹)</label>
+                            <input
+                              type="number"
+                              value={foodRatePerPersonPerDay}
+                              onChange={(e) => setFoodRatePerPersonPerDay(Number(e.target.value) || 0)}
+                              className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Meal Guests Count</label>
+                            <input
+                              type="number"
+                              value={foodGuestsCount}
+                              onChange={(e) => setFoodGuestsCount(Number(e.target.value) || 1)}
+                              className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {foodPlan !== "none" && (
+                      <div className="text-xs bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center">
+                        <span className="text-slate-600">Total Catering Cost:</span>
+                        <span className="text-sm font-black text-emerald-700">₹{totalFoodCost.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Section 5: Add-ons & Extra Services */}
+                  <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
+                      5. Custom Add-ons & Extra Services
+                    </span>
+
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newExtraDesc}
+                        onChange={(e) => setNewExtraDesc(e.target.value)}
+                        placeholder="e.g. Pool Heating, Bonfire Setup, BBQ Grill, Butler Service"
+                        className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"
+                      />
+                      <input
+                        type="number"
+                        value={newExtraAmount}
+                        onChange={(e) => setNewExtraAmount(e.target.value !== "" ? Number(e.target.value) : "")}
+                        placeholder="Amount (₹)"
+                        className="w-32 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none font-bold"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddExtra}
+                        className="px-4 py-2 bg-[#1B3564] text-[#DAA520] hover:text-white rounded-xl text-xs font-bold cursor-pointer"
+                      >
+                        + Add
+                      </button>
+                    </div>
+
+                    {extraCharges.length > 0 && (
+                      <div className="space-y-1.5 pt-1">
+                        {extraCharges.map((charge) => (
+                          <div key={charge.id} className="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-200 text-xs">
+                            <span className="font-medium text-slate-800">{charge.description}</span>
+                            <div className="flex items-center gap-3">
+                              <span className="font-bold text-slate-900">₹{charge.amount.toLocaleString("en-IN")}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveExtra(charge.id)}
+                                className="text-red-500 hover:text-red-700 cursor-pointer border-none bg-transparent p-1"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Section 6: Adjustments, Taxes & Payment */}
+                  <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
+                      6. Discounts, Tax & Payments
+                    </span>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Flat Discount (₹)</label>
+                        <input
+                          type="number"
+                          value={discountFlat}
+                          onChange={(e) => setDiscountFlat(Number(e.target.value) || 0)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Percent Discount (%)</label>
+                        <input
+                          type="number"
+                          value={discountPercent}
+                          onChange={(e) => setDiscountPercent(Number(e.target.value) || 0)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">GST Tax Rate</label>
+                        <select
+                          value={gstPercent}
+                          onChange={(e) => setGstPercent(Number(e.target.value) || 0)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
+                        >
+                          <option value="18">18% GST (Standard)</option>
+                          <option value="12">12% GST</option>
+                          <option value="5">5% GST</option>
+                          <option value="0">0% (Tax Exempt)</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Security Deposit (₹)</label>
+                        <input
+                          type="number"
+                          value={securityDeposit}
+                          onChange={(e) => setSecurityDeposit(Number(e.target.value) || 0)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Advance Payment Received (₹)</label>
+                        <input
+                          type="number"
+                          value={advancePaid}
+                          onChange={(e) => setAdvancePaid(Number(e.target.value) || 0)}
+                          className="w-full bg-white border border-emerald-300 text-emerald-900 rounded-xl px-3 py-2.5 text-xs font-black outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Reservation Status</label>
+                        <select
+                          value={bookingStatus}
+                          onChange={(e) => setBookingStatus(e.target.value)}
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2.5 text-xs font-bold outline-none"
+                        >
+                          <option value="CONFIRMED">CONFIRMED STAY</option>
+                          <option value="PENDING">VERIFICATION PENDING</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 7: Booking Notes */}
+                  <div>
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Directives & Special Notes</label>
+                    <input
+                      type="text"
+                      value={bookingNotes}
+                      onChange={(e) => setBookingNotes(e.target.value)}
+                      placeholder="e.g. Early check-in approved, pure veg food preferences, birthday celebration setup"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"
+                    />
+                  </div>
+
+                  {/* Live Financial Summary Banner */}
+                  <div className="bg-[#1B3564] text-white p-5 rounded-2xl border border-[#DAA520]/30 shadow-lg space-y-3">
+                    <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
+                      <span>Subtotal before GST:</span>
+                      <span className="font-bold text-white">₹{subtotal.toLocaleString("en-IN")}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
+                      <span>GST ({gstPercent}%):</span>
+                      <span className="font-bold text-white">₹{gstAmount.toLocaleString("en-IN")}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-sm font-bold text-[#DAA520]">
+                      <span>NET GRAND TOTAL:</span>
+                      <span className="text-xl font-black">₹{(grandTotal + securityDeposit).toLocaleString("en-IN")}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-xs font-bold pt-2 border-t border-white/10">
+                      <span className="text-emerald-300">Advance Paid: ₹{advancePaid.toLocaleString("en-IN")}</span>
+                      <span className={balanceDue <= 0 ? "text-emerald-300" : "text-amber-300"}>
+                        Balance Remaining: {balanceDue <= 0 ? "PAID IN FULL" : `₹${balanceDue.toLocaleString("en-IN")}`}
+                      </span>
+                    </div>
+                  </div>
+                </>
               )}
+
+              {/* Email Feedback */}
+              {emailFeedback && (
+                <div className={`p-3 rounded-xl text-xs font-bold flex items-center gap-2 ${
+                  emailFeedback.type === "success" ? "bg-emerald-50 text-emerald-800 border border-emerald-200" : "bg-red-50 text-red-800 border border-red-200"
+                }`}>
+                  {emailFeedback.type === "success" ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />}
+                  <span>{emailFeedback.msg}</span>
+                </div>
+              )}
+
+            </form>
+
+            {/* Modal Footer Actions */}
+            <div className="shrink-0 bg-slate-50 border-t border-slate-200 p-4 px-6 flex flex-wrap items-center justify-between gap-3 rounded-b-3xl">
+              <div className="flex items-center gap-2">
+                {modalMode === "GUEST_BOOKING" && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleSendEmailInvoice}
+                      disabled={isSendingEmail}
+                      className="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-blue-600 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                    >
+                      {isSendingEmail ? <Loader2 size={13} className="animate-spin" /> : <Mail size={13} />}
+                      <span className="hidden sm:inline">Send Email Invoice</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleShareWhatsApp()}
+                      className="px-3.5 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                    >
+                      <Share2 size={13} />
+                      <span className="hidden sm:inline">WhatsApp</span>
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-slate-100 transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+
+                {modalMode === "GUEST_BOOKING" ? (
+                  <>
+                    {/* Block Property & Download PDF */}
+                    <button
+                      type="button"
+                      disabled={isSubmitting || isDownloadingPDF}
+                      onClick={(e) => handleSaveAndBlockProperty(e, true)}
+                      className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg active:scale-95"
+                    >
+                      {isSubmitting || isDownloadingPDF ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <Download size={14} />
+                      )}
+                      <span>BLOCK & DOWNLOAD PDF INVOICE</span>
+                    </button>
+
+                    {/* Block Only */}
+                    <button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={(e) => handleSaveAndBlockProperty(e, false)}
+                      className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                    >
+                      Block Only
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="submit"
+                    form="block-and-invoice-form"
+                    disabled={isSubmitting}
+                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  >
+                    {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : "RECORD BLACKOUT BLOCK"}
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Pinned Sticky Footer */}
-            {modalView !== "OPTIONS" && (
-              <div className="shrink-0 bg-slate-50 border-t border-slate-200 p-4 px-6 flex items-center justify-end gap-3 rounded-b-[28px]">
-                <button 
-                  type="button"
-                  onClick={() => setModalView("OPTIONS")}
-                  className="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-slate-100 transition-all cursor-pointer"
-                >
-                  Back
-                </button>
-                <button 
-                  type="submit"
-                  form="availability-block-form"
-                  disabled={isSubmitting}
-                  className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
-                >
-                  {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : "RECORD ROOM BLOCK"}
-                </button>
-              </div>
-            )}
           </div>
         </div>,
         document.body
       )}
 
-      {/* 2. Detailed Reservation Inspector Modal rendered at document.body via Portal */}
+      {/* DETAILED RESERVATION INSPECTOR MODAL */}
       {mounted && selectedBooking && activeDetails && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4 md:p-6 animate-fade-in">
-          <div className="glass border border-slate-200 rounded-[32px] p-8 max-w-md w-full relative shadow-2xl space-y-6">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[99999] flex items-center justify-center p-4 md:p-6 animate-fade-in text-left">
+          <div className="glass border border-slate-200 rounded-[32px] p-6 sm:p-8 max-w-lg w-full relative shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
             
+            {/* Inspector Header */}
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
-                <h4 className="text-xl font-heading italic text-blue-600">{activeDetails.name}</h4>
-                <span className="text-[8px] text-slate-500 uppercase tracking-widest font-black block mt-0.5">Channel: {activeDetails.channel}</span>
+                <h4 className="text-xl font-heading italic text-[#1B3564] font-bold">{activeDetails.name}</h4>
+                <span className="text-[9px] text-slate-500 uppercase tracking-widest font-black block mt-0.5">
+                  Source: {activeDetails.channel}
+                </span>
               </div>
-              <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
+              <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
                 selectedBooking.status === "CONFIRMED" 
-                  ? "bg-emerald-500/10 text-emerald-700 border border-emerald-500/25" 
+                  ? "bg-emerald-500/15 text-emerald-700 border border-emerald-500/30" 
                   : selectedBooking.status === "PENDING"
-                  ? "bg-amber-500/10 text-amber-700 border border-amber-500/25"
-                  : "bg-red-500/10 text-red-700 border border-red-500/25"
+                  ? "bg-amber-500/15 text-amber-700 border border-amber-500/30"
+                  : "bg-red-500/15 text-red-700 border border-red-500/30"
               }`}>
                 {selectedBooking.status}
               </span>
             </div>
 
+            {/* Inspector Content */}
             <div className="space-y-4 text-xs">
               <div>
                 <span className="text-[9px] text-slate-400 uppercase tracking-widest block mb-0.5 font-bold">Sanctuary Estate</span>
-                <span className="font-heading text-base text-slate-900 font-medium">{villas.find(v => v.id === selectedBooking.villaId)?.name}</span>
+                <span className="font-heading text-lg text-slate-900 font-bold">{villas.find(v => v.id === selectedBooking.villaId)?.name}</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
                 <div>
                   <span className="text-[9px] text-slate-400 uppercase tracking-widest block mb-0.5 font-bold">Check-In</span>
-                  <span className="font-sans text-slate-900 font-semibold">{new Date(selectedBooking.checkIn).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}</span>
+                  <span className="font-sans text-slate-900 font-bold">{new Date(selectedBooking.checkIn).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}</span>
                 </div>
                 <div>
                   <span className="text-[9px] text-slate-400 uppercase tracking-widest block mb-0.5 font-bold">Check-Out</span>
-                  <span className="font-sans text-slate-900 font-semibold">{new Date(selectedBooking.checkOut).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}</span>
+                  <span className="font-sans text-slate-900 font-bold">{new Date(selectedBooking.checkOut).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}</span>
                 </div>
               </div>
 
-              {activeDetails.type === "MANUAL" && (
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
-                  <span className="text-[8px] text-[#1B3564] font-bold uppercase tracking-widest block mb-1">GUEST DETAILS</span>
+              {/* Guest Details */}
+              {(activeDetails.phone || activeDetails.email) && (
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1.5">
+                  <span className="text-[9px] text-[#1B3564] font-black uppercase tracking-widest block mb-1">GUEST CONTACT</span>
                   {activeDetails.phone && (
                     <div className="flex items-center gap-2 text-slate-800">
                       <Phone size={12} className="text-blue-600" />
@@ -802,16 +1844,6 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       <span className="truncate">{activeDetails.email}</span>
                     </div>
                   )}
-                  <div className="pt-2 border-t border-slate-200 mt-2 grid grid-cols-2 gap-2 text-[10px] text-slate-600">
-                    <div>
-                      <span className="block text-[8px] uppercase tracking-wider text-slate-400 font-bold">GUESTS</span>
-                      <span className="font-bold text-slate-850">{activeDetails.guests ?? 1} Guests</span>
-                    </div>
-                    <div>
-                      <span className="block text-[8px] uppercase tracking-wider text-slate-400 font-bold">NIGHTLY RATE</span>
-                      <span className="font-bold text-slate-850">₹{(activeDetails.nightlyRate ?? 0).toLocaleString("en-IN")}</span>
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -824,37 +1856,89 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                 </div>
               )}
 
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-widest block mb-0.5 font-bold">Transaction Value</span>
-                <span className="text-lg font-bold text-emerald-700">
+              {/* Financial Snapshot */}
+              <div className="bg-[#1B3564] text-white p-4 rounded-xl space-y-1">
+                <span className="text-[9px] text-[#DAA520] uppercase tracking-widest block font-bold">Transaction Value</span>
+                <div className="text-xl font-black">
                   {selectedBooking.totalPrice > 0 
                     ? `₹${selectedBooking.totalPrice.toLocaleString("en-IN")}` 
                     : "₹0 (Blocked Sanctuary)"}
-                </span>
+                </div>
+                {activeDetails.advancePaid !== undefined && (
+                  <div className="text-[11px] text-slate-300 pt-1 flex justify-between">
+                    <span>Advance Received: ₹{activeDetails.advancePaid.toLocaleString("en-IN")}</span>
+                    <span>Balance: ₹{(activeDetails.balanceDue || 0).toLocaleString("en-IN")}</span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Inspector Actions */}
-            <div className="space-y-3 pt-4 border-t border-slate-100">
+            <div className="space-y-2.5 pt-3 border-t border-slate-100">
+              {/* PDF Invoice Re-Download Button */}
+              {activeDetails.type !== "CHANNEL" && selectedBooking.totalPrice > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => generateAndDownloadInvoicePDF({
+                      villa: villas.find(v => v.id === selectedBooking.villaId),
+                      guestName: activeDetails.name,
+                      guestPhone: activeDetails.phone,
+                      guestEmail: activeDetails.email,
+                      checkIn: new Date(selectedBooking.checkIn).toISOString().split("T")[0],
+                      checkOut: new Date(selectedBooking.checkOut).toISOString().split("T")[0],
+                      nights: Math.max(1, Math.round((new Date(selectedBooking.checkOut).getTime() - new Date(selectedBooking.checkIn).getTime()) / (1000 * 60 * 60 * 24))),
+                      grandTotal: selectedBooking.totalPrice,
+                      advancePaid: activeDetails.advancePaid || 0,
+                      balanceDue: activeDetails.balanceDue || 0,
+                      subtotal: selectedBooking.totalPrice,
+                      subtotalBeforeDiscount: selectedBooking.totalPrice,
+                      ratePerNight: activeDetails.nightlyRate || 0,
+                      guestsCount: activeDetails.guests || 2,
+                    })}
+                    className="py-2.5 px-3 bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Download size={13} />
+                    <span>Download PDF</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleShareWhatsApp({
+                      villa: villas.find(v => v.id === selectedBooking.villaId),
+                      name: activeDetails.name,
+                      phone: activeDetails.phone,
+                      checkIn: new Date(selectedBooking.checkIn).toLocaleDateString("en-IN"),
+                      checkOut: new Date(selectedBooking.checkOut).toLocaleDateString("en-IN"),
+                      nights: Math.max(1, Math.round((new Date(selectedBooking.checkOut).getTime() - new Date(selectedBooking.checkIn).getTime()) / (1000 * 60 * 60 * 24))),
+                      guests: activeDetails.guests || 2,
+                      grandTotal: selectedBooking.totalPrice,
+                      advancePaid: activeDetails.advancePaid || 0,
+                      balanceDue: activeDetails.balanceDue || 0,
+                    })}
+                    className="py-2.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Share2 size={13} />
+                    <span>WhatsApp</span>
+                  </button>
+                </div>
+              )}
+
               {/* Show Clear button only for manual bookings, synced bookings or blackouts */}
-              {activeDetails.type !== "ONLINE" ? (
+              {activeDetails.type !== "ONLINE" && (
                 <button
                   onClick={() => handleCancelBooking(selectedBooking.id)}
                   disabled={isDeleting}
-                  className="w-full bg-red-500/10 border border-red-500/30 text-red-700 hover:bg-red-500/25 py-3.5 rounded-full text-xs font-black uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
-                  {isDeleting ? <Loader2 size={12} className="animate-spin" /> : "CLEAR BLOCK / CANCEL STAY"}
+                  {isDeleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                  <span>CLEAR BLOCK / CANCEL STAY</span>
                 </button>
-              ) : (
-                <div className="p-3 rounded-xl bg-amber-500/5 border border-amber-500/15 flex gap-2 items-start text-[10px] text-amber-700/80 leading-normal">
-                  <AlertTriangle size={14} className="shrink-0 mt-0.5" />
-                  <span>Stripe bookings must be cancelled directly inside the Stripe dashboard to trigger refunds.</span>
-                </div>
               )}
               
               <button 
                 onClick={() => setSelectedBooking(null)}
-                className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all cursor-pointer"
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border-none"
               >
                 CLOSE INSPECTOR
               </button>

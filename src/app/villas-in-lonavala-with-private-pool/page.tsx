@@ -18,6 +18,9 @@ import {
 } from "lucide-react";
 
 import VillaFeatureMarquee, { FeatureMarqueeItem } from "@/components/villas/villa-feature-marquee";
+import QuickMobileLeadForm from "@/components/common/quick-mobile-lead-form";
+import MegaDiscountAdBanner from "@/components/common/mega-discount-ad-banner";
+import AdLandingShowcase from "@/components/villas/ad-landing-showcase";
 
 const angleHouseFeatures: FeatureMarqueeItem[] = [
   {
@@ -62,6 +65,50 @@ const angleHouseFeatures: FeatureMarqueeItem[] = [
     description: "Double-height central hall designed for family board games & storytelling.",
     image: "/assets/villas/the-angle-house/gallery-18.webp",
   },
+];
+
+const angleHouseShowcaseImages = [
+  { url: "/assets/villas/the-angle-house/gallery-13.webp", title: "Private Waterfall Swimming Pool", tag: "Signature Pool" },
+  { url: "/assets/villas/the-angle-house/gallery-11.webp", title: "Double-Height Glass Facade", tag: "Architecture" },
+  { url: "/assets/villas/the-angle-house/gallery-19.webp", title: "Master Jacuzzi Suite", tag: "Luxury Bath" },
+  { url: "/assets/villas/the-angle-house/gallery-5.webp", title: "Pet-Friendly Fenced Lawns", tag: "Outdoor" },
+  { url: "/assets/villas/the-angle-house/gallery-16.webp", title: "In-House Gourmet Chef Dining", tag: "Culinary" },
+  { url: "/assets/villas/the-angle-house/gallery-18.webp", title: "Expansive Living Lounge Hall", tag: "Lounge" },
+];
+
+const angleHouseReviews = [
+  {
+    name: "Rohan & Priya Mehta",
+    location: "Bandra, Mumbai",
+    rating: 5,
+    date: "Stayed July 2026",
+    comment: "The waterfall pool is genuinely private, and the glass facade gives insane mountain views during monsoon. Kailash's team prepared mouth-watering food!",
+    highlight: "Waterfall Pool & Dining"
+  },
+  {
+    name: "Vikram Singhania",
+    location: "Koregaon Park, Pune",
+    rating: 5,
+    date: "Stayed June 2026",
+    comment: "Booked directly via WhatsApp on their 28% weekday deal. Saved ₹5,000+ compared to Airbnb, and the caretaker had the jacuzzi ready before check-in.",
+    highlight: "Direct Booking Savings"
+  },
+  {
+    name: "Aditi Deshmukh",
+    location: "Thane, Mumbai",
+    rating: 5,
+    date: "Stayed May 2026",
+    comment: "Our Golden Retriever had the best time running across the fenced lawns! Total peace of mind for pet parents.",
+    highlight: "Pet-Friendly Security"
+  },
+  {
+    name: "Sameer Kulkarni",
+    location: "Kothrud, Pune",
+    rating: 5,
+    date: "Stayed August 2026",
+    comment: "Celebrated my 30th birthday here with 12 friends. Cleanest pool in Lonavala and zero noise disturbances.",
+    highlight: "Group Celebration"
+  }
 ];
 
 export const metadata: Metadata = {
@@ -185,8 +232,18 @@ export default async function LonavalaGlassHousePage() {
 
         <Navbar />
 
+        {/* 28% Mega Weekday Offer Floating Ads & Countdown Strip */}
+        <MegaDiscountAdBanner 
+          pageName="lonavala"
+          villaName="The Angle House (Lonavala)"
+          location="Lonavala, Maharashtra"
+          couponCode="LONAVALA28"
+          discountPercent={28}
+          villaLink="/villa/the-angle-house"
+        />
+
         {/* Hero Section */}
-        <section className="relative pt-36 pb-20 md:pt-48 md:pb-28 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/15 text-center flex flex-col items-center">
+        <section className="relative pt-36 pb-20 md:pt-52 md:pb-28 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/15 text-center flex flex-col items-center">
           <div className="absolute inset-0 -z-10">
             <Image 
               src="/assets/villas/the-angle-house/gallery-11.webp" 
@@ -219,21 +276,38 @@ export default async function LonavalaGlassHousePage() {
               Discover <strong className="font-semibold text-[#1B3564]">The Angle House</strong>, widely rated as the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>. If you are searching for a premium <strong className="font-semibold text-[#1B3564]">villa for rent in Lonavala</strong>, enjoy our private waterfall pool, master jacuzzi, pet-friendly lawns, and in-house chef service.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md">
+            <div className="flex flex-wrap items-center justify-center gap-3 w-full max-w-xl mb-8">
               <Link 
                 href="/villa/the-angle-house" 
-                className="bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all text-center"
+                className="bg-white hover:bg-slate-100 border-2 border-[#1B3564]/30 text-[#1B3564] font-black text-xs uppercase tracking-wider py-3.5 px-6 rounded-2xl shadow-md transition-all active:scale-95 text-center flex items-center gap-1.5"
               >
-                View Villa Specifications
+                <span>View Villa Gallery & Specs</span>
+                <ChevronRight size={14} />
+              </Link>
+              <Link 
+                href="/villa/the-angle-house" 
+                className="bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-[#DAA520] hover:text-white text-xs font-black uppercase tracking-wider py-3.5 px-6 rounded-2xl shadow-lg transition-all text-center"
+              >
+                Book with 28% Off
               </Link>
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20the%20best%20villa%20in%20Lonavala%20-%20The%20Angle%20House" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20The%20Angle%20House%20in%20Lonavala%20with%20the%2028%%20discount%20coupon%20LONAVALA28" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold uppercase tracking-wider py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                className="bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs font-black uppercase tracking-wider py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
               >
-                <PhoneCall size={14} /> WhatsApp Concierge
+                <PhoneCall size={14} /> WhatsApp 28% Deal
               </a>
+            </div>
+
+            {/* Quick 1-Field Mobile Lead Form */}
+            <div className="w-full max-w-2xl">
+              <QuickMobileLeadForm
+                villaName="The Angle House (Lonavala)"
+                location="Lonavala, Maharashtra"
+                defaultCoupon="LONAVALA28"
+                discountPercent={28}
+              />
             </div>
           </div>
         </section>
@@ -256,92 +330,49 @@ export default async function LonavalaGlassHousePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
-              <Waves className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Private Waterfall Pool</h3>
-              <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Enjoy your own sanctuary among villas in Lonavala with private pool, complete with a cascading waterfall, sun loungers, and ambient lights.
-              </p>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
+                <Waves className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
+              </div>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">Private Waterfall Pool</h3>
             </div>
 
-            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
-              <Sparkles className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Architectural Masterpiece</h3>
-              <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Expansive double-height glass panels make this the best villa in Lonavala for capturing panoramic mountain and valley views.
-              </p>
+            <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
+                <Sparkles className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
+              </div>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">Architectural Masterpiece</h3>
             </div>
 
-            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
-              <Dog className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">Pet-Friendly Fenced Lawns</h3>
-              <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Fully secure boundary fencing ensures your pets and children can play freely across lush manicured gardens.
-              </p>
+            <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
+                <Dog className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
+              </div>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">Pet-Friendly Fenced Lawns</h3>
             </div>
 
-            <div className="bg-[#FAF8F5] p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 space-y-3 sm:space-y-4 hover:shadow-md transition-all">
-              <Utensils className="w-7 h-7 sm:w-8 sm:h-8 text-accent-primary" />
-              <h3 className="font-heading font-bold text-[#1B3564] text-base sm:text-lg">In-House Chef Service</h3>
-              <p className="text-text-primary/70 text-xs font-light leading-relaxed">
-                Fresh gourmet meals prepared on-site when you choose this villa for rent in Lonavala, featuring local and Jain specialties.
-              </p>
+            <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
+                <Utensils className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
+              </div>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">In-House Chef Service</h3>
             </div>
           </div>
         </section>
 
-        {/* Gallery Preview Grid */}
-        <section className="py-8 sm:py-12 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
-              <Image 
-                src="/assets/villas/the-angle-house/gallery-11.webp" 
-                alt="Exterior view of the best villa in Lonavala illuminated at dusk" 
-                fill 
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-500" 
-              />
-            </div>
-
-            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
-              <Image 
-                src="/assets/villas/the-angle-house/gallery-3.webp" 
-                alt="Private waterfall swimming pool deck at top villas in Lonavala with private pool" 
-                fill 
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-500" 
-              />
-            </div>
-
-            <div className="relative h-60 sm:h-72 rounded-2xl sm:rounded-3xl overflow-hidden shadow-md group">
-              <Image 
-                src="/assets/villas/the-angle-house/gallery-19.webp" 
-                alt="Master suite jacuzzi bath setup at luxury villa for rent in Lonavala" 
-                fill 
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-500" 
-              />
-            </div>
-          </div>
-
-          {/* Action Callout Button under Gallery */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link 
-              href="/villa/the-angle-house" 
-              className="w-full sm:w-auto bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white text-xs sm:text-sm font-bold uppercase tracking-wider py-3.5 sm:py-4 px-8 rounded-2xl shadow-lg transition-all text-center"
-            >
-              View Villa Specifications
-            </Link>
-            <a 
-              href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20booking%20the%20best%20villa%20in%20Lonavala%20-%20The%20Angle%20House" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="w-full sm:w-auto bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-bold uppercase tracking-wider py-3.5 sm:py-4 px-8 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
-            >
-              <PhoneCall size={16} /> WhatsApp Concierge
-            </a>
-          </div>
+        {/* Ad Conversion Suite: Comparison Matrix, Photo Tour, Reviews, and Sticky Mobile Bar */}
+        <section className="py-10 sm:py-16">
+          <AdLandingShowcase
+            villaSlug="the-angle-house"
+            villaName="The Angle House"
+            location="Lonavala, Maharashtra"
+            originalPrice={villa?.price || 13000}
+            discountedPrice={Math.round((villa?.price || 13000) * 0.72)}
+            couponCode="LONAVALA28"
+            images={angleHouseShowcaseImages}
+            reviews={angleHouseReviews}
+          />
         </section>
 
         {/* Comprehensive Editorial Guide Section */}
@@ -459,26 +490,37 @@ export default async function LonavalaGlassHousePage() {
               </div>
             </div>
 
-            <div className="w-full lg:w-80 bg-white p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-md space-y-3.5 sm:space-y-4 text-center">
-              <div className="border-b border-slate-100 pb-3">
-                <span className="text-xs text-slate-500 uppercase tracking-wider block">Starting Rate</span>
-                <span className="text-xl sm:text-2xl font-bold text-[#1B3564]">₹13,000 <span className="text-xs font-normal text-slate-500">/ night</span></span>
+            <div className="w-full lg:w-80 bg-white p-5 sm:p-6 rounded-2xl sm:rounded-3xl border-2 border-[#DAA520]/40 shadow-xl space-y-3.5 sm:space-y-4 text-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-[#DAA520] text-[#1B3564] text-[9px] font-black uppercase tracking-wider px-3 py-0.5 rounded-bl-lg">
+                28% OFF APPLIED
+              </div>
+
+              <div className="border-b border-slate-100 pb-3 pt-2">
+                <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider block">Special Direct Offer</span>
+                <div className="flex items-center justify-center gap-2 mt-1">
+                  <span className="text-sm line-through text-slate-400 font-medium">₹13,000</span>
+                  <span className="text-2xl sm:text-3xl font-black text-[#1B3564]">₹9,360</span>
+                  <span className="text-xs font-normal text-slate-500">/ night</span>
+                </div>
+                <span className="inline-block mt-1 text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                  Coupon: <strong className="text-[#1B3564]">LONAVALA28</strong>
+                </span>
               </div>
 
               <Link 
                 href="/villa/the-angle-house" 
-                className="block w-full bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center py-3.5 rounded-xl shadow transition-all"
+                className="block w-full bg-[#1B3564] hover:bg-[#0F2142] active:scale-95 text-[#DAA520] hover:text-white font-black text-xs uppercase tracking-wider text-center py-3.5 rounded-xl shadow transition-all"
               >
-                View Villa Specifications
+                Claim 28% Off & Book
               </Link>
 
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20the%20best%20villa%20in%20Lonavala" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20The%20Angle%20House%20in%20Lonavala%20with%2028%%20Discount%20(Coupon:%20LONAVALA28)" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-all"
+                className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white font-black text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-all shadow-md"
               >
-                <PhoneCall size={14} /> Quick WhatsApp Quote
+                <PhoneCall size={14} /> WhatsApp 28% Quote
               </a>
             </div>
           </div>
