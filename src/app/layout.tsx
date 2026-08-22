@@ -111,6 +111,59 @@ export default function RootLayout({
                   "@context": "https://schema.org",
                   "@graph": [
                     {
+                      "@type": "WebSite",
+                      "@id": "https://www.staywillas.com/#website",
+                      "url": "https://www.staywillas.com",
+                      "name": "Stay Willas",
+                      "alternateName": "StayWillas",
+                      "description": "Premium luxury villas with private pool & personal chefs across Lonavala, Khopoli & Maharashtra.",
+                      "publisher": {
+                        "@id": "https://www.staywillas.com/#organization"
+                      },
+                      "potentialAction": {
+                        "@type": "SearchAction",
+                        "target": "https://www.staywillas.com/villas?search={search_term_string}",
+                        "query-input": "required name=search_term_string"
+                      },
+                      "hasPart": [
+                        {
+                          "@type": "SiteNavigationElement",
+                          "name": "Luxury Villas",
+                          "url": "https://www.staywillas.com/villas"
+                        },
+                        {
+                          "@type": "SiteNavigationElement",
+                          "name": "Villas in Lonavala with Private Pool",
+                          "url": "https://www.staywillas.com/villas-in-lonavala-with-private-pool"
+                        },
+                        {
+                          "@type": "SiteNavigationElement",
+                          "name": "Khopoli Villas",
+                          "url": "https://www.staywillas.com/khopoli-villas"
+                        },
+                        {
+                          "@type": "SiteNavigationElement",
+                          "name": "Group Escape Villas",
+                          "url": "https://www.staywillas.com/escape"
+                        },
+                        {
+                          "@type": "SiteNavigationElement",
+                          "name": "Destinations",
+                          "url": "https://www.staywillas.com/destinations"
+                        },
+                        {
+                          "@type": "SiteNavigationElement",
+                          "name": "Travel Blog",
+                          "url": "https://www.staywillas.com/blog"
+                        },
+                        {
+                          "@type": "SiteNavigationElement",
+                          "name": "Contact Concierge",
+                          "url": "https://www.staywillas.com/contact"
+                        }
+                      ]
+                    },
+                    {
                       "@type": "Organization",
                       "@id": "https://www.staywillas.com/#organization",
                       "name": "Stay Willas",

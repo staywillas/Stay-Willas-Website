@@ -102,15 +102,17 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 3: Featured Stays (Important Links!) */}
+          {/* Column 3: Featured Stays & Special Offers */}
           <div className="md:col-span-2">
-            <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Featured Stays</h4>
+            <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Featured Offers</h4>
             <ul className="flex flex-col gap-4">
               {[
                 { name: "The Angle House", href: "/villa/the-angle-house" },
                 { name: "Canopy Crest", href: "/villa/canopy-crest" },
-                { name: "Lonavala Villa Pool", href: "/villas-in-lonavala-with-private-pool" },
-                { name: "Khopoli Villas", href: "/khopoli-villas" }
+                { name: "Lonavala Pool Villa", href: "/villas-in-lonavala-with-private-pool" },
+                { name: "Khopoli Villas", href: "/khopoli-villas" },
+                { name: "Group Escape Deal", href: "/escape" },
+                { name: "Travel Blog", href: "/blog" }
               ].map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">
