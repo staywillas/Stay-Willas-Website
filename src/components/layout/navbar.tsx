@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
-import { Menu, X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen } from "lucide-react";
+import { Menu, X, User, Phone, ChevronDown, ChevronRight, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen, Flame, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
@@ -26,6 +26,8 @@ const WhatsAppIcon = ({ size = 16, className = "" }: { size?: number; className?
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const toggleSubmenu = (key: string) => setOpenSubmenu((prev) => (prev === key ? null : key));
   const [wishlistCount, setWishlistCount] = useState(0);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const lastScrollY = useRef(0);
@@ -363,187 +365,359 @@ const Navbar = () => {
 
             {/* Scrollable Navigation Content */}
             <div 
-              className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden py-6 px-6 custom-scrollbar touch-pan-y overscroll-contain" 
+              className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden py-4 px-4 custom-scrollbar touch-pan-y overscroll-contain" 
               data-lenis-prevent
               onWheel={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
             >
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: { staggerChildren: 0.05, delayChildren: 0.1 }
-                  }
-                }}
-                className="flex flex-col gap-6"
-              >
-                {/* Explore Section */}
+              <div className="flex flex-col gap-4">
+                
+                {/* 1. Main Explore Section */}
                 <div>
-                  <motion.p
-                    variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
-                    className="text-[10px] tracking-[0.3em] uppercase font-extrabold text-[#DAA520] mb-3.5 pl-1"
-                  >
-                    Explore
-                  </motion.p>
-                  <div className="flex flex-col gap-0.5">
-                    {navLinks.map((link) => {
-                      const Icon = {
-                        Home: Home,
-                        Villas: Building2,
-                        Destinations: MapPin,
-                        Experiences: Sparkles,
-                        Stories: MessageSquare,
-                        Blog: BookOpen,
-                      }[link.name] || Sparkles;
+                  <p className="text-[9px] tracking-[0.25em] uppercase font-black text-[#DAA520] mb-2 pl-2">
+                    EXPLORE
+                  </p>
+                  <div className="flex flex-col gap-1">
+                    
+                    {/* Home Link */}
+                    <Link
+                      href="/"
+                      className={cn(
+                        "flex items-center gap-2.5 py-2 px-2.5 rounded-xl transition-all duration-200",
+                        pathname === "/"
+                          ? "bg-[#DAA520]/15 text-[#DAA520] font-bold border border-[#DAA520]/25"
+                          : "text-[#FAF8F5]/85 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5 font-semibold text-[13px]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Home size={15} className="text-[#DAA520] shrink-0" />
+                      <span className="text-[13px]">Home</span>
+                    </Link>
 
-                      return (
-                        <motion.div
-                          key={link.name}
-                          variants={{
-                            hidden: { opacity: 0, x: 30 },
-                            visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
-                          }}
+                    {/* Villas Dropdown Accordion */}
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => toggleSubmenu("villas")}
+                        className={cn(
+                          "w-full flex items-center justify-between py-2 px-2.5 rounded-xl transition-all duration-200 cursor-pointer text-left",
+                          pathname.startsWith("/villa")
+                            ? "bg-[#DAA520]/15 text-[#DAA520] font-bold border border-[#DAA520]/25"
+                            : "text-[#FAF8F5]/85 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5 font-semibold text-[13px]"
+                        )}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Building2 size={15} className="text-[#DAA520] shrink-0" />
+                          <span className="text-[13px]">Villas</span>
+                        </div>
+                        <ChevronDown 
+                          size={13} 
+                          className={cn("text-[#DAA520]/70 transition-transform duration-200", openSubmenu === "villas" && "rotate-180")} 
+                        />
+                      </button>
+
+                      {openSubmenu === "villas" && (
+                        <motion.div 
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="flex flex-col gap-0.5 mt-1 ml-4 pl-3 border-l border-[#DAA520]/25"
                         >
                           <Link
-                            href={link.href}
-                            className={cn(
-                              "flex items-center gap-3.5 py-3 px-3 rounded-xl transition-all duration-300 group",
-                              pathname === link.href
-                                ? "bg-[#DAA520]/10 text-[#DAA520] border border-[#DAA520]/20"
-                                : "text-[#FAF8F5]/75 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5"
-                            )}
+                            href="/villas"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
-                            {pathname === link.href && (
-                              <div className="w-1 h-5 rounded-full bg-[#DAA520]" />
-                            )}
-                            <Icon size={18} className="opacity-75 text-[#DAA520]" />
-                            <span className="text-lg font-heading tracking-wider">{link.name}</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]" />
+                            <span>All Luxury Villas</span>
+                          </Link>
+                          <Link
+                            href="/villa/the-angle-house"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>The Angle House (Lonavala)</span>
+                          </Link>
+                          <Link
+                            href="/villa/canopy-crest"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Canopy Crest (Khopoli)</span>
                           </Link>
                         </motion.div>
-                      );
-                    })}
-                  </div>
-                </div>
+                      )}
+                    </div>
 
-                {/* Divider */}
-                <div className="h-px bg-[#DAA520]/15 mx-3" />
-
-                {/* Connect Section */}
-                <div>
-                  <motion.p
-                    variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}
-                    className="text-[10px] tracking-[0.3em] uppercase font-extrabold text-[#DAA520] mb-3.5 pl-1"
-                  >
-                    Connect
-                  </motion.p>
-                  <div className="flex flex-col gap-0.5">
-                    {[
-                      { name: "About", href: "/about", icon: Info },
-                      { name: "Destinations", href: "/destinations", icon: MapPin },
-                      { name: "Escape", href: "/escape", icon: Sparkles },
-                      { name: "Partner With Us", href: "/partner", icon: Handshake },
-                      { name: "Contact", href: "/contact", icon: Mail },
-                    ].map((link) => (
-                      <motion.div
-                        key={link.name}
-                        variants={{
-                          hidden: { opacity: 0, x: 30 },
-                          visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
-                        }}
+                    {/* Areas & Destinations Dropdown Accordion */}
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => toggleSubmenu("areas")}
+                        className={cn(
+                          "w-full flex items-center justify-between py-2 px-2.5 rounded-xl transition-all duration-200 cursor-pointer text-left",
+                          pathname.startsWith("/areas") || pathname === "/destinations"
+                            ? "bg-[#DAA520]/15 text-[#DAA520] font-bold border border-[#DAA520]/25"
+                            : "text-[#FAF8F5]/85 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5 font-semibold text-[13px]"
+                        )}
                       >
-                        <Link
-                          href={link.href}
-                          className={cn(
-                            "flex items-center gap-3 py-3 px-3 rounded-xl transition-all duration-300",
-                            pathname === link.href
-                              ? "bg-[#DAA520]/10 text-[#DAA520] border border-[#DAA520]/20"
-                              : "text-[#FAF8F5]/75 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5"
-                          )}
-                          onClick={() => setIsMobileMenuOpen(false)}
+                        <div className="flex items-center gap-2.5">
+                          <MapPin size={15} className="text-[#DAA520] shrink-0" />
+                          <span className="text-[13px]">Destinations</span>
+                        </div>
+                        <ChevronDown 
+                          size={13} 
+                          className={cn("text-[#DAA520]/70 transition-transform duration-200", openSubmenu === "areas" && "rotate-180")} 
+                        />
+                      </button>
+
+                      {openSubmenu === "areas" && (
+                        <motion.div 
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="flex flex-col gap-0.5 mt-1 ml-4 pl-3 border-l border-[#DAA520]/25"
                         >
-                          {pathname === link.href && (
-                            <div className="w-1 h-5 rounded-full bg-[#DAA520]" />
-                          )}
-                          <link.icon size={18} className="opacity-75 text-[#DAA520]" />
-                          <span className="text-lg font-heading tracking-wider">{link.name}</span>
-                        </Link>
-                      </motion.div>
-                    ))}
+                          <Link
+                            href="/destinations"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]" />
+                            <span>All Destinations</span>
+                          </Link>
+                          <Link
+                            href="/areas/lonavala"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Lonavala Villas</span>
+                          </Link>
+                          <Link
+                            href="/areas/khopoli"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Khopoli Villas</span>
+                          </Link>
+                          <Link
+                            href="/areas/karjat"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Karjat Villas</span>
+                          </Link>
+                          <Link
+                            href="/areas/alibaug"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Alibaug Villas</span>
+                          </Link>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Experiences Link */}
+                    <Link
+                      href="/experiences"
+                      className={cn(
+                        "flex items-center gap-2.5 py-2 px-2.5 rounded-xl transition-all duration-200",
+                        pathname === "/experiences"
+                          ? "bg-[#DAA520]/15 text-[#DAA520] font-bold border border-[#DAA520]/25"
+                          : "text-[#FAF8F5]/85 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5 font-semibold text-[13px]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Sparkles size={15} className="text-[#DAA520] shrink-0" />
+                      <span className="text-[13px]">Experiences</span>
+                    </Link>
+
+                    {/* Stories & Reviews */}
+                    <Link
+                      href="/stories"
+                      className={cn(
+                        "flex items-center gap-2.5 py-2 px-2.5 rounded-xl transition-all duration-200",
+                        pathname === "/stories"
+                          ? "bg-[#DAA520]/15 text-[#DAA520] font-bold border border-[#DAA520]/25"
+                          : "text-[#FAF8F5]/85 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5 font-semibold text-[13px]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <MessageSquare size={15} className="text-[#DAA520] shrink-0" />
+                      <span className="text-[13px]">Stories</span>
+                    </Link>
+
+                    {/* Travel Blog */}
+                    <Link
+                      href="/blog"
+                      className={cn(
+                        "flex items-center gap-2.5 py-2 px-2.5 rounded-xl transition-all duration-200",
+                        pathname === "/blog"
+                          ? "bg-[#DAA520]/15 text-[#DAA520] font-bold border border-[#DAA520]/25"
+                          : "text-[#FAF8F5]/85 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5 font-semibold text-[13px]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <BookOpen size={15} className="text-[#DAA520] shrink-0" />
+                      <span className="text-[13px]">Blog</span>
+                    </Link>
                   </div>
                 </div>
 
-                {/* Divider */}
-                <div className="h-px bg-[#DAA520]/15 mx-3" />
-
-                {/* Wishlist Quick Access */}
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, x: 30 },
-                    visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
-                  }}
-                >
-                  <Link
-                    href="/wishlist"
-                    className={cn(
-                      "flex items-center gap-3 py-3 px-3 rounded-xl transition-all duration-300",
-                      pathname === "/wishlist"
-                        ? "bg-[#DAA520]/10 text-[#DAA520] border border-[#DAA520]/20"
-                        : "text-[#FAF8F5]/75 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5"
-                    )}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                {/* 2. Special 28% Off Offers Dropdown */}
+                <div className="bg-[#DAA520]/10 border border-[#DAA520]/30 rounded-2xl p-2.5">
+                  <button
+                    type="button"
+                    onClick={() => toggleSubmenu("offers")}
+                    className="w-full flex items-center justify-between cursor-pointer text-left"
                   >
-                    <Heart size={18} className="opacity-75 text-[#DAA520]" />
-                    <span className="text-lg font-heading tracking-wider">Wishlist</span>
-                    {wishlistCount > 0 && (
-                      <span className="ml-auto w-5 h-5 rounded-full bg-red-500 text-[10px] font-black text-white flex items-center justify-center">
-                        {wishlistCount}
+                    <div className="flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-full bg-[#DAA520] text-[#1B3564] flex items-center justify-center font-black text-[10px]">
+                        %
                       </span>
-                    )}
-                  </Link>
-                </motion.div>
+                      <span className="text-[12px] font-black uppercase tracking-wider text-[#DAA520]">
+                        MEGA 28% OFF OFFERS
+                      </span>
+                    </div>
+                    <ChevronDown 
+                      size={13} 
+                      className={cn("text-[#DAA520] transition-transform duration-200", openSubmenu === "offers" && "rotate-180")} 
+                    />
+                  </button>
 
-                {/* User Auth Section */}
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, x: 30 },
-                    visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
-                  }}
-                  className="bg-[#FAF8F5]/5 rounded-2xl p-4 border border-[#DAA520]/15"
-                >
+                  {(openSubmenu === "offers" || true) && (
+                    <div className="flex flex-col gap-1 mt-2 pt-2 border-t border-[#DAA520]/20">
+                      <Link
+                        href="/villas-in-lonavala-with-private-pool"
+                        className="py-1 px-2 text-[11px] font-bold text-white hover:text-[#DAA520] flex items-center justify-between rounded transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <span>Lonavala Villa Private Pool</span>
+                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">28% OFF</span>
+                      </Link>
+                      <Link
+                        href="/khopoli-villas"
+                        className="py-1 px-2 text-[11px] font-bold text-white hover:text-[#DAA520] flex items-center justify-between rounded transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <span>Khopoli Villas</span>
+                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">28% OFF</span>
+                      </Link>
+                      <Link
+                        href="/escape"
+                        className="py-1 px-2 text-[11px] font-bold text-white hover:text-[#DAA520] flex items-center justify-between rounded transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <span>Group Escape Special</span>
+                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">28% OFF</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. Company & More Dropdown Accordion */}
+                <div>
+                  <p className="text-[9px] tracking-[0.25em] uppercase font-black text-[#DAA520] mb-2 pl-2">
+                    COMPANY & MORE
+                  </p>
+                  <div className="flex flex-col gap-0.5">
+                    <Link
+                      href="/about"
+                      className={cn(
+                        "flex items-center gap-2.5 py-1.5 px-2.5 rounded-xl transition-all duration-200 text-[12px]",
+                        pathname === "/about" ? "text-[#DAA520] font-bold" : "text-[#FAF8F5]/80 hover:text-[#DAA520]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Info size={14} className="text-[#DAA520]" />
+                      <span>About Us</span>
+                    </Link>
+
+                    <Link
+                      href="/partner"
+                      className={cn(
+                        "flex items-center gap-2.5 py-1.5 px-2.5 rounded-xl transition-all duration-200 text-[12px]",
+                        pathname === "/partner" ? "text-[#DAA520] font-bold" : "text-[#FAF8F5]/80 hover:text-[#DAA520]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Handshake size={14} className="text-[#DAA520]" />
+                      <span>Partner / List Property</span>
+                    </Link>
+
+                    <Link
+                      href="/contact"
+                      className={cn(
+                        "flex items-center gap-2.5 py-1.5 px-2.5 rounded-xl transition-all duration-200 text-[12px]",
+                        pathname === "/contact" ? "text-[#DAA520] font-bold" : "text-[#FAF8F5]/80 hover:text-[#DAA520]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Mail size={14} className="text-[#DAA520]" />
+                      <span>Contact Concierge</span>
+                    </Link>
+
+                    <Link
+                      href="/wishlist"
+                      className={cn(
+                        "flex items-center justify-between py-1.5 px-2.5 rounded-xl transition-all duration-200 text-[12px]",
+                        pathname === "/wishlist" ? "text-[#DAA520] font-bold" : "text-[#FAF8F5]/80 hover:text-[#DAA520]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Heart size={14} className="text-[#DAA520]" />
+                        <span>Saved Wishlist</span>
+                      </div>
+                      {wishlistCount > 0 && (
+                        <span className="w-4 h-4 rounded-full bg-red-500 text-[9px] font-black text-white flex items-center justify-center">
+                          {wishlistCount}
+                        </span>
+                      )}
+                    </Link>
+                  </div>
+                </div>
+
+                {/* 4. User Auth Box */}
+                <div className="bg-[#FAF8F5]/5 rounded-xl p-3 border border-[#DAA520]/15">
                   {isSignedIn ? (
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5">
                       <UserButton
                         appearance={{
                           elements: {
-                            avatarBox: "w-10 h-10 border-2 border-[#DAA520]/40 rounded-full",
+                            avatarBox: "w-8 h-8 border border-[#DAA520]/40 rounded-full",
                             userButtonPopoverCard: "shadow-xl border border-[#DAA520]/20 rounded-2xl",
                           },
                         }}
                       />
                       <div className="flex flex-col">
-                        <span className="text-[#FAF8F5] text-sm font-semibold">Account</span>
-                        <span className="text-[#FAF8F5]/45 text-xs">Manage your profile</span>
+                        <span className="text-[#FAF8F5] text-xs font-semibold">My Account</span>
+                        <span className="text-[#FAF8F5]/45 text-[10px]">Manage bookings</span>
                       </div>
                     </div>
                   ) : (
                     <SignInButton mode="modal">
-                      <button className="flex items-center gap-3 w-full text-left cursor-pointer">
-                        <div className="w-10 h-10 rounded-full bg-[#FAF8F5]/5 border border-[#DAA520]/30 flex items-center justify-center">
-                          <User size={18} className="text-[#DAA520]" />
+                      <button className="flex items-center gap-2.5 w-full text-left cursor-pointer">
+                        <div className="w-8 h-8 rounded-full bg-[#FAF8F5]/5 border border-[#DAA520]/30 flex items-center justify-center">
+                          <User size={15} className="text-[#DAA520]" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[#FAF8F5] text-sm font-semibold">Sign In</span>
-                          <span className="text-[#FAF8F5]/45 text-xs">Access bookings & wishlist</span>
+                          <span className="text-[#FAF8F5] text-xs font-semibold">Sign In / Register</span>
+                          <span className="text-[#FAF8F5]/45 text-[10px]">Access bookings & saved villas</span>
                         </div>
                       </button>
                     </SignInButton>
                   )}
-                </motion.div>
-              </motion.div>
+                </div>
+
+              </div>
             </div>
 
             {/* Panel Footer — CTA + Contact */}
