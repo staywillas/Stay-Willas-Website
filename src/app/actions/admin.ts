@@ -741,10 +741,13 @@ export async function sendInvoiceEmailAction(data: {
   foodPlanName: string;
   totalFoodCost: number;
   totalExtrasCost: number;
-  subtotal: number;
+  subtotal: number; // Gross subtotal before discount
+  discountTotal?: number;
+  discountPercent?: number;
+  taxableAmount?: number;
   gstPercent: number;
   gstAmount: number;
-  grandTotal: number;
+  grandTotal: number; // Net payable grand total
   advancePaid: number;
   securityDeposit?: number;
   balanceDue: number;
@@ -753,6 +756,12 @@ export async function sendInvoiceEmailAction(data: {
     if (!data.guestEmail || !data.guestEmail.includes("@")) {
       return { success: false, error: "Please enter a valid guest email address." };
     }
+
+    const discountVal = data.discountTotal || 0;
+    const taxableVal = data.taxableAmount !== undefined ? data.taxableAmount : Math.max(0, data.subtotal - discountVal);
+    const depositVal = data.securityDeposit || 0;
+    const finalGrandTotal = data.grandTotal;
+    const finalBalanceDue = data.balanceDue;
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -841,21 +850,33 @@ export async function sendInvoiceEmailAction(data: {
                   <td style="font-weight: bold; color: #475569;">Gross Subtotal</td>
                   <td align="right" style="font-weight: bold; color: #0F172A;">₹${data.subtotal.toLocaleString("en-IN")}</td>
                 </tr>
+                ${
+                  discountVal > 0
+                    ? `<tr style="border-bottom: 1px solid #E2E8F0; color: #DC2626;">
+                        <td>Special Discount Applied</td>
+                        <td align="right" style="font-weight: bold;">- ₹${discountVal.toLocaleString("en-IN")}</td>
+                       </tr>
+                       <tr style="border-bottom: 1px solid #E2E8F0;">
+                        <td style="color: #64748B;">Net Taxable Value</td>
+                        <td align="right" style="font-weight: bold; color: #0F172A;">₹${taxableVal.toLocaleString("en-IN")}</td>
+                       </tr>`
+                    : ""
+                }
                 <tr style="border-bottom: 1px solid #E2E8F0;">
                   <td style="color: #64748B;">GST (${data.gstPercent}%)</td>
                   <td align="right" style="color: #0F172A;">₹${data.gstAmount.toLocaleString("en-IN")}</td>
                 </tr>
                 ${
-                  data.securityDeposit && data.securityDeposit > 0
+                  depositVal > 0
                     ? `<tr style="border-bottom: 1px solid #E2E8F0;">
-                        <td style="color: #64748B;">Refundable Security Deposit</td>
-                        <td align="right" style="color: #0F172A; font-weight: bold;">₹${data.securityDeposit.toLocaleString("en-IN")}</td>
+                        <td style="color: #B45309; font-weight: 500;">Refundable Security Deposit</td>
+                        <td align="right" style="color: #B45309; font-weight: bold;">₹${depositVal.toLocaleString("en-IN")}</td>
                        </tr>`
                     : ""
                 }
                 <tr style="background-color: #FEF3C7;">
                   <td style="font-weight: bold; color: #92400E; font-size: 15px;">NET PAYABLE AMOUNT</td>
-                  <td align="right" style="font-weight: bold; color: #92400E; font-size: 16px;">₹${data.grandTotal.toLocaleString("en-IN")}</td>
+                  <td align="right" style="font-weight: bold; color: #92400E; font-size: 16px;">₹${finalGrandTotal.toLocaleString("en-IN")}</td>
                 </tr>
               </table>
 
@@ -865,7 +886,7 @@ export async function sendInvoiceEmailAction(data: {
                   <td>
                     <div style="font-size: 12px; color: #DAA520; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Advance Paid Received: ₹${data.advancePaid.toLocaleString("en-IN")}</div>
                     <div style="font-size: 16px; font-weight: bold; margin-top: 4px;">
-                      NET BALANCE DUE: ${data.balanceDue <= 0 ? "PAID IN FULL" : `₹${data.balanceDue.toLocaleString("en-IN")}`}
+                      NET BALANCE DUE: ${finalBalanceDue <= 0 ? "PAID IN FULL" : `₹${finalBalanceDue.toLocaleString("en-IN")}`}
                     </div>
                   </td>
                 </tr>

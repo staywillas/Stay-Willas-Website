@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Timer, ArrowRight, PhoneCall, Copy, Check, ShieldCheck, Flame, Tag, Sparkles, X } from "lucide-react";
+import { Timer, ArrowRight, PhoneCall, Copy, Check, ShieldCheck, Flame, Tag, Sparkles, X, CloudRain } from "lucide-react";
 
 interface MegaDiscountAdBannerProps {
   pageName?: string;
@@ -10,6 +10,8 @@ interface MegaDiscountAdBannerProps {
   couponCode?: string;
   discountPercent?: number;
   villaLink?: string;
+  offerTitle?: string;
+  highlightText?: string;
 }
 
 export default function MegaDiscountAdBanner({
@@ -19,6 +21,8 @@ export default function MegaDiscountAdBanner({
   couponCode = "ESCAPE28",
   discountPercent = 28,
   villaLink,
+  offerTitle = "Monsoon Escape",
+  highlightText = "Stay 2 Nights & Save More",
 }: MegaDiscountAdBannerProps) {
   const [copied, setCopied] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
@@ -63,7 +67,7 @@ export default function MegaDiscountAdBanner({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const whatsappMessage = `Hi Stay Willas! 🌟 I want to grab the *${discountPercent}% MEGA WEEKDAY OFFER* (Coupon: *${couponCode}*) for *${villaName}* in ${location} before the timer ends!\n\nPlease share available Monday–Thursday dates and the discounted rate! ✨`;
+  const whatsappMessage = `Hi Stay Willas! 🌧️ I want to claim the *${offerTitle}* offer (*${highlightText}* on Weekdays) for *${villaName}* in ${location} with Coupon: *${couponCode}* (Flat ${discountPercent}%+ Off)!\n\nPlease share available Monday–Thursday dates and the best 2-night discounted quote! ✨`;
   const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMessage)}`;
 
   if (isDismissed) return null;
@@ -73,30 +77,33 @@ export default function MegaDiscountAdBanner({
       {/* ========================================================================= */}
       {/* 1. TOP STICKY AD COUNTDOWN ANNOUNCEMENT BAR (ABOVE NAVBAR) */}
       {/* ========================================================================= */}
-      <div className="fixed top-0 left-0 right-0 z-[100000] bg-gradient-to-r from-[#1B3564] via-[#0D1F3C] to-[#1B3564] text-white border-b border-[#DAA520]/80 shadow-[0_4px_30px_rgba(0,0,0,0.5)] h-10 sm:h-11 flex items-center px-2.5 sm:px-4 select-none">
+      <div className="fixed top-0 left-0 right-0 z-[100000] bg-gradient-to-r from-[#1B3564] via-[#0B1A33] to-[#1B3564] text-white border-b-2 border-[#DAA520] shadow-[0_4px_30px_rgba(0,0,0,0.6)] h-11 sm:h-12 flex items-center px-2.5 sm:px-4 select-none">
         <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-4">
           
           {/* Left Flash Offer Info */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 flex-1">
-            <span className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#DAA520] text-[#1B3564] shrink-0 animate-pulse shadow-sm">
-              <Flame size={12} className="fill-[#1B3564] stroke-[#1B3564]" />
+            <span className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#DAA520] text-[#1B3564] shrink-0 animate-bounce shadow-md">
+              <CloudRain size={14} className="stroke-[2.5]" />
             </span>
             <div className="flex items-center gap-1.5 sm:gap-2 truncate">
-              <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#DAA520] whitespace-nowrap">
-                MEGA {discountPercent}% OFF
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#DAA520] whitespace-nowrap bg-amber-400/10 px-2 py-0.5 rounded border border-[#DAA520]/40">
+                🌧️ {offerTitle.toUpperCase()}
               </span>
-              <span className="bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 text-[9px] sm:text-[10px] font-bold px-1.5 py-0.2 rounded uppercase whitespace-nowrap">
-                Mon–Thu Only
+              <span className="bg-emerald-500/25 border border-emerald-400/50 text-emerald-300 text-[9px] sm:text-[11px] font-black px-2 py-0.5 rounded uppercase whitespace-nowrap animate-pulse">
+                {highlightText}
               </span>
-              <span className="text-[10px] sm:text-[11px] text-slate-300 hidden md:inline truncate">
-                • Coupon: <strong className="text-white font-mono bg-white/15 px-1 rounded">{couponCode}</strong>
+              <span className="text-[9px] sm:text-[10px] text-amber-200 font-bold hidden lg:inline bg-white/10 px-2 py-0.5 rounded">
+                ⚡ Weekdays Only (Mon–Thu)
+              </span>
+              <span className="text-[10px] sm:text-[11px] text-slate-300 hidden xl:inline truncate">
+                • Code: <strong className="text-white font-mono bg-white/15 px-1.5 py-0.5 rounded">{couponCode}</strong>
               </span>
             </div>
           </div>
 
           {/* Center Countdown Clock */}
-          <div className="flex items-center gap-1 shrink-0 bg-black/50 border border-[#DAA520]/50 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg shadow-inner">
-            <Timer size={11} className="text-[#DAA520] animate-pulse hidden xs:block" />
+          <div className="flex items-center gap-1 shrink-0 bg-black/60 border border-[#DAA520]/60 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg shadow-inner">
+            <Timer size={12} className="text-[#DAA520] animate-spin hidden xs:block" />
             <div className="flex items-center gap-0.5 sm:gap-1 font-mono text-[10px] sm:text-xs font-black text-white">
               <span className="text-[#DAA520]">{timeLeft.days}d</span>:
               <span className="text-[#DAA520]">{String(timeLeft.hours).padStart(2, "0")}h</span>:
@@ -110,7 +117,7 @@ export default function MegaDiscountAdBanner({
             {villaLink && (
               <a
                 href={villaLink}
-                className="hidden xs:inline-flex items-center gap-1 bg-white/15 hover:bg-white/25 text-white font-black text-[9px] sm:text-xs uppercase tracking-wider px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-white/20 transition-all active:scale-95 whitespace-nowrap"
+                className="hidden md:inline-flex items-center gap-1 bg-white/15 hover:bg-white/25 text-white font-black text-[9px] sm:text-xs uppercase tracking-wider px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-white/20 transition-all active:scale-95 whitespace-nowrap"
               >
                 <span>View Villa</span>
                 <ArrowRight size={10} />
@@ -120,10 +127,10 @@ export default function MegaDiscountAdBanner({
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-[9px] sm:text-xs uppercase tracking-wider px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1 shadow-md active:scale-95 whitespace-nowrap cursor-pointer"
+              className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-[10px] sm:text-xs uppercase tracking-wider px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 shadow-[0_0_15px_rgba(37,211,102,0.5)] active:scale-95 whitespace-nowrap cursor-pointer hover:scale-105"
             >
-              <PhoneCall size={10} className="stroke-[2.5]" />
-              <span>GRAB 28%</span>
+              <PhoneCall size={12} className="stroke-[2.5]" />
+              <span>CLAIM OFFER</span>
             </a>
           </div>
         </div>
@@ -133,43 +140,43 @@ export default function MegaDiscountAdBanner({
       {/* 2. LEFT SIDE FLOATING SKYSCRAPER AD CARD (DESKTOP / LAPTOP - VISIBLE ON XL) */}
       {/* ========================================================================= */}
       <aside 
-        aria-label="Exclusive Weekday Discount"
-        className="hidden xl:flex fixed left-2 2xl:left-5 top-1/2 -translate-y-1/2 z-[90] flex-col items-center w-44 2xl:w-48 bg-gradient-to-b from-[#1B3564]/95 via-[#0F2142]/95 to-[#081326]/95 text-white rounded-2xl p-3.5 border-2 border-[#DAA520]/70 shadow-[0_15px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl animate-fade-in text-center"
+        aria-label="Monsoon Escape Weekday Discount"
+        className="hidden xl:flex fixed left-2 2xl:left-5 top-1/2 -translate-y-1/2 z-[90] flex-col items-center w-48 2xl:w-52 bg-gradient-to-b from-[#1B3564]/98 via-[#0F2142]/98 to-[#081326]/98 text-white rounded-3xl p-4 border-2 border-[#DAA520] shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl animate-fade-in text-center"
       >
         {/* Glowing Top Pill */}
-        <div className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-md -mt-6 mb-2 border border-white/20 flex items-center gap-1">
-          <Flame size={11} className="fill-[#1B3564]" /> MEGA DEAL
+        <div className="bg-gradient-to-r from-[#DAA520] to-[#FFD700] text-[#1B3564] text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg -mt-7 mb-2.5 border border-white/30 flex items-center gap-1">
+          <CloudRain size={12} className="stroke-[2.5]" /> {offerTitle.toUpperCase()}
         </div>
 
-        <span className="text-[9px] font-extrabold tracking-widest text-[#DAA520] uppercase block">
-          LIMITED AD OFFER
+        <span className="text-[9px] font-black tracking-widest text-[#DAA520] uppercase block">
+          LIMITED MONSOON DEAL
         </span>
-        <h4 className="text-2xl 2xl:text-3xl font-heading font-black text-white leading-none my-1">
-          28% OFF
+        <h4 className="text-xl 2xl:text-2xl font-heading font-black text-white leading-tight my-1">
+          {highlightText}
         </h4>
-        <span className="text-[9px] font-bold text-emerald-300 uppercase tracking-wider block bg-emerald-500/20 border border-emerald-500/30 px-1.5 py-0.5 rounded-md mb-2.5">
-          Mon–Thu Stays Only
+        <span className="text-[9px] font-bold text-amber-300 uppercase tracking-wider block bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 rounded-md mb-2.5">
+          Weekdays Only (Mon–Thu)
         </span>
 
         {/* Live Countdown Box */}
-        <div className="w-full bg-black/50 border border-[#DAA520]/40 rounded-xl p-2 mb-2.5 shadow-inner">
-          <span className="text-[8px] uppercase font-bold tracking-wider text-slate-400 block mb-1">
-            Offer Ends In
+        <div className="w-full bg-black/60 border border-[#DAA520]/50 rounded-xl p-2.5 mb-2.5 shadow-inner">
+          <span className="text-[8px] uppercase font-bold tracking-wider text-slate-300 block mb-1">
+            Offer Expires In
           </span>
-          <div className="grid grid-cols-4 gap-0.5 font-mono text-center">
-            <div className="bg-[#1B3564] p-0.5 rounded border border-[#DAA520]/20">
+          <div className="grid grid-cols-4 gap-1 font-mono text-center">
+            <div className="bg-[#1B3564] p-1 rounded border border-[#DAA520]/30">
               <span className="text-[11px] font-black text-[#DAA520] block">{timeLeft.days}</span>
               <span className="text-[6px] text-slate-400 uppercase">Days</span>
             </div>
-            <div className="bg-[#1B3564] p-0.5 rounded border border-[#DAA520]/20">
+            <div className="bg-[#1B3564] p-1 rounded border border-[#DAA520]/30">
               <span className="text-[11px] font-black text-[#DAA520] block">{String(timeLeft.hours).padStart(2, "0")}</span>
               <span className="text-[6px] text-slate-400 uppercase">Hrs</span>
             </div>
-            <div className="bg-[#1B3564] p-0.5 rounded border border-[#DAA520]/20">
+            <div className="bg-[#1B3564] p-1 rounded border border-[#DAA520]/30">
               <span className="text-[11px] font-black text-[#DAA520] block">{String(timeLeft.minutes).padStart(2, "0")}</span>
               <span className="text-[6px] text-slate-400 uppercase">Min</span>
             </div>
-            <div className="bg-[#DAA520] p-0.5 rounded">
+            <div className="bg-[#DAA520] p-1 rounded shadow-sm">
               <span className="text-[11px] font-black text-[#1B3564] block">{String(timeLeft.seconds).padStart(2, "0")}</span>
               <span className="text-[6px] text-[#1B3564] font-bold uppercase">Sec</span>
             </div>
@@ -177,17 +184,17 @@ export default function MegaDiscountAdBanner({
         </div>
 
         {/* Coupon Code Pill */}
-        <div className="w-full bg-white/10 border border-white/20 rounded-lg p-1.5 mb-2.5 flex items-center justify-between">
+        <div className="w-full bg-white/10 border border-white/20 rounded-xl p-2 mb-3 flex items-center justify-between">
           <div className="text-left min-w-0">
-            <span className="text-[7px] text-slate-400 uppercase block font-bold">Coupon Code</span>
-            <span className="text-[11px] font-black text-[#DAA520] font-mono tracking-wider truncate block">{couponCode}</span>
+            <span className="text-[7px] text-slate-300 uppercase block font-bold">Use Coupon Code</span>
+            <span className="text-[12px] font-black text-[#DAA520] font-mono tracking-wider truncate block">{couponCode}</span>
           </div>
           <button
             onClick={handleCopyCode}
-            className="p-1 bg-[#DAA520]/20 hover:bg-[#DAA520]/30 text-[#DAA520] rounded transition-all cursor-pointer shrink-0"
+            className="p-1.5 bg-[#DAA520]/30 hover:bg-[#DAA520]/50 text-[#DAA520] rounded-lg transition-all cursor-pointer shrink-0"
             title="Copy Coupon"
           >
-            {copied ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+            {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
           </button>
         </div>
 
@@ -196,9 +203,9 @@ export default function MegaDiscountAdBanner({
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-[10px] uppercase tracking-wider py-2 rounded-lg shadow-lg transition-all flex items-center justify-center gap-1 active:scale-95 cursor-pointer"
+          className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-[10px] uppercase tracking-wider py-2.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer hover:scale-102"
         >
-          <PhoneCall size={11} /> Claim 28% Off
+          <PhoneCall size={12} /> Claim 2-Night Deal
         </a>
       </aside>
 
@@ -207,33 +214,36 @@ export default function MegaDiscountAdBanner({
       {/* ========================================================================= */}
       <aside 
         aria-label="Direct Booking Benefits"
-        className="hidden xl:flex fixed right-2 2xl:right-5 top-1/2 -translate-y-1/2 z-[90] flex-col items-center w-44 2xl:w-48 bg-gradient-to-b from-[#1B3564]/95 via-[#0F2142]/95 to-[#081326]/95 text-white rounded-2xl p-3.5 border-2 border-[#DAA520]/70 shadow-[0_15px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl animate-fade-in text-center"
+        className="hidden xl:flex fixed right-2 2xl:right-5 top-1/2 -translate-y-1/2 z-[90] flex-col items-center w-48 2xl:w-52 bg-gradient-to-b from-[#1B3564]/98 via-[#0F2142]/98 to-[#081326]/98 text-white rounded-3xl p-4 border-2 border-[#DAA520] shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl animate-fade-in text-center"
       >
         {/* Direct Booking Badge */}
-        <div className="bg-emerald-500 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-md -mt-6 mb-2 border border-white/20 flex items-center gap-1">
-          <ShieldCheck size={11} /> 0% PLATFORM FEE
+        <div className="bg-emerald-500 text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg -mt-7 mb-2.5 border border-white/30 flex items-center gap-1">
+          <ShieldCheck size={12} /> 0% PLATFORM FEE
         </div>
 
         <span className="text-[9px] font-extrabold tracking-widest text-[#DAA520] uppercase block">
-          WHY BOOK OTAS?
+          DIRECT ADVANTAGE
         </span>
         <h4 className="text-xl 2xl:text-2xl font-heading font-black text-white leading-tight my-1">
-          DIRECT DEALS
+          MONSOON PERKS
         </h4>
         <p className="text-[9px] text-slate-300 leading-snug mb-2.5">
-          Save <strong>28% on Weekday Stays</strong> via WhatsApp Concierge.
+          Book <strong>2 Weekday Nights</strong> & unlock maximum savings + VIP chef dining.
         </p>
 
         {/* Value Props */}
-        <div className="w-full space-y-1 text-left text-[9px] text-slate-200 mb-2.5 bg-black/40 p-2 rounded-lg border border-white/10">
+        <div className="w-full space-y-1.5 text-left text-[9px] text-slate-200 mb-3 bg-black/50 p-2.5 rounded-xl border border-white/10">
           <div className="flex items-center gap-1 font-semibold truncate">
-            <span className="text-emerald-400 font-black">✓</span> Private Waterfall Pool
+            <span className="text-emerald-400 font-black">✓</span> Stay 2 Nights & Save More
           </div>
           <div className="flex items-center gap-1 font-semibold truncate">
-            <span className="text-emerald-400 font-black">✓</span> Gourmet Chef Dining
+            <span className="text-emerald-400 font-black">✓</span> Weekdays (Mon–Thu) Special
           </div>
           <div className="flex items-center gap-1 font-semibold truncate">
-            <span className="text-emerald-400 font-black">✓</span> Pet-Friendly Lawns
+            <span className="text-emerald-400 font-black">✓</span> Private Pool & Waterfall
+          </div>
+          <div className="flex items-center gap-1 font-semibold truncate">
+            <span className="text-emerald-400 font-black">✓</span> In-House Chef Cuisine
           </div>
         </div>
 
@@ -242,32 +252,32 @@ export default function MegaDiscountAdBanner({
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-[#1B3564] font-black text-[10px] uppercase tracking-wider py-2 rounded-lg shadow-lg transition-all flex items-center justify-center gap-1 hover:scale-105 active:scale-95 cursor-pointer"
+          className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] hover:from-[#c9951b] hover:to-[#d19730] text-[#1B3564] font-black text-[10px] uppercase tracking-wider py-2.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 hover:scale-102 active:scale-95 cursor-pointer"
         >
-          <span>WhatsApp Concierge</span>
-          <ArrowRight size={10} className="stroke-[3]" />
+          <span>WhatsApp Host</span>
+          <ArrowRight size={12} className="stroke-[3]" />
         </a>
       </aside>
 
       {/* ========================================================================= */}
-      {/* 4. FLOATING MOBILE 28% OFFER BADGE (BOTTOM-LEFT / BOTTOM-CENTER ON MOBILE) */}
+      {/* 4. FLOATING MOBILE OFFER BADGE (BOTTOM-LEFT ON MOBILE) */}
       {/* ========================================================================= */}
       <div className="xl:hidden fixed bottom-20 left-3 z-[80]">
         <a
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 bg-[#1B3564] text-white border-2 border-[#DAA520] pl-2.5 pr-3 py-1.5 rounded-full shadow-[0_8px_25px_rgba(0,0,0,0.4)] animate-bounce"
+          className="flex items-center gap-2 bg-[#1B3564] text-white border-2 border-[#DAA520] pl-2.5 pr-3 py-1.5 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.5)] animate-bounce"
         >
-          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#DAA520] text-[#1B3564] font-black text-[10px]">
-            %
+          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#DAA520] text-[#1B3564] font-black text-[11px]">
+            🌧️
           </span>
           <div className="text-left">
             <span className="text-[9px] font-black text-[#DAA520] uppercase block leading-none">
-              28% OFF WEEKDAYS
+              MONSOON ESCAPE • 2-NIGHT DEAL
             </span>
-            <span className="text-[8px] text-slate-300 font-medium leading-none">
-              Code: <strong className="text-white">{couponCode}</strong>
+            <span className="text-[8px] text-emerald-300 font-bold leading-none">
+              Weekdays (Mon–Thu) • Code: {couponCode}
             </span>
           </div>
         </a>
@@ -275,3 +285,4 @@ export default function MegaDiscountAdBanner({
     </>
   );
 }
+

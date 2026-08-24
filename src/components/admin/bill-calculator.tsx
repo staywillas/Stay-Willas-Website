@@ -25,9 +25,15 @@ interface BillCalculatorProps {
     guestName?: string;
     guestEmail?: string;
     guestPhone?: string;
+    guestsCount?: number;
+    baseGuests?: number;
+    extraGuestFee?: number;
     ratePerNight?: number;
+    weekendRatePerNight?: number;
+    weekendNights?: number;
     foodPlan?: string;
     foodRate?: number;
+    foodGuestsCount?: number;
     extraCharges?: ExtraCharge[];
     discountFlat?: number;
     discountPercent?: number;
@@ -70,21 +76,21 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
   const [baseGuests, setBaseGuests] = useState(12);
   const [extraGuestFee, setExtraGuestFee] = useState(1500);
 
-  // Auto calculate nights & weekend nights from dates
+  // Auto calculate nights & weekend nights from dates (Timezone-safe)
   const handleDateChange = (cin: string, cout: string) => {
     setCheckInDate(cin);
     setCheckOutDate(cout);
 
     if (cin && cout) {
-      const start = new Date(cin);
-      const end = new Date(cout);
+      const start = new Date(cin + "T12:00:00");
+      const end = new Date(cout + "T12:00:00");
       if (end > start) {
-        const totalDays = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+        const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
         setNights(totalDays);
 
         let wknd = 0;
         const cur = new Date(start);
-        while (cur < end) {
+        while (cur.getTime() < end.getTime()) {
           const day = cur.getDay(); // 0 Sun, 5 Fri, 6 Sat
           if (day === 5 || day === 6) {
             wknd++;
@@ -127,9 +133,16 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       if (prefillData.checkIn && prefillData.checkOut) {
         handleDateChange(prefillData.checkIn, prefillData.checkOut);
       }
-      if (prefillData.ratePerNight) setRatePerNight(prefillData.ratePerNight);
+      if (prefillData.guestsCount !== undefined) setGuestsCount(prefillData.guestsCount);
+      if (prefillData.baseGuests !== undefined) setBaseGuests(prefillData.baseGuests);
+      if (prefillData.extraGuestFee !== undefined) setExtraGuestFee(prefillData.extraGuestFee);
+      if (prefillData.ratePerNight !== undefined) setRatePerNight(prefillData.ratePerNight);
+      if (prefillData.weekendRatePerNight !== undefined) setWeekendRatePerNight(prefillData.weekendRatePerNight);
+      if (prefillData.weekendNights !== undefined) setWeekendNights(prefillData.weekendNights);
       if (prefillData.foodPlan) setFoodPlan(prefillData.foodPlan as any);
-      if (prefillData.foodRate) setFoodRatePerPersonPerDay(prefillData.foodRate);
+      if (prefillData.foodRate !== undefined) setFoodRatePerPersonPerDay(prefillData.foodRate);
+      if (prefillData.foodGuestsCount !== undefined) setFoodGuestsCount(prefillData.foodGuestsCount);
+      else if (prefillData.guestsCount !== undefined) setFoodGuestsCount(prefillData.guestsCount);
       if (Array.isArray(prefillData.extraCharges)) setExtraCharges(prefillData.extraCharges);
       if (prefillData.discountFlat !== undefined) setDiscountFlat(prefillData.discountFlat);
       if (prefillData.discountPercent !== undefined) setDiscountPercent(prefillData.discountPercent);
@@ -194,15 +207,17 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       `• Guest Count: ${guestsCount} Guest(s)\n` +
       `------------------------------------------\n` +
       `• Stay Accommodation Tariff: Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
-      (foodPlan !== "none" ? `• Catering Plan (${foodPlan}): Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
+      (foodPlan !== "none" ? `• Catering Plan (${foodPlan.toUpperCase()}): Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
       (totalExtrasCost > 0 ? `• Add-ons & Custom Extras: Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
-      (securityDeposit > 0 ? `• Refundable Security Deposit: Rs. ${securityDeposit.toLocaleString("en-IN")}\n` : "") +
-      `• Subtotal: Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}\n` +
+      `• Gross Subtotal: Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}\n` +
+      (totalDiscount > 0 ? `• Discount Deduction: - Rs. ${totalDiscount.toLocaleString("en-IN")}\n` : "") +
+      (totalDiscount > 0 ? `• Net Taxable Value: Rs. ${subtotal.toLocaleString("en-IN")}\n` : "") +
       `• GST Tax (${gstPercent}%): Rs. ${gstAmount.toLocaleString("en-IN")}\n` +
-      `• NET PAYABLE GRAND TOTAL: Rs. ${(grandTotal + securityDeposit).toLocaleString("en-IN")}\n` +
+      (securityDeposit > 0 ? `• Refundable Security Deposit: Rs. ${securityDeposit.toLocaleString("en-IN")}\n` : "") +
+      `• NET PAYABLE GRAND TOTAL: Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
       `------------------------------------------\n` +
       `• Advance Received: Rs. ${advancePaid.toLocaleString("en-IN")}\n` +
-      `• BALANCE REMAINING: ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${(balanceDue + securityDeposit).toLocaleString("en-IN")}`}\n` +
+      `• BALANCE REMAINING: ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
       `------------------------------------------\n\n` +
       `Please find your detailed invoice statement PDF attached.\n\n` +
       `Warm regards,\n` +
@@ -237,10 +252,13 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       checkInDate: checkInDate ? formatDateLabel(checkInDate) : undefined,
       checkOutDate: checkOutDate ? formatDateLabel(checkOutDate) : undefined,
       totalStayCost,
-      foodPlanName: foodPlan === "none" ? "No Meal Plan" : foodPlan,
+      foodPlanName: foodPlan === "none" ? "No Meal Plan" : `${foodPlan.toUpperCase()} Menu`,
       totalFoodCost,
       totalExtrasCost,
       subtotal: subtotalBeforeDiscount,
+      discountTotal: totalDiscount,
+      discountPercent,
+      taxableAmount: subtotal,
       gstPercent,
       gstAmount,
       grandTotal,
@@ -271,7 +289,13 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       `🌙 *Stay Duration:* ${nights} Night(s)\n` +
       `👥 *Guests:* ${guestsCount} Pax\n` +
       `------------------------------------------\n` +
-      `💰 *Grand Total:* Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
+      `🏠 *Stay Tariff:* Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
+      (foodPlan !== "none" ? `🍽️ *Catering (${foodPlan.toUpperCase()}):* Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
+      (totalExtrasCost > 0 ? `✨ *Add-ons & Extras:* Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
+      (totalDiscount > 0 ? `🎁 *Discount Deduction:* - Rs. ${totalDiscount.toLocaleString("en-IN")}\n` : "") +
+      (gstAmount > 0 ? `🏛️ *GST (${gstPercent}%):* Rs. ${gstAmount.toLocaleString("en-IN")}\n` : "") +
+      (securityDeposit > 0 ? `🛡️ *Refundable Deposit:* Rs. ${securityDeposit.toLocaleString("en-IN")}\n` : "") +
+      `💰 *Grand Total (Net Payable):* Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
       `💳 *Advance Received:* Rs. ${advancePaid.toLocaleString("en-IN")}\n` +
       `📌 *Balance Due:* ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
       `------------------------------------------\n` +
@@ -291,7 +315,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
     const villa = villas.find((v) => v.slug === selectedVillaSlug);
     if (villa) {
       setRatePerNight(villa.price);
-      setWeekendRatePerNight(villa.weekendPrice || villa.price * 1.2); // default 20% markup if not defined
+      setWeekendRatePerNight(villa.weekendPrice || Math.round(villa.price * 1.2)); // default 20% markup if not defined
       setBaseGuests(villa.baseGuests ?? 12);
       setExtraGuestFee(villa.extraGuestFee ?? 1500);
       setGuestsCount(villa.baseGuests ?? 12);
@@ -304,13 +328,13 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
     if (foodPlan === "none") {
       setFoodRatePerPersonPerDay(0);
     } else if (foodPlan === "standard") {
-      setFoodRatePerPersonPerDay(1200);
+      setFoodRatePerPersonPerDay(1000);
     } else if (foodPlan === "deluxe") {
       setFoodRatePerPersonPerDay(1500);
     }
   }, [foodPlan]);
 
-  // Calculations
+  // Financial Calculations
   const weekdayNights = Math.max(0, nights - weekendNights);
   const weekdayStayCost = weekdayNights * ratePerNight;
   const weekendStayCost = weekendNights * weekendRatePerNight;
@@ -334,15 +358,16 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
 
   // Calculate discount
   const calculatedPercentDiscount = subtotalBeforeDiscount * (discountPercent / 100);
-  const totalDiscount = calculatedPercentDiscount + discountFlat;
+  const totalDiscount = Math.round(calculatedPercentDiscount + discountFlat);
 
-  // Subtotal after discount
+  // Subtotal after discount (Taxable base)
   const subtotal = Math.max(0, subtotalBeforeDiscount - totalDiscount);
 
   // GST & Total
-  const gstAmount = subtotal * (gstPercent / 100);
-  const grandTotal = subtotal + gstAmount;
-  const balanceDue = grandTotal - advancePaid;
+  const gstAmount = Math.round(subtotal * (gstPercent / 100));
+  const taxInclusiveTotal = subtotal + gstAmount;
+  const grandTotal = Math.round(taxInclusiveTotal + (securityDeposit || 0)); // Full Net Payable
+  const balanceDue = Math.max(0, grandTotal - (advancePaid || 0));
 
   // Add Extra Charge line
   const handleAddExtra = (e: React.FormEvent) => {
@@ -737,7 +762,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
       doc.rect(rightAlignX - 2, currentY - 4, 210 - marginX - (rightAlignX - 2), 9, "F");
 
-      const finalNetPayable = grandTotal + securityDeposit;
+      const finalNetPayable = grandTotal;
 
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(9);
@@ -752,7 +777,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
 
       if (advancePaid > 0) {
         drawSummaryRow("Advance Paid:", `Rs. ${advancePaid.toLocaleString("en-IN")}`, false, [16, 122, 68]);
-        const finalBalance = finalNetPayable - advancePaid;
+        const finalBalance = balanceDue;
         const balanceText = finalBalance <= 0 ? "PAID IN FULL" : `Rs. ${finalBalance.toLocaleString("en-IN")}`;
         drawSummaryRow("BALANCE REMAINING:", balanceText, true, finalBalance <= 0 ? [16, 122, 68] : navyColor);
       }
@@ -1037,7 +1062,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold"
                 >
                   <option value="none">No Meal Plan</option>
-                  <option value="standard">Standard Pricing (Rs. 1,200/day)</option>
+                  <option value="standard">Standard Pricing (Rs. 1,000/day)</option>
                   <option value="deluxe">Deluxe Pricing (Rs. 1,500/day)</option>
                   <option value="custom">Custom Rate Package</option>
                 </select>
@@ -1317,8 +1342,14 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                 </div>
               </div>
 
-              {/* Net Taxable Value & GST Amount */}
+              {/* Net Taxable Value & GST Amount & Security Deposit */}
               <div className="space-y-1 text-xs text-slate-600 font-medium">
+                {totalDiscount > 0 && (
+                  <div className="flex justify-between text-red-600">
+                    <span>Discount Applied:</span>
+                    <span className="font-semibold">- ₹{totalDiscount.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span>Net Taxable Value:</span>
                   <span className="font-semibold text-slate-800">₹{subtotal.toLocaleString("en-IN")}</span>
@@ -1327,11 +1358,17 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   <span>GST Tax ({gstPercent}%):</span>
                   <span className="font-semibold text-slate-800">₹{gstAmount.toLocaleString("en-IN")}</span>
                 </div>
+                {securityDeposit > 0 && (
+                  <div className="flex justify-between text-amber-800">
+                    <span>Security Deposit (Refundable):</span>
+                    <span className="font-semibold">₹{securityDeposit.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
               </div>
 
               {/* Grand Total */}
               <div className="bg-[#1B3564]/5 border border-[#1B3564]/15 rounded-2xl p-3.5 flex justify-between items-center font-bold text-[#1B3564]">
-                <span className="font-heading text-xs uppercase tracking-wider">GRAND TOTAL:</span>
+                <span className="font-heading text-xs uppercase tracking-wider">NET PAYABLE GRAND TOTAL:</span>
                 <span className="font-sans text-lg text-slate-900 font-extrabold">₹{grandTotal.toLocaleString("en-IN")}</span>
               </div>
 

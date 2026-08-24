@@ -257,6 +257,9 @@ const AdminDashboard = ({
     const cin = new Date(booking.checkIn).toISOString().split("T")[0];
     const cout = new Date(booking.checkOut).toISOString().split("T")[0];
 
+    const parsedGuestsCount = (booking.userId && booking.userId.startsWith("{") ? (JSON.parse(booking.userId).guests || 1) : 1);
+    const parsedFoodGuestsCount = (booking.userId && booking.userId.startsWith("{") ? (JSON.parse(booking.userId).food?.guestsCount || parsedGuestsCount) : parsedGuestsCount);
+
     setCalculatorPrefill({
       villaSlug: booking.villa?.slug || "",
       checkIn: cin,
@@ -264,9 +267,14 @@ const AdminDashboard = ({
       guestName,
       guestEmail,
       guestPhone,
+      guestsCount: parsedGuestsCount,
+      baseGuests: booking.villa?.baseGuests ?? 12,
+      extraGuestFee: booking.villa?.extraGuestFee ?? 1500,
       ratePerNight,
+      weekendRatePerNight: booking.villa?.weekendPrice || Math.round((booking.villa?.price || ratePerNight) * 1.2),
       foodPlan,
       foodRate,
+      foodGuestsCount: parsedFoodGuestsCount,
       extraCharges,
       discountFlat,
       discountPercent,
@@ -334,21 +342,27 @@ const AdminDashboard = ({
   // Recalculate price override automatically when dates or nightly rate changes
   useEffect(() => {
     if (newBookingCheckIn && newBookingCheckOut) {
-      const inDate = new Date(newBookingCheckIn);
-      const outDate = new Date(newBookingCheckOut);
+      const inDate = new Date(newBookingCheckIn + "T12:00:00");
+      const outDate = new Date(newBookingCheckOut + "T12:00:00");
       const nights = Math.max(0, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
       
-      const stayTotal = nights * newBookingNightlyRate;
+      const selectedVilla = villas.find(v => v.id === newBookingVillaId);
+      const baseGuestsLimit = selectedVilla?.baseGuests ?? 12;
+      const extraFeePerGuest = selectedVilla?.extraGuestFee ?? 1500;
+      const extraGuestsCount = Math.max(0, newBookingGuests - baseGuestsLimit);
+      const extraGuestsCost = extraGuestsCount * extraFeePerGuest * nights;
+
+      const stayTotal = (nights * newBookingNightlyRate) + extraGuestsCost;
       const foodTotal = newBookingFoodPlan !== "none" ? (newBookingFoodRate * newBookingGuests * nights) : 0;
       const extrasTotal = newBookingExtraCharges.reduce((acc, c) => acc + (c.amount || 0), 0);
       const subtotal = stayTotal + foodTotal + extrasTotal;
       
       const discFlat = newBookingDiscountFlat || 0;
       const discPct = newBookingDiscountPercent || 0;
-      const discountVal = discFlat + (subtotal * (discPct / 100));
+      const discountVal = Math.round(discFlat + (subtotal * (discPct / 100)));
       
       const taxable = Math.max(0, subtotal - discountVal);
-      const gstTotal = taxable * ((newBookingGstPercent || 0) / 100);
+      const gstTotal = Math.round(taxable * ((newBookingGstPercent || 0) / 100));
       const grandTotal = Math.round(taxable + gstTotal + (newBookingSecurityDeposit || 0));
 
       setNewBookingPrice(grandTotal);
@@ -356,6 +370,7 @@ const AdminDashboard = ({
   }, [
     newBookingCheckIn, 
     newBookingCheckOut, 
+    newBookingVillaId,
     newBookingNightlyRate, 
     newBookingFoodPlan, 
     newBookingFoodRate, 
@@ -364,7 +379,8 @@ const AdminDashboard = ({
     newBookingDiscountFlat, 
     newBookingDiscountPercent, 
     newBookingGstPercent, 
-    newBookingSecurityDeposit
+    newBookingSecurityDeposit,
+    villas
   ]);
 
   const handleManualBookingSubmit = async (e: React.FormEvent) => {
@@ -378,18 +394,25 @@ const AdminDashboard = ({
 
     setIsSavingBooking(true);
     try {
-      const inDate = new Date(newBookingCheckIn);
-      const outDate = new Date(newBookingCheckOut);
+      const inDate = new Date(newBookingCheckIn + "T12:00:00");
+      const outDate = new Date(newBookingCheckOut + "T12:00:00");
       const nights = Math.max(1, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
-      const stayTotal = nights * newBookingNightlyRate;
+      
+      const selectedVilla = villas.find(v => v.id === newBookingVillaId);
+      const baseGuestsLimit = selectedVilla?.baseGuests ?? 12;
+      const extraFeePerGuest = selectedVilla?.extraGuestFee ?? 1500;
+      const extraGuestsCount = Math.max(0, newBookingGuests - baseGuestsLimit);
+      const extraGuestsCost = extraGuestsCount * extraFeePerGuest * nights;
+
+      const stayTotal = (nights * newBookingNightlyRate) + extraGuestsCost;
       const foodTotal = newBookingFoodPlan !== "none" ? (newBookingFoodRate * newBookingGuests * nights) : 0;
       const extrasTotal = newBookingExtraCharges.reduce((acc, c) => acc + (c.amount || 0), 0);
       const subtotal = stayTotal + foodTotal + extrasTotal;
       const discFlat = newBookingDiscountFlat || 0;
       const discPct = newBookingDiscountPercent || 0;
-      const discountVal = discFlat + (subtotal * (discPct / 100));
+      const discountVal = Math.round(discFlat + (subtotal * (discPct / 100)));
       const taxable = Math.max(0, subtotal - discountVal);
-      const gstTotal = taxable * ((newBookingGstPercent || 0) / 100);
+      const gstTotal = Math.round(taxable * ((newBookingGstPercent || 0) / 100));
       const grandTotal = Math.round(taxable + gstTotal + (newBookingSecurityDeposit || 0));
       const balanceDue = Math.max(0, grandTotal - (newBookingAdvancePaid || 0));
 
@@ -2153,13 +2176,17 @@ const AdminDashboard = ({
                         disabled={isSavingFullBill}
                         onClick={async () => {
                           setIsSavingFullBill(true);
-                          const stayTotal = nights * editBillNightlyRate;
+                          const baseGuestsLimit = b.villa?.baseGuests ?? 12;
+                          const extraFeePerGuest = b.villa?.extraGuestFee ?? 1500;
+                          const extraGuestsCount = Math.max(0, parsedGuests - baseGuestsLimit);
+                          const extraGuestsCost = extraGuestsCount * extraFeePerGuest * nights;
+                          const stayTotal = (nights * editBillNightlyRate) + extraGuestsCost;
                           const foodTotal = editBillFoodPlan !== "none" ? (editBillFoodRate * parsedGuests * nights) : 0;
                           const extrasTotal = editBillExtraCharges.reduce((a, b) => a + (b.amount || 0), 0);
                           const subtotal = stayTotal + foodTotal + extrasTotal;
-                          const discountVal = editBillDiscountFlat + (subtotal * (editBillDiscountPercent / 100));
+                          const discountVal = Math.round(editBillDiscountFlat + (subtotal * (editBillDiscountPercent / 100)));
                           const taxable = Math.max(0, subtotal - discountVal);
-                          const gstTotal = taxable * (editBillGstPercent / 100);
+                          const gstTotal = Math.round(taxable * (editBillGstPercent / 100));
                           const grandTotal = Math.round(taxable + gstTotal + editBillSecurityDeposit);
                           const balanceDue = editBillBalanceDue !== "" ? Number(editBillBalanceDue) : Math.max(0, grandTotal - editBillAdvancePaid);
 

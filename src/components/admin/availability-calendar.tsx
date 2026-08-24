@@ -268,9 +268,10 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   const subtotal = Math.max(0, subtotalBeforeDiscount - totalDiscount);
 
   // GST & Total
-  const gstAmount = subtotal * (gstPercent / 100);
-  const grandTotal = modalMode === "GUEST_BOOKING" ? (subtotal + gstAmount) : 0;
-  const balanceDue = Math.max(0, (grandTotal + securityDeposit) - advancePaid);
+  const gstAmount = Math.round(subtotal * (gstPercent / 100));
+  const taxInclusiveTotal = modalMode === "GUEST_BOOKING" ? (subtotal + gstAmount) : 0;
+  const grandTotal = modalMode === "GUEST_BOOKING" ? Math.round(taxInclusiveTotal + (securityDeposit || 0)) : 0;
+  const balanceDue = Math.max(0, grandTotal - (advancePaid || 0));
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -746,7 +747,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
       doc.rect(rightAlignX - 2, currentY - 4, 210 - marginX - (rightAlignX - 2), 9, "F");
 
-      const finalNetPayable = targetGrandTotal + targetSecurityDeposit;
+      const finalNetPayable = targetGrandTotal;
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
@@ -1875,54 +1876,99 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
             {/* Inspector Actions */}
             <div className="space-y-2.5 pt-3 border-t border-slate-100">
-              {/* PDF Invoice Re-Download Button */}
-              {activeDetails.type !== "CHANNEL" && selectedBooking.totalPrice > 0 && (
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => generateAndDownloadInvoicePDF({
-                      villa: villas.find(v => v.id === selectedBooking.villaId),
-                      guestName: activeDetails.name,
-                      guestPhone: activeDetails.phone,
-                      guestEmail: activeDetails.email,
-                      checkIn: new Date(selectedBooking.checkIn).toISOString().split("T")[0],
-                      checkOut: new Date(selectedBooking.checkOut).toISOString().split("T")[0],
-                      nights: Math.max(1, Math.round((new Date(selectedBooking.checkOut).getTime() - new Date(selectedBooking.checkIn).getTime()) / (1000 * 60 * 60 * 24))),
-                      grandTotal: selectedBooking.totalPrice,
-                      advancePaid: activeDetails.advancePaid || 0,
-                      balanceDue: activeDetails.balanceDue || 0,
-                      subtotal: selectedBooking.totalPrice,
-                      subtotalBeforeDiscount: selectedBooking.totalPrice,
-                      ratePerNight: activeDetails.nightlyRate || 0,
-                      guestsCount: activeDetails.guests || 2,
-                    })}
-                    className="py-2.5 px-3 bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <Download size={13} />
-                    <span>Download PDF</span>
-                  </button>
+              {/* PDF Invoice Re-Download Button & WhatsApp Share */}
+              {activeDetails.type !== "CHANNEL" && selectedBooking.totalPrice > 0 && (() => {
+                const bVilla = villas.find(v => v.id === selectedBooking.villaId);
+                const bNights = Math.max(1, Math.round((new Date(selectedBooking.checkOut).getTime() - new Date(selectedBooking.checkIn).getTime()) / (1000 * 60 * 60 * 24)));
+                const bRate = activeDetails.nightlyRate || (bVilla?.price) || Math.round(selectedBooking.totalPrice / bNights);
+                const bBaseGuests = bVilla?.baseGuests ?? 12;
+                const bExtraFee = bVilla?.extraGuestFee ?? 1500;
+                const bGuests = activeDetails.guests || 2;
+                const bExtraGuestsCount = Math.max(0, bGuests - bBaseGuests);
+                const bExtraGuestsCost = bExtraGuestsCount * bExtraFee * bNights;
+                const bFoodPlan = activeDetails.food?.plan || activeDetails.foodPlan || "none";
+                const bFoodRate = activeDetails.food?.ratePerPersonPerDay || activeDetails.foodRate || 0;
+                const bFoodGuests = activeDetails.food?.guestsCount || bGuests;
+                const bFoodTotal = activeDetails.food?.total || (bFoodPlan !== "none" ? bFoodRate * bFoodGuests * bNights : 0);
+                const bExtras = Array.isArray(activeDetails.extraCharges) ? activeDetails.extraCharges : [];
+                const bExtrasTotal = bExtras.reduce((sum: number, x: any) => sum + (x.amount || 0), 0);
+                const bStayTotal = (bNights * bRate) + bExtraGuestsCost;
+                const bGrossSubtotal = bStayTotal + bFoodTotal + bExtrasTotal;
+                const bDiscountFlat = activeDetails.discount?.flat || activeDetails.discountFlat || 0;
+                const bDiscountPct = activeDetails.discount?.percent || activeDetails.discountPercent || 0;
+                const bDiscountTotal = activeDetails.discount?.total || activeDetails.discountTotal || Math.round(bDiscountFlat + (bGrossSubtotal * (bDiscountPct / 100)));
+                const bTaxable = Math.max(0, bGrossSubtotal - bDiscountTotal);
+                const bGstPercent = activeDetails.gst?.percent !== undefined ? activeDetails.gst.percent : (activeDetails.gstPercent !== undefined ? activeDetails.gstPercent : 18);
+                const bGstAmount = activeDetails.gst?.total !== undefined ? activeDetails.gst.total : Math.round(bTaxable * (bGstPercent / 100));
+                const bDeposit = activeDetails.securityDeposit || 0;
+                const bGrandTotal = selectedBooking.totalPrice || (bTaxable + bGstAmount + bDeposit);
+                const bAdvance = activeDetails.advancePaid || 0;
+                const bBalance = activeDetails.balanceDue !== undefined ? activeDetails.balanceDue : Math.max(0, bGrandTotal - bAdvance);
 
-                  <button
-                    type="button"
-                    onClick={() => handleShareWhatsApp({
-                      villa: villas.find(v => v.id === selectedBooking.villaId),
-                      name: activeDetails.name,
-                      phone: activeDetails.phone,
-                      checkIn: new Date(selectedBooking.checkIn).toLocaleDateString("en-IN"),
-                      checkOut: new Date(selectedBooking.checkOut).toLocaleDateString("en-IN"),
-                      nights: Math.max(1, Math.round((new Date(selectedBooking.checkOut).getTime() - new Date(selectedBooking.checkIn).getTime()) / (1000 * 60 * 60 * 24))),
-                      guests: activeDetails.guests || 2,
-                      grandTotal: selectedBooking.totalPrice,
-                      advancePaid: activeDetails.advancePaid || 0,
-                      balanceDue: activeDetails.balanceDue || 0,
-                    })}
-                    className="py-2.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <Share2 size={13} />
-                    <span>WhatsApp</span>
-                  </button>
-                </div>
-              )}
+                return (
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => generateAndDownloadInvoicePDF({
+                        villa: bVilla,
+                        guestName: activeDetails.name,
+                        guestPhone: activeDetails.phone,
+                        guestEmail: activeDetails.email,
+                        checkIn: new Date(selectedBooking.checkIn).toISOString().split("T")[0],
+                        checkOut: new Date(selectedBooking.checkOut).toISOString().split("T")[0],
+                        nights: bNights,
+                        weekdayNights: bNights,
+                        weekendNights: 0,
+                        weekdayStayCost: bNights * bRate,
+                        weekendStayCost: 0,
+                        extraGuestsCost: bExtraGuestsCost,
+                        extraGuestsCount: bExtraGuestsCount,
+                        extraGuestFee: bExtraFee,
+                        foodPlan: bFoodPlan,
+                        foodRate: bFoodRate,
+                        foodGuests: bFoodGuests,
+                        totalFoodCost: bFoodTotal,
+                        extraCharges: bExtras,
+                        subtotalBeforeDiscount: bGrossSubtotal,
+                        totalDiscount: bDiscountTotal,
+                        subtotal: bTaxable,
+                        gstPercent: bGstPercent,
+                        gstAmount: bGstAmount,
+                        securityDeposit: bDeposit,
+                        grandTotal: bGrandTotal,
+                        advancePaid: bAdvance,
+                        balanceDue: bBalance,
+                        ratePerNight: bRate,
+                        guestsCount: bGuests,
+                      })}
+                      className="py-2.5 px-3 bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <Download size={13} />
+                      <span>Download PDF</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleShareWhatsApp({
+                        villa: bVilla,
+                        name: activeDetails.name,
+                        phone: activeDetails.phone,
+                        checkIn: new Date(selectedBooking.checkIn).toLocaleDateString("en-IN"),
+                        checkOut: new Date(selectedBooking.checkOut).toLocaleDateString("en-IN"),
+                        nights: bNights,
+                        guests: bGuests,
+                        grandTotal: bGrandTotal,
+                        advancePaid: bAdvance,
+                        balanceDue: bBalance,
+                      })}
+                      className="py-2.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <Share2 size={13} />
+                      <span>WhatsApp</span>
+                    </button>
+                  </div>
+                );
+              })()}
 
               {/* Show Clear button only for manual bookings, synced bookings or blackouts */}
               {activeDetails.type !== "ONLINE" && (
