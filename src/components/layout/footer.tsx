@@ -108,6 +108,7 @@ const Footer = () => {
               {[
                 { name: "The Angle House", href: "/villa/the-angle-house" },
                 { name: "Canopy Crest", href: "/villa/canopy-crest" },
+                { name: "Willow Peak", href: "/villa/willow-peak" },
                 { name: "Lonavala Pool Villa", href: "/villas-in-lonavala-with-private-pool" },
                 { name: "Khopoli Villas", href: "/khopoli-villas" },
                 { name: "Group Escape Deal", href: "/escape" },

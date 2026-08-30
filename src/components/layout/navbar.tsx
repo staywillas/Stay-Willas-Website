@@ -447,6 +447,14 @@ const Navbar = () => {
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
                             <span>Canopy Crest (Khopoli)</span>
                           </Link>
+                          <Link
+                            href="/villa/willow-peak"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Willow Peak (Lonavala)</span>
+                          </Link>
                         </motion.div>
                       )}
                     </div>
