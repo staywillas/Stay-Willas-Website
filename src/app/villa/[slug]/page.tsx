@@ -374,8 +374,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
       embedUrl: "https://maps.google.com/maps?q=18.7101381,73.3344093&hl=en&z=16&output=embed"
     },
     "willow-peak": {
-      directUrl: "https://maps.google.com/?q=Kurwande,+Lonavala,+Maharashtra",
-      embedUrl: "https://maps.google.com/maps?q=Kurwande,+Lonavala,+Maharashtra&hl=en&z=15&output=embed"
+      directUrl: "https://www.google.com/maps?q=P9P9+5XW+Willow+Peak+Resort,+Kurvande,+Maharashtra+410402&ftid=0x3be8070059702d61:0x4182db34c43d1717",
+      embedUrl: "https://maps.google.com/maps?q=P9P9+5XW+Willow+Peak+Resort,+Kurvande,+Maharashtra+410402&hl=en&z=16&output=embed"
     }
   };
 
