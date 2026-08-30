@@ -49,20 +49,22 @@ export default async function DestinationsPage() {
   
   const destinations = [
     {
-      name: "Lonavala",
+      name: "Lonavala (The Angle House)",
       tagline: "The Mountain Sanctuary",
       desc: "Cool mountain breeze, misty green valleys, and spacious pool estates perched on lush hills.",
       image: "/assets/villas/the-angle-house/gallery-11.webp",
       count: lonavalaCount,
-      isLaunchingSoon: lonavalaCount === 0
+      isLaunchingSoon: lonavalaCount === 0,
+      link: "/villa/the-angle-house"
     },
     {
-      name: "Khopoli",
+      name: "Khopoli (Canopy Crest)",
       tagline: "The Nature Escape",
       desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet pool retreats.",
       image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
       count: khopoliCount,
-      isLaunchingSoon: khopoliCount === 0
+      isLaunchingSoon: khopoliCount === 0,
+      link: "/villa/canopy-crest"
     }
   ];
 
@@ -138,13 +140,13 @@ export default async function DestinationsPage() {
               {!dest.isLaunchingSoon ? (
                 <div className="flex flex-col gap-3">
                   <Link 
-                    href={`/villas?region=${dest.name.toLowerCase()}`}
+                    href={dest.link}
                     className="inline-flex items-center gap-3 group/link"
                   >
                     <span className="w-12 h-12 rounded-full border border-[#0F172A]/20 flex items-center justify-center group-hover/link:bg-accent-primary group-hover/link:border-accent-primary group-hover/link:text-white transition-all">
                       <ArrowUpRight size={18} />
                     </span>
-                    <span className="uppercase tracking-[0.2em] text-[10px] font-bold">Explore {dest.count} {dest.count === 1 ? "Villa" : "Villas"}</span>
+                    <span className="uppercase tracking-[0.2em] text-[10px] font-bold">View Details & Book</span>
                   </Link>
                   <a
                     href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hey Stay Willas team! 🏔️ I am exploring your getaways in *${dest.name}* and would love to check availability for an upcoming escape. Could you share some suggestions?`)}`}

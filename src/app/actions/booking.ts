@@ -153,7 +153,16 @@ export async function createCheckoutSession(formData: {
     }
 
     const serviceFee = 0; // Removed luxury service fee
-    const discount = formData.couponCode === "STAY5" ? ((totalRoomPrice + totalExtraGuestsCost) * 0.05) : 0;
+    let discountRate = 0;
+    if (formData.couponCode) {
+      const code = formData.couponCode.trim().toUpperCase();
+      if (code === "STAYW28" || code.includes("28") || code === "ESCAPE28" || code === "LONAVALA28" || code === "KHOPOLI28") {
+        discountRate = 0.28;
+      } else if (code === "STAY5") {
+        discountRate = 0.05;
+      }
+    }
+    const discount = Math.round((totalRoomPrice + totalExtraGuestsCost) * discountRate);
     const finalTotal = totalRoomPrice + totalExtraGuestsCost + addOnsPrice + serviceFee - discount;
 
     // 4. STAGE D: Create database HELD Booking Record to secure the locked dates for 10 minutes

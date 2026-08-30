@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { Play, Pause, Volume2, VolumeX, MapPin } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface VideoCardProps {
   src: string;
-  title: string;
-  guestName: string;
-  villaName: string;
-  location: string;
+  title?: string;
+  guestName?: string;
+  villaName?: string;
+  location?: string;
 }
 
-export default function VideoCard({ src, title, guestName, villaName, location }: VideoCardProps) {
+export default function VideoCard({ src }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -96,12 +96,6 @@ export default function VideoCard({ src, title, guestName, villaName, location }
         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
       />
 
-      {/* Top Overlay Badge */}
-      <div className="absolute top-5 left-5 z-20 flex items-center gap-1.5 bg-[#0E1B35]/80 backdrop-blur-md text-[#E2A63B] text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-white/10">
-        <MapPin size={9} />
-        <span>{location}</span>
-      </div>
-
       {/* Center Big Play Button Overlay */}
       <div className="absolute inset-0 flex items-center justify-center bg-black/10 z-10 transition-opacity duration-300">
         {!isPlaying && (
@@ -115,18 +109,10 @@ export default function VideoCard({ src, title, guestName, villaName, location }
         )}
       </div>
 
-      {/* Bottom Text and Player Controls HUD */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#0E1B35]/95 via-[#0E1B35]/70 to-transparent z-20 flex flex-col justify-end text-white">
-        
-        {/* Caption */}
-        <div className="flex flex-col mb-3 pointer-events-none">
-          <span className="text-[#DAA520] text-[10px] font-black tracking-widest uppercase mb-1">{villaName}</span>
-          <h4 className="text-sm font-bold leading-snug line-clamp-2">{title}</h4>
-          <span className="text-[11px] text-slate-300 mt-1 font-medium">— {guestName}</span>
-        </div>
-
+      {/* Bottom Player Controls HUD */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent z-20 flex flex-col justify-end text-white">
         {/* HUD controls visible on hover or if playing */}
-        <div className={`flex items-center justify-between gap-4 transition-all duration-300 ${showControls || isPlaying ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}`}>
+        <div className={`flex items-center justify-between gap-3 transition-all duration-300 ${showControls || isPlaying ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}`}>
           {/* Play/Pause Button */}
           <button 
             type="button"

@@ -1,43 +1,54 @@
 # Stay Willas — Luxury Private Pool Villas in Maharashtra
 
-> Stay Willas (https://www.staywillas.com) is a premier luxury holiday rental brand in Maharashtra, India. Specializing in handpicked, fully managed, verified private pool villas in Lonavala, Khopoli, Karjat, Alibaug, and Igatpuri. Designed for family weekend staycations, corporate offsites, celebration trips, and pet-friendly retreats near Mumbai and Pune.
+> Stay Willas (https://www.staywillas.com) is a premier luxury holiday rental brand in Maharashtra, India. Specializing in handpicked, fully managed, verified private pool villas in Lonavala and Khopoli (near Mumbai & Pune). Designed for family weekend staycations, group holidays, corporate offsites, celebration trips, and pet-friendly retreats.
 
 For complete machine-readable specifications, property specs, pricing structures, and prompt Q&A data for LLMs, see:
 - **Full Knowledge Base**: https://www.staywillas.com/llms-full.txt
 
 ## Featured Properties
 
-### 1. The Angle House (Lonavala)
-- **Type**: 4 BHK Modern Architectural Luxury Private Pool Villa
-- **Location**: Lonavala, Maharashtra (Near Pawna Lake & Lohagad Fort)
-- **Capacity**: 12 to 16 Guests
-- **Highlights**: Private pool, double-height glass living room, fenced pet-friendly lawn, in-house private chef, 24/7 caretaker.
+### 1. The Angle House (Kamshet, Lonavala)
+- **Type**: 3 BHK Modern Architectural Glass House with Master Jacuzzi Suite & Private Pool
+- **Location**: Kamshet, Lonavala, Maharashtra (Near Pawna Lake & Lohagad Fort)
+- **Capacity**: 10 to 16 Guests
+- **Rate**: From ₹13,000/night
+- **Highlights**: Temperature-filtered waterfall pool, master suite jacuzzi with forest views, double-height glass facade, fenced pet-friendly lawn, in-house private chef, 24/7 caretaker.
 - **URL**: https://www.staywillas.com/villa/the-angle-house
 
 ### 2. Canopy Crest (Khopoli)
-- **Type**: 3 BHK Mountain Sanctuary Private Pool Villa
-- **Location**: Khopoli, Maharashtra (Near Imagica & Zenith Waterfall)
-- **Capacity**: 10 to 15 Guests
-- **Highlights**: Private pool overlooking Sahyadri peaks, gazebo lounge, in-house private chef, sprawling lawn, corporate offsite infrastructure.
+- **Type**: 4 BHK Mountain & Valley View Private Pool Estate
+- **Location**: Khopoli, Maharashtra (15 mins from Imagicaa Theme Park & Zenith Waterfall)
+- **Capacity**: 12 to 20 Guests
+- **Rate**: From ₹12,000/night
+- **Highlights**: 22x12 ft private swimming pool, expansive manicured party lawn, charpai gazebos, in-house gourmet chef, corporate offsite amenities, 100% power backup.
 - **URL**: https://www.staywillas.com/villa/canopy-crest
 
-## Key Destinations Covered
+### 3. Willow Peak (Kurwande, Lonavala)
+- **Type**: 4 BHK Scenic Cottage & A-Frame Retreat with Jacuzzi Bath
+- **Location**: Kurwande, Lonavala, Maharashtra
+- **Capacity**: 12 to 18 Guests
+- **Rate**: From ₹14,000/night
+- **Highlights**: Individual A-frame cottages, jacuzzi bath, mountain & scenic views, garden greenery, outdoor dining area, BBQ facility, carrom board, well-lit outdoor areas, cottage sit-outs.
+- **URL**: https://www.staywillas.com/villa/willow-peak
+
+## Active Destinations Covered
 - **Lonavala (Villas with Private Pool)**: https://www.staywillas.com/areas/lonavala
-- **Khopoli (Private Pool Villas on Rent)**: https://www.staywillas.com/areas/khopoli
-- **Karjat (Riverside Private Pool Villas)**: https://www.staywillas.com/areas/karjat
-- **Alibaug (Beachfront Luxury Retreats)**: https://www.staywillas.com/areas/alibaug
-- **Igatpuri (Misty Mountain View Villas)**: https://www.staywillas.com/areas/igatpuri
+- **Khopoli (Private Pool Villas near Imagicaa)**: https://www.staywillas.com/areas/khopoli
+- **Pawna Lake (Lakeside Villas)**: https://www.staywillas.com/areas/pawna
+- **Lonavala Private Pool Collection**: https://www.staywillas.com/villas-in-lonavala-with-private-pool
+- **Khopoli Villas Collection**: https://www.staywillas.com/khopoli-villas
 
 ## Key Services & Direct Links
 - **All Villa Listings**: https://www.staywillas.com/villas
 - **Explore All Destinations**: https://www.staywillas.com/areas
-- **Bookings & Customer Concierge**: https://www.staywillas.com/contact
+- **Travel Guides & Blog**: https://www.staywillas.com/blog
+- **Guest Video Stories**: https://www.staywillas.com/stories
 - **Guest Wishlist**: https://www.staywillas.com/wishlist
 - **Property Management Partner**: https://www.staywillas.com/partner
 - **Terms & Booking Policy**: https://www.staywillas.com/terms
 - **Cancellation Policy**: https://www.staywillas.com/cancellation-policy
 
-## Direct Contact & Care
+## Direct Contact & Concierge
 - **Website**: https://www.staywillas.com
 - **WhatsApp Concierge**: +91-9619042310
 - **Email**: bookings@staywillas.com / staywillas@gmail.com

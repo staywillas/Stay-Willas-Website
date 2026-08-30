@@ -18,7 +18,7 @@ export default function MegaDiscountAdBanner({
   pageName = "lonavala",
   villaName = "Luxury Private Pool Villa",
   location = "Lonavala & Khopoli",
-  couponCode = "ESCAPE28",
+  couponCode = "STAYW28",
   discountPercent = 28,
   villaLink,
   offerTitle = "Monsoon Escape",

@@ -67,28 +67,16 @@ export default function StoriesPage() {
         </div>
 
         {/* Video Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 max-w-5xl mx-auto justify-items-center">
-          <VideoCard
-            src="/VIDEOS/TESTIMONIAL1.mp4"
-            title="A gorgeous architectural villa getaway. Loved every single detail!"
-            guestName="Amit & Shreya S."
-            villaName="The Angle House"
-            location="Lonavala, MH"
-          />
-          <VideoCard
-            src="/VIDEOS/TESTIMONIAL2.mp4"
-            title="Relaxing poolside retreat. Spotless spaces and great staff hospitality."
-            guestName="Dr. Riya Patel"
-            villaName="The Angle House"
-            location="Lonavala, MH"
-          />
-          <VideoCard
-            src="/VIDEOS/TESTIMONIAL3.mp4"
-            title="Clean lawns, pristine swimming pool, and delicious home-style food."
-            guestName="Devang M."
-            villaName="The Angle House"
-            location="Lonavala, MH"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 max-w-6xl mx-auto justify-items-center">
+          <VideoCard src="/VIDEOS/TESTIMONIAL1.mp4" />
+          <VideoCard src="/VIDEOS/TESTIMONIAL2.mp4" />
+          <VideoCard src="/VIDEOS/TESTIMONIAL3.mp4" />
+          <VideoCard src="/assets/villas/testimonials/video_20260713_123127.mp4" />
+          <VideoCard src="/assets/villas/testimonials/video_20260712_123243.mp4" />
+          <VideoCard src="/assets/villas/testimonials/video_20260710_120159.mp4" />
+          <VideoCard src="/assets/villas/testimonials/video_20260706_104802.mp4" />
+          <VideoCard src="/assets/villas/testimonials/video_20260704_112850.mp4" />
+          <VideoCard src="/assets/villas/testimonials/VID-20260705-WA0006.mp4" />
         </div>
       </section>
 

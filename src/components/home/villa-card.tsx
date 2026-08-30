@@ -127,7 +127,7 @@ const VillaCard = ({
               href={`/villa/${id}`}
               className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white py-2 px-2.5 rounded-xl text-[9px] sm:text-[10px] font-black tracking-wider uppercase transition-all duration-200 flex items-center justify-center text-center shadow-xs cursor-pointer"
             >
-              Book Stay
+              View Details
             </Link>
 
             <a

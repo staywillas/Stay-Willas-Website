@@ -29,7 +29,7 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
   khopoli: {
     name: "Khopoli",
     tagline: "The Nature Escape",
-    desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet private pool getaways.",
+    desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet private pool getaways near Imagicaa.",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
     isLaunchingSoon: false
   },

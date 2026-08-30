@@ -118,21 +118,26 @@ const angleHouseReviews = [
 ];
 
 export const metadata: Metadata = {
-  title: "Monsoon Escape: Villas in Lonavala with Private Pool | The Angle House",
-  description: "Experience the Monsoon Escape at The Angle House in Lonavala. Stay 2 nights & save more on weekdays (Mon–Thu). Private waterfall pool, jacuzzi suite & chef service.",
+  title: "Villas in Lonavala with Private Pool | Luxury Staycations | Stay Willas",
+  description: "Book verified luxury villas in Lonavala with private pool, master suite jacuzzi, pet-friendly lawns & in-house chef. Best direct booking deals from ₹13,000/night.",
   keywords: [
     "villas in lonavala with private pool",
-    "monsoon escape lonavala",
+    "lonavala villa with private pool",
+    "private pool villas in lonavala",
+    "villas in lonavala",
+    "villa in lonavala",
+    "best villas in lonavala",
+    "luxury villas in lonavala",
     "the angle house lonavala",
-    "best villa in lonavala",
-    "villa for rent in lonavala"
+    "villa for rent in lonavala with swimming pool",
+    "private villa in lonavala"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/villas-in-lonavala-with-private-pool",
   },
   openGraph: {
-    title: "Monsoon Escape: Villas in Lonavala with Private Pool | The Angle House",
-    description: "Experience the Monsoon Escape at The Angle House in Lonavala. Stay 2 nights & save more on weekdays (Mon–Thu). Private waterfall pool, jacuzzi suite & chef service.",
+    title: "Villas in Lonavala with Private Pool | Luxury Staycations | Stay Willas",
+    description: "Book verified luxury villas in Lonavala with private pool, master suite jacuzzi, pet-friendly lawns & in-house chef. Best direct booking deals from ₹13,000/night.",
     url: "https://www.staywillas.com/villas-in-lonavala-with-private-pool",
     siteName: "Stay Willas",
     locale: "en_IN",
@@ -141,15 +146,15 @@ export const metadata: Metadata = {
         url: "https://www.staywillas.com/assets/villas/the-angle-house/gallery-11.webp",
         width: 1200,
         height: 630,
-        alt: "The Angle House - Monsoon Escape Villas in Lonavala with Private Pool",
+        alt: "The Angle House - Luxury Villas in Lonavala with Private Pool",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Monsoon Escape: Villas in Lonavala with Private Pool | The Angle House",
-    description: "Experience the Monsoon Escape at The Angle House in Lonavala. Stay 2 nights & save more on weekdays (Mon–Thu). Private waterfall pool, jacuzzi suite & chef service.",
+    title: "Villas in Lonavala with Private Pool | Luxury Staycations | Stay Willas",
+    description: "Book verified luxury villas in Lonavala with private pool, master suite jacuzzi, pet-friendly lawns & in-house chef. Best direct booking deals from ₹13,000/night.",
     images: ["https://www.staywillas.com/assets/villas/the-angle-house/gallery-11.webp"],
   },
 };
@@ -249,7 +254,7 @@ export default async function LonavalaGlassHousePage() {
           pageName="lonavala"
           villaName="The Angle House (Lonavala)"
           location="Lonavala, Maharashtra"
-          couponCode="LONAVALA28"
+          couponCode="STAYW28"
           discountPercent={28}
           villaLink="/villa/the-angle-house"
           offerTitle="Monsoon Escape"
@@ -305,7 +310,7 @@ export default async function LonavalaGlassHousePage() {
             {/* Strong Action CTAs */}
             <div className="flex flex-wrap items-center justify-center gap-3 w-full max-w-xl mb-8">
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20the%20Monsoon%20Escape%20Offer%20for%20The%20Angle%20House%20in%20Lonavala%20(Stay%20for%202%20Nights%20and%20Save%20More%20-%20Weekdays%20Only).%20Coupon:%20LONAVALA28" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20the%20Monsoon%20Escape%20Offer%20for%20The%20Angle%20House%20in%20Lonavala%20(Stay%20for%202%20Nights%20and%20Save%20More%20-%20Weekdays%20Only).%20Coupon:%20STAYW28" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-black uppercase tracking-wider py-4 px-7 rounded-2xl shadow-[0_4px_20px_rgba(37,211,102,0.4)] transition-all flex items-center justify-center gap-2 hover:scale-105"
@@ -333,7 +338,7 @@ export default async function LonavalaGlassHousePage() {
               <QuickMobileLeadForm
                 villaName="The Angle House (Lonavala)"
                 location="Lonavala, Maharashtra"
-                defaultCoupon="LONAVALA28"
+                defaultCoupon="STAYW28"
                 discountPercent={28}
                 offerTitle="Monsoon Escape"
                 highlightText="Stay 2 Nights & Save More (Weekdays Only)"
@@ -396,7 +401,7 @@ export default async function LonavalaGlassHousePage() {
                   <span className="text-[11px] text-[#DAA520] font-bold block mt-1">Total for 2 Weekday Nights</span>
                 </div>
                 <a
-                  href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20claim%20the%20Monsoon%20Escape%202-Night%20Weekday%20Deal%20for%20The%20Angle%20House%20in%20Lonavala%20(Coupon:%20LONAVALA28)"
+                  href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20claim%20the%20Monsoon%20Escape%202-Night%20Weekday%20Deal%20for%20The%20Angle%20House%20in%20Lonavala%20(Coupon:%20STAYW28)"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full bg-[#25D366] hover:bg-emerald-600 active:scale-95 text-white font-black text-xs uppercase tracking-wider py-4 rounded-xl shadow-lg transition-all"
@@ -461,7 +466,7 @@ export default async function LonavalaGlassHousePage() {
             location="Lonavala, Maharashtra"
             originalPrice={basePrice}
             discountedPrice={discounted1Night}
-            couponCode="LONAVALA28"
+            couponCode="STAYW28"
             images={angleHouseShowcaseImages}
             reviews={angleHouseReviews}
             offerTitle="Monsoon Escape"
@@ -609,7 +614,7 @@ export default async function LonavalaGlassHousePage() {
                   <span className="text-xs font-normal text-slate-500">/ night</span>
                 </div>
                 <span className="inline-block mt-1 text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
-                  Coupon: <strong className="text-[#1B3564]">LONAVALA28</strong>
+                  Coupon: <strong className="text-[#1B3564]">STAYW28</strong>
                 </span>
               </div>
 

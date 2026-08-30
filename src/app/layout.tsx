@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Luxury Villas in Maharashtra | Stay Willas",
-    description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Alibaug today.",
+    description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Khopoli today.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
   verification: {

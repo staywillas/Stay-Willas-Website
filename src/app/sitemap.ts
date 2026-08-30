@@ -111,10 +111,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const regions = [
     "lonavala",
     "khopoli",
-    "karjat",
-    "alibaug",
-    "pawna",
-    "kashid"
+    "pawna"
   ];
   const areaRoutes: MetadataRoute.Sitemap = regions.map((region) => ({
     url: `${BASE_URL}/areas/${region}`,

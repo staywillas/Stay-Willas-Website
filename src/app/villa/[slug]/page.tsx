@@ -7,7 +7,9 @@ import {
   Wifi, Waves, Car,
   Wind, MapPin, Award, ChevronLeft,
   Share2, Heart, CheckCircle2,
-  Users, Bed, Bath, PawPrint
+  Users, Bed, Bath, PawPrint,
+  Tv, Home, Trees, UtensilsCrossed,
+  Flame, Gamepad2, ShowerHead, Sun, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
@@ -101,12 +103,24 @@ const amenityIconMap: { [key: string]: React.ComponentType<any> } = {
   "Tropical Courtyard": CheckCircle2,
   "Open-air Lounge Pavilions": CheckCircle2,
   "Beach Volley Net": Award,
-  "Jacuzzi in Master Bedroom": AnimatedPoolIcon,
-  "Waterfall Feature": AnimatedWaterfallIcon,
-  "Panoramic Glass Frontage": AnimatedGlassFrontageIcon,
-  "Modern warm lighting": AnimatedLightingIcon,
-  "Outdoor lounging spaces": AnimatedLoungingIcon,
-  "Living Hall": AnimatedLivingHallIcon,
+  "Individual Cottages": Home,
+  "A-Frame / Cottage-Style Architecture": Home,
+  "Air-Conditioned Rooms": Wind,
+  "Comfortable Double Beds": Bed,
+  "Television": Tv,
+  "Wi-Fi": Wifi,
+  "Attached Bathrooms": Bath,
+  "Shower Facilities": ShowerHead,
+  "Jacuzzi Bath": AnimatedPoolIcon,
+  "Mountain / Scenic Views": AnimatedMountainIcon,
+  "Garden & Greenery": Trees,
+  "Outdoor Seating": AnimatedLoungingIcon,
+  "Outdoor Dining Area": UtensilsCrossed,
+  "Carrom Board": Gamepad2,
+  "BBQ Facility": Flame,
+  "Parking": Car,
+  "Well-Lit Outdoor Areas": Sun,
+  "Cottage Sit-Outs": AnimatedBalconyIcon,
   "3 Beds": Bed,
   "2 Balconies": AnimatedBalconyIcon,
 };
@@ -180,13 +194,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   let keywordsList = [`${villa.bedrooms} BHK private pool villa in ${city}`, `${villa.name.toLowerCase()}`];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "The Angle House | 3 BHK Glass House Villa in Lonavala with Private Pool | Stay Willas";
-    descText = "Book The Angle House in Lonavala, a 3 BHK glass house villa in Lonavala with private pool, pet friendly lawn, and in-house chef service.";
-    keywordsList = ["the angle house in lonavala", "3 BHK glass house villa in lonavala with private pool"];
+    titleText = "The Angle House | 3 BHK Glass House Villa in Kamshet, Lonavala | Stay Willas";
+    descText = "Book The Angle House in Kamshet, Lonavala — a 3 BHK glass house villa with private waterfall pool, pet friendly lawn, and in-house chef service.";
+    keywordsList = ["the angle house in kamshet", "the angle house lonavala", "3 BHK glass house villa in kamshet lonavala"];
   } else if (villa.slug === "canopy-crest") {
     titleText = "Canopy Crest | 4 BHK Private Pool Estate in Khopoli for Groups | Stay Willas";
     descText = "Book Canopy Crest in Khopoli, a 4 BHK private pool estate in Khopoli for groups with sprawling lawns and in-house chef service.";
     keywordsList = ["canopy crest in khopoli", "4 BHK private pool estate in khopoli for groups"];
+  } else if (villa.slug === "willow-peak") {
+    titleText = "Willow Peak | Scenic Cottage & A-Frame Retreat in Kurwande, Lonavala | Stay Willas";
+    descText = "Book Willow Peak in Kurwande, Lonavala — private A-frame cottages with jacuzzi bath, mountain views, garden, outdoor dining & BBQ.";
+    keywordsList = ["willow peak kurwande", "cottage stay in kurwande lonavala", "a-frame villa in kurwande"];
   }
 
   const ogImageUrl = villa.images[0] ? `https://www.staywillas.com${villa.images[0]}` : "https://www.staywillas.com/images/hero-villa.png";
@@ -266,7 +284,17 @@ export default async function VillaDetailPage({ params }: PageProps) {
     guests: villa.guests,
     bedrooms: villa.bedrooms,
     bathrooms: villa.bathrooms,
-    amenities: villa.amenities.map((name) => {
+    amenities: villa.amenities
+      .filter((name) => {
+        const lower = name.toLowerCase().trim();
+        return (
+          !lower.includes("modern warm lighting") &&
+          !lower.includes("warm lighting") &&
+          !lower.includes("panoramic glass") &&
+          !lower.includes("glass frontage")
+        );
+      })
+      .map((name) => {
       let icon = amenityIconMap[name];
       if (!icon) {
         const lowerName = name.toLowerCase();
@@ -318,6 +346,20 @@ export default async function VillaDetailPage({ params }: PageProps) {
       {
         question: "What amenities are available at Canopy Crest?",
         answer: "Canopy Crest features a private pool (22x12 ft), spacious lawn, music system, indoor/outdoor games, wheelchair accessibility, CCTV security, and dedicated caretaker services."
+      }
+    ],
+    "willow-peak": [
+      {
+        question: "Where is Willow Peak located?",
+        answer: "Willow Peak is located in Kurwande, Lonavala, Maharashtra, enveloped in scenic mountain greenery and tranquil landscapes."
+      },
+      {
+        question: "What kind of stay experience does Willow Peak provide?",
+        answer: "Willow Peak features individual cottages with A-frame architecture, private sit-outs, jacuzzi baths, and manicured green gardens."
+      },
+      {
+        question: "What amenities and activities are available at Willow Peak?",
+        answer: "Willow Peak offers air-conditioned cottage suites, comfortable double beds, Wi-Fi, TV, outdoor dining, BBQ facilities, carrom board, and secure parking."
       }
     ]
   };
@@ -465,7 +507,12 @@ export default async function VillaDetailPage({ params }: PageProps) {
               <span className="flex items-center gap-2 font-bold"><Bath size={14} className="text-accent-secondary" />{villaData.bathrooms} Bathrooms</span>
             </div>
 
-            {/* 2. What this place offers (Amenities first) */}
+            {/* 2. In-Villa Bespoke Food Menu Popup (Above Amenities section) */}
+            <div>
+              <FoodMenuModal />
+            </div>
+
+            {/* 3. What this place offers (Amenities) */}
             <div className="mb-12">
               <h2 className="text-3xl font-heading text-[#1B3564] mb-8 font-bold border-b border-border-subtle pb-4">What this place offers</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
@@ -509,11 +556,6 @@ export default async function VillaDetailPage({ params }: PageProps) {
                 </div>
               </div>
             )}
-
-            {/* 3. In-Villa Bespoke Food Menu Popup */}
-            <div className="mb-12">
-              <FoodMenuModal />
-            </div>
 
             {/* 4. The Story & Readability Points (Story last, high contrast) */}
             <div className="mb-12">

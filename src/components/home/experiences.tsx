@@ -24,7 +24,7 @@ const categories = [
   {
     title: "Misty Mountain Ghats",
     tag: "ELEVATED RETREATS",
-    description: "Unwind above the clouds. Enjoy stunning balcony sunsets, scenic valley hikes, and cool refreshing breezes in Lonavala and Igatpuri.",
+    description: "Unwind above the clouds. Enjoy stunning balcony sunsets, scenic valley hikes, and cool refreshing breezes in Lonavala and Khopoli.",
     image: "/images/exp-mountain.png",
     link: "/villas?category=Mountain+View",
   },
@@ -32,7 +32,7 @@ const categories = [
     title: "Intimate Bonfire Pits",
     tag: "COZY STARLIGHT LOUNGES",
     description: "Gather under the stars. Warm up around cozy, hand-laid bonfire pits and outdoor stone fireplaces with your favorite music, vintage wines, and close companions.",
-    image: "/images/villa-alibaug.png",
+    image: "/assets/villas/the-angle-house/gallery-5.webp",
     link: "/villas?category=Couple+Retreats",
   },
   {

@@ -16,22 +16,22 @@ import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 
 const destinations = [
   {
-    name: "Lonavala",
+    name: "The Angle House (Lonavala)",
     image: "/assets/villas/the-angle-house/gallery-11.webp",
-    count: "1 Villa",
+    count: "Book Villa",
     tag: "Mountain Escapes",
-    desc: "Cool breeze, misty green hills, and quiet retreats.",
+    desc: "Cool breeze, misty green hills, waterfall pool, master jacuzzi & chef service.",
     isLaunchingSoon: false,
-    link: "/areas/lonavala"
+    link: "/villa/the-angle-house"
   },
   {
-    name: "Khopoli",
+    name: "Canopy Crest (Khopoli)",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
-    count: "1 Villa",
+    count: "Book Villa",
     tag: "Nature Getaways",
-    desc: "Scenic foothills, waterfalls, and green valleys near the hills.",
+    desc: "Scenic foothills, waterfalls, 22ft pool and large lawn near Imagicaa.",
     isLaunchingSoon: false,
-    link: "/areas/khopoli"
+    link: "/villa/canopy-crest"
   }
 ];
 

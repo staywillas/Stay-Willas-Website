@@ -87,9 +87,8 @@ const Footer = () => {
                 { name: "All Stays", href: "/villas" },
                 { name: "Destinations", href: "/destinations" },
                 { name: "Villas in Lonavala", href: "/areas/lonavala" },
-                { name: "Alibaug Villas", href: "/areas/alibaug" },
-                { name: "Karjat Villas", href: "/areas/karjat" },
                 { name: "Luxury Villas in Khopoli", href: "/areas/khopoli" },
+                { name: "Pawna Lake Villas", href: "/areas/pawna" },
                 { name: "Experiences", href: "/experiences" },
                 { name: "Guest Stories", href: "/stories" }
               ].map((link) => (

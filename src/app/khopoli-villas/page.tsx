@@ -248,7 +248,7 @@ export default async function KhopoliGroupEstatePage() {
           pageName="khopoli"
           villaName="Canopy Crest (Khopoli)"
           location="Khopoli, Maharashtra"
-          couponCode="KHOPOLI28"
+          couponCode="STAYW28"
           discountPercent={28}
           villaLink="/villa/canopy-crest"
           offerTitle="Monsoon Escape"
@@ -304,7 +304,7 @@ export default async function KhopoliGroupEstatePage() {
             {/* Strong Action CTAs */}
             <div className="flex flex-wrap items-center justify-center gap-3 w-full max-w-xl mb-8">
               <a 
-                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20the%20Monsoon%20Escape%20Offer%20for%20Canopy%20Crest%20in%20Khopoli%20(Stay%20for%202%20Nights%20and%20Save%20More%20-%20Weekdays%20Only).%20Coupon:%20KHOPOLI28" 
+                href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I'm%20interested%20in%20the%20Monsoon%20Escape%20Offer%20for%20Canopy%20Crest%20in%20Khopoli%20(Stay%20for%202%20Nights%20and%20Save%20More%20-%20Weekdays%20Only).%20Coupon:%20STAYW28" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="bg-[#25D366] hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-black uppercase tracking-wider py-4 px-7 rounded-2xl shadow-[0_4px_20px_rgba(37,211,102,0.4)] transition-all flex items-center justify-center gap-2 hover:scale-105"
@@ -332,7 +332,7 @@ export default async function KhopoliGroupEstatePage() {
               <QuickMobileLeadForm
                 villaName="Canopy Crest (Khopoli)"
                 location="Khopoli, Maharashtra"
-                defaultCoupon="KHOPOLI28"
+                defaultCoupon="STAYW28"
                 discountPercent={28}
                 offerTitle="Monsoon Escape"
                 highlightText="Stay 2 Nights & Save More (Weekdays Only)"
@@ -395,7 +395,7 @@ export default async function KhopoliGroupEstatePage() {
                   <span className="text-[11px] text-[#DAA520] font-bold block mt-1">Total for 2 Weekday Nights</span>
                 </div>
                 <a
-                  href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20claim%20the%20Monsoon%20Escape%202-Night%20Weekday%20Deal%20for%20Canopy%20Crest%20in%20Khopoli%20(Coupon:%20KHOPOLI28)"
+                  href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20claim%20the%20Monsoon%20Escape%202-Night%20Weekday%20Deal%20for%20Canopy%20Crest%20in%20Khopoli%20(Coupon:%20STAYW28)"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full bg-[#25D366] hover:bg-emerald-600 active:scale-95 text-white font-black text-xs uppercase tracking-wider py-4 rounded-xl shadow-lg transition-all"
@@ -460,7 +460,7 @@ export default async function KhopoliGroupEstatePage() {
             location="Khopoli, Maharashtra"
             originalPrice={basePrice}
             discountedPrice={discounted1Night}
-            couponCode="KHOPOLI28"
+            couponCode="STAYW28"
             images={canopyCrestShowcaseImages}
             reviews={canopyCrestReviews}
             offerTitle="Monsoon Escape"
@@ -608,7 +608,7 @@ export default async function KhopoliGroupEstatePage() {
                   <span className="text-xs font-normal text-slate-500">/ night</span>
                 </div>
                 <span className="inline-block mt-1 text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
-                  Coupon: <strong className="text-[#1B3564]">KHOPOLI28</strong>
+                  Coupon: <strong className="text-[#1B3564]">STAYW28</strong>
                 </span>
               </div>
 

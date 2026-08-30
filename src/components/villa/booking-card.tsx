@@ -348,7 +348,7 @@ const BookingCard = ({
 
   const getDiscountRate = (code: string): number => {
     const clean = code.trim().toUpperCase();
-    if (clean.includes("28") || clean === "ESCAPE28" || clean === "FLASH28" || clean === "STAY28" || clean === "WILLAS28" || clean === "OFFER28" || clean === "LONAVALA28" || clean === "KHOPOLI28" || clean === "SUMMER28" || clean === "DIRECT28") {
+    if (clean === "STAYW28" || clean.includes("28") || clean === "ESCAPE28" || clean === "FLASH28" || clean === "STAY28" || clean === "WILLAS28" || clean === "OFFER28" || clean === "LONAVALA28" || clean === "KHOPOLI28" || clean === "SUMMER28" || clean === "DIRECT28") {
       return 0.28;
     }
     if (clean === "STAY5") {
@@ -668,7 +668,7 @@ We are so excited about this getaway! Could you please check availability and he
               <div>
                 <span className="text-[10px] text-[#DAA520] uppercase tracking-wider font-black block">Special Direct Offer</span>
                 <p className="text-xs text-slate-800 font-bold mt-0.5 leading-tight">
-                  Flat <span className="text-emerald-600 font-black">28% OFF</span> with coupon <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all">ESCAPE28</strong>
+                  Flat <span className="text-emerald-600 font-black">28% OFF</span> with coupon <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all">STAYW28</strong>
                 </p>
               </div>
             </div>
@@ -677,7 +677,7 @@ We are so excited about this getaway! Could you please check availability and he
                 type="button"
                 onClick={() => {
                   setIsCouponApplied(true);
-                  setCouponCode("ESCAPE28");
+                  setCouponCode("STAYW28");
                 }}
                 className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 shadow-xs"
               >
@@ -693,7 +693,7 @@ We are so excited about this getaway! Could you please check availability and he
           <div className="flex gap-2 w-full">
             <input
               type="text"
-              placeholder="Enter coupon code (e.g. ESCAPE28)"
+              placeholder="Enter coupon code (e.g. STAYW28)"
               className="flex-1 min-w-0 bg-white border border-border-subtle rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wider placeholder:text-text-primary/30 placeholder:normal-case outline-none focus:border-[#DAA520] focus:ring-1 focus:ring-[#DAA520]/20"
               value={couponCode}
               onChange={(e) => {

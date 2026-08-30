@@ -57,7 +57,7 @@ export default async function EscapePage() {
     id: "lonavala-estate",
     slug: "the-angle-house",
     name: "The Angle House",
-    location: "Lonavala, Maharashtra",
+    location: "Kamshet, Lonavala, Maharashtra",
     price: 13000,
     weekendPrice: 20000,
     fridayPrice: 15000,
@@ -75,7 +75,6 @@ export default async function EscapePage() {
     ],
     amenities: [
       "Private Swimming Pool",
-      "Panoramic Glass Frontage",
       "Outdoor lounging spaces",
       "Jacuzzi in Master Bedroom",
       "Dedicated Caretaker"

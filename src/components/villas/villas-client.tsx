@@ -44,7 +44,7 @@ const CATEGORIES = [
   "Cold Climates"
 ];
 
-const REGIONS = ["Lonavala", "Khopoli", "Karjat", "Igatpuri", "Alibaug", "Goa"];
+const REGIONS = ["Lonavala", "Khopoli"];
 
 const AMENITY_TAGS = [
   { label: "Swimming Pool", match: ["pool", "swimming"] },

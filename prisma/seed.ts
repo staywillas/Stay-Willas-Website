@@ -6,7 +6,7 @@ const villasData = [
     id: "lonavala-estate",
     slug: "the-angle-house",
     name: "The Angle House",
-    location: "Lonavala, Maharashtra",
+    location: "Kamshet, Lonavala, Maharashtra",
     category: "Infinity Pools",
     description: `Imagine waking up to the gentle breeze of the hills, surrounded by sleek glass walls and towering trees. Welcome to The Angle House, a stunning designer villa where dramatic modern architecture meets forest serenity. Characterized by its striking angular glass-facade design, this estate is a genuinely unique retreat that stands out in Lonavala's landscape. Located a short, convenient drive from Mumbai and Pune, it is the perfect sanctuary to unwind with your loved ones.
 
@@ -49,8 +49,6 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     amenities: [
       "Private Swimming Pool",
       "Waterfall Feature",
-      "Panoramic Glass Frontage",
-      "Modern warm lighting",
       "Outdoor lounging spaces",
       "Chilled Air Conditioning",
       "Super-fast Wi-Fi",
@@ -102,6 +100,64 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
       "Meals Available",
       "Senior Citizen Friendly",
       "Spacious Lawn"
+    ]
+  },
+  {
+    id: "lonavala-willow-peak",
+    slug: "willow-peak",
+    name: "Willow Peak",
+    location: "Kurwande, Lonavala, Maharashtra",
+    category: "Mountain View",
+    description: `Escape to Willow Peak in Kurwande, Lonavala — a charming scenic retreat featuring individual cottages and distinct A-frame architecture surrounded by lush gardens and mountain greenery. Nestled in the serene hills of Kurwande near Lonavala, this estate offers private air-conditioned cottages with comfortable double beds, attached bathrooms with modern shower facilities, and soothing jacuzzi baths.
+
+Guests can soak in breathtaking mountain and scenic nature views from their private cottage sit-outs, unwind in the manicured gardens, or gather around the outdoor dining area and BBQ facility. Complete with carrom board entertainment, well-lit outdoor evening spaces, secure parking, television, and high-speed Wi-Fi, Willow Peak is the ideal sanctuary for peaceful staycations with family and friends.`,
+    price: 14000,
+    weekendPrice: 22000,
+    fridayPrice: 17000,
+    saturdayPrice: 22000,
+    sundayPrice: 15000,
+    baseGuests: 12,
+    extraGuestFee: 1200,
+    guests: 18,
+    bedrooms: 4,
+    bathrooms: 4,
+    images: [
+      "/assets/villas/willow-peak/main.webp",
+      "/assets/villas/willow-peak/gallery-13.webp",
+      "/assets/villas/willow-peak/gallery-14.webp",
+      "/assets/villas/willow-peak/gallery-12.webp",
+      "/assets/villas/willow-peak/gallery-1.webp",
+      "/assets/villas/willow-peak/gallery-2.webp",
+      "/assets/villas/willow-peak/gallery-3.webp",
+      "/assets/villas/willow-peak/gallery-4.webp",
+      "/assets/villas/willow-peak/gallery-5.webp",
+      "/assets/villas/willow-peak/gallery-6.webp",
+      "/assets/villas/willow-peak/gallery-7.webp",
+      "/assets/villas/willow-peak/gallery-8.webp",
+      "/assets/villas/willow-peak/gallery-9.webp",
+      "/assets/villas/willow-peak/gallery-10.webp",
+      "/assets/villas/willow-peak/gallery-11.webp",
+      "/assets/villas/willow-peak/gallery-15.webp"
+    ],
+    amenities: [
+      "Individual Cottages",
+      "A-Frame / Cottage-Style Architecture",
+      "Air-Conditioned Rooms",
+      "Comfortable Double Beds",
+      "Television",
+      "Wi-Fi",
+      "Attached Bathrooms",
+      "Shower Facilities",
+      "Jacuzzi Bath",
+      "Mountain / Scenic Views",
+      "Garden & Greenery",
+      "Outdoor Seating",
+      "Outdoor Dining Area",
+      "Carrom Board",
+      "BBQ Facility",
+      "Parking",
+      "Well-Lit Outdoor Areas",
+      "Cottage Sit-Outs"
     ]
   }
 ];

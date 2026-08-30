@@ -43,21 +43,23 @@ export default async function AreasPage() {
   const areas = [
     {
       slug: "lonavala",
-      name: "Lonavala",
+      name: "The Angle House (Lonavala)",
       tagline: "The Mountain Sanctuary",
       desc: "Cool mountain breeze, misty green valleys, and spacious private pool villas perched on lush hills.",
       image: "/assets/villas/the-angle-house/gallery-11.webp",
       count: lonavalaCount,
-      isLaunchingSoon: lonavalaCount === 0
+      isLaunchingSoon: lonavalaCount === 0,
+      link: "/villa/the-angle-house"
     },
     {
       slug: "khopoli",
-      name: "Khopoli",
+      name: "Canopy Crest (Khopoli)",
       tagline: "The Nature Escape",
       desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet private pool getaways.",
       image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
       count: khopoliCount,
-      isLaunchingSoon: khopoliCount === 0
+      isLaunchingSoon: khopoliCount === 0,
+      link: "/villa/canopy-crest"
     }
   ];
 
@@ -137,10 +139,10 @@ export default async function AreasPage() {
                 <div className="p-6 pt-0 text-left">
                   {!area.isLaunchingSoon ? (
                     <Link
-                      href={`/areas/${area.slug}`}
+                      href={area.link}
                       className="inline-flex items-center justify-between w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-2xl px-5 py-3.5 text-xs font-bold tracking-wider uppercase shadow-md transition-all duration-300 group-hover:scale-[1.02]"
                     >
-                      Explore {area.name} Stays
+                      View Details & Book
                       <ArrowUpRight size={16} className="text-accent-primary" />
                     </Link>
                   ) : (
@@ -224,7 +226,7 @@ export default async function AreasPage() {
                   Are you tired of the repetitive city routine and seeking a relaxing break close to home? Finding luxury <strong>weekend getaway villas</strong> has become the preferred choice for discerning travelers who want to escape traffic, noise, and pollution. Whether it is a quick family gathering or a private pool party with friends, booking independent <strong>private pool rentals</strong> near Mumbai and Pune provides the perfect solution. You get the space, privacy, and specialized concierge services that traditional hotels simply cannot deliver. Our homes are built to offer you a home away from home.
                 </p>
                 <p>
-                  Our carefully curated portfolio highlights premium properties in the most scenic locations of Maharashtra. From the misty heights of Lonavala and the serene base of the Sahyadri mountains in Khopoli, to the quiet coastal breezes of Alibaug and the riverside farmhouses in Karjat, we offer a diverse selection of <strong>villas near mumbai</strong> to match every group's requirement. If you are a resident of Pune looking to beat the summer heat, our properties act as the ultimate collection of <strong>villas near pune</strong>, offering cool, temperature-controlled private pools and spacious lawns. Each villa is checked for safety, hygiene, and luxury standards before your arrival.
+                  Our carefully curated portfolio highlights premium properties in the most scenic locations of Maharashtra. From the misty heights of Lonavala to the serene base of the Sahyadri mountains in Khopoli, we offer a diverse selection of <strong>villas near mumbai</strong> to match every group's requirement. If you are a resident of Pune looking to beat the summer heat, our properties act as the ultimate collection of <strong>villas near pune</strong>, offering cool, temperature-controlled private pools and spacious lawns. Each villa is checked for safety, hygiene, and luxury standards before your arrival.
                 </p>
                 <p>
                   What makes renting private <strong>villas near mumbai</strong> so popular is the travel time. You don't need to book plane tickets or plan weeks in advance. You can simply load your bags into the car on a Friday afternoon and arrive at your private sanctuary within 1.5 to 2 hours. Similarly, Pune residents have easy access to these getaways via the Mumbai-Pune Expressway, making our <strong>villas near pune</strong> highly accessible for weekend retreats. It makes it incredibly easy to arrange spontaneous family reunions or weekend get-togethers without heavy travel stress.
@@ -233,7 +235,7 @@ export default async function AreasPage() {
                   Furthermore, these holiday homes are fully staffed with professional estate managers and private chefs. When you choose our <strong>villas near mumbai</strong>, you get to customize your menus, set your own schedules, and enjoy standard luxury amenities like high-speed Wi-Fi, private pools, and custom bonfire lawns. For teams looking to align their goals in a relaxed environment, these <strong>villas near pune</strong> also double as high-end corporate retreats, offering spacious meeting areas and recreational facilities. You can host workshops in the afternoon and relax by the poolside bar in the evening.
                 </p>
                 <p>
-                  In addition, pet owners will find our collection highly appealing, as many of these properties offer large fenced lawns and pet-friendly policies. Your pets can enjoy the open space just as much as you do. Browse our premium locations today, find the destination that fits your group, and secure your upcoming staycation. Whether you want a beachside villa in Alibaug or a mountain sanctuary in Lonavala, we have the ideal properties ready for your arrival. We are constantly expanding our listings to provide you with the most luxurious options available.
+                  In addition, pet owners will find our collection highly appealing, as many of these properties offer large fenced lawns and pet-friendly policies. Your pets can enjoy the open space just as much as you do. Browse our premium locations today, find the destination that fits your group, and secure your upcoming staycation. Whether you want a lush group estate in Khopoli or an architectural mountain sanctuary in Lonavala, we have the ideal properties ready for your arrival. We are constantly expanding our listings to provide you with the most luxurious options available.
                 </p>
               </article>
             </main>

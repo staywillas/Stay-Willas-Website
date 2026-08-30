@@ -45,7 +45,7 @@ export default function FoodMenuModal() {
   return (
     <>
       {/* Food Menu CTA Card */}
-      <div className="bg-gradient-to-br from-white to-[#FDFBF7] border border-[#DAA520]/25 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300 select-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 my-10">
+      <div className="bg-gradient-to-br from-white to-[#FDFBF7] border border-[#DAA520]/25 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300 select-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 rounded-2xl bg-[#DAA520]/10 border border-[#DAA520]/20 flex items-center justify-center text-[#DAA520] shrink-0">
             <ChefHat size={22} className="animate-pulse" />

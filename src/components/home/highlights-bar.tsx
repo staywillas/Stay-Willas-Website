@@ -75,17 +75,17 @@ const highlightsData = [
       desc: "Stunning valley views in the heart of Lonavala",
     },
   ],
-  // Slide 2: Alibaug Beachfront / Steps from the Sand
+  // Slide 2: Khopoli Valley Sanctuary / Nature Retreats
   [
     {
       icon: "Sun",
-      title: "Beachfront Bliss",
-      desc: "Wake up to ocean views and sea breeze",
+      title: "Valley Sanctuaries",
+      desc: "Sprawling private estates surrounded by nature",
     },
     {
       icon: "Palmtree",
       title: "Handpicked Stays",
-      desc: "Beautiful beach houses with premium comfort",
+      desc: "Large group pool villas with premium comfort",
     },
     {
       icon: "BellRing",
@@ -95,7 +95,7 @@ const highlightsData = [
     {
       icon: "Compass",
       title: "Local Experiences",
-      desc: "Discover Alibaug beyond the sandy beaches",
+      desc: "Explore Khopoli valleys, waterfalls and private lawns",
     },
   ],
 ];

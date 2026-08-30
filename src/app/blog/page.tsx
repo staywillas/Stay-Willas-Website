@@ -61,12 +61,12 @@ export default function BlogIndexPage() {
         </section>
 
         {/* Blog Grid */}
-        <section className="py-20 md:py-28 max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 max-w-5xl mx-auto justify-items-center">
+        <section className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
             {blogsData.map((blog) => (
               <div 
                 key={blog.slug} 
-                className="bg-white border border-[#DAA520]/15 hover:border-[#DAA520]/45 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-between group max-w-md"
+                className="bg-white border border-[#DAA520]/15 hover:border-[#DAA520]/45 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-between group w-full"
               >
                 <div>
                   {/* Image wrapper with 3D hover support */}
@@ -75,48 +75,48 @@ export default function BlogIndexPage() {
                       src={blog.image}
                       alt={blog.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, 450px"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent opacity-60" />
                     
-                    <span className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm text-[#1B3564] font-bold text-[9px] tracking-wider uppercase px-3.5 py-1.5 rounded-full shadow-sm font-mono border border-[#DAA520]/20 select-none">
+                    <span className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm text-[#1B3564] font-bold text-[9px] tracking-wider uppercase px-3 py-1 rounded-full shadow-sm font-mono border border-[#DAA520]/20 select-none">
                       Guide
                     </span>
                   </div>
 
                   {/* Body Content */}
-                  <div className="p-8 text-left">
+                  <div className="p-6 text-left">
                     {/* Date and Read Time Row */}
-                    <div className="flex items-center gap-4 text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-4 select-none">
-                      <span className="flex items-center gap-1">
-                        <Calendar size={12} className="text-[#DAA520]" />
+                    <div className="flex items-center gap-3 text-xs text-slate-500 font-semibold uppercase tracking-wider mb-3 select-none">
+                      <span className="flex items-center gap-1.5">
+                        <Calendar size={13} className="text-[#DAA520]" />
                         {blog.date}
                       </span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/30" />
-                      <span className="flex items-center gap-1">
-                        <Clock size={12} className="text-[#DAA520]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/40" />
+                      <span className="flex items-center gap-1.5">
+                        <Clock size={13} className="text-[#DAA520]" />
                         {blog.readTime}
                       </span>
                     </div>
 
-                    <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold mb-4 group-hover:text-accent-primary transition-colors leading-snug">
+                    <h2 className="text-lg md:text-xl font-heading text-[#1B3564] font-bold mb-3 group-hover:text-accent-primary transition-colors leading-snug line-clamp-2">
                       {blog.title}
                     </h2>
                     
-                    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed font-light mb-6">
+                    <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed font-normal line-clamp-3 mb-5">
                       {blog.description}
                     </p>
                   </div>
                 </div>
 
                 {/* Footer Link */}
-                <div className="p-8 pt-0 text-left">
+                <div className="p-6 pt-0 text-left">
                   <Link
                     href={`/blog/${blog.slug}`}
-                    className="inline-flex items-center justify-between w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-2xl px-5 py-3.5 text-xs font-bold tracking-wider uppercase shadow-md transition-all duration-300 group-hover:scale-[1.02]"
+                    className="inline-flex items-center justify-between w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-xl px-5 py-3 text-xs font-bold tracking-wider uppercase shadow-sm transition-all duration-300 group-hover:scale-[1.02]"
                   >
-                    Read Full Article
+                    Read Article
                     <ArrowRight size={14} className="text-[#DAA520] group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>

@@ -9,21 +9,25 @@ import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Luxury Villas in Khopoli | Private Weekend Getaways | Stay Willas",
-  description: "Discover luxury villas in Khopoli with Stay Willas. Sprawling group estates, private pools, and nature retreats near Mumbai and Pune for weekend staycations.",
+  title: "Villas in Khopoli with Private Pool | Luxury Staycations | Stay Willas",
+  description: "Discover luxury villas in Khopoli with private pool, sprawling green lawns & in-house chef dining near Imagicaa. Book verified 4 BHK group estates from ₹12,000/night.",
   keywords: [
-    "luxury villas in Khopoli",
-    "villas in Khopoli",
-    "Khopoli villa staycation",
-    "weekend getaway villa Khopoli",
-    "corporate offsite villa Khopoli"
+    "villas in khopoli with private pool",
+    "villas in khopoli",
+    "khopoli villa with swimming pool",
+    "luxury villas in khopoli",
+    "canopy crest khopoli",
+    "khopoli villas",
+    "villas near imagica with private pool",
+    "khopoli villa staycation",
+    "corporate offsite villa khopoli"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/khopoli",
   },
   openGraph: {
-    title: "Luxury Villas in Khopoli | Private Weekend Getaways | Stay Willas",
-    description: "Discover luxury villas in Khopoli with Stay Willas. Sprawling group estates, private pools, and nature retreats near Mumbai and Pune for weekend staycations.",
+    title: "Villas in Khopoli with Private Pool | Luxury Staycations | Stay Willas",
+    description: "Discover luxury villas in Khopoli with private pool, sprawling green lawns & in-house chef dining near Imagicaa. Book verified 4 BHK group estates from ₹12,000/night.",
     url: "https://www.staywillas.com/areas/khopoli",
     siteName: "Stay Willas",
     locale: "en_IN",
@@ -32,15 +36,15 @@ export const metadata: Metadata = {
         url: "https://www.staywillas.com/images/hero-villa.png",
         width: 1200,
         height: 630,
-        alt: "Luxury Villas in Khopoli - Stay Willas Collection",
+        alt: "Villas in Khopoli with Private Pool - Stay Willas Collection",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villas in Khopoli | Private Weekend Getaways | Stay Willas",
-    description: "Discover luxury villas in Khopoli with Stay Willas. Sprawling group estates, private pools, and nature retreats near Mumbai and Pune for weekend staycations.",
+    title: "Villas in Khopoli with Private Pool | Luxury Staycations | Stay Willas",
+    description: "Discover luxury villas in Khopoli with private pool, sprawling green lawns & in-house chef dining near Imagicaa. Book verified 4 BHK group estates from ₹12,000/night.",
     images: ["https://www.staywillas.com/images/hero-villa.png"],
   },
 };
