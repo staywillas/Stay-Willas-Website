@@ -183,7 +183,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     if (foodPlan === "none") {
       setFoodRatePerPersonPerDay(0);
     } else if (foodPlan === "standard") {
-      setFoodRatePerPersonPerDay(1200);
+      setFoodRatePerPersonPerDay(1250);
     } else if (foodPlan === "deluxe") {
       setFoodRatePerPersonPerDay(1500);
     }
@@ -1488,7 +1488,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                           className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
                         >
                           <option value="none">No Meals Plan (Self / External)</option>
-                          <option value="standard">Standard Menu (₹1,200/day)</option>
+                          <option value="standard">Standard Menu (₹1,250/day)</option>
                           <option value="deluxe">Deluxe Gourmet Menu (₹1,500/day)</option>
                           <option value="custom">Custom Dining Rate</option>
                         </select>
