@@ -364,6 +364,21 @@ export default async function VillaDetailPage({ params }: PageProps) {
     ]
   };
 
+  const villaMapData: Record<string, { directUrl: string; embedUrl: string }> = {
+    "the-angle-house": {
+      directUrl: "https://www.google.com/maps/place/StayWillas+The+Angle+House+%7C+With+Jacuzzi+%7C+Lonavala/@18.7687773,73.5659749,17z/data=!3m1!4b1!4m9!3m8!1s0x3bc2ad6536845e45:0x4a41e2fba2fc985c!5m2!4m1!1i2!8m2!3d18.7687773!4d73.5685498!16s%2Fg%2F11zb_x4877",
+      embedUrl: "https://maps.google.com/maps?q=18.7687773,73.5685498&hl=en&z=16&output=embed"
+    },
+    "canopy-crest": {
+      directUrl: "https://www.google.com/maps/place/StayWillas+Canopy+Crest+Khopoli+%7C+Premium+Villa+with+Swimming+Pool/@18.7101381,73.3318344,17z/data=!3m1!4b1!4m6!3m5!1s0x3be80541e66fe4dd:0xf311fa62a65e318f!8m2!3d18.7101381!4d73.3344093!16s%2Fg%2F11zcgpz6w2",
+      embedUrl: "https://maps.google.com/maps?q=18.7101381,73.3344093&hl=en&z=16&output=embed"
+    },
+    "willow-peak": {
+      directUrl: "https://maps.google.com/?q=Kurwande,+Lonavala,+Maharashtra",
+      embedUrl: "https://maps.google.com/maps?q=Kurwande,+Lonavala,+Maharashtra&hl=en&z=15&output=embed"
+    }
+  };
+
   const villaFaqs = villaFaqsMap[villa.slug] || [];
   
   const faqSchema = villaFaqs.length > 0 ? {
@@ -612,6 +627,74 @@ export default async function VillaDetailPage({ params }: PageProps) {
               <p className="text-slate-900 text-lg leading-relaxed whitespace-pre-line font-normal">
                 {villaData.description}
               </p>
+            </div>
+
+            {/* 5. Location & Surroundings (Interactive Google Map) */}
+            <div className="mb-12">
+              <h2 className="text-3xl font-heading mb-6 border-b border-[#DAA520]/20 pb-6 italic text-[#1B3564] font-bold">
+                Location & Surroundings
+              </h2>
+              
+              <div className="bg-white border border-[#DAA520]/20 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <span className="text-[10px] text-accent-secondary font-black uppercase tracking-widest block mb-1">
+                      Exact Google Maps Pinpoint
+                    </span>
+                    <h3 className="text-xl font-heading font-bold text-[#1B3564] flex items-center gap-2">
+                      <MapPin size={18} className="text-[#DAA520]" />
+                      {villaData.location}
+                    </h3>
+                  </div>
+                  
+                  {villaMapData[villaData.slug]?.directUrl && (
+                    <a
+                      href={villaMapData[villaData.slug].directUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-[#1B3564] hover:bg-[#152A50] text-white px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-sm hover:scale-105 active:scale-95 flex items-center gap-2 shrink-0"
+                    >
+                      <MapPin size={14} className="text-[#DAA520]" />
+                      Open in Google Maps
+                    </a>
+                  )}
+                </div>
+
+                {/* Map Embed Frame */}
+                {villaMapData[villaData.slug]?.embedUrl && (
+                  <div className="relative w-full h-[320px] sm:h-[380px] rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-100">
+                    <iframe
+                      title={`${villaData.name} Google Maps Location`}
+                      src={villaMapData[villaData.slug].embedUrl}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen={false}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="w-full h-full"
+                    />
+                  </div>
+                )}
+
+                {/* Getting Here Guidance */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100 text-xs text-slate-600">
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={15} className="text-[#DAA520] shrink-0 mt-0.5" />
+                    <span>
+                      {villaData.slug === "the-angle-house" 
+                        ? "Conveniently accessible from Mumbai-Pune Expressway via Kamshet / Old Highway." 
+                        : villaData.slug === "canopy-crest"
+                        ? "Direct smooth drive from Khopoli toll plaza, 15 mins from Imagicaa."
+                        : "Scenic hilltop drive through Kurwande, close to Tiger Point & Bushi Dam."}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={15} className="text-[#DAA520] shrink-0 mt-0.5" />
+                    <span>Free on-site private vehicle parking with well-lit driveway access.</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
