@@ -488,8 +488,17 @@ We are so excited about this getaway! Could you please check availability and he
     <div className="bg-white border border-border-subtle/80 rounded-3xl p-5 sm:p-7 lg:p-8 sticky top-28 shadow-[0_12px_48px_rgba(27,53,100,0.08)] w-full transition-all duration-300">
       <div className="flex items-end justify-between mb-6 pb-4 border-b border-border-subtle/50">
         <div>
-          <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">₹{price}</span>
-          <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">/ night</span>
+          <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">
+            ₹{isWillowPeak ? (Math.round(5999 * cottagesCount)).toLocaleString("en-IN") : price}
+          </span>
+          <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">
+            / night {isWillowPeak ? `(${cottagesCount} Cottage${cottagesCount > 1 ? "s" : ""})` : ""}
+          </span>
+          {isWillowPeak && (
+            <div className="text-[10.5px] font-medium text-slate-500 mt-1">
+              ₹5,999 Weekday • ₹6,999 Fri/Sun • ₹8,999 Sat <span className="text-[#1B3564] font-black">per cottage</span>
+            </div>
+          )}
         </div>
         <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${
           isOverlapping ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'

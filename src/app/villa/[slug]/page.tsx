@@ -716,12 +716,17 @@ export default async function VillaDetailPage({ params }: PageProps) {
             <BookingCard
               villaId={villaData.id}
               villaName={villaData.name}
-              price={villaData.price}
+              price={villaData.slug === "willow-peak" ? "5,999" : villaData.price}
               basePrice={villa.price}
               weekendPrice={villa.weekendPrice}
+              fridayPrice={villa.fridayPrice}
+              saturdayPrice={villa.saturdayPrice}
+              sundayPrice={villa.sundayPrice}
               dailyPrices={villa.dailyPrices as any}
               seasonalPrices={villa.seasonalPrices as any}
               maxGuests={villaData.guests}
+              baseGuests={villa.baseGuests ?? undefined}
+              extraGuestFee={villa.extraGuestFee ?? undefined}
               bookings={serializedBookings}
             />
           </div>
@@ -737,7 +742,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
         <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
           <div className="flex flex-col text-left shrink-0">
             <span className="text-[8px] text-[#DAA520] block uppercase tracking-widest font-black">Direct Best Rate</span>
-            <span className="text-[#1B3564] font-black text-base leading-tight">₹{villaData.price} <span className="text-[9px] font-normal text-slate-500 font-sans">/ night</span></span>
+            <span className="text-[#1B3564] font-black text-base leading-tight">₹{villaData.slug === "willow-peak" ? "5,999" : villaData.price} <span className="text-[9px] font-normal text-slate-500 font-sans">/ night {villaData.slug === "willow-peak" ? "/ cottage" : ""}</span></span>
             <span className="text-[7.5px] text-emerald-600 font-bold uppercase tracking-wider">✓ 0% Platform Fee</span>
           </div>
 
