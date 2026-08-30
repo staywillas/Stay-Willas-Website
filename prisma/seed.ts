@@ -72,7 +72,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     sundayPrice: 22000,
     baseGuests: 12,
     extraGuestFee: 1200,
-    guests: 20,
+    guests: 16,
     bedrooms: 4,
     bathrooms: 5,
     images: [
@@ -108,19 +108,19 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     name: "Willow Peak",
     location: "Kurwande, Lonavala, Maharashtra",
     category: "Mountain View",
-    description: `Escape to Willow Peak in Kurwande, Lonavala — a charming scenic retreat featuring individual cottages and distinct A-frame architecture surrounded by lush gardens and mountain greenery. Nestled in the serene hills of Kurwande near Lonavala, this estate offers private air-conditioned cottages with comfortable double beds, attached bathrooms with modern shower facilities, and soothing jacuzzi baths.
-
-Guests can soak in breathtaking mountain and scenic nature views from their private cottage sit-outs, unwind in the manicured gardens, or gather around the outdoor dining area and BBQ facility. Complete with carrom board entertainment, well-lit outdoor evening spaces, secure parking, television, and high-speed Wi-Fi, Willow Peak is the ideal sanctuary for peaceful staycations with family and friends.`,
+    description: `Escape to Willow Peak in Kurwande, Lonavala — a charming scenic retreat featuring 3 private individual cottages with distinct A-frame architecture surrounded by lush gardens and mountain greenery. Nestled in the serene hills of Kurwande near Lonavala, each private cottage accommodates up to 4 guests and offers air-conditioned bedrooms with comfortable double beds, attached bathrooms with modern shower facilities, and soothing jacuzzi baths.
+    
+With 3 standalone cottages on site (hosting up to 12 guests total), groups can book 1, 2, or all 3 cottages depending on party size. Soak in breathtaking mountain views from private cottage sit-outs, unwind in the manicured gardens, or gather around the outdoor dining area and BBQ facility. Complete with carrom board entertainment, well-lit outdoor evening spaces, secure parking, television, and high-speed Wi-Fi, Willow Peak is the ideal sanctuary for peaceful staycations with family and friends.`,
     price: 14000,
     weekendPrice: 22000,
     fridayPrice: 17000,
     saturdayPrice: 22000,
     sundayPrice: 15000,
-    baseGuests: 12,
+    baseGuests: 4,
     extraGuestFee: 1200,
-    guests: 18,
-    bedrooms: 4,
-    bathrooms: 4,
+    guests: 12,
+    bedrooms: 3,
+    bathrooms: 3,
     images: [
       "/assets/villas/willow-peak/main.webp",
       "/assets/villas/willow-peak/gallery-13.webp",

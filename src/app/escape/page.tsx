@@ -93,7 +93,7 @@ export default async function EscapePage() {
     sundayPrice: 22000,
     baseGuests: 12,
     extraGuestFee: 1200,
-    guests: 20,
+    guests: 16,
     bedrooms: 4,
     bathrooms: 5,
     images: [

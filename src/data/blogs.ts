@@ -220,7 +220,7 @@ export const blogsData: BlogPost[] = [
       {
         heading: "Group Stays FAQs",
         paragraphs: ["Common questions regarding group bookings:"],
-        list: ["How many guests can stay? Canopy Crest can comfortably accommodate up to 20 guests with extra bedding setups.","Are events permitted? Yes, the lawns and gazebo are perfect for small intimate gatherings and corporate bonding sessions.","What is the food arrangement? We provide customizable all-inclusive meal packages cooked fresh by our chef."]
+        list: ["How many guests can stay? Canopy Crest can comfortably accommodate up to 16 guests with extra bedding setups.","Are events permitted? Yes, the lawns and gazebo are perfect for small intimate gatherings and corporate bonding sessions.","What is the food arrangement? We provide customizable all-inclusive meal packages cooked fresh by our chef."]
       }
     ],
     conclusion: "Take your next group gathering to a new level. Book Canopy Crest and enjoy a fully serviced private pool retreat in Khopoli."
@@ -302,7 +302,7 @@ export const blogsData: BlogPost[] = [
       {
         heading: "2. Accommodation & Team Scale",
         paragraphs: [
-          "Ensure the property has enough space to house your team comfortably. For team privacy, ensuite bathrooms and separate beds are usually preferred. Properties like <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest in Khopoli</a> can accommodate up to 20 guests with 4 massive bedrooms, 5 bathrooms, and expansive charpai lawns."
+          "Ensure the property has enough space to house your team comfortably. For team privacy, ensuite bathrooms and separate beds are usually preferred. Properties like <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest in Khopoli</a> can accommodate up to 16 guests with 4 massive bedrooms, 5 bathrooms, and expansive charpai lawns."
         ]
       },
       {

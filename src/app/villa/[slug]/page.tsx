@@ -262,14 +262,27 @@ export default async function VillaDetailPage({ params }: PageProps) {
       checkIn: true,
       checkOut: true,
       status: true,
+      userId: true,
     }
   });
 
-  const serializedBookings = activeBookings.map(b => ({
-    checkIn: b.checkIn.toISOString(),
-    checkOut: b.checkOut.toISOString(),
-    status: b.status,
-  }));
+  const serializedBookings = activeBookings.map(b => {
+    let cottagesCount = 1;
+    try {
+      if (b.userId && b.userId.startsWith('{')) {
+        const parsed = JSON.parse(b.userId);
+        if (parsed.cottagesCount) cottagesCount = parsed.cottagesCount;
+        else if (parsed.guests) cottagesCount = Math.max(1, Math.min(3, Math.ceil(parsed.guests / 4)));
+      }
+    } catch (e) {}
+
+    return {
+      checkIn: b.checkIn.toISOString(),
+      checkOut: b.checkOut.toISOString(),
+      status: b.status,
+      cottagesCount,
+    };
+  });
 
   const villaData = {
     id: villa.id,
@@ -344,8 +357,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
         answer: "Canopy Crest is located in Khopoli, Maharashtra, just a short drive from Adlabs Imagica, making it an ideal base for families visiting the theme park."
       },
       {
-        question: "What amenities are available at Canopy Crest?",
-        answer: "Canopy Crest features a private pool (22x12 ft), spacious lawn, music system, indoor/outdoor games, wheelchair accessibility, CCTV security, and dedicated caretaker services."
+        question: "What is the guest capacity and amenities at Canopy Crest?",
+        answer: "Canopy Crest comfortably accommodates up to 16 guests across 4 bedrooms, and features a private pool (22x12 ft), spacious lawn, music system, indoor/outdoor games, and dedicated caretaker services."
       }
     ],
     "willow-peak": [
@@ -354,8 +367,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
         answer: "Willow Peak is located in Kurwande, Lonavala, Maharashtra, enveloped in scenic mountain greenery and tranquil landscapes."
       },
       {
-        question: "What kind of stay experience does Willow Peak provide?",
-        answer: "Willow Peak features individual cottages with A-frame architecture, private sit-outs, jacuzzi baths, and manicured green gardens."
+        question: "How does booking individual cottages work at Willow Peak?",
+        answer: "Willow Peak consists of 3 individual cottages, each accommodating up to 4 guests (12 guests total). Depending on your group size, you can book 1 cottage (up to 4 guests), 2 cottages (up to 8 guests), or all 3 cottages (up to 12 guests for the full private estate)."
       },
       {
         question: "What amenities and activities are available at Willow Peak?",

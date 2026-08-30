@@ -81,8 +81,16 @@ export async function calculateStayPrice(
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
+  const isWillowPeak = villa.slug === "willow-peak";
+  const cottagesCount = isWillowPeak ? Math.max(1, Math.min(3, Math.ceil(guests / 4))) : 1;
+
+  if (isWillowPeak) {
+    // Proportional pricing based on number of cottages booked (1 cottage = 1/3, 2 = 2/3, 3 = 3/3)
+    totalStayPrice = Math.round(totalStayPrice * (cottagesCount / 3));
+  }
+
   const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-  const baseGuestsCount = villa.baseGuests ?? villa.guests;
+  const baseGuestsCount = isWillowPeak ? (cottagesCount * 4) : (villa.baseGuests ?? villa.guests);
   const extraGuests = Math.max(0, guests - baseGuestsCount);
   const extraGuestsCostPerNight = villa.extraGuestFee ? extraGuests * villa.extraGuestFee : 0;
   const totalExtraGuestsCost = extraGuestsCostPerNight * (nights > 0 ? nights : 0);
@@ -90,7 +98,8 @@ export async function calculateStayPrice(
   return { 
     totalRoomPrice: totalStayPrice, 
     totalExtraGuestsCost,
-    baseRate: villa.price 
+    baseRate: villa.price,
+    cottagesCount
   };
 }
 
@@ -112,6 +121,12 @@ export async function createCheckoutSession(formData: {
   const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
 
   try {
+    const targetVilla = await prisma.villa.findUnique({
+      where: { id: formData.villaId }
+    });
+    const isWillowPeak = targetVilla?.slug === "willow-peak" || formData.villaName.toLowerCase().includes("willow");
+    const requiredCottages = isWillowPeak ? Math.max(1, Math.min(3, Math.ceil(formData.guests / 4))) : 1;
+
     // 1. STAGE A: Strict Double Booking & Lock Prevention using Transaction Checks
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
     const overlappingBookings = await prisma.booking.findMany({
@@ -129,8 +144,42 @@ export async function createCheckoutSession(formData: {
       }
     });
 
-    if (overlappingBookings.length > 0) {
-      throw new Error("These dates are already booked or temporarily locked by another user in checkout. Please select different dates.");
+    if (isWillowPeak) {
+      // Check each night to ensure total booked cottages + requiredCottages <= 3
+      let cur = new Date(checkInDate);
+      while (cur.getTime() < checkOutDate.getTime()) {
+        const nextDay = new Date(cur);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        let bookedOnNight = 0;
+        for (const b of overlappingBookings) {
+          if (b.checkIn < nextDay && b.checkOut > cur) {
+            let bCottages = 1;
+            try {
+              if (b.userId && b.userId.startsWith("{")) {
+                const parsed = JSON.parse(b.userId);
+                if (parsed.cottagesCount) bCottages = parsed.cottagesCount;
+                else if (parsed.guests) bCottages = Math.ceil(parsed.guests / 4);
+              }
+            } catch (e) {}
+            bookedOnNight += bCottages;
+          }
+        }
+
+        if (bookedOnNight + requiredCottages > 3) {
+          const freeCottages = Math.max(0, 3 - bookedOnNight);
+          throw new Error(
+            freeCottages > 0
+              ? `Only ${freeCottages} cottage(s) (max ${freeCottages * 4} guests) available on ${cur.toLocaleDateString("en-IN")}. You requested ${requiredCottages} cottages for ${formData.guests} guests.`
+              : `All 3 cottages at Willow Peak are fully booked on ${cur.toLocaleDateString("en-IN")}. Please select different dates.`
+          );
+        }
+        cur.setDate(cur.getDate() + 1);
+      }
+    } else {
+      if (overlappingBookings.length > 0) {
+        throw new Error("These dates are already booked or temporarily locked by another user in checkout. Please select different dates.");
+      }
     }
 
     // 2. STAGE B: Dynamic Pricing Calculation (Weighted)
@@ -165,11 +214,18 @@ export async function createCheckoutSession(formData: {
     const discount = Math.round((totalRoomPrice + totalExtraGuestsCost) * discountRate);
     const finalTotal = totalRoomPrice + totalExtraGuestsCost + addOnsPrice + serviceFee - discount;
 
+    const userPayload = JSON.stringify({
+      userId: formData.userId || "GUEST_USER",
+      guests: formData.guests,
+      cottagesCount: requiredCottages,
+      cottageLabel: isWillowPeak ? `${requiredCottages} of 3 Cottages` : undefined,
+    });
+
     // 4. STAGE D: Create database HELD Booking Record to secure the locked dates for 10 minutes
     const holdBooking = await prisma.booking.create({
       data: {
         villaId: formData.villaId,
-        userId: formData.userId || "GUEST_USER",
+        userId: userPayload,
         checkIn: checkInDate,
         checkOut: checkOutDate,
         totalPrice: finalTotal,

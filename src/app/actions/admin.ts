@@ -20,6 +20,7 @@ export async function createManualBooking(formData: {
   totalPrice: number;
   status: string; // CONFIRMED, PENDING, BLOCKED
   notes?: string;
+  cottagesCount?: number;
   type?: "GUEST" | "MAINTENANCE" | "OWNER_USE";
   guests?: number;
   nightlyRate?: number;
@@ -41,33 +42,86 @@ export async function createManualBooking(formData: {
     const checkInDate = new Date(formData.checkIn);
     const checkOutDate = new Date(formData.checkOut);
 
-    // Overlap validation: check if dates are already blocked for this villa
-    const overlapping = await prisma.booking.findFirst({
-      where: {
-        villaId: formData.villaId,
-        status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
-        OR: [
-          {
-            checkIn: { lte: checkInDate },
-            checkOut: { gt: checkInDate },
-          },
-          {
-            checkIn: { lt: checkOutDate },
-            checkOut: { gte: checkOutDate },
-          },
-          {
-            checkIn: { gte: checkInDate },
-            checkOut: { lte: checkOutDate },
-          },
-        ],
-      },
+    const targetVilla = await prisma.villa.findUnique({
+      where: { id: formData.villaId }
     });
 
-    if (overlapping) {
-      return {
-        success: false,
-        error: `These dates overlap with an existing booking/blackout: ${overlapping.status} (${overlapping.checkIn.toLocaleDateString()} - ${overlapping.checkOut.toLocaleDateString()}).`,
-      };
+    const isWillowPeak = targetVilla?.slug === "willow-peak";
+    const cottagesToBook = isWillowPeak 
+      ? (formData.cottagesCount || Math.max(1, Math.min(3, Math.ceil((formData.guests || 1) / 4))))
+      : 1;
+
+    if (isWillowPeak) {
+      // For Willow Peak: Check that night-by-night total booked cottages does not exceed 3
+      const overlappingBookings = await prisma.booking.findMany({
+        where: {
+          villaId: formData.villaId,
+          status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] },
+          AND: [
+            { checkIn: { lt: checkOutDate } },
+            { checkOut: { gt: checkInDate } }
+          ]
+        }
+      });
+
+      let cur = new Date(checkInDate);
+      while (cur.getTime() < checkOutDate.getTime()) {
+        const nextDay = new Date(cur);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        let bookedOnNight = 0;
+        for (const b of overlappingBookings) {
+          if (b.checkIn < nextDay && b.checkOut > cur) {
+            let bCottages = 1;
+            try {
+              if (b.userId && b.userId.startsWith("{")) {
+                const parsed = JSON.parse(b.userId);
+                if (parsed.cottagesCount) bCottages = parsed.cottagesCount;
+                else if (parsed.guests) bCottages = Math.ceil(parsed.guests / 4);
+              }
+            } catch (e) {}
+            bookedOnNight += bCottages;
+          }
+        }
+
+        if (bookedOnNight + cottagesToBook > 3) {
+          const freeCottages = Math.max(0, 3 - bookedOnNight);
+          return {
+            success: false,
+            error: `Only ${freeCottages} cottage(s) available on ${cur.toLocaleDateString("en-IN")}. Cannot allocate ${cottagesToBook} cottage(s).`
+          };
+        }
+        cur.setDate(cur.getDate() + 1);
+      }
+    } else {
+      // Overlap validation for single-unit villas
+      const overlapping = await prisma.booking.findFirst({
+        where: {
+          villaId: formData.villaId,
+          status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
+          OR: [
+            {
+              checkIn: { lte: checkInDate },
+              checkOut: { gt: checkInDate },
+            },
+            {
+              checkIn: { lt: checkOutDate },
+              checkOut: { gte: checkOutDate },
+            },
+            {
+              checkIn: { gte: checkInDate },
+              checkOut: { lte: checkOutDate },
+            },
+          ],
+        },
+      });
+
+      if (overlapping) {
+        return {
+          success: false,
+          error: `These dates overlap with an existing booking/blackout: ${overlapping.status} (${overlapping.checkIn.toLocaleDateString()} - ${overlapping.checkOut.toLocaleDateString()}).`,
+        };
+      }
     }
 
     // Determine custom JSON serialized userId payload
@@ -76,11 +130,13 @@ export async function createManualBooking(formData: {
       userIdPayload = JSON.stringify({
         type: "MAINTENANCE",
         reason: formData.guestName || "Routine Maintenance",
+        cottagesCount: cottagesToBook,
       });
     } else if (formData.type === "OWNER_USE") {
       userIdPayload = JSON.stringify({
         type: "OWNER_USE",
         reason: formData.guestName || "Owner Occupancy",
+        cottagesCount: cottagesToBook,
       });
     } else {
       userIdPayload = JSON.stringify({
@@ -90,6 +146,8 @@ export async function createManualBooking(formData: {
         phone: formData.guestPhone || "",
         notes: formData.notes || "",
         guests: formData.guests || 1,
+        cottagesCount: cottagesToBook,
+        cottageLabel: isWillowPeak ? `${cottagesToBook} of 3 Cottages` : undefined,
         nightlyRate: formData.nightlyRate || 0,
         food: {
           plan: formData.foodPlan || "none",

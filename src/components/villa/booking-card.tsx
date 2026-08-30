@@ -32,6 +32,7 @@ interface BookingProp {
   checkIn: string;
   checkOut: string;
   status: string;
+  cottagesCount?: number;
 }
 
 interface BookingCardProps {
@@ -108,6 +109,9 @@ const BookingCard = ({
 }: BookingCardProps) => {
   const { user, isSignedIn } = useUser();
 
+  const isWillowPeak = villaId.includes("willow") || villaName.toLowerCase().includes("willow");
+  const actualMaxGuests = isWillowPeak ? 12 : (villaName.toLowerCase().includes("canopy") ? 16 : maxGuests);
+
   const [checkIn, setCheckIn] = useState<Date>(new Date());
   const [checkOut, setCheckOut] = useState<Date>(addDays(new Date(), 3));
   const [guests, setGuests] = useState(2);
@@ -120,6 +124,9 @@ const BookingCard = ({
   const [couponCode, setCouponCode] = useState("");
   const [isCouponApplied, setIsCouponApplied] = useState(false);
 
+  // Cottages required for Willow Peak (max 4 per cottage)
+  const cottagesCount = isWillowPeak ? Math.max(1, Math.min(3, Math.ceil(guests / 4))) : 1;
+
   // Premium custom calendar states
   const [showCalendar, setShowCalendar] = useState(false);
   const [calendarTarget, setCalendarTarget] = useState<"checkIn" | "checkOut">("checkIn");
@@ -129,26 +136,69 @@ const BookingCard = ({
   const isDateBooked = React.useCallback((date: Date) => {
     const check = new Date(date);
     check.setHours(0, 0, 0, 0);
+
+    if (isWillowPeak) {
+      let bookedCottages = 0;
+      for (const b of bookings) {
+        if (b.status === "CANCELLED") continue;
+        const start = new Date(b.checkIn);
+        const end = new Date(b.checkOut);
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+        if (check >= start && check < end) {
+          bookedCottages += (b.cottagesCount || 1);
+        }
+      }
+      return (bookedCottages + cottagesCount) > 3;
+    }
+
     return bookings.some(b => {
+      if (b.status === "CANCELLED") return false;
       const start = new Date(b.checkIn);
       const end = new Date(b.checkOut);
       start.setHours(0, 0, 0, 0);
       end.setHours(0, 0, 0, 0);
       return check >= start && check < end;
     });
-  }, [bookings]);
+  }, [bookings, isWillowPeak, cottagesCount]);
 
   // Date range overlap check
   const isRangeInvalid = React.useCallback((start: Date, end: Date) => {
     if (start >= end) return true;
+
+    if (isWillowPeak) {
+      let cur = new Date(start);
+      cur.setHours(0, 0, 0, 0);
+      const endNorm = new Date(end);
+      endNorm.setHours(0, 0, 0, 0);
+
+      while (cur < endNorm) {
+        let bookedCottages = 0;
+        for (const b of bookings) {
+          if (b.status === "CANCELLED") continue;
+          const bStart = new Date(b.checkIn);
+          const bEnd = new Date(b.checkOut);
+          bStart.setHours(0, 0, 0, 0);
+          bEnd.setHours(0, 0, 0, 0);
+          if (cur >= bStart && cur < bEnd) {
+            bookedCottages += (b.cottagesCount || 1);
+          }
+        }
+        if (bookedCottages + cottagesCount > 3) return true;
+        cur = addDays(cur, 1);
+      }
+      return false;
+    }
+
     return bookings.some(b => {
+      if (b.status === "CANCELLED") return false;
       const bStart = new Date(b.checkIn);
       const bEnd = new Date(b.checkOut);
       bStart.setHours(0, 0, 0, 0);
       bEnd.setHours(0, 0, 0, 0);
       return bStart < end && bEnd > start;
     });
-  }, [bookings]);
+  }, [bookings, isWillowPeak, cottagesCount]);
 
   const isOverlapping = isRangeInvalid(checkIn, checkOut);
 
@@ -315,9 +365,10 @@ const BookingCard = ({
   };
 
   const breakdown = getPricingBreakdown();
-  const subtotal = breakdown.reduce((sum, item) => sum + item.price, 0);
+  const rawSubtotal = breakdown.reduce((sum, item) => sum + item.price, 0);
+  const subtotal = Math.round(rawSubtotal * (isWillowPeak ? (cottagesCount / 3) : 1));
 
-  const baseGuestsCount = baseGuests ?? maxGuests;
+  const baseGuestsCount = isWillowPeak ? (cottagesCount * 4) : (baseGuests ?? actualMaxGuests);
   const extraGuests = Math.max(0, guests - baseGuestsCount);
   const extraGuestsCostPerNight = extraGuestFee ? extraGuests * extraGuestFee : 0;
   const totalExtraGuestsCost = extraGuestsCostPerNight * (nights > 0 ? nights : 0);
@@ -628,18 +679,20 @@ We are so excited about this getaway! Could you please check availability and he
         {/* Guests picker - Dual Type or Select Input */}
         <div className="w-full bg-white p-4 text-left border border-border-subtle rounded-2xl flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">Guests (Max {maxGuests})</span>
+            <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">
+              Guests (Max {actualMaxGuests})
+            </span>
             <div className="flex items-center gap-2 mt-1">
               <input
                 type="number"
                 min={1}
-                max={maxGuests}
+                max={actualMaxGuests}
                 className="w-12 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0"
                 value={guests}
                 onChange={(e) => {
                   const val = parseInt(e.target.value);
                   if (!isNaN(val)) {
-                    setGuests(Math.min(maxGuests, Math.max(1, val)));
+                    setGuests(Math.min(actualMaxGuests, Math.max(1, val)));
                   }
                 }}
               />
@@ -649,7 +702,7 @@ We are so excited about this getaway! Could you please check availability and he
                 onChange={(e) => setGuests(parseInt(e.target.value))}
                 className="flex-1 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0 cursor-pointer appearance-none"
               >
-                {Array.from({ length: maxGuests }, (_, i) => i + 1).map(num => (
+                {Array.from({ length: actualMaxGuests }, (_, i) => i + 1).map(num => (
                   <option key={num} value={num} className="text-text-primary">
                     {num} Guest{num > 1 ? "s" : ""}
                   </option>
@@ -659,6 +712,32 @@ We are so excited about this getaway! Could you please check availability and he
           </div>
           <Users size={16} className="text-text-primary/30 shrink-0 pointer-events-none" />
         </div>
+
+        {/* Willow Peak Multi-Cottage Allocation Breakdown */}
+        {isWillowPeak && (
+          <div className="w-full bg-gradient-to-br from-amber-50/90 to-orange-50/50 border border-amber-200/90 rounded-2xl p-4 text-left shadow-xs space-y-1.5 animate-fade-in">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                <span>🏡</span> Cottage Allocation
+              </span>
+              <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-[#1B3564] text-[#DAA520]">
+                {cottagesCount} of 3 Cottages Booked
+              </span>
+            </div>
+            <p className="text-xs text-slate-700 leading-relaxed font-medium">
+              For <strong>{guests} guests</strong>, <strong>{cottagesCount} private cottage{cottagesCount > 1 ? "s are" : " is"}</strong> reserved (max 4 guests per cottage).
+            </p>
+            <div className="text-[11px] text-emerald-800 font-semibold pt-1 border-t border-amber-200/60 flex items-center gap-1.5">
+              <span>✓</span>
+              <span>
+                {cottagesCount === 3
+                  ? "Full Estate Reserved — exclusive access to all 3 cottages."
+                  : `${3 - cottagesCount} cottage${3 - cottagesCount > 1 ? "s remain" : " remains"} free for other bookings on these dates.`
+                }
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Coupon Code Section */}
         <div className="w-full bg-gradient-to-r from-amber-50 to-emerald-50/50 border border-[#DAA520]/40 rounded-2xl p-4 text-left shadow-sm space-y-3">

@@ -146,7 +146,7 @@ export default async function KhopoliPage() {
                     "name": "How many guests can Canopy Crest accommodate?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Canopy Crest comfortably accommodates up to 20 guests across 4 spacious BHK suites with extra mattresses provided."
+                      "text": "Canopy Crest comfortably accommodates up to 16 guests across 4 spacious BHK suites."
                     }
                   },
                   {
@@ -450,7 +450,7 @@ export default async function KhopoliPage() {
 
               <h2>Spacious Estates for Large Group Gatherings</h2>
               <p>
-                Finding luxury accommodations that comfortably house 15 to 20 guests under one roof can be challenging. Standard hotels require booking multiple separated rooms, breaking up the togetherness of a group vacation.
+                Finding luxury accommodations that comfortably house up to 16 guests under one roof can be challenging. Standard hotels require booking multiple separated rooms, breaking up the togetherness of a group vacation.
               </p>
               <p>
                 Reserving a large group villa khopoli property like <Link href="/villa/canopy-crest" className="underline text-accent-primary font-bold">Canopy Crest</Link> solves this problem. Featuring a 4 BHK layout with 5 bathrooms, massive common living rooms, charpai lawns, and a large private swimming pool, everyone stays together comfortably.
@@ -574,7 +574,7 @@ export default async function KhopoliPage() {
                 <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
                   <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">How many guests can Canopy Crest accommodate?</h4>
                   <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Canopy Crest comfortably accommodates up to 20 guests across 4 spacious BHK suites with extra mattresses provided.
+                    Canopy Crest comfortably accommodates up to 16 guests across 4 spacious BHK suites.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">

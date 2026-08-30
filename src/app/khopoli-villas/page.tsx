@@ -46,7 +46,7 @@ const canopyCrestFeatures: FeatureMarqueeItem[] = [
     id: 3,
     title: "4 Master BHK Bedroom Suites",
     badge: "Group Capacity",
-    description: "Spacious master suites accommodating up to 20 to 25+ guests with 5 bathrooms.",
+    description: "Spacious master suites accommodating up to 16 guests with 5 bathrooms.",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg",
   },
   {
@@ -75,7 +75,7 @@ const canopyCrestFeatures: FeatureMarqueeItem[] = [
 const canopyCrestShowcaseImages = [
   { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg", title: "22x12 Ft Private Swimming Pool", tag: "Massive Pool" },
   { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg", title: "Charpai Green Lawns", tag: "Multi-Acre" },
-  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg", title: "Spacious 4 BHK Master Suites", tag: "Capacity 20+" },
+  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg", title: "Spacious 4 BHK Master Suites", tag: "Capacity 16 Guests" },
   { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg", title: "Outdoor Gazebo & Bonfire Pit", tag: "Evening Lounge" },
   { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg", title: "Indoor Games & Music Lounge", tag: "Entertainment" },
   { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg", title: "In-House Gourmet Dining", tag: "Chef Service" },
@@ -174,7 +174,7 @@ export default async function KhopoliGroupEstatePage() {
                 "@context": "https://schema.org",
                 "@type": "VacationRental",
                 "name": "Canopy Crest — Premier Khopoli Villas with Private Pool (Monsoon Escape)",
-                "description": "Sprawling estate among top khopoli villas accommodating up to 20 guests. Features a private pool, charpai lawns, bonfire sit-outs, and in-house chef service. Special Monsoon Escape weekday offer: Stay 2 nights & save more.",
+                "description": "Sprawling estate among top khopoli villas accommodating up to 16 guests. Features a private pool, charpai lawns, bonfire sit-outs, and in-house chef service. Special Monsoon Escape weekday offer: Stay 2 nights & save more.",
                 "url": "https://www.staywillas.com/khopoli-villas",
                 "address": {
                   "@type": "PostalAddress",
@@ -185,7 +185,7 @@ export default async function KhopoliGroupEstatePage() {
                 "numberOfRooms": 4,
                 "occupancy": {
                   "@type": "QuantitativeValue",
-                  "maxValue": 20
+                  "maxValue": 16
                 },
                 "priceRange": "₹15,000 - ₹22,000"
               },
@@ -232,7 +232,7 @@ export default async function KhopoliGroupEstatePage() {
                     "name": "Why is Canopy Crest ideal for those searching for villas in khopoli?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "Out of all villas in khopoli, Canopy Crest offers complete privacy, multi-acre lawns with traditional charpai lounge setups, and capacity for up to 20 guests."
+                      "text": "Out of all villas in khopoli, Canopy Crest offers complete privacy, multi-acre lawns with traditional charpai lounge setups, and capacity for up to 16 guests."
                     }
                   }
                 ]
@@ -260,10 +260,10 @@ export default async function KhopoliGroupEstatePage() {
           <div className="absolute inset-0 -z-10">
             <Image 
               src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" 
-              alt="Canopy Crest - Premier khopoli villas with private pool"
-              fill
-              priority
-              className="object-cover opacity-25 filter blur-[1px]"
+              alt="Canopy Crest - Premier khopoli villas with private pool" 
+              fill 
+              priority 
+              className="object-cover opacity-25 filter blur-[1px]" 
             />
             <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/80 via-bg-primary/95 to-bg-primary" />
           </div>
@@ -298,7 +298,7 @@ export default async function KhopoliGroupEstatePage() {
             </div>
 
             <p className="text-text-primary/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl font-light mb-8">
-              Experience the best of <strong className="font-semibold text-[#1B3564]">khopoli villas</strong> at <strong className="font-semibold text-[#1B3564]">Canopy Crest</strong>. If you are comparing <strong className="font-semibold text-[#1B3564]">villas in khopoli</strong> for reunions or retreats, our <strong className="font-semibold text-[#1B3564]">large group villa khopoli</strong> accommodates up to 20 guests with private pool, charpai lawns, and chef service.
+              Experience the best of <strong className="font-semibold text-[#1B3564]">khopoli villas</strong> at <strong className="font-semibold text-[#1B3564]">Canopy Crest</strong>. If you are comparing <strong className="font-semibold text-[#1B3564]">villas in khopoli</strong> for reunions or retreats, our <strong className="font-semibold text-[#1B3564]">large group villa khopoli</strong> accommodates up to 16 guests with private pool, charpai lawns, and chef service.
             </p>
 
             {/* Strong Action CTAs */}
@@ -426,7 +426,7 @@ export default async function KhopoliGroupEstatePage() {
               <div className="w-12 h-12 rounded-2xl bg-[#1B3564]/5 group-hover:bg-[#1B3564] flex items-center justify-center transition-colors">
                 <Users className="w-6 h-6 text-accent-primary group-hover:text-[#DAA520] transition-colors" />
               </div>
-              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">Up to 20 Guests</h3>
+              <h3 className="font-heading font-bold text-[#1B3564] text-sm sm:text-base">Up to 16 Guests</h3>
             </div>
 
             <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#DAA520]/20 flex flex-col items-center text-center space-y-2.5 sm:space-y-3 hover:shadow-md hover:border-[#DAA520]/50 transition-all group">
@@ -474,7 +474,7 @@ export default async function KhopoliGroupEstatePage() {
             
             <h2>Discover Luxury Staycations at Khopoli Villas: Monsoon Escape</h2>
             <p>
-              When organizing a group staycation from Mumbai or Pune, finding a property that delivers scale, privacy, and full hospitality is paramount. Out of all available <strong>khopoli villas</strong>, <strong className="font-semibold text-[#1B3564]">Canopy Crest</strong> provides an ideal balance of multi-acre open lawns, a 22ft private swimming pool, and comfortable accommodations for up to 20 guests.
+              When organizing a group staycation from Mumbai or Pune, finding a property that delivers scale, privacy, and full hospitality is paramount. Out of all available <strong>khopoli villas</strong>, <strong className="font-semibold text-[#1B3564]">Canopy Crest</strong> provides an ideal balance of multi-acre open lawns, a 22ft private swimming pool, and comfortable accommodations for up to 16 guests.
             </p>
             <p>
               Under the <strong>Monsoon Escape</strong> offer, when your group <strong>stays for 2 nights on weekdays (Monday to Thursday)</strong>, you unlock maximum direct savings, complimentary evening bonfires, and customized meal packages cooked by our on-site culinary team.

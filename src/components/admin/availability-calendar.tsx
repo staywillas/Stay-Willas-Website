@@ -119,6 +119,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
   // Selected Villa in Modal
   const [selectedVillaId, setSelectedVillaId] = useState<string>("");
+  const [cottagesCount, setCottagesCount] = useState<number>(1);
 
   // Section 1: Guest Information
   const [guestName, setGuestName] = useState("");
@@ -167,13 +168,19 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     if (!selectedVillaId) return;
     const villa = villas.find((v) => v.id === selectedVillaId);
     if (villa) {
+      const isWillow = villa.slug === "willow-peak";
       setRatePerNight(villa.price);
       setWeekendRatePerNight(villa.weekendPrice || villa.saturdayPrice || Math.round(villa.price * 1.2));
-      setBaseGuests(villa.baseGuests ?? 12);
-      setExtraGuestFee(villa.extraGuestFee ?? 1500);
+      setBaseGuests(villa.baseGuests ?? (isWillow ? 4 : 12));
+      setExtraGuestFee(villa.extraGuestFee ?? 1200);
       if (guestCount < 1) {
         setGuestCount(villa.guests || 2);
         setFoodGuestsCount(villa.guests || 2);
+      }
+      if (isWillow) {
+        setCottagesCount(Math.max(1, Math.min(3, Math.ceil((guestCount || 2) / 4))));
+      } else {
+        setCottagesCount(1);
       }
     }
   }, [selectedVillaId, villas]);
@@ -218,13 +225,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   // Add Extra Charge line
   const handleAddExtra = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newExtraDesc || !newExtraAmount || Number(newExtraAmount) <= 0) return;
-    const newCharge: ExtraCharge = {
-      id: "extra-" + Date.now(),
-      description: newExtraDesc.trim(),
-      amount: Number(newExtraAmount),
-    };
-    setExtraCharges([...extraCharges, newCharge]);
+    if (!newExtraDesc.trim() || !newExtraAmount || Number(newExtraAmount) <= 0) return;
+    setExtraCharges([...extraCharges, { id: "extra-" + Date.now(), description: newExtraDesc.trim(), amount: Number(newExtraAmount) }]);
     setNewExtraDesc("");
     setNewExtraAmount("");
   };
@@ -235,17 +237,22 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   };
 
   // Financial Calculations
-  const weekdayNights = Math.max(0, nights - weekendNights);
-  const weekdayStayCost = weekdayNights * ratePerNight;
-  const weekendStayCost = weekendNights * weekendRatePerNight;
-  const totalBaseStayCost = weekdayStayCost + weekendStayCost;
+  const isWillowSelected = villas.find((v) => v.id === selectedVillaId)?.slug === "willow-peak";
+  const standardNights = Math.max(0, nights - weekendNights);
+  const weekdayNights = standardNights;
+  const weekdayStayCost = Math.round(weekdayNights * ratePerNight * (isWillowSelected ? (cottagesCount / 3) : 1));
+  const weekendStayCost = Math.round(weekendNights * weekendRatePerNight * (isWillowSelected ? (cottagesCount / 3) : 1));
+  const totalStayCost = modalMode === "GUEST_BOOKING" 
+    ? (weekdayStayCost + weekendStayCost) 
+    : 0;
 
   // Extra guests calculation
-  const extraGuestsCount = Math.max(0, guestCount - baseGuests);
-  const extraGuestsCost = extraGuestsCount * extraGuestFee * nights;
-
-  // Total Stay Accommodation Cost
-  const totalStayCost = modalMode === "GUEST_BOOKING" ? (totalBaseStayCost + extraGuestsCost) : 0;
+  const allowedBase = isWillowSelected ? (cottagesCount * 4) : baseGuests;
+  const extraGuestsCount = Math.max(0, guestCount - allowedBase);
+  const totalExtraGuestsCost = modalMode === "GUEST_BOOKING" 
+    ? (extraGuestsCount * extraGuestFee * nights) 
+    : 0;
+  const extraGuestsCost = totalExtraGuestsCost;
 
   // Total Food Cost
   const totalFoodCost = modalMode === "GUEST_BOOKING" && foodPlan !== "none" 
@@ -258,7 +265,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     : 0;
 
   // Subtotal before discount
-  const subtotalBeforeDiscount = totalStayCost + totalFoodCost + totalExtrasCost;
+  const subtotalBeforeDiscount = totalStayCost + totalExtraGuestsCost + totalFoodCost + totalExtrasCost;
 
   // Calculate discount
   const calculatedPercentDiscount = subtotalBeforeDiscount * (discountPercent / 100);
@@ -292,8 +299,12 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
   // Get status of a specific day for a specific villa from the real DB bookings prop
   const getDayStatus = (villaId: string, date: Date) => {
-    const booking = bookings.find(b => {
+    const villa = villas.find(v => v.id === villaId);
+    const isWillow = villa?.slug === "willow-peak";
+
+    const dayBookings = bookings.filter(b => {
       if (b.villaId !== villaId) return false;
+      if (b.status === "CANCELLED") return false;
       const start = new Date(b.checkIn);
       const end = new Date(b.checkOut);
       
@@ -305,11 +316,38 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       return check >= start && check < end;
     });
 
-    if (booking) {
-      return { status: booking.status, data: booking };
+    if (dayBookings.length === 0) {
+      return { status: "AVAILABLE", data: null, bookedCottages: 0, totalCottages: 3, label: isWillow ? "3/3 Free" : "Available" };
     }
 
-    return { status: "AVAILABLE", data: null };
+    if (isWillow) {
+      let bookedCottages = 0;
+      for (const b of dayBookings) {
+        let count = 1;
+        try {
+          if (b.userId && b.userId.startsWith('{')) {
+            const parsed = JSON.parse(b.userId);
+            if (parsed.cottagesCount) count = parsed.cottagesCount;
+            else if (parsed.guests) count = Math.max(1, Math.min(3, Math.ceil(parsed.guests / 4)));
+          }
+        } catch (e) {}
+        bookedCottages += count;
+      }
+
+      if (bookedCottages >= 3) {
+        return { status: "CONFIRMED", data: dayBookings[0], bookedCottages: 3, totalCottages: 3, label: "Full (3/3 Booked)" };
+      } else {
+        return { 
+          status: "PARTIAL", 
+          data: dayBookings[0], 
+          bookedCottages, 
+          totalCottages: 3, 
+          label: `${3 - bookedCottages}/3 Free` 
+        };
+      }
+    }
+
+    return { status: dayBookings[0].status, data: dayBookings[0], bookedCottages: 1, totalCottages: 1, label: dayBookings[0].status };
   };
 
   // Reset form states
@@ -831,6 +869,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         notes: bookingNotes,
         type,
         guests: guestCount,
+        cottagesCount: isWillowSelected ? cottagesCount : 1,
         nightlyRate: ratePerNight,
         foodPlan,
         foodRatePerPersonPerDay,
@@ -1167,6 +1206,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                     cellClass = "bg-amber-50 border-y border-amber-200 text-amber-700 cursor-pointer shadow-[inset_0_0_8px_rgba(245,158,11,0.1)]";
                   } else if (statusInfo.status === "BLOCKED") {
                     cellClass = "bg-red-50 border-y border-red-200 text-red-700 cursor-pointer shadow-[inset_0_0_8px_rgba(239,68,68,0.1)]";
+                  } else if (statusInfo.status === "PARTIAL") {
+                    cellClass = "bg-amber-100/70 border-y border-amber-300 text-amber-900 cursor-pointer shadow-[inset_0_0_8px_rgba(245,158,11,0.15)]";
                   }
 
                   return (
@@ -1174,7 +1215,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       key={day.getDate()} 
                       onClick={() => handleCellClick(villa.id, day, statusInfo)}
                       className={`p-0 text-center border-r border-slate-100 h-11 transition-all ${cellClass}`}
-                      title={`${villa.name} - ${day.toLocaleDateString("en-IN")} (${statusInfo.status})`}
+                      title={`${villa.name} - ${day.toLocaleDateString("en-IN")} (${statusInfo.label || statusInfo.status})`}
                     >
                       <div className="w-full h-full flex items-center justify-center">
                         {statusInfo.status === "AVAILABLE" && (
@@ -1188,6 +1229,11 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                         )}
                         {statusInfo.status === "PENDING" && (
                           <Clock size={11} className="text-amber-700" />
+                        )}
+                        {statusInfo.status === "PARTIAL" && (
+                          <span className="text-[7.5px] font-black px-1 py-0.5 rounded bg-[#1B3564] text-[#DAA520] leading-none whitespace-nowrap">
+                            {statusInfo.label}
+                          </span>
                         )}
                       </div>
                     </td>
@@ -1402,22 +1448,69 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       </div>
 
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Guest Count (Pax) *</label>
+                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">
+                          Guest Count (Pax) {isWillowSelected ? "(Max 12)" : "*"}
+                        </label>
                         <input
                           type="number"
                           min="1"
-                          max="60"
+                          max={isWillowSelected ? 12 : 60}
                           value={guestCount}
                           onChange={(e) => {
                             const val = Number(e.target.value) || 1;
                             setGuestCount(val);
                             setFoodGuestsCount(val);
+                            if (isWillowSelected) {
+                              setCottagesCount(Math.max(1, Math.min(3, Math.ceil(val / 4))));
+                            }
                           }}
                           required
                           className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:border-[#1B3564] outline-none font-bold"
                         />
                       </div>
                     </div>
+
+                    {/* Willow Peak Cottage Selector */}
+                    {isWillowSelected && (
+                      <div className="bg-amber-50/90 border border-amber-200 rounded-xl p-3 space-y-2 mt-2">
+                        <div className="flex items-center justify-between text-xs font-bold text-[#1B3564]">
+                          <span className="flex items-center gap-1.5">
+                            <span>🏡</span> Willow Peak Cottage Allocation:
+                          </span>
+                          <span className="bg-[#1B3564] text-[#DAA520] px-2.5 py-0.5 rounded-full text-[10px] font-black">
+                            {cottagesCount} of 3 Cottages Booked
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          {[1, 2, 3].map((num) => (
+                            <button
+                              key={num}
+                              type="button"
+                              onClick={() => {
+                                setCottagesCount(num);
+                                if (guestCount > num * 4) {
+                                  setGuestCount(num * 4);
+                                  setFoodGuestsCount(num * 4);
+                                }
+                              }}
+                              className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                                cottagesCount === num
+                                  ? "bg-[#1B3564] text-white shadow-xs"
+                                  : "bg-white text-slate-700 border border-slate-200 hover:border-amber-400"
+                              }`}
+                            >
+                              {num === 1 ? "1 Cottage (≤4 G)" : num === 2 ? "2 Cottages (≤8 G)" : "3 Cottages (≤12 G)"}
+                            </button>
+                          ))}
+                        </div>
+                        <p className="text-[11px] text-slate-600">
+                          {cottagesCount === 3
+                            ? "All 3 Cottages reserved (Entire property blocked for these dates)"
+                            : `${cottagesCount} Cottage(s) allocated for ${guestCount} guest(s). ${3 - cottagesCount} Cottage(s) remain open for other bookings.`
+                          }
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Section 3: Nightly Pricing & Extra Guest Rates */}
