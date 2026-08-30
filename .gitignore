@@ -53,3 +53,4 @@ next-env.d.ts
 *.heic
 public/assets/villas/willow peak/
 staywillas.com-Performance-*/
+/*.pdf
