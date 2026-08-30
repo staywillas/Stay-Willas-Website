@@ -148,20 +148,9 @@ const Footer = () => {
             <div className="flex flex-col gap-6">
               <div className="flex items-start gap-3.5 group">
                 <MapPin className="text-[#DAA520] shrink-0 mt-1 group-hover:scale-110 transition-transform" size={18} />
-                <div className="text-white/70 text-xs leading-relaxed">
-                  <strong className="text-white block text-sm font-semibold mb-0.5">Mumbai Office:</strong>
-                  Kim Cottage, 14, PR Kadam Marg,<br /> Maneklal Estate, Ghatkopar West, Mumbai 400084
-                </div>
-              </div>
-              <div className="flex items-start gap-3.5 group">
-                <MapPin className="text-[#DAA520] shrink-0 mt-1 group-hover:scale-110 transition-transform" size={18} />
-                <div className="text-white/70 text-xs leading-relaxed">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <strong className="text-white text-sm font-semibold">Chennai Office:</strong>
-                    <span className="text-[9px] bg-[#DAA520]/20 text-[#DAA520] px-1.5 py-0.2 rounded font-mono font-bold">X736+H45</span>
-                  </div>
-                  1st Cross St, Sunrise Ave, Singaravelan Salai,<br /> Neelankarai, Chennai 600115
-                </div>
+                <p className="text-white/70 text-sm leading-relaxed">
+                  Kim cottage, 14, PR Kadam Marg,<br /> Maneklal Estate, Ghatkopar West,<br /> Mumbai, Maharashtra 400084
+                </p>
               </div>
               <div className="flex items-center gap-3.5 group">
                 <Phone className="text-[#DAA520] shrink-0 group-hover:scale-110 transition-transform" size={18} />

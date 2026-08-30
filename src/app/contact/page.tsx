@@ -130,43 +130,17 @@ export default function ContactPage() {
                     <a href="mailto:staywillas@gmail.com" className="text-xl hover:text-accent-secondary transition-colors">staywillas@gmail.com</a>
                   </div>
                 </div>
-                {/* Mumbai Office */}
                 <div className="flex gap-6 items-start">
                   <div className="w-12 h-12 rounded-2xl bg-white border border-border-subtle flex items-center justify-center text-accent-secondary shrink-0">
                     <MapPin size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">Mumbai Office</p>
-                    <p className="text-sm font-semibold text-[#1B3564]">Kim Cottage, 14, PR Kadam Marg</p>
-                    <p className="text-xs text-text-primary/60 leading-snug mt-0.5">
-                      Maneklal Estate, Ghatkopar West, Mumbai, MH 400084
+                    <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">Visit Us</p>
+                    <p className="text-xl leading-snug">
+                      Kim cottage, 14, PR Kadam Marg, <br />
+                      Maneklal Estate, Ghatkopar West, <br />
+                      Mumbai, Maharashtra 400084
                     </p>
-                  </div>
-                </div>
-
-                {/* Chennai Office */}
-                <div className="flex gap-6 items-start">
-                  <div className="w-12 h-12 rounded-2xl bg-white border border-[#DAA520]/40 flex items-center justify-center text-[#DAA520] shrink-0 shadow-sm">
-                    <MapPin size={20} />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-[10px] text-accent-secondary uppercase tracking-widest font-bold">Chennai Office</p>
-                      <span className="bg-[#DAA520]/15 text-[#1B3564] text-[9px] font-black px-1.5 py-0.5 rounded">X736+H45</span>
-                    </div>
-                    <p className="text-sm font-semibold text-[#1B3564]">1st Cross St, Sunrise Ave</p>
-                    <p className="text-xs text-text-primary/60 leading-snug mt-0.5">
-                      Singaravelan Salai, Neelankarai, Chennai, TN 600115
-                    </p>
-                    <a
-                      href="https://www.google.com/maps/place/12%C2%B057'14.0%22N+80%C2%B015'37.3%22E/@12.953897,80.260373,17z"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-accent-primary hover:text-accent-secondary font-bold mt-2"
-                    >
-                      <span>Open in Google Maps</span>
-                      <ArrowRight size={12} />
-                    </a>
                   </div>
                 </div>
               </div>
@@ -220,81 +194,6 @@ export default function ContactPage() {
             <ContactForm />
           </div>
 
-        </div>
-      </section>
-
-      {/* Interactive Google Maps Pinpoint Section */}
-      <section className="pb-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-        <div className="bg-gradient-to-br from-white to-[#FDFBF7] border border-[#DAA520]/30 rounded-[2.5rem] p-6 md:p-10 shadow-lg overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-8 pb-6 border-b border-slate-100">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-accent-secondary font-bold tracking-[0.25em] uppercase text-xs">
-                  Official Office Location
-                </span>
-                <span className="bg-[#DAA520]/15 text-[#1B3564] text-[10px] font-black px-2.5 py-0.5 rounded-full border border-[#DAA520]/30">
-                  Chennai Hub
-                </span>
-              </div>
-              <h2 className="text-2xl md:text-4xl font-heading text-[#1B3564] font-semibold">
-                Visit Our <span className="italic text-accent-primary">Chennai Office</span>
-              </h2>
-              <p className="text-xs md:text-sm text-text-primary/60 mt-1 max-w-2xl">
-                1st Cross St, Sunrise Ave, Singaravelan Salai, Neelankarai, Chennai, Tamil Nadu 600115 (Plus Code: <strong>X736+H45 Chennai, Tamil Nadu</strong>)
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                href="https://www.google.com/maps/place/12%C2%B057'14.0%22N+80%C2%B015'37.3%22E/@12.953897,80.260373,17z"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#1B3564] hover:bg-[#152A50] text-white px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md hover:scale-105 active:scale-95 flex items-center gap-2"
-              >
-                <MapPin size={14} className="text-[#DAA520]" />
-                Open in Google Maps
-              </a>
-              <a
-                href="https://www.google.com/maps/dir/?api=1&destination=12.953897,80.260373"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white border border-[#1B3564]/20 hover:border-[#DAA520] text-[#1B3564] px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-xs hover:scale-105 active:scale-95 flex items-center gap-2"
-              >
-                <ArrowRight size={14} className="text-accent-primary" />
-                Get Directions
-              </a>
-            </div>
-          </div>
-
-          {/* Embedded Map Container */}
-          <div className="relative w-full h-[380px] md:h-[450px] rounded-3xl overflow-hidden border border-[#DAA520]/25 shadow-inner bg-slate-100">
-            <iframe
-              title="Stay Willas Chennai Office Google Maps Pinpoint"
-              src="https://maps.google.com/maps?q=12.953897,80.260373&hl=en&z=17&output=embed"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen={false}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="w-full h-full"
-            />
-          </div>
-
-          {/* Coordinates Bar */}
-          <div className="mt-6 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-600">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-[#1B3564]">GPS Coordinates:</span>
-              <span className="font-mono text-slate-800 bg-slate-100 px-2 py-0.5 rounded text-[11px]">12.953897, 80.260373</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-[#1B3564]">Plus Code:</span>
-              <span className="font-mono text-slate-800 bg-slate-100 px-2 py-0.5 rounded text-[11px]">X736+H45 Chennai</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-[#1B3564]">Landmarks:</span>
-              <span className="text-slate-800 text-[11px]">Sunrise Ave, Neelankarai / ECR</span>
-            </div>
-          </div>
         </div>
       </section>
 
