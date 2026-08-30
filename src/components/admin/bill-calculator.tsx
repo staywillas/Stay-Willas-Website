@@ -328,7 +328,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
     if (foodPlan === "none") {
       setFoodRatePerPersonPerDay(0);
     } else if (foodPlan === "standard") {
-      setFoodRatePerPersonPerDay(1000);
+      setFoodRatePerPersonPerDay(1250);
     } else if (foodPlan === "deluxe") {
       setFoodRatePerPersonPerDay(1500);
     }
@@ -1062,7 +1062,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold"
                 >
                   <option value="none">No Meal Plan</option>
-                  <option value="standard">Standard Pricing (Rs. 1,000/day)</option>
+                  <option value="standard">Standard Pricing (Rs. 1,250/day)</option>
                   <option value="deluxe">Deluxe Pricing (Rs. 1,500/day)</option>
                   <option value="custom">Custom Rate Package</option>
                 </select>

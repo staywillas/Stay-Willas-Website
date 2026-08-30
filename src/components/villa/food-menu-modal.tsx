@@ -4,31 +4,109 @@ import React, { useState, useEffect } from "react";
 import { Utensils, X, Check, ChefHat } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const indianMenu = [
-  {
-    category: "Starters",
-    items: [
-      { name: "Paneer Tikka", desc: "Soft, smoky paneer pieces grilled with fresh peppers and traditional spices.", price: 420 },
-      { name: "Tandoori Chicken (Half)", desc: "Juicy chicken marinated in yogurt and traditional spices, grilled in a clay oven.", price: 480 }
+interface MealItem {
+  course: string;
+  veg: string;
+  nonVeg?: string;
+  jainAvailable?: boolean;
+}
+
+const foodPackages = {
+  standard: {
+    name: "Standard Meal Package",
+    tagline: "Homestyle comfort meals cooked fresh on-site",
+    price: 1250,
+    badge: "Popular Choice",
+    meals: [
+      {
+        course: "Breakfast (8:30 AM – 10:30 AM)",
+        items: [
+          "Choice of Kanda Poha / Upma / Misal Pav / Idli Sambar",
+          "Eggs to order (Scrambled / Omelette / Boiled) with Bread & Butter",
+          "Hot Masala Chai & Fresh Brewed Coffee"
+        ]
+      },
+      {
+        course: "Lunch (1:00 PM – 3:00 PM)",
+        items: [
+          "Main Course: Paneer Butter Masala / Kadhai Veg OR Homestyle Chicken Curry",
+          "Yellow Dal Tadka / Dal Fry with Steamed Jeera Rice",
+          "Fresh Handmade Phulkas / Chapatis",
+          "Garden Green Salad, Roasted Papad & Pickle",
+          "Dessert: Hot Gulab Jamun / Shrikhand"
+        ]
+      },
+      {
+        course: "Evening High Tea (5:00 PM – 6:30 PM)",
+        items: [
+          "Steaming Hot Onion / Mix Veg Pakoras with Green Chutney",
+          "Biscuits & Cookies",
+          "Masala Chai & Coffee"
+        ]
+      },
+      {
+        course: "Dinner (8:30 PM – 10:30 PM)",
+        items: [
+          "Main Course: Veg Kolhapuri / Mix Veg OR Chicken Masala Gravy",
+          "Comforting Dal Fry with Steamed Rice",
+          "Fresh Hot Phulkas / Chapatis",
+          "Cooling Boondi Raita & Salad",
+          "Dessert: Kheer / Sweet Dish"
+        ]
+      }
     ]
   },
-  {
-    category: "Main Dishes",
-    items: [
-      { name: "Butter Chicken", desc: "Tender grilled chicken cooked in a rich, creamy tomato gravy with a touch of butter.", price: 550 },
-      { name: "Dal Makhani", desc: "Slow-cooked black lentils with fresh cream and butter, cooked overnight.", price: 350 }
-    ]
-  },
-  {
-    category: "Sweet Desserts",
-    items: [
-      { name: "Royal Gulab Jamun (2 pcs)", desc: "Warm, sweet milk balls soaked in delicious sugar syrup.", price: 150 }
+  deluxe: {
+    name: "Deluxe Gourmet Package",
+    tagline: "Lavish multi-course feast with BBQ starters & premium specials",
+    price: 1500,
+    badge: "Chef's Special",
+    meals: [
+      {
+        course: "Breakfast (8:30 AM – 10:30 AM)",
+        items: [
+          "Choice of Stuffed Aloo/Paneer Parathas OR South Indian Platter (Idli/Dosa/Vada)",
+          "Eggs to order (Cheese Omelette / Sunny Side Up / Bhurji) with Toast & Jam",
+          "Fresh Seasonal Cut Fruits & Juice",
+          "Special Masala Chai & Filter Coffee"
+        ]
+      },
+      {
+        course: "Lunch (1:00 PM – 3:00 PM)",
+        items: [
+          "Paneer Tikka Masala / Kadhai Paneer OR Butter Chicken / Mutton Sukka",
+          "Dal Makhani slow-cooked overnight with fresh cream",
+          "Fragrant Jeera Rice / Veg Pulao",
+          "Fresh Butter Phulkas / Naan",
+          "Cucumber Raita, Roasted Papad, Achari Salad",
+          "Dessert: Gulab Jamun with Vanilla Ice Cream / Rasmalai"
+        ]
+      },
+      {
+        course: "Evening BBQ & Hi-Tea (5:00 PM – 6:30 PM)",
+        items: [
+          "Live Barbecue Starters: Paneer Tikka / Veg Seekh OR Chicken Tikka / Seekh Kebab",
+          "Crispy French Fries / Cheese Corn Balls with Dips",
+          "Adrak Elaichi Chai, Cappuccino & Cookies"
+        ]
+      },
+      {
+        course: "Dinner (8:30 PM – 10:30 PM)",
+        items: [
+          "Signature Dum Biryani (Veg Dum Biryani OR Chicken Dum Biryani)",
+          "Mughlai Gravy / Paneer Lababdar OR Chicken Korma",
+          "Dal Tadka with Steamed Basmati Rice & Mirchi Ka Salan",
+          "Fresh Tandoori Rotis / Butter Phulkas",
+          "Dessert: Sizzling Brownie / Shahi Tukda"
+        ]
+      }
     ]
   }
-];
+};
 
 export default function FoodMenuModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"standard" | "deluxe">("standard");
 
   // Lock background scroll when the popup is open
   useEffect(() => {
@@ -42,6 +120,8 @@ export default function FoodMenuModal() {
     };
   }, [isOpen]);
 
+  const activePackage = foodPackages[selectedPlan];
+
   return (
     <>
       {/* Food Menu CTA Card */}
@@ -51,9 +131,14 @@ export default function FoodMenuModal() {
             <ChefHat size={22} className="animate-pulse" />
           </div>
           <div className="text-left">
-            <h4 className="font-heading text-xl text-[#1B3564] font-semibold">Homemade Food Menu</h4>
+            <div className="flex items-center gap-2">
+              <h4 className="font-heading text-xl text-[#1B3564] font-semibold">Homemade Meal Packages</h4>
+              <span className="text-[10px] bg-[#DAA520]/15 text-[#1B3564] font-bold px-2 py-0.5 rounded-full border border-[#DAA520]/30">
+                ₹1,250 – ₹1,500 / day
+              </span>
+            </div>
             <p className="text-xs text-text-primary/60 leading-relaxed mt-1">
-              Enjoy hot, fresh Indian meals cooked right inside the villa by our private chefs.
+              All 4 daily meals included: Breakfast, Lunch, Evening Snacks with Tea/Coffee & Dinner prepared by private in-villa chefs.
             </p>
           </div>
         </div>
@@ -68,7 +153,7 @@ export default function FoodMenuModal() {
       {/* Modal Popup */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-[1000000] flex items-center justify-center p-4 md:p-10">
+          <div className="fixed inset-0 z-[1000000] flex items-center justify-center p-4 md:p-6">
             {/* Frosted glass backdrop click listener */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -85,7 +170,7 @@ export default function FoodMenuModal() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative w-full max-w-[680px] bg-[#FDFBF7] border border-[#DAA520]/20 rounded-[2.5rem] shadow-[0_15px_40px_rgba(27,53,100,0.2)] p-5 md:p-8 flex flex-col justify-between overflow-hidden max-h-[85vh] z-10"
+              className="relative w-full max-w-[760px] bg-[#FDFBF7] border border-[#DAA520]/30 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.3)] p-5 md:p-7 flex flex-col justify-between overflow-hidden max-h-[90vh] z-10"
             >
               {/* Header with Close Cross Button */}
               <div className="flex items-center justify-between pb-4 border-b border-[#DAA520]/20 shrink-0">
@@ -94,9 +179,9 @@ export default function FoodMenuModal() {
                     <Utensils size={18} />
                   </div>
                   <div>
-                    <span className="text-[10px] text-accent-secondary font-black uppercase tracking-[0.25em] block mb-0.5">Dining</span>
+                    <span className="text-[10px] text-accent-secondary font-black uppercase tracking-[0.25em] block mb-0.5">Dining Packages</span>
                     <h3 className="text-2xl font-heading text-[#1B3564] italic">
-                      Our Food <span className="not-italic font-bold font-sans text-accent-primary">Menu</span>
+                      Private Chef <span className="not-italic font-bold font-sans text-accent-primary">Meal Menu</span>
                     </h3>
                   </div>
                 </div>
@@ -110,51 +195,124 @@ export default function FoodMenuModal() {
                 </button>
               </div>
 
+              {/* Package Selector Tabs */}
+              <div className="grid grid-cols-2 gap-3 pt-4 pb-3 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlan("standard")}
+                  className={`p-3.5 rounded-2xl border transition-all text-left flex flex-col justify-between cursor-pointer ${
+                    selectedPlan === "standard"
+                      ? "bg-[#1B3564] text-white border-[#1B3564] shadow-md scale-[1.02]"
+                      : "bg-white text-slate-700 border-slate-200 hover:border-[#DAA520]/50"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[11px] font-black uppercase tracking-wider">Standard Package</span>
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                      selectedPlan === "standard" ? "bg-[#DAA520] text-[#1B3564]" : "bg-slate-100 text-slate-600"
+                    }`}>
+                      Popular
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className={`text-xl font-extrabold ${selectedPlan === "standard" ? "text-[#DAA520]" : "text-[#1B3564]"}`}>
+                      ₹1,250
+                    </span>
+                    <span className={`text-[10px] ${selectedPlan === "standard" ? "text-slate-300" : "text-slate-500"}`}>
+                      / person / day
+                    </span>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlan("deluxe")}
+                  className={`p-3.5 rounded-2xl border transition-all text-left flex flex-col justify-between cursor-pointer ${
+                    selectedPlan === "deluxe"
+                      ? "bg-[#1B3564] text-white border-[#1B3564] shadow-md scale-[1.02]"
+                      : "bg-white text-slate-700 border-slate-200 hover:border-[#DAA520]/50"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[11px] font-black uppercase tracking-wider">Deluxe Package</span>
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                      selectedPlan === "deluxe" ? "bg-[#DAA520] text-[#1B3564]" : "bg-amber-100 text-amber-800"
+                    }`}>
+                      Chef Special BBQ
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className={`text-xl font-extrabold ${selectedPlan === "deluxe" ? "text-[#DAA520]" : "text-[#1B3564]"}`}>
+                      ₹1,500
+                    </span>
+                    <span className={`text-[10px] ${selectedPlan === "deluxe" ? "text-slate-300" : "text-slate-500"}`}>
+                      / person / day
+                    </span>
+                  </div>
+                </button>
+              </div>
+
               {/* Scrollable Menu Items */}
               <div 
                 data-lenis-prevent
-                className="flex-1 overflow-y-auto min-h-0 max-h-[42vh] sm:max-h-[50vh] py-4 space-y-8 pr-3 mr-1 scrollbar-thin"
+                className="flex-1 overflow-y-auto min-h-0 max-h-[44vh] sm:max-h-[48vh] py-2 space-y-4 pr-2 mr-0.5 scrollbar-thin text-left"
               >
-                {indianMenu.map((cat, idx) => (
-                  <div key={idx} className="space-y-4 text-left">
-                    <h4 className="text-xs font-black text-accent-secondary uppercase tracking-[0.2em] border-b border-[#DAA520]/10 pb-2 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]"></span>
-                      {cat.category}
-                    </h4>
-                    <div className="grid grid-cols-1 gap-4">
-                      {cat.items.map((item, itemIdx) => (
-                        <div key={itemIdx} className="bg-white border border-border-subtle rounded-2xl p-4.5 flex justify-between gap-4 shadow-sm hover:border-[#DAA520]/30 transition-all duration-300">
-                          <div className="flex-1 min-w-0">
-                            <h5 className="font-bold text-text-primary text-sm uppercase tracking-wide truncate">{item.name}</h5>
-                            <p className="text-[11px] text-text-primary/50 leading-relaxed mt-1 font-light">{item.desc}</p>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <span className="text-sm font-black text-[#1B3564]">₹{item.price.toLocaleString("en-IN")}</span>
-                            <span className="block text-[8px] text-[#DAA520] font-bold uppercase tracking-wider mt-1">Chef Special</span>
-                          </div>
-                        </div>
+                <div className="bg-amber-50/80 border border-amber-200/80 rounded-xl p-2.5 text-[11px] text-amber-900 flex items-center justify-between">
+                  <span>✨ <strong>{activePackage.name}:</strong> {activePackage.tagline}</span>
+                  <span className="font-bold text-[#1B3564]">All 4 Meals Included</span>
+                </div>
+
+                {activePackage.meals.map((meal, idx) => (
+                  <div key={idx} className="bg-white border border-[#DAA520]/20 rounded-2xl p-4 shadow-xs hover:border-[#DAA520]/40 transition-all">
+                    <h5 className="font-heading font-bold text-[#1B3564] text-sm mb-2.5 pb-1.5 border-b border-slate-100 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#DAA520]" />
+                      {meal.course}
+                    </h5>
+                    <ul className="space-y-1.5 text-xs text-slate-700">
+                      {meal.items.map((item, itemIdx) => (
+                        <li key={itemIdx} className="flex items-start gap-2">
+                          <Check size={13} className="text-emerald-600 mt-0.5 shrink-0" />
+                          <span>{item}</span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
                 ))}
               </div>
 
-              {/* Footer / Booking info */}
-              <div className="pt-4 border-t border-[#DAA520]/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shrink-0 text-left">
-                <div>
-                  <span className="text-[9px] text-[#DAA520] font-black uppercase tracking-wider flex items-center gap-1">
-                    <Check size={12} className="stroke-[3]" /> Fresh Local Ingredients
-                  </span>
-                  <p className="text-[10px] text-text-primary/55 mt-0.5 leading-relaxed font-light">
-                    We can adjust the spices and ingredients to suit your taste. Please order 24 hours before you check in.
-                  </p>
+              {/* Dietary notes */}
+              <div className="pt-3 pb-1 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] text-slate-600">
+                <div className="flex items-center gap-1.5">
+                  <Check size={12} className="text-emerald-600" />
+                  <span>Pure Veg & Jain cooking with separate cookware</span>
                 </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="bg-[#1B3564] hover:bg-[#152A50] text-white px-8 py-3.5 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-md cursor-pointer active:scale-95 border-none w-full sm:w-auto text-center font-bold"
-                >
-                  CLOSE MENU
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <Check size={12} className="text-emerald-600" />
+                  <span>Customizable spice levels for kids & seniors</span>
+                </div>
+              </div>
+
+              {/* Footer / Booking info */}
+              <div className="pt-3 border-t border-[#DAA520]/20 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 text-left">
+                <p className="text-[10px] text-slate-500">
+                  Orders must be confirmed at least 24 hours prior to check-in.
+                </p>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <a
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🍽️ I would love to select the ${activePackage.name} (₹${activePackage.price}/person/day) for our stay.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 sm:flex-initial bg-[#25D366] hover:bg-emerald-600 text-white px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all text-center"
+                  >
+                    Confirm Meal on WhatsApp
+                  </a>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="bg-[#1B3564] hover:bg-[#152A50] text-white px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>

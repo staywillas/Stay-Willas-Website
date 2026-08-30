@@ -15,7 +15,12 @@ const createPrismaClient = () => {
   }
 
   // Create the PostgreSQL pool adapter for Prisma 7's new driver system
-  const pool = new Pool({ connectionString });
+  const pool = new Pool({
+    connectionString,
+    max: 1,
+    idleTimeoutMillis: 1000,
+    connectionTimeoutMillis: 10000
+  });
   const adapter = new PrismaPg(pool);
   
   return new PrismaClient({ adapter });
