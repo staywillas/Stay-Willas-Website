@@ -113,7 +113,7 @@ const VillaCard = ({
             <div className="flex flex-col text-left">
               <span className="text-[7.5px] sm:text-[8px] text-[#1B3564]/60 uppercase tracking-widest font-extrabold">Starting at</span>
               <span className="text-[#1B3564] text-xs sm:text-base font-black whitespace-nowrap">
-                ₹{price} <span className="text-[8px] sm:text-[10px] font-normal text-slate-500 font-sans">/ night</span>
+                ₹{id.includes("willow") ? "5,999" : price} <span className="text-[8px] sm:text-[10px] font-normal text-slate-500 font-sans">/ night {id.includes("willow") ? "/ cottage" : ""}</span>
               </span>
             </div>
             <span className="text-[8px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
