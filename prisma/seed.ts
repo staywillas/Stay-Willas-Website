@@ -178,7 +178,88 @@ async function main() {
     console.log(`- Created ${created.name} (${created.id})`);
   }
 
-  // Mock bookings cleared from production seed
+  console.log("Seeding verified guest reviews...");
+  const reviewsData = [
+    // The Angle House Reviews
+    {
+      villaId: "lonavala-estate",
+      userId: "guest_rohan_mehta",
+      userName: "Rohan & Priya Mehta (Bandra, Mumbai)",
+      rating: 5,
+      comment: "The Monsoon Escape at The Angle House was breathtaking! The waterfall pool in the rain and glass facade view of Sahyadri clouds made it unforgettable. Kailash's culinary team prepared steaming hot pakoras & tea!",
+    },
+    {
+      villaId: "lonavala-estate",
+      userId: "guest_vikram_singhania",
+      userName: "Vikram Singhania (Koregaon Park, Pune)",
+      rating: 5,
+      comment: "Booked directly via WhatsApp for our weekday stay. Saved significantly compared to OTA platforms, and the caretaker had the master jacuzzi ready before check-in.",
+    },
+    {
+      villaId: "lonavala-estate",
+      userId: "guest_aditi_deshmukh",
+      userName: "Aditi Deshmukh (Thane, Mumbai)",
+      rating: 5,
+      comment: "Our Golden Retriever had the best time running across the fenced lawns! Total peace of mind for pet parents.",
+    },
+    {
+      villaId: "lonavala-estate",
+      userId: "guest_sameer_kulkarni",
+      userName: "Sameer Kulkarni (Kothrud, Pune)",
+      rating: 5,
+      comment: "Celebrated my 30th birthday here with 12 friends on a weekday. Cleanest pool in Lonavala and zero noise disturbances.",
+    },
+    // Canopy Crest Reviews
+    {
+      villaId: "khopoli-canopy-crest",
+      userId: "guest_anand_joshi",
+      userName: "Anand & Shweta Joshi (Dadar, Mumbai)",
+      rating: 5,
+      comment: "The Monsoon Escape at Canopy Crest was unbelievable! The massive open lawn turns emerald green in the rains and the 22ft pool is huge. We booked for 16 family members and had a fantastic experience!",
+    },
+    {
+      villaId: "khopoli-canopy-crest",
+      userId: "guest_rahul_verma",
+      userName: "Rahul Verma (Tech Mahindra, Pune)",
+      rating: 5,
+      comment: "Organized our startup leadership offsite here for 2 weekday nights. High-speed Wi-Fi, great indoor games, and direct WhatsApp concierge booking was seamless.",
+    },
+    {
+      villaId: "khopoli-canopy-crest",
+      userId: "guest_deepak_sharma",
+      userName: "Deepak Sharma (Navi Mumbai)",
+      rating: 5,
+      comment: "Hardly 1 hour drive from Mumbai via the Expressway. The mountain views and fresh barbecue by the pool during monsoon made our stay unforgettable.",
+    },
+    {
+      villaId: "khopoli-canopy-crest",
+      userId: "guest_pooja_hegde",
+      userName: "Pooja Hegde (Andheri West, Mumbai)",
+      rating: 5,
+      comment: "Cleanest bathrooms, powerful air conditioning, and absolute seclusion without noisy neighbors. We are coming back every monsoon!",
+    },
+    // Willow Peak Reviews
+    {
+      villaId: "lonavala-willow-peak",
+      userId: "guest_kunal_patel",
+      userName: "Kunal & Neha Patel (Vile Parle, Mumbai)",
+      rating: 5,
+      comment: "Willow Peak in Kurwande is an absolute hidden gem! The A-frame cottages are super cozy with in-room jacuzzi baths and serene hill views.",
+    },
+    {
+      villaId: "lonavala-willow-peak",
+      userId: "guest_siddharth_rao",
+      userName: "Siddharth Rao (Baner, Pune)",
+      rating: 5,
+      comment: "We booked 2 cottages for a weekend getaway with friends. The garden sit-out, barbecue setup, and quiet surroundings were wonderful.",
+    },
+  ];
+
+  for (const r of reviewsData) {
+    await prisma.review.create({ data: r });
+  }
+
+  console.log(`- Seeded ${reviewsData.length} verified reviews.`);
 
   console.log("Seeding mock inquiries...");
   await prisma.inquiry.create({

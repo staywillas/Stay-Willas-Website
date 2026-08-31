@@ -7,6 +7,7 @@ import { ArrowUpRight, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } 
 import Link from "next/link";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
+import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Weekend Getaway Villas Near Mumbai | Private Pool Destinations | Stay Willas",
@@ -63,8 +64,32 @@ export default async function AreasPage() {
     }
   ];
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Destinations", url: "/areas" },
+  ]);
+
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${BASE_URL}/areas#webpage`,
+    url: `${BASE_URL}/areas`,
+    name: "Weekend Getaway Villas & Areas | Stay Willas",
+    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala & Khopoli.",
+    isPartOf: {
+      "@id": `${BASE_URL}/#website`,
+    },
+  };
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between">
+      {/* Structured Data: CollectionPage & BreadcrumbList */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([collectionSchema, breadcrumbSchema]),
+        }}
+      />
       <div>
         <Navbar />
         

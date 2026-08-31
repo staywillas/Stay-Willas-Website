@@ -92,67 +92,6 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-bg-primary">
       <h1 className="sr-only">Luxury Villas Near Mumbai for Private Getaways</h1>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "Stay Willas",
-            "alternateName": ["StayWillas", "Stay Willas"],
-            "url": "https://www.staywillas.com",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://www.staywillas.com/villas?region={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          })
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "LocalBusiness",
-            "name": "Stay Willas",
-            "alternateName": ["StayWillas", "Stay Willas"],
-            "description": "Premium luxury villa rentals in Maharashtra. Handpicked private pool villas near Mumbai and Pune with chef services, pet-friendly options, and concierge support.",
-            "url": "https://www.staywillas.com",
-            "logo": "https://www.staywillas.com/icon.png",
-            "image": "https://www.staywillas.com/icon.png",
-            "telephone": "+91-9619042310",
-            "email": "bookings@staywillas.com",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "Kim cottage, 14, PR Kadam Marg, Maneklal Estate, Ghatkopar West",
-              "addressLocality": "Mumbai",
-              "addressRegion": "Maharashtra",
-              "postalCode": "400084",
-              "addressCountry": "IN"
-            },
-            "geo": {
-              "@type": "GeoCoordinates",
-              "latitude": "19.0912",
-              "longitude": "72.9016"
-            },
-            "areaServed": [
-              { "@type": "Place", "name": "Lonavala" },
-              { "@type": "Place", "name": "Khopoli" }
-            ],
-            "priceRange": "₹₹₹",
-            "openingHoursSpecification": {
-              "@type": "OpeningHoursSpecification",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-              "opens": "00:00",
-              "closes": "23:59"
-            },
-            "sameAs": [
-              "https://www.instagram.com/staywillas"
-            ]
-          })
-        }}
-      />
       <Navbar />
       <TopTicker />
       <Hero />

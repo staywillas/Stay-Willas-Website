@@ -29,25 +29,25 @@ export default function MegaDiscountAdBanner({
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileBadgeOpen, setIsMobileBadgeOpen] = useState(false);
 
-  // Calculate target date: 30 days from today (1 month)
+  // Dynamic countdown to end of current month
   const [timeLeft, setTimeLeft] = useState({
-    days: 29,
-    hours: 23,
-    minutes: 59,
-    seconds: 59,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
   useEffect(() => {
     setIsMounted(true);
-    // 30-day fixed deadline
-    const deadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).getTime();
+    // Real end-of-month target date (e.g., last day of current month at 23:59:59)
+    const now = new Date();
+    const deadline = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).getTime();
 
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const difference = deadline - now;
+    const updateTimer = () => {
+      const current = new Date().getTime();
+      const difference = deadline - current;
 
       if (difference <= 0) {
-        clearInterval(timer);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       } else {
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -56,7 +56,10 @@ export default function MegaDiscountAdBanner({
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
         setTimeLeft({ days, hours, minutes, seconds });
       }
-    }, 1000);
+    };
+
+    updateTimer();
+    const timer = setInterval(updateTimer, 1000);
 
     return () => clearInterval(timer);
   }, []);

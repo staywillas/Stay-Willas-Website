@@ -199,8 +199,8 @@ const Navbar = () => {
                 <div className="flex flex-col gap-4">
                   <Link href="/about" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">About</Link>
                   <Link href="/destinations" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Destinations</Link>
-                  <Link href="/villas-in-lonavala-with-private-pool" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Lonavala Villa Pool</Link>
-                  <Link href="/khopoli-villas" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Khopoli Villas</Link>
+                  <Link href="/areas/lonavala" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Lonavala Villas</Link>
+                  <Link href="/areas/khopoli" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Khopoli Villas</Link>
                   <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Escape</Link>
                   <Link href="/partner" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Partner</Link>
                   <Link href="/contact" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Contact</Link>
@@ -595,15 +595,15 @@ const Navbar = () => {
                   {(openSubmenu === "offers" || true) && (
                     <div className="flex flex-col gap-1 mt-2 pt-2 border-t border-[#DAA520]/20">
                       <Link
-                        href="/villas-in-lonavala-with-private-pool"
+                        href="/areas/lonavala"
                         className="py-1 px-2 text-[11px] font-bold text-white hover:text-[#DAA520] flex items-center justify-between rounded transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        <span>Lonavala Villa Private Pool</span>
+                        <span>Lonavala Villas</span>
                         <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">28% OFF</span>
                       </Link>
                       <Link
-                        href="/khopoli-villas"
+                        href="/areas/khopoli"
                         className="py-1 px-2 text-[11px] font-bold text-white hover:text-[#DAA520] flex items-center justify-between rounded transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >

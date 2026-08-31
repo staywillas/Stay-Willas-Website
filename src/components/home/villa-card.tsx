@@ -69,7 +69,7 @@ const VillaCard = ({
             {/* Verified Badge */}
             <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-full bg-[#1B3564]/90 backdrop-blur-md border border-[#DAA520]/40 text-[#FAF8F5] text-[8px] sm:text-[9px] uppercase tracking-wider font-extrabold shadow-md flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              <span>Private Pool</span>
+              <span>{id.includes("willow") ? "Private Jacuzzi" : "Private Pool"}</span>
             </div>
           </div>
           

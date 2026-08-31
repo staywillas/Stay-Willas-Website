@@ -9,6 +9,7 @@ import Footer from "@/components/layout/footer";
 import VillaCard from "@/components/home/villa-card";
 import { MapPin, ChevronRight, ArrowLeft, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { generateDestinationCollectionSchema, generateBreadcrumbSchema, generateFAQSchema } from "@/lib/schema";
 
 interface AreaDetails {
   name: string;
@@ -196,62 +197,41 @@ export default async function AreaRegionPage({ params }: PageProps) {
     }
   ];
 
+  const destinationSchema = generateDestinationCollectionSchema({
+    regionSlug: regionKey,
+    regionName: area.name,
+    title: `Luxury Villas in ${area.name} with Private Pool | Stay Willas`,
+    description: `Discover luxury villas in ${area.name} with private swimming pools, scenic mountain greenery, and in-house chef services.`,
+    villas: villas.map(v => ({
+      slug: v.id,
+      name: v.name,
+      location: v.location,
+      image: v.image,
+      price: v.price,
+      bedrooms: v.bedrooms,
+      guests: v.guests,
+    })),
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Destinations", url: "/areas" },
+    { name: area.name, url: `/areas/${regionKey}` },
+  ]);
+
+  const faqSchema = generateFAQSchema(currentFaqs);
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between">
-      {/* Structured Data: ItemList, BreadcrumbList & FAQPage */}
+      {/* Structured Data: CollectionPage, ItemList, BreadcrumbList & FAQPage */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify([
-            {
-              "@context": "https://schema.org",
-              "@type": "ItemList",
-              "name": `Luxury Villas in ${area.name} with Private Pool | Stay Willas`,
-              "numberOfItems": villas.length,
-              "itemListElement": villas.map((v, idx) => ({
-                "@type": "ListItem",
-                "position": idx + 1,
-                "name": v.name,
-                "url": `https://www.staywillas.com/villa/${v.id}`
-              }))
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": "Home",
-                  "item": "https://www.staywillas.com"
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "name": "Areas",
-                  "item": "https://www.staywillas.com/areas"
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 3,
-                  "name": area.name,
-                  "item": `https://www.staywillas.com/areas/${regionKey}`
-                }
-              ]
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": currentFaqs.map(f => ({
-                "@type": "Question",
-                "name": f.question,
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": f.answer
-                }
-              }))
-            }
-          ])
+            ...destinationSchema["@graph"],
+            breadcrumbSchema,
+            ...(faqSchema ? [faqSchema] : []),
+          ]),
         }}
       />
       <div>

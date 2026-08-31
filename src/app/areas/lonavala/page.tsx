@@ -7,6 +7,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
+import { generateDestinationCollectionSchema, generateBreadcrumbSchema, generateFAQSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
@@ -82,116 +83,57 @@ export default async function LonavalaPage() {
 
   const signatureVilla = villas.find(v => v.id === "the-angle-house");
 
+  const lonavalaFaqs = [
+    {
+      question: "How is the private pool cleaned and maintained?",
+      answer: "Every private pool undergoes complete filtration and sanitization cycles prior to guest arrival. On-site staff perform daily water quality checks to guarantee safety and clarity."
+    },
+    {
+      question: "Can we request pure vegetarian or Jain catering?",
+      answer: "Yes. Our in-house chefs cater to specific dietary requirements including pure-veg and Jain preparations using dedicated cookware and fresh ingredients."
+    },
+    {
+      question: "Are pets allowed at the property?",
+      answer: "Yes, pets are welcome. The Angle House features fully fenced lawns and safe outdoor spaces where pets can play freely."
+    }
+  ];
+
+  const destinationSchema = generateDestinationCollectionSchema({
+    regionSlug: "lonavala",
+    regionName: "Lonavala",
+    title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
+    description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services.",
+    villas: villas.map(v => ({
+      slug: v.id,
+      name: v.name,
+      location: v.location,
+      image: v.image,
+      price: v.price,
+      bedrooms: v.bedrooms,
+      guests: v.guests,
+    })),
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Destinations", url: "/areas" },
+    { name: "Lonavala", url: "/areas/lonavala" },
+  ]);
+
+  const faqSchema = generateFAQSchema(lonavalaFaqs);
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
       <div>
-        {/* Technical SEO: Multi-Schema Structured Data with Aggregate Rating */}
+        {/* Structured Data: CollectionPage, ItemList, BreadcrumbList & FAQPage */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify([
-              {
-                "@context": "https://schema.org",
-                "@type": "Organization",
-                "@id": "https://www.staywillas.com/#organization",
-                "name": "Stay Willas",
-                "url": "https://www.staywillas.com",
-                "logo": "https://www.staywillas.com/icon.png",
-                "aggregateRating": {
-                  "@type": "AggregateRating",
-                  "ratingValue": "4.9",
-                  "reviewCount": "128",
-                  "bestRating": "5",
-                  "worstRating": "1"
-                }
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "LodgingBusiness",
-                "name": "Stay Willas — Luxury Villas in Lonavala",
-                "description": "Book luxury villas in Lonavala with Stay Willas. Featuring private pool stays, dedicated chef services, and scenic mountain views for family and group getaways.",
-                "url": "https://www.staywillas.com/areas/lonavala",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": "Lonavala",
-                  "addressRegion": "Maharashtra",
-                  "addressCountry": "IN"
-                },
-                "geo": {
-                  "@type": "GeoCoordinates",
-                  "latitude": "18.7546",
-                  "longitude": "73.4062"
-                },
-                "priceRange": "₹₹₹",
-                "aggregateRating": {
-                  "@type": "AggregateRating",
-                  "ratingValue": "4.9",
-                  "reviewCount": "128",
-                  "bestRating": "5",
-                  "worstRating": "1"
-                },
-                "amenityFeature": [
-                  { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
-                  { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true },
-                  { "@type": "LocationFeatureSpecification", "name": "Super-fast Wi Fi", "value": true },
-                  { "@type": "LocationFeatureSpecification", "name": "Lush Greenery Lawns", "value": true }
-                ]
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                  {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Home",
-                    "item": "https://www.staywillas.com"
-                  },
-                  {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "Areas",
-                    "item": "https://www.staywillas.com/areas"
-                  },
-                  {
-                    "@type": "ListItem",
-                    "position": 3,
-                    "name": "Lonavala",
-                    "item": "https://www.staywillas.com/areas/lonavala"
-                  }
-                ]
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "FAQPage",
-                "mainEntity": [
-                  {
-                    "@type": "Question",
-                    "name": "How is the private pool cleaned and maintained?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Every private pool undergoes complete filtration and sanitization cycles prior to guest arrival. On-site staff perform daily water quality checks to guarantee safety and clarity."
-                    }
-                  },
-                  {
-                    "@type": "Question",
-                    "name": "Can we request pure vegetarian or Jain catering?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Yes. Our in-house chefs cater to specific dietary requirements including pure-veg and Jain preparations using dedicated cookware and fresh ingredients."
-                    }
-                  },
-                  {
-                    "@type": "Question",
-                    "name": "Are pets allowed at the property?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Yes, pets are welcome. The Angle House features fully fenced lawns and safe outdoor spaces where pets can play freely."
-                    }
-                  }
-                ]
-              }
-            ])
+              ...destinationSchema["@graph"],
+              breadcrumbSchema,
+              ...(faqSchema ? [faqSchema] : []),
+            ]),
           }}
         />
         <Navbar />
@@ -570,29 +512,29 @@ export default async function LonavalaPage() {
                     className="object-cover" 
                   />
                   <div className="absolute top-3 right-3 bg-[#1B3564]/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">
-                    From ₹18,000 / night
+                    From ₹13,000 / night
                   </div>
                 </div>
 
                 <div>
                   <h4 className="font-heading text-xl font-bold text-[#1B3564]">The Angle House</h4>
                   <p className="text-xs text-text-primary/60 mt-1 flex items-center gap-1">
-                    <MapPin size={12} className="text-accent-primary" /> Lonavala, Maharashtra
+                    <MapPin size={12} className="text-accent-primary" /> Kamshet, Lonavala, Maharashtra
                   </p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 text-center text-xs bg-white p-3 rounded-2xl border border-[#DAA520]/15 text-slate-700">
                   <div>
-                    <span className="block font-bold text-[#1B3564]">12-15</span>
+                    <span className="block font-bold text-[#1B3564]">16</span>
                     <span className="text-[10px] text-slate-500">Guests</span>
                   </div>
                   <div>
-                    <span className="block font-bold text-[#1B3564]">4 BHK</span>
-                    <span className="text-[10px] text-slate-500">Rooms</span>
+                    <span className="block font-bold text-[#1B3564]">3 BHK</span>
+                    <span className="text-[10px] text-slate-500">Suites</span>
                   </div>
                   <div>
                     <span className="block font-bold text-[#1B3564]">Pool</span>
-                    <span className="text-[10px] text-slate-500">Private</span>
+                    <span className="text-[10px] text-slate-500">Waterfall</span>
                   </div>
                 </div>
 

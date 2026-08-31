@@ -120,6 +120,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   // Selected Villa in Modal
   const [selectedVillaId, setSelectedVillaId] = useState<string>("");
   const [cottagesCount, setCottagesCount] = useState<number>(1);
+  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">("A");
 
   // Section 1: Guest Information
   const [guestName, setGuestName] = useState("");
@@ -1470,43 +1471,60 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       </div>
                     </div>
 
-                    {/* Willow Peak Cottage Selector */}
+                    {/* Willow Peak Cottage Selector - Cottage A, B, C, or ALL */}
                     {isWillowSelected && (
-                      <div className="bg-amber-50/90 border border-amber-200 rounded-xl p-3 space-y-2 mt-2">
+                      <div className="bg-amber-50/90 border border-amber-200 rounded-xl p-3 space-y-2.5 mt-2">
                         <div className="flex items-center justify-between text-xs font-bold text-[#1B3564]">
                           <span className="flex items-center gap-1.5">
-                            <span>🏡</span> Willow Peak Cottage Allocation:
+                            <span>🏡</span> Willow Peak Cottage Selection:
                           </span>
                           <span className="bg-[#1B3564] text-[#DAA520] px-2.5 py-0.5 rounded-full text-[10px] font-black">
-                            {cottagesCount} of 3 Cottages Booked
+                            {cottageSelection === "ALL" ? "All 3 Cottages (Full Estate)" : `Cottage ${cottageSelection} (1 Cottage)`}
                           </span>
                         </div>
-                        <div className="grid grid-cols-3 gap-2">
-                          {[1, 2, 3].map((num) => (
-                            <button
-                              key={num}
-                              type="button"
-                              onClick={() => {
-                                setCottagesCount(num);
-                                if (guestCount > num * 4) {
-                                  setGuestCount(num * 4);
-                                  setFoodGuestsCount(num * 4);
-                                }
-                              }}
-                              className={`py-2 px-3 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                                cottagesCount === num
-                                  ? "bg-[#1B3564] text-white shadow-xs"
-                                  : "bg-white text-slate-700 border border-slate-200 hover:border-amber-400"
-                              }`}
-                            >
-                              {num === 1 ? "1 Cottage (≤4 G)" : num === 2 ? "2 Cottages (≤8 G)" : "3 Cottages (≤12 G)"}
-                            </button>
-                          ))}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                          {[
+                            { id: "A", label: "Cottage A", sub: "Max 4 Guests" },
+                            { id: "B", label: "Cottage B", sub: "Max 4 Guests" },
+                            { id: "C", label: "Cottage C", sub: "Max 4 Guests" },
+                            { id: "ALL", label: "All 3 Cottages", sub: "Max 12 Guests" },
+                          ].map((item) => {
+                            const isSel = cottageSelection === item.id;
+                            return (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => {
+                                  const newSel = item.id as "A" | "B" | "C" | "ALL";
+                                  setCottageSelection(newSel);
+                                  const count = newSel === "ALL" ? 3 : 1;
+                                  setCottagesCount(count);
+                                  if (newSel !== "ALL" && guestCount > 4) {
+                                    setGuestCount(4);
+                                    setFoodGuestsCount(4);
+                                  } else if (newSel === "ALL" && guestCount < 5) {
+                                    setGuestCount(6);
+                                    setFoodGuestsCount(6);
+                                  }
+                                }}
+                                className={`py-2 px-2 rounded-xl text-center transition-all cursor-pointer border ${
+                                  isSel
+                                    ? "bg-[#1B3564] text-white border-[#1B3564] shadow-xs"
+                                    : "bg-white text-slate-700 border-slate-200 hover:border-amber-400"
+                                }`}
+                              >
+                                <div className="text-xs font-black">{item.label}</div>
+                                <div className={`text-[9px] font-bold mt-0.5 ${isSel ? "text-[#DAA520]" : "text-slate-400"}`}>
+                                  {item.sub}
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
-                        <p className="text-[11px] text-slate-600">
-                          {cottagesCount === 3
-                            ? "All 3 Cottages reserved (Entire property blocked for these dates)"
-                            : `${cottagesCount} Cottage(s) allocated for ${guestCount} guest(s). ${3 - cottagesCount} Cottage(s) remain open for other bookings.`
+                        <p className="text-[11px] text-slate-600 font-medium">
+                          {cottageSelection === "ALL"
+                            ? "All 3 Cottages (A, B, and C) reserved (Entire Willow Peak property blocked for these dates)."
+                            : `Cottage ${cottageSelection} allocated for ${guestCount} guest(s). The other 2 cottages remain open for separate reservations.`
                           }
                         </p>
                       </div>

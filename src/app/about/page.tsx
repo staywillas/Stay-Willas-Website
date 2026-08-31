@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
+import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -35,49 +36,37 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "About Us", url: "/about" },
+  ]);
+
+  const aboutSchema = {
+    "@type": "AboutPage",
+    "@id": `${BASE_URL}/about#webpage`,
+    url: `${BASE_URL}/about`,
+    name: "About Stay Willas | Luxury Villa Rentals in Maharashtra",
+    description: "Learn about Stay Willas and our luxury villa rentals in Maharashtra. Handpicked private pool villas in Lonavala & Khopoli with warm hospitality.",
+    isPartOf: {
+      "@id": `${BASE_URL}/#website`,
+    },
+    about: {
+      "@id": `${BASE_URL}/#organization`,
+    },
+  };
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
       <h1 className="sr-only">About Stay Willas - Luxury Villa Rentals in Maharashtra</h1>
       <Navbar />
+      {/* Structured Data: AboutPage & BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            {
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "name": "Stay Willas",
-              "description": "Premium luxury villa rentals in Maharashtra. Handpicked private pool villas near Mumbai and Pune with chef services, pet-friendly options, and concierge support.",
-              "url": "https://www.staywillas.com",
-              "telephone": "+91-9619042310",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Kim cottage, 14, PR Kadam Marg, Maneklal Estate, Ghatkopar West",
-                "addressLocality": "Mumbai",
-                "addressRegion": "Maharashtra",
-                "postalCode": "400084",
-                "addressCountry": "IN"
-              }
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": "Home",
-                  "item": "https://www.staywillas.com"
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "name": "About Us",
-                  "item": "https://www.staywillas.com/about"
-                }
-              ]
-            }
-          ])
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [aboutSchema, breadcrumbSchema],
+          }),
         }}
       />
       
@@ -179,7 +168,7 @@ export default function AboutPage() {
                 Lonavala Villa with Pool
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Looking for the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Our handpicked collection features signature architectural icons like <a href="/villas-in-lonavala-with-private-pool" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">The Angle House</a>. Enjoy a private waterfall swimming pool, master suite Jacuzzi, double-height glass facades, and pet-friendly fenced lawns.
+                Looking for the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Our handpicked collection features signature architectural icons like <a href="/villa/the-angle-house" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">The Angle House</a>. Enjoy a private waterfall swimming pool, master suite Jacuzzi, double-height glass facades, and pet-friendly fenced lawns.
               </p>
               <a href="/areas/lonavala" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
                 Explore Lonavala Villas &rarr;
@@ -192,7 +181,7 @@ export default function AboutPage() {
                 Khopoli Villa Staycation
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Plan a memorable <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> with sprawling multi-acre grounds like <a href="/khopoli-villas" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">Canopy Crest</a>. Ideal for large group gatherings up to 25+ guests, corporate offsites, charpai green lawns, and dedicated in-house chef services.
+                Plan a memorable <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> with sprawling multi-acre grounds like <a href="/villa/canopy-crest" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">Canopy Crest</a>. Ideal for large group gatherings up to 16+ guests, corporate offsites, charpai green lawns, and dedicated in-house chef services.
               </p>
               <a href="/areas/khopoli" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
                 Explore Khopoli Estates &rarr;

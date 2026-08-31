@@ -6,6 +6,7 @@ import Footer from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, MessageSquare, ArrowRight } from "lucide-react";
 import ContactForm from "@/components/contact/contact-form";
+import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Contact Stay Willas | Book Lonavala Villa with Pool",
@@ -43,30 +44,36 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Contact Us", url: "/contact" },
+  ]);
+
+  const contactSchema = {
+    "@type": "ContactPage",
+    "@id": `${BASE_URL}/contact#webpage`,
+    url: `${BASE_URL}/contact`,
+    name: "Contact Stay Willas | Customer Support & Villa Bookings",
+    description: "Contact Stay Willas concierge to book luxury private pool villas in Lonavala and Khopoli.",
+    isPartOf: {
+      "@id": `${BASE_URL}/#website`,
+    },
+    about: {
+      "@id": `${BASE_URL}/#organization`,
+    },
+  };
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
       <h1 className="sr-only">Stay Willas Contact | Customer Support & Villa Bookings</h1>
+      {/* Structured Data: ContactPage & BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://www.staywillas.com"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Contact Us",
-                "item": "https://www.staywillas.com/contact"
-              }
-            ]
-          })
+            "@graph": [contactSchema, breadcrumbSchema],
+          }),
         }}
       />
       <Navbar />
@@ -218,7 +225,7 @@ export default function ContactPage() {
                 Lonavala Villa with Pool Desk
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Interested in reserving <a href="/villas-in-lonavala-with-private-pool" className="underline font-semibold text-accent-primary">The Angle House</a>—voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Get instant availability checks, tariff details, and private waterfall pool customization via WhatsApp.
+                Interested in reserving <a href="/villa/the-angle-house" className="underline font-semibold text-accent-primary">The Angle House</a>—voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Get instant availability checks, tariff details, and private waterfall pool customization via WhatsApp.
               </p>
             </div>
 
@@ -227,7 +234,7 @@ export default function ContactPage() {
                 Khopoli Group Offsite Booking
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Need a <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> for large family reunions or corporate retreats? Contact us for custom stay packages at <a href="/khopoli-villas" className="underline font-semibold text-accent-primary">Canopy Crest</a> with charpai lawns & swimming pools.
+                Need a <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> for large family reunions or corporate retreats? Contact us for custom stay packages at <a href="/villa/canopy-crest" className="underline font-semibold text-accent-primary">Canopy Crest</a> with charpai lawns & swimming pools.
               </p>
             </div>
 

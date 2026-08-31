@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import VillasClient from "@/components/villas/villas-client";
+import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const dynamic = "force-dynamic";
 
@@ -92,47 +93,51 @@ export default async function VillasPage({ searchParams }: PageProps) {
   const initialRegion = typeof regionParam === "string" ? regionParam.trim() : "";
   const initialCategory = typeof categoryParam === "string" ? categoryParam.trim() : "";
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "All Villas", url: "/villas" },
+  ]);
+
+  const collectionSchema = {
+    "@type": "CollectionPage",
+    "@id": `${BASE_URL}/villas#webpage`,
+    url: `${BASE_URL}/villas`,
+    name: "Luxury Villas for Rent Near Mumbai & Lonavala | Stay Willas",
+    description: "Browse handpicked villas with private pool & chef service across Lonavala and Khopoli.",
+    isPartOf: {
+      "@id": `${BASE_URL}/#website`,
+    },
+  };
+
+  const itemListSchema = {
+    "@type": "ItemList",
+    "@id": `${BASE_URL}/villas#itemlist`,
+    name: "Stay Willas Luxury Collection",
+    numberOfItems: villas.length,
+    itemListElement: villas.map((villa, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      name: villa.name,
+      url: `${BASE_URL}/villa/${villa.slug}`,
+      image: villa.image.startsWith("http") ? villa.image : `${BASE_URL}${villa.image}`,
+    })),
+  };
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between">
       <div>
-        {/* Structured Data: ItemList & BreadcrumbList for SERP Carousel & Hierarchy */}
+        {/* Structured Data: CollectionPage, ItemList & BreadcrumbList */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              {
-                "@context": "https://schema.org",
-                "@type": "ItemList",
-                "name": "Villas for Rent in Lonavala | Luxury Villas Near Mumbai",
-                "description": "Browse handpicked villas for rent in Lonavala and luxury villas near Mumbai with private pool & chef service.",
-                "numberOfItems": villas.length,
-                "itemListElement": villas.map((villa, idx) => ({
-                  "@type": "ListItem",
-                  "position": idx + 1,
-                  "name": villa.name,
-                  "url": `https://www.staywillas.com/villa/${villa.slug}`,
-                  "image": villa.image.startsWith("http") ? villa.image : `https://www.staywillas.com${villa.image}`
-                }))
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                  {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Home",
-                    "item": "https://www.staywillas.com"
-                  },
-                  {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "Villas for Rent in Lonavala",
-                    "item": "https://www.staywillas.com/villas"
-                  }
-                ]
-              }
-            ])
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                collectionSchema,
+                itemListSchema,
+                breadcrumbSchema,
+              ],
+            }),
           }}
         />
 

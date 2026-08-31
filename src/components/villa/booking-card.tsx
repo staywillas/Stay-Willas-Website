@@ -124,8 +124,12 @@ const BookingCard = ({
   const [couponCode, setCouponCode] = useState("");
   const [isCouponApplied, setIsCouponApplied] = useState(false);
 
-  // Cottages required for Willow Peak (max 4 per cottage)
-  const cottagesCount = isWillowPeak ? Math.max(1, Math.min(3, Math.ceil(guests / 4))) : 1;
+  // Specific Cottage Selection for Willow Peak: "A" | "B" | "C" | "ALL"
+  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">("A");
+
+  // Cottages required for Willow Peak (1 for Cottage A/B/C, 3 for ALL)
+  const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
+  const currentMaxGuests = isWillowPeak ? (cottageSelection === "ALL" ? 12 : 4) : actualMaxGuests;
 
   // Premium custom calendar states
   const [showCalendar, setShowCalendar] = useState(false);
@@ -444,6 +448,10 @@ const BookingCard = ({
       const formattedCheckIn = format(checkIn, "dd MMM yyyy");
       const formattedCheckOut = format(checkOut, "dd MMM yyyy");
       
+      const cottageInfoSection = isWillowPeak
+        ? `\n🏡 *Cottage Selection:* ${cottageSelection === "ALL" ? "All 3 Cottages (A + B + C — Entire Estate, Max 12 Guests)" : `Cottage ${cottageSelection} (Max 4 Guests, Private Jacuzzi)`}`
+        : "";
+
       const addOnsSection = selectedAddOns.length > 0
         ? `\n• Add-On Experiences: *${selectedAddOns.join(", ")}*`
         : "";
@@ -453,7 +461,7 @@ const BookingCard = ({
         : "";
 
       const msg = `Hello Stay Willas team! 🌟 I'm planning our next luxury staycation and would love to reserve *${villaName}* for our group of *${guests}* guest(s). 🏰✨
-
+${cottageInfoSection}
 Here are our stay details:
 📅 *Dates:* ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights)${addOnsSection}${discountSection}
 💵 *Total Stay Bill:* ₹${total.toLocaleString("en-IN")}
@@ -480,7 +488,10 @@ We are so excited about this getaway! Could you please check availability and he
   const handleQuickWhatsAppQuote = () => {
     const formattedCheckIn = format(checkIn, "dd MMM yyyy");
     const formattedCheckOut = format(checkOut, "dd MMM yyyy");
-    const msg = `Hi Stay Willas Concierge! 🌟 I'm looking at *${villaName}* for ${guests} guest(s) from ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights, ~₹${total.toLocaleString("en-IN")}). Could you please share your best direct offer and confirm availability?`;
+    const cottageSub = isWillowPeak 
+      ? ` [${cottageSelection === "ALL" ? "All 3 Cottages (A, B, C)" : `Cottage ${cottageSelection}`}]`
+      : "";
+    const msg = `Hi Stay Willas Concierge! 🌟 I'm looking at *${villaName}*${cottageSub} for ${guests} guest(s) from ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights, ~₹${total.toLocaleString("en-IN")}). Could you please share your best direct offer and confirm availability?`;
     window.open(`https://wa.me/919619042310?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
@@ -492,11 +503,14 @@ We are so excited about this getaway! Could you please check availability and he
             ₹{isWillowPeak ? (Math.round(5999 * cottagesCount)).toLocaleString("en-IN") : price}
           </span>
           <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">
-            / night {isWillowPeak ? `(${cottagesCount} Cottage${cottagesCount > 1 ? "s" : ""})` : ""}
+            / night {isWillowPeak ? (cottageSelection === "ALL" ? "(All 3 Cottages)" : `(Cottage ${cottageSelection})`) : ""}
           </span>
           {isWillowPeak && (
             <div className="text-[10.5px] font-medium text-slate-500 mt-1">
-              ₹5,999 Weekday • ₹6,999 Fri/Sun • ₹8,999 Sat <span className="text-[#1B3564] font-black">per cottage</span>
+              {cottageSelection === "ALL"
+                ? "₹17,997/n Weekday • All 3 Cottages (A, B, C) — Full Estate (up to 12 Guests)"
+                : `₹5,999/n Weekday • ₹6,999 Fri/Sun • ₹8,999 Sat for Cottage ${cottageSelection} (up to 4 Guests)`
+              }
             </div>
           )}
         </div>
@@ -509,6 +523,55 @@ We are so excited about this getaway! Could you please check availability and he
       </div>
 
       <div className="space-y-4 mb-6">
+        {/* Willow Peak Cottage Selector - A, B, C or ALL */}
+        {isWillowPeak && (
+          <div className="w-full bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 text-left shadow-xs space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10.5px] font-black uppercase tracking-wider text-[#1B3564] flex items-center gap-1.5 font-sans">
+                <span>🏡</span> Select Cottage Allocation:
+              </span>
+              <span className="text-[10px] font-bold text-[#DAA520] bg-[#1B3564] px-2 py-0.5 rounded-md">
+                {cottageSelection === "ALL" ? "Full Estate (3 Cottages)" : `Cottage ${cottageSelection} (1 Cottage)`}
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
+              {[
+                { id: "A", label: "Cottage A", sub: "Max 4 Guests" },
+                { id: "B", label: "Cottage B", sub: "Max 4 Guests" },
+                { id: "C", label: "Cottage C", sub: "Max 4 Guests" },
+                { id: "ALL", label: "All 3 Cottages", sub: "Max 12 Guests" },
+              ].map((item) => {
+                const isSelected = cottageSelection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      const newSel = item.id as "A" | "B" | "C" | "ALL";
+                      setCottageSelection(newSel);
+                      if (newSel !== "ALL" && guests > 4) {
+                        setGuests(4);
+                      } else if (newSel === "ALL" && guests < 5) {
+                        setGuests(6);
+                      }
+                    }}
+                    className={`py-2 px-1.5 sm:px-2 rounded-xl text-center transition-all cursor-pointer border ${
+                      isSelected
+                        ? "bg-[#1B3564] text-white border-[#1B3564] shadow-sm ring-2 ring-[#DAA520]/40"
+                        : "bg-white text-slate-700 border-slate-200 hover:border-[#DAA520]/70 hover:bg-amber-50/40"
+                    }`}
+                  >
+                    <div className="text-xs font-black">{item.label}</div>
+                    <div className={`text-[9.5px] font-bold mt-0.5 ${isSelected ? "text-[#DAA520]" : "text-slate-400"}`}>
+                      {item.sub}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
         {/* Live Admin Panel Sync Status Badge */}
         <div className="flex items-center justify-between bg-slate-100/90 px-4 py-2.5 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-slate-200/80">
           <span className="flex items-center gap-2 text-[#1B3564]">
@@ -689,19 +752,19 @@ We are so excited about this getaway! Could you please check availability and he
         <div className="w-full bg-white p-4 text-left border border-border-subtle rounded-2xl flex items-center justify-between gap-4">
           <div className="flex-1 min-w-0">
             <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">
-              Guests (Max {actualMaxGuests})
+              Guests (Max {currentMaxGuests} {isWillowPeak ? (cottageSelection === "ALL" ? "for 3 Cottages" : "per Cottage") : ""})
             </span>
             <div className="flex items-center gap-2 mt-1">
               <input
                 type="number"
                 min={1}
-                max={actualMaxGuests}
+                max={currentMaxGuests}
                 className="w-12 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0"
                 value={guests}
                 onChange={(e) => {
                   const val = parseInt(e.target.value);
                   if (!isNaN(val)) {
-                    setGuests(Math.min(actualMaxGuests, Math.max(1, val)));
+                    setGuests(Math.min(currentMaxGuests, Math.max(1, val)));
                   }
                 }}
               />
@@ -711,7 +774,7 @@ We are so excited about this getaway! Could you please check availability and he
                 onChange={(e) => setGuests(parseInt(e.target.value))}
                 className="flex-1 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0 cursor-pointer appearance-none"
               >
-                {Array.from({ length: actualMaxGuests }, (_, i) => i + 1).map(num => (
+                {Array.from({ length: currentMaxGuests }, (_, i) => i + 1).map(num => (
                   <option key={num} value={num} className="text-text-primary">
                     {num} Guest{num > 1 ? "s" : ""}
                   </option>
@@ -727,21 +790,24 @@ We are so excited about this getaway! Could you please check availability and he
           <div className="w-full bg-gradient-to-br from-amber-50/90 to-orange-50/50 border border-amber-200/90 rounded-2xl p-4 text-left shadow-xs space-y-1.5 animate-fade-in">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
-                <span>🏡</span> Cottage Allocation
+                <span>🏡</span> Selected: {cottageSelection === "ALL" ? "All 3 Cottages (A, B, C)" : `Cottage ${cottageSelection}`}
               </span>
               <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-[#1B3564] text-[#DAA520]">
-                {cottagesCount} of 3 Cottages Booked
+                {cottageSelection === "ALL" ? "3 of 3 Cottages" : "1 of 3 Cottages"}
               </span>
             </div>
             <p className="text-xs text-slate-700 leading-relaxed font-medium">
-              For <strong>{guests} guests</strong>, <strong>{cottagesCount} private cottage{cottagesCount > 1 ? "s are" : " is"}</strong> reserved (max 4 guests per cottage).
+              {cottageSelection === "ALL"
+                ? `Full Estate: All 3 A-frame chalets (Cottage A, B, and C) reserved for your group of ${guests} guests (Max 12).`
+                : `Private Chalet: Cottage ${cottageSelection} allocated for ${guests} guest(s) (Max 4). Features private en-suite jacuzzi and balcony.`
+              }
             </p>
             <div className="text-[11px] text-emerald-800 font-semibold pt-1 border-t border-amber-200/60 flex items-center gap-1.5">
               <span>✓</span>
               <span>
-                {cottagesCount === 3
-                  ? "Full Estate Reserved — exclusive access to all 3 cottages."
-                  : `${3 - cottagesCount} cottage${3 - cottagesCount > 1 ? "s remain" : " remains"} free for other bookings on these dates.`
+                {cottageSelection === "ALL"
+                  ? "Full Estate Reserved — exclusive private access to the entire grounds."
+                  : `Other 2 cottages remain open for independent guests on these dates.`
                 }
               </span>
             </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import EscapeClientPage from "./escape-client-page";
+import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Villas for Groups in Lonavala | Private Pool Stays | Stay Willas",
@@ -148,10 +149,37 @@ export default async function EscapePage() {
     amenities: canopyCrest.amenities
   } : defaultCanopyCrest;
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Group Escapes", url: "/escape" },
+  ]);
+
+  const collectionSchema = {
+    "@type": "CollectionPage",
+    "@id": `${BASE_URL}/escape#webpage`,
+    url: `${BASE_URL}/escape`,
+    name: "Villas for Groups in Lonavala & Khopoli | Stay Willas",
+    description: "Find private villas for groups in Lonavala with pools, spacious rooms and premium amenities.",
+    isPartOf: {
+      "@id": `${BASE_URL}/#website`,
+    },
+  };
+
   return (
-    <EscapeClientPage 
-      angleHouse={serializedAngleHouse} 
-      canopyCrest={serializedCanopyCrest} 
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [collectionSchema, breadcrumbSchema],
+          }),
+        }}
+      />
+      <EscapeClientPage 
+        angleHouse={serializedAngleHouse} 
+        canopyCrest={serializedCanopyCrest} 
+      />
+    </>
   );
 }

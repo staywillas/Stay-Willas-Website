@@ -7,6 +7,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import VillaCard from "@/components/home/villa-card";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
+import { generateDestinationCollectionSchema, generateBreadcrumbSchema, generateFAQSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Villas in Khopoli with Private Pool | Luxury Staycations | Stay Willas",
@@ -80,150 +81,61 @@ export default async function KhopoliPage() {
 
   const signatureVilla = villas.find(v => v.id === "canopy-crest");
 
+  const khopoliFaqs = [
+    {
+      question: "How many guests can Canopy Crest accommodate?",
+      answer: "Canopy Crest comfortably accommodates up to 16 guests across 4 spacious BHK suites."
+    },
+    {
+      question: "Is there high-speed Wi-Fi for work offsites?",
+      answer: "Yes, the estate is equipped with high-speed fiber internet suitable for video conferencing and remote work."
+    },
+    {
+      question: "Can we order pure vegetarian or Jain food?",
+      answer: "Yes. Our in-house chefs cater dedicated pure-veg and Jain meals using separate cookware."
+    },
+    {
+      question: "Is there a market nearby for grocery shopping?",
+      answer: "Yes, Khopoli town has full-fledged markets within a 10-15 minute drive from our properties. However, we recommend informing our concierge of your grocery requirements beforehand so we can stock your chosen villa."
+    }
+  ];
+
+  const destinationSchema = generateDestinationCollectionSchema({
+    regionSlug: "khopoli",
+    regionName: "Khopoli",
+    title: "Villas in Khopoli with Private Pool | Luxury Staycations | Stay Willas",
+    description: "Discover luxury villas in Khopoli with private pool, sprawling green lawns & in-house chef dining near Imagicaa.",
+    villas: villas.map(v => ({
+      slug: v.id,
+      name: v.name,
+      location: v.location,
+      image: v.image,
+      price: v.price,
+      bedrooms: v.bedrooms,
+      guests: v.guests,
+    })),
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Destinations", url: "/areas" },
+    { name: "Khopoli", url: "/areas/khopoli" },
+  ]);
+
+  const faqSchema = generateFAQSchema(khopoliFaqs);
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
       <div>
-        {/* Technical SEO: Multi-Schema Structured Data */}
+        {/* Structured Data: CollectionPage, ItemList, BreadcrumbList & FAQPage */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify([
-              {
-                "@context": "https://schema.org",
-                "@type": "LodgingBusiness",
-                "name": "Stay Willas — Khopoli Villas",
-                "description": "Book a khopoli villa staycation at Canopy Crest. The ultimate weekend getaway villa Khopoli for corporate offsite villa Khopoli & large group villa khopoli.",
-                "url": "https://www.staywillas.com/areas/khopoli",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": "Khopoli",
-                  "addressRegion": "Maharashtra",
-                  "addressCountry": "IN"
-                },
-                "geo": {
-                  "@type": "GeoCoordinates",
-                  "latitude": "18.7830",
-                  "longitude": "73.3430"
-                },
-                "priceRange": "₹₹₹",
-                "amenityFeature": [
-                  { "@type": "LocationFeatureSpecification", "name": "Private Pool", "value": true },
-                  { "@type": "LocationFeatureSpecification", "name": "Charpai Lawns", "value": true },
-                  { "@type": "LocationFeatureSpecification", "name": "Private Chef", "value": true },
-                  { "@type": "LocationFeatureSpecification", "name": "High-Speed Fiber Wi-Fi", "value": true }
-                ]
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                  {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Home",
-                    "item": "https://www.staywillas.com"
-                  },
-                  {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "Areas",
-                    "item": "https://www.staywillas.com/areas"
-                  },
-                  {
-                    "@type": "ListItem",
-                    "position": 3,
-                    "name": "Khopoli",
-                    "item": "https://www.staywillas.com/areas/khopoli"
-                  }
-                ]
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "FAQPage",
-                "mainEntity": [
-                  {
-                    "@type": "Question",
-                    "name": "How many guests can Canopy Crest accommodate?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Canopy Crest comfortably accommodates up to 16 guests across 4 spacious BHK suites."
-                    }
-                  },
-                  {
-                    "@type": "Question",
-                    "name": "Is there high-speed Wi-Fi for work offsites?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Yes, the estate is equipped with high-speed fiber internet suitable for video conferencing and remote work."
-                    }
-                  },
-                  {
-                    "@type": "Question",
-                    "name": "Can we order pure vegetarian or Jain food?",
-                    "acceptedAnswer": {
-                      "@type": "Answer",
-                      "text": "Yes. Our in-house chefs cater dedicated pure-veg and Jain meals using separate cookware."
-                    }
-                  }
-                ]
-              }
-            ])
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": "Home",
-                  "item": "https://www.staywillas.com"
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "name": "Areas",
-                  "item": "https://www.staywillas.com/areas"
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 3,
-                  "name": "Khopoli",
-                  "item": "https://www.staywillas.com/areas/khopoli"
-                }
-              ]
-            })
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Are your private estates suitable for hosting events?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, absolutely. Many of our villas in Khopoli have massive lawns and poolside bars built specifically for events. Our team can help organize catering, basic sound set-ups, and custom decorations."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Is there a market nearby for grocery shopping?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, Khopoli town has full-fledged markets within a 10-15 minute drive from our properties. However, we recommend informing our concierge of your grocery requirements beforehand so we can stock your chosen villa."
-                  }
-                }
-              ]
-            })
+              ...destinationSchema["@graph"],
+              breadcrumbSchema,
+              ...(faqSchema ? [faqSchema] : []),
+            ]),
           }}
         />
         <Navbar />
@@ -629,16 +541,16 @@ export default async function KhopoliPage() {
 
                 <div className="grid grid-cols-3 gap-2 text-center text-xs bg-white p-3 rounded-2xl border border-[#DAA520]/15 text-slate-700">
                   <div>
-                    <span className="block font-bold text-[#1B3564]">10-15</span>
+                    <span className="block font-bold text-[#1B3564]">16</span>
                     <span className="text-[10px] text-slate-500">Guests</span>
                   </div>
                   <div>
-                    <span className="block font-bold text-[#1B3564]">3 BHK</span>
-                    <span className="text-[10px] text-slate-500">Rooms</span>
+                    <span className="block font-bold text-[#1B3564]">4 BHK</span>
+                    <span className="text-[10px] text-slate-500">Suites</span>
                   </div>
                   <div>
                     <span className="block font-bold text-[#1B3564]">Pool</span>
-                    <span className="text-[10px] text-slate-500">Private</span>
+                    <span className="text-[10px] text-slate-500">22ft Pool</span>
                   </div>
                 </div>
 

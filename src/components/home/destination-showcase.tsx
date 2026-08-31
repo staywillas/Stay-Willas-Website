@@ -32,6 +32,24 @@ const destinations = [
     desc: "Scenic foothills, waterfalls, 22ft pool and large lawn near Imagicaa.",
     isLaunchingSoon: false,
     link: "/villa/canopy-crest"
+  },
+  {
+    name: "Willow Peak (Lonavala)",
+    image: "/assets/villas/willow-peak/gallery-1.webp",
+    count: "Book Cottages",
+    tag: "A-Frame Chalets",
+    desc: "3 wooden cottages (Cottage A, B, C) with private jacuzzi baths & valley views.",
+    isLaunchingSoon: false,
+    link: "/villa/willow-peak"
+  },
+  {
+    name: "Mahabaleshwar",
+    image: "/images/destinations/mahabaleshwar.jpg",
+    count: "Explore Villas",
+    tag: "Strawberry Valleys",
+    desc: "Misty mountain peaks, strawberry plantations, and private luxury hill villas.",
+    isLaunchingSoon: true,
+    link: "/partner"
   }
 ];
 

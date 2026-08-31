@@ -7,6 +7,7 @@ import Footer from "@/components/layout/footer";
 import { blogsData } from "@/data/blogs";
 import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
+import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Stay Willas Blog | Luxury Villa Guides & Staycation Tips",
@@ -38,8 +39,34 @@ export const metadata: Metadata = {
 };
 
 export default function BlogIndexPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog" },
+  ]);
+
+  const collectionSchema = {
+    "@type": "CollectionPage",
+    "@id": `${BASE_URL}/blog#webpage`,
+    url: `${BASE_URL}/blog`,
+    name: "Stay Willas Blog | Luxury Villa Guides & Staycation Tips",
+    description: "Explore the Stay Willas blog for luxury villa guides, weekend staycation tips, and travel ideas near Mumbai and Pune.",
+    isPartOf: {
+      "@id": `${BASE_URL}/#website`,
+    },
+  };
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
+      {/* Structured Data: CollectionPage & BreadcrumbList */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [collectionSchema, breadcrumbSchema],
+          }),
+        }}
+      />
       <div>
         <Navbar />
 
