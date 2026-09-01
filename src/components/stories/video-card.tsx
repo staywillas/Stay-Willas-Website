@@ -6,13 +6,14 @@ import { motion } from "framer-motion";
 
 interface VideoCardProps {
   src: string;
+  poster?: string;
   title?: string;
   guestName?: string;
   villaName?: string;
   location?: string;
 }
 
-export default function VideoCard({ src }: VideoCardProps) {
+export default function VideoCard({ src, poster, title, guestName }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -80,19 +81,18 @@ export default function VideoCard({ src }: VideoCardProps) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="relative flex flex-col group rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden shadow-[0_15px_40px_rgba(27,53,100,0.08)] bg-white border border-slate-100/80 cursor-pointer w-full aspect-[9/16] max-w-[260px] sm:max-w-[280px] mx-auto"
+      className="relative flex flex-col group rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden shadow-[0_15px_40px_rgba(27,53,100,0.08)] bg-slate-900 border border-[#DAA520]/20 cursor-pointer w-full aspect-[9/16] max-w-[260px] sm:max-w-[280px] mx-auto"
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
       onClick={togglePlay}
     >
       {/* Video element */}
-      {/* TODO: generate a lightweight webp poster if not available */}
       <video
         ref={videoRef}
         src={src}
         preload="metadata"
         playsInline
-        poster="/images/video-placeholder.webp"
+        poster={poster}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleVideoEnded}
         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.02]"

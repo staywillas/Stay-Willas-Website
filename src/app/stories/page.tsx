@@ -67,15 +67,42 @@ export default function StoriesPage() {
 
         {/* Video Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 max-w-6xl mx-auto justify-items-center">
-          <VideoCard src="/VIDEOS/TESTIMONIAL1.mp4" />
-          <VideoCard src="/VIDEOS/TESTIMONIAL2.mp4" />
-          <VideoCard src="/VIDEOS/TESTIMONIAL3.mp4" />
-          <VideoCard src="/assets/villas/testimonials/video_20260713_123127.mp4" />
-          <VideoCard src="/assets/villas/testimonials/video_20260712_123243.mp4" />
-          <VideoCard src="/assets/villas/testimonials/video_20260710_120159.mp4" />
-          <VideoCard src="/assets/villas/testimonials/video_20260706_104802.mp4" />
-          <VideoCard src="/assets/villas/testimonials/video_20260704_112850.mp4" />
-          <VideoCard src="/assets/villas/testimonials/VID-20260705-WA0006.mp4" />
+          <VideoCard 
+            src="/VIDEOS/TESTIMONIAL1.mp4" 
+            poster="/thumbnails/stories/testimonial1.webp" 
+          />
+          <VideoCard 
+            src="/VIDEOS/TESTIMONIAL2.mp4" 
+            poster="/thumbnails/stories/testimonial2.webp" 
+          />
+          <VideoCard 
+            src="/VIDEOS/TESTIMONIAL3.mp4" 
+            poster="/thumbnails/stories/testimonial3.webp" 
+          />
+          <VideoCard 
+            src="/assets/villas/testimonials/video_20260713_123127.mp4" 
+            poster="/thumbnails/stories/video_20260713_123127.webp" 
+          />
+          <VideoCard 
+            src="/assets/villas/testimonials/video_20260712_123243.mp4" 
+            poster="/thumbnails/stories/video_20260712_123243.webp" 
+          />
+          <VideoCard 
+            src="/assets/villas/testimonials/video_20260710_120159.mp4" 
+            poster="/thumbnails/stories/video_20260710_120159.webp" 
+          />
+          <VideoCard 
+            src="/assets/villas/testimonials/video_20260706_104802.mp4" 
+            poster="/thumbnails/stories/video_20260706_104802.webp" 
+          />
+          <VideoCard 
+            src="/assets/villas/testimonials/video_20260704_112850.mp4" 
+            poster="/thumbnails/stories/video_20260704_112850.webp" 
+          />
+          <VideoCard 
+            src="/assets/villas/testimonials/VID-20260705-WA0006.mp4" 
+            poster="/thumbnails/stories/VID-20260705-WA0006.webp" 
+          />
         </div>
       </section>
 
