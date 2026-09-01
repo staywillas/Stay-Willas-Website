@@ -13,7 +13,7 @@ export const ORGANIZATION_SCHEMA = {
   alternateName: ["StayWillas", "Stay Willas Luxury Collection"],
   url: BASE_URL,
   logo: `${BASE_URL}/icon.png`,
-  image: `${BASE_URL}/images/hero-villa.png`,
+  image: `${BASE_URL}/images/hero-villa.webp`,
   description: "Stay Willas is a premier luxury villa rental and hospitality brand in Maharashtra, specializing in verified private pool villas and mountain retreats in Lonavala and Khopoli.",
   telephone: "+91-9619042310",
   email: "bookings@staywillas.com",
@@ -136,6 +136,12 @@ const VILLA_COORDINATES: Record<string, { lat: number; lng: number; street: stri
     street: "Kurwande",
     locality: "Lonavala",
   },
+  "terra-cotta-villa": {
+    lat: 17.9237,
+    lng: 73.7438,
+    street: "Kaswand, Panchgani-Mahabaleshwar Road",
+    locality: "Panchgani",
+  },
 };
 
 export function generatePropertySchema(villa: PropertySchemaInput) {
@@ -161,7 +167,8 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
 
   return {
     "@context": "https://schema.org",
-    "@type": ["VacationRental", "LodgingBusiness"],
+    "@type": "LodgingBusiness",
+    additionalType: "https://schema.org/VacationRental",
     "@id": `${propertyUrl}#property`,
     name: villa.name,
     description: villa.description,

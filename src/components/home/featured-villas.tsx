@@ -36,14 +36,14 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-20 gap-8">
           <motion.div
-            initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ 
               type: "spring", 
-              stiffness: 60, 
-              damping: 16,
-              duration: 1 
+              stiffness: 70, 
+              damping: 18,
+              duration: 0.8 
             }}
             className="max-w-3xl"
           >
@@ -54,20 +54,20 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
               Places We <span className="italic bg-gradient-to-r from-[#1B3564] to-[#DAA520] bg-clip-text text-transparent pr-2 inline-block">Love</span>
             </h2>
             <p className="text-lg text-text-primary/65 mt-8">
-              Every villa in our collection has been carefully selected for its unique charm, 
-              luxury amenities, and unforgettable experience. Discover your next perfect escape.
+              Every villa in our collection has been carefully selected for its unique architecture, 
+              private swimming pools, scenic mountain vistas, and unforgettable comfort.
             </p>
           </motion.div>
           
           <motion.div
-            initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ 
               type: "spring", 
-              stiffness: 60, 
-              damping: 15,
-              delay: 0.15
+              stiffness: 70, 
+              damping: 18,
+              delay: 0.1
             }}
           >
             <Link href="/villas" className="bg-[#1B3564] hover:bg-[#152A50] text-white font-bold rounded-full px-8 py-4 text-sm tracking-widest uppercase transition-all duration-300 shadow-lg hover:shadow-glow-navy inline-block hover:-translate-y-1">
@@ -81,15 +81,15 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
           {villas.map((villa, index) => (
             <motion.div
               key={villa.id}
-              initial={{ opacity: 0, y: 60, filter: "blur(12px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, margin: "-80px" }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ 
                 type: "spring",
-                stiffness: 70,
-                damping: 18,
+                stiffness: 80,
+                damping: 20,
                 mass: 0.8,
-                delay: index * 0.15 
+                delay: index * 0.1 
               }}
               className="h-full flex flex-col"
             >

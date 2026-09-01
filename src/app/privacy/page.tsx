@@ -15,14 +15,14 @@ export const metadata: Metadata = {
     title: "Privacy Policy & Guest Data Protection | Stay Willas",
     description: "Read the Stay Willas privacy policy & guest data protection standards. Learn how we handle your personal information and transaction security.",
     url: "https://www.staywillas.com/privacy",
-    images: [{ url: "https://www.staywillas.com/images/hero-villa.png" }],
+    images: [{ url: "https://www.staywillas.com/images/hero-villa.webp" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Privacy Policy & Guest Data Protection | Stay Willas",
     description: "Read the Stay Willas privacy policy & guest data protection standards. Learn how we handle your personal information and transaction security.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 

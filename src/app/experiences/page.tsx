@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com/experiences",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
         alt: "Stay Willas Experiences",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Luxury Villa Experiences | Stay Willas",
     description: "Discover luxury villa experiences in Lonavala & Khopoli. Enjoy customized staycation activities, in-villa chef dining & private pool wellness.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 

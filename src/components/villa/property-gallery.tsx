@@ -151,7 +151,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
   // Safe fallback images if less than 5 are provided
   const visibleImages = [...images];
   while (visibleImages.length < 5) {
-    visibleImages.push(images[0] || "/images/hero-villa.png");
+    visibleImages.push(images[0] || "/images/hero-villa.webp");
   }
 
   const openGridOverlay = () => {
@@ -180,7 +180,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
   return (
     <>
       {/* Mobile-Only Swipeable Carousel (Hidden on Desktop) */}
-      <div className="md:hidden relative w-full mb-8 overflow-hidden rounded-3xl aspect-[4/3] border border-white/10 shadow-2xl">
+      <div className="md:hidden relative w-full mb-4 overflow-hidden rounded-2xl aspect-[16/11] border border-white/10 shadow-xl">
         <div className="flex h-full w-full overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth">
           {visibleImages.slice(0, 5).map((img, idx) => (
             <div 
@@ -196,7 +196,7 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
                 sizes="(max-width: 768px) 100vw, 400px"
                 className="object-cover" 
               />
-              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[9px] uppercase tracking-widest font-black text-white/80 border border-white/10">
+              <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-[8.5px] uppercase tracking-widest font-black text-white/80 border border-white/10">
                 {idx + 1} / 5
               </div>
             </div>
@@ -204,13 +204,13 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
         </div>
         
         {/* Mobile signature view badge */}
-        <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-[9px] uppercase tracking-widest font-black text-[#FFCC00] shadow-lg">
+        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-[8.5px] uppercase tracking-widest font-black text-[#FFCC00] shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-[#FFCC00] animate-pulse"></span>
           Signature View
         </div>
 
         {/* Floating Share and Save Buttons on Mobile */}
-        <div className="absolute top-4 right-4 flex items-center gap-2.5 z-10">
+        <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
           <ShareButton minimal />
           <SaveButton villaId={villaId} villaName={propertyName} minimal />
         </div>
@@ -218,10 +218,10 @@ const PropertyGallery = ({ images, propertyName, villaId }: PropertyGalleryProps
         {/* Show All Photos floating button on Mobile */}
         <button 
           onClick={openGridOverlay}
-          className="absolute bottom-4 left-4 bg-black/80 hover:bg-black/95 text-white backdrop-blur-md border border-white/10 hover:border-gold/30 px-5 py-3 rounded-xl flex items-center gap-2 text-[9px] font-black tracking-[0.15em] uppercase transition-all duration-300 shadow-xl cursor-pointer"
+          className="absolute bottom-3 left-3 bg-black/80 hover:bg-black/95 text-white backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-[8.5px] font-black tracking-wider uppercase transition-all shadow-md cursor-pointer"
         >
           <Grid size={11} className="text-[#FFCC00]" />
-          View all {images.length} photos
+          View {images.length} photos
         </button>
       </div>
 

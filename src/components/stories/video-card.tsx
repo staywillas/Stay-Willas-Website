@@ -86,11 +86,13 @@ export default function VideoCard({ src }: VideoCardProps) {
       onClick={togglePlay}
     >
       {/* Video element */}
+      {/* TODO: generate a lightweight webp poster if not available */}
       <video
         ref={videoRef}
         src={src}
         preload="metadata"
         playsInline
+        poster="/images/video-placeholder.webp"
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleVideoEnded}
         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.02]"

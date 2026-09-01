@@ -301,51 +301,67 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   // Get status of a specific day for a specific villa from the real DB bookings prop
   const getDayStatus = (villaId: string, date: Date) => {
     const villa = villas.find(v => v.id === villaId);
-    const isWillow = villa?.slug === "willow-peak";
+    const isWillowEntire = villa?.slug === "willow-peak";
+    const isWillowCottage = villa?.slug?.startsWith("willow-peak-cottage");
 
-    const dayBookings = bookings.filter(b => {
-      if (b.villaId !== villaId) return false;
+    const check = new Date(date);
+    check.setHours(0, 0, 0, 0);
+
+    const isDateOverlapping = (b: Booking) => {
       if (b.status === "CANCELLED") return false;
       const start = new Date(b.checkIn);
       const end = new Date(b.checkOut);
-      
-      const check = new Date(date);
-      check.setHours(0, 0, 0, 0);
       start.setHours(0, 0, 0, 0);
       end.setHours(0, 0, 0, 0);
-      
       return check >= start && check < end;
-    });
+    };
 
-    if (dayBookings.length === 0) {
-      return { status: "AVAILABLE", data: null, bookedCottages: 0, totalCottages: 3, label: isWillow ? "3/3 Free" : "Available" };
-    }
-
-    if (isWillow) {
-      let bookedCottages = 0;
-      for (const b of dayBookings) {
-        let count = 1;
-        try {
-          if (b.userId && b.userId.startsWith('{')) {
-            const parsed = JSON.parse(b.userId);
-            if (parsed.cottagesCount) count = parsed.cottagesCount;
-            else if (parsed.guests) count = Math.max(1, Math.min(3, Math.ceil(parsed.guests / 4)));
-          }
-        } catch (e) {}
-        bookedCottages += count;
+    if (isWillowEntire) {
+      // Find bookings for Entire Estate OR any individual cottage
+      const entireEstateBookings = bookings.filter(b => b.villaId === villaId && isDateOverlapping(b));
+      if (entireEstateBookings.length > 0) {
+        return { status: entireEstateBookings[0].status, data: entireEstateBookings[0], bookedCottages: 3, totalCottages: 3, label: "Full Estate Booked" };
       }
 
-      if (bookedCottages >= 3) {
-        return { status: "CONFIRMED", data: dayBookings[0], bookedCottages: 3, totalCottages: 3, label: "Full (3/3 Booked)" };
-      } else {
-        return { 
-          status: "PARTIAL", 
-          data: dayBookings[0], 
-          bookedCottages, 
-          totalCottages: 3, 
-          label: `${3 - bookedCottages}/3 Free` 
+      const allCottageVillaIds = villas.filter(v => v.slug?.startsWith("willow-peak-cottage")).map(v => v.id);
+      const cottageBookings = bookings.filter(b => allCottageVillaIds.includes(b.villaId) && isDateOverlapping(b));
+      
+      if (cottageBookings.length > 0) {
+        return {
+          status: "CONFIRMED",
+          data: cottageBookings[0],
+          bookedCottages: cottageBookings.length,
+          totalCottages: 3,
+          label: `${cottageBookings.length}/3 Cottage(s) Booked`
         };
       }
+
+      return { status: "AVAILABLE", data: null, bookedCottages: 0, totalCottages: 3, label: "Available (3 Cottages)" };
+    }
+
+    if (isWillowCottage) {
+      // 1. Check if Entire Estate is booked on this date
+      const entireEstateVilla = villas.find(v => v.slug === "willow-peak");
+      if (entireEstateVilla) {
+        const entireBooking = bookings.find(b => b.villaId === entireEstateVilla.id && isDateOverlapping(b));
+        if (entireBooking) {
+          return { status: "CONFIRMED", data: entireBooking, bookedCottages: 1, totalCottages: 1, label: "Booked (Full Estate)" };
+        }
+      }
+
+      // 2. Check direct booking on this specific cottage
+      const directBooking = bookings.find(b => b.villaId === villaId && isDateOverlapping(b));
+      if (directBooking) {
+        return { status: directBooking.status, data: directBooking, bookedCottages: 1, totalCottages: 1, label: directBooking.status };
+      }
+
+      return { status: "AVAILABLE", data: null, bookedCottages: 0, totalCottages: 1, label: "Available" };
+    }
+
+    // Standard single-unit villas
+    const dayBookings = bookings.filter(b => b.villaId === villaId && isDateOverlapping(b));
+    if (dayBookings.length === 0) {
+      return { status: "AVAILABLE", data: null, bookedCottages: 0, totalCottages: 1, label: "Available" };
     }
 
     return { status: dayBookings[0].status, data: dayBookings[0], bookedCottages: 1, totalCottages: 1, label: dayBookings[0].status };
@@ -494,7 +510,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
       let logoData: { dataUrl: string; aspect: number } | null = null;
       try {
-        const logoImg = await loadImage("/images/STAY WILLAS logo transparent.png");
+        const logoImg = await loadImage("/images/STAY WILLAS logo transparent.webp");
         logoData = getCroppedLogoDataUrl(logoImg);
       } catch (e) {
         console.warn("Could not load transparent logo for PDF", e);
@@ -1248,8 +1264,16 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
       {/* UNIFIED MODAL: BLOCK PROPERTY & GENERATE INVOICE */}
       {mounted && isModalOpen && createPortal(
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[99999] flex items-center justify-center p-3 sm:p-4 md:p-6 animate-fade-in overflow-y-auto">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-5xl w-full relative shadow-2xl flex flex-col max-h-[92vh] my-auto overflow-hidden text-left">
+        <div 
+          data-lenis-prevent="true"
+          style={{ overscrollBehavior: "contain" }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-md z-[99999] flex items-center justify-center p-3 sm:p-4 md:p-6 animate-fade-in overflow-y-auto"
+        >
+          <div 
+            data-lenis-prevent="true"
+            style={{ overscrollBehavior: "contain" }}
+            className="bg-white border border-slate-200 rounded-3xl max-w-5xl w-full relative shadow-2xl flex flex-col max-h-[92vh] my-auto overflow-hidden text-left"
+          >
             
             {/* Modal Header */}
             <div className="shrink-0 px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-[#1B3564] text-white">
@@ -1277,7 +1301,13 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
             </div>
 
             {/* Scrollable Form Body */}
-            <form id="block-and-invoice-form" onSubmit={(e) => handleSaveAndBlockProperty(e, true)} className="flex-1 overflow-y-auto p-5 md:p-6 space-y-6">
+            <form 
+              id="block-and-invoice-form" 
+              onSubmit={(e) => handleSaveAndBlockProperty(e, true)} 
+              data-lenis-prevent="true"
+              style={{ overscrollBehavior: "contain" }}
+              className="flex-1 overflow-y-auto p-5 md:p-6 space-y-6"
+            >
               
               {/* Type Switcher */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-2 rounded-2xl border border-slate-200">
@@ -1900,8 +1930,16 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
       {/* DETAILED RESERVATION INSPECTOR MODAL */}
       {mounted && selectedBooking && activeDetails && createPortal(
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[99999] flex items-center justify-center p-4 md:p-6 animate-fade-in text-left">
-          <div className="glass border border-slate-200 rounded-[32px] p-6 sm:p-8 max-w-lg w-full relative shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+        <div 
+          data-lenis-prevent="true"
+          style={{ overscrollBehavior: "contain" }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-md z-[99999] flex items-center justify-center p-4 md:p-6 animate-fade-in text-left"
+        >
+          <div 
+            data-lenis-prevent="true"
+            style={{ overscrollBehavior: "contain" }}
+            className="glass border border-slate-200 rounded-[32px] p-6 sm:p-8 max-w-lg w-full relative shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto"
+          >
             
             {/* Inspector Header */}
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">

@@ -7,13 +7,13 @@ import { cn } from "@/lib/utils";
 interface ThreeDHoverCardProps {
   children: React.ReactNode;
   className?: string;
-  maxTilt?: number;      // Maximum tilt angle in degrees (default: 10)
+  maxTilt?: number;      // Maximum tilt angle in degrees (default: 8)
   scale?: number;        // Scale on hover (default: 1.03)
-  lift?: number;         // Y-translation on hover (default: -10)
-  glareOpacity?: number; // Maximum opacity of glare/reflection (default: 0.3)
+  lift?: number;         // Y-translation on hover (default: -8)
+  glareOpacity?: number; // Maximum opacity of glare/reflection (default: 0.25)
 }
 
-export default function ThreeDHoverCard({
+function DesktopTiltCard({
   children,
   className,
   maxTilt = 8,
@@ -22,9 +22,7 @@ export default function ThreeDHoverCard({
   glareOpacity = 0.25,
 }: ThreeDHoverCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  // Motion Values for performance (no state-induced React re-renders)
   const rotateXVal = useMotionValue(0);
   const rotateYVal = useMotionValue(0);
   const liftVal = useMotionValue(0);
@@ -34,19 +32,6 @@ export default function ThreeDHoverCard({
   const glareY = useMotionValue(50);
   const glareOpacityVal = useMotionValue(0);
 
-  // Detection for touch devices to avoid scroll interference
-  useEffect(() => {
-    const checkTouch = () => {
-      setIsTouchDevice(
-        window.matchMedia("(pointer: coarse)").matches ||
-        "ontouchstart" in window ||
-        navigator.maxTouchPoints > 0
-      );
-    };
-    checkTouch();
-  }, []);
-
-  // Spring configuration for silky smooth physical response
   const springConfig = { 
     stiffness: 140, 
     damping: 22, 
@@ -59,46 +44,37 @@ export default function ThreeDHoverCard({
   const springScale = useSpring(scaleVal, springConfig);
   const springGlareOpacity = useSpring(glareOpacityVal, springConfig);
 
-  // Dynamic glare background gradient tracking the cursor
   const glareBackground = useTransform(
     [glareX, glareY],
     ([x, y]) => `radial-gradient(circle at ${x}% ${y}%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%)`
   );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isTouchDevice || !cardRef.current) return;
-
+    if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
     
-    // Relative coordinates of the mouse within the card (0 to width/height)
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    // Calculate rotation (-maxTilt to +maxTilt)
-    // tiltX controls rotation around the X-axis (looks like vertical tilt)
-    // tiltY controls rotation around the Y-axis (looks like horizontal tilt)
     const tiltX = -((mouseY / height) - 0.5) * maxTilt;
     const tiltY = ((mouseX / width) - 0.5) * maxTilt;
 
     rotateXVal.set(tiltX);
     rotateYVal.set(tiltY);
 
-    // Calculate glare percentage (0 to 100)
     glareX.set((mouseX / width) * 100);
     glareY.set((mouseY / height) * 100);
   };
 
   const handleMouseEnter = () => {
-    if (isTouchDevice) return;
     liftVal.set(lift);
     scaleVal.set(scale);
     glareOpacityVal.set(glareOpacity);
   };
 
   const handleMouseLeave = () => {
-    // Reset all spring targets back to resting state
     rotateXVal.set(0);
     rotateYVal.set(0);
     liftVal.set(0);
@@ -117,35 +93,57 @@ export default function ThreeDHoverCard({
     >
       <motion.div
         style={{
-          rotateX: isTouchDevice ? 0 : springRotateX,
-          rotateY: isTouchDevice ? 0 : springRotateY,
-          y: isTouchDevice ? 0 : springLift,
-          scale: isTouchDevice ? 1 : springScale,
+          rotateX: springRotateX,
+          rotateY: springRotateY,
+          y: springLift,
+          scale: springScale,
           transformStyle: "preserve-3d",
         }}
         className="relative w-full h-full rounded-[inherit] overflow-hidden transition-shadow duration-300"
       >
-        {/* Child Content */}
         <div 
           className="w-full h-full rounded-[inherit] overflow-hidden"
-          style={{ transform: "translateZ(0px)" }} // Safari rendering bug fix
+          style={{ transform: "translateZ(0px)" }}
         >
           {children}
         </div>
 
-        {/* Premium Glassmorphic Glare Reflection Overlay */}
-        {!isTouchDevice && (
-          <motion.div
-            style={{
-              background: glareBackground,
-              opacity: springGlareOpacity,
-              transform: "translateZ(1px)",
-            }}
-            className="absolute inset-0 pointer-events-none rounded-[inherit] z-50 transition-opacity duration-300"
-          />
-        )}
+        <motion.div
+          style={{
+            background: glareBackground,
+            opacity: springGlareOpacity,
+            transform: "translateZ(1px)",
+          }}
+          className="absolute inset-0 pointer-events-none rounded-[inherit] z-50 transition-opacity duration-300"
+        />
       </motion.div>
     </div>
   );
 }
+
+export default function ThreeDHoverCard(props: ThreeDHoverCardProps) {
+  const [isDesktopWithMouse, setIsDesktopWithMouse] = useState(false);
+
+  useEffect(() => {
+    // Check if device is desktop with mouse pointer (not touch screen or mobile)
+    const isDesktop =
+      window.innerWidth >= 1024 &&
+      window.matchMedia("(pointer: fine)").matches &&
+      !("ontouchstart" in window);
+
+    setIsDesktopWithMouse(isDesktop);
+  }, []);
+
+  // For touch/mobile devices: 100% pure lightweight DOM with zero Framer Motion physics loops
+  if (!isDesktopWithMouse) {
+    return (
+      <div className={cn("relative w-full h-full rounded-[inherit] overflow-hidden transition-transform duration-300", props.className)}>
+        {props.children}
+      </div>
+    );
+  }
+
+  return <DesktopTiltCard {...props} />;
+}
+
 

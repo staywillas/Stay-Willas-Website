@@ -46,74 +46,77 @@ export async function createManualBooking(formData: {
       where: { id: formData.villaId }
     });
 
-    const isWillowPeak = targetVilla?.slug === "willow-peak";
-    const cottagesToBook = isWillowPeak 
-      ? (formData.cottagesCount || Math.max(1, Math.min(3, Math.ceil((formData.guests || 1) / 4))))
-      : 1;
+    const isWillowEntire = targetVilla?.slug === "willow-peak";
+    const isWillowCottage = targetVilla?.slug?.startsWith("willow-peak-cottage");
 
-    if (isWillowPeak) {
-      // For Willow Peak: Check that night-by-night total booked cottages does not exceed 3
-      const overlappingBookings = await prisma.booking.findMany({
+    let relevantVillaIds = [formData.villaId];
+    if (isWillowCottage) {
+      const entireEstate = await prisma.villa.findFirst({ where: { slug: "willow-peak" } });
+      if (entireEstate) relevantVillaIds.push(entireEstate.id);
+    } else if (isWillowEntire) {
+      const allWillow = await prisma.villa.findMany({
+        where: {
+          OR: [
+            { slug: "willow-peak" },
+            { slug: { startsWith: "willow-peak-cottage" } }
+          ]
+        },
+        select: { id: true }
+      });
+      relevantVillaIds = allWillow.map(v => v.id);
+    }
+
+    if (isWillowEntire) {
+      // If booking Entire Estate, verify that NO booking exists on ANY cottage or the entire estate
+      const overlapping = await prisma.booking.findFirst({
+        where: {
+          villaId: { in: relevantVillaIds },
+          status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
+          AND: [
+            { checkIn: { lt: checkOutDate } },
+            { checkOut: { gt: checkInDate } }
+          ]
+        },
+        include: { villa: true }
+      });
+
+      if (overlapping) {
+        return {
+          success: false,
+          error: `Cannot block Willow Peak (Entire Estate): ${overlapping.villa?.name || "a cottage"} is already booked/blocked from ${new Date(overlapping.checkIn).toLocaleDateString("en-IN")} to ${new Date(overlapping.checkOut).toLocaleDateString("en-IN")}.`
+        };
+      }
+    } else if (isWillowCottage) {
+      // If booking a specific cottage, verify that NEITHER the Entire Estate nor this specific cottage is booked
+      const overlapping = await prisma.booking.findFirst({
+        where: {
+          villaId: { in: relevantVillaIds },
+          status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
+          AND: [
+            { checkIn: { lt: checkOutDate } },
+            { checkOut: { gt: checkInDate } }
+          ]
+        },
+        include: { villa: true }
+      });
+
+      if (overlapping) {
+        return {
+          success: false,
+          error: `Cannot block this cottage: ${overlapping.villa?.name || "the property"} is already booked/blocked from ${new Date(overlapping.checkIn).toLocaleDateString("en-IN")} to ${new Date(overlapping.checkOut).toLocaleDateString("en-IN")}.`
+        };
+      }
+    } else {
+      // Overlap validation for standard villas
+      const overlapping = await prisma.booking.findFirst({
         where: {
           villaId: formData.villaId,
-          status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] },
+          status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
           AND: [
             { checkIn: { lt: checkOutDate } },
             { checkOut: { gt: checkInDate } }
           ]
         }
-      });
-
-      let cur = new Date(checkInDate);
-      while (cur.getTime() < checkOutDate.getTime()) {
-        const nextDay = new Date(cur);
-        nextDay.setDate(nextDay.getDate() + 1);
-
-        let bookedOnNight = 0;
-        for (const b of overlappingBookings) {
-          if (b.checkIn < nextDay && b.checkOut > cur) {
-            let bCottages = 1;
-            try {
-              if (b.userId && b.userId.startsWith("{")) {
-                const parsed = JSON.parse(b.userId);
-                if (parsed.cottagesCount) bCottages = parsed.cottagesCount;
-                else if (parsed.guests) bCottages = Math.ceil(parsed.guests / 4);
-              }
-            } catch (e) {}
-            bookedOnNight += bCottages;
-          }
-        }
-
-        if (bookedOnNight + cottagesToBook > 3) {
-          const freeCottages = Math.max(0, 3 - bookedOnNight);
-          return {
-            success: false,
-            error: `Only ${freeCottages} cottage(s) available on ${cur.toLocaleDateString("en-IN")}. Cannot allocate ${cottagesToBook} cottage(s).`
-          };
-        }
-        cur.setDate(cur.getDate() + 1);
-      }
-    } else {
-      // Overlap validation for single-unit villas
-      const overlapping = await prisma.booking.findFirst({
-        where: {
-          villaId: formData.villaId,
-          status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] },
-          OR: [
-            {
-              checkIn: { lte: checkInDate },
-              checkOut: { gt: checkInDate },
-            },
-            {
-              checkIn: { lt: checkOutDate },
-              checkOut: { gte: checkOutDate },
-            },
-            {
-              checkIn: { gte: checkInDate },
-              checkOut: { lte: checkOutDate },
-            },
-          ],
-        },
       });
 
       if (overlapping) {
@@ -125,6 +128,8 @@ export async function createManualBooking(formData: {
     }
 
     // Determine custom JSON serialized userId payload
+    const isWillowPeak = isWillowEntire;
+    const cottagesToBook = isWillowEntire ? 3 : 1;
     let userIdPayload = "";
     if (formData.type === "MAINTENANCE") {
       userIdPayload = JSON.stringify({
@@ -565,7 +570,8 @@ export async function setDailyPriceRange(
   villaId: string,
   startDateStr: string,
   endDateStr: string,
-  price: number
+  price: number,
+  daysOfWeek?: number[] // Array of day indexes [0=Sun, 1=Mon, ..., 6=Sat]
 ) {
   try {
     const start = new Date(startDateStr);
@@ -579,12 +585,19 @@ export async function setDailyPriceRange(
       return { success: false, error: "Start date must be on or before end date." };
     }
 
-    // Collect all dates in range
+    // Collect all dates in range, optionally filtered by days of the week
     const datesToOverride: Date[] = [];
     let current = new Date(start);
     while (current <= end) {
-      datesToOverride.push(new Date(current));
+      const dayIndex = current.getUTCDay(); // 0 is Sun, 6 is Sat
+      if (!daysOfWeek || daysOfWeek.length === 0 || daysOfWeek.includes(dayIndex)) {
+        datesToOverride.push(new Date(current));
+      }
       current.setUTCDate(current.getUTCDate() + 1);
+    }
+
+    if (datesToOverride.length === 0) {
+      return { success: false, error: "No matching days found in the selected date range." };
     }
 
     // Overlap validation: check if any of these dates overlap with existing confirmed/pending/blocked bookings
@@ -656,7 +669,8 @@ export async function setDailyPriceRange(
 export async function deleteDailyPriceRange(
   villaId: string,
   startDateStr: string,
-  endDateStr: string
+  endDateStr: string,
+  daysOfWeek?: number[] // Array of day indexes [0=Sun, 1=Mon, ..., 6=Sat]
 ) {
   try {
     const start = new Date(startDateStr);
@@ -668,15 +682,37 @@ export async function deleteDailyPriceRange(
       return { success: false, error: "Start date must be on or before end date." };
     }
 
-    await prisma.dailyPrice.deleteMany({
-      where: {
-        villaId,
-        date: {
-          gte: start,
-          lte: end
+    if (!daysOfWeek || daysOfWeek.length === 0 || daysOfWeek.length === 7) {
+      await prisma.dailyPrice.deleteMany({
+        where: {
+          villaId,
+          date: {
+            gte: start,
+            lte: end
+          }
         }
+      });
+    } else {
+      // Find matching dates to delete
+      const datesToDelete: Date[] = [];
+      let current = new Date(start);
+      while (current <= end) {
+        const dayIndex = current.getUTCDay();
+        if (daysOfWeek.includes(dayIndex)) {
+          datesToDelete.push(new Date(current));
+        }
+        current.setUTCDate(current.getUTCDate() + 1);
       }
-    });
+
+      if (datesToDelete.length > 0) {
+        await prisma.dailyPrice.deleteMany({
+          where: {
+            villaId,
+            date: { in: datesToDelete }
+          }
+        });
+      }
+    }
 
     revalidatePath("/admin");
     return { success: true };

@@ -18,25 +18,22 @@ function ScrollRestorer() {
 }
 
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
-  const [isTouchOrMobile, setIsTouchOrMobile] = useState(false);
+  const [enableLenis, setEnableLenis] = useState(false);
 
   useEffect(() => {
-    const checkTouchOrMobile = () => {
-      const isMobileScreen = window.innerWidth < 1024;
-      const hasTouchSupport =
-        "ontouchstart" in window ||
-        navigator.maxTouchPoints > 0 ||
-        (window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
-      setIsTouchOrMobile(isMobileScreen || hasTouchSupport);
-    };
+    // Only enable Lenis on desktop devices with mouse/pointer (no touch/mobile)
+    const isDesktop =
+      window.innerWidth >= 1024 &&
+      window.matchMedia("(pointer: fine)").matches &&
+      !("ontouchstart" in window);
 
-    checkTouchOrMobile();
-    window.addEventListener("resize", checkTouchOrMobile);
-    return () => window.removeEventListener("resize", checkTouchOrMobile);
+    if (isDesktop) {
+      setEnableLenis(true);
+    }
   }, []);
 
-  // For mobile and touch devices, bypass JS scroll hijacking to guarantee 100% native, lag-free scrolling
-  if (isTouchOrMobile) {
+  // For mobile, iPhone, and touch devices: 100% native lag-free WebKit scrolling
+  if (!enableLenis) {
     return <>{children}</>;
   }
 
@@ -44,9 +41,9 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     <ReactLenis 
       root 
       options={{ 
-        lerp: 0.12,             // Snappy, responsive interpolation
+        lerp: 0.12,
         smoothWheel: true, 
-        syncTouch: false,       // Prevent touch lag
+        syncTouch: false,
         wheelMultiplier: 1.0,   
         touchMultiplier: 1.0,   
         infinite: false,

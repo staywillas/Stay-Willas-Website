@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com/contact",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
         alt: "Contact Stay Willas Concierge",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Contact Stay Willas | Book Lonavala Villa with Pool",
     description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or Khopoli staycation estate. 24/7 WhatsApp customer support available.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 

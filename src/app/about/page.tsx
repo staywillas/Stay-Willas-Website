@@ -7,19 +7,19 @@ import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Stay Willas | Luxury Villa Rentals in Maharashtra",
-  description: "Learn about Stay Willas and our luxury villa rentals in Maharashtra. Handpicked private pool villas in Lonavala & Khopoli with warm hospitality.",
-  keywords: ["about Stay Willas", "luxury villa rentals in maharashtra", "premium villa management"],
+  title: "About Stay Willas | Private Villa Rentals in Maharashtra",
+  description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala, Khopoli & Mahabaleshwar with warm hospitality.",
+  keywords: ["about Stay Willas", "private villa rentals in maharashtra", "premium villa management"],
   alternates: {
     canonical: "https://www.staywillas.com/about",
   },
   openGraph: {
-    title: "About Stay Willas | Luxury Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our luxury villa rentals in Maharashtra. Handpicked private pool villas in Lonavala & Khopoli with warm hospitality.",
+    title: "About Stay Willas | Private Villa Rentals in Maharashtra",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala, Khopoli & Mahabaleshwar with warm hospitality.",
     url: "https://www.staywillas.com/about",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
         alt: "About Stay Willas",
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Stay Willas | Luxury Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our luxury villa rentals in Maharashtra. Handpicked private pool villas in Lonavala & Khopoli with warm hospitality.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    title: "About Stay Willas | Private Villa Rentals in Maharashtra",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala, Khopoli & Mahabaleshwar with warm hospitality.",
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 
@@ -45,8 +45,8 @@ export default function AboutPage() {
     "@type": "AboutPage",
     "@id": `${BASE_URL}/about#webpage`,
     url: `${BASE_URL}/about`,
-    name: "About Stay Willas | Luxury Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our luxury villa rentals in Maharashtra. Handpicked private pool villas in Lonavala & Khopoli with warm hospitality.",
+    name: "About Stay Willas | Private Villa Rentals in Maharashtra",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala, Khopoli & Mahabaleshwar with warm hospitality.",
     isPartOf: {
       "@id": `${BASE_URL}/#website`,
     },
@@ -57,7 +57,7 @@ export default function AboutPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
-      <h1 className="sr-only">About Stay Willas - Luxury Villa Rentals in Maharashtra</h1>
+      <h1 className="sr-only">About Stay Willas - Private Villa Rentals in Maharashtra</h1>
       <Navbar />
       {/* Structured Data: AboutPage & BreadcrumbList */}
       <script
@@ -78,7 +78,7 @@ export default function AboutPage() {
               Our Story
             </span>
             <h2 className="text-5xl md:text-8xl font-heading mb-8 leading-tight">
-              What Luxury <br />
+              What Hospitality <br />
               <span className="italic text-accent-primary">Really Means.</span>
             </h2>
             <p className="text-text-primary/55 text-xl leading-relaxed mb-10">
@@ -89,8 +89,8 @@ export default function AboutPage() {
           </div>
           <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
             <Image 
-              src="/images/hero-villa.png" 
-              alt="Luxury Estate" 
+              src="/images/hero-villa.webp" 
+              alt="Stay Willas Private Estate" 
               fill 
               priority
               sizes="(max-width: 768px) 95vw, (max-width: 1200px) 45vw, 550px"
@@ -101,26 +101,36 @@ export default function AboutPage() {
       </section>
 
       {/* Values Section */}
-      <section className="py-32 bg-bg-secondary">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-heading mb-6 italic">What We Believe In</h2>
-            <div className="w-24 h-px bg-accent-primary/30 mx-auto" />
+      <section className="py-24 bg-bg-secondary/40 border-y border-border-primary/40 px-6 md:px-12 lg:px-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-20">
+            <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
+              Our Pillars
+            </span>
+            <h2 className="text-4xl md:text-6xl font-heading mb-6">
+              The Stay Willas <span className="italic text-accent-primary">Promise</span>
+            </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
-              { icon: ShieldCheck, title: "Handpicked", desc: "We personally visit and check every home to ensure everything is perfect." },
-              { icon: Sparkles, title: "Unique Stays", desc: "Access to beautiful private homes you won't find anywhere else." },
-              { icon: Heart, title: "Hospitality", desc: "Warm, friendly local hosts who love making you feel welcome." },
-              { icon: Award, title: "Quality", desc: "Creating beautiful, stress-free staycations you'll love." }
-            ].map((pillar) => (
-              <div key={pillar.title} className="text-center group">
-                <div className="w-16 h-16 rounded-2xl bg-white border border-border-subtle flex items-center justify-center mx-auto mb-6 group-hover:bg-accent-primary group-hover:text-white transition-all">
-                  <pillar.icon size={32} />
-                </div>
-                <h3 className="text-xl font-heading mb-4">{pillar.title}</h3>
-                <p className="text-text-primary/40 text-sm leading-relaxed">{pillar.desc}</p>
+              {
+                title: "100% Verified Privacy",
+                desc: "Every villa in our collection is strictly private. No shared amenities, no unexpected neighbors. Your space is entirely yours.",
+              },
+              {
+                title: "Homestyle Care & Dining",
+                desc: "From fresh Maharashtrian breakfast to live poolside barbecues, our dedicated in-house caretakers and chefs ensure effortless comfort.",
+              },
+              {
+                title: "Transparent Direct Rates",
+                desc: "No hidden booking commissions or middleman markups. Direct-to-guest reservations with complete pricing clarity.",
+              },
+            ].map((pillar, i) => (
+              <div key={i} className="p-8 rounded-3xl bg-bg-primary border border-border-primary/60 shadow-sm space-y-4 text-left">
+                <span className="text-accent-secondary font-heading text-2xl font-bold">0{i + 1}</span>
+                <h3 className="text-xl font-heading font-semibold text-text-primary">{pillar.title}</h3>
+                <p className="text-text-primary/60 text-sm leading-relaxed">{pillar.desc}</p>
               </div>
             ))}
           </div>
@@ -146,7 +156,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Rich SEO Content Section */}
+      {/* Rich SEO Content Section: Maharashtra Villa Management & Getaways */}
       <section className="py-24 bg-[#FAF8F5] border-t border-[#DAA520]/20 px-6 md:px-12 lg:px-24">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-3xl mx-auto">
@@ -154,7 +164,7 @@ export default function AboutPage() {
               Maharashtra's Premier Villa Management
             </span>
             <h2 className="text-3xl md:text-5xl font-heading font-bold text-[#1B3564] mb-4">
-              Redefining <span className="italic text-accent-primary font-serif font-light">Luxury Villa Rentals</span> in Maharashtra
+              Redefining <span className="italic text-accent-primary font-serif font-light">Private Villa Stays</span> in Maharashtra
             </h2>
             <p className="text-text-primary/75 text-sm md:text-base leading-relaxed font-light">
               At Stay Willas, we curate extraordinary private staycation experiences for families, corporate teams, and celebration groups seeking uncompromised comfort near Mumbai and Pune.
@@ -191,13 +201,13 @@ export default function AboutPage() {
             {/* SEO Pillar 3: Signature Hospitality */}
             <div className="bg-white p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm space-y-4">
               <h3 className="text-xl font-heading font-bold text-[#1B3564]">
-                Luxury Villa Rentals Maharashtra
+                Mahabaleshwar & Panchgani Stays
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Whether you need a <strong className="font-semibold text-[#1B3564]">pet friendly villa in Lonavala</strong> or a private pool retreat in Khopoli, Stay Willas offers 100% verified properties with 24/7 concierge support and customized dining.
+                Experience hillside serenity at <strong className="font-semibold text-[#1B3564]">Terra Cotta Villa</strong> in Panchgani. 4 BHK rustic terracotta brick architecture with private pool, near Mapro Garden with 24/7 caretaker support.
               </p>
-              <a href="/villas" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
-                View Full Villa Catalog &rarr;
+              <a href="/areas/mahabaleshwar" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
+                Explore Mahabaleshwar &rarr;
               </a>
             </div>
           </div>
@@ -208,7 +218,7 @@ export default function AboutPage() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs md:text-sm text-text-primary/80 font-light leading-relaxed">
               <ul className="space-y-3 list-disc pl-5">
-                <li><strong className="font-semibold text-[#1B3564]">Handpicked Luxury Properties:</strong> Every villa is personally inspected for safety, privacy, clean water filtration, and premium bedding.</li>
+                <li><strong className="font-semibold text-[#1B3564]">Handpicked Private Properties:</strong> Every villa is personally inspected for safety, privacy, clean water filtration, and premium bedding.</li>
                 <li><strong className="font-semibold text-[#1B3564]">In-House Chef & Dining:</strong> Freshly prepared Maharashtrian specialties, continental menus, and dedicated Jain meal preparation.</li>
                 <li><strong className="font-semibold text-[#1B3564]">Pet-Friendly Havens:</strong> Securely fenced private gardens allowing your furry companions to run freely.</li>
               </ul>

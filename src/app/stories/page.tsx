@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com/stories",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
         alt: "Stay Willas Guest Stories",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
     description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool estates near Mumbai & Pune.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 
@@ -39,7 +39,6 @@ export default function StoriesPage() {
   return (
     <main className="min-h-screen bg-[#F5F2EA] bg-[url('/assets/noise.png')] bg-blend-overlay">
       <Navbar />
-      <TopTicker />
 
       {/* Hero Section */}
       <section className="relative pt-36 pb-20 md:pt-48 md:pb-28 text-center px-6 border-b border-[#DAA520]/15">

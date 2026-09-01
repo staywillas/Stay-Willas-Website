@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com/destinations",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
         alt: "Villa Destinations in Maharashtra",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Villa Destinations in Maharashtra | Stay Willas",
     description: "Discover top villa destinations in maharashtra. Reserve verified villas in lonavala with private pool & chef service for a memorable staycation.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 

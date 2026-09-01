@@ -496,7 +496,7 @@ export default async function LonavalaGlassHousePage() {
 
             <h2>Choosing the Perfect Villa for Rent in Lonavala</h2>
             <p>
-              If you are searching for a premier <strong>villa for rent in lonavala</strong> that accommodates groups up to 16 guests, The Angle House is meticulously equipped to deliver total convenience:
+              If you are searching for a premier <strong>villa for rent in lonavala</strong> that accommodates groups up to 12 guests, The Angle House is meticulously equipped to deliver total convenience:
             </p>
 
             <h3>Exclusive Private Amenities & Jacuzzi</h3>

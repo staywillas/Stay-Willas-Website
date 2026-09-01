@@ -15,14 +15,14 @@ export const metadata: Metadata = {
     title: "Terms & Conditions for Villa Bookings | Stay Willas",
     description: "Read the terms and conditions for villa bookings with Stay Willas. Learn about payment policies, house rules, and safety terms.",
     url: "https://www.staywillas.com/terms",
-    images: [{ url: "https://www.staywillas.com/images/hero-villa.png" }],
+    images: [{ url: "https://www.staywillas.com/images/hero-villa.webp" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Terms & Conditions for Villa Bookings | Stay Willas",
     description: "Read the terms and conditions for villa bookings with Stay Willas. Learn about payment policies, house rules, and safety terms.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 

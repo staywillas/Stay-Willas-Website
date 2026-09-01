@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com/wishlist",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
         alt: "My Wishlist Stay Willas",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "My Wishlist of Premium Luxury Retreats | Stay Willas",
     description: "Browse My Wishlist of premium luxury retreats saved for your next getaway. Compare private pool villas, view pricing, and check dates. Plan your trip.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 
@@ -70,7 +70,7 @@ export default async function WishlistPage() {
       name: villa.name,
       location: villa.location,
       price: villa.price.toLocaleString("en-IN"),
-      image: villa.images[0] || "/images/hero-villa.png",
+      image: villa.images[0] || "/images/hero-villa.webp",
       guests: villa.guests,
       bedrooms: villa.bedrooms,
       bathrooms: villa.bathrooms,

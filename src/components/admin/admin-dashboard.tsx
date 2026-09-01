@@ -106,32 +106,18 @@ interface Booking {
   createdAt?: Date;
 }
 
-interface Inquiry {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-  villaId: string | null;
-  type: string;
-  createdAt: Date;
-}
-
 interface AdminDashboardProps {
   initialVillas: Villa[];
   initialBookings: Booking[];
-  initialInquiries: Inquiry[];
   userEmail: string;
 }
 
 const AdminDashboard = ({ 
   initialVillas, 
   initialBookings, 
-  initialInquiries,
   userEmail 
 }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "inquiries" | "calendar" | "pricing" | "calculator">("overview");
-  const [inquiryFilter, setInquiryFilter] = useState<"ALL" | "GUEST" | "OWNER">("ALL");
+  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "calendar" | "pricing" | "calculator">("overview");
 
   // Lift properties and bookings to states for high reactivity
   const [villas, setVillas] = useState<Villa[]>(initialVillas);
@@ -659,13 +645,8 @@ const AdminDashboard = ({
     .reduce((sum, b) => sum + b.totalPrice, 0);
 
   const pendingBookings = bookings.filter(b => b.status === "PENDING").length;
-  const totalInquiriesCount = initialInquiries.length;
-  const partnerRequestsCount = initialInquiries.filter(i => i.type === "OWNER").length;
-
-  const filteredInquiries = initialInquiries.filter(i => {
-    if (inquiryFilter === "ALL") return true;
-    return i.type === inquiryFilter;
-  });
+  const confirmedBookings = bookings.filter(b => b.status === "CONFIRMED").length;
+  const blockedDatesCount = bookings.filter(b => b.status === "BLOCKED").length;
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-12 relative animate-fade-in">
@@ -779,14 +760,14 @@ const AdminDashboard = ({
         {/* Metric 4 */}
         <div className="glass border border-slate-200 rounded-3xl p-8 hover:border-blue-500/30 transition-all duration-300 group">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs uppercase tracking-widest text-slate-500 font-bold">Total Inquiries</span>
-            <div className="w-12 h-12 rounded-2xl bg-slate-50 text-blue-400 flex items-center justify-center group-hover:bg-blue-500/10 transition-colors">
-              <MessageSquare size={20} />
+            <span className="text-xs uppercase tracking-widest text-slate-500 font-bold">Confirmed Stays</span>
+            <div className="w-12 h-12 rounded-2xl bg-slate-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-500/10 transition-colors">
+              <CheckCircle size={20} />
             </div>
           </div>
-          <h2 className="text-4xl font-bold mb-2 text-slate-900">{totalInquiriesCount}</h2>
+          <h2 className="text-4xl font-bold mb-2 text-slate-900">{confirmedBookings}</h2>
           <p className="text-slate-500 text-xs">
-            Includes <span className="text-blue-400 font-bold">{partnerRequestsCount} partner requests</span>
+            <span className="text-emerald-600 font-bold">{blockedDatesCount} blocked/maintenance</span> dates
           </p>
         </div>
       </div>
@@ -845,16 +826,6 @@ const AdminDashboard = ({
           Bookings Pipeline ({totalBookings})
         </button>
         <button
-          onClick={() => setActiveTab("inquiries")}
-          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
-            activeTab === "inquiries" 
-              ? "border-[#1B3564] text-[#1B3564]" 
-              : "border-transparent text-slate-400 hover:text-[#1B3564]"
-          }`}
-        >
-          User Inquiries ({totalInquiriesCount})
-        </button>
-        <button
           onClick={() => setActiveTab("calculator")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
             activeTab === "calculator" 
@@ -887,8 +858,40 @@ const AdminDashboard = ({
       )}
 
       {activeTab === "overview" && (
-        <div className="space-y-8">
+        <div className="space-y-12">
+          {/* Main Layout Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Quick Actions & Channels */}
+            <div className="lg:col-span-1 space-y-8">
+              <div className="glass border border-slate-200 rounded-[32px] p-8">
+                <h3 className="text-xl font-cormorant font-bold italic mb-8">Quick Operations</h3>
+                <div className="space-y-4">
+                  <a 
+                    href="/villas"
+                    target="_blank"
+                    className="w-full flex items-center justify-between p-5 rounded-2xl bg-blue-500/5 border border-blue-500/20 text-blue-400 hover:bg-blue-500/10 transition-all text-xs font-bold uppercase tracking-widest"
+                  >
+                    <span>Browse Villa Grid</span>
+                    <ExternalLink size={14} />
+                  </a>
+                  <button 
+                    onClick={() => setActiveTab("pricing")}
+                    className="w-full flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition-all text-xs font-bold uppercase tracking-widest cursor-pointer"
+                  >
+                    <span>Everyday Pricing Calendar</span>
+                    <TrendingUp size={14} />
+                  </button>
+                  <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 border border-slate-100">
+                    <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-2">Prisma Client Status</p>
+                    <div className="flex items-center gap-2 text-blue-400 text-xs">
+                      <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+                      <span>Database Synchronized (Supabase AP-SE-2)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Recent Activity Bookings */}
             <div className="glass border border-slate-200 rounded-[32px] p-8 lg:col-span-2">
               <div className="flex items-center justify-between mb-8">
@@ -918,7 +921,7 @@ const AdminDashboard = ({
                       <div className="flex items-center gap-4">
                         <div className="relative w-16 h-12 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0">
                           <Image 
-                            src={booking.villa.images[0] || "/images/hero-villa.png"} 
+                            src={booking.villa.images[0] || "/images/hero-villa.webp"} 
                             alt={booking.villa.name} 
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -968,14 +971,11 @@ const AdminDashboard = ({
                   <ExternalLink size={14} />
                 </a>
                 <button 
-                  onClick={() => {
-                    setActiveTab("inquiries");
-                    setInquiryFilter("OWNER");
-                  }}
+                  onClick={() => setActiveTab("pricing")}
                   className="w-full flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition-all text-xs font-bold uppercase tracking-widest cursor-pointer"
                 >
-                  <span>Acquisitions Queue</span>
-                  <Users size={14} />
+                  <span>Everyday Pricing Calendar</span>
+                  <TrendingUp size={14} />
                 </button>
                 <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 border border-slate-100">
                   <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-2">Prisma Client Status</p>
@@ -996,7 +996,7 @@ const AdminDashboard = ({
             <div key={villa.id} className="glass border border-slate-200 rounded-[32px] overflow-hidden hover:border-blue-500/30 transition-all duration-300 group flex flex-col h-full">
               <div className="relative h-48 bg-slate-50 border border-slate-100">
                 <Image 
-                  src={villa.images[0] || "/images/hero-villa.png"} 
+                  src={villa.images[0] || "/images/hero-villa.webp"} 
                   alt={villa.name} 
                   fill
                   className="object-cover group-hover:scale-105 transition-all duration-500"
@@ -1526,90 +1526,18 @@ const AdminDashboard = ({
         </div>
       )}
 
-      {activeTab === "inquiries" && (
-        <div className="space-y-8">
-          <div className="flex items-center justify-between font-sans">
-            <h3 className="text-2xl font-cormorant font-bold italic">Communication Queue</h3>
-            {/* Filter buttons */}
-            <div className="flex gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
-              <button 
-                onClick={() => setInquiryFilter("ALL")}
-                className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                  inquiryFilter === "ALL" ? "bg-blue-600 text-white font-black" : "text-slate-500 hover:text-white"
-                }`}
-              >
-                All ({totalInquiriesCount})
-              </button>
-              <button 
-                onClick={() => setInquiryFilter("GUEST")}
-                className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                  inquiryFilter === "GUEST" ? "bg-blue-600 text-white font-black" : "text-slate-500 hover:text-white"
-                }`}
-              >
-                Guests
-              </button>
-              <button 
-                onClick={() => setInquiryFilter("OWNER")}
-                className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                  inquiryFilter === "OWNER" ? "bg-blue-600 text-white font-black" : "text-slate-500 hover:text-white"
-                }`}
-              >
-                Partners ({partnerRequestsCount})
-              </button>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            {filteredInquiries.length === 0 ? (
-              <div className="glass border border-slate-200 rounded-[32px] p-12 text-center text-slate-400 text-sm">
-                No inquiries matching this criteria.
-              </div>
-            ) : (
-              filteredInquiries.map((inquiry) => (
-                <div key={inquiry.id} className="glass border border-slate-200 rounded-[32px] p-8 hover:border-blue-500/20 transition-all">
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
-                    <div>
-                      <div className="flex items-center gap-3 mb-1.5">
-                        <h4 className="text-lg font-cormorant font-bold text-blue-400 italic">{inquiry.name}</h4>
-                        <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase ${
-                          inquiry.type === "OWNER" 
-                            ? "bg-purple-500/10 text-purple-400 border border-purple-500/25" 
-                            : "bg-blue-500/10 text-blue-400 border border-blue-500/25"
-                        }`}>
-                          {inquiry.type === "OWNER" ? "PARTNERSHIP REQUEST" : "GUEST INQUIRY"}
-                        </span>
-                      </div>
-                      <p className="text-slate-500 text-xs">
-                        Email: <span className="text-slate-800 mr-4">{inquiry.email}</span> Phone: <span className="text-slate-800">{inquiry.phone}</span>
-                      </p>
-                    </div>
-
-                    <div className="text-left md:text-right">
-                      <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold block mb-1">RECEIVED ON</span>
-                      <p className="text-xs text-slate-600">
-                        {new Date(inquiry.createdAt).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h5 className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-2">Message</h5>
-                    <p className="text-slate-800 leading-relaxed text-sm bg-slate-50 border border-slate-200 rounded-2xl p-6 italic">
-                      &ldquo;{inquiry.message}&rdquo;
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
       {/* 1. PMS Property Editor & Channel Sync Modal */}
       {editingVilla && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6 overflow-y-auto animate-fade-in font-sans">
+        <div 
+          data-lenis-prevent="true"
+          style={{ overscrollBehavior: "contain" }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6 overflow-y-auto animate-fade-in font-sans"
+        >
           <form 
             onSubmit={handleSaveVilla}
-            className="glass border border-slate-200 rounded-[32px] p-8 max-w-2xl w-full my-8 relative shadow-2xl space-y-6"
+            data-lenis-prevent="true"
+            style={{ overscrollBehavior: "contain" }}
+            className="glass border border-slate-200 rounded-[32px] p-8 max-w-2xl w-full my-8 relative shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
           >
             <div>
               <h4 className="text-2xl font-cormorant font-bold italic text-blue-400">Property Management Console</h4>
@@ -1949,8 +1877,16 @@ const AdminDashboard = ({
         const calculatedBalance = parsedBalanceDue > 0 ? parsedBalanceDue : Math.max(0, b.totalPrice - parsedAdvancePaid);
 
         return (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200">
-            <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+          <div 
+            data-lenis-prevent="true"
+            style={{ overscrollBehavior: "contain" }}
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200"
+          >
+            <div 
+              data-lenis-prevent="true"
+              style={{ overscrollBehavior: "contain" }}
+              className="relative w-full max-w-3xl max-h-[92vh] flex flex-col bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+            >
               
               {/* Header */}
               <div className="bg-[#1B3564] text-white px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between flex-shrink-0 border-b border-white/10">
@@ -2008,7 +1944,11 @@ const AdminDashboard = ({
               </div>
 
               {/* Modal Body */}
-              <div className="p-3.5 sm:p-4 space-y-3 flex-1 overflow-y-auto text-slate-800 font-sans">
+              <div 
+                data-lenis-prevent="true"
+                style={{ overscrollBehavior: "contain" }}
+                className="p-3.5 sm:p-4 space-y-3 flex-1 overflow-y-auto text-slate-800 font-sans"
+              >
 
                 {/* Inline Full Bill Editor Box */}
                 {isEditingFullBill ? (
@@ -2239,7 +2179,7 @@ const AdminDashboard = ({
                   <div className="sm:col-span-5 flex items-center gap-3">
                     <div className="relative w-14 h-12 rounded-lg overflow-hidden bg-slate-200 border border-slate-200 flex-shrink-0">
                       <Image 
-                        src={b.villa?.images?.[0] || "/images/hero-villa.png"} 
+                        src={b.villa?.images?.[0] || "/images/hero-villa.webp"} 
                         alt={b.villa?.name || "Villa"} 
                         fill
                         className="object-cover"

@@ -3,38 +3,38 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Luxury Villas Near Mumbai with Private Pools | Stay Willas",
-  description: "Discover premier luxury villas near Mumbai with private pools, signature hospitality & chef services in Lonavala and Khopoli. Ideal for weekend getaways.",
+  title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
+  description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala, Khopoli & Mahabaleshwar. Direct rates with 0% platform fee.",
   keywords: [
-    "luxury villas near Mumbai",
-    "luxury villas near Mumbai with private pools",
     "private pool villas near Mumbai",
-    "villas near Mumbai for weekend",
-    "luxury villas in Maharashtra",
-    "weekend villas near Mumbai"
+    "villas in lonavala with private pool",
+    "villas in khopoli with private pool",
+    "villas in mahabaleshwar with private pool",
+    "weekend getaway villas near mumbai",
+    "exclusive villas near Mumbai"
   ],
   alternates: {
     canonical: "https://www.staywillas.com",
   },
   openGraph: {
-    title: "Luxury Villas Near Mumbai with Private Pools | Stay Willas",
-    description: "Discover premier luxury villas near Mumbai with private pools, signature hospitality & chef services in Lonavala and Khopoli. Ideal for weekend getaways.",
+    title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
+    description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala, Khopoli & Mahabaleshwar. Direct rates with 0% platform fee.",
     url: "https://www.staywillas.com",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
-        alt: "Luxury villas near Mumbai - Stay Willas Collection",
+        alt: "Private pool villas near Mumbai - Stay Willas Collection",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villas Near Mumbai with Private Pools | Stay Willas",
-    description: "Discover premier luxury villas near Mumbai with private pools, signature hospitality & chef services in Lonavala and Khopoli. Ideal for weekend getaways.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
+    description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala, Khopoli & Mahabaleshwar.",
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 
@@ -54,35 +54,37 @@ const Footer = dynamic(() => import("@/components/layout/footer"));
 
 import { prisma } from "@/lib/db";
 
+export const revalidate = 60; // Instant TTFB via ISR cache
+
 export default async function Home() {
-  // Let's explicitly fetch priorities
-  const angleHouse = await prisma.villa.findUnique({
-    where: { slug: "the-angle-house" }
-  });
-  
-  const canopyCrest = await prisma.villa.findUnique({
-    where: { slug: "canopy-crest" }
-  });
-
-  // Query all other premium villas
-  const otherVillas = await prisma.villa.findMany({
-    where: {
-      slug: { notIn: ["the-angle-house", "canopy-crest"] }
-    },
+  // Query all villas in a single roundtrip
+  const allVillas = await prisma.villa.findMany({
     orderBy: { createdAt: "desc" },
+    select: {
+      slug: true,
+      name: true,
+      location: true,
+      price: true,
+      guests: true,
+      bedrooms: true,
+      bathrooms: true,
+      images: true,
+    }
   });
 
-  // Combine them with priorities always at the top/first spot!
-  const dbVillas = [];
-  if (angleHouse) dbVillas.push(angleHouse);
-  if (canopyCrest) dbVillas.push(canopyCrest);
-  dbVillas.push(...otherVillas);
+  // Prioritize signature stays always at top
+  const prioritySlugs = ["the-angle-house", "canopy-crest"];
+  const prioritized = allVillas
+    .filter((v) => prioritySlugs.includes(v.slug))
+    .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
+  const remaining = allVillas.filter((v) => !prioritySlugs.includes(v.slug));
+  const dbVillas = [...prioritized, ...remaining];
 
   const featuredVillas = dbVillas.map((villa) => ({
     id: villa.slug,
     name: villa.name,
     location: villa.location,
-    image: villa.images[0] || "/images/hero-villa.png",
+    image: villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/main.webp" : (villa.images[0] || "/images/hero-villa.webp"),
     price: villa.price.toLocaleString("en-IN"),
     guests: villa.guests,
     bedrooms: villa.bedrooms,
@@ -91,14 +93,11 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-bg-primary">
-      <h1 className="sr-only">Luxury Villas Near Mumbai for Private Getaways</h1>
       <Navbar />
-      <TopTicker />
       <Hero />
       <BookingBar />
       <DestinationShowcase />
       <FeaturedVillas villas={featuredVillas} />
-      <InfiniteMarquee />
       <WhyChooseUs />
       <SEOContent />
       <PartnerSection />

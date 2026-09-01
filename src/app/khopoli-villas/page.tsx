@@ -520,7 +520,7 @@ export default async function KhopoliGroupEstatePage() {
               <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#DAA520]/15">
                 <h3 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">Why is Canopy Crest ideal for those searching for villas in khopoli?</h3>
                 <p className="text-text-primary/70 text-xs sm:text-sm font-light leading-relaxed">
-                  Out of all villas in khopoli, Canopy Crest offers complete privacy, multi-acre lawns with traditional charpai lounge setups, and capacity for up to 20 guests.
+                  Out of all villas in khopoli, Canopy Crest offers complete privacy, multi-acre lawns with traditional charpai lounge setups, and capacity for up to 16 guests.
                 </p>
               </div>
             </div>

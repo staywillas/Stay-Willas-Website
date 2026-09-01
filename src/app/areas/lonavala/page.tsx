@@ -6,40 +6,39 @@ import { prisma } from "@/lib/db";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import VillaCard from "@/components/home/villa-card";
-import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
+import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar, MessageCircle, Sparkles, Star, Tag, Zap, Waves, Users, Utensils } from "lucide-react";
 import { generateDestinationCollectionSchema, generateBreadcrumbSchema, generateFAQSchema } from "@/lib/schema";
 
+export const revalidate = 60; // Instant TTFB via ISR cache
+
 export const metadata: Metadata = {
-  title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
-  description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services. Book verified lonavala villa stays near Bhushi Dam & Pawna Lake today.",
+  title: "Private Pool Villas in Lonavala | Handcrafted Mountain Stays | Stay Willas",
+  description: "Explore premier private pool villas in Lonavala with lush greenery, mountain views, and in-house chef services. Book verified estates with zero platform fees.",
   keywords: [
-    "luxury villas in lonavala",
-    "villas in lonavala",
-    "lonavala villa with private pool",
     "villas in lonavala with private pool",
-    "villa in lonavala",
-    "lonavala villa",
-    "villas near lonavala",
-    "lonavla villa",
-    "pool villa",
-    "private villa",
-    "villas resort"
+    "lonavala villa with private pool",
+    "villas in lonavala",
+    "private pool villa in lonavala",
+    "villa in lonavala for family",
+    "lonavala villa staycation",
+    "pool villa lonavala",
+    "private villa lonavala"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/areas/lonavala",
   },
   openGraph: {
-    title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
-    description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services. Book verified lonavala villa stays near Bhushi Dam & Pawna Lake today.",
+    title: "Private Pool Villas in Lonavala | Handcrafted Mountain Stays | Stay Willas",
+    description: "Explore premier private pool villas in Lonavala with lush greenery, mountain views, and in-house chef services. Book verified estates with zero platform fees.",
     url: "https://www.staywillas.com/areas/lonavala",
     siteName: "Stay Willas",
     locale: "en_IN",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
-        alt: "Luxury Villas in Lonavala with Private Pool - Stay Willas Collection",
+        alt: "Private Pool Villas in Lonavala - Stay Willas Collection",
       }
     ],
     type: "website",
@@ -48,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
     description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services. Book verified lonavala villa stays near Bhushi Dam & Pawna Lake today.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 
@@ -74,7 +73,7 @@ export default async function LonavalaPage() {
     id: villa.slug,
     name: villa.name,
     location: villa.location,
-    image: villa.images[0] || "/images/hero-villa.png",
+    image: villa.images[0] || "/images/hero-villa.webp",
     price: villa.price.toLocaleString("en-IN"),
     guests: villa.guests,
     bedrooms: villa.bedrooms,
@@ -138,37 +137,164 @@ export default async function LonavalaPage() {
         />
         <Navbar />
         
-        {/* Banner Section */}
-        <section className="relative pt-36 pb-20 md:pt-48 md:pb-32 px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/10 text-center flex flex-col items-center">
-          <div className="absolute inset-0 -z-10">
+        {/* Modern 2-Column Split Luxury Hero Banner */}
+        <section className="relative pt-24 pb-10 sm:pt-32 sm:pb-16 md:pt-40 md:pb-24 px-4 sm:px-8 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/20 min-h-[480px] sm:min-h-[580px] md:min-h-[660px] flex items-center">
+          {/* High-Resolution Stunning Villa Background Image */}
+          <div className="absolute inset-0 z-0 select-none pointer-events-none">
             <Image 
               src="/assets/villas/the-angle-house/gallery-11.webp" 
-              alt="Luxury private pool villa in Lonavala by StayWillas"
+              alt="Luxury private pool villa in Lonavala by Stay Willas"
               fill
               priority
-              className="object-cover opacity-20 filter blur-[2px]"
+              quality={85}
+              className="object-cover object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/80 via-bg-primary/95 to-bg-primary" />
+            {/* Cinematic Luxury Dark Overlays */}
+            <div className="absolute inset-0 bg-[#0E1B35]/70 z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0E1B35] via-[#0E1B35]/50 to-[#0E1B35]/75 z-10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0E1B35]/90 via-[#0E1B35]/60 to-[#0E1B35]/40 z-10" />
           </div>
 
-          <div className="max-w-4xl mx-auto flex flex-col items-center">
-            <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-text-primary/50 tracking-wider uppercase font-semibold mb-6">
-              <Link href="/" className="hover:text-accent-primary transition-colors">Home</Link>
-              <ChevronRight size={10} />
-              <Link href="/areas" className="hover:text-accent-primary transition-colors">Areas</Link>
-              <ChevronRight size={10} />
-              <span className="text-text-primary font-bold">Lonavala</span>
-            </div>
+          <div className="max-w-7xl mx-auto w-full relative z-20 text-white">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 lg:gap-14 items-center">
+              
+              {/* Left Column (7 cols): Editorial & Action */}
+              <div className="lg:col-span-7 text-left flex flex-col items-start">
+                {/* Breadcrumb Navigation */}
+                <div className="flex items-center gap-1.5 text-[9px] sm:text-[10px] md:text-xs text-slate-300/80 tracking-wider uppercase font-semibold mb-2 sm:mb-3 bg-black/30 backdrop-blur-md px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border border-white/15">
+                  <Link href="/" className="hover:text-[#DAA520] transition-colors">Home</Link>
+                  <ChevronRight size={10} className="text-slate-400" />
+                  <Link href="/areas" className="hover:text-[#DAA520] transition-colors">Areas</Link>
+                  <ChevronRight size={10} className="text-slate-400" />
+                  <span className="text-[#DAA520] font-bold">Lonavala</span>
+                </div>
 
-            <span className="text-accent-secondary font-semibold tracking-[0.4em] uppercase text-[10px] md:text-xs mb-3 block">
-              Boutique Mountain Sanctuary
-            </span>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading leading-tight tracking-tight mb-6">
-              Luxury Villas in <span className="italic text-accent-primary font-serif font-light font-normal">Lonavala</span>
-            </h1>
-            <p className="text-text-primary/80 text-sm md:text-base leading-relaxed max-w-2xl font-light">
-              A scenic 2-hour drive from Mumbai and Pune. Discover our architectural sanctuary featuring dramatic glass facades, private waterfall pools, pet-friendly lawns, and tailored in-villa culinary experiences.
-            </p>
+                {/* Big Floating 28% Off on Weekdays Button */}
+                <Link 
+                  href="/villa/the-angle-house"
+                  className="group inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 via-amber-600 to-[#DAA520] hover:from-red-500 hover:to-amber-500 text-white px-4.5 sm:px-8 py-2.5 sm:py-4 rounded-full shadow-[0_4px_20px_rgba(220,38,38,0.45)] hover:shadow-[0_8px_35px_rgba(218,165,32,0.6)] transition-all duration-300 transform hover:-translate-y-1 mb-3 sm:mb-5 cursor-pointer border border-white/25"
+                >
+                  <span className="text-xs sm:text-base md:text-lg font-black tracking-wide flex items-center gap-1.5 sm:gap-2">
+                    🔥 28% Off on Weekdays
+                  </span>
+                  <ChevronRight size={15} className="group-hover:translate-x-1.5 transition-transform" />
+                </Link>
+
+                {/* Main Headline */}
+                <h1 className="text-3xl sm:text-5xl md:text-6xl font-heading leading-tight tracking-tight mb-2.5 sm:mb-4 text-white">
+                  Luxury Villas in{" "}
+                  <span className="italic font-light font-sans bg-gradient-to-r from-[#DAA520] via-[#F3C766] to-[#FFE082] bg-clip-text text-transparent font-bold pr-2 sm:pr-3 inline-block">
+                    Lonavala
+                  </span>
+                </h1>
+
+                {/* Subtitle */}
+                <p className="text-slate-200 text-xs sm:text-base md:text-lg leading-relaxed max-w-xl font-light mb-4 sm:mb-8">
+                  A scenic 2-hour drive from Mumbai and Pune. Discover architectural glass-facade sanctuaries, private waterfall pools, on-demand gourmet chefs, and cozy mountain cottages.
+                </p>
+
+                {/* Direct Booking Hero CTA Group */}
+                <div className="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3.5 w-full sm:w-auto mb-4 sm:mb-8">
+                  <a 
+                    href="#lonavala-villas-grid"
+                    className="w-full sm:w-auto bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] hover:text-[#0E1B35] font-black text-xs sm:text-sm tracking-wider uppercase px-6 sm:px-8 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-glow-gold transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
+                  >
+                    <Zap size={15} className="text-[#1B3564] fill-[#1B3564]" />
+                    <span>BOOK DIRECT (0% FEE)</span>
+                  </a>
+                  <a 
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and catering menus for luxury villas in Lonavala.")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs sm:text-sm tracking-wider uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
+                  >
+                    <MessageCircle size={15} />
+                    <span>WHATSAPP DIRECT OFFER</span>
+                  </a>
+                </div>
+
+                {/* Direct Booking Value Trust Anchor */}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] sm:text-xs text-white/90 font-bold bg-white/10 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-white/15">
+                  <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-400" /> 100% Private Pools</span>
+                  <span className="text-white/40">•</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-400" /> In-House Chef</span>
+                  <span className="text-white/40">•</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-400" /> Guaranteed Lowest Rate</span>
+                </div>
+              </div>
+
+              {/* Right Column (5 cols): Interactive Floating Privilege Card */}
+              <div className="lg:col-span-5 w-full">
+                <div className="bg-[#0E1B35]/85 backdrop-blur-2xl border border-[#DAA520]/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 text-white text-left relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-[#DAA520]/15 rounded-full blur-3xl pointer-events-none" />
+
+                  <div className="flex items-center justify-between border-b border-[#DAA520]/20 pb-4">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#DAA520] block mb-0.5">
+                        Direct Rates
+                      </span>
+                      <h3 className="font-heading text-xl sm:text-2xl font-bold text-white">
+                        Lonavala Escapes
+                      </h3>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] text-slate-400 uppercase block">Starting From</span>
+                      <span className="text-xl sm:text-2xl font-black text-[#DAA520]">₹4,999</span>
+                      <span className="text-[10px] text-slate-400"> / night</span>
+                    </div>
+                  </div>
+
+                  {/* Benefit Checkmarks */}
+                  <div className="space-y-3 text-xs sm:text-sm text-slate-200">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                        <CheckCircle2 size={14} />
+                      </div>
+                      <span><strong>0% Commission</strong> — Save 15% vs Airbnb & OTAs</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-[#DAA520]/20 text-[#DAA520] flex items-center justify-center shrink-0">
+                        <Sparkles size={14} />
+                      </div>
+                      <span><strong>In-Villa Chef</strong> — Fresh Veg, Jain & Non-Veg Menus</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+                        <ShieldCheck size={14} />
+                      </div>
+                      <span><strong>100% Private</strong> — Entire villa or cottage to yourself</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                        <MessageCircle size={14} />
+                      </div>
+                      <span><strong>Fast Response</strong> — Direct concierge support in &lt; 2 mins</span>
+                    </div>
+                  </div>
+
+                  {/* Fast Action Buttons in Card */}
+                  <div className="space-y-2.5 pt-2">
+                    <a 
+                      href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check available dates and direct pricing for Lonavala villas.")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
+                    >
+                      <MessageCircle size={16} />
+                      <span>Check Dates & Pricing (WhatsApp)</span>
+                    </a>
+                    <a 
+                      href="#lonavala-villas-grid"
+                      className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs uppercase tracking-wider py-3 px-4 rounded-2xl transition-all flex items-center justify-center gap-2 text-center"
+                    >
+                      <span>Explore 4 Properties Below</span>
+                      <ChevronRight size={14} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </section>
 
@@ -216,22 +342,34 @@ export default async function LonavalaPage() {
                       <span className="font-semibold text-sm">{signatureVilla.bathrooms} Baths</span>
                     </div>
                   </div>
+
+                  <div className="flex items-center gap-3 mb-6 bg-white/70 px-4 py-2 rounded-xl border border-[#DAA520]/20 w-fit">
+                    <span className="flex items-center gap-1 text-xs font-bold text-[#1B3564]">
+                      <Star size={13} className="text-[#DAA520] fill-[#DAA520]" /> 4.9/5
+                    </span>
+                    <span className="text-slate-300">|</span>
+                    <span className="text-xs font-bold text-emerald-700">From ₹13,000 / night</span>
+                    <span className="text-slate-300">|</span>
+                    <span className="text-[11px] text-slate-500 font-medium">0% Commission</span>
+                  </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 w-full">
+                <div className="flex flex-col sm:flex-row gap-3.5 w-full">
                   <Link 
-                    href={`/villa/${signatureVilla.id}`}
-                    className="flex-1 bg-[#1B3564] hover:bg-[#152A50] text-white text-xs font-bold tracking-widest uppercase text-center py-4 rounded-2xl shadow-md transition-all duration-300"
+                    href={`/villa/${signatureVilla.id}#booking-card-section`}
+                    className="flex-1 bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] hover:text-white text-xs font-black tracking-widest uppercase text-center py-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                   >
-                    View Details
+                    <span>CHECK DATES & BOOK</span>
+                    <ChevronRight size={14} />
                   </Link>
                   <a 
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas! 🌟 I am interested in booking your signature villa: *${signatureVilla.name}* in Lonavala.`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas! 🌟 I'd like to check custom dates, rates and food menus for *${signatureVilla.name}* in Lonavala.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 border border-[#1B3564]/30 hover:border-[#1B3564] text-[#1B3564] text-xs font-bold tracking-widest uppercase text-center py-4 rounded-2xl transition-all duration-300"
+                    className="flex-1 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black tracking-widest uppercase text-center py-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                   >
-                    Check Availability
+                    <MessageCircle size={15} />
+                    <span>GET WHATSAPP QUOTE</span>
                   </a>
                 </div>
               </div>
@@ -240,17 +378,25 @@ export default async function LonavalaPage() {
         )}
 
         {/* Villa Collection Grid */}
-        <section className="py-16 px-6 md:px-12 lg:px-24 bg-[#F9F7F2]/50 border-t border-b border-[#DAA520]/10">
-          <div className="max-w-7xl mx-auto text-center mb-12">
-            <span className="text-accent-secondary font-semibold tracking-[0.3em] uppercase text-[10px] mb-2 block">
-              Curated Selection
-            </span>
-            <h3 className="text-3xl md:text-4xl font-heading text-[#1B3564]">
-              Available Private Pool Sanctuaries
-            </h3>
-            <p className="text-text-primary/60 text-xs sm:text-sm font-light mt-3 max-w-lg mx-auto">
-              Explore our handpicked range of high-end properties, offering absolute privacy and luxury.
-            </p>
+        <section id="lonavala-villas-grid" className="py-16 px-6 md:px-12 lg:px-24 bg-[#F9F7F2]/50 border-t border-b border-[#DAA520]/10 scroll-mt-20">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4 text-left">
+            <div>
+              <span className="inline-flex items-center gap-1.5 bg-[#DAA520]/15 text-accent-secondary font-bold tracking-[0.25em] uppercase text-[10px] px-3.5 py-1 rounded-full mb-2">
+                Curated Collection • {villas.length} Properties
+              </span>
+              <h3 className="text-3xl md:text-4xl font-heading text-[#1B3564]">
+                Available Private Sanctuaries in Lonavala
+              </h3>
+              <p className="text-text-primary/60 text-xs sm:text-sm font-light mt-2 max-w-xl">
+                Explore our handpicked range of architectural glass villas, private pool estates, and cozy mountain cottages.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full flex items-center gap-1.5">
+                <CheckCircle2 size={13} /> 0% Middleman Fees
+              </span>
+            </div>
           </div>
 
           <div className="max-w-7xl mx-auto">
@@ -262,7 +408,7 @@ export default async function LonavalaPage() {
                  </Link>
                </div>
             ) : (
-              <div className="flex flex-wrap justify-center gap-8 lg:gap-10">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-8 lg:gap-10">
                 {villas.map((villa) => (
                   <div key={villa.id} className="w-full sm:w-[calc(50%-20px)] lg:w-[calc(33.33%-27px)] max-w-sm transform transition duration-300 hover:-translate-y-2">
                     <VillaCard 
@@ -282,91 +428,83 @@ export default async function LonavalaPage() {
           </div>
         </section>
 
-        {/* Narrative SEO Story with Left/Right Sidebars & Enlarged Body Typography */}
-        <section className="py-16 px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1600px] mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-start">
-            
-            {/* LEFT SIDEBAR: Destination Navigation & Trust Badges */}
-            <aside className="lg:col-span-3 space-y-6 lg:sticky lg:top-28">
-              <div className="bg-[#FAF8F5] border border-[#DAA520]/25 rounded-3xl p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#DAA520]/15">
-                  <MapPin className="text-accent-primary w-5 h-5" />
-                  <h3 className="font-heading font-bold text-[#1B3564] text-lg">Explore Destinations</h3>
-                </div>
-                <div className="space-y-2.5">
-                  <Link href="/areas/lonavala" className="flex items-center justify-between p-3 rounded-2xl bg-[#1B3564] text-white font-medium text-sm transition-all shadow-md">
-                    <span className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#DAA520] animate-pulse" />
-                      Lonavala
-                    </span>
-                    <span className="text-[10px] uppercase font-bold bg-[#DAA520] text-[#1B3564] px-2.5 py-1 rounded-full">Active</span>
-                  </Link>
+        {/* Full-Width 4-Column Feature Highlights */}
+        <section className="py-12 bg-white border-b border-[#DAA520]/20 px-4 sm:px-8 md:px-12 lg:px-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center max-w-3xl mx-auto mb-10">
+              <span className="text-[10px] font-black text-[#DAA520] uppercase tracking-[0.25em] block mb-1">
+                Stay Willas Standard
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-heading font-bold text-[#1B3564]">
+                The Private Pool Villa Advantage in Lonavala
+              </h3>
+            </div>
 
-                  <Link href="/areas/khopoli" className="flex items-center justify-between p-3 rounded-2xl bg-white hover:bg-slate-100 text-[#1B3564] font-medium text-sm transition-all border border-[#DAA520]/15">
-                    <span className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                      Khopoli
-                    </span>
-                    <span className="text-[10px] uppercase font-bold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full">Active</span>
-                  </Link>
-
-                  {[
-                    { name: "Pawna Lake", slug: "pawna" }
-                  ].map((area) => (
-                    <Link key={area.slug} href={`/areas/${area.slug}`} className="flex items-center justify-between p-3 rounded-2xl bg-white/60 hover:bg-white text-slate-600 font-normal text-sm transition-all border border-slate-200/60">
-                      <span>{area.name}</span>
-                      <span className="text-[10px] uppercase font-semibold bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200/60">Coming Soon</span>
-                    </Link>
-                  ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+              <div className="p-6 rounded-3xl bg-[#FAF8F5] border border-slate-200 hover:border-[#DAA520]/40 transition-all shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-[#DAA520]/15 flex items-center justify-center mb-4 text-[#1B3564]">
+                  <Waves size={24} />
                 </div>
+                <h4 className="font-bold text-[#1B3564] text-base mb-1.5">Waterfall Pools & Jacuzzi</h4>
+                <p className="text-slate-600 text-xs leading-relaxed">
+                  Enjoy private temperature-filtered waterfall pools and private master suite Jacuzzis with total privacy.
+                </p>
               </div>
 
-              {/* Stay Willas Guarantee Seal */}
-              <div className="bg-gradient-to-br from-[#1B3564] to-[#0F2142] text-white rounded-3xl p-6 shadow-md border border-[#DAA520]/30 space-y-4">
-                <div className="flex items-center gap-3">
-                  <ShieldCheck className="text-[#DAA520] w-7 h-7 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-heading font-bold text-base text-white">Stay Willas Guarantee</h4>
-                    <p className="text-xs text-white/70">Verified Luxury & Hospitality</p>
-                  </div>
+              <div className="p-6 rounded-3xl bg-[#FAF8F5] border border-slate-200 hover:border-[#DAA520]/40 transition-all shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-blue-500/15 flex items-center justify-center mb-4 text-[#1B3564]">
+                  <Users size={24} />
                 </div>
-                <ul className="space-y-2.5 text-xs text-white/80 font-light pt-2 border-t border-white/10">
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#DAA520]" /> 100% Private Pools</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#DAA520]" /> In-House Chef Options</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#DAA520]" /> 24/7 Estate Concierge</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#DAA520]" /> Pet-Friendly Fenced Lawns</li>
-                </ul>
+                <h4 className="font-bold text-[#1B3564] text-base mb-1.5">Family & Group Reunions</h4>
+                <p className="text-slate-600 text-xs leading-relaxed">
+                  Spacious living lounges, double-height ceilings, and large manicured lawns designed to host up to 16 guests.
+                </p>
               </div>
-            </aside>
 
-            {/* CENTER COLUMN: Main Editorial Article with Natural Typography */}
-            <main className="lg:col-span-6 bg-white/95 rounded-3xl p-6 sm:p-10 md:p-12 border border-[#DAA520]/15 shadow-sm">
-              <article className="prose prose-lg md:prose-xl max-w-none text-left select-text prose-p:text-slate-800 prose-p:text-lg md:prose-p:text-xl prose-p:leading-relaxed md:prose-p:leading-loose prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mb-6 prose-h2:mt-12 prose-h3:text-accent-secondary prose-h3:font-heading prose-h3:text-xl prose-a:text-accent-primary">
+              <div className="p-6 rounded-3xl bg-[#FAF8F5] border border-slate-200 hover:border-[#DAA520]/40 transition-all shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/15 flex items-center justify-center mb-4 text-[#1B3564]">
+                  <Utensils size={24} />
+                </div>
+                <h4 className="font-bold text-[#1B3564] text-base mb-1.5">In-House Chef Dining</h4>
+                <p className="text-slate-600 text-xs leading-relaxed">
+                  Fresh Maharashtrian breakfast, poolside barbecues, and dedicated pure-vegetarian and Jain meals prepared on-site.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-[#FAF8F5] border border-slate-200 hover:border-[#DAA520]/40 transition-all shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 flex items-center justify-center mb-4 text-emerald-700">
+                  <ShieldCheck size={24} />
+                </div>
+                <h4 className="font-bold text-[#1B3564] text-base mb-1.5">Direct 0% Platform Fee</h4>
+                <p className="text-slate-600 text-xs leading-relaxed">
+                  Book directly with Stay Willas with zero booking portal markups, transparent pricing, and instant concierge support.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Full-Width Editorial Article Section */}
+        <section className="py-16 px-4 sm:px-8 md:px-12 lg:px-20 max-w-7xl mx-auto w-full text-left">
+          <div className="bg-white rounded-3xl p-6 sm:p-10 md:p-14 border border-[#DAA520]/20 shadow-sm">
+            <article className="prose prose-lg md:prose-xl max-w-none text-left select-text prose-p:text-slate-800 prose-p:text-base md:prose-p:text-lg prose-p:leading-relaxed prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-10 prose-h3:text-[#DAA520] prose-h3:font-heading prose-h3:text-xl prose-a:text-[#DAA520]">
               <h2>The Lonavala Mountain Escape, Reimagined</h2>
               <p>
-                We have all felt it: Friday afternoon in Mumbai or Pune, watching city traffic crawl while yearning for the cool, mist-laden air of the Sahyadri mountains. For travelers across western Maharashtra, escaping to the hills isn't just a leisure activity—it is a vital reset. Lonavala offers an unmatchable retreat when monsoon clouds roll over Khandala ghats and carpet the valleys in lush greenery.
+                We have all felt it: Friday afternoon in Mumbai or Pune, watching city traffic crawl while yearning for the cool, mist-laden air of the Sahyadri mountains. For travelers across western Maharashtra, escaping to the hills isn&apos;t just a leisure activity—it is a vital reset. Lonavala offers an unmatchable retreat when monsoon clouds roll over Khandala ghats and carpet the valleys in lush greenery.
               </p>
               <p>
-                Whether you are searching for a serene <strong>private villa</strong>, a secluded <strong>pool villa</strong>, or an exclusive <strong>villas resort</strong> experience, booking a <strong>villa in lonavala</strong> gives your group complete independence. Unlike crowded commercial hotels, Stay Willas offers a variety of handpicked luxury estates equipped with high-speed super-fast <strong>wi fi</strong>, private infinity pools, and dedicated chef hospitality.
+                Whether you are searching for a serene <strong>private villa</strong>, a secluded <strong>pool villa</strong>, or an exclusive mountain sanctuary, booking a <strong>villa in lonavala with private pool</strong> gives your group complete independence. Unlike crowded commercial hotels, Stay Willas offers handpicked estates equipped with high-speed super-fast Wi-Fi, private pools, and dedicated chef hospitality.
               </p>
 
               <h2>Why Choose a Private Estate Over Traditional Hotels</h2>
               <p>
-                When evaluating <strong>luxury villas in lonavala</strong>, discerning travelers prioritize absolute privacy over standard resort rooms. Reserving a dedicated <strong>lonavala villa</strong> ensures your family has exclusive access to manicured lawns, sun decks, and living rooms without sharing amenities with strangers.
+                When evaluating <strong>villas in lonavala</strong>, discerning travelers prioritize absolute privacy over standard resort rooms. Reserving a dedicated <strong>lonavala villa</strong> ensures your family has exclusive access to manicured lawns, sun decks, and living rooms without sharing amenities with strangers.
               </p>
               <p>
-                If you are planning a weekend trip for large family groups, a <strong>lonavala villa with private pool</strong> offers ground-floor bedrooms for elderly grandparents and safe outdoor play areas for children. Waking up to panoramic mountain vistas and fresh mountain breezes makes every <strong>lonavla villa</strong> staycation truly memorable.
+                If you are planning a weekend trip for large family groups, a <strong>lonavala villa with private pool</strong> offers ground-floor bedrooms for elderly grandparents and safe outdoor play areas for children. Waking up to panoramic mountain vistas and fresh mountain breezes makes every staycation truly memorable.
               </p>
 
-              <h2>Architectural Distinction — The Angle House Spotlight</h2>
-              <p>
-                Waking up to misty valleys through floor-to-ceiling glass walls is an experience unmatched by ordinary stays. Our flagship estate, <Link href="/villa/the-angle-house" className="underline text-accent-primary font-bold">The Angle House</Link>, stands out among premier <strong>villas in lonavala with private pool</strong> amenities. Perched near scenic viewpoints, it features a private waterfall pool, master jacuzzi, and private chef dining options.
-              </p>
-              <p>
-                For travelers looking for top <strong>villas in lonavala</strong>, this architectural gem features a double-height living hall surrounded by <strong>lush greenery</strong> and tranquil hill views. Guests seeking a tranquil <strong>lake view</strong> retreat or proximity to natural attractions like <strong>bhushi dam</strong> will find our location ideal for both relaxation and exploration.
-              </p>
-
-              <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">
+              <div className="my-10 relative h-80 sm:h-96 w-full rounded-3xl overflow-hidden shadow-xl not-prose">
                 <Image 
                   src="/assets/villas/the-angle-house/gallery-3.webp" 
                   alt="The Angle House lonavala villa with private pool surrounded by lush greenery" 
@@ -375,57 +513,74 @@ export default async function LonavalaPage() {
                 />
               </div>
 
-              <h2>Milestones & Special Gatherings in the Hills</h2>
-              <p>
-                Finding an ideal venue for life's celebrations requires a balance of atmosphere, capacity, and freedom. Reserving <strong>villas near lonavala</strong> for birthday party events allows host families to create personalized experiences that public venues simply cannot support.
-              </p>
-              <p>
-                Whether organizing a milestone 30th birthday, an intimate anniversary dinner under string lights, or a relaxed family reunion, choosing a <strong>private villa</strong> offers the flexibility to curate your own music, decor, and dining schedules without strict hotel curfews.
-              </p>
-
-              {/* Enhanced Key Features Summary Box for High Readability */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-10 not-prose">
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm">
-                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Family & Multi-Gen Reunions</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Thoughtfully designed layouts featuring accessible ground-floor bedrooms, large common living lounges for indoor games, and secure grassy lawns for kids.
+              <h2>Gatherings, Celebrations & Offsites in the Hills</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 my-8 not-prose">
+                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
+                  <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Family Reunions</h4>
+                  <p className="text-slate-600 text-xs leading-relaxed">
+                    Thoughtfully designed layouts featuring accessible ground-floor bedrooms, large living lounges, and secure grassy lawns for kids.
                   </p>
                 </div>
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm">
-                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Milestone Celebrations</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Host memorable events with custom outdoor lighting setups, pool deck lounge seating, and tailored multi-course meals prepared live by on-site chefs.
+                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
+                  <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Milestone Birthdays</h4>
+                  <p className="text-slate-600 text-xs leading-relaxed">
+                    Host memorable events with custom outdoor lighting, pool deck lounge seating, and tailored multi-course meals prepared live by on-site chefs.
                   </p>
                 </div>
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm">
-                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Corporate Leadership Offsites</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    High-speed fiber <strong>wi fi</strong>, quiet meeting zones, and evening campfire sit-outs designed to facilitate team alignment and strategic focus.
+                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
+                  <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Corporate Offsites</h4>
+                  <p className="text-slate-600 text-xs leading-relaxed">
+                    High-speed fiber Wi-Fi, quiet meeting zones, and evening campfire sit-outs designed to facilitate team alignment and strategic focus.
                   </p>
                 </div>
-                <div className="bg-[#FAF8F5] p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm">
-                  <h4 className="text-[#1B3564] font-heading text-lg font-bold mb-2">Pet-Friendly Staycations</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                    Fully fenced boundary lawns surrounded by <strong>lush greenery</strong> mean your pets travel and relax right alongside you.
+                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
+                  <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Pet-Friendly Grounds</h4>
+                  <p className="text-slate-600 text-xs leading-relaxed">
+                    Fully fenced boundary lawns surrounded by lush greenery mean your pets travel and relax right alongside you.
                   </p>
                 </div>
               </div>
 
-              <h2>In-Villa Chef Hospitality & Custom Dining</h2>
-              <p>
-                Culinary quality is central to an exceptional staycation. Driving through weekend town traffic or waiting for table openings at crowded restaurants can diminish your weekend rest. Our dedicated in-house culinary staff prepares freshly cooked meals right inside the estate kitchen.
-              </p>
-              <p>
-                Guests enjoy customized menus ranging from authentic regional Maharashtrian breakfast spreads like hot Kanda Poha and Misal to poolside evening barbecues. For families with specific dietary preferences, our chefs provide dedicated pure-vegetarian and Jain meal preparations using separate kitchenware.
-              </p>
+              {/* Mid-Article High-Converting Concierge Breakout Box */}
+              <div className="my-10 bg-gradient-to-br from-[#1B3564] via-[#152A50] to-[#0E1B35] rounded-3xl p-6 sm:p-10 text-white border border-[#DAA520]/40 shadow-xl not-prose relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#DAA520]/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
+                  <div className="text-left">
+                    <span className="inline-flex items-center gap-1.5 bg-[#DAA520]/20 border border-[#DAA520]/40 text-[#DAA520] font-black uppercase text-[10px] tracking-widest px-3.5 py-1.5 rounded-full mb-3">
+                      <Sparkles size={12} /> Direct Concierge Service
+                    </span>
+                    <h3 className="font-heading font-bold text-xl sm:text-3xl text-white leading-tight">
+                      Planning a Family Reunion, Birthday, or Offsite in Lonavala?
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-xl leading-relaxed">
+                      Skip the search. Tell us your dates and group size, and our Lonavala destination manager will share verified private pool villas, customized chef menus, and direct booking rates.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
+                    <a
+                      href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'm planning a special gathering in Lonavala. Could you share curated private pool villas and catering options for our dates?")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
+                    >
+                      <MessageCircle size={15} />
+                      <span>WhatsApp Proposal</span>
+                    </a>
+                    <Link
+                      href="/villa/the-angle-house#booking-card-section"
+                      className="bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] font-black text-xs uppercase tracking-wider py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
+                    >
+                      <Zap size={15} className="fill-[#1B3564]" />
+                      <span>Check Rates & Book</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
 
               <h2>Micro-Climates & Seasonal Travel Guide</h2>
-              <p>
-                Lonavala's geography creates distinct micro-climates depending on elevation and location. Higher altitude neighborhoods like Tungarli enjoy cooler mountain breezes and sweeping valley views, while areas closer to Khandala offer easy access from the Mumbai-Pune Expressway.
-              </p>
-
-              <div className="my-8 overflow-hidden rounded-2xl border border-[#DAA520]/15 not-prose">
-                <table className="min-w-full divide-y divide-[#DAA520]/15 text-left text-sm">
+              <div className="my-8 overflow-hidden rounded-3xl border border-[#DAA520]/20 not-prose shadow-xs">
+                <table className="min-w-full divide-y divide-[#DAA520]/20 text-left text-xs sm:text-sm bg-white">
                   <thead className="bg-[#FAF8F5]">
                     <tr>
                       <th className="px-6 py-4 font-bold text-[#1B3564]">Season</th>
@@ -433,168 +588,59 @@ export default async function LonavalaPage() {
                       <th className="px-6 py-4 font-bold text-[#1B3564]">Atmosphere & Experience</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#DAA520]/15 bg-white">
+                  <tbody className="divide-y divide-[#DAA520]/15">
                     <tr>
-                      <td className="px-6 py-4 font-semibold">Monsoon Peak</td>
-                      <td className="px-6 py-4">June – September</td>
-                      <td className="px-6 py-4">Rolling fog, waterfall streams, and green hillsides near <strong>bhushi dam</strong>. Ideal for enjoying warm tea behind glass walls.</td>
+                      <td className="px-6 py-4 font-bold text-[#1B3564] whitespace-nowrap">Monsoon Peak</td>
+                      <td className="px-6 py-4 font-medium text-slate-700 whitespace-nowrap">June – September</td>
+                      <td className="px-6 py-4 text-slate-600 leading-relaxed">Rolling fog, waterfall streams, and green hillsides near Bhushi Dam. Ideal for enjoying warm tea behind glass walls.</td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 font-semibold">Crisp Winter</td>
-                      <td className="px-6 py-4">October – February</td>
-                      <td className="px-6 py-4">Cool mountain air, clear skies, outdoor barbecues on the pool deck, and evening gatherings around open fires.</td>
+                      <td className="px-6 py-4 font-bold text-[#1B3564] whitespace-nowrap">Crisp Winter</td>
+                      <td className="px-6 py-4 font-medium text-slate-700 whitespace-nowrap">October – February</td>
+                      <td className="px-6 py-4 text-slate-600 leading-relaxed">Cool mountain air, clear skies, outdoor barbecues on the pool deck, and evening gatherings around open fires.</td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 font-semibold">Breezy Summer</td>
-                      <td className="px-6 py-4">March – May</td>
-                      <td className="px-6 py-4">Pleasant morning breezes and cool evening temperatures, perfect for night swims in your private <strong>pool villa</strong>.</td>
+                      <td className="px-6 py-4 font-bold text-[#1B3564] whitespace-nowrap">Breezy Summer</td>
+                      <td className="px-6 py-4 font-medium text-slate-700 whitespace-nowrap">March – May</td>
+                      <td className="px-6 py-4 text-slate-600 leading-relaxed">Pleasant morning breezes and cool evening temperatures, perfect for night swims in your private pool.</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <h2>Local Insights & Sightseeing Near Bhushi Dam & Pawna Lake</h2>
-              <p>
-                When taking a break from relaxing by your <strong>private villa</strong> pool, explore nearby natural attractions. Take an early morning drive to Tiger Point for sunrise vistas, visit <strong>bhushi dam</strong> for refreshing cascading waters, or trek up Lohagad Fort during the monsoon season. For tranquil waters and sunset views, Pawna Lake offers an exquisite <strong>lake view</strong> setting just a short drive away.
-              </p>
-              <p>
-                Planning your travel times is key to a smooth journey. Leaving Mumbai or Pune by 7:30 AM on Friday lets you beat the Expressway traffic rush, arriving at your <strong>lonavala villa with private pool</strong> right in time for lunch.
-              </p>
-
-              <div className="my-12 relative h-96 w-full rounded-3xl overflow-hidden shadow-2xl">
-                <Image 
-                  src="/assets/villas/the-angle-house/gallery-4.webp" 
-                  alt="Scenic mountain valley view from The Angle House in Lonavala" 
-                  fill 
-                  className="object-cover"
-                />
-              </div>
-
-              <h2>Frequently Asked Questions</h2>
-
-              <div className="my-8 space-y-4 not-prose text-left">
-                <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">How is the private pool cleaned and maintained?</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+              <h2>Frequently Asked Questions — Lonavala Villas</h2>
+              <div className="my-8 grid grid-cols-1 md:grid-cols-2 gap-6 not-prose text-left">
+                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">How is the private pool cleaned and maintained?</h4>
+                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
                     Every private pool undergoes complete filtration and sanitization cycles prior to guest arrival. On-site staff perform daily water quality checks to guarantee safety and clarity.
                   </p>
                 </div>
-                <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Can we request pure vegetarian or Jain catering?</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">Can we request pure vegetarian or Jain catering?</h4>
+                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
                     Yes. Our in-house chefs cater to specific dietary requirements including pure-veg and Jain preparations using dedicated cookware and fresh ingredients.
                   </p>
                 </div>
-                <div className="bg-[#FAF8F5] p-6 rounded-2xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-base">Are pets allowed at the property?</h4>
-                  <p className="text-text-primary/70 text-sm font-light leading-relaxed">
+                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">Are pets allowed at the property?</h4>
+                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
                     Yes, pets are welcome. The Angle House features fully fenced lawns and safe outdoor spaces where pets can play freely.
                   </p>
                 </div>
-              </div>
-              </article>
-            </main>
-
-            {/* RIGHT SIDEBAR: Area Villa Booking & Inquiry Panel */}
-            <aside className="lg:col-span-3 space-y-6 lg:sticky lg:top-28">
-              {/* Villa Booking Card */}
-              <div className="bg-[#FAF8F5] border border-[#DAA520]/30 rounded-3xl p-6 shadow-md space-y-4">
-                <div className="flex items-center justify-between border-b border-[#DAA520]/15 pb-3">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary">Lonavala Flagship</span>
-                  <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">Available</span>
-                </div>
-                
-                <div className="relative h-44 w-full rounded-2xl overflow-hidden shadow-inner">
-                  <Image 
-                    src="/assets/villas/the-angle-house/gallery-3.webp" 
-                    alt="The Angle House Lonavala" 
-                    fill 
-                    className="object-cover" 
-                  />
-                  <div className="absolute top-3 right-3 bg-[#1B3564]/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">
-                    From ₹13,000 / night
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-heading text-xl font-bold text-[#1B3564]">The Angle House</h4>
-                  <p className="text-xs text-text-primary/60 mt-1 flex items-center gap-1">
-                    <MapPin size={12} className="text-accent-primary" /> Kamshet, Lonavala, Maharashtra
+                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
+                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">How do direct bookings compare to OTA platforms?</h4>
+                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                    Direct bookings via Stay Willas carry 0% platform commission, providing you with guaranteed lowest prices and customized meal coordination.
                   </p>
                 </div>
-
-                <div className="grid grid-cols-3 gap-2 text-center text-xs bg-white p-3 rounded-2xl border border-[#DAA520]/15 text-slate-700">
-                  <div>
-                    <span className="block font-bold text-[#1B3564]">16</span>
-                    <span className="text-[10px] text-slate-500">Guests</span>
-                  </div>
-                  <div>
-                    <span className="block font-bold text-[#1B3564]">3 BHK</span>
-                    <span className="text-[10px] text-slate-500">Suites</span>
-                  </div>
-                  <div>
-                    <span className="block font-bold text-[#1B3564]">Pool</span>
-                    <span className="text-[10px] text-slate-500">Waterfall</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-2">
-                  <Link 
-                    href="/villa/the-angle-house" 
-                    className="block w-full bg-[#1B3564] hover:bg-[#0F2142] text-white text-center text-sm font-bold uppercase tracking-wider py-3.5 rounded-2xl shadow-md transition-all transform hover:-translate-y-0.5"
-                  >
-                    Book This Villa
-                  </Link>
-
-                  <a 
-                    href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20want%20to%20book%20a%20villa%20in%20Lonavala" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white text-center text-sm font-bold uppercase tracking-wider py-3 rounded-2xl shadow-sm transition-all"
-                  >
-                    <PhoneCall size={14} /> WhatsApp Concierge
-                  </a>
-                </div>
               </div>
-
-              {/* Quick Inquiry Box */}
-              <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
-                <h4 className="font-heading font-bold text-[#1B3564] text-base border-b border-slate-100 pb-3 flex items-center gap-2">
-                  <Calendar size={16} className="text-accent-primary" /> Check Dates & Inquiry
-                </h4>
-                <p className="text-xs text-slate-600 font-light">
-                  Need help choosing the right villa for your dates and group size in Lonavala?
-                </p>
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-[11px] font-semibold uppercase text-slate-500 mb-1">Expected Guests</label>
-                    <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 font-medium focus:outline-none focus:border-[#1B3564]">
-                      <option>4 - 8 Guests</option>
-                      <option>8 - 12 Guests</option>
-                      <option>12 - 20+ Guests</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold uppercase text-slate-500 mb-1">Destination</label>
-                    <input type="text" readOnly value="Lonavala, MH" className="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 font-bold" />
-                  </div>
-                  <a 
-                    href="https://wa.me/919619042310?text=Hi%20Stay%20Willas,%20I%20need%20a%20quote%20for%20a%20Lonavala%20villa" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] font-bold text-xs uppercase tracking-wider text-center py-3 rounded-xl transition-colors"
-                  >
-                    Get Instant Quote
-                  </a>
-                </div>
-              </div>
-            </aside>
-
+            </article>
           </div>
         </section>
 
           {/* Internal Blog Links */}
-          <div className="mt-16 p-8 bg-[#FAF8F5] rounded-3xl border border-[#DAA520]/15">
+          <div className="mt-16 p-8 bg-[#FAF8F5] rounded-3xl border border-[#DAA520]/15 max-w-7xl mx-auto">
             <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Related Guides</h3>
             <ul className="space-y-3 text-sm text-slate-700 font-light">
               <li>→ <Link href="/blog/top-7-hidden-gems-secret-viewpoints-in-lonavala" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Top 7 Hidden Gems & Secret Viewpoints in Lonavala (And Where to Stay Nearby)</Link></li>
@@ -609,22 +655,94 @@ export default async function LonavalaPage() {
             </ul>
           </div>
 
-        {/* Bottom Navigation for SEO flow */}
-        <section className="py-12 border-t border-[#DAA520]/10 max-w-7xl mx-auto px-6 md:px-12 w-full">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="text-left">
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-text-primary/40 mb-1">
-                Explore Other Destinations
-              </h4>
-              <p className="text-xs text-text-primary/60 font-light">
-                Discover luxury escapes in other premium areas.
-              </p>
+        {/* High-Converting VIP Direct Booking Privilege Banner */}
+        <section className="py-16 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto w-full my-8">
+          <div className="bg-gradient-to-br from-[#1B3564] via-[#152A50] to-[#0E1B35] rounded-3xl p-8 sm:p-12 text-white border border-[#DAA520]/40 shadow-2xl relative overflow-hidden text-center flex flex-col items-center">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#DAA520]/10 rounded-full blur-3xl pointer-events-none" />
+            
+            <span className="inline-flex items-center gap-1.5 bg-[#DAA520]/20 border border-[#DAA520]/40 text-[#DAA520] font-black uppercase text-[10px] tracking-widest px-4 py-1.5 rounded-full mb-4">
+              <Star size={12} className="fill-[#DAA520]" /> Direct Booking Privilege
+            </span>
+
+            <h3 className="font-heading font-bold text-3xl sm:text-5xl text-white max-w-2xl leading-tight">
+              Why Book Direct with Stay Willas in Lonavala?
+            </h3>
+            <p className="text-slate-300 text-xs sm:text-sm font-light mt-4 max-w-xl leading-relaxed">
+              Enjoy guaranteed best rates, zero middleman commissions, custom meal menu design, and priority check-in assistance.
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8 w-full max-w-4xl text-left">
+              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
+                <span className="text-[#DAA520] font-bold text-lg block mb-1">0% Commission</span>
+                <p className="text-[11px] text-slate-300 font-light">No OTA markups or hidden fees</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
+                <span className="text-[#DAA520] font-bold text-lg block mb-1">Chef Assist</span>
+                <p className="text-[11px] text-slate-300 font-light">Direct pure-veg & Jain culinary planning</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
+                <span className="text-[#DAA520] font-bold text-lg block mb-1">100% Private</span>
+                <p className="text-[11px] text-slate-300 font-light">Exclusive villa & waterfall pool access</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15">
+                <span className="text-[#DAA520] font-bold text-lg block mb-1">24/7 Caretaker</span>
+                <p className="text-[11px] text-slate-300 font-light">Dedicated on-site estate hospitality</p>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <Link href="/areas/khopoli" className="bg-[#FAF8F5] hover:bg-[#1B3564] border border-[#DAA520]/20 hover:border-[#1B3564] text-[#1B3564] hover:text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all">Khopoli</Link>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center max-w-md">
+              <Link 
+                href="/villas"
+                className="w-full sm:w-auto bg-[#DAA520] hover:bg-[#B8860B] text-[#1B3564] font-black text-xs uppercase tracking-wider py-4 px-8 rounded-full shadow-lg transition-all"
+              >
+                Explore All Villas
+              </Link>
+              <a 
+                href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Lonavala.")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-4 px-8 rounded-full shadow-lg transition-all flex items-center justify-center gap-2"
+              >
+                <MessageCircle size={15} />
+                <span>Chat with Specialist</span>
+              </a>
             </div>
           </div>
         </section>
+      </div>
+
+      {/* Option E: Floating Mobile Sticky Bar (1-Tap Conversion) */}
+      <div className="block lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0E1B35]/95 backdrop-blur-xl border-t border-[#DAA520]/30 px-4 py-3 shadow-[0_-8px_30px_rgba(0,0,0,0.5)]">
+        <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
+          <div className="flex flex-col">
+            <span className="text-[11px] font-extrabold text-[#DAA520] leading-tight">
+              From ₹13,000<span className="text-[9px] text-slate-300 font-normal"> / nt</span>
+            </span>
+            <span className="text-[9px] font-bold text-emerald-400 flex items-center gap-1">
+              <Zap size={10} className="fill-emerald-400" /> 0% Platform Fee
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <a 
+              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I want to check direct booking rates for Lonavala private pool villas.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#25D366] active:bg-[#20ba5a] text-white font-black text-[11px] uppercase tracking-wider py-2.5 px-3.5 rounded-xl shadow-md flex items-center gap-1.5 shrink-0"
+            >
+              <MessageCircle size={14} />
+              <span>WhatsApp</span>
+            </a>
+
+            <a 
+              href="#lonavala-villas-grid"
+              className="bg-[#DAA520] active:bg-[#B8860B] text-[#1B3564] font-black text-[11px] uppercase tracking-wider py-2.5 px-3.5 rounded-xl shadow-md flex items-center gap-1.5 shrink-0"
+            >
+              <Zap size={13} className="fill-[#1B3564]" />
+              <span>Book Direct</span>
+            </a>
+          </div>
+        </div>
       </div>
 
       <Footer />

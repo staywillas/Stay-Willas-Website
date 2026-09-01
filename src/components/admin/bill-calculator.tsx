@@ -472,7 +472,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       // Load transparent company logo for PDF header & auto-crop transparent padding
       let logoData: { dataUrl: string; aspect: number } | null = null;
       try {
-        const logoImg = await loadImage("/images/STAY WILLAS logo transparent.png");
+        const logoImg = await loadImage("/images/STAY WILLAS logo transparent.webp");
         logoData = getCroppedLogoDataUrl(logoImg);
       } catch (e) {
         console.warn("Could not load transparent logo for PDF, falling back to clean text header", e);

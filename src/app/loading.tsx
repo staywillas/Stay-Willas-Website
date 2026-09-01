@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Loading() {
   return (
@@ -27,9 +28,11 @@ export default function Loading() {
           }}
           className="w-20 h-20 rounded-full flex items-center justify-center border border-border-subtle overflow-hidden bg-white shadow-lg"
         >
-          <img 
-            src="/images/logo.png" 
+          <Image 
+            src="/images/logo.webp" 
             alt="Stay Willas Logo" 
+            width={80}
+            height={80}
             className="w-full h-full object-cover scale-[1.6]" 
           />
         </motion.div>

@@ -101,7 +101,7 @@ export async function getConciergeRecommendation(params: ConciergeRecommendation
       id: villa.slug, // Slug used as dynamic route identifier
       name: villa.name,
       location: villa.location.split(",")[0], // e.g. "Lonavala"
-      image: villa.images[0] || "/images/hero-villa.png",
+      image: villa.images[0] || "/images/hero-villa.webp",
       price: villa.price.toLocaleString("en-IN"),
       guests: villa.guests,
       bedrooms: villa.bedrooms,

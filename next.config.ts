@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   compress: true,
   images: {
     formats: ['image/avif', 'image/webp'],
-    qualities: [75, 85],
+    qualities: [75, 80, 85],
     minimumCacheTTL: 31536000, // 1 year cache for immutable villa images
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -152,6 +152,7 @@ const nextConfig: NextConfig = {
         { key: 'X-DNS-Prefetch-Control', value: 'on' },
         { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
         { key: 'X-Robots-Tag', value: defaultRobotsHeader },
+        { key: 'Link', value: '<https://images.unsplash.com>; rel=preconnect' },
       ],
     },
     {

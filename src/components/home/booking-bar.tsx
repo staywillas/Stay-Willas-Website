@@ -96,8 +96,11 @@ const BookingBar = () => {
     };
   }, [availabilityModalOpen]);
 
-  // Load all global availability across all properties
+  // Load all global availability on demand when user opens calendar or modal
   useEffect(() => {
+    if (!isCalendarOpen && !availabilityModalOpen) return;
+    if (bookingsData.length > 0) return;
+
     let active = true;
     const fetchAvailability = async () => {
       setIsLoadingBookings(true);
@@ -118,7 +121,7 @@ const BookingBar = () => {
     return () => {
       active = false;
     };
-  }, []);
+  }, [isCalendarOpen, availabilityModalOpen, bookingsData.length]);
 
   // Helper: check if a calendar date is fully booked across ALL villas in collection
   const isDateFullyBooked = (date: Date) => {
@@ -695,10 +698,11 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                           >
                             {/* Property Single High-Res Image */}
                             <div className="relative w-full md:w-60 h-44 md:h-36 rounded-2xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 shadow-inner">
-                              <img
-                                src={villa.image || "/images/hero-villa.png"}
+                              <Image
+                                src={villa.image || "/images/hero-villa.webp"}
                                 alt={villa.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-500"
                               />
                               {/* Overlay Pill / Tag */}
                               <div className="absolute top-2.5 left-2.5 bg-[#0E1B35]/85 backdrop-blur-md text-[#DAA520] text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/20">

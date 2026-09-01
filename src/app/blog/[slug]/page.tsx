@@ -7,6 +7,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { blogsData } from "@/data/blogs";
 import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle } from "lucide-react";
+import { prisma } from "@/lib/db";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -65,6 +66,14 @@ export default async function BlogDetailsPage({ params }: PageProps) {
   }
 
   const otherBlogs = blogsData.filter((b) => b.slug !== slug).slice(0, 2);
+
+  let relatedVilla = null;
+  if ((blog as any).relatedVillaSlug) {
+    relatedVilla = await prisma.villa.findUnique({
+      where: { slug: (blog as any).relatedVillaSlug },
+      select: { name: true, slug: true, images: true, location: true }
+    });
+  }
 
   // Structured Data Schema for Search Engines (JSON-LD BlogPosting & FAQPage)
   const faqList = blog.sections
@@ -193,7 +202,58 @@ export default async function BlogDetailsPage({ params }: PageProps) {
         </div>
 
         {/* Article Content */}
-        <article className="max-w-none text-left mb-20 font-sans">
+        <article className="max-w-none text-left mb-20 font-sans clearfix">
+          
+          {/* Related Villa Widget - Floats Right */}
+          {relatedVilla && (
+            <div className="hidden md:block float-right ml-8 mb-8 w-72 bg-white rounded-2xl shadow-xl border border-[#DAA520]/20 overflow-hidden relative z-10 sticky top-32">
+              <div className="h-40 relative w-full">
+                <Image
+                  src={relatedVilla.images[0] || "/images/hero-villa.webp"}
+                  alt={relatedVilla.name}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute top-3 left-3 bg-[#1B3564] text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                  Featured Stay
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-heading text-lg font-bold text-[#1B3564] mb-1 leading-tight">{relatedVilla.name}</h3>
+                <p className="text-sm text-slate-500 mb-4">{relatedVilla.location}</p>
+                <Link 
+                  href={`/villa/${relatedVilla.slug}`}
+                  className="block w-full text-center bg-[#DAA520] hover:bg-[#C5951C] text-white font-bold py-2.5 rounded-lg text-sm uppercase tracking-wider transition-colors"
+                >
+                  Book Now
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* Mobile Related Villa Widget */}
+          {relatedVilla && (
+            <div className="md:hidden w-full bg-white rounded-2xl shadow-md border border-[#DAA520]/20 overflow-hidden mb-8 flex items-center p-3 gap-4">
+              <div className="h-20 w-24 relative rounded-xl overflow-hidden shrink-0">
+                <Image
+                  src={relatedVilla.images[0] || "/images/hero-villa.webp"}
+                  alt={relatedVilla.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-heading text-sm font-bold text-[#1B3564] leading-tight mb-1">{relatedVilla.name}</h3>
+                <Link 
+                  href={`/villa/${relatedVilla.slug}`}
+                  className="inline-block bg-[#DAA520] text-white font-bold py-1.5 px-4 rounded-md text-xs uppercase tracking-wider"
+                >
+                  Book Now
+                </Link>
+              </div>
+            </div>
+          )}
+
           <div 
             className="text-slate-800 text-xl md:text-2xl leading-[1.8] italic border-l-4 border-[#DAA520] pl-6 md:pl-8 mb-12 font-normal bg-[#FAF8F5]/90 p-6 md:p-8 rounded-r-3xl border border-[#DAA520]/20 shadow-sm"
             dangerouslySetInnerHTML={{ __html: blog.intro }}

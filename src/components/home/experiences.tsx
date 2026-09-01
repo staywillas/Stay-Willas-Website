@@ -11,21 +11,21 @@ const categories = [
     title: "Heated Infinity Pools",
     tag: "SIGNATURE WATERFALLS",
     description: "Submerge into absolute tranquility. Our luxury villas offer private, temperature-controlled infinity pools with panoramic views of misty ghats and surrounding valleys.",
-    image: "/images/exp-pool.png",
+    image: "/images/exp-pool.webp",
     link: "/villas?category=Infinity+Pools",
   },
   {
     title: "Bespoke Private Chefs",
     tag: "GASTRONOMIC BLISS",
     description: "Savor a customized farm-to-table menu designed just for you. From traditional local delicacies to multi-course continental banquets, prepared on-site by our verified private chefs.",
-    image: "/images/exp-chef.png",
+    image: "/images/exp-chef.webp",
     link: "/villas",
   },
   {
     title: "Misty Mountain Ghats",
     tag: "ELEVATED RETREATS",
     description: "Unwind above the clouds. Enjoy stunning balcony sunsets, scenic valley hikes, and cool refreshing breezes in Lonavala and Khopoli.",
-    image: "/images/exp-mountain.png",
+    image: "/images/exp-mountain.webp",
     link: "/villas?category=Mountain+View",
   },
   {
@@ -39,7 +39,7 @@ const categories = [
     title: "Pet Play Sanctuaries",
     tag: "FURRY FRIENDS WELCOME",
     description: "Vacation is better together. Our premium pet-friendly villas feature sprawling lawns, secure play zones, and specialized services so your pets can run free and enjoy a true holiday.",
-    image: "/images/villa-mahabaleshwar.png",
+    image: "/images/villa-mahabaleshwar.webp",
     link: "/villas",
   },
 ];

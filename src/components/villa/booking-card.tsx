@@ -401,16 +401,26 @@ const BookingCard = ({
 
   const serviceFee = 0; // Removed luxury service fee
 
+  // Check if every selected stay night is strictly a weekday (Monday = 1, Tuesday = 2, Wednesday = 3, Thursday = 4)
+  const isAllWeekdays = breakdown.length > 0 && breakdown.every(b => {
+    const d = b.date.getDay();
+    return d >= 1 && d <= 4;
+  });
+
   const getDiscountRate = (code: string): number => {
     const clean = code.trim().toUpperCase();
-    if (clean === "STAYW28" || clean.includes("28") || clean === "ESCAPE28" || clean === "FLASH28" || clean === "STAY28" || clean === "WILLAS28" || clean === "OFFER28" || clean === "LONAVALA28" || clean === "KHOPOLI28" || clean === "SUMMER28" || clean === "DIRECT28") {
+    const is28Code = clean === "STAYW28" || clean.includes("28") || clean === "ESCAPE28" || clean === "FLASH28" || clean === "STAY28" || clean === "WILLAS28" || clean === "OFFER28" || clean === "LONAVALA28" || clean === "KHOPOLI28" || clean === "SUMMER28" || clean === "DIRECT28";
+    
+    if (is28Code) {
+      if (!isAllWeekdays) return 0;
       return 0.28;
     }
     if (clean === "STAY5") {
       return 0.05;
     }
     if (clean.length > 0) {
-      return 0.28; // Standard 28% promo discount
+      if (!isAllWeekdays) return 0;
+      return 0.28; // Standard 28% promo discount on weekdays
     }
     return 0;
   };
@@ -820,9 +830,9 @@ We are so excited about this getaway! Could you please check availability and he
             <div className="flex items-start sm:items-center gap-2">
               <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#DAA520]/20 text-[#1B3564] text-xs font-black shrink-0">🎁</span>
               <div>
-                <span className="text-[10px] text-[#DAA520] uppercase tracking-wider font-black block">Special Direct Offer</span>
+                <span className="text-[10px] text-[#DAA520] uppercase tracking-wider font-black block">Weekday Special Direct Offer</span>
                 <p className="text-xs text-slate-800 font-bold mt-0.5 leading-tight">
-                  Flat <span className="text-emerald-600 font-black">28% OFF</span> with coupon <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all">STAYW28</strong>
+                  Flat <span className="text-emerald-600 font-black">28% OFF</span> on Weekdays (Mon–Thu) with coupon <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all">STAYW28</strong>
                 </p>
               </div>
             </div>
@@ -830,6 +840,10 @@ We are so excited about this getaway! Could you please check availability and he
               <button
                 type="button"
                 onClick={() => {
+                  if (!isAllWeekdays) {
+                    alert("Coupon code STAYW28 (28% OFF) is exclusively valid for Weekday stays (Monday to Thursday nights). For weekend dates, standard direct rates apply.");
+                    return;
+                  }
                   setIsCouponApplied(true);
                   setCouponCode("STAYW28");
                 }}
@@ -837,9 +851,13 @@ We are so excited about this getaway! Could you please check availability and he
               >
                 Apply 28% Off
               </button>
-            ) : (
+            ) : discount > 0 ? (
               <span className="text-[10px] font-black text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-full uppercase flex items-center gap-1 w-full sm:w-auto shrink-0 justify-center">
                 <Check size={12} className="stroke-[3]" /> 28% Applied (-₹{discount.toLocaleString("en-IN")})
+              </span>
+            ) : (
+              <span className="text-[10px] font-black text-amber-800 bg-amber-100/80 px-2.5 py-1 rounded-full uppercase flex items-center gap-1 w-full sm:w-auto shrink-0 justify-center">
+                ⚠️ Mon–Thu Stays Only
               </span>
             )}
           </div>
@@ -865,6 +883,9 @@ We are so excited about this getaway! Could you please check availability and he
                   setCouponCode("");
                 } else {
                   if (couponCode.trim().length > 0) {
+                    if ((couponCode.toUpperCase().includes("28") || couponCode.toUpperCase() === "STAYW28") && !isAllWeekdays) {
+                      alert("Coupon code STAYW28 (28% OFF) is exclusively valid for Weekday stays (Monday to Thursday nights). For weekend dates, standard direct rates apply.");
+                    }
                     setIsCouponApplied(true);
                   } else {
                     alert("Please enter a valid coupon code or click Apply 28% Off.");

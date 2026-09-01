@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { 
   TrendingUp, 
   Calendar, 
@@ -344,10 +345,11 @@ export default function PartnerPortal({ initialData, defaultEmail }: PartnerPort
                         <div key={villa.id} className="p-6 rounded-3xl bg-slate-900 border border-white/5 flex gap-6 items-center shadow-xl hover:border-accent-primary/20 transition-all group">
                           {villa.images?.[0] && (
                             <div className="relative w-28 h-28 rounded-2xl overflow-hidden shrink-0">
-                              <img 
+                              <Image 
                                 src={villa.images[0]} 
                                 alt={villa.name}
-                                className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                                fill
+                                className="object-cover group-hover:scale-110 transition-transform duration-500"
                               />
                             </div>
                           )}

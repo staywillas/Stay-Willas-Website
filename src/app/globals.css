@@ -333,25 +333,12 @@ html {
   width: 100%;
 }
 
-/* GPU-accelerated compositing for animated elements */
+/* GPU-accelerated compositing for animated elements on desktop */
 .hardware-accelerated,
 [class*="animate-"],
 .group:hover img {
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
-  will-change: transform;
-}
-
-/* content-visibility: auto for off-screen sections - huge paint saving */
-.lazy-paint,
-section {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
-}
-
-/* Reduce layout shifts and optimize image rendering */
-img {
-  content-visibility: auto;
 }
 
 /* ── ADVANCED ANIMATIONS ────────────────────────────────── */
@@ -392,12 +379,12 @@ img {
     transform: scale(1) translate(0, 0);
   }
   100% {
-    transform: scale(1.08) translate(-1%, -0.5%);
+    transform: scale(1.06) translate(-1%, -0.5%);
   }
 }
 
 .animate-ken-burns {
-  animation: ken-burns 16s ease-out infinite alternate;
+  animation: ken-burns 18s ease-out infinite alternate;
 }
 
 .animate-float {
@@ -428,23 +415,25 @@ img {
 }
 
 /* ── MOBILE RENDERING PERFORMANCE OPTIMIZATIONS ── */
-@media (max-width: 768px) {
-  /* Disable heavy continuous background transform animations on mobile for 60fps scroll */
+@media (max-width: 1024px) {
+  html {
+    scroll-behavior: auto !important; /* Enable native instant momentum scroll on iOS/mobile */
+  }
+
+  /* Disable heavy continuous background transform animations on touch/mobile for 120fps/60fps scroll */
   .animate-ken-burns,
   .animate-rotate-slow,
-  .animate-float-slow {
+  .animate-float-slow,
+  .animate-float,
+  .animate-orbit-card {
     animation: none !important;
+    transform: none !important;
   }
 
   /* Lighten backdrop-filter blur rendering load on mobile GPUs */
   .glass, .glass-dark, .glass-premium, .glass-brown {
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-  }
-
-  /* Optimize layout containment & hardware compositing */
-  section {
-    contain: content;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
   }
 }
 

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { Menu, X, User, Phone, ChevronDown, ChevronRight, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen, Flame, ShieldCheck } from "lucide-react";
@@ -61,21 +62,28 @@ const Navbar = () => {
     window.addEventListener("wishlist-updated", updateCount);
     window.addEventListener("storage", updateCount);
     
+    let ticking = false;
     const handleScroll = () => {
-      const currentScrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-      setIsScrolled(currentScrollY > 30);
-      
-      // Mobile hide/show based on scroll direction
-      if (currentScrollY < 80) {
-        setIsNavVisible(true);
-      } else if (currentScrollY > lastScrollY.current + 5) {
-        setIsNavVisible(false); // Scrolling down
-      } else if (currentScrollY < lastScrollY.current - 5) {
-        setIsNavVisible(true); // Scrolling up
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+          setIsScrolled(currentScrollY > 30);
+          
+          // Mobile hide/show based on scroll direction
+          if (currentScrollY < 80) {
+            setIsNavVisible(true);
+          } else if (currentScrollY > lastScrollY.current + 8) {
+            setIsNavVisible(false); // Scrolling down
+          } else if (currentScrollY < lastScrollY.current - 8) {
+            setIsNavVisible(true); // Scrolling up
+          }
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
       }
-      lastScrollY.current = currentScrollY;
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     const handleToggleMenu = () => setIsMobileMenuOpen(prev => !prev);
     window.addEventListener("toggle-mobile-menu", handleToggleMenu);
@@ -144,11 +152,11 @@ const Navbar = () => {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
           <div className="relative w-8 h-8 sm:w-11 sm:h-11 md:w-13 md:h-13 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
-            <img 
-              src="/images/logo.png" 
+            <Image 
+              src="/images/logo.webp" 
               alt="Stay Willas Logo" 
-              width="52"
-              height="52"
+              width={52}
+              height={52}
               className="w-full h-full object-cover scale-[1.6]" 
             />
           </div>
@@ -201,7 +209,8 @@ const Navbar = () => {
                   <Link href="/destinations" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Destinations</Link>
                   <Link href="/areas/lonavala" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Lonavala Villas</Link>
                   <Link href="/areas/khopoli" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Khopoli Villas</Link>
-                  <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Escape</Link>
+                  <Link href="/areas/mahabaleshwar" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Mahabaleshwar Villas</Link>
+                  <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Group Stays in Lonavala</Link>
                   <Link href="/partner" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Partner</Link>
                   <Link href="/contact" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Contact</Link>
                 </div>
@@ -349,7 +358,7 @@ const Navbar = () => {
             <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-[#DAA520]/15 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="relative w-9 h-9 rounded-full overflow-hidden border border-[#DAA520]/35">
-                  <img src="/images/logo.png" alt="Stay Willas" width="36" height="36" className="w-full h-full object-cover scale-[1.6]" />
+                  <Image src="/images/logo.webp" alt="Stay Willas" width={36} height={36} className="w-full h-full object-cover scale-[1.6]" />
                 </div>
                 <span className="font-heading text-lg tracking-widest text-[#FAF8F5]">STAY WILLAS</span>
               </div>
@@ -455,6 +464,14 @@ const Navbar = () => {
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
                             <span>Willow Peak (Lonavala)</span>
                           </Link>
+                          <Link
+                            href="/villa/terra-cotta-villa"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Terra Cotta Villa (Mahabaleshwar)</span>
+                          </Link>
                         </motion.div>
                       )}
                     </div>
@@ -511,6 +528,14 @@ const Navbar = () => {
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
                             <span>Khopoli Villas</span>
+                          </Link>
+                          <Link
+                            href="/areas/mahabaleshwar"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Mahabaleshwar Villas</span>
                           </Link>
                           <Link
                             href="/areas"
@@ -615,7 +640,7 @@ const Navbar = () => {
                         className="py-1 px-2 text-[11px] font-bold text-white hover:text-[#DAA520] flex items-center justify-between rounded transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        <span>Group Escape Special</span>
+                        <span>Group Villas in Lonavala</span>
                         <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">28% OFF</span>
                       </Link>
                     </div>

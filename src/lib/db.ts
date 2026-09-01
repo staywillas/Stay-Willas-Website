@@ -17,9 +17,10 @@ const createPrismaClient = () => {
   // Create the PostgreSQL pool adapter for Prisma 7's new driver system
   const pool = new Pool({
     connectionString,
-    max: 1,
+    max: 1, // Single connection per worker ensures total parallel workers stay under Supabase's 15 session limit
     idleTimeoutMillis: 1000,
-    connectionTimeoutMillis: 10000
+    connectionTimeoutMillis: 10000,
+    allowExitOnIdle: true
   });
   const adapter = new PrismaPg(pool);
   

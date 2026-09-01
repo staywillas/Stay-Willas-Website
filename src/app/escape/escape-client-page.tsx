@@ -8,11 +8,13 @@ import {
   Sparkles, Menu, X, Briefcase
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import GhostCursor from "@/components/ui/GhostCursor";
+import dynamic from 'next/dynamic';
+const GhostCursor = dynamic(() => import('@/components/ui/GhostCursor'), { ssr: false });
 import WarpLines from "@/components/ui/WarpLines";
 import Navbar from "@/components/layout/navbar";
 import QuickMobileLeadForm from "@/components/common/quick-mobile-lead-form";
 import MegaDiscountAdBanner from "@/components/common/mega-discount-ad-banner";
+import Image from "next/image";
 
 interface VillaData {
   id: string;
@@ -323,25 +325,16 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
 
       <Navbar />
 
-      {/* 28% Mega Weekday Offer Floating Ads & Countdown Strip */}
-      <MegaDiscountAdBanner 
-        pageName="escape"
-        villaName="Group Luxury Villas"
-        location="Lonavala & Khopoli"
-        couponCode="STAYW28"
-        discountPercent={28}
-        villaLink="#properties-section"
-      />
-
       {/* 2. HERO / PSYCHOLOGICAL COPY HOOK */}
       <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-40 sm:pt-52 pb-16 px-6 text-center overflow-hidden z-10">
         
         {/* Subtle Background Image of The Angle House */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none opacity-25 mix-blend-overlay">
-          <img 
+          <Image 
             src="/assets/villas/the-angle-house/gallery-11.webp" 
             alt="The Angle House Background" 
-            className="w-full h-full object-cover filter brightness-[0.4]"
+            fill
+            className="object-cover filter brightness-[0.4]"
           />
         </div>
         {/* CSS Ambient Glowing Orbs */}
@@ -625,10 +618,11 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           {/* Right Column: Immersive Card Image */}
           <div className="lg:col-span-7">
             <div className="relative group rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 aspect-[4/3] sm:aspect-[16/10]">
-              <img 
+              <Image 
                 src="/assets/villas/the-angle-house/gallery-11.webp" 
                 alt="The Angle House Lonavala" 
-                className="w-full h-full object-cover transition-transform duration-[4000ms] ease-out group-hover:scale-110" 
+                fill
+                className="object-cover transition-transform duration-[4000ms] ease-out group-hover:scale-110" 
               />
               {/* Blur gradient cover */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
@@ -663,10 +657,11 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           {/* Property 1: The Angle House */}
           <div className="bg-[#0D0A14]/75 backdrop-blur-xl rounded-3xl overflow-hidden border border-[#DAA520]/20 shadow-2xl flex flex-col hover:border-[#DAA520]/45 transition-all duration-500 group">
             <div className="relative aspect-[16/10] overflow-hidden border-b border-[#DAA520]/15">
-              <img 
+              <Image 
                 src={angleHouse.images[0] || "/assets/villas/the-angle-house/gallery-11.webp"} 
                 alt={angleHouse.name} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105" 
               />
               <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold text-white shadow-sm flex items-center gap-1 border border-[#DAA520]/35">
                 <Star size={12} className="fill-[#DAA520] text-[#DAA520]" /> 4.9 (18 Reviews)
@@ -747,10 +742,11 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           {/* Property 2: Canopy Crest */}
           <div className="bg-[#0D0A14]/75 backdrop-blur-xl rounded-3xl overflow-hidden border border-[#DAA520]/20 shadow-2xl flex flex-col hover:border-[#DAA520]/45 transition-all duration-500 group">
             <div className="relative aspect-[16/10] overflow-hidden border-b border-[#DAA520]/15">
-              <img 
+              <Image 
                 src={canopyCrest.images[0] || "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg"} 
                 alt={canopyCrest.name} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105" 
               />
               <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold text-white shadow-sm flex items-center gap-1 border border-[#DAA520]/35">
                 <Star size={12} className="fill-[#DAA520] text-[#DAA520]" /> 4.8 (14 Reviews)
@@ -1356,7 +1352,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                   "name": "What are the best villas for groups in Lonavala?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "StayWillas offers premier villas for groups in Lonavala including The Angle House (3 BHK, up to 16 guests with private waterfall pool) and Canopy Crest (4 BHK, up to 20 guests with sprawling lawns and private pool)."
+                    "text": "StayWillas offers premier villas for groups in Lonavala including The Angle House (3 BHK, up to 12 guests with private waterfall pool) and Canopy Crest (4 BHK, up to 16 guests with sprawling lawns and private pool)."
                   }
                 },
                 {
@@ -1364,7 +1360,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                   "name": "How many guests can stay in a StayWillas group villa?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Our group villas comfortably accommodate groups ranging from 6 to 20 guests depending on the property selected. Canopy Crest accommodates up to 20 guests, while The Angle House accommodates up to 16 guests."
+                    "text": "Our group villas comfortably accommodate groups ranging from 4 to 16 guests depending on the property selected. Canopy Crest accommodates up to 16 guests, while The Angle House accommodates up to 12 guests."
                   }
                 },
                 {
@@ -1431,11 +1427,11 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             {[
               {
                 q: "What are the best villas for groups in Lonavala?",
-                a: "StayWillas offers premier villas for groups in Lonavala including The Angle House (3 BHK, up to 16 guests with private waterfall pool) and Canopy Crest (4 BHK, up to 20 guests with sprawling lawns and private pool)."
+                a: "StayWillas offers premier villas for groups in Lonavala including The Angle House (3 BHK, up to 12 guests with private waterfall pool) and Canopy Crest (4 BHK, up to 16 guests with sprawling lawns and private pool)."
               },
               {
                 q: "How many guests can stay in a StayWillas group villa?",
-                a: "Our group villas comfortably accommodate groups ranging from 6 to 20 guests depending on the property selected. Canopy Crest accommodates up to 20 guests, while The Angle House accommodates up to 16 guests."
+                a: "Our group villas comfortably accommodate groups ranging from 4 to 16 guests depending on the property selected. Canopy Crest accommodates up to 16 guests, while The Angle House accommodates up to 12 guests."
               },
               {
                 q: "Do the group villas feature private swimming pools?",

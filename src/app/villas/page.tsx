@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import VillasClient from "@/components/villas/villas-client";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // Instant TTFB via ISR cache
 
 export const metadata: Metadata = {
   title: "Luxury Villas for Rent Near Mumbai & Lonavala | Stay Willas",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com/villas",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
         alt: "Villas for rent near Mumbai - Stay Willas Collection",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Luxury Villas for Rent Near Mumbai & Lonavala | Stay Willas",
     description: "Browse our handpicked collection of luxury villas for rent near Mumbai, Lonavala, and Khopoli. Enjoy private pools, chef service, and complete privacy.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 
@@ -51,28 +51,18 @@ export default async function VillasPage({ searchParams }: PageProps) {
   const regionParam = resolvedParams.region;
   const categoryParam = resolvedParams.category;
 
-  // Fetch priorities to ensure they are always first
-  const angleHouse = await prisma.villa.findUnique({
-    where: { slug: "the-angle-house" }
-  });
-  
-  const canopyCrest = await prisma.villa.findUnique({
-    where: { slug: "canopy-crest" }
-  });
-
-  // Query other premium villas
-  const otherVillas = await prisma.villa.findMany({
-    where: {
-      slug: { notIn: ["the-angle-house", "canopy-crest"] }
-    },
+  // Fetch all villas in a single query
+  const allVillas = await prisma.villa.findMany({
     orderBy: { createdAt: "desc" },
   });
 
-  // Combine them with priorities always at the top/first spot!
-  const dbVillas = [];
-  if (angleHouse) dbVillas.push(angleHouse);
-  if (canopyCrest) dbVillas.push(canopyCrest);
-  dbVillas.push(...otherVillas);
+  // Prioritize signature properties
+  const prioritySlugs = ["the-angle-house", "canopy-crest"];
+  const prioritized = allVillas
+    .filter((v) => prioritySlugs.includes(v.slug))
+    .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
+  const remaining = allVillas.filter((v) => !prioritySlugs.includes(v.slug));
+  const dbVillas = [...prioritized, ...remaining];
 
   // Map the database format to the UI client model structure
   const villas = dbVillas.map((villa) => ({
@@ -82,7 +72,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
     location: villa.location,
     priceRaw: villa.price,
     priceFormatted: villa.price.toLocaleString("en-IN"),
-    image: villa.images[0] || "/images/hero-villa.png",
+    image: villa.images[0] || "/images/hero-villa.webp",
     bedrooms: villa.bedrooms,
     bathrooms: villa.bathrooms,
     guests: villa.guests,
@@ -145,8 +135,6 @@ export default async function VillasPage({ searchParams }: PageProps) {
         
         {/* Spacing below Navbar */}
         <div className="pt-44" />
-
-        <h1 className="sr-only">Luxury Villas for Rent Near Mumbai & Lonavala | Stay Willas</h1>
 
         {/* Highly Interactive, Real-Time Client Filter and Grid Section */}
         <VillasClient 

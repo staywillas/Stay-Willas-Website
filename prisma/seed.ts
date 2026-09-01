@@ -12,7 +12,7 @@ const villasData = [
 
 Step outside onto the main deck, and you will find your own private swimming pool, complete with a soothing waterfall feature, outdoor lounge chairs, and cozy corners to sit. It is a perfect setting for family getaways, milestone birthdays, or quiet weekend escapes.
 
-Inside, the slow luxury continues. The villa features three spacious, beautifully appointed bedrooms that can comfortably sleep up to 16 guests. The master suite offers a private in-room jacuzzi, providing the ultimate space to rejuvenate.
+Inside, the slow luxury continues. The villa features three spacious, beautifully appointed bedrooms that can comfortably sleep up to 12 guests. The master suite offers a private in-room jacuzzi, providing the ultimate space to rejuvenate.
 
 To elevate your stay, the villa is fully pet-friendly, welcoming your furry companions to run on the lush lawns. We also offer a dedicated private chef who specializes in preparing fresh, custom veg-only and Jain food spreads in separate setups. Book your escape today and experience the absolute peak of modern architectural luxury.`,
     price: 13000,
@@ -20,9 +20,9 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     fridayPrice: 15000,
     saturdayPrice: 20000,
     sundayPrice: 13000,
-    baseGuests: 12,
-    extraGuestFee: 1200,
-    guests: 16,
+    baseGuests: 8,
+    extraGuestFee: 1000,
+    guests: 12,
     bedrooms: 3,
     bathrooms: 3,
     images: [
@@ -104,20 +104,147 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     ]
   },
   {
+    id: "lonavala-willow-peak-cottage-a",
+    slug: "willow-peak-cottage-a",
+    name: "Willow Peak - Cottage A",
+    location: "Kurwande, Lonavala, Maharashtra",
+    category: "Mountain Cottages",
+    description: `Escape to Willow Peak - Cottage A in Kurwande, Lonavala — a charming private 1 BHK A-frame cottage accommodating up to 4 guests. Nestled in the serene hills of Kurwande near Lonavala, this cottage features an air-conditioned bedroom with a comfortable double bed, an attached modern bathroom with shower, a soothing in-room jacuzzi bath, and a private outdoor sit-out with lush garden views. Complete with Wi-Fi, television, BBQ facility, and peaceful mountain ambiance, it is the ideal romantic or small-family sanctuary.`,
+    price: 4999,
+    weekendPrice: 6999,
+    fridayPrice: 5999,
+    saturdayPrice: 6999,
+    sundayPrice: 4999,
+    baseGuests: 2,
+    extraGuestFee: 800,
+    guests: 4,
+    bedrooms: 1,
+    bathrooms: 1,
+    images: [
+      "/assets/villas/willow-peak/gallery-12.webp",
+      "/assets/villas/willow-peak/gallery-6.webp",
+      "/assets/villas/willow-peak/gallery-7.webp",
+      "/assets/villas/willow-peak/gallery-1.webp",
+      "/assets/villas/willow-peak/gallery-4.webp",
+      "/assets/villas/willow-peak/gallery-5.webp",
+      "/assets/villas/willow-peak/gallery-2.webp",
+      "/assets/villas/willow-peak/gallery-3.webp"
+    ],
+    amenities: [
+      "1 BHK A-Frame Cottage",
+      "Private Jacuzzi Bath",
+      "Air-Conditioned Room",
+      "Comfortable Double Bed",
+      "Television",
+      "Super-fast Wi-Fi",
+      "Attached Bathroom",
+      "Shower Facilities",
+      "Mountain & Garden Views",
+      "Private Sit-Out",
+      "Outdoor Dining & BBQ Area",
+      "Carrom Board",
+      "Parking"
+    ]
+  },
+  {
+    id: "lonavala-willow-peak-cottage-b",
+    slug: "willow-peak-cottage-b",
+    name: "Willow Peak - Cottage B",
+    location: "Kurwande, Lonavala, Maharashtra",
+    category: "Mountain Cottages",
+    description: `Welcome to Willow Peak - Cottage B in Kurwande, Lonavala. A cozy standalone A-frame wooden cottage hosting up to 4 guests with distinct alpine architecture. Features a restful air-conditioned bedroom, an attached bathroom, a relaxing in-room private jacuzzi bath, and a scenic garden sit-out overlooking the Sahyadri mountains. Equipped with high-speed Wi-Fi, television, BBQ area, and dedicated parking.`,
+    price: 4999,
+    weekendPrice: 6999,
+    fridayPrice: 5999,
+    saturdayPrice: 6999,
+    sundayPrice: 4999,
+    baseGuests: 2,
+    extraGuestFee: 800,
+    guests: 4,
+    bedrooms: 1,
+    bathrooms: 1,
+    images: [
+      "/assets/villas/willow-peak/gallery-12.webp",
+      "/assets/villas/willow-peak/gallery-6.webp",
+      "/assets/villas/willow-peak/gallery-7.webp",
+      "/assets/villas/willow-peak/gallery-13.webp",
+      "/assets/villas/willow-peak/gallery-14.webp",
+      "/assets/villas/willow-peak/gallery-8.webp",
+      "/assets/villas/willow-peak/gallery-9.webp",
+      "/assets/villas/willow-peak/gallery-10.webp"
+    ],
+    amenities: [
+      "1 BHK A-Frame Cottage",
+      "Private Jacuzzi Bath",
+      "Air-Conditioned Room",
+      "Comfortable Double Bed",
+      "Television",
+      "Super-fast Wi-Fi",
+      "Attached Bathroom",
+      "Shower Facilities",
+      "Mountain & Garden Views",
+      "Private Sit-Out",
+      "Outdoor Dining & BBQ Area",
+      "Carrom Board",
+      "Parking"
+    ]
+  },
+  {
+    id: "lonavala-willow-peak-cottage-c",
+    slug: "willow-peak-cottage-c",
+    name: "Willow Peak - Cottage C",
+    location: "Kurwande, Lonavala, Maharashtra",
+    category: "Mountain Cottages",
+    description: `Unwind at Willow Peak - Cottage C in Kurwande, Lonavala. A secluded 1 BHK A-frame mountain cottage accommodating up to 4 guests. Features an attached private modern bathroom, soothing in-room jacuzzi bath, air-conditioned bedroom, peaceful sit-out deck surrounded by greenery, high-speed Wi-Fi, and television.`,
+    price: 4999,
+    weekendPrice: 6999,
+    fridayPrice: 5999,
+    saturdayPrice: 6999,
+    sundayPrice: 4999,
+    baseGuests: 2,
+    extraGuestFee: 800,
+    guests: 4,
+    bedrooms: 1,
+    bathrooms: 1,
+    images: [
+      "/assets/villas/willow-peak/gallery-12.webp",
+      "/assets/villas/willow-peak/gallery-7.webp",
+      "/assets/villas/willow-peak/gallery-6.webp",
+      "/assets/villas/willow-peak/gallery-15.webp",
+      "/assets/villas/willow-peak/gallery-11.webp",
+      "/assets/villas/willow-peak/gallery-2.webp",
+      "/assets/villas/willow-peak/gallery-3.webp",
+      "/assets/villas/willow-peak/main.webp"
+    ],
+    amenities: [
+      "1 BHK A-Frame Cottage",
+      "Private Jacuzzi Bath",
+      "Air-Conditioned Room",
+      "Comfortable Double Bed",
+      "Television",
+      "Super-fast Wi-Fi",
+      "Attached Bathroom",
+      "Shower Facilities",
+      "Mountain & Garden Views",
+      "Private Sit-Out",
+      "Outdoor Dining & BBQ Area",
+      "Carrom Board",
+      "Parking"
+    ]
+  },
+  {
     id: "lonavala-willow-peak",
     slug: "willow-peak",
-    name: "Willow Peak",
+    name: "Willow Peak (Entire Estate - 3 Cottages)",
     location: "Kurwande, Lonavala, Maharashtra",
     category: "Mountain View",
-    description: `Escape to Willow Peak in Kurwande, Lonavala — a charming scenic retreat featuring 3 private individual cottages (Cottage A, B, and C) with distinct A-frame architecture surrounded by lush gardens and mountain greenery. Nestled in the serene hills of Kurwande near Lonavala, each private cottage accommodates up to 4 guests and offers air-conditioned bedrooms with comfortable double beds, attached bathrooms with modern shower facilities, and soothing private jacuzzi baths.
-    
-With 3 standalone cottages on site (hosting up to 12 guests total), guests can book individual cottages (Cottage A, B, or C) starting from ₹5,999/night, or reserve all 3 cottages together for exclusive private estate access. Soak in breathtaking mountain views from private cottage sit-outs, unwind in the manicured gardens, or gather around the outdoor dining area and BBQ facility. Complete with carrom board entertainment, well-lit outdoor evening spaces, secure parking, television, and high-speed Wi-Fi, Willow Peak is the ideal sanctuary for peaceful staycations with family and friends.`,
-    price: 5999,
-    weekendPrice: 8999,
-    fridayPrice: 6999,
-    saturdayPrice: 8999,
-    sundayPrice: 6999,
-    baseGuests: 4,
+    description: `Reserve the entire Willow Peak estate in Kurwande, Lonavala — comprising all 3 private standalone A-frame cottages (Cottages A, B, and C) for exclusive group use up to 12 guests. Perched in the serene hills of Kurwande near Lonavala, the estate features 3 air-conditioned bedrooms, 3 attached modern bathrooms, soothing private jacuzzi baths in each cottage, expansive manicured gardens, outdoor dining deck, and BBQ facilities. Complete with carrom board entertainment, well-lit outdoor evening spaces, secure parking, televisions, and high-speed Wi-Fi across the property. Ideal for multi-family gatherings, milestone celebrations, and group staycations.`,
+    price: 17997,
+    weekendPrice: 23997,
+    fridayPrice: 20997,
+    saturdayPrice: 23997,
+    sundayPrice: 17997,
+    baseGuests: 8,
     extraGuestFee: 1000,
     guests: 12,
     bedrooms: 3,
@@ -141,24 +268,89 @@ With 3 standalone cottages on site (hosting up to 12 guests total), guests can b
       "/assets/villas/willow-peak/gallery-15.webp"
     ],
     amenities: [
-      "Individual Cottages",
-      "A-Frame / Cottage-Style Architecture",
-      "Air-Conditioned Rooms",
+      "3 Individual Standalone Cottages (Exclusive Estate)",
+      "A-Frame Alpine Architecture",
+      "Private Jacuzzi Baths in Each Cottage",
+      "Air-Conditioned Bedrooms",
       "Comfortable Double Beds",
-      "Television",
-      "Wi-Fi",
-      "Attached Bathrooms",
+      "Televisions in Each Unit",
+      "High-Speed Wi-Fi",
+      "3 Attached Bathrooms",
       "Shower Facilities",
-      "Jacuzzi Bath",
-      "Mountain / Scenic Views",
-      "Garden & Greenery",
-      "Outdoor Seating",
+      "Panoramic Mountain Views",
+      "Spacious Gardens & Greenery",
       "Outdoor Dining Area",
-      "Carrom Board",
       "BBQ Facility",
-      "Parking",
-      "Well-Lit Outdoor Areas",
-      "Cottage Sit-Outs"
+      "Carrom Board Entertainment",
+      "Secure Private Parking",
+      "Well-Lit Evening Lawns",
+      "Private Cottage Sit-Outs"
+    ]
+  },
+  {
+    id: "mahabaleshwar-terra-cotta",
+    slug: "terra-cotta-villa",
+    name: "Terra Cotta Villa",
+    location: "Panchgani - Mahabaleshwar, Maharashtra",
+    category: "Private Estates",
+    description: `Immerse yourself in rustic mountain serenity at Terra Cotta Villa, a premier 4-BHK private pool sanctuary perched on the picturesque hills of Panchgani and Mahabaleshwar. Built with warm, earthy terracotta brick-style architecture, this private estate seamlessly blends timeless countryside charm with modern luxury amenities.
+
+Step outside onto your private poolside deck surrounded by manicured lawns and towering hillscapes. Take a refreshing swim in the crystal-clear pool, relax under the private gazebo with misty valley breezes, or host memorable evening barbecues under the stars.
+
+Inside, the villa offers 4 spacious, elegantly furnished air-conditioned bedrooms that comfortably host up to 16 guests, complete with private attached bathrooms, high-speed Wi-Fi, and plush bedding. The sprawling living and dining hall provides ample seating for family reunions, celebrations, and intimate getaways.
+
+Located near Kaswand along the scenic Panchgani-Mahabaleshwar road, Terra Cotta Villa is just minutes away from Mapro Garden (4.5 km) and Lingmala Falls (11 km), offering effortless access to strawberry farms and panoramic viewpoints while remaining a peaceful private retreat.`,
+    price: 14000,
+    weekendPrice: 22000,
+    fridayPrice: 18000,
+    saturdayPrice: 22000,
+    sundayPrice: 14000,
+    baseGuests: 12,
+    extraGuestFee: 1000,
+    guests: 16,
+    bedrooms: 4,
+    bathrooms: 4,
+    images: [
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg", // 1. Illuminated Luxury Exterior & Pool
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0035.jpg", // 2. Master Bedroom Suite
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0037.jpg", // 3. Private Swimming Pool & Mountain Greenery
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0033.jpg", // 4. Daytime Exterior & Pool Deck
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0047.jpg", // 5. Bedroom Suite 2
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0055.jpg", // 6. Bedroom Suite 3
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0042.jpg", // 7. Bedroom Suite 4
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0053.jpg", // 8. Bedroom Suite 5
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0017.jpg", // 9. Night Pool Lighted View
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0049.jpg", // 10. Evening Villa Facade & Pool
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0031.jpg", // 11. Mountain Balcony Sit-out
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0054.jpg", // 12. Terracotta Brick Balcony Deck
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0034.jpg", // 13. Outdoor Gazebo Hill View Dining
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0043.jpg", // 14. Living Room & Lounge
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0046.jpg", // 15. Panoramic Window Living Area
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0050.jpg", // 16. Dining Area
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0060.jpg", // 17. Gourmet Food & Breakfast Spread
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0045.jpg", // 18. Bonfire & Barbecue Evening Setup
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0051.jpg", // 19. Poolside Carrom & Entertainment
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0059.jpg", // 20. Scenic Mountain Deck
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0032.jpg", // 21. Equipped Kitchen
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0048.jpg", // 22. Architectural Staircase & Interior
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0039.jpg", // 23. Luxury Bathroom
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0052.jpg", // 24. Bathroom with Shower
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0057.jpg", // 25. En-suite Vanity & Mirror
+      "/assets/villas/terra-cotta-villa/IMG-20260901-WA0056.jpg"  // 26. Bedroom Suite
+    ],
+    amenities: [
+      "Private Swimming Pool",
+      "Expansive Lawn & Gazebo",
+      "Air Conditioning",
+      "Spacious Living Hall",
+      "Music System / Speaker",
+      "Indoor Games & Carrom",
+      "Super-fast Wi-Fi",
+      "Dedicated Caretaker",
+      "Meals & Chef On-Demand",
+      "BBQ Setup Available",
+      "Secure On-Site Parking",
+      "Mountain & Valley Views"
     ]
   }
 ];
@@ -253,6 +445,28 @@ async function main() {
       rating: 5,
       comment: "We booked 2 cottages for a weekend getaway with friends. The garden sit-out, barbecue setup, and quiet surroundings were wonderful.",
     },
+    // Terra Cotta Villa Reviews
+    {
+      villaId: "mahabaleshwar-terra-cotta",
+      userId: "guest_tanvi_kapoor",
+      userName: "Tanvi Kapoor (Juhu, Mumbai)",
+      rating: 5,
+      comment: "Terra Cotta Villa in Panchgani exceeded all our expectations! The rustic brick architecture and private swimming pool overlooking the hills made our family holiday magical.",
+    },
+    {
+      villaId: "mahabaleshwar-terra-cotta",
+      userId: "guest_harsh_patil",
+      userName: "Harshvardhan Patil (Kothrud, Pune)",
+      rating: 5,
+      comment: "Stayed with a group of 14 friends for a 3-day weekend. Very close to Mapro Garden, huge lawn for evening music, and the on-demand chef made incredible local barbecue!",
+    },
+    {
+      villaId: "mahabaleshwar-terra-cotta",
+      userId: "guest_neelam_shah",
+      userName: "Neelam & Rajesh Shah (Ahmedabad)",
+      rating: 5,
+      comment: "Peaceful hillside ambiance and spacious 4 BHK layout. The caretaker was exceptionally polite and helped us with strawberry picking recommendations nearby.",
+    }
   ];
 
   for (const r of reviewsData) {

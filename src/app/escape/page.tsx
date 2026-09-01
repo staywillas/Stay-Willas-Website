@@ -1,7 +1,8 @@
 import React from "react";
 import { Metadata } from "next";
 import { prisma } from "@/lib/db";
-import EscapeClientPage from "./escape-client-page";
+import dynamic from 'next/dynamic';
+const EscapeClientPage = dynamic(() => import('./escape-client-page'));
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com/escape",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.png",
+        url: "https://www.staywillas.com/images/hero-villa.webp",
         width: 1200,
         height: 630,
         alt: "Villas for Groups in Lonavala - Stay Willas Collection",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Villas for Groups in Lonavala | Private Pool Stays | Stay Willas",
     description: "Find private villas for groups in Lonavala with pools, spacious rooms and premium amenities. Perfect for friends, families and weekend getaways.",
-    images: ["https://www.staywillas.com/images/hero-villa.png"],
+    images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 
@@ -165,6 +166,33 @@ export default async function EscapePage() {
     },
   };
 
+  const escapeFaqs = [
+    {
+      question: "What are the best private pool villas for groups in Lonavala?",
+      answer: "The Angle House and Canopy Crest by Stay Willas are top-rated private pool villas for groups in Lonavala and Khopoli, offering 3 to 4 expansive bedroom suites, private swimming pools, master jacuzzis, and accommodations for 12 to 20+ guests."
+    },
+    {
+      question: "Can we host a private family reunion or celebration at your Lonavala group villas?",
+      answer: "Yes, our group villas in Lonavala feature large outdoor lounging lawns, pool decks, dedicated sound systems, and on-site caretakers to support intimate family celebrations and corporate offsites."
+    },
+    {
+      question: "Do your group villas include customized chef meal catering?",
+      answer: "Yes, dedicated private chefs cook all meals fresh on-site, offering customized multi-cuisine spreads, local Maharashtrian dishes, poolside barbecues, and pure vegetarian / Jain preparations."
+    }
+  ];
+
+  const faqSchema = {
+    "@type": "FAQPage",
+    "mainEntity": escapeFaqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
   return (
     <>
       <script
@@ -172,10 +200,19 @@ export default async function EscapePage() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@graph": [collectionSchema, breadcrumbSchema],
+            "@graph": [collectionSchema, breadcrumbSchema, faqSchema],
           }),
         }}
       />
+      {/* Semantic Crawlable Headings for Googlebot */}
+      <div className="sr-only">
+        <h2>Villas for Groups in Lonavala | Private Pool Group Stays</h2>
+        <h3>Best Large Group Villa Estates in Lonavala & Khopoli</h3>
+        <p>
+          Discover handpicked private pool villas for groups in Lonavala accommodating 10 to 20+ guests. 
+          Featuring The Angle House and Canopy Crest with private swimming pools, on-site chef dining, master jacuzzis, and pet-friendly lawns.
+        </p>
+      </div>
       <EscapeClientPage 
         angleHouse={serializedAngleHouse} 
         canopyCrest={serializedCanopyCrest} 

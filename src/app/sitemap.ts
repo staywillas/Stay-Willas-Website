@@ -58,6 +58,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.85,
     },
     {
+      url: `${BASE_URL}/villas-in-lonavala-with-private-pool`,
+      lastModified: currentDate,
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/khopoli-villas`,
+      lastModified: currentDate,
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
       url: `${BASE_URL}/about`,
       lastModified: currentDate,
       changeFrequency: "monthly",
@@ -99,6 +111,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const regions = [
     "lonavala",
     "khopoli",
+    "mahabaleshwar",
     "pawna"
   ];
   const areaRoutes: MetadataRoute.Sitemap = regions.map((region) => ({
@@ -145,6 +158,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       {
         url: `${BASE_URL}/villa/willow-peak`,
+        lastModified: currentDate,
+        changeFrequency: "weekly" as const,
+        priority: 0.9,
+      },
+      {
+        url: `${BASE_URL}/villa/willow-peak-cottage-a`,
+        lastModified: currentDate,
+        changeFrequency: "weekly" as const,
+        priority: 0.85,
+      },
+      {
+        url: `${BASE_URL}/villa/willow-peak-cottage-b`,
+        lastModified: currentDate,
+        changeFrequency: "weekly" as const,
+        priority: 0.85,
+      },
+      {
+        url: `${BASE_URL}/villa/willow-peak-cottage-c`,
+        lastModified: currentDate,
+        changeFrequency: "weekly" as const,
+        priority: 0.85,
+      },
+      {
+        url: `${BASE_URL}/villa/terra-cotta-villa`,
         lastModified: currentDate,
         changeFrequency: "weekly" as const,
         priority: 0.9,

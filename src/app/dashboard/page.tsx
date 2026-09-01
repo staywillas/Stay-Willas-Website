@@ -79,7 +79,7 @@ export default async function DashboardPage() {
     villaId: b.villaId,
     villaName: b.villa.name,
     villaLocation: b.villa.location,
-    villaImage: b.villa.images[0] || "/images/hero-villa.png",
+    villaImage: b.villa.images[0] || "/images/hero-villa.webp",
     checkIn: b.checkIn.toISOString(),
     checkOut: b.checkOut.toISOString(),
     totalPrice: b.totalPrice,

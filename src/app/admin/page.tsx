@@ -43,7 +43,7 @@ export default async function AdminPage() {
   }
 
   // 2. Query all database statistics & pipelines dynamically in parallel
-  const [dbVillas, dbBookings, dbInquiries] = await Promise.all([
+  const [dbVillas, dbBookings] = await Promise.all([
     prisma.villa.findMany({
       include: {
         seasonalPrices: true,
@@ -55,9 +55,6 @@ export default async function AdminPage() {
       include: {
         villa: true,
       },
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.inquiry.findMany({
       orderBy: { createdAt: "desc" },
     }),
   ]);
@@ -81,7 +78,6 @@ export default async function AdminPage() {
       <AdminDashboard 
         initialVillas={sortedVillas as any} 
         initialBookings={dbBookings as any} 
-        initialInquiries={dbInquiries}
         userEmail={userEmail}
       />
     </main>

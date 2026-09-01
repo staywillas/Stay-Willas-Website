@@ -113,7 +113,11 @@ const VillaCard = ({
             <div className="flex flex-col text-left">
               <span className="text-[7.5px] sm:text-[8px] text-[#1B3564]/60 uppercase tracking-widest font-extrabold">Starting at</span>
               <span className="text-[#1B3564] text-xs sm:text-base font-black whitespace-nowrap">
-                ₹{id.includes("willow") ? "5,999" : price} <span className="text-[8px] sm:text-[10px] font-normal text-slate-500 font-sans">/ night {id.includes("willow") ? "/ cottage" : ""}</span>
+                ₹{id === "lonavala-willow-peak" || id === "willow-peak" 
+                  ? "17,997" 
+                  : id.includes("cottage") 
+                  ? "5,999" 
+                  : price} <span className="text-[8px] sm:text-[10px] font-normal text-slate-500 font-sans">/ night {id.includes("cottage") ? "/ cottage" : ""}</span>
               </span>
             </div>
             <span className="text-[8px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -124,10 +128,10 @@ const VillaCard = ({
           {/* Dual Conversion Action Buttons (Visible on Mobile & Desktop) */}
           <div className="grid grid-cols-2 gap-2">
             <Link
-              href={`/villa/${id}`}
-              className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white py-2 px-2.5 rounded-xl text-[9px] sm:text-[10px] font-black tracking-wider uppercase transition-all duration-200 flex items-center justify-center text-center shadow-xs cursor-pointer"
+              href={`/villa/${id}#booking-card-section`}
+              className="bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white py-2 px-2.5 rounded-xl text-[9px] sm:text-[10px] font-black tracking-wider uppercase transition-all duration-200 flex items-center justify-center text-center shadow-xs cursor-pointer whitespace-nowrap"
             >
-              View Details
+              Dates & Rates
             </Link>
 
             <a

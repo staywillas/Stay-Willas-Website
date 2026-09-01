@@ -129,9 +129,31 @@ export async function createCheckoutSession(formData: {
 
     // 1. STAGE A: Strict Double Booking & Lock Prevention using Transaction Checks
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+    const isWillowEntire = targetVilla?.slug === "willow-peak";
+    const isWillowCottage = Boolean(targetVilla?.slug?.startsWith("willow-peak-cottage"));
+
+    let relevantVillaIds = [formData.villaId];
+    if (isWillowCottage) {
+      // If booking an individual cottage, also check if the entire estate is booked
+      const entireEstate = await prisma.villa.findFirst({ where: { slug: "willow-peak" } });
+      if (entireEstate) relevantVillaIds.push(entireEstate.id);
+    } else if (isWillowEntire) {
+      // If booking entire estate, check all 3 cottages and entire estate
+      const allWillow = await prisma.villa.findMany({
+        where: {
+          OR: [
+            { slug: "willow-peak" },
+            { slug: { startsWith: "willow-peak-cottage" } }
+          ]
+        },
+        select: { id: true }
+      });
+      relevantVillaIds = allWillow.map(v => v.id);
+    }
+
     const overlappingBookings = await prisma.booking.findMany({
       where: {
-        villaId: formData.villaId,
+        villaId: { in: relevantVillaIds },
         status: { in: ["CONFIRMED", "BLOCKED", "HELD"] },
         OR: [
           { status: { in: ["CONFIRMED", "BLOCKED"] } },
@@ -141,40 +163,19 @@ export async function createCheckoutSession(formData: {
           { checkIn: { lt: checkOutDate } },
           { checkOut: { gt: checkInDate } }
         ]
+      },
+      include: {
+        villa: true
       }
     });
 
-    if (isWillowPeak) {
-      // Check each night to ensure total booked cottages + requiredCottages <= 3
-      let cur = new Date(checkInDate);
-      while (cur.getTime() < checkOutDate.getTime()) {
-        const nextDay = new Date(cur);
-        nextDay.setDate(nextDay.getDate() + 1);
-
-        let bookedOnNight = 0;
-        for (const b of overlappingBookings) {
-          if (b.checkIn < nextDay && b.checkOut > cur) {
-            let bCottages = 1;
-            try {
-              if (b.userId && b.userId.startsWith("{")) {
-                const parsed = JSON.parse(b.userId);
-                if (parsed.cottagesCount) bCottages = parsed.cottagesCount;
-                else if (parsed.guests) bCottages = Math.ceil(parsed.guests / 4);
-              }
-            } catch (e) {}
-            bookedOnNight += bCottages;
-          }
-        }
-
-        if (bookedOnNight + requiredCottages > 3) {
-          const freeCottages = Math.max(0, 3 - bookedOnNight);
-          throw new Error(
-            freeCottages > 0
-              ? `Only ${freeCottages} cottage(s) (max ${freeCottages * 4} guests) available on ${cur.toLocaleDateString("en-IN")}. You requested ${requiredCottages} cottages for ${formData.guests} guests.`
-              : `All 3 cottages at Willow Peak are fully booked on ${cur.toLocaleDateString("en-IN")}. Please select different dates.`
-          );
-        }
-        cur.setDate(cur.getDate() + 1);
+    if (isWillowEntire) {
+      if (overlappingBookings.length > 0) {
+        throw new Error("Cannot book Willow Peak (Entire Estate): one or more cottages or the entire estate is already reserved on these dates. Please select different dates.");
+      }
+    } else if (isWillowCottage) {
+      if (overlappingBookings.length > 0) {
+        throw new Error("This cottage is unavailable on the selected dates (either already booked or the Entire Estate is reserved). Please select different dates.");
       }
     } else {
       if (overlappingBookings.length > 0) {
@@ -206,7 +207,23 @@ export async function createCheckoutSession(formData: {
     if (formData.couponCode) {
       const code = formData.couponCode.trim().toUpperCase();
       if (code === "STAYW28" || code.includes("28") || code === "ESCAPE28" || code === "LONAVALA28" || code === "KHOPOLI28") {
-        discountRate = 0.28;
+        // Enforce weekday-only rule (Monday - Thursday stay nights)
+        let isAllWeekdays = true;
+        let curNight = new Date(checkInDate);
+        while (curNight.getTime() < checkOutDate.getTime()) {
+          const day = curNight.getDay();
+          if (day < 1 || day > 4) {
+            isAllWeekdays = false;
+            break;
+          }
+          curNight.setDate(curNight.getDate() + 1);
+        }
+
+        if (isAllWeekdays) {
+          discountRate = 0.28;
+        } else {
+          throw new Error("Coupon code STAYW28 (28% OFF) is exclusively valid for weekday stays (Monday to Thursday nights). For weekend dates, standard direct rates apply.");
+        }
       } else if (code === "STAY5") {
         discountRate = 0.05;
       }
@@ -501,7 +518,7 @@ export async function checkAvailableVillasForDates(data: {
           location: v.location,
           category: v.category,
           amenities: v.amenities,
-          image: v.images[0] || "/images/hero-villa.png"
+          image: v.images[0] || "/images/hero-villa.webp"
         }))
       };
     }
@@ -538,7 +555,7 @@ export async function checkAvailableVillasForDates(data: {
         location: v.location,
         category: v.category,
         amenities: v.amenities,
-        image: v.images[0] || "/images/hero-villa.png"
+        image: v.images[0] || "/images/hero-villa.webp"
       }))
     };
   } catch (error: any) {

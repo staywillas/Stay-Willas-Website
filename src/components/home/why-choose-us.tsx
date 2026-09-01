@@ -34,21 +34,21 @@ const WhyChooseUs = () => {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-20">
           <motion.div
-            initial={{ opacity: 0, y: 35, filter: "blur(6px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ 
               type: "spring",
-              stiffness: 60,
-              damping: 15,
-              duration: 0.8 
+              stiffness: 70,
+              damping: 18,
+              duration: 0.7 
             }}
           >
-            <span className="inline-block text-blue-600 font-bold tracking-[0.3em] uppercase text-[9px] sm:text-xs mb-2 sm:mb-4 bg-blue-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
+            <span className="inline-block text-[#559C24] font-bold tracking-[0.3em] uppercase text-[9px] sm:text-xs mb-2 sm:mb-4 bg-[#559C24]/10 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
               Why Choose Us
             </span>
             <h2 className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-heading text-text-primary mt-2 sm:mt-6">
-              We Care About <span className="italic bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent pr-2 inline-block">Your Stay</span>
+              We Care About <span className="italic bg-gradient-to-r from-[#1B3564] to-[#DAA520] bg-clip-text text-transparent pr-2 inline-block">Your Stay</span>
             </h2>
             <p className="text-xs sm:text-lg text-text-primary/65 mt-2 sm:mt-6 max-w-2xl mx-auto">
               Experience uncompromising luxury with genuine hospitality and attention to every detail.
@@ -61,14 +61,14 @@ const WhyChooseUs = () => {
           {reasons.map((reason, index) => (
             <motion.div
               key={reason.title}
-              initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, margin: "-50px" }}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
               transition={{ 
                 type: "spring",
                 stiffness: 80,
-                damping: 18,
-                delay: index * 0.12 
+                damping: 20,
+                delay: index * 0.08 
               }}
               className="group"
             >

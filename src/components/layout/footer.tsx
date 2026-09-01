@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Camera, Mail, MapPin, Phone, ArrowUp, ArrowRight } from "lucide-react";
 
 const Footer = () => {
@@ -49,9 +50,11 @@ const Footer = () => {
           <div className="md:col-span-3">
             <Link href="/" className="flex items-center gap-3 mb-8 group">
               <div className="relative w-12 h-12 rounded-full overflow-hidden border border-[#DAA520]/30 shadow-lg bg-white/10 flex items-center justify-center shrink-0 group-hover:border-[#DAA520] transition-colors">
-                <img 
-                  src="/images/logo.png" 
+                <Image 
+                  src="/images/logo.webp" 
                   alt="Stay Willas Logo" 
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover scale-[1.6]" 
                 />
               </div>
@@ -111,7 +114,7 @@ const Footer = () => {
                 { name: "Willow Peak", href: "/villa/willow-peak" },
                 { name: "Lonavala Villas", href: "/areas/lonavala" },
                 { name: "Khopoli Villas", href: "/areas/khopoli" },
-                { name: "Group Escape Deal", href: "/escape" },
+                { name: "Group Villas in Lonavala", href: "/escape" },
                 { name: "Travel Blog", href: "/blog" }
               ].map((link) => (
                 <li key={link.name}>
