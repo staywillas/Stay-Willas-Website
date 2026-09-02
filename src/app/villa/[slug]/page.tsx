@@ -51,30 +51,55 @@ export async function generateStaticParams() {
 }
 
 // Cache query to avoid duplicate roundtrips between generateMetadata and VillaDetailPage
-const getCachedVilla = cache(async (slug: string) => {
-  let villa = await prisma.villa.findUnique({
-    where: { slug },
-    include: {
-      dailyPrices: true,
-      seasonalPrices: true,
-    },
-  });
+const getCachedVilla = React.cache
+  ? React.cache(async (slug: string) => {
+      let villa = await prisma.villa.findUnique({
+        where: { slug },
+        include: {
+          dailyPrices: true,
+          seasonalPrices: true,
+        },
+      });
 
-  if (!villa) {
-    villa = await prisma.villa.findUnique({
-      where: { id: slug },
-      include: {
-        dailyPrices: true,
-        seasonalPrices: true,
-      },
-    });
-  }
-  return villa;
-});
+      if (!villa) {
+        villa = await prisma.villa.findUnique({
+          where: { id: slug },
+          include: {
+            dailyPrices: true,
+            seasonalPrices: true,
+          },
+        });
+      }
+      return villa;
+    })
+  : async (slug: string) => {
+      let villa = await prisma.villa.findUnique({
+        where: { slug },
+        include: {
+          dailyPrices: true,
+          seasonalPrices: true,
+        },
+      });
 
-const getCachedReviews = cache(async (villaId: string) => {
-  return await getReviews(villaId);
-});
+      if (!villa) {
+        villa = await prisma.villa.findUnique({
+          where: { id: slug },
+          include: {
+            dailyPrices: true,
+            seasonalPrices: true,
+          },
+        });
+      }
+      return villa;
+    };
+
+const getCachedReviews = React.cache
+  ? React.cache(async (villaId: string) => {
+      return await getReviews(villaId);
+    })
+  : async (villaId: string) => {
+      return await getReviews(villaId);
+    };
 
 interface PageProps {
   params: Promise<{ slug: string }>;
