@@ -1021,7 +1021,7 @@ export async function sendInvoiceEmailAction(data: {
 }
 
 /**
- * Approve a pending guest verification booking
+ * Approve a pending guest verification booking and send confirmation email to guest
  */
 export async function approveVerificationBooking(bookingId: string) {
   try {
@@ -1035,9 +1035,153 @@ export async function approveVerificationBooking(bookingId: string) {
       },
     });
 
+    // Parse guest info from userId JSON if available
+    let guestName = "Valued Guest";
+    let guestEmail = "";
+    let guestPhone = "";
+    let guestCount = 1;
+    let cottageSel = "";
+
+    try {
+      if (booking.userId && booking.userId.startsWith("{")) {
+        const parsed = JSON.parse(booking.userId);
+        if (parsed.name) guestName = parsed.name;
+        if (parsed.email) guestEmail = parsed.email;
+        if (parsed.phone) guestPhone = parsed.phone;
+        if (parsed.guests) guestCount = parsed.guests;
+        if (parsed.cottageSelection) cottageSel = parsed.cottageSelection;
+      }
+    } catch (e) {}
+
+    const checkInStr = new Date(booking.checkIn).toLocaleDateString("en-IN", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+    const checkOutStr = new Date(booking.checkOut).toLocaleDateString("en-IN", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+    const nights = Math.max(1, Math.round((new Date(booking.checkOut).getTime() - new Date(booking.checkIn).getTime()) / (1000 * 60 * 60 * 24)));
+
+    let emailSent = false;
+    let emailStatus = "";
+
+    // Send confirmation email if email is provided
+    if (guestEmail && guestEmail.includes("@") && guestEmail !== "N/A") {
+      try {
+        const emailHtml = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <style>
+              body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #FAF8F5; color: #1E293B; }
+              .container { max-width: 600px; margin: 20px auto; background: #FFFFFF; border-radius: 20px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+              .header { background: #1B3564; padding: 35px 30px; text-align: center; color: white; }
+              .header h1 { margin: 0 0 8px 0; font-size: 26px; letter-spacing: 1px; }
+              .header p { margin: 0; font-size: 13px; color: #DAA520; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+              .content { padding: 30px; }
+              .status-badge { display: inline-block; background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; font-weight: 800; font-size: 12px; padding: 6px 14px; border-radius: 50px; text-transform: uppercase; margin-bottom: 20px; }
+              .card { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+              .row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; }
+              .row:last-child { margin-bottom: 0; }
+              .label { color: #64748B; font-weight: 500; }
+              .value { color: #0F172A; font-weight: 700; text-align: right; }
+              .total-row { border-top: 2px dashed #CBD5E1; padding-top: 14px; margin-top: 14px; }
+              .total-value { color: #1B3564; font-size: 18px; font-weight: 900; }
+              .btn { display: block; text-align: center; background: #25D366; color: white; text-decoration: none; padding: 14px 20px; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; }
+              .footer { background: #F1F5F9; padding: 20px; text-align: center; font-size: 12px; color: #64748B; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <p>Stay Willas Luxury Sanctuary</p>
+                <h1>Booking Confirmed! 🥂</h1>
+              </div>
+              <div class="content">
+                <div style="text-align: center;">
+                  <span class="status-badge">✅ Verified & Confirmed</span>
+                </div>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                  Dear <strong>${guestName}</strong>,<br><br>
+                  We are delighted to confirm your luxury staycation at <strong>${booking.villa.name}</strong>! Your reservation has been reviewed and verified by our management team.
+                </p>
+                
+                <div class="card">
+                  <div class="row">
+                    <span class="label">Booking Reference:</span>
+                    <span class="value" style="font-family: monospace;">${booking.id}</span>
+                  </div>
+                  <div class="row">
+                    <span class="label">Property:</span>
+                    <span class="value">${booking.villa.name}${cottageSel ? ` (Cottage ${cottageSel})` : ""}</span>
+                  </div>
+                  <div class="row">
+                    <span class="label">Check-In:</span>
+                    <span class="value">${checkInStr}</span>
+                  </div>
+                  <div class="row">
+                    <span class="label">Check-Out:</span>
+                    <span class="value">${checkOutStr}</span>
+                  </div>
+                  <div class="row">
+                    <span class="label">Duration:</span>
+                    <span class="value">${nights} Night(s)</span>
+                  </div>
+                  <div class="row">
+                    <span class="label">Guests:</span>
+                    <span class="value">${guestCount} Guest(s)</span>
+                  </div>
+                  <div class="row total-row">
+                    <span class="label" style="font-size: 15px; font-weight: 700; color: #1B3564;">Total Confirmed Bill:</span>
+                    <span class="value total-value">₹${booking.totalPrice.toLocaleString("en-IN")}</span>
+                  </div>
+                </div>
+
+                <p style="font-size: 13px; color: #64748B; line-height: 1.5;">
+                  📍 <strong>Location:</strong> ${booking.villa.location || "Lonavala, Maharashtra"}<br>
+                  🛎️ <strong>Personal Concierge:</strong> Available 24/7 for catering, check-in coordination, and special requests.
+                </p>
+
+                <a href="https://wa.me/919619042310?text=Hello%20Stay%20Willas!%20My%20booking%20is%20confirmed%20for%20${encodeURIComponent(booking.villa.name)}%20(Ref:%20${booking.id})." class="btn">
+                  💬 Chat with Your Concierge on WhatsApp
+                </a>
+              </div>
+              <div class="footer">
+                Stay Willas Luxury Escapes • contact@staywillas.com • +91 96190 42310<br>
+                Thank you for choosing Stay Willas for your getaway.
+              </div>
+            </div>
+          </body>
+          </html>
+        `;
+
+        const mailRes = await sendEmail({
+          to: guestEmail,
+          subject: `🏰 Booking Confirmed: Your Stay at ${booking.villa.name} (Ref: ${booking.id}) - Stay Willas`,
+          html: emailHtml,
+        });
+
+        if (mailRes.success) {
+          emailSent = true;
+          emailStatus = `Confirmation email dispatched to ${guestEmail}`;
+        }
+      } catch (err: any) {
+        console.error("Failed to send booking confirmation email:", err);
+        emailStatus = `Email error: ${err.message}`;
+      }
+    } else {
+      emailStatus = "No guest email provided";
+    }
+
     revalidatePath("/admin");
     revalidatePath(`/villa/${booking.villa.slug}`);
-    return { success: true, booking };
+    return { success: true, booking, emailSent, emailStatus, guestEmail };
   } catch (error: any) {
     console.error("approveVerificationBooking error:", error);
     return { success: false, error: error.message || "Failed to approve booking." };

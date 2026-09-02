@@ -122,13 +122,14 @@ const AdminDashboard = ({
   initialInquiries = [],
   userEmail 
 }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "leads" | "calendar" | "pricing" | "calculator">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "awaiting_verification" | "leads" | "calendar" | "pricing" | "calculator">("overview");
 
   // Lift properties and bookings to states for high reactivity
   const [villas, setVillas] = useState<Villa[]>(initialVillas);
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
   const [inquiries, setInquiries] = useState<any[]>(initialInquiries);
   const [leadFilter, setLeadFilter] = useState<"ALL" | "BOOKING_LEAD" | "OWNER" | "GUEST">("ALL");
+  const [approvingBookingId, setApprovingBookingId] = useState<string | null>(null);
 
   // Selected Booking details modal state & invoice prefill
   const [selectedBookingDetails, setSelectedBookingDetails] = useState<Booking | null>(null);
@@ -839,6 +840,21 @@ const AdminDashboard = ({
           Bookings Pipeline ({totalBookings})
         </button>
         <button
+          onClick={() => setActiveTab("awaiting_verification")}
+          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+            activeTab === "awaiting_verification" 
+              ? "border-amber-500 text-amber-900 font-black" 
+              : "border-transparent text-slate-400 hover:text-amber-800"
+          }`}
+        >
+          <span>⏳ Awaiting Verification</span>
+          {bookings.filter(b => b.status === "AWAITING_VERIFICATION" || (b.status === "PENDING" && b.userId && b.userId.includes("ONLINE_VERIFICATION"))).length > 0 && (
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500 text-white animate-pulse">
+              {bookings.filter(b => b.status === "AWAITING_VERIFICATION" || (b.status === "PENDING" && b.userId && b.userId.includes("ONLINE_VERIFICATION"))).length}
+            </span>
+          )}
+        </button>
+        <button
           onClick={() => setActiveTab("leads")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
             activeTab === "leads" 
@@ -866,6 +882,204 @@ const AdminDashboard = ({
       </div>
 
       {/* Tab Contents */}
+      {activeTab === "awaiting_verification" && (
+        <div className="space-y-8 font-sans animate-fade-in text-left">
+          {(() => {
+            const pendingList = bookings.filter(
+              b => b.status === "AWAITING_VERIFICATION" || 
+                   (b.status === "PENDING" && b.userId && b.userId.includes("ONLINE_VERIFICATION"))
+            );
+
+            return (
+              <div className="w-full glass border border-amber-500/30 bg-amber-500/5 rounded-[32px] p-6 sm:p-8 overflow-hidden shadow-xl space-y-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-amber-500/20">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-800">
+                        Guest Verification Queue • {pendingList.length} Awaiting Approval
+                      </span>
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-cormorant font-bold italic text-[#1B3564]">
+                      Awaiting Verification Reservations
+                    </h3>
+                    <p className="text-xs text-slate-600 mt-0.5">
+                      Review requests submitted by guests via Option 2. Approving will automatically confirm dates and dispatch a branded confirmation email to their inbox.
+                    </p>
+                  </div>
+                </div>
+
+                {pendingList.length === 0 ? (
+                  <div className="py-16 text-center space-y-3 bg-white/70 rounded-2xl border border-slate-200">
+                    <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-bold">
+                      ✓
+                    </div>
+                    <h4 className="text-lg font-bold text-slate-800">All Clear!</h4>
+                    <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                      There are currently no reservations awaiting verification. New requests will appear here in real-time.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-4">
+                    {pendingList.map((item) => {
+                      let guestName = "Guest Traveler";
+                      let guestPhone = "";
+                      let guestEmail = "";
+                      let guestCount = 1;
+                      let cottageSel = "";
+                      let couponUsed = "";
+
+                      try {
+                        if (item.userId && item.userId.startsWith("{")) {
+                          const parsed = JSON.parse(item.userId);
+                          if (parsed.name) guestName = parsed.name;
+                          if (parsed.phone) guestPhone = parsed.phone;
+                          if (parsed.email) guestEmail = parsed.email;
+                          if (parsed.guests) guestCount = parsed.guests;
+                          if (parsed.cottageSelection) cottageSel = parsed.cottageSelection;
+                          if (parsed.coupon) couponUsed = parsed.coupon;
+                        }
+                      } catch (e) {}
+
+                      const cin = new Date(item.checkIn);
+                      const cout = new Date(item.checkOut);
+                      const nights = Math.max(1, Math.round((cout.getTime() - cin.getTime()) / (1000 * 60 * 60 * 24)));
+                      const isApprovingThis = approvingBookingId === item.id;
+
+                      return (
+                        <div 
+                          key={item.id}
+                          className="bg-white border-2 border-amber-500/25 rounded-2xl p-5 sm:p-6 shadow-md hover:shadow-lg transition-all flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5"
+                        >
+                          {/* Left: Info */}
+                          <div className="space-y-2.5 flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-[#1B3564] text-white">
+                                🏰 {item.villa.name}
+                              </span>
+                              {cottageSel && cottageSel !== "ALL" && (
+                                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                                  🏡 Cottage {cottageSel}
+                                </span>
+                              )}
+                              <span className="text-xs font-mono text-slate-400 bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
+                                Ref ID: {item.id}
+                              </span>
+                            </div>
+
+                            <div className="flex items-baseline gap-3 flex-wrap">
+                              <h4 className="text-lg font-bold text-slate-900">
+                                👤 {guestName}
+                              </h4>
+                              {guestPhone && (
+                                <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md">
+                                  📱 {guestPhone}
+                                </span>
+                              )}
+                              {guestEmail && (
+                                <span className="text-xs text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
+                                  ✉️ {guestEmail}
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-3 text-xs text-slate-600 flex-wrap">
+                              <span>
+                                📅 <strong>{cin.toLocaleDateString("en-IN", { weekday: "short", month: "short", day: "numeric" })}</strong> to <strong>{cout.toLocaleDateString("en-IN", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</strong> ({nights} nights)
+                              </span>
+                              <span>•</span>
+                              <span>👥 <strong>{guestCount} Guests</strong></span>
+                              <span>•</span>
+                              <span>💵 Total Bill: <strong className="text-slate-900 text-sm font-black">₹{item.totalPrice.toLocaleString("en-IN")}</strong></span>
+                              {couponUsed && (
+                                <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">
+                                  Coupon: {couponUsed}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Right: Actions */}
+                          <div className="flex items-center gap-2.5 w-full lg:w-auto justify-end flex-shrink-0 pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-100">
+                            {guestPhone && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const cleanPh = guestPhone.replace(/[^0-9]/g, "");
+                                  const msg = `Hello ${guestName}! 🌟 This is Stay Willas management regarding your reservation request for *${item.villa.name}* (${cin.toLocaleDateString("en-IN", { month: "short", day: "numeric" })} - ${cout.toLocaleDateString("en-IN", { month: "short", day: "numeric" })}). We are happy to help and verify your booking! ✨`;
+                                  window.open(`https://wa.me/${cleanPh.startsWith("91") ? cleanPh : `91${cleanPh}`}?text=${encodeURIComponent(msg)}`, "_blank");
+                                }}
+                                className="px-4 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border-none"
+                              >
+                                💬 WhatsApp
+                              </button>
+                            )}
+
+                            <button
+                              type="button"
+                              disabled={isApprovingThis}
+                              onClick={async () => {
+                                if (confirm(`Approve and confirm booking for ${guestName} at ${item.villa.name}? This will lock the dates and send a confirmation email to ${guestEmail || "the guest"}.`)) {
+                                  setApprovingBookingId(item.id);
+                                  const res = await approveVerificationBooking(item.id);
+                                  setApprovingBookingId(null);
+
+                                  if (res.success && res.booking) {
+                                    setBookings(bookings.map(b => b.id === item.id ? (res.booking as any) : b));
+                                    const emailNotice = res.emailSent 
+                                      ? `\n\n✉️ Confirmation email sent to ${res.guestEmail}!`
+                                      : res.guestEmail 
+                                      ? `\n\n(Note: ${res.emailStatus})` 
+                                      : "";
+                                    alert(`Reservation for ${guestName} is now CONFIRMED!${emailNotice}`);
+                                  } else {
+                                    alert(res.error || "Failed to approve booking.");
+                                  }
+                                }
+                              }}
+                              className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer shadow-md border-none active:scale-[0.98]"
+                            >
+                              {isApprovingThis ? (
+                                <>
+                                  <Loader2 size={14} className="animate-spin" />
+                                  <span>Approving & Sending Email...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <CheckCircle2 size={15} />
+                                  <span>Approve & Send Email</span>
+                                </>
+                              )}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (confirm(`Decline and release held dates for ${guestName}'s request?`)) {
+                                  const res = await rejectVerificationBooking(item.id);
+                                  if (res.success) {
+                                    setBookings(bookings.filter(b => b.id !== item.id));
+                                  } else {
+                                    alert(res.error || "Failed to decline booking.");
+                                  }
+                                }
+                              }}
+                              className="px-3.5 py-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-red-200"
+                            >
+                              Decline
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
       {activeTab === "leads" && (
         <div className="space-y-8 font-sans animate-fade-in text-left">
           {/* Top Metrics Row */}
