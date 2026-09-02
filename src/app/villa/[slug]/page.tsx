@@ -7,9 +7,11 @@ import {
   Wifi, Waves, Car,
   Wind, MapPin, Award, ChevronLeft,
   Share2, Heart, CheckCircle2,
-  Users, Bed, Bath, PawPrint,
-  Tv, Home, Trees, UtensilsCrossed,
-  Flame, Gamepad2, ShowerHead, Sun, Sparkles
+  Users, Bed, BedDouble, Bath, PawPrint,
+  Tv, Home, Trees, UtensilsCrossed, Utensils,
+  Flame, Gamepad2, ShowerHead, Sun, Sparkles,
+  Speaker, Music, ShieldCheck, Accessibility,
+  HeartHandshake, DoorClosed, Layers, UserCheck, ChefHat
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
@@ -79,60 +81,118 @@ interface PageProps {
 }
 
 const amenityIconMap: { [key: string]: React.ComponentType<any> } = {
-  "Super-fast Wi-Fi": Wifi,
-  "Heated Infinity Pool": AnimatedPoolIcon,
-  "Infinity Swimming Pool": AnimatedPoolIcon,
+  // Pool & Jacuzzi
   "Private Swimming Pool": AnimatedPoolIcon,
   "Massive Swimming Pool": AnimatedPoolIcon,
+  "Heated Infinity Pool": AnimatedPoolIcon,
+  "Infinity Swimming Pool": AnimatedPoolIcon,
   "Plunge Pool": AnimatedPoolIcon,
   "Heated Pool": AnimatedPoolIcon,
+  "Private Jacuzzi": AnimatedPoolIcon,
+  "Private Jacuzzi Bath": AnimatedPoolIcon,
+  "Jacuzzi in Master Bedroom": AnimatedPoolIcon,
+  "Jacuzzi Bath": AnimatedPoolIcon,
+  "Waterfall Feature": AnimatedWaterfallIcon,
+
+  // Music & Entertainment
+  "Music System/Speaker": Speaker,
+  "Music System / Speaker": Speaker,
+  "Music System": Speaker,
+  "Indoor/Outdoor Games": Gamepad2,
+  "Indoor Games & Carrom": Gamepad2,
+  "Carrom Board": Gamepad2,
+  "Carrom Board Entertainment": Gamepad2,
+  "Television": Tv,
+  "Televisions in Each Unit": Tv,
+  "Billiards Table": Gamepad2,
+  "Beach Volley Net": Gamepad2,
+
+  // Architecture & Rooms
+  "Balcony/Terrace": AnimatedBalconyIcon,
+  "2 Balconies": AnimatedBalconyIcon,
+  "Spacious Balcony": AnimatedBalconyIcon,
+  "Private Sit-Out": AnimatedBalconyIcon,
+  "Cottage Sit-Outs": AnimatedBalconyIcon,
+  "Living Hall": AnimatedLivingHallIcon,
+  "Spacious Living Hall": AnimatedLivingHallIcon,
+  "1 BHK A-Frame Cottage": Home,
+  "3 Individual Standalone Cottages (Exclusive Estate)": Home,
+  "Individual Cottages": Home,
+  "A-Frame Alpine Architecture": Home,
+  "A-Frame / Cottage-Style Architecture": Home,
+  "Outdoor lounging spaces": AnimatedLoungingIcon,
+  "Outdoor Seating": AnimatedLoungingIcon,
+  "Open-air Lounge Pavilions": AnimatedLoungingIcon,
+
+  // Accessibility & Safety
+  "Wheelchair Friendly": Accessibility,
+  "Senior Citizen Friendly": HeartHandshake,
+  "CCTV Security": ShieldCheck,
+  "Secure Private Parking": Car,
   "Private Parking": Car,
+  "Parking": Car,
+
+  // Bedroom & Living Essentials
+  "Extra Mattress": BedDouble,
+  "3 Beds": Bed,
+  "Comfortable Double Bed": Bed,
+  "Comfortable Double Beds": Bed,
+  "Air-Conditioned Room": Wind,
+  "Air-Conditioned Rooms": Wind,
+  "Air-Conditioned Bedrooms": Wind,
+  "Chilled Air Conditioning": Wind,
+  "Air Conditioning": Wind,
+  "Wardrobes": DoorClosed,
+  "Super-fast Wi-Fi": Wifi,
+  "High-Speed Wi-Fi": Wifi,
+  "Wi-Fi": Wifi,
+
+  // Bathrooms & Toiletries
+  "Geyser": Flame,
+  "Towels & Toiletries": Sparkles,
+  "Attached Bathroom": Bath,
+  "Attached Bathrooms": Bath,
+  "3 Attached Bathrooms": Bath,
+  "Shower Facilities": ShowerHead,
+
+  // Dining & Chef
+  "Meals Available": UtensilsCrossed,
+  "Meals & Chef On-Demand": UtensilsCrossed,
   "Kailash (Private Chef)": AnimatedChefIcon,
   "Private Chef Included": AnimatedChefIcon,
-  "Chilled Air Conditioning": Wind,
-  "Daily Housekeeping": CheckCircle2,
-  "Beachfront Access": AnimatedMountainIcon,
+  "Open-air BBQ Grill": Flame,
+  "BBQ Grill Station": Flame,
+  "BBQ Facility": Flame,
+  "Outdoor Fireplace": AnimatedBonfireIcon,
   "Beach Bonfire Pit": AnimatedBonfireIcon,
-  "Vineyard Tours": Award,
-  "Lake Access & Views": AnimatedMountainIcon,
-  "Private Wine Tasting Cellar": AnimatedChefIcon,
-  "Spacious Stone Deck": Award,
-  "Billiards Table": Award,
+  "Outdoor Dining Area": UtensilsCrossed,
+  "Outdoor Dining & BBQ Area": UtensilsCrossed,
+  "Dedicated Caretaker": UserCheck,
+  "Daily Housekeeping": UserCheck,
+
+  // Outdoor & Views
+  "Spacious Lawn": Trees,
+  "Expansive Lawn & Gazebo": Trees,
+  "Lawn & Garden Area": Trees,
+  "Garden & Greenery": Trees,
+  "Spacious Gardens & Greenery": Trees,
+  "Organic Vegetable Garden": Trees,
+  "Tropical Courtyard": Trees,
   "Mountain & Valley Views": AnimatedMountainIcon,
   "Mountain & Ghat Views": AnimatedMountainIcon,
-  "Panoramic Lake Views": AnimatedMountainIcon,
-  "Lawn & Garden Area": CheckCircle2,
-  "Riverside Deck": AnimatedMountainIcon,
-  "Organic Vegetable Garden": CheckCircle2,
-  "Open-air BBQ Grill": AnimatedChefIcon,
-  "BBQ Grill Station": AnimatedChefIcon,
-  "Outdoor Fireplace": AnimatedBonfireIcon,
-  "Kayaking Equipment": Waves,
-  "Private Jacuzzi": AnimatedPoolIcon,
-  "Spacious Balcony": MapPin,
-  "Tropical Courtyard": CheckCircle2,
-  "Open-air Lounge Pavilions": CheckCircle2,
-  "Beach Volley Net": Award,
-  "Individual Cottages": Home,
-  "A-Frame / Cottage-Style Architecture": Home,
-  "Air-Conditioned Rooms": Wind,
-  "Comfortable Double Beds": Bed,
-  "Television": Tv,
-  "Wi-Fi": Wifi,
-  "Attached Bathrooms": Bath,
-  "Shower Facilities": ShowerHead,
-  "Jacuzzi Bath": AnimatedPoolIcon,
+  "Mountain & Garden Views": AnimatedMountainIcon,
+  "Panoramic Mountain Views": AnimatedMountainIcon,
   "Mountain / Scenic Views": AnimatedMountainIcon,
-  "Garden & Greenery": Trees,
-  "Outdoor Seating": AnimatedLoungingIcon,
-  "Outdoor Dining Area": UtensilsCrossed,
-  "Carrom Board": Gamepad2,
-  "BBQ Facility": Flame,
-  "Parking": Car,
+  "Panoramic Lake Views": AnimatedMountainIcon,
+  "Lake Access & Views": AnimatedMountainIcon,
+  "Beachfront Access": AnimatedMountainIcon,
+  "Riverside Deck": AnimatedMountainIcon,
   "Well-Lit Outdoor Areas": Sun,
-  "Cottage Sit-Outs": AnimatedBalconyIcon,
-  "3 Beds": Bed,
-  "2 Balconies": AnimatedBalconyIcon,
+  "Well-Lit Evening Lawns": Sun,
+  "Spacious Stone Deck": AnimatedBalconyIcon,
+  "Vineyard Tours": Award,
+  "Private Wine Tasting Cellar": ChefHat,
+  "Kayaking Equipment": Waves,
 };
 
 const defaultRules = [
@@ -561,26 +621,41 @@ export default async function VillaDetailPage({ params }: PageProps) {
         );
       })
       .map((name) => {
-      let icon = amenityIconMap[name];
-      if (!icon) {
-        const lowerName = name.toLowerCase();
-        if (lowerName.includes("bed")) icon = Bed;
-        else if (lowerName.includes("balcon")) icon = AnimatedBalconyIcon;
-        else if (lowerName.includes("pool")) icon = AnimatedPoolIcon;
-        else if (lowerName.includes("chef") || lowerName.includes("grill")) icon = AnimatedChefIcon;
-        else if (lowerName.includes("light")) icon = AnimatedLightingIcon;
-        else if (lowerName.includes("wifi") || lowerName.includes("wi-fi")) icon = Wifi;
-        else if (lowerName.includes("ac ") || lowerName.includes("air cond")) icon = Wind;
-        else if (lowerName.includes("lounge") || lowerName.includes("outdoor")) icon = AnimatedLoungingIcon;
-        else if (lowerName.includes("hall") || lowerName.includes("living")) icon = AnimatedLivingHallIcon;
-        else if (lowerName.includes("waterfall")) icon = AnimatedWaterfallIcon;
-        else if (lowerName.includes("glass") || lowerName.includes("panoramic")) icon = AnimatedGlassFrontageIcon;
-      }
-      return {
-        name,
-        icon: icon || CheckCircle2,
-      };
-    }),
+        let icon = amenityIconMap[name];
+        if (!icon) {
+          const lower = name.toLowerCase();
+          if (lower.includes("music") || lower.includes("speaker") || lower.includes("sound") || lower.includes("audio")) icon = Speaker;
+          else if (lower.includes("game") || lower.includes("carrom") || lower.includes("play") || lower.includes("board")) icon = Gamepad2;
+          else if (lower.includes("wheelchair") || lower.includes("accessible")) icon = Accessibility;
+          else if (lower.includes("senior") || lower.includes("elder") || lower.includes("friendly")) icon = HeartHandshake;
+          else if (lower.includes("cctv") || lower.includes("security") || lower.includes("guard")) icon = ShieldCheck;
+          else if (lower.includes("mattress") || lower.includes("bed")) icon = BedDouble;
+          else if (lower.includes("geyser") || lower.includes("heater") || lower.includes("hot water") || lower.includes("warm")) icon = Flame;
+          else if (lower.includes("wardrobe") || lower.includes("closet") || lower.includes("cupboard")) icon = DoorClosed;
+          else if (lower.includes("towel") || lower.includes("toilet") || lower.includes("linen") || lower.includes("amenities")) icon = Sparkles;
+          else if (lower.includes("meal") || lower.includes("food") || lower.includes("dining") || lower.includes("kitchen")) icon = UtensilsCrossed;
+          else if (lower.includes("lawn") || lower.includes("garden") || lower.includes("tree") || lower.includes("grass")) icon = Trees;
+          else if (lower.includes("balcon") || lower.includes("terrace") || lower.includes("sit-out") || lower.includes("deck")) icon = AnimatedBalconyIcon;
+          else if (lower.includes("pool") || lower.includes("jacuzzi") || lower.includes("bath") || lower.includes("swim")) icon = AnimatedPoolIcon;
+          else if (lower.includes("waterfall")) icon = AnimatedWaterfallIcon;
+          else if (lower.includes("chef") || lower.includes("cook") || lower.includes("grill") || lower.includes("bbq")) icon = AnimatedChefIcon;
+          else if (lower.includes("light") || lower.includes("sun")) icon = Sun;
+          else if (lower.includes("wifi") || lower.includes("wi-fi") || lower.includes("internet")) icon = Wifi;
+          else if (lower.includes("ac") || lower.includes("air cond") || lower.includes("cool")) icon = Wind;
+          else if (lower.includes("lounge") || lower.includes("seating") || lower.includes("outdoor")) icon = AnimatedLoungingIcon;
+          else if (lower.includes("hall") || lower.includes("living")) icon = AnimatedLivingHallIcon;
+          else if (lower.includes("caretaker") || lower.includes("staff") || lower.includes("housekeeping")) icon = UserCheck;
+          else if (lower.includes("tv") || lower.includes("television")) icon = Tv;
+          else if (lower.includes("park") || lower.includes("car")) icon = Car;
+          else if (lower.includes("mountain") || lower.includes("valley") || lower.includes("view")) icon = AnimatedMountainIcon;
+          else if (lower.includes("cottage") || lower.includes("house") || lower.includes("villa") || lower.includes("home")) icon = Home;
+          else icon = Sparkles;
+        }
+        return {
+          name,
+          icon: icon || Sparkles,
+        };
+      }),
     rules: defaultRules,
   };
 
