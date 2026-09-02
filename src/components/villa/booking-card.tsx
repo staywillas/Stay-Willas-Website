@@ -615,7 +615,7 @@ We are so excited about this getaway! Could you please check availability and he
             Thank You, {clientName}!
           </h3>
           <p className="text-xs text-slate-500 mt-1.5 leading-relaxed max-w-md mx-auto">
-            Your stay reservation at <strong>{villaName}</strong> is placed on temporary hold. Our Stay Willas manager will review and confirm your reservation shortly in the admin panel.
+            Your stay reservation at <strong>{villaName}</strong> is placed on temporary hold. Our Stay Willas manager will verify and confirm your reservation within 24 hours.
           </p>
         </div>
 
@@ -1132,7 +1132,7 @@ We are so excited about this getaway! Could you please check availability and he
           type="button"
           onClick={handleBooking}
           disabled={isLoading || nights <= 0 || isOverlapping}
-          className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border-none active:scale-[0.98]"
+          className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-4 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border-none active:scale-[0.98]"
         >
           <div className="flex items-center gap-2.5">
             <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white shrink-0">
@@ -1146,12 +1146,12 @@ We are so excited about this getaway! Could you please check availability and he
           <span className="text-[11px] font-black bg-white/20 px-2.5 py-1 rounded-lg">Instant ➔</span>
         </button>
 
-        {/* Option 2: Book & Await Admin Verification */}
+        {/* Option 2: Book & Await Admin Verification (Will be verified within 24 hours) */}
         <button
           type="button"
           onClick={handleAwaitVerificationBooking}
           disabled={isSubmittingVerification || nights <= 0 || isOverlapping}
-          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border border-[#DAA520]/40 active:scale-[0.98]"
+          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-4 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border border-[#DAA520]/40 active:scale-[0.98]"
         >
           <div className="flex items-center gap-2.5">
             {isSubmittingVerification ? (
@@ -1161,31 +1161,10 @@ We are so excited about this getaway! Could you please check availability and he
             )}
             <div className="text-left">
               <span className="block font-black text-xs sm:text-sm">Option 2: Book & Await Verification</span>
-              <span className="text-[10px] text-slate-300 font-normal block">Hold dates • Verified by Admin</span>
+              <span className="text-[10px] text-slate-300 font-normal block">Hold dates • Will be verified within 24 hours</span>
             </div>
           </div>
           <span className="text-[11px] font-black bg-[#DAA520]/30 text-[#DAA520] px-2.5 py-1 rounded-lg">Hold Dates ➔</span>
-        </button>
-
-        {/* Option 3: Instant Online Payment */}
-        <button
-          type="button"
-          onClick={handleOnlinePayment}
-          disabled={isOnlinePaying || nights <= 0 || isOverlapping}
-          className="w-full bg-slate-900 hover:bg-black text-white py-3 px-4 rounded-2xl text-xs font-bold tracking-wider uppercase transition-all duration-300 shadow-sm flex items-center justify-between cursor-pointer border border-slate-700 active:scale-[0.98]"
-        >
-          <div className="flex items-center gap-2.5">
-            {isOnlinePaying ? (
-              <Loader2 className="animate-spin text-white" size={18} />
-            ) : (
-              <Sparkles size={18} className="text-[#DAA520] shrink-0" />
-            )}
-            <div className="text-left">
-              <span className="block font-bold text-xs">Option 3: Pay Online / Cards & UPI</span>
-              <span className="text-[10px] text-slate-400 font-normal block">Direct secure gateway checkout</span>
-            </div>
-          </div>
-          <span className="text-[10px] text-slate-300 font-bold bg-white/10 px-2 py-0.5 rounded-md">Pay Now ➔</span>
         </button>
       </div>
 
