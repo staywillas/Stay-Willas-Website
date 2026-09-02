@@ -376,7 +376,8 @@ const BookingCard = ({
     }
 
     // 5. Fallback to base rate
-    return { price: basePrice, type: "BASE" as const, label: "Base Rate" };
+    const numericBasePrice = typeof basePrice === "number" ? basePrice : (typeof price === "number" ? price : parseFloat(String(price)) || 0);
+    return { price: numericBasePrice, type: "BASE" as const, label: "Base Rate" };
   };
 
   const getPricingBreakdown = () => {
@@ -598,11 +599,12 @@ We are so excited about this getaway! Could you please check availability and he
       const res = await createCheckoutSession({
         villaId,
         villaName,
-        pricePerNight: Number(price) || basePrice || 13000,
         checkIn,
         checkOut,
         guests,
-        addOns: selectedAddOns,
+        selectedAddOns,
+        userId: user?.id || "GUEST_USER",
+        couponCode: isCouponApplied ? couponCode : undefined,
       });
 
       if (res?.url) {

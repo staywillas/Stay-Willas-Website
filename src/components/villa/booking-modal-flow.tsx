@@ -313,7 +313,6 @@ export default function BookingModalFlow({
       {mounted && isLeadGateOpen && typeof document !== "undefined" && createPortal(
         <div 
           data-lenis-prevent="true"
-          data-lenis-prevent
           className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
         >
           {/* Backdrop dismiss */}
@@ -321,7 +320,6 @@ export default function BookingModalFlow({
 
           <div 
             data-lenis-prevent="true"
-            data-lenis-prevent
             className="relative bg-white border-2 border-[#DAA520]/30 rounded-[32px] p-6 sm:p-9 max-w-lg w-full my-auto shadow-[0_24px_70px_rgba(0,0,0,0.4)] z-10 text-slate-900 space-y-6"
           >
             {/* Header */}
@@ -442,7 +440,6 @@ export default function BookingModalFlow({
       {mounted && isBookingModalOpen && typeof document !== "undefined" && createPortal(
         <div 
           data-lenis-prevent="true"
-          data-lenis-prevent
           className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
         >
           {/* Backdrop dismiss */}
@@ -450,7 +447,6 @@ export default function BookingModalFlow({
 
           <div 
             data-lenis-prevent="true"
-            data-lenis-prevent
             className="relative w-full max-w-2xl max-h-[92vh] flex flex-col bg-white rounded-[28px] sm:rounded-[36px] shadow-[0_24px_80px_rgba(0,0,0,0.5)] border-2 border-[#DAA520]/30 overflow-hidden z-10 my-auto"
           >
             {/* Modal Sticky Header */}
@@ -478,7 +474,6 @@ export default function BookingModalFlow({
             {/* Scrollable Booking Card Content */}
             <div 
               data-lenis-prevent="true"
-              data-lenis-prevent
               className="flex-1 overflow-y-auto overscroll-contain p-3 sm:p-5 bg-slate-50 relative z-10 touch-pan-y"
               style={{ maxHeight: "calc(92vh - 75px)", WebkitOverflowScrolling: "touch" }}
             >
@@ -517,14 +512,12 @@ export default function BookingModalFlow({
       {mounted && isAvailabilityModalOpen && typeof document !== "undefined" && createPortal(
         <div 
           data-lenis-prevent="true"
-          data-lenis-prevent
           className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
         >
           <div className="fixed inset-0" onClick={() => setIsAvailabilityModalOpen(false)} />
 
           <div 
             data-lenis-prevent="true"
-            data-lenis-prevent
             className="relative bg-white border-2 border-[#DAA520]/30 rounded-[32px] p-5 sm:p-8 max-w-lg w-full my-auto shadow-2xl z-10 text-slate-900 space-y-5"
           >
             {/* Header */}

@@ -489,7 +489,7 @@ const AdminDashboard = ({
   };
 
   // iCal Sync States
-  const [channelConfigs, setChannelConfigs] = useState<Record<string, { airbnb?: string; booking?: string; vrbo?: string }>>({});
+  const [channelConfigs, setChannelConfigs] = useState<Record<string, { airbnb?: string; booking?: string; vrbo?: string; mmt?: string }>>({});
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<{ success: boolean; syncedCount?: number; errors?: string[] } | null>(null);
 

@@ -29,10 +29,13 @@ export async function calculateStayPrice(
   if (!villa) throw new Error("Villa not found");
 
   let totalStayPrice = 0;
+  let weekdayStayPrice = 0;
+  let weekdayNights = 0;
   let currentDate = new Date(checkIn);
   const end = new Date(checkOut);
 
   while (currentDate.getTime() < end.getTime()) {
+    let nightPrice = 0;
     // 0. Check for exact daily override price (highest priority)
     const normalizedDate = new Date(currentDate);
     normalizedDate.setHours(0, 0, 0, 0);
@@ -44,7 +47,7 @@ export async function calculateStayPrice(
     });
 
     if (dailyOverride) {
-      totalStayPrice += dailyOverride.price;
+      nightPrice = dailyOverride.price;
     } else {
       // 1. Check seasonal pricing table overrides
       const seasonalOverride = villa.seasonalPrices.find(sp => {
@@ -54,28 +57,35 @@ export async function calculateStayPrice(
       });
 
       if (seasonalOverride) {
-        totalStayPrice += seasonalOverride.price;
+        nightPrice = seasonalOverride.price;
       } else {
         // 2. Check specific day-of-week pricing overrides
         const dayOfWeek = currentDate.getDay();
         
         if (dayOfWeek === 5 && villa.fridayPrice != null) {
-          totalStayPrice += villa.fridayPrice;
+          nightPrice = villa.fridayPrice;
         } else if (dayOfWeek === 6 && villa.saturdayPrice != null) {
-          totalStayPrice += villa.saturdayPrice;
+          nightPrice = villa.saturdayPrice;
         } else if (dayOfWeek === 0 && villa.sundayPrice != null) {
-          totalStayPrice += villa.sundayPrice;
+          nightPrice = villa.sundayPrice;
         } else {
           // 3. Check legacy weekend pricing
           const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
           if (isWeekend && villa.weekendPrice) {
-            totalStayPrice += villa.weekendPrice;
+            nightPrice = villa.weekendPrice;
           } else {
             // 4. Fallback to base pricing
-            totalStayPrice += villa.price;
+            nightPrice = villa.price;
           }
         }
       }
+    }
+
+    totalStayPrice += nightPrice;
+    const day = currentDate.getDay();
+    if (day >= 1 && day <= 4) {
+      weekdayStayPrice += nightPrice;
+      weekdayNights++;
     }
 
     currentDate.setDate(currentDate.getDate() + 1);
@@ -87,6 +97,7 @@ export async function calculateStayPrice(
   if (isWillowPeak) {
     // Proportional pricing based on number of cottages booked (1 cottage = 1/3, 2 = 2/3, 3 = 3/3)
     totalStayPrice = Math.round(totalStayPrice * (cottagesCount / 3));
+    weekdayStayPrice = Math.round(weekdayStayPrice * (cottagesCount / 3));
   }
 
   const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
@@ -94,11 +105,16 @@ export async function calculateStayPrice(
   const extraGuests = Math.max(0, guests - baseGuestsCount);
   const extraGuestsCostPerNight = villa.extraGuestFee ? extraGuests * villa.extraGuestFee : 0;
   const totalExtraGuestsCost = extraGuestsCostPerNight * (nights > 0 ? nights : 0);
+  const weekdayExtraGuestsCost = extraGuestsCostPerNight * weekdayNights;
+  const weekdayEligibleTotal = weekdayStayPrice + weekdayExtraGuestsCost;
 
   return { 
     totalRoomPrice: totalStayPrice, 
     totalExtraGuestsCost,
+    weekdayEligibleTotal,
+    weekdayNights,
     baseRate: villa.price,
+    extraGuestsCostPerNight,
     cottagesCount
   };
 }
@@ -113,7 +129,7 @@ export async function createCheckoutSession(formData: {
   checkOut: Date;
   guests: number;
   selectedAddOns?: string[];
-  userId: string;
+  userId?: string;
   couponCode?: string;
 }) {
   const checkInDate = new Date(formData.checkIn);
@@ -184,7 +200,11 @@ export async function createCheckoutSession(formData: {
     }
 
     // 2. STAGE B: Dynamic Pricing Calculation (Weighted)
-    const { totalRoomPrice, totalExtraGuestsCost } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate, formData.guests);
+    const { 
+      totalRoomPrice, 
+      totalExtraGuestsCost, 
+      weekdayEligibleTotal 
+    } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate, formData.guests);
 
     // 3. STAGE C: Add-Ons Aggregate Costs
     let addOnsPrice = 0;
@@ -206,33 +226,6 @@ export async function createCheckoutSession(formData: {
     let discount = 0;
     if (formData.couponCode) {
       const code = formData.couponCode.trim().toUpperCase();
-      
-      // Calculate weekday-only eligible accommodation price
-      let weekdayEligibleRoomPrice = 0;
-      let weekdayNights = 0;
-      let curNight = new Date(checkInDate);
-      
-      while (curNight.getTime() < checkOutDate.getTime()) {
-        const day = curNight.getDay();
-        // Monday (1) to Thursday (4) are weekdays
-        if (day >= 1 && day <= 4) {
-          const matchingDaily = dailyPrices.find((dp: any) => {
-            const d = new Date(dp.date);
-            return curNight.getFullYear() === d.getUTCFullYear() &&
-                   curNight.getMonth() === d.getUTCMonth() &&
-                   curNight.getDate() === d.getUTCDate();
-          });
-          
-          let nightRate = matchingDaily ? matchingDaily.price : baseRate;
-          nightRate = Math.round(nightRate * (isWillowPeak ? (requiredCottages / 3) : 1));
-          weekdayEligibleRoomPrice += nightRate;
-          weekdayNights++;
-        }
-        curNight.setDate(curNight.getDate() + 1);
-      }
-
-      const weekdayExtraGuestsCost = extraGuestsCostPerNight * weekdayNights;
-      const weekdayEligibleTotal = weekdayEligibleRoomPrice + weekdayExtraGuestsCost;
 
       if (code === "STAYW28" || code.includes("28") || code === "ESCAPE28" || code === "LONAVALA28" || code === "KHOPOLI28") {
         discount = Math.round(weekdayEligibleTotal * 0.28);
