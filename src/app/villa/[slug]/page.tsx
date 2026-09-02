@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import BookingCard from "@/components/villa/booking-card";
+import MobileBookingController from "@/components/villa/mobile-booking-controller";
 import ReviewSection from "@/components/villa/review-section";
 import PropertyGallery from "@/components/villa/property-gallery";
 import ShareButton from "@/components/villa/share-button";
@@ -145,42 +146,42 @@ const canopyCrestSpaces = [
   {
     title: "Bedroom 1",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
-    description: "This is a spacious bedroom situated on the ground floor of the property.\n\nThe room offers a comfortable king-sized bed, AC, Wi-Fi, wardrobes and a window that opens up to a beautiful view of the manicured field.\n\nIt has an ensuite bathroom with a geyser, towels, and basic toiletries."
+    description: "Ground floor suite with king bed, AC, WiFi & ensuite bath."
   },
   {
     title: "Bedroom 2",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg",
-    description: "This is a spacious bedroom situated on the ground floor of the property.\n\nThe room offers a comfortable king-sized bed, AC, Wi-Fi, wardrobes and a window that opens up to a beautiful view of the manicured field.\n\nIt has an ensuite bathroom with a geyser, towels, and basic toiletries."
+    description: "Cozy king bedroom with AC, wardrobe & attached bathroom."
   },
   {
     title: "Bedroom 3",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg",
-    description: "This is a spacious bedroom situated on the ground floor of the property.\n\nThe room offers a comfortable king-sized bed, AC, Wi-Fi, wardrobes and a window that opens up to a beautiful view of the manicured field.\n\nIt has an ensuite bathroom with a geyser, towels, and basic toiletries."
+    description: "Air-conditioned suite with scenic hillside garden views."
   },
   {
     title: "Bedroom 4",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
-    description: "This is a spacious bedroom situated on the ground floor of the property.\n\nThe room offers a comfortable king-sized bed, AC, Wi-Fi, wardrobes and a window that opens up to a beautiful view of the manicured field.\n\nIt has an ensuite bathroom with a geyser, towels, and basic toiletries."
+    description: "Spacious private bedroom with king bed & attached bath."
   },
   {
     title: "Living & Dining Room",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
-    description: "This living room is set on the ground floor.\n\nIt can easily seat upto 6 people & is equipped with an AC, a wired music system, WiFi and a cosy seating arrangement.\n\nThe dining room, offering comfortable seating for up to 6 people, is a part of the living room."
+    description: "Air-conditioned seating for 6 with TV & dining area."
   },
   {
     title: "Bathrooms",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
-    description: "There are 4 ensuite bathrooms and 1 powder room in the living area.\n\nAll bathrooms have geysers, towels and basic toiletries."
+    description: "4 ensuite luxury bathrooms with hot water geysers & towels."
   },
   {
     title: "Swimming Pool",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
-    description: "Guests can enjoy a relaxing soak in the private swimming pool.\n\nThis pool overlooks the surrounding hills, 22x12 ft. in size and 4 ft. in depth."
+    description: "Private 22x12 ft pool overlooking Sahyadri hills."
   },
   {
-    title: "Lawn",
+    title: "Lawn & Sit-out",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg",
-    description: "This is an expansive lawn, located on the ground floor of the property, overlooking amazing views of the hills around.\n\nIt is decked with a sit-out space and comfortable traditional charpais for up to 12 people.\n\nGuests can meditate here, take a walk, have fun or relish some barbeque."
+    description: "Expansive green lawn with traditional charpai seating."
   }
 ];
 
@@ -188,42 +189,75 @@ const terraCottaSpaces = [
   {
     title: "Master Bedroom 1",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0035.jpg",
-    description: "Spacious master bedroom with plush king bed, air conditioning, high-speed Wi-Fi, wardrobes, and scenic hillside window view.\n\nFeatures an ensuite modern bathroom with hot water geyser and toiletries."
+    description: "Plush king bed suite with AC, valley view & attached bath."
   },
   {
     title: "Bedroom 2",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0047.jpg",
-    description: "Elegantly styled bedroom suite with double bed, AC, bedside tables, wardrobe, and attached bathroom."
+    description: "Elegantly styled double bed suite with AC & wardrobe."
   },
   {
     title: "Bedroom 3 (Circular Bed)",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0055.jpg",
-    description: "Distinctive circular bed bedroom suite designed with contemporary flair, ambient lighting, AC, and en-suite bathroom."
+    description: "Distinctive circular bed design with AC & ensuite bath."
   },
   {
     title: "Bedroom 4",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0042.jpg",
-    description: "Comfortable air-conditioned bedroom with wooden headboard, large windows with valley views, and modern attached bathroom."
+    description: "Valley view bedroom with wooden finish & attached bath."
   },
   {
     title: "Private Swimming Pool",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0037.jpg",
-    description: "Exclusive private swimming pool surrounded by a rustic deck with views of the lush greenery and Sahyadri mountains."
+    description: "Exclusive pool with rustic mountain-view deck."
   },
   {
     title: "Spacious Living & Lounge",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0043.jpg",
-    description: "Open-concept living room with large sofas, wide television, music system, and dining area perfect for family gatherings."
+    description: "Spacious family lounge with TV, sofas & music system."
   },
   {
     title: "Terrace & Balcony Deck",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0031.jpg",
-    description: "Private upper-level sit-out balcony overlooking misty morning valley views and strawberry plantations."
+    description: "Private upper-level sit-out overlooking valley mist."
   },
   {
-    title: "Clean & Luxury Bathrooms",
+    title: "Luxury Bathrooms",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0059.jpg",
-    description: "Immaculate en-suite luxury bathrooms with premium fixtures, hot water, and complimentary toiletries for a refreshing stay."
+    description: "Modern en-suite bathrooms with hot water & toiletries."
+  }
+];
+
+const willowPeakSpaces = [
+  {
+    title: "Cottage A (A-Frame Chalet)",
+    image: "/assets/villas/willow-peak/gallery-12.webp",
+    description: "Chalet with king bed, in-room jacuzzi & garden sit-out."
+  },
+  {
+    title: "Cottage B (A-Frame Chalet)",
+    image: "/assets/villas/willow-peak/gallery-6.webp",
+    description: "Alpine A-frame chalet with private jacuzzi & hill views."
+  },
+  {
+    title: "Cottage C (A-Frame Chalet)",
+    image: "/assets/villas/willow-peak/gallery-7.webp",
+    description: "Secluded mountain cottage with private jacuzzi & BBQ deck."
+  },
+  {
+    title: "Private In-Room Jacuzzis",
+    image: "/assets/villas/willow-peak/gallery-1.webp",
+    description: "Warm soothing jacuzzi inside each private cottage suite."
+  },
+  {
+    title: "Expansive Garden & Lawns",
+    image: "/assets/villas/willow-peak/gallery-2.webp",
+    description: "Lush lawn with evening lighting & outdoor seating."
+  },
+  {
+    title: "Outdoor Dining & BBQ Deck",
+    image: "/assets/villas/willow-peak/gallery-4.webp",
+    description: "Outdoor group dining area with live barbecue setup."
   }
 ];
 
@@ -715,8 +749,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
         {/* Cinematic, Interactive Property Gallery & Lightbox (Rendered immediately below title) */}
         <PropertyGallery images={villaData.images} propertyName={villaData.name} villaId={villaData.slug} />
 
-        {/* Weekday Promo Banner for The Angle House and Canopy Crest */}
-        {(villaData.slug === "the-angle-house" || villaData.slug === "canopy-crest") && (
+        {/* Weekday Promo Banner for Signature Villas */}
+        {(villaData.slug === "the-angle-house" || villaData.slug === "canopy-crest" || villaData.slug === "terra-cotta-villa" || villaData.slug.includes("willow-peak")) && (
           <div className="mb-4 sm:mb-6 bg-gradient-to-r from-red-600/10 via-amber-500/10 to-[#DAA520]/15 border border-[#DAA520]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-4 shadow-xs">
             <div className="flex items-center gap-2.5 sm:gap-3">
               <span className="bg-gradient-to-r from-red-600 to-amber-600 text-white font-black text-[10px] sm:text-xs uppercase px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-xs animate-pulse shrink-0">
@@ -743,7 +777,12 @@ export default async function VillaDetailPage({ params }: PageProps) {
           </div>
         )}
 
-        {/* TOP OVERVIEW & BOOKING CARD (Split 7 / 5 Columns) */}
+        {/* In-Villa Bespoke Food Menu (Moved up for high prominence & fast access) */}
+        <div className="mb-4 sm:mb-6">
+          <FoodMenuModal />
+        </div>
+
+        {/* TOP OVERVIEW & BOOKING SECTION (Split 7 / 5 Columns on Desktop) */}
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-5 sm:gap-8 lg:gap-12 mb-10 sm:mb-16 items-start">
           <div className="order-2 lg:order-1 lg:col-span-7 space-y-4 sm:space-y-6 w-full">
             {/* 1. Guests, Bedrooms & Bathrooms Specs Capsule */}
@@ -764,12 +803,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
               </span>
             </div>
 
-            {/* 2. In-Villa Bespoke Food Menu Popup */}
-            <div>
-              <FoodMenuModal />
-            </div>
-
-            {/* 3. Pet Friendly Badge */}
+            {/* 2. Pet Friendly Badge */}
             {villaData.rules.some(r => r.toLowerCase().includes("furry") || r.toLowerCase().includes("pet")) && (
               <div className="bg-[#DAA520]/5 border border-[#DAA520]/20 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 flex items-center justify-between gap-3 sm:gap-4 shadow-xs select-none">
                 <div className="flex items-start gap-3 sm:gap-4">
@@ -789,7 +823,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
               </div>
             )}
 
-            {/* 4. Highlight Readability Points Box */}
+            {/* 3. Highlight Readability Points Box */}
             <div className="bg-white border border-[#DAA520]/20 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xs text-left">
               <h3 className="text-xs sm:text-base font-bold text-[#1B3564] mb-3 sm:mb-4 uppercase tracking-wider">Key Highlights</h3>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4">
@@ -817,91 +851,129 @@ export default async function VillaDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Right Column: Sticky Booking Card */}
+          {/* Right Column: Desktop Sticky Booking Card & Mobile Dedicated Booking Controller */}
           <div className="order-1 lg:order-2 lg:col-span-5 relative w-full lg:sticky lg:top-28" id="booking-card-section">
-            <BookingCard
-              villaId={villaData.id}
-              villaName={villaData.name}
-              price={villaData.price}
-              basePrice={villa.price}
-              weekendPrice={villa.weekendPrice}
-              fridayPrice={villa.fridayPrice}
-              saturdayPrice={villa.saturdayPrice}
-              sundayPrice={villa.sundayPrice}
-              dailyPrices={villa.dailyPrices as any}
-              seasonalPrices={villa.seasonalPrices as any}
-              maxGuests={villaData.guests}
-              baseGuests={villa.baseGuests ?? undefined}
-              extraGuestFee={villa.extraGuestFee ?? undefined}
-              bookings={serializedBookings}
-            />
+            {/* Desktop Only: Sticky Inline Booking Card */}
+            <div className="hidden lg:block w-full">
+              <BookingCard
+                villaId={villaData.id}
+                villaName={villaData.name}
+                price={villaData.price}
+                basePrice={villa.price}
+                weekendPrice={villa.weekendPrice}
+                fridayPrice={villa.fridayPrice}
+                saturdayPrice={villa.saturdayPrice}
+                sundayPrice={villa.sundayPrice}
+                dailyPrices={villa.dailyPrices as any}
+                seasonalPrices={villa.seasonalPrices as any}
+                maxGuests={villaData.guests}
+                baseGuests={villa.baseGuests ?? undefined}
+                extraGuestFee={villa.extraGuestFee ?? undefined}
+                bookings={serializedBookings}
+              />
+            </div>
+
+            {/* Mobile Only: Interactive Booking Controller (2 Action Buttons: Book Villa & View Availability) */}
+            <div className="block lg:hidden w-full">
+              <MobileBookingController
+                villaId={villaData.id}
+                villaName={villaData.name}
+                price={villaData.price}
+                basePrice={villa.price}
+                weekendPrice={villa.weekendPrice}
+                fridayPrice={villa.fridayPrice}
+                saturdayPrice={villa.saturdayPrice}
+                sundayPrice={villa.sundayPrice}
+                dailyPrices={villa.dailyPrices as any}
+                seasonalPrices={villa.seasonalPrices as any}
+                maxGuests={villaData.guests}
+                baseGuests={villa.baseGuests ?? undefined}
+                extraGuestFee={villa.extraGuestFee ?? undefined}
+                bookings={serializedBookings}
+                location={villaData.location}
+              />
+            </div>
           </div>
         </div>
 
-        {/* FULL-WIDTH SECTION: Rooms & Spaces Layout (Conditional for Canopy Crest & Terra Cotta Villa) */}
-        {(villaData.slug === "canopy-crest" || villaData.slug === "terra-cotta-villa") && (
-          <div className="mb-16 animate-fade-in text-left">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-[#DAA520]/20 gap-4">
+        {/* FULL-WIDTH SECTION: What this place offers (Amenities) */}
+        <div className="mb-12 sm:mb-16 text-left">
+          <div className="mb-4 sm:mb-8 pb-3 sm:pb-4 border-b border-[#DAA520]/20">
+            <span className="text-accent-secondary text-[9px] sm:text-[10px] tracking-[0.3em] uppercase font-black block mb-1">
+              Included Amenities
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading text-[#1B3564] font-bold">
+              What This Place Offers
+            </h2>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2 sm:gap-3.5 md:gap-4">
+            {villaData.amenities.map((amenity) => (
+              <div 
+                key={amenity.name} 
+                className="flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-1.5 sm:gap-3 bg-white p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border border-[#DAA520]/20 shadow-xs hover:border-[#DAA520]/40 transition-all justify-center sm:justify-start"
+              >
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-[#FAF8F5] border border-[#DAA520]/20 flex items-center justify-center text-accent-secondary shrink-0">
+                  <amenity.icon size={16} className="sm:w-[18px] sm:h-[18px]" />
+                </div>
+                <span className="text-[10px] sm:text-xs font-bold text-slate-800 leading-tight line-clamp-2">
+                  {amenity.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* FULL-WIDTH SECTION: Rooms & Spaces Layout (For Canopy Crest, Terra Cotta Villa & Willow Peak) */}
+        {(villaData.slug === "canopy-crest" || villaData.slug === "terra-cotta-villa" || villaData.slug.includes("willow-peak")) && (
+          <div className="mb-12 sm:mb-16 animate-fade-in text-left">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 sm:mb-8 pb-3 sm:pb-4 border-b border-[#DAA520]/20 gap-2 sm:gap-4">
               <div>
-                <span className="text-accent-secondary text-[10px] tracking-[0.3em] uppercase font-bold block mb-1">
+                <span className="text-accent-secondary text-[9px] sm:text-[10px] tracking-[0.3em] uppercase font-black block mb-1">
                   Estate Layout
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-bold">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading text-[#1B3564] font-bold">
                   Rooms & Spaces
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-slate-600 max-w-md">
                 {villaData.slug === "terra-cotta-villa"
                   ? "Rustic 4 BHK private pool estate in Panchgani / Mahabaleshwar accommodating up to 16 guests."
-                  : "Sprawling 4 BHK mountain sanctuary accommodating up to 16 guests with private pool & lawns."}
+                  : villaData.slug === "canopy-crest"
+                  ? "Sprawling 4 BHK mountain sanctuary accommodating up to 16 guests with private pool & lawns."
+                  : "Exclusive 3-cottage mountain estate in Kurwande, Lonavala with private in-room jacuzzis for up to 12 guests."}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {(villaData.slug === "terra-cotta-villa" ? terraCottaSpaces : canopyCrestSpaces).map((space, idx) => (
-                <div key={idx} className="bg-white border border-[#DAA520]/15 hover:border-[#DAA520]/40 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
+              {(villaData.slug === "terra-cotta-villa"
+                ? terraCottaSpaces 
+                : villaData.slug === "canopy-crest"
+                ? canopyCrestSpaces 
+                : willowPeakSpaces
+              ).map((space, idx) => (
+                <div key={idx} className="bg-white border border-[#DAA520]/20 hover:border-[#DAA520]/45 rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col group">
                   <div className="relative aspect-[4/3] w-full bg-slate-100 overflow-hidden">
                     <Image
                       src={space.image}
                       alt={space.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  <div className="p-5 flex-grow flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-base font-bold text-[#1B3564] mb-2">{space.title}</h3>
-                      <p className="text-slate-600 text-xs leading-relaxed whitespace-pre-line">{space.description}</p>
-                    </div>
+                  <div className="p-2.5 sm:p-3.5 flex flex-col justify-center text-left">
+                    <h3 className="text-xs sm:text-sm font-bold text-[#1B3564] truncate leading-tight mb-0.5">
+                      {space.title}
+                    </h3>
+                    <p className="text-[10px] sm:text-xs text-slate-500 font-light truncate leading-tight">
+                      {space.description}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         )}
-
-        {/* FULL-WIDTH SECTION: What this place offers (Amenities) */}
-        <div className="mb-16 text-left">
-          <div className="mb-8 pb-4 border-b border-[#DAA520]/20">
-            <span className="text-accent-secondary text-[10px] tracking-[0.3em] uppercase font-bold block mb-1">
-              Included Amenities
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-bold">
-              What This Place Offers
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-            {villaData.amenities.map((amenity) => (
-              <div key={amenity.name} className="flex items-center gap-4 text-slate-900 font-medium bg-white p-4 rounded-2xl border border-[#DAA520]/15 shadow-xs hover:border-[#DAA520]/30 transition-all">
-                <div className="w-10 h-10 rounded-xl bg-[#FAF8F5] border border-[#DAA520]/20 flex items-center justify-center text-accent-secondary shrink-0">
-                  <amenity.icon size={20} />
-                </div>
-                <span className="text-sm font-semibold">{amenity.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* FULL-WIDTH SECTION: The Story */}
         <div className="mb-16 text-left">
@@ -997,38 +1069,6 @@ export default async function VillaDetailPage({ params }: PageProps) {
         
         <VillaSEOContent slug={villaData.slug} />
       </section>
-
-      {/* Mobile Sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-[#DAA520]/25 px-4 py-3 shadow-[0_-8px_30px_rgba(27,53,100,0.15)]">
-        <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
-          <div className="flex flex-col text-left shrink-0">
-            <span className="text-[8px] text-[#DAA520] block uppercase tracking-widest font-black">Direct Best Rate</span>
-            <span className="text-[#1B3564] font-black text-base leading-tight">₹{villaData.price} <span className="text-[9px] font-normal text-slate-500 font-sans">/ night</span></span>
-            <span className="text-[7.5px] text-emerald-600 font-bold uppercase tracking-wider">✓ 0% Platform Fee</span>
-          </div>
-
-          <div className="flex items-center gap-2 flex-1 justify-end">
-            <a
-              href="#booking-card-section"
-              className="bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] hover:text-white font-black px-3.5 py-3 rounded-xl text-[10px] tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-center active:scale-95 whitespace-nowrap"
-            >
-              Dates & Rates
-            </a>
-            
-            <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I would love to book *${villaData.name}* in ${villaData.location}. Could you please check available dates and share your best direct offer?`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black px-4 py-3 rounded-xl text-[10px] tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-center gap-1.5 active:scale-95 whitespace-nowrap"
-            >
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-white shrink-0">
-                <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
-              </svg>
-              <span>Book WhatsApp</span>
-            </a>
-          </div>
-        </div>
-      </div>
 
       <Footer />
     </main>

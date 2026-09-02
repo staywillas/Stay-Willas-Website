@@ -11,7 +11,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-b from-[#0E1B35] to-[#0A162B] text-[#FAF8F5] pt-32 pb-12 px-6 md:px-12 lg:px-24 border-t border-[#DAA520]/20 relative overflow-hidden">
+    <footer className="bg-gradient-to-b from-[#0E1B35] to-[#0A162B] text-[#FAF8F5] pt-32 pb-32 xl:pb-12 px-6 md:px-12 lg:px-24 border-t border-[#DAA520]/20 relative overflow-hidden">
       {/* Elegant Gold Glow Backdrop Overlays */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-[#DAA520]/5 rounded-full blur-[120px] -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#DAA520]/5 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2 pointer-events-none" />

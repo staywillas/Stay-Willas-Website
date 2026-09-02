@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { 
@@ -50,6 +50,7 @@ interface BookingCardProps {
   baseGuests?: number;
   extraGuestFee?: number;
   bookings?: BookingProp[];
+  initialCottageSelection?: "A" | "B" | "C" | "ALL";
 }
 
 const availableAddOns = [
@@ -103,9 +104,10 @@ const BookingCard = ({
   dailyPrices = [], 
   seasonalPrices = [], 
   maxGuests = 16,
-  baseGuests,
-  extraGuestFee,
-  bookings = []
+  baseGuests = 10,
+  extraGuestFee = 1500,
+  bookings = [],
+  initialCottageSelection,
 }: BookingCardProps) => {
   const { user, isSignedIn } = useUser();
 
@@ -125,7 +127,13 @@ const BookingCard = ({
   const [isCouponApplied, setIsCouponApplied] = useState(false);
 
   // Specific Cottage Selection for Willow Peak: "A" | "B" | "C" | "ALL"
-  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">("A");
+  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">(initialCottageSelection || "A");
+
+  useEffect(() => {
+    if (initialCottageSelection) {
+      setCottageSelection(initialCottageSelection);
+    }
+  }, [initialCottageSelection]);
 
   // Cottages required for Willow Peak (1 for Cottage A/B/C, 3 for ALL)
   const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
@@ -399,33 +407,17 @@ const BookingCard = ({
     );
   };
 
-  const serviceFee = 0; // Removed luxury service fee
-
-  // Check if every selected stay night is strictly a weekday (Monday = 1, Tuesday = 2, Wednesday = 3, Thursday = 4)
-  const isAllWeekdays = breakdown.length > 0 && breakdown.every(b => {
-    const d = b.date.getDay();
-    return d >= 1 && d <= 4;
-  });
+  const serviceFee = 0;
 
   const getDiscountRate = (code: string): number => {
     const clean = code.trim().toUpperCase();
-    const is28Code = clean === "STAYW28" || clean.includes("28") || clean === "ESCAPE28" || clean === "FLASH28" || clean === "STAY28" || clean === "WILLAS28" || clean === "OFFER28" || clean === "LONAVALA28" || clean === "KHOPOLI28" || clean === "SUMMER28" || clean === "DIRECT28";
-    
-    if (is28Code) {
-      if (!isAllWeekdays) return 0;
-      return 0.28;
-    }
-    if (clean === "STAY5") {
-      return 0.05;
-    }
-    if (clean.length > 0) {
-      if (!isAllWeekdays) return 0;
-      return 0.28; // Standard 28% promo discount on weekdays
-    }
-    return 0;
+    if (clean === "STAY5") return 0.05;
+    if (clean === "STAY10" || clean.includes("10")) return 0.10;
+    // Default 28% discount for STAYW28 or any 28 coupon
+    return 0.28;
   };
 
-  const discountRate = isCouponApplied ? getDiscountRate(couponCode) : 0;
+  const discountRate = isCouponApplied ? getDiscountRate(couponCode || "STAYW28") : 0;
   const discount = Math.round((subtotal + totalExtraGuestsCost) * discountRate);
   const total = Math.max(0, subtotal + totalExtraGuestsCost + serviceFee + addOnsCost - discount);
 
@@ -840,25 +832,25 @@ We are so excited about this getaway! Could you please check availability and he
               <button
                 type="button"
                 onClick={() => {
-                  if (!isAllWeekdays) {
-                    alert("Coupon code STAYW28 (28% OFF) is exclusively valid for Weekday stays (Monday to Thursday nights). For weekend dates, standard direct rates apply.");
-                    return;
-                  }
                   setIsCouponApplied(true);
                   setCouponCode("STAYW28");
                 }}
-                className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 shadow-xs"
+                className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 shadow-xs active:scale-95"
               >
                 Apply 28% Off
               </button>
-            ) : discount > 0 ? (
-              <span className="text-[10px] font-black text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-full uppercase flex items-center gap-1 w-full sm:w-auto shrink-0 justify-center">
-                <Check size={12} className="stroke-[3]" /> 28% Applied (-₹{discount.toLocaleString("en-IN")})
-              </span>
             ) : (
-              <span className="text-[10px] font-black text-amber-800 bg-amber-100/80 px-2.5 py-1 rounded-full uppercase flex items-center gap-1 w-full sm:w-auto shrink-0 justify-center">
-                ⚠️ Mon–Thu Stays Only
-              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCouponApplied(false);
+                  setCouponCode("");
+                }}
+                className="text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 px-3 py-1.5 rounded-xl uppercase flex items-center gap-1.5 w-full sm:w-auto shrink-0 justify-center cursor-pointer transition-all active:scale-95"
+              >
+                <Check size={12} className="stroke-[3] text-emerald-700" />
+                <span>28% Applied (-₹{discount.toLocaleString("en-IN")}) ✕</span>
+              </button>
             )}
           </div>
           
@@ -883,20 +875,17 @@ We are so excited about this getaway! Could you please check availability and he
                   setCouponCode("");
                 } else {
                   if (couponCode.trim().length > 0) {
-                    if ((couponCode.toUpperCase().includes("28") || couponCode.toUpperCase() === "STAYW28") && !isAllWeekdays) {
-                      alert("Coupon code STAYW28 (28% OFF) is exclusively valid for Weekday stays (Monday to Thursday nights). For weekend dates, standard direct rates apply.");
-                    }
                     setIsCouponApplied(true);
                   } else {
-                    alert("Please enter a valid coupon code or click Apply 28% Off.");
-                    setIsCouponApplied(false);
+                    setIsCouponApplied(true);
+                    setCouponCode("STAYW28");
                   }
                 }
               }}
               className={`px-4 py-2 border text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
                 isCouponApplied 
                   ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-100" 
-                  : "border-border-subtle bg-white hover:bg-slate-50 text-text-primary font-black"
+                  : "border-[#1B3564] bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] font-black"
               }`}
             >
               {isCouponApplied ? "Remove" : "Apply"}
@@ -1035,15 +1024,37 @@ We are so excited about this getaway! Could you please check availability and he
             </div>
           )}
 
+          {/* Coupon Discount Banner */}
           {discount > 0 && (
-            <div className="flex justify-between text-sm text-emerald-600 font-bold bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
-              <span className="flex items-center gap-1">🎁 Promo ({Math.round(discountRate * 100)}% Off)</span>
-              <span>-₹{discount.toLocaleString("en-IN")}</span>
+            <div className="flex items-center justify-between text-xs font-black text-emerald-800 bg-emerald-100/90 px-3.5 py-2.5 rounded-xl border border-emerald-300 shadow-xs">
+              <span className="flex items-center gap-1.5">
+                <Sparkles size={14} className="text-emerald-700 shrink-0" />
+                <span>28% Weekday Discount ({couponCode || "STAYW28"})</span>
+              </span>
+              <span className="text-sm font-black">-₹{discount.toLocaleString("en-IN")}</span>
             </div>
           )}
-          <div className="flex justify-between text-lg font-heading pt-4 border-t border-[#1B3564]/10">
-            <span className="text-[#1B3564]">Total Stay Bill</span>
-            <span className="text-[#1B3564] font-bold">₹{total.toLocaleString("en-IN")}</span>
+
+          {/* Total Bill with Savings Callout */}
+          <div className="flex justify-between items-center text-lg font-heading pt-4 border-t border-[#1B3564]/10">
+            <div className="flex flex-col text-left">
+              <span className="text-[#1B3564] font-bold">Total Stay Bill</span>
+              {discount > 0 && (
+                <span className="text-[10.5px] text-emerald-700 font-sans font-black mt-0.5">
+                  ✓ You save ₹{discount.toLocaleString("en-IN")} with coupon!
+                </span>
+              )}
+            </div>
+            <div className="flex items-baseline gap-2">
+              {discount > 0 && (
+                <span className="text-xs text-slate-400 line-through font-sans">
+                  ₹{(subtotal + totalExtraGuestsCost + addOnsCost).toLocaleString("en-IN")}
+                </span>
+              )}
+              <span className="text-[#1B3564] font-black text-xl">
+                ₹{total.toLocaleString("en-IN")}
+              </span>
+            </div>
           </div>
         </div>
       )}

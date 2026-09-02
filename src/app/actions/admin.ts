@@ -330,7 +330,7 @@ export async function getChannelConfigs() {
 
 export async function updateChannelConfig(
   villaId: string,
-  configs: { airbnb?: string; booking?: string; vrbo?: string }
+  configs: { airbnb?: string; booking?: string; vrbo?: string; mmt?: string }
 ) {
   try {
     const filePath = getConfigFilePath();
@@ -424,7 +424,7 @@ export async function syncExternalChannels() {
       const villaConfig = configs[villa.id];
       if (!villaConfig) continue;
 
-      const channels = ["airbnb", "booking", "vrbo"] as const;
+      const channels = ["airbnb", "booking", "vrbo", "mmt"] as const;
       const parsedEvents: Array<{ start: Date; end: Date; uid: string; channel: string }> = [];
 
       for (const channel of channels) {

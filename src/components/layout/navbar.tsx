@@ -98,6 +98,7 @@ const Navbar = () => {
 
   // Lock body scroll and stop Lenis when mobile menu is open
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent("mobile-menu-state", { detail: { isOpen: isMobileMenuOpen } }));
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
       try { lenisRef.current?.stop(); } catch {}

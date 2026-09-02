@@ -37,15 +37,15 @@ const PartnerSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.8 }}
           >
             <span className="inline-block text-[#DAA520] font-bold tracking-[0.3em] uppercase text-xs mb-6 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
               🏠 Partnership Opportunity
             </span>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-white mb-10 leading-tight">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-heading text-white mb-8 sm:mb-10 leading-tight">
               Own a Villa? <br />
               <span className="italic bg-gradient-to-r from-[#FAF7F0] via-[#DAA520] to-[#FAF7F0] bg-clip-text text-transparent pr-2 inline-block">Let's Share It</span> <br />
               With The World.

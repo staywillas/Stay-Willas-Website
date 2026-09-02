@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { logoutAction } from "@/app/actions/login-actions";
 import { 
   Home as HomeIcon, 
@@ -502,10 +503,13 @@ const AdminDashboard = ({
   const [editAirbnb, setEditAirbnb] = useState("");
   const [editBooking, setEditBooking] = useState("");
   const [editVrbo, setEditVrbo] = useState("");
+  const [editMmt, setEditMmt] = useState("");
   const [isSavingVilla, setIsSavingVilla] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // Load Channel Configs & trigger auto-sync on load
   useEffect(() => {
+    setMounted(true);
     getChannelConfigs().then(configs => setChannelConfigs(configs));
 
     const hasSynced = sessionStorage.getItem("staywillas_auto_synced");
@@ -563,6 +567,7 @@ const AdminDashboard = ({
     setEditAirbnb(config.airbnb || "");
     setEditBooking(config.booking || "");
     setEditVrbo(config.vrbo || "");
+    setEditMmt(config.mmt || "");
   };
 
   // Save PMS Villa Settings
@@ -594,6 +599,7 @@ const AdminDashboard = ({
         airbnb: editAirbnb,
         booking: editBooking,
         vrbo: editVrbo,
+        mmt: editMmt,
       });
 
       if (villaRes.success && channelRes.success) {
@@ -620,6 +626,7 @@ const AdminDashboard = ({
             airbnb: editAirbnb,
             booking: editBooking,
             vrbo: editVrbo,
+            mmt: editMmt,
           }
         }));
 
@@ -1527,21 +1534,45 @@ const AdminDashboard = ({
       )}
 
       {/* 1. PMS Property Editor & Channel Sync Modal */}
-      {editingVilla && (
+      {mounted && editingVilla && typeof document !== "undefined" && createPortal(
         <div 
           data-lenis-prevent="true"
           style={{ overscrollBehavior: "contain" }}
-          className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-6 overflow-y-auto animate-fade-in font-sans"
+          className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto font-sans"
         >
+          {/* Backdrop Click Dismiss */}
+          <div 
+            className="fixed inset-0"
+            onClick={() => setEditingVilla(null)}
+          />
+
           <form 
             onSubmit={handleSaveVilla}
             data-lenis-prevent="true"
             style={{ overscrollBehavior: "contain" }}
-            className="glass border border-slate-200 rounded-[32px] p-8 max-w-2xl w-full my-8 relative shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
+            className="relative bg-white border-2 border-slate-200 rounded-3xl p-6 sm:p-8 max-w-3xl w-full my-auto shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto z-10 text-slate-900"
           >
-            <div>
-              <h4 className="text-2xl font-cormorant font-bold italic text-blue-400">Property Management Console</h4>
-              <p className="text-slate-500 text-xs mt-1">Specify sanctuary base pricing, parameters, and sync calendars.</p>
+            {/* Header */}
+            <div className="flex items-start justify-between pb-3.5 border-b border-slate-200 shrink-0">
+              <div>
+                <span className="text-[10px] text-blue-600 font-black uppercase tracking-widest block">
+                  Sanctuary PMS & Channel Manager
+                </span>
+                <h4 className="text-xl sm:text-2xl font-heading font-bold text-[#1B3564]">
+                  Property Management Console
+                </h4>
+                <p className="text-slate-500 text-xs mt-0.5">
+                  Specify sanctuary base pricing, parameters, and sync calendars.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingVilla(null)}
+                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 hover:text-black transition-all cursor-pointer shrink-0"
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1738,6 +1769,17 @@ const AdminDashboard = ({
                     className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2 text-xs focus:border-blue-500 outline-none"
                   />
                 </div>
+
+                <div>
+                  <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">MakeMyTrip / Goibibo Import URL</label>
+                  <input 
+                    type="url" 
+                    value={editMmt}
+                    onChange={(e) => setEditMmt(e.target.value)}
+                    placeholder="https://ingoibibo.com/calendar/ical/..."
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2 text-xs focus:border-blue-500 outline-none"
+                  />
+                </div>
               </div>
             </div>
 
@@ -1770,7 +1812,8 @@ const AdminDashboard = ({
               </button>
             </div>
           </form>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* 2. Synced Channels Toast / Alert */}
@@ -1876,11 +1919,13 @@ const AdminDashboard = ({
 
         const calculatedBalance = parsedBalanceDue > 0 ? parsedBalanceDue : Math.max(0, b.totalPrice - parsedAdvancePaid);
 
-        return (
+        if (typeof document === "undefined") return null;
+
+        return createPortal(
           <div 
             data-lenis-prevent="true"
             style={{ overscrollBehavior: "contain" }}
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200"
           >
             <div 
               data-lenis-prevent="true"
@@ -2532,7 +2577,8 @@ const AdminDashboard = ({
               </div>
 
             </div>
-          </div>
+          </div>,
+          document.body
         );
       })()}
 

@@ -57,7 +57,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
   });
 
   // Prioritize signature properties
-  const prioritySlugs = ["the-angle-house", "canopy-crest"];
+  const prioritySlugs = ["the-angle-house", "canopy-crest", "terra-cotta-villa", "willow-peak"];
   const prioritized = allVillas
     .filter((v) => prioritySlugs.includes(v.slug))
     .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
@@ -68,11 +68,15 @@ export default async function VillasPage({ searchParams }: PageProps) {
   const villas = dbVillas.map((villa) => ({
     id: villa.id,
     slug: villa.slug,
-    name: villa.name,
+    name: villa.slug === "willow-peak" ? "Willow Peak" : villa.name,
     location: villa.location,
     priceRaw: villa.price,
     priceFormatted: villa.price.toLocaleString("en-IN"),
-    image: villa.images[0] || "/images/hero-villa.webp",
+    image: villa.slug === "terra-cotta-villa"
+      ? (villa.images[0] || "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg")
+      : villa.slug.includes("willow-peak") 
+      ? "/assets/villas/willow-peak/main.webp" 
+      : (villa.images[0] || "/images/hero-villa.webp"),
     bedrooms: villa.bedrooms,
     bathrooms: villa.bathrooms,
     guests: villa.guests,

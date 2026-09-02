@@ -13,8 +13,19 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
   const { user, isSignedIn } = useAuth();
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isVillaDetailPage = pathname?.startsWith("/villa/");
+
+  useEffect(() => {
+    const handleMenuState = (e: any) => {
+      setIsMenuOpen(e.detail?.isOpen ?? false);
+    };
+    window.addEventListener("mobile-menu-state", handleMenuState);
+    return () => {
+      window.removeEventListener("mobile-menu-state", handleMenuState);
+    };
+  }, []);
 
   useEffect(() => {
     const updateCount = () => {
@@ -34,7 +45,7 @@ export default function MobileBottomNav() {
     };
   }, []);
 
-  if (isVillaDetailPage) return null;
+  if (isVillaDetailPage || isMenuOpen) return null;
 
   const handleMenuClick = () => {
     window.dispatchEvent(new CustomEvent("toggle-mobile-menu"));
