@@ -1020,5 +1020,47 @@ export async function sendInvoiceEmailAction(data: {
   }
 }
 
+/**
+ * Approve a pending guest verification booking
+ */
+export async function approveVerificationBooking(bookingId: string) {
+  try {
+    const booking = await prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        status: "CONFIRMED",
+      },
+      include: {
+        villa: true,
+      },
+    });
 
+    revalidatePath("/admin");
+    revalidatePath(`/villa/${booking.villa.slug}`);
+    return { success: true, booking };
+  } catch (error: any) {
+    console.error("approveVerificationBooking error:", error);
+    return { success: false, error: error.message || "Failed to approve booking." };
+  }
+}
 
+/**
+ * Reject or cancel a pending verification booking
+ */
+export async function rejectVerificationBooking(bookingId: string) {
+  try {
+    const booking = await prisma.booking.delete({
+      where: { id: bookingId },
+      include: {
+        villa: true,
+      },
+    });
+
+    revalidatePath("/admin");
+    revalidatePath(`/villa/${booking.villa.slug}`);
+    return { success: true };
+  } catch (error: any) {
+    console.error("rejectVerificationBooking error:", error);
+    return { success: false, error: error.message || "Failed to reject booking." };
+  }
+}

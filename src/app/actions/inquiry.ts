@@ -9,7 +9,7 @@ export async function submitInquiry(formData: {
   phone: string;
   message: string;
   villaId?: string;
-  type?: "GUEST" | "OWNER";
+  type?: "GUEST" | "OWNER" | "BOOKING_LEAD";
 }) {
   try {
     const inquiry = await prisma.inquiry.create({
@@ -33,7 +33,37 @@ export async function submitInquiry(formData: {
   }
 }
 
-export async function getInquiries(type?: "GUEST" | "OWNER") {
+/**
+ * Automatically captures a booking lead when a user submits their contact info in the booking gate
+ */
+export async function captureBookingLead(data: {
+  name: string;
+  phone: string;
+  email?: string;
+  villaName: string;
+  villaId?: string;
+}) {
+  try {
+    const inquiry = await prisma.inquiry.create({
+      data: {
+        name: data.name.trim(),
+        phone: data.phone.trim(),
+        email: data.email?.trim() || "N/A",
+        message: `Direct Booking Lead for ${data.villaName}. Guest entered name & phone in booking gate.`,
+        villaId: data.villaId || null,
+        type: "BOOKING_LEAD",
+      },
+    });
+
+    revalidatePath("/admin");
+    return { success: true, leadId: inquiry.id };
+  } catch (error: any) {
+    console.error("Failed to capture booking lead:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function getInquiries(type?: "GUEST" | "OWNER" | "BOOKING_LEAD") {
   try {
     const inquiries = await prisma.inquiry.findMany({
       where: type ? { type } : {},
@@ -45,3 +75,4 @@ export async function getInquiries(type?: "GUEST" | "OWNER") {
     return [];
   }
 }
+

@@ -16,6 +16,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import BookingCard from "@/components/villa/booking-card";
 import MobileBookingController from "@/components/villa/mobile-booking-controller";
+import BookingModalFlow from "@/components/villa/booking-modal-flow";
 import ReviewSection from "@/components/villa/review-section";
 import PropertyGallery from "@/components/villa/property-gallery";
 import ShareButton from "@/components/villa/share-button";
@@ -851,48 +852,26 @@ export default async function VillaDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Right Column: Desktop Sticky Booking Card & Mobile Dedicated Booking Controller */}
+          {/* Right Column: Luxury Reservation Trigger & Lead-Gated Modal Flow (PC & Mobile) */}
           <div className="order-1 lg:order-2 lg:col-span-5 relative w-full lg:sticky lg:top-28" id="booking-card-section">
-            {/* Desktop Only: Sticky Inline Booking Card */}
-            <div className="hidden lg:block w-full">
-              <BookingCard
-                villaId={villaData.id}
-                villaName={villaData.name}
-                price={villaData.price}
-                basePrice={villa.price}
-                weekendPrice={villa.weekendPrice}
-                fridayPrice={villa.fridayPrice}
-                saturdayPrice={villa.saturdayPrice}
-                sundayPrice={villa.sundayPrice}
-                dailyPrices={villa.dailyPrices as any}
-                seasonalPrices={villa.seasonalPrices as any}
-                maxGuests={villaData.guests}
-                baseGuests={villa.baseGuests ?? undefined}
-                extraGuestFee={villa.extraGuestFee ?? undefined}
-                bookings={serializedBookings}
-              />
-            </div>
-
-            {/* Mobile Only: Interactive Booking Controller (2 Action Buttons: Book Villa & View Availability) */}
-            <div className="block lg:hidden w-full">
-              <MobileBookingController
-                villaId={villaData.id}
-                villaName={villaData.name}
-                price={villaData.price}
-                basePrice={villa.price}
-                weekendPrice={villa.weekendPrice}
-                fridayPrice={villa.fridayPrice}
-                saturdayPrice={villa.saturdayPrice}
-                sundayPrice={villa.sundayPrice}
-                dailyPrices={villa.dailyPrices as any}
-                seasonalPrices={villa.seasonalPrices as any}
-                maxGuests={villaData.guests}
-                baseGuests={villa.baseGuests ?? undefined}
-                extraGuestFee={villa.extraGuestFee ?? undefined}
-                bookings={serializedBookings}
-                location={villaData.location}
-              />
-            </div>
+            <BookingModalFlow
+              villaId={villaData.id}
+              villaName={villaData.name}
+              price={Number(villaData.price) || villa.price}
+              basePrice={villa.price}
+              weekendPrice={villa.weekendPrice}
+              fridayPrice={villa.fridayPrice}
+              saturdayPrice={villa.saturdayPrice}
+              sundayPrice={villa.sundayPrice}
+              dailyPrices={villa.dailyPrices as any}
+              seasonalPrices={villa.seasonalPrices as any}
+              maxGuests={villaData.guests}
+              baseGuests={villa.baseGuests ?? undefined}
+              extraGuestFee={villa.extraGuestFee ?? undefined}
+              bookings={serializedBookings}
+              location={villaData.location}
+              isAngleHouse={villaData.slug === "the-angle-house"}
+            />
           </div>
         </div>
 

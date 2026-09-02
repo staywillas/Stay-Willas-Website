@@ -564,3 +564,89 @@ export async function checkAvailableVillasForDates(data: {
   }
 }
 
+/**
+ * Creates a provisional reservation awaiting admin verification and confirmation
+ */
+export async function createAwaitingVerificationBooking(data: {
+  villaId: string;
+  guestName: string;
+  guestPhone: string;
+  guestEmail?: string;
+  checkIn: string | Date;
+  checkOut: string | Date;
+  guests: number;
+  addOns?: any[];
+  couponCode?: string;
+  totalPrice: number;
+  cottageSelection?: string;
+}) {
+  try {
+    if (!data.villaId || !data.guestName || !data.guestPhone || !data.checkIn || !data.checkOut) {
+      return { success: false, error: "Missing required booking details." };
+    }
+
+    const checkInDate = new Date(data.checkIn);
+    const checkOutDate = new Date(data.checkOut);
+
+    if (checkOutDate <= checkInDate) {
+      return { success: false, error: "Check-out date must be after check-in date." };
+    }
+
+    // Verify no conflicting confirmed or blocked booking exists
+    const conflict = await prisma.booking.findFirst({
+      where: {
+        villaId: data.villaId,
+        status: { in: ["CONFIRMED", "BLOCKED"] },
+        AND: [
+          { checkIn: { lt: checkOutDate } },
+          { checkOut: { gt: checkInDate } },
+        ],
+      },
+    });
+
+    if (conflict) {
+      return {
+        success: false,
+        error: "These dates have already been reserved. Please choose alternate dates.",
+      };
+    }
+
+    const userPayload = JSON.stringify({
+      type: "ONLINE_VERIFICATION",
+      name: data.guestName.trim(),
+      phone: data.guestPhone.trim(),
+      email: data.guestEmail?.trim() || "",
+      guests: data.guests,
+      cottageSelection: data.cottageSelection || "ALL",
+      coupon: data.couponCode || null,
+      submittedAt: new Date().toISOString(),
+    });
+
+    const booking = await prisma.booking.create({
+      data: {
+        villaId: data.villaId,
+        userId: userPayload,
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        totalPrice: data.totalPrice,
+        status: "AWAITING_VERIFICATION",
+        addOns: data.addOns ? (data.addOns as any) : undefined,
+        kycName: data.guestName.trim(),
+      },
+      include: {
+        villa: true,
+      },
+    });
+
+    return {
+      success: true,
+      bookingId: booking.id,
+      booking,
+      message: "Your booking request has been submitted for concierge verification.",
+    };
+  } catch (error: any) {
+    console.error("createAwaitingVerificationBooking error:", error);
+    return { success: false, error: error.message || "Failed to submit booking for verification." };
+  }
+}
+

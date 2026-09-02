@@ -51,7 +51,9 @@ import {
   createManualBooking,
   deleteBooking,
   updateBookingPayment,
-  updateBookingFullDetails
+  updateBookingFullDetails,
+  approveVerificationBooking,
+  rejectVerificationBooking
 } from "@/app/actions/admin";
 
 interface SeasonalPrice {
@@ -110,19 +112,23 @@ interface Booking {
 interface AdminDashboardProps {
   initialVillas: Villa[];
   initialBookings: Booking[];
+  initialInquiries?: any[];
   userEmail: string;
 }
 
 const AdminDashboard = ({ 
   initialVillas, 
   initialBookings, 
+  initialInquiries = [],
   userEmail 
 }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "calendar" | "pricing" | "calculator">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "leads" | "calendar" | "pricing" | "calculator">("overview");
 
   // Lift properties and bookings to states for high reactivity
   const [villas, setVillas] = useState<Villa[]>(initialVillas);
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
+  const [inquiries, setInquiries] = useState<any[]>(initialInquiries);
+  const [leadFilter, setLeadFilter] = useState<"ALL" | "BOOKING_LEAD" | "OWNER" | "GUEST">("ALL");
 
   // Selected Booking details modal state & invoice prefill
   const [selectedBookingDetails, setSelectedBookingDetails] = useState<Booking | null>(null);
@@ -833,6 +839,21 @@ const AdminDashboard = ({
           Bookings Pipeline ({totalBookings})
         </button>
         <button
+          onClick={() => setActiveTab("leads")}
+          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+            activeTab === "leads" 
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
+          }`}
+        >
+          <span>🎯 Leads CRM</span>
+          {inquiries.length > 0 && (
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500 text-white">
+              {inquiries.length}
+            </span>
+          )}
+        </button>
+        <button
           onClick={() => setActiveTab("calculator")}
           className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
             activeTab === "calculator" 
@@ -845,6 +866,195 @@ const AdminDashboard = ({
       </div>
 
       {/* Tab Contents */}
+      {activeTab === "leads" && (
+        <div className="space-y-8 font-sans animate-fade-in text-left">
+          {/* Top Metrics Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs">
+              <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold block mb-1">Total Inquiries & Leads</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-heading font-black text-[#1B3564]">{inquiries.length}</span>
+                <span className="text-xs text-slate-500 font-semibold">Captured</span>
+              </div>
+            </div>
+
+            <div className="bg-amber-50/60 border border-amber-200/80 rounded-3xl p-5 shadow-xs">
+              <span className="text-[10px] text-amber-800 uppercase tracking-widest font-bold block mb-1">Direct Booking Leads</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-heading font-black text-amber-900">
+                  {inquiries.filter((i: any) => i.type === "BOOKING_LEAD").length}
+                </span>
+                <span className="text-xs text-amber-700 font-semibold">Entered Booking Gate</span>
+              </div>
+            </div>
+
+            <div className="bg-blue-50/60 border border-blue-200/80 rounded-3xl p-5 shadow-xs">
+              <span className="text-[10px] text-blue-800 uppercase tracking-widest font-bold block mb-1">Owner Partnerships</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-heading font-black text-[#1B3564]">
+                  {inquiries.filter((i: any) => i.type === "OWNER").length}
+                </span>
+                <span className="text-xs text-blue-700 font-semibold">Property Owners</span>
+              </div>
+            </div>
+
+            <div className="bg-emerald-50/60 border border-emerald-200/80 rounded-3xl p-5 shadow-xs">
+              <span className="text-[10px] text-emerald-800 uppercase tracking-widest font-bold block mb-1">General Inquiries</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-heading font-black text-emerald-900">
+                  {inquiries.filter((i: any) => i.type === "GUEST" || !i.type).length}
+                </span>
+                <span className="text-xs text-emerald-700 font-semibold">Traveler Queries</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Leads Registry Table */}
+          <div className="w-full glass border border-slate-200 rounded-[32px] p-6 sm:p-8 overflow-hidden">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
+              <div>
+                <h3 className="text-2xl font-cormorant font-bold italic text-[#1B3564]">
+                  Guest Leads & Inquiries Registry
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Real-time record of every user who entered their name & phone on the booking gate or submitted an inquiry.
+                </p>
+              </div>
+
+              {/* Filter Buttons */}
+              <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl flex-wrap">
+                {(["ALL", "BOOKING_LEAD", "OWNER", "GUEST"] as const).map((filter) => (
+                  <button
+                    key={filter}
+                    type="button"
+                    onClick={() => setLeadFilter(filter)}
+                    className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                      leadFilter === filter
+                        ? "bg-[#1B3564] text-white shadow-sm"
+                        : "text-slate-600 hover:text-black"
+                    }`}
+                  >
+                    {filter === "ALL" ? "All Leads" : filter === "BOOKING_LEAD" ? "🎯 Booking Leads" : filter === "OWNER" ? "🤝 Owners" : "💬 Inquiries"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-500 text-[10px] uppercase tracking-widest font-bold">
+                    <th className="py-3.5">Guest / Prospect</th>
+                    <th className="py-3.5">Contact Details</th>
+                    <th className="py-3.5">Lead Type</th>
+                    <th className="py-3.5">Interest / Message</th>
+                    <th className="py-3.5">Captured At</th>
+                    <th className="py-3.5 text-right">Instant Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-sm">
+                  {inquiries.filter((i: any) => leadFilter === "ALL" || i.type === leadFilter).length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="py-12 text-center text-slate-400 italic text-sm">
+                        No leads found for the selected filter.
+                      </td>
+                    </tr>
+                  ) : (
+                    inquiries
+                      .filter((i: any) => leadFilter === "ALL" || i.type === leadFilter)
+                      .map((lead: any) => {
+                        const cleanPhone = (lead.phone || "").replace(/[^0-9]/g, "");
+                        const isBookingLead = lead.type === "BOOKING_LEAD";
+                        const isOwner = lead.type === "OWNER";
+
+                        return (
+                          <tr key={lead.id} className="hover:bg-slate-50 transition-colors">
+                            {/* Name */}
+                            <td className="py-4 font-bold text-slate-900">
+                              <div className="flex items-center gap-2">
+                                <span className="w-7 h-7 rounded-full bg-slate-100 text-[#1B3564] flex items-center justify-center text-xs font-black">
+                                  {lead.name ? lead.name.charAt(0).toUpperCase() : "G"}
+                                </span>
+                                <span>{lead.name || "Anonymous Guest"}</span>
+                              </div>
+                            </td>
+
+                            {/* Contact Details */}
+                            <td className="py-4">
+                              <div className="space-y-0.5">
+                                <div className="font-mono text-xs font-bold text-slate-800 flex items-center gap-1">
+                                  <span>📱</span> {lead.phone || "N/A"}
+                                </div>
+                                {lead.email && lead.email !== "N/A" && (
+                                  <div className="text-[11px] text-slate-500">
+                                    ✉️ {lead.email}
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+
+                            {/* Type Badge */}
+                            <td className="py-4">
+                              <span className={`inline-block px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
+                                isBookingLead
+                                  ? "bg-amber-100 text-amber-900 border border-amber-300"
+                                  : isOwner
+                                  ? "bg-blue-100 text-[#1B3564] border border-blue-300"
+                                  : "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                              }`}>
+                                {isBookingLead ? "🎯 Booking Attempt" : isOwner ? "🤝 Owner Partner" : "💬 Guest Inquiry"}
+                              </span>
+                            </td>
+
+                            {/* Message / Details */}
+                            <td className="py-4 max-w-xs text-xs text-slate-600">
+                              <p className="truncate" title={lead.message || "No notes"}>
+                                {lead.message || "Direct Website Contact"}
+                              </p>
+                            </td>
+
+                            {/* Captured Date */}
+                            <td className="py-4 text-xs text-slate-500 whitespace-nowrap">
+                              {lead.createdAt 
+                                ? new Date(lead.createdAt).toLocaleDateString("en-IN", { 
+                                    month: "short", 
+                                    day: "numeric", 
+                                    hour: "2-digit", 
+                                    minute: "2-digit" 
+                                  }) 
+                                : "Recent"}
+                            </td>
+
+                            {/* 1-Click WhatsApp Action */}
+                            <td className="py-4 text-right">
+                              {cleanPhone ? (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const dialPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
+                                    const msg = `Hello ${lead.name || "there"}! 🌟 This is Stay Willas management. We noticed your interest in our luxury villas on our website and would love to help you plan your perfect getaway! How can we assist you today? ✨`;
+                                    window.open(`https://wa.me/${dialPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+                                  }}
+                                  className="px-3.5 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border-none"
+                                >
+                                  💬 Chat on WhatsApp
+                                </button>
+                              ) : (
+                                <span className="text-xs text-slate-400 italic">No Phone</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
       {activeTab === "calculator" && (
         <BillCalculator villas={villas as any} prefillData={calculatorPrefill} />
       )}
@@ -1061,21 +1271,191 @@ const AdminDashboard = ({
       {activeTab === "bookings" && (
         <div className="flex flex-col xl:flex-row gap-8 items-start">
           
-          {/* Main Registry Table */}
-          <div className="flex-1 w-full glass border border-slate-200 rounded-[32px] p-8 overflow-hidden font-sans">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-cormorant font-bold italic">Active Reservation Registry</h3>
-              <button
-                onClick={() => {
-                  setShowAddBooking(!showAddBooking);
-                  setBookingFormError("");
-                }}
-                className="text-[10px] bg-[#1B3564] hover:bg-[#152A50] text-white font-black px-4 py-2.5 rounded-full tracking-widest uppercase transition-all flex items-center gap-1.5 cursor-pointer shadow-md border-none"
-              >
-                <Plus size={12} />
-                {showAddBooking ? "Hide Panel" : "Booked for Villa Stay"}
-              </button>
-            </div>
+          {/* Main Registry Column */}
+          <div className="flex-1 w-full space-y-8 font-sans">
+
+            {/* PENDING GUEST VERIFICATIONS QUEUE (Lead Gate & Verification Mode) */}
+            {(() => {
+              const pendingVerifications = bookings.filter(
+                b => b.status === "AWAITING_VERIFICATION" || 
+                     (b.status === "PENDING" && b.userId && b.userId.includes("ONLINE_VERIFICATION"))
+              );
+
+              if (pendingVerifications.length === 0) return null;
+
+              return (
+                <div className="bg-amber-500/5 border-2 border-amber-500/30 rounded-[32px] p-6 sm:p-8 shadow-xl space-y-5 animate-fade-in">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-4 border-b border-amber-500/20">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-800">
+                          Action Required • {pendingVerifications.length} Pending
+                        </span>
+                      </div>
+                      <h3 className="text-2xl font-cormorant font-bold italic text-[#1B3564]">
+                        Pending Guest Verification Requests
+                      </h3>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        Guests who submitted reservation requests through the website booking portal awaiting your confirmation.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4">
+                    {pendingVerifications.map((item) => {
+                      let guestName = "Guest Traveler";
+                      let guestPhone = "";
+                      let guestEmail = "";
+                      let guestCount = 1;
+                      let cottageSel = "";
+                      let couponUsed = "";
+
+                      try {
+                        if (item.userId && item.userId.startsWith("{")) {
+                          const parsed = JSON.parse(item.userId);
+                          if (parsed.name) guestName = parsed.name;
+                          if (parsed.phone) guestPhone = parsed.phone;
+                          if (parsed.email) guestEmail = parsed.email;
+                          if (parsed.guests) guestCount = parsed.guests;
+                          if (parsed.cottageSelection) cottageSel = parsed.cottageSelection;
+                          if (parsed.coupon) couponUsed = parsed.coupon;
+                        }
+                      } catch (e) {}
+
+                      const cin = new Date(item.checkIn);
+                      const cout = new Date(item.checkOut);
+                      const nights = Math.max(1, Math.round((cout.getTime() - cin.getTime()) / (1000 * 60 * 60 * 24)));
+
+                      return (
+                        <div 
+                          key={item.id}
+                          className="bg-white border border-amber-500/30 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+                        >
+                          {/* Villa & Guest Info */}
+                          <div className="space-y-1.5 flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#1B3564] text-white">
+                                {item.villa.name}
+                              </span>
+                              {cottageSel && cottageSel !== "ALL" && (
+                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                                  Cottage {cottageSel}
+                                </span>
+                              )}
+                              <span className="text-xs font-mono text-slate-400">
+                                Ref: {item.id}
+                              </span>
+                            </div>
+
+                            <div className="flex items-baseline gap-2 flex-wrap">
+                              <h4 className="text-base font-bold text-slate-900">
+                                👤 {guestName}
+                              </h4>
+                              {guestPhone && (
+                                <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+                                  📱 {guestPhone}
+                                </span>
+                              )}
+                              {guestEmail && (
+                                <span className="text-xs text-slate-500">
+                                  ✉️ {guestEmail}
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-3 text-xs text-slate-600 flex-wrap">
+                              <span>
+                                📅 <strong>{cin.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}</strong> to <strong>{cout.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}</strong> ({nights} nights)
+                              </span>
+                              <span>•</span>
+                              <span>👥 <strong>{guestCount} Guests</strong></span>
+                              <span>•</span>
+                              <span>💵 Total Bill: <strong className="text-slate-900 text-sm">₹{item.totalPrice.toLocaleString("en-IN")}</strong></span>
+                              {couponUsed && (
+                                <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">
+                                  Coupon: {couponUsed}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Quick Actions */}
+                          <div className="flex items-center gap-2 w-full md:w-auto justify-end flex-shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+                            {guestPhone && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const cleanPh = guestPhone.replace(/[^0-9]/g, "");
+                                  const msg = `Hello ${guestName}! 🌟 This is Stay Willas management regarding your booking request for *${item.villa.name}* from ${cin.toLocaleDateString("en-IN", { month: "short", day: "numeric" })} to ${cout.toLocaleDateString("en-IN", { month: "short", day: "numeric" })}. We would love to assist and confirm your reservation! ✨`;
+                                  window.open(`https://wa.me/${cleanPh.startsWith("91") ? cleanPh : `91${cleanPh}`}?text=${encodeURIComponent(msg)}`, "_blank");
+                                }}
+                                className="px-3.5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border-none"
+                                title="Chat on WhatsApp"
+                              >
+                                💬 WhatsApp
+                              </button>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (confirm(`Approve and confirm booking for ${guestName} at ${item.villa.name}? This will lock the dates across all calendars.`)) {
+                                  const res = await approveVerificationBooking(item.id);
+                                  if (res.success && res.booking) {
+                                    setBookings(bookings.map(b => b.id === item.id ? (res.booking as any) : b));
+                                    alert(`Reservation for ${guestName} is now CONFIRMED!`);
+                                  } else {
+                                    alert(res.error || "Failed to approve booking.");
+                                  }
+                                }
+                              }}
+                              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shadow-md border-none"
+                            >
+                              <CheckCircle2 size={14} />
+                              <span>Approve & Confirm</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (confirm(`Decline and release dates for ${guestName}'s request?`)) {
+                                  const res = await rejectVerificationBooking(item.id);
+                                  if (res.success) {
+                                    setBookings(bookings.filter(b => b.id !== item.id));
+                                  } else {
+                                    alert(res.error || "Failed to decline booking.");
+                                  }
+                                }
+                              }}
+                              className="px-3 py-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border border-red-200"
+                            >
+                              Decline
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Main Registry Table */}
+            <div className="w-full glass border border-slate-200 rounded-[32px] p-8 overflow-hidden font-sans">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-2xl font-cormorant font-bold italic">Active Reservation Registry</h3>
+                <button
+                  onClick={() => {
+                    setShowAddBooking(!showAddBooking);
+                    setBookingFormError("");
+                  }}
+                  className="text-[10px] bg-[#1B3564] hover:bg-[#152A50] text-white font-black px-4 py-2.5 rounded-full tracking-widest uppercase transition-all flex items-center gap-1.5 cursor-pointer shadow-md border-none"
+                >
+                  <Plus size={12} />
+                  {showAddBooking ? "Hide Panel" : "Booked for Villa Stay"}
+                </button>
+              </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
@@ -1180,6 +1560,7 @@ const AdminDashboard = ({
               </table>
             </div>
           </div>
+        </div>
 
           {/* Record Manual Booking Sidebar Panel */}
           {showAddBooking && (

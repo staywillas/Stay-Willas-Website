@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { 
   Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2,
   ChefHat, Wine, Sparkles, Car, Check, ChevronDown, ChevronUp,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, ShieldCheck
 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
-import { createCheckoutSession } from "@/app/actions/booking";
+import { createCheckoutSession, createAwaitingVerificationBooking } from "@/app/actions/booking";
 import { useUser, SignInButton } from "@clerk/nextjs";
 
 interface DailyPriceProp {
@@ -38,19 +38,22 @@ interface BookingProp {
 interface BookingCardProps {
   villaId: string;
   villaName: string;
-  price: string;
-  basePrice: number;
+  price: string | number;
+  basePrice?: number;
   weekendPrice?: number | null;
   fridayPrice?: number | null;
   saturdayPrice?: number | null;
   sundayPrice?: number | null;
-  dailyPrices: DailyPriceProp[];
-  seasonalPrices: SeasonalPriceProp[];
+  dailyPrices?: DailyPriceProp[];
+  seasonalPrices?: SeasonalPriceProp[];
   maxGuests?: number;
   baseGuests?: number;
   extraGuestFee?: number;
   bookings?: BookingProp[];
   initialCottageSelection?: "A" | "B" | "C" | "ALL";
+  initialGuestName?: string;
+  initialGuestPhone?: string;
+  onBookingComplete?: () => void;
 }
 
 const availableAddOns = [
@@ -108,6 +111,9 @@ const BookingCard = ({
   extraGuestFee = 1500,
   bookings = [],
   initialCottageSelection,
+  initialGuestName = "",
+  initialGuestPhone = "",
+  onBookingComplete,
 }: BookingCardProps) => {
   const { user, isSignedIn } = useUser();
 
@@ -117,14 +123,26 @@ const BookingCard = ({
   const [checkIn, setCheckIn] = useState<Date>(new Date());
   const [checkOut, setCheckOut] = useState<Date>(addDays(new Date(), 3));
   const [guests, setGuests] = useState(2);
-  const [clientName, setClientName] = useState("");
+  const [clientName, setClientName] = useState(initialGuestName || "");
   const [clientEmail, setClientEmail] = useState("");
-  const [clientPhone, setClientPhone] = useState("");
+  const [clientPhone, setClientPhone] = useState(initialGuestPhone || "");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmittingVerification, setIsSubmittingVerification] = useState(false);
+  const [verificationSubmitted, setVerificationSubmitted] = useState(false);
+  const [submittedBookingId, setSubmittedBookingId] = useState<string | null>(null);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [showAddOns, setShowAddOns] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [isCouponApplied, setIsCouponApplied] = useState(false);
+
+  // Sync initial props when passed
+  useEffect(() => {
+    if (initialGuestName) setClientName(initialGuestName);
+  }, [initialGuestName]);
+
+  useEffect(() => {
+    if (initialGuestPhone) setClientPhone(initialGuestPhone);
+  }, [initialGuestPhone]);
 
   // Specific Cottage Selection for Willow Peak: "A" | "B" | "C" | "ALL"
   const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">(initialCottageSelection || "A");
@@ -487,6 +505,90 @@ We are so excited about this getaway! Could you please check availability and he
     }
   };
 
+  const handleAwaitVerificationBooking = async () => {
+    if (!clientName.trim()) {
+      alert("Please enter your Full Name.");
+      return;
+    }
+    if (!clientPhone.trim()) {
+      alert("Please enter your Phone Number.");
+      return;
+    }
+
+    setIsSubmittingVerification(true);
+    try {
+      const res = await createAwaitingVerificationBooking({
+        villaId,
+        guestName: clientName.trim(),
+        guestPhone: clientPhone.trim(),
+        guestEmail: clientEmail.trim(),
+        checkIn,
+        checkOut,
+        guests,
+        addOns: selectedAddOns,
+        couponCode: isCouponApplied ? (couponCode || "STAYW28") : undefined,
+        totalPrice: total,
+        cottageSelection: isWillowPeak ? cottageSelection : undefined,
+      });
+
+      setIsSubmittingVerification(false);
+      if (res.success && res.bookingId) {
+        setVerificationSubmitted(true);
+        setSubmittedBookingId(res.bookingId);
+        if (onBookingComplete) onBookingComplete();
+      } else {
+        alert(res.error || "Failed to submit booking for verification. Please try again.");
+      }
+    } catch (err: any) {
+      setIsSubmittingVerification(false);
+      alert(err.message || "Failed to submit booking for verification.");
+    }
+  };
+
+  const [isOnlinePaying, setIsOnlinePaying] = useState(false);
+
+  const handleOnlinePayment = async () => {
+    if (!clientName.trim()) {
+      alert("Please enter your Full Name.");
+      return;
+    }
+    if (!clientEmail.trim()) {
+      alert("Please enter your Email Address for the payment receipt.");
+      return;
+    }
+    if (!clientPhone.trim()) {
+      alert("Please enter your Phone Number.");
+      return;
+    }
+
+    setIsOnlinePaying(true);
+    try {
+      const res = await createCheckoutSession({
+        villaId,
+        villaName,
+        pricePerNight: Number(price) || basePrice || 13000,
+        checkIn,
+        checkOut,
+        guests,
+        addOns: selectedAddOns,
+      });
+
+      if (res?.url) {
+        window.location.href = res.url;
+      } else {
+        // Fallback to verification booking if Stripe is not in live production mode
+        alert("Online gateway initializing. Submitting your dates for instant concierge verification hold.");
+        await handleAwaitVerificationBooking();
+      }
+    } catch (err: any) {
+      console.error("Online checkout error:", err);
+      // Fallback
+      await handleAwaitVerificationBooking();
+    } finally {
+      setIsOnlinePaying(false);
+    }
+  };
+
   const handleQuickWhatsAppQuote = () => {
     const formattedCheckIn = format(checkIn, "dd MMM yyyy");
     const formattedCheckOut = format(checkOut, "dd MMM yyyy");
@@ -496,6 +598,71 @@ We are so excited about this getaway! Could you please check availability and he
     const msg = `Hi Stay Willas Concierge! 🌟 I'm looking at *${villaName}*${cottageSub} for ${guests} guest(s) from ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights, ~₹${total.toLocaleString("en-IN")}). Could you please share your best direct offer and confirm availability?`;
     window.open(`https://wa.me/919619042310?text=${encodeURIComponent(msg)}`, "_blank");
   };
+
+  if (verificationSubmitted) {
+    return (
+      <div className="bg-white border-2 border-emerald-500/30 rounded-3xl p-6 sm:p-8 text-center space-y-5 shadow-xl w-full font-sans animate-fade-in">
+        <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
+          <CheckCircle2 size={36} className="text-emerald-600" />
+        </div>
+        <div>
+          <span className="text-[10px] text-emerald-700 font-black uppercase tracking-[0.2em] block mb-1">
+            Verification Request Submitted
+          </span>
+          <h3 className="text-2xl font-heading font-bold text-[#1B3564]">
+            Thank You, {clientName}!
+          </h3>
+          <p className="text-xs text-slate-500 mt-1.5 leading-relaxed max-w-md mx-auto">
+            Your stay reservation at <strong>{villaName}</strong> is placed on temporary hold. Our Stay Willas manager will review and confirm your reservation shortly in the admin panel.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-left space-y-2 text-xs">
+          <div className="flex justify-between text-slate-500">
+            <span>Booking Reference:</span>
+            <span className="font-mono font-bold text-slate-800">{submittedBookingId}</span>
+          </div>
+          <div className="flex justify-between text-slate-500">
+            <span>Dates:</span>
+            <span className="font-bold text-slate-800">{format(checkIn, "dd MMM yyyy")} – {format(checkOut, "dd MMM yyyy")} ({nights} nights)</span>
+          </div>
+          <div className="flex justify-between text-slate-500">
+            <span>Guests:</span>
+            <span className="font-bold text-slate-800">{guests} Guest(s)</span>
+          </div>
+          <div className="flex justify-between text-slate-500">
+            <span>Total Estimated Bill:</span>
+            <span className="font-bold text-slate-900 text-sm">₹{total.toLocaleString("en-IN")}</span>
+          </div>
+          <div className="flex justify-between text-slate-500">
+            <span>Phone:</span>
+            <span className="font-bold text-slate-800">{clientPhone}</span>
+          </div>
+        </div>
+
+        <div className="space-y-2 pt-2">
+          <button
+            type="button"
+            onClick={() => {
+              const msg = `Hello Stay Willas team! 🌟 I just submitted a verification booking for *${villaName}* (Ref ID: ${submittedBookingId}) for ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Name: ${clientName}, Phone: ${clientPhone}. Looking forward to confirming! ✨`;
+              window.open(`https://wa.me/919619042310?text=${encodeURIComponent(msg)}`, "_blank");
+            }}
+            className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
+          >
+            <span>💬 Track with Concierge on WhatsApp</span>
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => setVerificationSubmitted(false)}
+            className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+          >
+            Modify or Make Another Booking
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white border border-border-subtle/80 rounded-3xl p-5 sm:p-7 lg:p-8 sticky top-28 shadow-[0_12px_48px_rgba(27,53,100,0.08)] w-full transition-all duration-300">
@@ -949,39 +1116,73 @@ We are so excited about this getaway! Could you please check availability and he
         </div>
       </div>
 
-      <div className="space-y-2.5 mb-4">
-        <Button 
-          onClick={handleBooking}
-          disabled={isLoading || nights <= 0 || isOverlapping}
-          className={`w-full text-white rounded-2xl py-6 text-xs sm:text-sm font-black tracking-[0.16em] flex items-center justify-center gap-2 transition-all duration-300 whitespace-nowrap cursor-pointer border border-[#DAA520]/40 ${
-            isOverlapping 
-              ? "bg-red-500 hover:bg-red-600 shadow-md cursor-not-allowed" 
-              : "bg-[#1B3564] hover:bg-[#152A50] shadow-[0_8px_25px_rgba(27,53,100,0.3)] hover:shadow-[0_12px_35px_rgba(27,53,100,0.45)] hover:scale-[1.01] active:scale-[0.98]"
-          }`}
-        >
-          {isLoading ? (
-            <Loader2 className="animate-spin" />
-          ) : isOverlapping ? (
-            "DATES UNAVAILABLE DUE TO RESERVATION"
-          ) : (
-            "CONFIRM RESERVATION VIA WHATSAPP"
-          )}
-        </Button>
+      <div className="space-y-3 mb-4 text-left">
+        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
+          Choose Your Preferred Booking Mode:
+        </span>
 
-        {/* Fast-Track 1-Click WhatsApp Quote */}
+        {/* Option 1: WhatsApp Instant Booking */}
         <button
           type="button"
-          onClick={handleQuickWhatsAppQuote}
-          disabled={nights <= 0 || isOverlapping}
-          className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs font-black tracking-wider uppercase transition-all duration-300 shadow-sm flex items-center justify-center gap-2 cursor-pointer border-none active:scale-[0.98]"
+          onClick={handleBooking}
+          disabled={isLoading || nights <= 0 || isOverlapping}
+          className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border-none active:scale-[0.98]"
         >
-          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white shrink-0">
-            <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
-          </svg>
-          <span>1-CLICK INSTANT WHATSAPP QUOTE</span>
+          <div className="flex items-center gap-2.5">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white shrink-0">
+              <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
+            </svg>
+            <div className="text-left">
+              <span className="block font-black text-xs sm:text-sm">Option 1: Book via WhatsApp</span>
+              <span className="text-[10px] text-white/80 font-normal block">Instant chat with concierge & custom quote</span>
+            </div>
+          </div>
+          <span className="text-[11px] font-black bg-white/20 px-2.5 py-1 rounded-lg">Instant ➔</span>
+        </button>
+
+        {/* Option 2: Book & Await Admin Verification */}
+        <button
+          type="button"
+          onClick={handleAwaitVerificationBooking}
+          disabled={isSubmittingVerification || nights <= 0 || isOverlapping}
+          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border border-[#DAA520]/40 active:scale-[0.98]"
+        >
+          <div className="flex items-center gap-2.5">
+            {isSubmittingVerification ? (
+              <Loader2 className="animate-spin text-[#DAA520]" size={20} />
+            ) : (
+              <ShieldCheck size={20} className="text-[#DAA520] shrink-0" />
+            )}
+            <div className="text-left">
+              <span className="block font-black text-xs sm:text-sm">Option 2: Book & Await Verification</span>
+              <span className="text-[10px] text-slate-300 font-normal block">Hold dates • Verified by Admin</span>
+            </div>
+          </div>
+          <span className="text-[11px] font-black bg-[#DAA520]/30 text-[#DAA520] px-2.5 py-1 rounded-lg">Hold Dates ➔</span>
+        </button>
+
+        {/* Option 3: Instant Online Payment */}
+        <button
+          type="button"
+          onClick={handleOnlinePayment}
+          disabled={isOnlinePaying || nights <= 0 || isOverlapping}
+          className="w-full bg-slate-900 hover:bg-black text-white py-3 px-4 rounded-2xl text-xs font-bold tracking-wider uppercase transition-all duration-300 shadow-sm flex items-center justify-between cursor-pointer border border-slate-700 active:scale-[0.98]"
+        >
+          <div className="flex items-center gap-2.5">
+            {isOnlinePaying ? (
+              <Loader2 className="animate-spin text-white" size={18} />
+            ) : (
+              <Sparkles size={18} className="text-[#DAA520] shrink-0" />
+            )}
+            <div className="text-left">
+              <span className="block font-bold text-xs">Option 3: Pay Online / Cards & UPI</span>
+              <span className="text-[10px] text-slate-400 font-normal block">Direct secure gateway checkout</span>
+            </div>
+          </div>
+          <span className="text-[10px] text-slate-300 font-bold bg-white/10 px-2 py-0.5 rounded-md">Pay Now ➔</span>
         </button>
       </div>
-      
+
       <p className="text-center text-slate-500 text-[10px] uppercase tracking-widest mb-4 font-semibold select-none flex items-center justify-center gap-1.5">
         <span>🔒 Best Direct Price Guarantee • 0% Platform Fee</span>
       </p>
