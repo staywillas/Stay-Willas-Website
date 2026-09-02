@@ -18,6 +18,7 @@ import {
 import BookingCard from "@/components/villa/booking-card";
 import { format } from "date-fns";
 import { captureBookingLead } from "@/app/actions/inquiry";
+import { useLenis } from "lenis/react";
 
 interface BookingModalFlowProps {
   villaId: string;
@@ -57,6 +58,7 @@ export default function BookingModalFlow({
   isAngleHouse = false,
 }: BookingModalFlowProps) {
   const [mounted, setMounted] = useState(false);
+  const lenis = useLenis();
   
   // Modals state
   const [isLeadGateOpen, setIsLeadGateOpen] = useState(false);
@@ -80,17 +82,26 @@ export default function BookingModalFlow({
     setMounted(true);
   }, []);
 
-  // Lock body scroll when any modal is open
+  // Lock body scroll and pause Lenis smooth scroll when any modal is open
   useEffect(() => {
     if (isLeadGateOpen || isBookingModalOpen || isAvailabilityModalOpen) {
       document.body.style.overflow = "hidden";
+      if (lenis) {
+        try { lenis.stop(); } catch {}
+      }
     } else {
       document.body.style.overflow = "unset";
+      if (lenis) {
+        try { lenis.start(); } catch {}
+      }
     }
     return () => {
       document.body.style.overflow = "unset";
+      if (lenis) {
+        try { lenis.start(); } catch {}
+      }
     };
-  }, [isLeadGateOpen, isBookingModalOpen, isAvailabilityModalOpen]);
+  }, [isLeadGateOpen, isBookingModalOpen, isAvailabilityModalOpen, lenis]);
 
   const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
   const displayPrice = isWillowPeak ? 5999 * cottagesCount : price;
@@ -300,11 +311,19 @@ export default function BookingModalFlow({
       {/* 2. STEP 1: LEAD CAPTURE GATE MODAL (Name & Phone Number First)            */}
       {/* ========================================================================= */}
       {mounted && isLeadGateOpen && typeof document !== "undefined" && createPortal(
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-4 overflow-y-auto animate-fade-in font-sans">
+        <div 
+          data-lenis-prevent="true"
+          data-lenis-prevent
+          className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
+        >
           {/* Backdrop dismiss */}
           <div className="fixed inset-0" onClick={() => setIsLeadGateOpen(false)} />
 
-          <div className="relative bg-white border-2 border-[#DAA520]/30 rounded-[32px] p-6 sm:p-9 max-w-lg w-full my-auto shadow-[0_24px_70px_rgba(0,0,0,0.4)] z-10 text-slate-900 space-y-6">
+          <div 
+            data-lenis-prevent="true"
+            data-lenis-prevent
+            className="relative bg-white border-2 border-[#DAA520]/30 rounded-[32px] p-6 sm:p-9 max-w-lg w-full my-auto shadow-[0_24px_70px_rgba(0,0,0,0.4)] z-10 text-slate-900 space-y-6"
+          >
             {/* Header */}
             <div className="flex items-start justify-between pb-4 border-b border-slate-100">
               <div className="text-left">
@@ -421,13 +440,21 @@ export default function BookingModalFlow({
       {/* 3. STEP 2: FULL BOOKING PANEL MODAL (Dates, Add-ons & 3 Booking Modes)     */}
       {/* ========================================================================= */}
       {mounted && isBookingModalOpen && typeof document !== "undefined" && createPortal(
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fade-in font-sans">
+        <div 
+          data-lenis-prevent="true"
+          data-lenis-prevent
+          className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
+        >
           {/* Backdrop dismiss */}
           <div className="fixed inset-0" onClick={() => setIsBookingModalOpen(false)} />
 
-          <div className="relative w-full max-w-2xl max-h-[94vh] flex flex-col bg-white rounded-[28px] sm:rounded-[36px] shadow-[0_24px_80px_rgba(0,0,0,0.5)] border-2 border-[#DAA520]/30 overflow-hidden z-10">
+          <div 
+            data-lenis-prevent="true"
+            data-lenis-prevent
+            className="relative w-full max-w-2xl max-h-[92vh] flex flex-col bg-white rounded-[28px] sm:rounded-[36px] shadow-[0_24px_80px_rgba(0,0,0,0.5)] border-2 border-[#DAA520]/30 overflow-hidden z-10 my-auto"
+          >
             {/* Modal Sticky Header */}
-            <div className="bg-[#1B3564] text-white px-5 py-4 flex items-center justify-between flex-shrink-0 border-b border-white/10">
+            <div className="bg-[#1B3564] text-white px-5 py-4 flex items-center justify-between flex-shrink-0 border-b border-white/10 z-20">
               <div className="text-left">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-widest">
@@ -449,7 +476,12 @@ export default function BookingModalFlow({
             </div>
 
             {/* Scrollable Booking Card Content */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50">
+            <div 
+              data-lenis-prevent="true"
+              data-lenis-prevent
+              className="flex-1 overflow-y-auto overscroll-contain p-3 sm:p-5 bg-slate-50 relative z-10 touch-pan-y"
+              style={{ maxHeight: "calc(92vh - 75px)", WebkitOverflowScrolling: "touch" }}
+            >
               <BookingCard
                 villaId={villaId}
                 villaName={villaName}
@@ -468,6 +500,7 @@ export default function BookingModalFlow({
                 initialCottageSelection={cottageSelection}
                 initialGuestName={guestName}
                 initialGuestPhone={guestPhone}
+                isModal={true}
                 onBookingComplete={() => {
                   // Keep modal open so success confirmation can be viewed
                 }}
@@ -482,10 +515,18 @@ export default function BookingModalFlow({
       {/* 4. AVAILABILITY CALENDAR MODAL (Green = Open, Red = Reserved)              */}
       {/* ========================================================================= */}
       {mounted && isAvailabilityModalOpen && typeof document !== "undefined" && createPortal(
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fade-in font-sans">
+        <div 
+          data-lenis-prevent="true"
+          data-lenis-prevent
+          className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
+        >
           <div className="fixed inset-0" onClick={() => setIsAvailabilityModalOpen(false)} />
 
-          <div className="relative bg-white border-2 border-[#DAA520]/30 rounded-[32px] p-5 sm:p-8 max-w-lg w-full my-auto shadow-2xl z-10 text-slate-900 space-y-5">
+          <div 
+            data-lenis-prevent="true"
+            data-lenis-prevent
+            className="relative bg-white border-2 border-[#DAA520]/30 rounded-[32px] p-5 sm:p-8 max-w-lg w-full my-auto shadow-2xl z-10 text-slate-900 space-y-5"
+          >
             {/* Header */}
             <div className="flex items-start justify-between pb-3.5 border-b border-slate-100">
               <div className="text-left">

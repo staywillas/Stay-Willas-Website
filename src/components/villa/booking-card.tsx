@@ -54,6 +54,7 @@ interface BookingCardProps {
   initialGuestName?: string;
   initialGuestPhone?: string;
   onBookingComplete?: () => void;
+  isModal?: boolean;
 }
 
 const availableAddOns = [
@@ -114,6 +115,7 @@ const BookingCard = ({
   initialGuestName = "",
   initialGuestPhone = "",
   onBookingComplete,
+  isModal = false,
 }: BookingCardProps) => {
   const { user, isSignedIn } = useUser();
 
@@ -665,7 +667,11 @@ We are so excited about this getaway! Could you please check availability and he
   }
 
   return (
-    <div className="bg-white border border-border-subtle/80 rounded-3xl p-5 sm:p-7 lg:p-8 sticky top-28 shadow-[0_12px_48px_rgba(27,53,100,0.08)] w-full transition-all duration-300">
+    <div className={`bg-white transition-all duration-300 w-full ${
+      isModal 
+        ? "p-2 sm:p-4 rounded-2xl relative shadow-none border-none" 
+        : "border border-border-subtle/80 rounded-3xl p-5 sm:p-7 lg:p-8 sticky top-28 shadow-[0_12px_48px_rgba(27,53,100,0.08)]"
+    }`}>
       <div className="flex items-end justify-between mb-6 pb-4 border-b border-border-subtle/50">
         <div>
           <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">
