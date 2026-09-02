@@ -203,32 +203,45 @@ export async function createCheckoutSession(formData: {
     }
 
     const serviceFee = 0; // Removed luxury service fee
-    let discountRate = 0;
+    let discount = 0;
     if (formData.couponCode) {
       const code = formData.couponCode.trim().toUpperCase();
-      if (code === "STAYW28" || code.includes("28") || code === "ESCAPE28" || code === "LONAVALA28" || code === "KHOPOLI28") {
-        // Enforce weekday-only rule (Monday - Thursday stay nights)
-        let isAllWeekdays = true;
-        let curNight = new Date(checkInDate);
-        while (curNight.getTime() < checkOutDate.getTime()) {
-          const day = curNight.getDay();
-          if (day < 1 || day > 4) {
-            isAllWeekdays = false;
-            break;
-          }
-          curNight.setDate(curNight.getDate() + 1);
+      
+      // Calculate weekday-only eligible accommodation price
+      let weekdayEligibleRoomPrice = 0;
+      let weekdayNights = 0;
+      let curNight = new Date(checkInDate);
+      
+      while (curNight.getTime() < checkOutDate.getTime()) {
+        const day = curNight.getDay();
+        // Monday (1) to Thursday (4) are weekdays
+        if (day >= 1 && day <= 4) {
+          const matchingDaily = dailyPrices.find((dp: any) => {
+            const d = new Date(dp.date);
+            return curNight.getFullYear() === d.getUTCFullYear() &&
+                   curNight.getMonth() === d.getUTCMonth() &&
+                   curNight.getDate() === d.getUTCDate();
+          });
+          
+          let nightRate = matchingDaily ? matchingDaily.price : baseRate;
+          nightRate = Math.round(nightRate * (isWillowPeak ? (requiredCottages / 3) : 1));
+          weekdayEligibleRoomPrice += nightRate;
+          weekdayNights++;
         }
+        curNight.setDate(curNight.getDate() + 1);
+      }
 
-        if (isAllWeekdays) {
-          discountRate = 0.28;
-        } else {
-          throw new Error("Coupon code STAYW28 (28% OFF) is exclusively valid for weekday stays (Monday to Thursday nights). For weekend dates, standard direct rates apply.");
-        }
+      const weekdayExtraGuestsCost = extraGuestsCostPerNight * weekdayNights;
+      const weekdayEligibleTotal = weekdayEligibleRoomPrice + weekdayExtraGuestsCost;
+
+      if (code === "STAYW28" || code.includes("28") || code === "ESCAPE28" || code === "LONAVALA28" || code === "KHOPOLI28") {
+        discount = Math.round(weekdayEligibleTotal * 0.28);
       } else if (code === "STAY5") {
-        discountRate = 0.05;
+        discount = Math.round(weekdayEligibleTotal * 0.05);
+      } else if (code === "STAY10" || code.includes("10")) {
+        discount = Math.round(weekdayEligibleTotal * 0.10);
       }
     }
-    const discount = Math.round((totalRoomPrice + totalExtraGuestsCost) * discountRate);
     const finalTotal = totalRoomPrice + totalExtraGuestsCost + addOnsPrice + serviceFee - discount;
 
     const userPayload = JSON.stringify({

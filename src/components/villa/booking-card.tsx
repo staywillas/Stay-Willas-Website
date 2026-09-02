@@ -429,16 +429,46 @@ const BookingCard = ({
 
   const serviceFee = 0;
 
-  const getDiscountRate = (code: string): number => {
-    const clean = code.trim().toUpperCase();
-    if (clean === "STAY5") return 0.05;
-    if (clean === "STAY10" || clean.includes("10")) return 0.10;
-    // Default 28% discount for STAYW28 or any 28 coupon
-    return 0.28;
+  // Check if a night is a weekday (Monday = 1, Tuesday = 2, Wednesday = 3, Thursday = 4)
+  const isWeekdayNight = (item: { date: Date; type: string }) => {
+    // If explicit weekend override type (FRIDAY, SATURDAY, SUNDAY, WEEKEND)
+    if (item.type === "FRIDAY" || item.type === "SATURDAY" || item.type === "SUNDAY" || item.type === "WEEKEND") {
+      return false;
+    }
+    const day = item.date.getDay(); // 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
+    return day >= 1 && day <= 4;
   };
 
-  const discountRate = isCouponApplied ? getDiscountRate(couponCode || "STAYW28") : 0;
-  const discount = Math.round((subtotal + totalExtraGuestsCost) * discountRate);
+  const weekdayBreakdown = breakdown.filter(item => isWeekdayNight(item));
+  const rawWeekdaySubtotal = weekdayBreakdown.reduce((sum, item) => sum + item.price, 0);
+  const weekdaySubtotal = Math.round(rawWeekdaySubtotal * (isWillowPeak ? (cottagesCount / 3) : 1));
+  const weekdayNightsCount = weekdayBreakdown.length;
+
+  // Extra guests cost associated with weekday nights
+  const weekdayExtraGuestsCost = extraGuestsCostPerNight * weekdayNightsCount;
+  const weekdayEligibleBase = weekdaySubtotal + weekdayExtraGuestsCost;
+
+  const calculateDiscount = () => {
+    if (!isCouponApplied || nights <= 0) return 0;
+    const clean = (couponCode || "STAYW28").trim().toUpperCase();
+
+    if (clean.includes("28") || clean === "STAYW28" || clean === "WEEKDAY28") {
+      // Flat 28% discount strictly on Mon-Thu (Weekday) nights only!
+      return Math.round(weekdayEligibleBase * 0.28);
+    }
+
+    if (clean === "STAY5") {
+      return Math.round(weekdayEligibleBase * 0.05);
+    }
+
+    if (clean === "STAY10" || clean.includes("10")) {
+      return Math.round(weekdayEligibleBase * 0.10);
+    }
+
+    return Math.round(weekdayEligibleBase * 0.28);
+  };
+
+  const discount = calculateDiscount();
   const total = Math.max(0, subtotal + totalExtraGuestsCost + serviceFee + addOnsCost - discount);
 
   const handleCheckInClick = () => {
@@ -1213,11 +1243,22 @@ We are so excited about this getaway! Could you please check availability and he
           {/* Coupon Discount Banner */}
           {discount > 0 && (
             <div className="flex items-center justify-between text-xs font-black text-emerald-800 bg-emerald-100/90 px-3.5 py-2.5 rounded-xl border border-emerald-300 shadow-xs">
-              <span className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 text-left">
                 <Sparkles size={14} className="text-emerald-700 shrink-0" />
-                <span>28% Weekday Discount ({couponCode || "STAYW28"})</span>
-              </span>
-              <span className="text-sm font-black">-₹{discount.toLocaleString("en-IN")}</span>
+                <div>
+                  <span>28% Weekday Discount ({couponCode || "STAYW28"})</span>
+                  <span className="text-[10px] text-emerald-700 font-normal block">
+                    Applied on {weekdayNightsCount} weekday night{weekdayNightsCount > 1 ? "s" : ""} (Mon–Thu) • Weekend rates unaffected
+                  </span>
+                </div>
+              </div>
+              <span className="text-sm font-black shrink-0">-₹{discount.toLocaleString("en-IN")}</span>
+            </div>
+          )}
+
+          {isCouponApplied && discount === 0 && nights > 0 && (
+            <div className="text-[11px] text-amber-800 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200 text-left">
+              ℹ️ <strong>Coupon STAYW28:</strong> Flat 28% discount applies exclusively to Monday–Thursday nights. Your selected dates are charged at standard weekend rates.
             </div>
           )}
 
