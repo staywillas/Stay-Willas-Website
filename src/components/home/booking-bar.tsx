@@ -38,6 +38,7 @@ import {
 } from "date-fns";
 import { getDestinationAvailability, checkAvailableVillasForDates } from "@/app/actions/booking";
 import { AnimatePresence, motion } from "framer-motion";
+import { useLenis } from "lenis/react";
 
 interface VillaResult {
   id: string;
@@ -86,16 +87,27 @@ const BookingBar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const lenis = useLenis();
+
   useEffect(() => {
     if (availabilityModalOpen) {
       document.body.style.overflow = "hidden";
+      if (lenis) {
+        try { lenis.stop(); } catch {}
+      }
     } else {
       document.body.style.overflow = "";
+      if (lenis) {
+        try { lenis.start(); } catch {}
+      }
     }
     return () => {
       document.body.style.overflow = "";
+      if (lenis) {
+        try { lenis.start(); } catch {}
+      }
     };
-  }, [availabilityModalOpen]);
+  }, [availabilityModalOpen, lenis]);
 
   // Load all global availability on demand when user opens calendar or modal
   useEffect(() => {
@@ -566,11 +578,16 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
         <AnimatePresence>
           {availabilityModalOpen && (
             <div 
+              data-lenis-prevent="true"
               className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5"
               onWheel={(e) => {
+                e.stopPropagation();
                 if (modalBodyRef.current && !modalBodyRef.current.contains(e.target as Node)) {
                   modalBodyRef.current.scrollTop += e.deltaY;
                 }
+              }}
+              onTouchMove={(e) => {
+                e.stopPropagation();
               }}
             >
               <motion.div 
@@ -582,10 +599,20 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 onClick={() => setAvailabilityModalOpen(false)} 
               />
               <motion.div 
+                data-lenis-prevent="true"
                 initial={{ opacity: 0, scale: 0.94, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.94, y: 20 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
+                onWheel={(e) => {
+                  e.stopPropagation();
+                  if (modalBodyRef.current && !modalBodyRef.current.contains(e.target as Node)) {
+                    modalBodyRef.current.scrollTop += e.deltaY;
+                  }
+                }}
+                onTouchMove={(e) => {
+                  e.stopPropagation();
+                }}
                 className="relative z-10 w-full max-w-3xl h-[88vh] max-h-[88vh] sm:h-[85vh] sm:max-h-[85vh] flex flex-col min-h-0 bg-white rounded-3xl sm:rounded-[2.5rem] shadow-[0_30px_90px_rgba(0,0,0,0.35)] border border-[#DAA520]/30 overflow-hidden text-left my-auto"
               >
                 
@@ -694,6 +721,13 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 <div 
                   ref={modalBodyRef}
                   tabIndex={0}
+                  data-lenis-prevent="true"
+                  onWheel={(e) => {
+                    e.stopPropagation();
+                  }}
+                  onTouchMove={(e) => {
+                    e.stopPropagation();
+                  }}
                   className="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1 min-h-0 overscroll-contain touch-pan-y custom-scrollbar focus:outline-none"
                   style={{
                     WebkitOverflowScrolling: "touch",
