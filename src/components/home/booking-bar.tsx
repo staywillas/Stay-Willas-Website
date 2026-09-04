@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -71,6 +71,7 @@ const BookingBar = () => {
   const [availabilityModalOpen, setAvailabilityModalOpen] = useState(false);
   const [availableVillasList, setAvailableVillasList] = useState<VillaResult[]>([]);
   const [modalLocationFilter, setModalLocationFilter] = useState<string>("ALL");
+  const modalBodyRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -564,7 +565,14 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
       {mounted && createPortal(
         <AnimatePresence>
           {availabilityModalOpen && (
-            <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5">
+            <div 
+              className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5"
+              onWheel={(e) => {
+                if (modalBodyRef.current && !modalBodyRef.current.contains(e.target as Node)) {
+                  modalBodyRef.current.scrollTop += e.deltaY;
+                }
+              }}
+            >
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -578,7 +586,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.94, y: 20 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="relative z-10 w-full max-w-3xl max-h-[90vh] flex flex-col bg-white rounded-3xl sm:rounded-[2.5rem] shadow-[0_30px_90px_rgba(0,0,0,0.35)] border border-[#DAA520]/30 overflow-hidden text-left my-auto"
+                className="relative z-10 w-full max-w-3xl h-[88vh] max-h-[88vh] sm:h-[85vh] sm:max-h-[85vh] flex flex-col min-h-0 bg-white rounded-3xl sm:rounded-[2.5rem] shadow-[0_30px_90px_rgba(0,0,0,0.35)] border border-[#DAA520]/30 overflow-hidden text-left my-auto"
               >
                 
                 {/* Modal Header */}
@@ -683,7 +691,15 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 </div>
 
                 {/* Modal Body: Property Cards */}
-                <div className="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1">
+                <div 
+                  ref={modalBodyRef}
+                  tabIndex={0}
+                  className="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1 min-h-0 overscroll-contain touch-pan-y custom-scrollbar focus:outline-none"
+                  style={{
+                    WebkitOverflowScrolling: "touch",
+                    overscrollBehavior: "contain",
+                  }}
+                >
                   {filteredModalVillas.length > 0 ? (
                     <div className="space-y-4">
                       {filteredModalVillas.map((villa) => {
