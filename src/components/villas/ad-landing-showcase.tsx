@@ -168,6 +168,9 @@ export default function AdLandingShowcase({
                   ₹{discountedPrice.toLocaleString("en-IN")}
                 </span>
                 <span className="text-xs text-slate-300 ml-1.5 font-medium">/ night (Monsoon Weekday Rate)</span>
+                <div className="text-[10px] text-amber-300/80 italic font-medium mt-0.5">
+                  *Prices may vary due to demand
+                </div>
                 <div className="text-[11px] text-emerald-400 font-bold mt-1">
                   🎉 Save ~₹{(otaEstimatedPrice1Night - discountedPrice).toLocaleString("en-IN")} per night vs Portals
                 </div>

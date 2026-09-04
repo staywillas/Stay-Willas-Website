@@ -323,60 +323,74 @@ const BookingCard = ({
 
   const nights = differenceInDays(checkOut, checkIn);
 
-  // Timezone-safe daily rate calculation
+  // Timezone-safe daily rate calculation from dynamic pricing scheduler
   const getDayPriceDetails = (date: Date) => {
     const check = new Date(date);
     check.setHours(0, 0, 0, 0);
 
-    // 1. Check Daily Overrides (highest priority)
+    const checkY = check.getFullYear();
+    const checkM = check.getMonth();
+    const checkD = check.getDate();
+    const checkIso = `${checkY}-${String(checkM + 1).padStart(2, "0")}-${String(checkD).padStart(2, "0")}`;
+
+    // 1. Check Daily Overrides (highest priority from dynamic pricing scheduler)
     const dailyOverride = dailyPrices?.find(dp => {
+      if (!dp?.date) return false;
       const dDate = new Date(dp.date);
-      return check.getFullYear() === dDate.getUTCFullYear() &&
-             check.getMonth() === dDate.getUTCMonth() &&
-             check.getDate() === dDate.getUTCDate();
+      const matchLocal = dDate.getFullYear() === checkY && dDate.getMonth() === checkM && dDate.getDate() === checkD;
+      const matchUTC = dDate.getUTCFullYear() === checkY && dDate.getUTCMonth() === checkM && dDate.getUTCDate() === checkD;
+      const matchStr = typeof dp.date === "string" && dp.date.startsWith(checkIso);
+      return matchLocal || matchUTC || matchStr;
     });
 
     if (dailyOverride) {
-      return { price: dailyOverride.price, type: "DAILY" as const, label: "due to demand" };
+      return { 
+        price: Number(dailyOverride.price), 
+        type: "DAILY" as const, 
+        label: (dailyOverride as any).label || "Scheduled Rate" 
+      };
     }
 
     // 2. Check Seasonal Price Overrides
     const seasonalOverride = seasonalPrices?.find(sp => {
+      if (!sp?.startDate || !sp?.endDate) return false;
       const start = new Date(sp.startDate);
       const end = new Date(sp.endDate);
       start.setHours(0, 0, 0, 0);
-      end.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
       return check.getTime() >= start.getTime() && check.getTime() <= end.getTime();
     });
 
     if (seasonalOverride) {
       return { 
-        price: seasonalOverride.price, 
+        price: Number(seasonalOverride.price), 
         type: "SEASONAL" as const, 
-        label: seasonalOverride.label || "Holiday Season" 
+        label: seasonalOverride.label || "Seasonal Rate" 
       };
     }
 
     // 3. Check specific day-of-week pricing overrides
     const dayOfWeek = check.getDay();
-    if (dayOfWeek === 5 && fridayPrice != null) {
-      return { price: fridayPrice, type: "FRIDAY" as const, label: "Friday Rate" };
+    if (dayOfWeek === 5 && fridayPrice != null && Number(fridayPrice) > 0) {
+      return { price: Number(fridayPrice), type: "FRIDAY" as const, label: "Friday Rate" };
     }
-    if (dayOfWeek === 6 && saturdayPrice != null) {
-      return { price: saturdayPrice, type: "SATURDAY" as const, label: "Saturday Rate" };
+    if (dayOfWeek === 6 && saturdayPrice != null && Number(saturdayPrice) > 0) {
+      return { price: Number(saturdayPrice), type: "SATURDAY" as const, label: "Saturday Rate" };
     }
-    if (dayOfWeek === 0 && sundayPrice != null) {
-      return { price: sundayPrice, type: "SUNDAY" as const, label: "Sunday Rate" };
+    if (dayOfWeek === 0 && sundayPrice != null && Number(sundayPrice) > 0) {
+      return { price: Number(sundayPrice), type: "SUNDAY" as const, label: "Sunday Rate" };
     }
 
     // 4. Check Legacy Weekend Pricing
     const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
-    if (isWeekend && weekendPrice) {
-      return { price: weekendPrice, type: "WEEKEND" as const, label: "Weekend Rate" };
+    if (isWeekend && weekendPrice != null && Number(weekendPrice) > 0) {
+      return { price: Number(weekendPrice), type: "WEEKEND" as const, label: "Weekend Rate" };
     }
 
     // 5. Fallback to base rate
-    const numericBasePrice = typeof basePrice === "number" ? basePrice : (typeof price === "number" ? price : parseFloat(String(price)) || 0);
+    const numericBasePrice = typeof basePrice === "number" && basePrice > 0 
+      ? basePrice 
+      : (typeof price === "number" && price > 0 ? price : parseFloat(String(price).replace(/[^0-9.]/g, "")) || 0);
     return { price: numericBasePrice, type: "BASE" as const, label: "Base Rate" };
   };
 
@@ -706,12 +720,24 @@ We are so excited about this getaway! Could you please check availability and he
     }`}>
       <div className="flex items-end justify-between mb-6 pb-4 border-b border-border-subtle/50">
         <div>
-          <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">
-            ₹{isWillowPeak ? (Math.round(5999 * cottagesCount)).toLocaleString("en-IN") : price}
+          <span className="text-[10px] sm:text-[11px] text-slate-500 font-bold uppercase tracking-widest block mb-0.5">
+            Starting at
           </span>
-          <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">
-            / night {isWillowPeak ? (cottageSelection === "ALL" ? "(All 3 Cottages)" : `(Cottage ${cottageSelection})`) : ""}
-          </span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">
+              ₹{isWillowPeak 
+                ? (Math.round(5999 * cottagesCount)).toLocaleString("en-IN") 
+                : (nights > 0 && subtotal > 0
+                    ? Math.round(subtotal / nights).toLocaleString("en-IN")
+                    : (typeof price === "number" ? price.toLocaleString("en-IN") : price))}
+            </span>
+            <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">
+              / night {isWillowPeak ? (cottageSelection === "ALL" ? "(All 3 Cottages)" : `(Cottage ${cottageSelection})`) : ""}
+            </span>
+          </div>
+          <div className="text-[10px] sm:text-[11px] text-amber-800/80 font-medium italic mt-0.5">
+            *Prices may vary due to demand
+          </div>
           {isWillowPeak && (
             <div className="text-[10.5px] font-medium text-slate-500 mt-1">
               {cottageSelection === "ALL"
@@ -1154,6 +1180,123 @@ We are so excited about this getaway! Could you please check availability and he
         </div>
       </div>
 
+      {/* FINAL STAY BILL & DYNAMIC RATE BREAKDOWN (Displayed in Step 2 above booking buttons) */}
+      {nights > 0 && (
+        <div className="space-y-4 pt-5 pb-5 mb-5 border-t border-b border-[#DAA520]/25 text-left">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#1B3564] uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles size={13} className="text-[#DAA520]" />
+              <span>Final Bill Breakdown ({nights} Night{nights > 1 ? "s" : ""})</span>
+            </span>
+            <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-black">
+              Dynamic Rates Applied
+            </span>
+          </div>
+
+          {/* Detailed stay breakdown card */}
+          <div className="bg-[#FAF8F5] border border-[#DAA520]/20 rounded-2xl p-4 space-y-2.5 text-left select-none shadow-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-[0.15em] block">
+                Scheduled Daily Rates
+              </span>
+              <span className="text-[9px] text-slate-500 italic">
+                *Prices may vary due to demand
+              </span>
+            </div>
+            <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1 divide-y divide-slate-100">
+              {breakdown.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center text-xs text-slate-700 pt-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-semibold text-slate-800">
+                      {format(item.date, "EEE, dd MMM yyyy")}
+                    </span>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase tracking-tight ${
+                      item.type === "DAILY" 
+                        ? "bg-amber-100 text-amber-900 border border-amber-300"
+                        : item.type === "SEASONAL"
+                        ? "bg-purple-100 text-purple-900 border border-purple-300"
+                        : item.type === "SATURDAY" || item.type === "FRIDAY" || item.type === "SUNDAY" || item.type === "WEEKEND"
+                        ? "bg-blue-50 text-blue-800 border border-blue-200"
+                        : "bg-slate-100 text-slate-600"
+                    }`}>
+                      {item.label}
+                    </span>
+                  </div>
+                  <span className="font-black text-[#1B3564]">
+                    ₹{item.price.toLocaleString("en-IN")}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-between text-xs pt-2.5 border-t border-slate-200 font-bold text-slate-800">
+              <span>Accommodation Subtotal ({nights}N)</span>
+              <span>₹{subtotal.toLocaleString("en-IN")}</span>
+            </div>
+
+            {totalExtraGuestsCost > 0 && (
+              <div className="flex justify-between text-xs pt-1 font-bold text-slate-700">
+                <span>Extra Guests ({extraGuests} Pax × ₹{extraGuestFee.toLocaleString("en-IN")}/n × {nights}N)</span>
+                <span>₹{totalExtraGuestsCost.toLocaleString("en-IN")}</span>
+              </div>
+            )}
+          </div>
+
+          {addOnsCost > 0 && (
+            <div className="flex justify-between text-xs font-semibold text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
+              <span>Signature Experiences ({selectedAddOns.length} selected)</span>
+              <span className="font-black text-[#1B3564]">₹{addOnsCost.toLocaleString("en-IN")}</span>
+            </div>
+          )}
+
+          {/* Coupon Discount Banner */}
+          {discount > 0 && (
+            <div className="flex items-center justify-between text-xs font-black text-emerald-800 bg-emerald-100/90 px-3.5 py-2.5 rounded-xl border border-emerald-300 shadow-xs">
+              <div className="flex items-center gap-1.5 text-left">
+                <Sparkles size={14} className="text-emerald-700 shrink-0" />
+                <div>
+                  <span>28% Weekday Discount ({couponCode || "STAYW28"})</span>
+                  <span className="text-[10px] text-emerald-700 font-normal block">
+                    Applied on {weekdayNightsCount} weekday night{weekdayNightsCount > 1 ? "s" : ""} (Mon–Thu)
+                  </span>
+                </div>
+              </div>
+              <span className="text-sm font-black shrink-0">-₹{discount.toLocaleString("en-IN")}</span>
+            </div>
+          )}
+
+          {isCouponApplied && discount === 0 && nights > 0 && (
+            <div className="text-[11px] text-amber-800 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200 text-left">
+              ℹ️ <strong>Coupon STAYW28:</strong> Flat 28% discount applies exclusively to Monday–Thursday nights. Your selected dates are charged at standard weekend rates.
+            </div>
+          )}
+
+          {/* Total Final Bill Highlight Box */}
+          <div className="p-4 bg-[#1B3564] text-white rounded-2xl flex items-center justify-between shadow-md">
+            <div className="flex flex-col text-left">
+              <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-wider block">
+                Total Final Stay Bill
+              </span>
+              <span className="text-2xl font-black font-heading text-white">
+                ₹{total.toLocaleString("en-IN")}
+              </span>
+              {discount > 0 && (
+                <span className="text-[10.5px] text-emerald-300 font-sans font-medium mt-0.5">
+                  ✓ You save ₹{discount.toLocaleString("en-IN")} with coupon!
+                </span>
+              )}
+            </div>
+
+            <div className="text-right">
+              <span className="text-[10px] text-slate-300 uppercase tracking-widest block">0% Fees</span>
+              <span className="text-xs text-[#DAA520] font-bold">
+                {nights} Night{nights > 1 ? "s" : ""} • {guests} Pax
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-3 mb-4 text-left">
         <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
           Choose Your Preferred Booking Mode:
@@ -1172,7 +1315,7 @@ We are so excited about this getaway! Could you please check availability and he
             </svg>
             <div className="text-left">
               <span className="block font-black text-xs sm:text-sm">Option 1: Book via WhatsApp</span>
-              <span className="text-[10px] text-white/80 font-normal block">Instant chat with concierge & custom quote</span>
+              <span className="text-[10px] text-white/80 font-normal block">Instant chat with concierge • ₹{total > 0 ? total.toLocaleString("en-IN") : "Quote"}</span>
             </div>
           </div>
           <span className="text-[11px] font-black bg-white/20 px-2.5 py-1 rounded-lg">Instant ➔</span>
@@ -1196,97 +1339,13 @@ We are so excited about this getaway! Could you please check availability and he
               <span className="text-[10px] text-slate-300 font-normal block">Hold dates • Will be verified within 24 hours</span>
             </div>
           </div>
-          <span className="text-[11px] font-black bg-[#DAA520]/30 text-[#DAA520] px-2.5 py-1 rounded-lg">Hold Dates ➔</span>
+          <span className="text-[11px] font-black bg-[#DAA520]/30 text-[#DAA520] px-2.5 py-1 rounded-lg">Hold for ₹{total > 0 ? total.toLocaleString("en-IN") : "Total"} ➔</span>
         </button>
       </div>
 
       <p className="text-center text-slate-500 text-[10px] uppercase tracking-widest mb-4 font-semibold select-none flex items-center justify-center gap-1.5">
         <span>🔒 Best Direct Price Guarantee • 0% Platform Fee</span>
       </p>
-
-      {nights > 0 && (
-        <div className="space-y-4 pt-6 border-t border-border-subtle">
-          {/* Detailed stay breakdown card */}
-          <div className="bg-bg-primary border border-border-subtle rounded-2xl p-4 space-y-2.5 text-left select-none shadow-sm">
-            <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block">
-              Stay Rate Breakdown
-            </span>
-            <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
-              {breakdown.map((item, idx) => (
-                <div key={idx} className="flex justify-between text-xs text-text-primary/70">
-                  <span className="font-medium">
-                    {format(item.date, "dd MMM yyyy")} ({item.label})
-                  </span>
-                  <span className="font-bold text-text-primary">
-                    ₹{item.price.toLocaleString("en-IN")}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between text-xs pt-2.5 border-t border-border-subtle/60 font-bold text-text-primary/80">
-              <span>Accommodation Subtotal</span>
-              <span>₹{subtotal.toLocaleString("en-IN")}</span>
-            </div>
-            {totalExtraGuestsCost > 0 && (
-              <div className="flex justify-between text-xs pt-1 font-bold text-text-primary/80">
-                <span>Extra Guests ({extraGuests} × ₹{extraGuestFee}/night)</span>
-                <span>₹{totalExtraGuestsCost.toLocaleString("en-IN")}</span>
-              </div>
-            )}
-          </div>
-
-          {addOnsCost > 0 && (
-            <div className="flex justify-between text-sm">
-              <span className="text-text-primary/60">Signature Experiences</span>
-              <span className="text-text-primary">₹{addOnsCost.toLocaleString("en-IN")}</span>
-            </div>
-          )}
-
-          {/* Coupon Discount Banner */}
-          {discount > 0 && (
-            <div className="flex items-center justify-between text-xs font-black text-emerald-800 bg-emerald-100/90 px-3.5 py-2.5 rounded-xl border border-emerald-300 shadow-xs">
-              <div className="flex items-center gap-1.5 text-left">
-                <Sparkles size={14} className="text-emerald-700 shrink-0" />
-                <div>
-                  <span>28% Weekday Discount ({couponCode || "STAYW28"})</span>
-                  <span className="text-[10px] text-emerald-700 font-normal block">
-                    Applied on {weekdayNightsCount} weekday night{weekdayNightsCount > 1 ? "s" : ""} (Mon–Thu) • Weekend rates unaffected
-                  </span>
-                </div>
-              </div>
-              <span className="text-sm font-black shrink-0">-₹{discount.toLocaleString("en-IN")}</span>
-            </div>
-          )}
-
-          {isCouponApplied && discount === 0 && nights > 0 && (
-            <div className="text-[11px] text-amber-800 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200 text-left">
-              ℹ️ <strong>Coupon STAYW28:</strong> Flat 28% discount applies exclusively to Monday–Thursday nights. Your selected dates are charged at standard weekend rates.
-            </div>
-          )}
-
-          {/* Total Bill with Savings Callout */}
-          <div className="flex justify-between items-center text-lg font-heading pt-4 border-t border-[#1B3564]/10">
-            <div className="flex flex-col text-left">
-              <span className="text-[#1B3564] font-bold">Total Stay Bill</span>
-              {discount > 0 && (
-                <span className="text-[10.5px] text-emerald-700 font-sans font-black mt-0.5">
-                  ✓ You save ₹{discount.toLocaleString("en-IN")} with coupon!
-                </span>
-              )}
-            </div>
-            <div className="flex items-baseline gap-2">
-              {discount > 0 && (
-                <span className="text-xs text-slate-400 line-through font-sans">
-                  ₹{(subtotal + totalExtraGuestsCost + addOnsCost).toLocaleString("en-IN")}
-                </span>
-              )}
-              <span className="text-[#1B3564] font-black text-xl">
-                ₹{total.toLocaleString("en-IN")}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="mt-8 p-4 rounded-2xl bg-accent-secondary/8 border border-accent-secondary/20 flex gap-3 items-start text-left select-none">
         <Info className="text-accent-secondary shrink-0 mt-0.5" size={16} />

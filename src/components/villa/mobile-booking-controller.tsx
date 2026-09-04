@@ -371,7 +371,10 @@ export default function MobileBookingController(props: MobileBookingControllerPr
               {isWillowPeak ? (cottageSelection === "ALL" ? "Full Estate (3 Cottages)" : `Cottage ${cottageSelection} (Jacuzzi)`) : "Direct Best Rate"}
             </span>
             <span className="text-[#1B3564] font-black text-base leading-tight">₹{activeDisplayPrice} <span className="text-[9px] font-normal text-slate-500 font-sans">/ night</span></span>
-            <span className="text-[7.5px] text-emerald-600 font-bold uppercase tracking-wider">✓ 0% Platform Fee</span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[7.5px] text-emerald-600 font-bold uppercase tracking-wider">✓ 0% Fee</span>
+              <span className="text-[7px] text-amber-800/80 font-medium italic">• Prices may vary due to demand</span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2 flex-1 justify-end">

@@ -121,6 +121,9 @@ const VillaCard = ({
                   ? "4,999" 
                   : price} <span className="text-[8px] sm:text-[10px] font-normal text-slate-500 font-sans">/ night {id.includes("cottage") ? "/ cottage" : ""}</span>
               </span>
+              <span className="text-[7.5px] sm:text-[8px] text-amber-800/80 font-medium italic mt-0.5 block">
+                *Prices may vary due to demand
+              </span>
             </div>
             <span className="text-[8px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
               0% Fee

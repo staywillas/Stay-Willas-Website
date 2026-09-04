@@ -241,6 +241,7 @@ export default async function LonavalaPage() {
                       <span className="text-[10px] text-slate-400 uppercase block">Starting From</span>
                       <span className="text-xl sm:text-2xl font-black text-[#DAA520]">₹4,999</span>
                       <span className="text-[10px] text-slate-400"> / night</span>
+                      <span className="text-[8px] text-slate-400 block italic mt-0.5">*Prices may vary due to demand</span>
                     </div>
                   </div>
 
@@ -349,6 +350,7 @@ export default async function LonavalaPage() {
                     </span>
                     <span className="text-slate-300">|</span>
                     <span className="text-xs font-bold text-emerald-700">From ₹13,000 / night</span>
+                    <span className="text-[10px] text-amber-700 italic font-medium">(*Prices may vary due to demand)</span>
                     <span className="text-slate-300">|</span>
                     <span className="text-[11px] text-slate-500 font-medium">0% Commission</span>
                   </div>

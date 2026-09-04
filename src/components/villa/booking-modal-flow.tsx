@@ -218,6 +218,9 @@ export default function BookingModalFlow({
                 Direct Sanctuary Booking
               </span>
             </div>
+            <span className="text-[9.5px] sm:text-[10.5px] text-slate-500 font-bold uppercase tracking-widest block mb-0.5">
+              Starting at
+            </span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">
                 ₹{displayPrice.toLocaleString("en-IN")}
@@ -225,6 +228,9 @@ export default function BookingModalFlow({
               <span className="text-slate-500 text-xs sm:text-sm font-semibold">
                 / night {isWillowPeak ? (cottageSelection === "ALL" ? "(All 3 Cottages)" : `(Cottage ${cottageSelection})`) : ""}
               </span>
+            </div>
+            <div className="text-[9px] text-amber-800/80 font-medium italic mt-0.5">
+              *Prices may vary due to demand
             </div>
           </div>
           <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shrink-0">

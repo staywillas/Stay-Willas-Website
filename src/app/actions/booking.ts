@@ -36,14 +36,18 @@ export async function calculateStayPrice(
 
   while (currentDate.getTime() < end.getTime()) {
     let nightPrice = 0;
-    // 0. Check for exact daily override price (highest priority)
-    const normalizedDate = new Date(currentDate);
-    normalizedDate.setHours(0, 0, 0, 0);
+    const checkY = currentDate.getFullYear();
+    const checkM = currentDate.getMonth();
+    const checkD = currentDate.getDate();
+    const checkIso = `${checkY}-${String(checkM + 1).padStart(2, "0")}-${String(checkD).padStart(2, "0")}`;
 
     const dailyOverride = villa.dailyPrices.find(dp => {
+      if (!dp?.date) return false;
       const dDate = new Date(dp.date);
-      dDate.setHours(0, 0, 0, 0);
-      return normalizedDate.getTime() === dDate.getTime();
+      const matchLocal = dDate.getFullYear() === checkY && dDate.getMonth() === checkM && dDate.getDate() === checkD;
+      const matchUTC = dDate.getUTCFullYear() === checkY && dDate.getUTCMonth() === checkM && dDate.getUTCDate() === checkD;
+      const matchStr = typeof dp.date === "string" && (dp.date as string).startsWith(checkIso);
+      return matchLocal || matchUTC || matchStr;
     });
 
     if (dailyOverride) {
@@ -475,6 +479,10 @@ export async function checkAvailableVillasForDates(data: {
         name: true,
         slug: true,
         price: true,
+        weekendPrice: true,
+        fridayPrice: true,
+        saturdayPrice: true,
+        sundayPrice: true,
         bedrooms: true,
         bathrooms: true,
         guests: true,
@@ -482,6 +490,8 @@ export async function checkAvailableVillasForDates(data: {
         category: true,
         amenities: true,
         images: true,
+        dailyPrices: true,
+        seasonalPrices: true,
         bookings: {
           where: {
             OR: [
@@ -548,13 +558,74 @@ export async function checkAvailableVillasForDates(data: {
 
     console.log("[Availability] Available villas after date filter:", availableVillas.length, "/", villas.length);
 
+    // Helper to calculate dynamic rate for dates
+    const calculateDynamicRate = (v: typeof villas[0]) => {
+      let cur = new Date(userCheckIn);
+      const end = new Date(userCheckOut);
+      let total = 0;
+      let nightsCount = 0;
+
+      while (cur.getTime() < end.getTime()) {
+        let nightRate = v.price;
+        const checkY = cur.getFullYear();
+        const checkM = cur.getMonth();
+        const checkD = cur.getDate();
+        const checkIso = `${checkY}-${String(checkM + 1).padStart(2, "0")}-${String(checkD).padStart(2, "0")}`;
+
+        // Priority 1: Exact daily override
+        const dailyOverride = v.dailyPrices?.find(dp => {
+          if (!dp?.date) return false;
+          const dDate = new Date(dp.date);
+          const matchLocal = dDate.getFullYear() === checkY && dDate.getMonth() === checkM && dDate.getDate() === checkD;
+          const matchUTC = dDate.getUTCFullYear() === checkY && dDate.getUTCMonth() === checkM && dDate.getUTCDate() === checkD;
+          const matchStr = typeof dp.date === "string" && (dp.date as string).startsWith(checkIso);
+          return matchLocal || matchUTC || matchStr;
+        });
+
+        if (dailyOverride) {
+          nightRate = dailyOverride.price;
+        } else {
+          // Priority 2: Seasonal override
+          const seasonal = v.seasonalPrices?.find(sp => {
+            const start = new Date(sp.startDate);
+            const endSp = new Date(sp.endDate);
+            return cur.getTime() >= start.getTime() && cur.getTime() <= endSp.getTime();
+          });
+
+          if (seasonal) {
+            nightRate = seasonal.price;
+          } else {
+            // Priority 3: Day-of-week rates
+            const dayOfWeek = cur.getDay();
+            if (dayOfWeek === 5 && v.fridayPrice != null) {
+              nightRate = v.fridayPrice;
+            } else if (dayOfWeek === 6 && v.saturdayPrice != null) {
+              nightRate = v.saturdayPrice;
+            } else if (dayOfWeek === 0 && v.sundayPrice != null) {
+              nightRate = v.sundayPrice;
+            } else if ((dayOfWeek === 5 || dayOfWeek === 6) && v.weekendPrice) {
+              nightRate = v.weekendPrice;
+            } else {
+              nightRate = v.price;
+            }
+          }
+        }
+
+        total += nightRate;
+        nightsCount++;
+        cur.setDate(cur.getDate() + 1);
+      }
+
+      return nightsCount > 0 ? Math.round(total / nightsCount) : v.price;
+    };
+
     return {
       success: true,
       villas: availableVillas.map(v => ({
         id: v.id,
         name: v.name,
         slug: v.slug,
-        price: v.price,
+        price: calculateDynamicRate(v),
         bedrooms: v.bedrooms,
         bathrooms: v.bathrooms,
         guests: v.guests,

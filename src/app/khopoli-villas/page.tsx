@@ -607,6 +607,9 @@ export default async function KhopoliGroupEstatePage() {
                   <span className="text-2xl sm:text-3xl font-black text-[#1B3564]">₹{discounted1Night.toLocaleString("en-IN")}</span>
                   <span className="text-xs font-normal text-slate-500">/ night</span>
                 </div>
+                <div className="text-[9px] text-amber-700 italic font-medium mt-0.5">
+                  *Prices may vary due to demand
+                </div>
                 <span className="inline-block mt-1 text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
                   Coupon: <strong className="text-[#1B3564]">STAYW28</strong>
                 </span>

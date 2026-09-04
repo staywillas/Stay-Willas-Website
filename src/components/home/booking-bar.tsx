@@ -756,6 +756,9 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                   <span className="text-base font-black text-slate-900">
                                     ₹{villa.price?.toLocaleString("en-IN")} <span className="text-xs font-normal text-slate-500">/ night</span>
                                   </span>
+                                  <span className="text-[8px] text-amber-800/80 font-medium italic block mt-0.5">
+                                    *Prices may vary due to demand
+                                  </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">

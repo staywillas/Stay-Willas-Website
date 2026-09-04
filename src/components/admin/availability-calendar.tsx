@@ -131,12 +131,9 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   // Section 2: Stay Dates & Rates
   const [checkInStr, setCheckInStr] = useState("");
   const [checkOutStr, setCheckOutStr] = useState("");
-  const [ratePerNight, setRatePerNight] = useState<number>(0);
-  const [weekendRatePerNight, setWeekendRatePerNight] = useState<number>(0);
   const [nights, setNights] = useState<number>(1);
-  const [weekendNights, setWeekendNights] = useState<number>(0);
-  const [baseGuests, setBaseGuests] = useState<number>(12);
-  const [extraGuestFee, setExtraGuestFee] = useState<number>(1500);
+  // Night-by-Night Pricing (Night 1, Night 2, etc. - Empty by default for client entry)
+  const [nightRates, setNightRates] = useState<(number | "")[]>([""]);
 
   // Section 3: Dining / Meal Plan
   const [foodPlan, setFoodPlan] = useState<"none" | "standard" | "deluxe" | "custom">("none");
@@ -164,16 +161,61 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   const [isDeleting, setIsDeleting] = useState(false);
   const [emailFeedback, setEmailFeedback] = useState<{ type: "success" | "error"; msg: string } | null>(null);
 
-  // When villa changes in the modal, populate standard rates and limits
+  // Helper to format date label for a given night (0-indexed)
+  const getNightDateLabel = (index: number) => {
+    if (!checkInStr) return `Night ${index + 1}`;
+    try {
+      const d = new Date(checkInStr + "T12:00:00");
+      d.setDate(d.getDate() + index);
+      const dayName = d.toLocaleDateString("en-IN", { weekday: "short" });
+      const dayDate = d.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+      return `Night ${index + 1} (${dayName}, ${dayDate})`;
+    } catch {
+      return `Night ${index + 1}`;
+    }
+  };
+
+  // Adjust total nights and sync nightRates array length
+  const handleNightsChange = (newCount: number) => {
+    const safeCount = Math.max(1, newCount);
+    setNights(safeCount);
+    setNightRates((prev) => {
+      const next = [...prev];
+      while (next.length < safeCount) next.push("");
+      return next.slice(0, safeCount);
+    });
+
+    if (checkInStr) {
+      try {
+        const d = new Date(checkInStr + "T12:00:00");
+        d.setDate(d.getDate() + safeCount);
+        setCheckOutStr(d.toISOString().split("T")[0]);
+      } catch {}
+    }
+  };
+
+  const handleNightRateChange = (index: number, valStr: string) => {
+    const val = valStr === "" ? "" : Number(valStr);
+    setNightRates((prev) => {
+      const next = [...prev];
+      next[index] = val;
+      return next;
+    });
+  };
+
+  const handleCopyNight1ToAll = () => {
+    const first = nightRates[0];
+    if (first !== undefined && first !== "") {
+      setNightRates(Array(nights).fill(first));
+    }
+  };
+
+  // When villa changes in the modal, populate standard limits
   useEffect(() => {
     if (!selectedVillaId) return;
     const villa = villas.find((v) => v.id === selectedVillaId);
     if (villa) {
       const isWillow = villa.slug === "willow-peak";
-      setRatePerNight(villa.price);
-      setWeekendRatePerNight(villa.weekendPrice || villa.saturdayPrice || Math.round(villa.price * 1.2));
-      setBaseGuests(villa.baseGuests ?? (isWillow ? 4 : 12));
-      setExtraGuestFee(villa.extraGuestFee ?? 1200);
       if (guestCount < 1) {
         setGuestCount(villa.guests || 2);
         setFoodGuestsCount(villa.guests || 2);
@@ -197,28 +239,22 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     }
   }, [foodPlan]);
 
-  // Auto calculate nights & weekend nights from dates
+  // Auto calculate nights from dates and sync night rates array
   const handleDateChange = (cin: string, cout: string) => {
     setCheckInStr(cin);
     setCheckOutStr(cout);
 
     if (cin && cout) {
-      const start = new Date(cin);
-      const end = new Date(cout);
+      const start = new Date(cin + "T12:00:00");
+      const end = new Date(cout + "T12:00:00");
       if (end > start) {
         const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
         setNights(totalDays);
-
-        let wknd = 0;
-        const cur = new Date(start);
-        while (cur < end) {
-          const day = cur.getDay(); // 0 Sun, 5 Fri, 6 Sat
-          if (day === 5 || day === 6) {
-            wknd++;
-          }
-          cur.setDate(cur.getDate() + 1);
-        }
-        setWeekendNights(Math.min(totalDays, wknd));
+        setNightRates((prev) => {
+          const next = [...prev];
+          while (next.length < totalDays) next.push("");
+          return next.slice(0, totalDays);
+        });
       }
     }
   };
@@ -239,21 +275,15 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
   // Financial Calculations
   const isWillowSelected = villas.find((v) => v.id === selectedVillaId)?.slug === "willow-peak";
-  const standardNights = Math.max(0, nights - weekendNights);
-  const weekdayNights = standardNights;
-  const weekdayStayCost = Math.round(weekdayNights * ratePerNight * (isWillowSelected ? (cottagesCount / 3) : 1));
-  const weekendStayCost = Math.round(weekendNights * weekendRatePerNight * (isWillowSelected ? (cottagesCount / 3) : 1));
-  const totalStayCost = modalMode === "GUEST_BOOKING" 
-    ? (weekdayStayCost + weekendStayCost) 
+
+  // Total Stay Tariff (Sum of each night rate, no extra guest fee per request)
+  const totalStayCost = modalMode === "GUEST_BOOKING"
+    ? nightRates.reduce<number>((sum, r) => sum + (typeof r === "number" ? r : 0), 0)
     : 0;
 
-  // Extra guests calculation
-  const allowedBase = isWillowSelected ? (cottagesCount * 4) : baseGuests;
-  const extraGuestsCount = Math.max(0, guestCount - allowedBase);
-  const totalExtraGuestsCost = modalMode === "GUEST_BOOKING" 
-    ? (extraGuestsCount * extraGuestFee * nights) 
-    : 0;
-  const extraGuestsCost = totalExtraGuestsCost;
+  // No separate guest fee
+  const totalExtraGuestsCost = 0;
+  const extraGuestsCost = 0;
 
   // Total Food Cost
   const totalFoodCost = modalMode === "GUEST_BOOKING" && foodPlan !== "none" 
@@ -266,7 +296,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     : 0;
 
   // Subtotal before discount
-  const subtotalBeforeDiscount = totalStayCost + totalExtraGuestsCost + totalFoodCost + totalExtrasCost;
+  const subtotalBeforeDiscount = totalStayCost + totalFoodCost + totalExtrasCost;
 
   // Calculate discount
   const calculatedPercentDiscount = subtotalBeforeDiscount * (discountPercent / 100);
@@ -374,13 +404,10 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
     const villa = villas.find((v) => v.id === targetVillaId);
     if (villa) {
-      setRatePerNight(villa.price);
-      setWeekendRatePerNight(villa.weekendPrice || villa.saturdayPrice || Math.round(villa.price * 1.2));
-      setBaseGuests(villa.baseGuests ?? 12);
-      setExtraGuestFee(villa.extraGuestFee ?? 1500);
       setGuestCount(villa.guests || 2);
       setFoodGuestsCount(villa.guests || 2);
     }
+    setNightRates([""]);
 
     if (initialDate) {
       const inDate = new Date(initialDate);
@@ -524,16 +551,9 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       const targetCheckIn = customBookingData?.checkIn || checkInStr;
       const targetCheckOut = customBookingData?.checkOut || checkOutStr;
       const targetNights = customBookingData?.nights || nights;
-      const targetWeekdayNights = customBookingData?.weekdayNights !== undefined ? customBookingData.weekdayNights : weekdayNights;
-      const targetWeekendNights = customBookingData?.weekendNights !== undefined ? customBookingData.weekendNights : weekendNights;
+      const targetNightRates: (number | "")[] = customBookingData?.nightRates || nightRates;
       const targetGuestsCount = customBookingData?.guestsCount || guestCount;
-      const targetRatePerNight = customBookingData?.ratePerNight || ratePerNight;
-      const targetWeekendRatePerNight = customBookingData?.weekendRatePerNight || weekendRatePerNight;
-      const targetWeekdayStayCost = customBookingData?.weekdayStayCost || weekdayStayCost;
-      const targetWeekendStayCost = customBookingData?.weekendStayCost || weekendStayCost;
-      const targetExtraGuestsCost = customBookingData?.extraGuestsCost || extraGuestsCost;
-      const targetExtraGuestsCount = customBookingData?.extraGuestsCount || extraGuestsCount;
-      const targetExtraGuestFee = customBookingData?.extraGuestFee || extraGuestFee;
+      const targetStayCost = customBookingData?.totalStayCost !== undefined ? customBookingData.totalStayCost : totalStayCost;
       const targetFoodPlan = customBookingData?.foodPlan || foodPlan;
       const targetFoodRate = customBookingData?.foodRate || foodRatePerPersonPerDay;
       const targetFoodGuests = customBookingData?.foodGuests || foodGuestsCount;
@@ -729,32 +749,17 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         currentY += 7.5;
       };
 
-      if (targetWeekdayNights > 0) {
+      // Rows: Each Night Tariff
+      targetNightRates.forEach((r, idx) => {
+        const nightLbl = getNightDateLabel(idx);
+        const amt = typeof r === "number" ? r : 0;
         drawTableRow(
-          `Stay Tariff - Weekday Nights`,
-          `${targetWeekdayNights} Night(s)`,
-          `Rs. ${targetRatePerNight.toLocaleString("en-IN")}`,
-          `Rs. ${targetWeekdayStayCost.toLocaleString("en-IN")}`
+          `Stay Tariff - ${nightLbl}`,
+          `1 Night`,
+          `Rs. ${amt.toLocaleString("en-IN")}`,
+          `Rs. ${amt.toLocaleString("en-IN")}`
         );
-      }
-
-      if (targetWeekendNights > 0) {
-        drawTableRow(
-          `Stay Tariff - Weekend Nights`,
-          `${targetWeekendNights} Night(s)`,
-          `Rs. ${targetWeekendRatePerNight.toLocaleString("en-IN")}`,
-          `Rs. ${targetWeekendStayCost.toLocaleString("en-IN")}`
-        );
-      }
-
-      if (targetExtraGuestsCount > 0) {
-        drawTableRow(
-          `Extra Guests Fee`,
-          `${targetExtraGuestsCount} Pax * ${targetNights} Nights`,
-          `Rs. ${targetExtraGuestFee.toLocaleString("en-IN")}`,
-          `Rs. ${targetExtraGuestsCost.toLocaleString("en-IN")}`
-        );
-      }
+      });
 
       if (targetFoodPlan && targetFoodPlan !== "none") {
         const planLabel = targetFoodPlan.toUpperCase() + " MENU";
@@ -887,7 +892,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         type,
         guests: guestCount,
         cottagesCount: isWillowSelected ? cottagesCount : 1,
-        nightlyRate: ratePerNight,
+        nightlyRate: nights > 0 ? Math.round(totalStayCost / nights) : (typeof nightRates[0] === "number" ? nightRates[0] : 0),
         foodPlan,
         foodRatePerPersonPerDay,
         foodGuestsCount,
@@ -1006,8 +1011,14 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       `🌙 *Stay Duration:* ${numNights} Night(s)\n` +
       `👥 *Guests:* ${numGuests} Pax\n` +
       `------------------------------------------\n` +
+      `🏠 *Nightly Stay Tariff:*\n` +
+      nightRates.map((r, i) => `   • ${getNightDateLabel(i)}: Rs. ${typeof r === "number" ? r.toLocaleString("en-IN") : "0"}`).join("\n") +
+      `\n   *Total Stay Tariff:* Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
+      (totalFoodCost > 0 ? `🍽️ *Catering Plan:* Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
+      (totalExtrasCost > 0 ? `✨ *Add-ons & Extras:* Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
+      (securityDeposit > 0 ? `🛡️ *Refundable Deposit:* Rs. ${securityDeposit.toLocaleString("en-IN")}\n` : "") +
       `💰 *Grand Total:* Rs. ${total.toLocaleString("en-IN")}\n` +
-      `💳 *Advance Received:* Rs. ${advance.toLocaleString("en-IN")}\n` +
+      (advance > 0 ? `💳 *Advance Received:* Rs. ${advance.toLocaleString("en-IN")}\n` : "") +
       `📌 *Balance Due on Check-In:* ${balance <= 0 ? "PAID IN FULL" : `Rs. ${balance.toLocaleString("en-IN")}`}\n` +
       `------------------------------------------\n` +
       `Thank you for booking with Stay Willas! 🥂`;
@@ -1400,12 +1411,10 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                 <div className="flex items-center gap-3 text-xs font-bold text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
                   <span>Stay Duration:</span>
                   <span className="bg-[#1B3564] text-white px-2.5 py-0.5 rounded-full text-[11px]">
-                    {nights} Total Nights
+                    {nights} Total Night{nights > 1 ? "s" : ""}
                   </span>
                   <span className="text-slate-400">•</span>
-                  <span className="text-slate-600">{weekdayNights} Weekday Nights</span>
-                  <span className="text-slate-400">•</span>
-                  <span className="text-amber-700">{weekendNights} Weekend Nights</span>
+                  <span className="text-slate-600">{guestCount} Guests</span>
                 </div>
               </div>
 
@@ -1561,55 +1570,76 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                     )}
                   </div>
 
-                  {/* Section 3: Nightly Pricing & Extra Guest Rates */}
+                  {/* Section 3: Night-by-Night Stay Rates */}
                   <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-3">
-                    <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
-                      3. Nightly Tariff Breakdown
-                    </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                      <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Weekday Rate (₹/n)</label>
-                        <input
-                          type="number"
-                          value={ratePerNight}
-                          onChange={(e) => setRatePerNight(Number(e.target.value) || 0)}
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Weekend Rate (₹/n)</label>
-                        <input
-                          type="number"
-                          value={weekendRatePerNight}
-                          onChange={(e) => setWeekendRatePerNight(Number(e.target.value) || 0)}
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Base Guests Included</label>
-                        <input
-                          type="number"
-                          value={baseGuests}
-                          onChange={(e) => setBaseGuests(Number(e.target.value) || 1)}
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Extra Guest Fee (₹/pax/n)</label>
-                        <input
-                          type="number"
-                          value={extraGuestFee}
-                          onChange={(e) => setExtraGuestFee(Number(e.target.value) || 0)}
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
-                        />
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
+                        3. Nightly Stay Rates ({nights} Night{nights > 1 ? "s" : ""})
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {nights > 1 && nightRates[0] !== "" && (
+                          <button
+                            type="button"
+                            onClick={handleCopyNight1ToAll}
+                            className="text-[10px] font-bold text-[#1B3564] bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2 py-0.5 rounded-lg cursor-pointer transition-colors"
+                          >
+                            Copy Night 1 to All
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleNightsChange(nights + 1)}
+                          className="text-[10px] font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-lg cursor-pointer"
+                        >
+                          + 1 Night
+                        </button>
+                        {nights > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => handleNightsChange(nights - 1)}
+                            className="text-[10px] font-bold text-red-600 bg-white hover:bg-red-50 border border-slate-200 px-2 py-0.5 rounded-lg cursor-pointer"
+                          >
+                            - 1 Night
+                          </button>
+                        )}
                       </div>
                     </div>
 
+                    <p className="text-[11px] text-slate-500">
+                      Enter tariff for each booked night (Night 1, Night 2, etc.). Pricing fields are left blank so you can enter the agreed rates directly.
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {nightRates.map((rate, index) => {
+                        const nightLabel = getNightDateLabel(index);
+                        return (
+                          <div key={index} className="bg-white border border-slate-200 rounded-xl p-3 space-y-1 focus-within:border-[#1B3564] transition-all">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[11px] font-bold text-slate-800 flex items-center gap-1">
+                                <span className="w-4 h-4 rounded-full bg-[#1B3564] text-white text-[9px] flex items-center justify-center font-black">
+                                  {index + 1}
+                                </span>
+                                <span>{nightLabel}</span>
+                              </span>
+                              <span className="text-[9px] text-slate-400 font-bold uppercase">Tariff</span>
+                            </div>
+                            <div className="relative">
+                              <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 select-none">₹</span>
+                              <input
+                                type="number"
+                                placeholder="Enter tariff..."
+                                value={rate}
+                                onChange={(e) => handleNightRateChange(index, e.target.value)}
+                                className="w-full text-xs font-bold text-slate-900 border border-slate-200 rounded-lg pl-6 pr-2.5 py-1.5 bg-slate-50/50 focus:bg-white focus:outline-none focus:border-[#1B3564]"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
                     <div className="text-xs bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center">
-                      <span className="text-slate-600">Total Villa Accommodation Tariff:</span>
+                      <span className="text-slate-600 font-medium">Total Stay Accommodation Tariff:</span>
                       <span className="text-base font-black text-[#1B3564]">₹{totalStayCost.toLocaleString("en-IN")}</span>
                     </div>
                   </div>
@@ -1719,18 +1749,71 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                     )}
                   </div>
 
-                  {/* Section 6: Adjustments, Taxes & Payment */}
+                  {/* Section 6: Advance Paid, Security Deposit & Adjustments */}
                   <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-3">
                     <span className="text-[10px] font-extrabold text-[#1B3564] uppercase tracking-widest block font-sans">
-                      6. Discounts, Tax & Payments
+                      6. Advance Paid, Security Deposit & Taxes
                     </span>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {/* Dedicated Advance Paid & Security Deposit Cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Advance Paid */}
+                      <div className="bg-white p-3.5 rounded-xl border border-emerald-300 shadow-2xs space-y-1">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-bold text-emerald-900 flex items-center gap-1.5">
+                            <CheckCircle2 size={13} className="text-emerald-600" />
+                            <span>Advance Received / Paid (₹)</span>
+                          </label>
+                          <span className="text-[9px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full uppercase">
+                            Paid by Guest
+                          </span>
+                        </div>
+                        <div className="relative">
+                          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-emerald-700 select-none">₹</span>
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={advancePaid || ""}
+                            onChange={(e) => setAdvancePaid(Number(e.target.value) || 0)}
+                            className="w-full bg-emerald-50/40 border border-emerald-200 text-emerald-950 rounded-lg pl-6 pr-3 py-1.5 text-xs font-black outline-none focus:bg-white focus:border-emerald-500"
+                          />
+                        </div>
+                        <span className="text-[10px] text-slate-400 block">Deducted from the total to calculate balance at check-in</span>
+                      </div>
+
+                      {/* Security Deposit */}
+                      <div className="bg-white p-3.5 rounded-xl border border-amber-300 shadow-2xs space-y-1">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-bold text-amber-950 flex items-center gap-1.5">
+                            <ShieldAlert size={13} className="text-[#DAA520]" />
+                            <span>Security Deposit (₹)</span>
+                          </label>
+                          <span className="text-[9px] font-black text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full uppercase">
+                            Refundable
+                          </span>
+                        </div>
+                        <div className="relative">
+                          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-amber-700 select-none">₹</span>
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={securityDeposit || ""}
+                            onChange={(e) => setSecurityDeposit(Number(e.target.value) || 0)}
+                            className="w-full bg-amber-50/40 border border-amber-200 text-slate-900 rounded-lg pl-6 pr-3 py-1.5 text-xs font-black outline-none focus:bg-white focus:border-[#DAA520]"
+                          />
+                        </div>
+                        <span className="text-[10px] text-slate-400 block">Refundable deposit for property damage care</span>
+                      </div>
+                    </div>
+
+                    {/* Discounts, Tax Rate & Status */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
                       <div>
                         <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Flat Discount (₹)</label>
                         <input
                           type="number"
-                          value={discountFlat}
+                          value={discountFlat || ""}
+                          placeholder="0"
                           onChange={(e) => setDiscountFlat(Number(e.target.value) || 0)}
                           className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
                         />
@@ -1740,7 +1823,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                         <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Percent Discount (%)</label>
                         <input
                           type="number"
-                          value={discountPercent}
+                          value={discountPercent || ""}
+                          placeholder="0"
                           onChange={(e) => setDiscountPercent(Number(e.target.value) || 0)}
                           className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
                         />
@@ -1761,33 +1845,11 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       </div>
 
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Security Deposit (₹)</label>
-                        <input
-                          type="number"
-                          value={securityDeposit}
-                          onChange={(e) => setSecurityDeposit(Number(e.target.value) || 0)}
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                      <div>
-                        <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Advance Payment Received (₹)</label>
-                        <input
-                          type="number"
-                          value={advancePaid}
-                          onChange={(e) => setAdvancePaid(Number(e.target.value) || 0)}
-                          className="w-full bg-white border border-emerald-300 text-emerald-900 rounded-xl px-3 py-2.5 text-xs font-black outline-none"
-                        />
-                      </div>
-
-                      <div>
                         <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">Reservation Status</label>
                         <select
                           value={bookingStatus}
                           onChange={(e) => setBookingStatus(e.target.value)}
-                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2.5 text-xs font-bold outline-none"
+                          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs font-bold outline-none"
                         >
                           <option value="CONFIRMED">CONFIRMED STAY</option>
                           <option value="PENDING">VERIFICATION PENDING</option>
@@ -1811,24 +1873,47 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                   {/* Live Financial Summary Banner */}
                   <div className="bg-[#1B3564] text-white p-5 rounded-2xl border border-[#DAA520]/30 shadow-lg space-y-3">
                     <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
-                      <span>Subtotal before GST:</span>
-                      <span className="font-bold text-white">₹{subtotal.toLocaleString("en-IN")}</span>
+                      <span>Stay Subtotal ({nights}N):</span>
+                      <span className="font-bold text-white">₹{totalStayCost.toLocaleString("en-IN")}</span>
                     </div>
 
-                    <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
-                      <span>GST ({gstPercent}%):</span>
-                      <span className="font-bold text-white">₹{gstAmount.toLocaleString("en-IN")}</span>
-                    </div>
+                    {totalFoodCost > 0 && (
+                      <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
+                        <span>Catering Charges:</span>
+                        <span className="font-bold text-white">₹{totalFoodCost.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+
+                    {totalExtrasCost > 0 && (
+                      <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
+                        <span>Add-ons & Extras:</span>
+                        <span className="font-bold text-white">₹{totalExtrasCost.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+
+                    {gstAmount > 0 && (
+                      <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
+                        <span>GST ({gstPercent}%):</span>
+                        <span className="font-bold text-white">₹{gstAmount.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+
+                    {securityDeposit > 0 && (
+                      <div className="flex justify-between items-center text-xs text-amber-300 border-b border-white/10 pb-2">
+                        <span>+ Refundable Security Deposit:</span>
+                        <span className="font-bold">₹{securityDeposit.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
 
                     <div className="flex justify-between items-center text-sm font-bold text-[#DAA520]">
                       <span>NET GRAND TOTAL:</span>
-                      <span className="text-xl font-black">₹{(grandTotal + securityDeposit).toLocaleString("en-IN")}</span>
+                      <span className="text-xl font-black">₹{grandTotal.toLocaleString("en-IN")}</span>
                     </div>
 
                     <div className="flex justify-between items-center text-xs font-bold pt-2 border-t border-white/10">
                       <span className="text-emerald-300">Advance Paid: ₹{advancePaid.toLocaleString("en-IN")}</span>
                       <span className={balanceDue <= 0 ? "text-emerald-300" : "text-amber-300"}>
-                        Balance Remaining: {balanceDue <= 0 ? "PAID IN FULL" : `₹${balanceDue.toLocaleString("en-IN")}`}
+                        Balance on Check-In: {balanceDue <= 0 ? "PAID IN FULL" : `₹${balanceDue.toLocaleString("en-IN")}`}
                       </span>
                     </div>
                   </div>
@@ -2066,13 +2151,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                         checkIn: new Date(selectedBooking.checkIn).toISOString().split("T")[0],
                         checkOut: new Date(selectedBooking.checkOut).toISOString().split("T")[0],
                         nights: bNights,
-                        weekdayNights: bNights,
-                        weekendNights: 0,
-                        weekdayStayCost: bNights * bRate,
-                        weekendStayCost: 0,
-                        extraGuestsCost: bExtraGuestsCost,
-                        extraGuestsCount: bExtraGuestsCount,
-                        extraGuestFee: bExtraFee,
+                        nightRates: Array(bNights).fill(bRate),
+                        totalStayCost: bNights * bRate,
                         foodPlan: bFoodPlan,
                         foodRate: bFoodRate,
                         foodGuests: bFoodGuests,

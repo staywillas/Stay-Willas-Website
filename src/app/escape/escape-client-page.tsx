@@ -712,6 +712,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                     <span className="text-xs text-slate-400 block font-light">Starting from</span>
                     <span className="text-2xl font-bold text-white">₹{angleHouse.price.toLocaleString("en-IN")}</span>
                     <span className="text-xs text-slate-400 font-light"> / night (Weekday)</span>
+                    <span className="text-[10px] text-amber-400/90 block italic mt-0.5">*Prices may vary due to demand</span>
                   </div>
                   <div className="text-right">
                     <span className="text-xs text-slate-400 block font-light">Weekend Tariff</span>
@@ -797,6 +798,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                     <span className="text-xs text-slate-400 block font-light">Starting from</span>
                     <span className="text-2xl font-bold text-white">₹{canopyCrest.price.toLocaleString("en-IN")}</span>
                     <span className="text-xs text-slate-400 font-light"> / night (Weekday)</span>
+                    <span className="text-[10px] text-amber-400/90 block italic mt-0.5">*Prices may vary due to demand</span>
                   </div>
                   <div className="text-right">
                     <span className="text-xs text-slate-400 block font-light">Weekend Tariff</span>

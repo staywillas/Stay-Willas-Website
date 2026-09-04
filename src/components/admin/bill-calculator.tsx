@@ -1,7 +1,30 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Calendar, User, FileText, Plus, Trash2, Download, Calculator, Mail, Send, Share2, CheckCircle2, AlertCircle, RotateCcw } from "lucide-react";
+import {
+  Sparkles,
+  Calendar,
+  User,
+  FileText,
+  Plus,
+  Trash2,
+  Download,
+  Calculator,
+  Mail,
+  Send,
+  Share2,
+  CheckCircle2,
+  AlertCircle,
+  RotateCcw,
+  Utensils,
+  Copy,
+  Check,
+  ArrowRight,
+  Percent,
+  ShieldCheck,
+  Building2,
+  CheckCheck,
+} from "lucide-react";
 import { sendInvoiceEmailAction } from "@/app/actions/admin";
 
 interface Villa {
@@ -31,6 +54,7 @@ interface BillCalculatorProps {
     ratePerNight?: number;
     weekendRatePerNight?: number;
     weekendNights?: number;
+    nightRates?: number[];
     foodPlan?: string;
     foodRate?: number;
     foodGuestsCount?: number;
@@ -49,34 +73,121 @@ interface ExtraCharge {
   amount: number;
 }
 
-const loadImage = (url: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = (err) => reject(err);
-    img.src = url;
-  });
-};
-
 export default function BillCalculator({ villas, prefillData }: BillCalculatorProps) {
-  // Guest Details
+  // Mode Selector: "invoice" | "food"
+  const [activeCalculator, setActiveCalculator] = useState<"invoice" | "food">("invoice");
+
+  // =========================================================================
+  // 1. INVOICE CALCULATOR STATE (PRICING STARTS EMPTY / BLANK)
+  // =========================================================================
   const [guestName, setGuestName] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
 
-  // Stay Settings
+  // Property & Dates
   const [selectedVillaSlug, setSelectedVillaSlug] = useState("");
+  const [customPropertyName, setCustomPropertyName] = useState("");
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
-  const [ratePerNight, setRatePerNight] = useState(0);
-  const [weekendRatePerNight, setWeekendRatePerNight] = useState(0);
-  const [nights, setNights] = useState(1);
-  const [weekendNights, setWeekendNights] = useState(0); // number of weekend nights in the stay
-  const [guestsCount, setGuestsCount] = useState(1);
-  const [baseGuests, setBaseGuests] = useState(12);
-  const [extraGuestFee, setExtraGuestFee] = useState(1500);
+  const [nights, setNights] = useState<number>(1);
+  const [guestsCount, setGuestsCount] = useState<number | "">(12);
 
-  // Auto calculate nights & weekend nights from dates (Timezone-safe)
+  // Night-by-Night Tariff (Night 1, Night 2, etc. - EMPTY BY DEFAULT FOR CLIENT TO ENTER)
+  const [nightRates, setNightRates] = useState<(number | "")[]>([""]);
+
+  // Food / Catering cost in Invoice
+  const [invoiceFoodCost, setInvoiceFoodCost] = useState<number | "">("");
+  const [invoiceFoodNote, setInvoiceFoodNote] = useState("");
+
+  // Custom Extra Charges
+  const [extraCharges, setExtraCharges] = useState<ExtraCharge[]>([]);
+  const [newExtraDesc, setNewExtraDesc] = useState("");
+  const [newExtraAmount, setNewExtraAmount] = useState<number | "">("");
+
+  // Adjustments (All empty or standard zero default)
+  const [discountFlat, setDiscountFlat] = useState<number | "">("");
+  const [discountPercent, setDiscountPercent] = useState<number | "">("");
+  const [gstPercent, setGstPercent] = useState<number>(0); // 0% by default
+  const [customGst, setCustomGst] = useState<number | "">("");
+  const [securityDeposit, setSecurityDeposit] = useState<number | "">("");
+  const [advancePaid, setAdvancePaid] = useState<number | "">("");
+
+  // UI status feedback
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailFeedback, setEmailFeedback] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+  const [copiedInvoice, setCopiedInvoice] = useState(false);
+
+  // =========================================================================
+  // 2. FOOD / CATERING CALCULATOR STATE (PRICING STARTS EMPTY / BLANK)
+  // =========================================================================
+  const [foodMenuType, setFoodMenuType] = useState<"veg" | "non-veg" | "mix" | "custom">("mix");
+  const [foodPax, setFoodPax] = useState<number | "">(12);
+  const [foodDays, setFoodDays] = useState<number | "">(1);
+  // Rate per person/day is LEFT EMPTY for user to enter
+  const [foodRatePerPerson, setFoodRatePerPerson] = useState<number | "">("");
+  
+  // Optional Food Extras (BBQ, High Tea, etc.)
+  const [foodExtras, setFoodExtras] = useState<ExtraCharge[]>([]);
+  const [newFoodExtraDesc, setNewFoodExtraDesc] = useState("");
+  const [newFoodExtraAmount, setNewFoodExtraAmount] = useState<number | "">("");
+  const [foodGstPercent, setFoodGstPercent] = useState<number>(0);
+  const [foodAppliedToInvoice, setFoodAppliedToInvoice] = useState(false);
+  const [copiedFood, setCopiedFood] = useState(false);
+
+  // Helper to format date label for a given night (0-indexed)
+  const getNightDateLabel = (index: number) => {
+    if (!checkInDate) return `Night ${index + 1}`;
+    try {
+      const d = new Date(checkInDate + "T12:00:00");
+      d.setDate(d.getDate() + index);
+      const dayName = d.toLocaleDateString("en-IN", { weekday: "short" });
+      const dayDate = d.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+      return `Night ${index + 1} (${dayName}, ${dayDate})`;
+    } catch {
+      return `Night ${index + 1}`;
+    }
+  };
+
+  // Adjust total nights and sync nightRates array length
+  const handleNightsChange = (newCount: number) => {
+    const safeCount = Math.max(1, newCount);
+    setNights(safeCount);
+    setNightRates((prev) => {
+      const next = [...prev];
+      while (next.length < safeCount) next.push("");
+      return next.slice(0, safeCount);
+    });
+
+    if (checkInDate) {
+      try {
+        const d = new Date(checkInDate + "T12:00:00");
+        d.setDate(d.getDate() + safeCount);
+        setCheckOutDate(d.toISOString().split("T")[0]);
+      } catch {}
+    }
+
+    if (foodDays === 1 || foodDays === nights) {
+      setFoodDays(safeCount);
+    }
+  };
+
+  const handleNightRateChange = (index: number, valStr: string) => {
+    const val = valStr === "" ? "" : Number(valStr);
+    setNightRates((prev) => {
+      const next = [...prev];
+      next[index] = val;
+      return next;
+    });
+  };
+
+  const handleCopyNight1ToAll = () => {
+    const first = nightRates[0];
+    if (first !== undefined && first !== "") {
+      setNightRates(Array(nights).fill(first));
+    }
+  };
+
+  // Auto calculate nights from dates and sync night slots
   const handleDateChange = (cin: string, cout: string) => {
     setCheckInDate(cin);
     setCheckOutDate(cout);
@@ -87,43 +198,19 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       if (end > start) {
         const totalDays = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
         setNights(totalDays);
-
-        let wknd = 0;
-        const cur = new Date(start);
-        while (cur.getTime() < end.getTime()) {
-          const day = cur.getDay(); // 0 Sun, 5 Fri, 6 Sat
-          if (day === 5 || day === 6) {
-            wknd++;
-          }
-          cur.setDate(cur.getDate() + 1);
+        setNightRates((prev) => {
+          const next = [...prev];
+          while (next.length < totalDays) next.push("");
+          return next.slice(0, totalDays);
+        });
+        if (foodDays === 1 || foodDays === nights) {
+          setFoodDays(totalDays);
         }
-        setWeekendNights(Math.min(totalDays, wknd));
       }
     }
   };
 
-  // Food Settings
-  const [foodPlan, setFoodPlan] = useState<"none" | "standard" | "deluxe" | "custom">("none");
-  const [foodRatePerPersonPerDay, setFoodRatePerPersonPerDay] = useState(0);
-  const [foodGuestsCount, setFoodGuestsCount] = useState(0);
-
-  // Extra Charges List
-  const [extraCharges, setExtraCharges] = useState<ExtraCharge[]>([]);
-  const [newExtraDesc, setNewExtraDesc] = useState("");
-  const [newExtraAmount, setNewExtraAmount] = useState<number | "">("");
-
-  // Adjustments & Discounts & Advance & Security Deposit
-  const [securityDeposit, setSecurityDeposit] = useState<number>(0);
-  const [discountPercent, setDiscountPercent] = useState(0);
-  const [discountFlat, setDiscountFlat] = useState(0);
-  const [gstPercent, setGstPercent] = useState(18);
-  const [advancePaid, setAdvancePaid] = useState(0);
-
-  // Email & Communication States
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
-  const [emailFeedback, setEmailFeedback] = useState<{ type: "success" | "error"; msg: string } | null>(null);
-
-  // Auto-populate when launched from Reservation Details modal
+  // Prefill handling from existing bookings (if opened from admin dashboard)
   useEffect(() => {
     if (prefillData) {
       if (prefillData.guestName) setGuestName(prefillData.guestName);
@@ -134,52 +221,24 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
         handleDateChange(prefillData.checkIn, prefillData.checkOut);
       }
       if (prefillData.guestsCount !== undefined) setGuestsCount(prefillData.guestsCount);
-      if (prefillData.baseGuests !== undefined) setBaseGuests(prefillData.baseGuests);
-      if (prefillData.extraGuestFee !== undefined) setExtraGuestFee(prefillData.extraGuestFee);
-      if (prefillData.ratePerNight !== undefined) setRatePerNight(prefillData.ratePerNight);
-      if (prefillData.weekendRatePerNight !== undefined) setWeekendRatePerNight(prefillData.weekendRatePerNight);
-      if (prefillData.weekendNights !== undefined) setWeekendNights(prefillData.weekendNights);
-      if (prefillData.foodPlan) setFoodPlan(prefillData.foodPlan as any);
-      if (prefillData.foodRate !== undefined) setFoodRatePerPersonPerDay(prefillData.foodRate);
-      if (prefillData.foodGuestsCount !== undefined) setFoodGuestsCount(prefillData.foodGuestsCount);
-      else if (prefillData.guestsCount !== undefined) setFoodGuestsCount(prefillData.guestsCount);
+      if (prefillData.nightRates && Array.isArray(prefillData.nightRates)) {
+        setNightRates(prefillData.nightRates);
+        setNights(prefillData.nightRates.length);
+      } else if (prefillData.ratePerNight !== undefined && prefillData.ratePerNight > 0) {
+        setNightRates((prev) => prev.map(() => prefillData.ratePerNight!));
+      }
+      if (prefillData.foodRate !== undefined && prefillData.foodRate > 0) {
+        setFoodRatePerPerson(prefillData.foodRate);
+      }
+      if (prefillData.foodGuestsCount !== undefined) setFoodPax(prefillData.foodGuestsCount);
       if (Array.isArray(prefillData.extraCharges)) setExtraCharges(prefillData.extraCharges);
-      if (prefillData.discountFlat !== undefined) setDiscountFlat(prefillData.discountFlat);
-      if (prefillData.discountPercent !== undefined) setDiscountPercent(prefillData.discountPercent);
+      if (prefillData.discountFlat !== undefined && prefillData.discountFlat > 0) setDiscountFlat(prefillData.discountFlat);
+      if (prefillData.discountPercent !== undefined && prefillData.discountPercent > 0) setDiscountPercent(prefillData.discountPercent);
       if (prefillData.gstPercent !== undefined) setGstPercent(prefillData.gstPercent);
-      if (prefillData.advancePaid !== undefined) setAdvancePaid(prefillData.advancePaid);
-      if (prefillData.securityDeposit !== undefined) setSecurityDeposit(prefillData.securityDeposit);
+      if (prefillData.advancePaid !== undefined && prefillData.advancePaid > 0) setAdvancePaid(prefillData.advancePaid);
+      if (prefillData.securityDeposit !== undefined && prefillData.securityDeposit > 0) setSecurityDeposit(prefillData.securityDeposit);
     }
   }, [prefillData]);
-
-  // Reset all calculator inputs
-  const handleResetAll = () => {
-    setGuestName("");
-    setGuestPhone("");
-    setGuestEmail("");
-    setSelectedVillaSlug("");
-    setCheckInDate("");
-    setCheckOutDate("");
-    setRatePerNight(0);
-    setWeekendRatePerNight(0);
-    setNights(1);
-    setWeekendNights(0);
-    setGuestsCount(1);
-    setBaseGuests(12);
-    setExtraGuestFee(1500);
-    setFoodPlan("none");
-    setFoodRatePerPersonPerDay(0);
-    setFoodGuestsCount(0);
-    setExtraCharges([]);
-    setNewExtraDesc("");
-    setNewExtraAmount("");
-    setSecurityDeposit(0);
-    setDiscountPercent(0);
-    setDiscountFlat(0);
-    setGstPercent(18);
-    setAdvancePaid(0);
-    setEmailFeedback(null);
-  };
 
   // Format date helper
   const formatDateLabel = (dStr: string) => {
@@ -188,189 +247,95 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
     return isNaN(d.getTime()) ? dStr : d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
   };
 
-  // Auto-Draft Mailto Link Launcher (Opens client email app with pre-written text & details)
-  const handleDraftMailto = () => {
-    const selectedVilla = villas.find((v) => v.slug === selectedVillaSlug);
-    const villaName = selectedVilla ? selectedVilla.name : "Villa Property";
-    const villaLoc = selectedVilla ? selectedVilla.location : "";
-
-    const mailSubject = `Stay Willas Booking Invoice - ${villaName} (${guestName || "Guest"})`;
-    const mailBody = `Dear ${guestName || "Valued Guest"},\n\n` +
-      `Thank you for choosing Stay Willas!\n\n` +
-      `Below is your reservation invoice summary for your stay at ${villaName} (${villaLoc}):\n` +
-      `------------------------------------------\n` +
-      `• Primary Guest: ${guestName || "N/A"}\n` +
-      `• Contact Phone: ${guestPhone || "N/A"}\n` +
-      (checkInDate ? `• Check-In Date: ${formatDateLabel(checkInDate)} (2:00 PM)\n` : "") +
-      (checkOutDate ? `• Check-Out Date: ${formatDateLabel(checkOutDate)} (11:00 AM)\n` : "") +
-      `• Total Duration: ${nights} Night(s)\n` +
-      `• Guest Count: ${guestsCount} Guest(s)\n` +
-      `------------------------------------------\n` +
-      `• Stay Accommodation Tariff: Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
-      (foodPlan !== "none" ? `• Catering Plan (${foodPlan.toUpperCase()}): Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
-      (totalExtrasCost > 0 ? `• Add-ons & Custom Extras: Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
-      `• Gross Subtotal: Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}\n` +
-      (totalDiscount > 0 ? `• Discount Deduction: - Rs. ${totalDiscount.toLocaleString("en-IN")}\n` : "") +
-      (totalDiscount > 0 ? `• Net Taxable Value: Rs. ${subtotal.toLocaleString("en-IN")}\n` : "") +
-      `• GST Tax (${gstPercent}%): Rs. ${gstAmount.toLocaleString("en-IN")}\n` +
-      (securityDeposit > 0 ? `• Refundable Security Deposit: Rs. ${securityDeposit.toLocaleString("en-IN")}\n` : "") +
-      `• NET PAYABLE GRAND TOTAL: Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
-      `------------------------------------------\n` +
-      `• Advance Received: Rs. ${advancePaid.toLocaleString("en-IN")}\n` +
-      `• BALANCE REMAINING: ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
-      `------------------------------------------\n\n` +
-      `Please find your detailed invoice statement PDF attached.\n\n` +
-      `Warm regards,\n` +
-      `Stay Willas Concierge\n` +
-      `WhatsApp / Call: +91 9619042310 | www.staywillas.com`;
-
-    const mailtoUrl = `mailto:${encodeURIComponent(guestEmail || "")}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
-    window.location.href = mailtoUrl;
+  // Property Display Name (No prices included)
+  const getSelectedVillaName = () => {
+    if (selectedVillaSlug === "custom") {
+      return customPropertyName.trim() || "Private Villa Estate";
+    }
+    const found = villas.find((v) => v.slug === selectedVillaSlug);
+    return found ? found.name : "Luxury Villa";
   };
 
-  // Direct Server-Side Email Dispatch via Resend / Nodemailer
-  const handleSendDirectEmail = async () => {
-    const selectedVilla = villas.find((v) => v.slug === selectedVillaSlug);
-    if (!selectedVilla) return;
-
-    if (!guestEmail || !guestEmail.includes("@")) {
-      setEmailFeedback({ type: "error", msg: "Please enter a valid guest email in Section 1." });
-      return;
-    }
-
-    setIsSendingEmail(true);
-    setEmailFeedback(null);
-
-    const res = await sendInvoiceEmailAction({
-      guestName: guestName || "Valued Guest",
-      guestEmail: guestEmail.trim(),
-      guestPhone,
-      villaName: selectedVilla.name,
-      location: selectedVilla.location,
-      nights,
-      guestsCount,
-      checkInDate: checkInDate ? formatDateLabel(checkInDate) : undefined,
-      checkOutDate: checkOutDate ? formatDateLabel(checkOutDate) : undefined,
-      totalStayCost,
-      foodPlanName: foodPlan === "none" ? "No Meal Plan" : `${foodPlan.toUpperCase()} Menu`,
-      totalFoodCost,
-      totalExtrasCost,
-      subtotal: subtotalBeforeDiscount,
-      discountTotal: totalDiscount,
-      discountPercent,
-      taxableAmount: subtotal,
-      gstPercent,
-      gstAmount,
-      grandTotal,
-      advancePaid,
-      securityDeposit,
-      balanceDue,
-    });
-
-    setIsSendingEmail(false);
-    if (res.success) {
-      setEmailFeedback({ type: "success", msg: res.message || "Invoice email dispatched to guest!" });
-    } else {
-      setEmailFeedback({ type: "error", msg: res.error || "Failed to send email." });
-    }
+  const getSelectedVillaLocation = () => {
+    if (selectedVillaSlug === "custom") return "Maharashtra";
+    const found = villas.find((v) => v.slug === selectedVillaSlug);
+    return found ? found.location : "Near Mumbai";
   };
 
-  // Share via WhatsApp Web / App
-  const handleShareWhatsApp = () => {
-    const selectedVilla = villas.find((v) => v.slug === selectedVillaSlug);
-    const villaName = selectedVilla ? selectedVilla.name : "Stay Willas Property";
+  // =========================================================================
+  // FINANCIAL CALCULATIONS: FOOD CALCULATOR
+  // =========================================================================
+  const numFoodPax = typeof foodPax === "number" ? foodPax : 0;
+  const numFoodDays = typeof foodDays === "number" ? foodDays : 0;
+  const numFoodRate = typeof foodRatePerPerson === "number" ? foodRatePerPerson : 0;
 
-    const msg = `✨ *Stay Willas - Reservation Invoice* ✨\n` +
-      `------------------------------------------\n` +
-      `🏰 *Property:* ${villaName}\n` +
-      `👤 *Guest Name:* ${guestName || "Valued Guest"}\n` +
-      (checkInDate ? `📅 *Check-In:* ${formatDateLabel(checkInDate)}\n` : "") +
-      (checkOutDate ? `📅 *Check-Out:* ${formatDateLabel(checkOutDate)}\n` : "") +
-      `🌙 *Stay Duration:* ${nights} Night(s)\n` +
-      `👥 *Guests:* ${guestsCount} Pax\n` +
-      `------------------------------------------\n` +
-      `🏠 *Stay Tariff:* Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
-      (foodPlan !== "none" ? `🍽️ *Catering (${foodPlan.toUpperCase()}):* Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
-      (totalExtrasCost > 0 ? `✨ *Add-ons & Extras:* Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
-      (totalDiscount > 0 ? `🎁 *Discount Deduction:* - Rs. ${totalDiscount.toLocaleString("en-IN")}\n` : "") +
-      (gstAmount > 0 ? `🏛️ *GST (${gstPercent}%):* Rs. ${gstAmount.toLocaleString("en-IN")}\n` : "") +
-      (securityDeposit > 0 ? `🛡️ *Refundable Deposit:* Rs. ${securityDeposit.toLocaleString("en-IN")}\n` : "") +
-      `💰 *Grand Total (Net Payable):* Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
-      `💳 *Advance Received:* Rs. ${advancePaid.toLocaleString("en-IN")}\n` +
-      `📌 *Balance Due:* ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
-      `------------------------------------------\n` +
-      `Thank you for booking with Stay Willas! 🥂`;
+  const baseFoodCost = numFoodPax * numFoodDays * numFoodRate;
+  const foodExtrasCost = foodExtras.reduce((acc, curr) => acc + curr.amount, 0);
+  const subtotalFoodBeforeGst = baseFoodCost + foodExtrasCost;
+  const foodGstAmount = Math.round(subtotalFoodBeforeGst * (foodGstPercent / 100));
+  const totalFoodCostCalculated = subtotalFoodBeforeGst + foodGstAmount;
+  const perPersonTotalFoodCost = numFoodPax > 0 ? Math.round(totalFoodCostCalculated / numFoodPax) : 0;
 
-    const cleanPhone = guestPhone ? guestPhone.replace(/[^0-9]/g, "") : "";
-    const waUrl = cleanPhone.length >= 10
-      ? `https://wa.me/${cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`
-      : `https://wa.me/?text=${encodeURIComponent(msg)}`;
-
-    window.open(waUrl, "_blank");
+  // Transfer Food to Invoice
+  const handleApplyFoodToInvoice = () => {
+    if (totalFoodCostCalculated <= 0) return;
+    setInvoiceFoodCost(totalFoodCostCalculated);
+    const menuLabel =
+      foodMenuType === "veg"
+        ? "Pure Veg Menu"
+        : foodMenuType === "non-veg"
+        ? "Non-Veg Menu"
+        : foodMenuType === "mix"
+        ? "Mix Veg & Non-Veg Menu"
+        : "Custom Food Package";
+    setInvoiceFoodNote(`${menuLabel} (${numFoodPax} Pax for ${numFoodDays} Day(s) @ ₹${numFoodRate.toLocaleString("en-IN")}/pax/day)`);
+    setFoodAppliedToInvoice(true);
+    setActiveCalculator("invoice");
   };
 
-  // Prefill values when villa changes
-  useEffect(() => {
-    if (!selectedVillaSlug) return;
-    const villa = villas.find((v) => v.slug === selectedVillaSlug);
-    if (villa) {
-      setRatePerNight(villa.price);
-      setWeekendRatePerNight(villa.weekendPrice || Math.round(villa.price * 1.2)); // default 20% markup if not defined
-      setBaseGuests(villa.baseGuests ?? 12);
-      setExtraGuestFee(villa.extraGuestFee ?? 1500);
-      setGuestsCount(villa.baseGuests ?? 12);
-      setFoodGuestsCount(villa.baseGuests ?? 12);
-    }
-  }, [selectedVillaSlug, villas]);
+  // =========================================================================
+  // FINANCIAL CALCULATIONS: INVOICE CALCULATOR
+  // =========================================================================
+  const numNights = nights > 0 ? nights : 1;
+  const numGuestsCount = typeof guestsCount === "number" ? guestsCount : 0;
 
-  // Adjust food rate based on plan type
-  useEffect(() => {
-    if (foodPlan === "none") {
-      setFoodRatePerPersonPerDay(0);
-    } else if (foodPlan === "standard") {
-      setFoodRatePerPersonPerDay(1250);
-    } else if (foodPlan === "deluxe") {
-      setFoodRatePerPersonPerDay(1500);
-    }
-  }, [foodPlan]);
+  // Total Stay Tariff: sum of each night's rate entered by user (No extra guest fee per request)
+  const totalStayCost = nightRates.reduce<number>((sum, r) => sum + (typeof r === "number" ? r : 0), 0);
 
-  // Financial Calculations
-  const weekdayNights = Math.max(0, nights - weekendNights);
-  const weekdayStayCost = weekdayNights * ratePerNight;
-  const weekendStayCost = weekendNights * weekendRatePerNight;
-  const totalBaseStayCost = weekdayStayCost + weekendStayCost;
-
-  // Extra guests stays
-  const extraGuestsCount = Math.max(0, guestsCount - baseGuests);
-  const extraGuestsCost = extraGuestsCount * extraGuestFee * nights;
-
-  // Total Stay Cost
-  const totalStayCost = totalBaseStayCost + extraGuestsCost;
-
-  // Total Food Cost
-  const totalFoodCost = foodPlan !== "none" ? foodRatePerPersonPerDay * foodGuestsCount * nights : 0;
+  // Total Food Tariff in Invoice
+  const totalInvoiceFoodCost = typeof invoiceFoodCost === "number" ? invoiceFoodCost : 0;
 
   // Total Extras
   const totalExtrasCost = extraCharges.reduce((acc, curr) => acc + curr.amount, 0);
 
   // Subtotal before discount
-  const subtotalBeforeDiscount = totalStayCost + totalFoodCost + totalExtrasCost;
+  const subtotalBeforeDiscount = totalStayCost + totalInvoiceFoodCost + totalExtrasCost;
 
-  // Calculate discount
-  const calculatedPercentDiscount = subtotalBeforeDiscount * (discountPercent / 100);
-  const totalDiscount = Math.round(calculatedPercentDiscount + discountFlat);
+  // Discounts
+  const numDiscountFlat = typeof discountFlat === "number" ? discountFlat : 0;
+  const numDiscountPercent = typeof discountPercent === "number" ? discountPercent : 0;
+  const percentDiscountAmount = subtotalBeforeDiscount * (numDiscountPercent / 100);
+  const totalDiscount = Math.round(percentDiscountAmount + numDiscountFlat);
 
-  // Subtotal after discount (Taxable base)
+  // Taxable subtotal
   const subtotal = Math.max(0, subtotalBeforeDiscount - totalDiscount);
 
-  // GST & Total
-  const gstAmount = Math.round(subtotal * (gstPercent / 100));
-  const taxInclusiveTotal = subtotal + gstAmount;
-  const grandTotal = Math.round(taxInclusiveTotal + (securityDeposit || 0)); // Full Net Payable
-  const balanceDue = Math.max(0, grandTotal - (advancePaid || 0));
+  // GST
+  const activeGstPercent = customGst !== "" ? Number(customGst) : gstPercent;
+  const gstAmount = Math.round(subtotal * (activeGstPercent / 100));
 
-  // Add Extra Charge line
-  const handleAddExtra = (e: React.FormEvent) => {
+  // Security deposit & Grand total
+  const numDeposit = typeof securityDeposit === "number" ? securityDeposit : 0;
+  const grandTotal = subtotal + gstAmount + numDeposit;
+
+  // Advance paid & Balance due
+  const numAdvance = typeof advancePaid === "number" ? advancePaid : 0;
+  const balanceDue = Math.max(0, grandTotal - numAdvance);
+
+  // =========================================================================
+  // ACTIONS: ADD EXTRA CHARGES
+  // =========================================================================
+  const handleAddInvoiceExtra = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newExtraDesc || !newExtraAmount || Number(newExtraAmount) <= 0) return;
     setExtraCharges([
@@ -385,81 +350,202 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
     setNewExtraAmount("");
   };
 
-  // Remove Extra Charge
-  const handleRemoveExtra = (id: string) => {
-    setExtraCharges(extraCharges.filter((c) => c.id !== id));
+  const handleAddFoodExtra = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newFoodExtraDesc || !newFoodExtraAmount || Number(newFoodExtraAmount) <= 0) return;
+    setFoodExtras([
+      ...foodExtras,
+      {
+        id: Math.random().toString(),
+        description: newFoodExtraDesc,
+        amount: Number(newFoodExtraAmount),
+      },
+    ]);
+    setNewFoodExtraDesc("");
+    setNewFoodExtraAmount("");
   };
 
-  // Helper to trim empty transparent borders & compute crisp, un-distorted logo aspect ratio
-  const getCroppedLogoDataUrl = (img: HTMLImageElement): { dataUrl: string; aspect: number } => {
-    try {
-      const canvas = document.createElement("canvas");
-      const w = img.naturalWidth || img.width || 1000;
-      const h = img.naturalHeight || img.height || 1000;
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return { dataUrl: img.src, aspect: w / h };
+  // Reset helpers
+  const handleResetInvoice = () => {
+    setGuestName("");
+    setGuestPhone("");
+    setGuestEmail("");
+    setSelectedVillaSlug("");
+    setCustomPropertyName("");
+    setCheckInDate("");
+    setCheckOutDate("");
+    setNights(1);
+    setNightRates([""]);
+    setGuestsCount(12);
+    setInvoiceFoodCost("");
+    setInvoiceFoodNote("");
+    setExtraCharges([]);
+    setNewExtraDesc("");
+    setNewExtraAmount("");
+    setDiscountFlat("");
+    setDiscountPercent("");
+    setGstPercent(0);
+    setCustomGst("");
+    setSecurityDeposit("");
+    setAdvancePaid("");
+    setEmailFeedback(null);
+    setFoodAppliedToInvoice(false);
+  };
 
-      ctx.drawImage(img, 0, 0);
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
+  const handleResetFood = () => {
+    setFoodMenuType("mix");
+    setFoodPax(12);
+    setFoodDays(1);
+    setFoodRatePerPerson("");
+    setFoodExtras([]);
+    setNewFoodExtraDesc("");
+    setNewFoodExtraAmount("");
+    setFoodGstPercent(0);
+  };
 
-      let minX = w, minY = h, maxX = 0, maxY = 0;
-      let found = false;
+  // =========================================================================
+  // SHARING & EXPORTS
+  // =========================================================================
+  const getInvoiceTextSummary = () => {
+    const villaName = getSelectedVillaName();
+    const villaLoc = getSelectedVillaLocation();
 
-      // Scan pixels for non-transparent content (alpha > 15)
-      for (let y = 0; y < h; y += 4) {
-        for (let x = 0; x < w; x += 4) {
-          const alpha = data[(y * w + x) * 4 + 3];
-          if (alpha > 15) {
-            if (x < minX) minX = x;
-            if (x > maxX) maxX = x;
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
-            found = true;
-          }
-        }
-      }
+    return (
+      `✨ *Stay Willas - Reservation Invoice* ✨\n` +
+      `------------------------------------------\n` +
+      `🏰 *Property:* ${villaName} (${villaLoc})\n` +
+      `👤 *Guest Name:* ${guestName || "Valued Guest"}\n` +
+      (guestPhone ? `📞 *Phone:* ${guestPhone}\n` : "") +
+      (checkInDate ? `📅 *Check-In:* ${formatDateLabel(checkInDate)} (2:00 PM)\n` : "") +
+      (checkOutDate ? `📅 *Check-Out:* ${formatDateLabel(checkOutDate)} (11:00 AM)\n` : "") +
+      `🌙 *Duration:* ${numNights} Night(s)\n` +
+      `👥 *Guests:* ${numGuestsCount} Pax\n` +
+      `------------------------------------------\n` +
+      `🏠 *Stay Tariff (${numNights} Night${numNights > 1 ? "s" : ""}):*\n` +
+      nightRates.map((r, i) => `   • ${getNightDateLabel(i)}: Rs. ${typeof r === "number" ? r.toLocaleString("en-IN") : "0"}`).join("\n") +
+      `\n   *Total Stay Tariff:* Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
+      (totalInvoiceFoodCost > 0 ? `🍽️ *Food / Catering:* Rs. ${totalInvoiceFoodCost.toLocaleString("en-IN")}${invoiceFoodNote ? ` (${invoiceFoodNote})` : ""}\n` : "") +
+      (totalExtrasCost > 0 ? `✨ *Add-ons & Extras:* Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
+      `• *Gross Subtotal:* Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}\n` +
+      (totalDiscount > 0 ? `🎁 *Discount:* - Rs. ${totalDiscount.toLocaleString("en-IN")}\n` : "") +
+      (activeGstPercent > 0 ? `🏛️ *GST (${activeGstPercent}%):* Rs. ${gstAmount.toLocaleString("en-IN")}\n` : "") +
+      (numDeposit > 0 ? `🛡️ *Refundable Deposit:* Rs. ${numDeposit.toLocaleString("en-IN")}\n` : "") +
+      `💰 *GRAND TOTAL (Net Payable):* Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
+      (numAdvance > 0 ? `💳 *Advance Received:* Rs. ${numAdvance.toLocaleString("en-IN")}\n` : "") +
+      `📌 *BALANCE DUE:* ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
+      `------------------------------------------\n` +
+      `For inquiries: +91 9619042310 | www.staywillas.com 🥂`
+    );
+  };
 
-      if (!found || maxX <= minX || maxY <= minY) {
-        minX = 0; minY = 0; maxX = w; maxY = h;
-      }
+  const getFoodTextSummary = () => {
+    const menuTitle =
+      foodMenuType === "veg"
+        ? "Pure Vegetarian Menu"
+        : foodMenuType === "non-veg"
+        ? "Non-Vegetarian Menu"
+        : foodMenuType === "mix"
+        ? "Mix Veg & Non-Veg Menu"
+        : "Custom Catering Package";
 
-      const cropW = maxX - minX;
-      const cropH = maxY - minY;
-      const padX = Math.round(cropW * 0.02);
-      const padY = Math.round(cropH * 0.02);
+    return (
+      `🍽️ *Stay Willas - Catering & Food Quotation* 🍽️\n` +
+      `------------------------------------------\n` +
+      `🥗 *Menu Plan:* ${menuTitle}\n` +
+      `👥 *Guests:* ${numFoodPax} Pax\n` +
+      `📅 *Duration:* ${numFoodDays} Day(s)\n` +
+      (numFoodRate > 0 ? `💵 *Rate:* Rs. ${numFoodRate.toLocaleString("en-IN")} per person / day\n` : "") +
+      `------------------------------------------\n` +
+      `🥘 *Base Meals Total:* Rs. ${baseFoodCost.toLocaleString("en-IN")}\n` +
+      (foodExtrasCost > 0 ? `🍢 *Add-ons (BBQ / Snacks):* Rs. ${foodExtrasCost.toLocaleString("en-IN")}\n` : "") +
+      (foodGstAmount > 0 ? `🏛️ *GST (${foodGstPercent}%):* Rs. ${foodGstAmount.toLocaleString("en-IN")}\n` : "") +
+      `💰 *TOTAL FOOD COST:* Rs. ${totalFoodCostCalculated.toLocaleString("en-IN")}\n` +
+      (numFoodPax > 0 ? `👤 *Cost per Person:* Rs. ${perPersonTotalFoodCost.toLocaleString("en-IN")}\n` : "") +
+      `------------------------------------------\n` +
+      `Stay Willas Hospitality | WhatsApp: +91 9619042310`
+    );
+  };
 
-      const startX = Math.max(0, minX - padX);
-      const startY = Math.max(0, minY - padY);
-      const finalW = Math.min(w - startX, cropW + padX * 2);
-      const finalH = Math.min(h - startY, cropH + padY * 2);
+  const handleShareWhatsApp = () => {
+    const msg = getInvoiceTextSummary();
+    const cleanPhone = guestPhone ? guestPhone.replace(/[^0-9]/g, "") : "";
+    const waUrl =
+      cleanPhone.length >= 10
+        ? `https://wa.me/${cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`
+        : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+    window.open(waUrl, "_blank");
+  };
 
-      const targetW = 600;
-      const targetH = Math.round((finalH / finalW) * targetW) || 200;
+  const handleShareFoodWhatsApp = () => {
+    const msg = getFoodTextSummary();
+    const cleanPhone = guestPhone ? guestPhone.replace(/[^0-9]/g, "") : "";
+    const waUrl =
+      cleanPhone.length >= 10
+        ? `https://wa.me/${cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`
+        : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+    window.open(waUrl, "_blank");
+  };
 
-      const cropCanvas = document.createElement("canvas");
-      cropCanvas.width = targetW;
-      cropCanvas.height = targetH;
-      const cropCtx = cropCanvas.getContext("2d");
-      if (cropCtx) {
-        cropCtx.imageSmoothingEnabled = true;
-        cropCtx.imageSmoothingQuality = "high";
-        cropCtx.drawImage(canvas, startX, startY, finalW, finalH, 0, 0, targetW, targetH);
-      }
+  const handleCopyInvoiceText = () => {
+    navigator.clipboard.writeText(getInvoiceTextSummary());
+    setCopiedInvoice(true);
+    setTimeout(() => setCopiedInvoice(false), 2000);
+  };
 
-      return {
-        dataUrl: cropCanvas.toDataURL("image/png"),
-        aspect: targetW / targetH,
-      };
-    } catch (err) {
-      console.warn("Error cropping logo transparent borders", err);
-      return { dataUrl: img.src, aspect: (img.naturalWidth || 1) / (img.naturalHeight || 1) };
+  const handleCopyFoodText = () => {
+    navigator.clipboard.writeText(getFoodTextSummary());
+    setCopiedFood(true);
+    setTimeout(() => setCopiedFood(false), 2000);
+  };
+
+  // Direct Server Email
+  const handleSendDirectEmail = async () => {
+    const propertyName = getSelectedVillaName();
+    const propertyLoc = getSelectedVillaLocation();
+
+    if (!guestEmail || !guestEmail.includes("@")) {
+      setEmailFeedback({ type: "error", msg: "Please enter a valid guest email in Section 1." });
+      return;
+    }
+
+    setIsSendingEmail(true);
+    setEmailFeedback(null);
+
+    const res = await sendInvoiceEmailAction({
+      guestName: guestName || "Valued Guest",
+      guestEmail: guestEmail.trim(),
+      guestPhone,
+      villaName: propertyName,
+      location: propertyLoc,
+      nights: numNights,
+      guestsCount: numGuestsCount,
+      checkInDate: checkInDate ? formatDateLabel(checkInDate) : undefined,
+      checkOutDate: checkOutDate ? formatDateLabel(checkOutDate) : undefined,
+      totalStayCost,
+      foodPlanName: invoiceFoodNote || (totalInvoiceFoodCost > 0 ? "Catering Plan" : "No Meal Plan"),
+      totalFoodCost: totalInvoiceFoodCost,
+      totalExtrasCost,
+      subtotal: subtotalBeforeDiscount,
+      discountTotal: totalDiscount,
+      discountPercent: numDiscountPercent,
+      taxableAmount: subtotal,
+      gstPercent: activeGstPercent,
+      gstAmount,
+      grandTotal,
+      advancePaid: numAdvance,
+      securityDeposit: numDeposit,
+      balanceDue,
+    });
+
+    setIsSendingEmail(false);
+    if (res.success) {
+      setEmailFeedback({ type: "success", msg: res.message || "Invoice email dispatched to guest!" });
+    } else {
+      setEmailFeedback({ type: "error", msg: res.error || "Failed to send email." });
     }
   };
 
-  // Generate & Download PDF Function (Bulletproof & Fast)
+  // PDF Generation with bulletproof error safety
   const handleDownloadPDF = async () => {
     try {
       const { jsPDF } = await import("jspdf");
@@ -469,67 +555,39 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
         format: "a4",
       });
 
-      // Load transparent company logo for PDF header & auto-crop transparent padding
-      let logoData: { dataUrl: string; aspect: number } | null = null;
-      try {
-        const logoImg = await loadImage("/images/STAY WILLAS logo transparent.webp");
-        logoData = getCroppedLogoDataUrl(logoImg);
-      } catch (e) {
-        console.warn("Could not load transparent logo for PDF, falling back to clean text header", e);
-      }
-
-      const activeVillaName = villas.find((v) => v.slug === selectedVillaSlug)?.name || "Stay Willas Estate";
-
-      // Executive Brand Palette (Stay Willas Theme)
-      const navyColor = [27, 53, 100];   // #1B3564 Navy
-      const goldColor = [218, 165, 32];  // #DAA520 Gold
+      const navyColor = [27, 53, 100]; // #1B3564 Navy
+      const goldColor = [218, 165, 32]; // #DAA520 Gold
       const darkCharcoal = [30, 41, 59]; // #1E293B Text
-      const lightBeige = [250, 248, 245]; // #FAF8F5 Card BG
-      const borderGray = [226, 232, 240]; // #E2E8F0
+      const lightBeige = [250, 248, 245]; // #FAF8F5
+      const borderGray = [226, 232, 240];
 
-      // Page margins & baseline
       const marginX = 15;
       let currentY = 0;
 
-      // Header Top Dual Accent Stripe (Navy & Gold)
+      // Header Top Accent Stripes
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
       doc.rect(0, 0, 210, 6, "F");
       doc.setFillColor(goldColor[0], goldColor[1], goldColor[2]);
       doc.rect(0, 6, 210, 1.5, "F");
 
-      currentY = 14;
+      currentY = 15;
 
-      // Logo & Brand Header Info (Crisp, Natural Aspect Ratio without distortion)
-      if (logoData && logoData.aspect) {
-        const maxLogoW = 62; // max width in mm
-        const maxLogoH = 16.5; // max height in mm
-        
-        let logoW = maxLogoW;
-        let logoH = logoW / logoData.aspect;
+      // Brand Title
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(22);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("STAY WILLAS", marginX, currentY + 5);
 
-        if (logoH > maxLogoH) {
-          logoH = maxLogoH;
-          logoW = logoH * logoData.aspect;
-        }
-
-        doc.addImage(logoData.dataUrl, "PNG", marginX, currentY - 2, logoW, logoH, undefined, "FAST");
-      } else {
-        doc.setFont("Helvetica", "bold");
-        doc.setFontSize(24);
-        doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-        doc.text("STAY WILLAS", marginX, currentY + 6);
-
-        doc.setFont("Helvetica", "bold");
-        doc.setFontSize(7.5);
-        doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-        doc.text("L U X U R Y   E S T A T E S   &   V I L L A S", marginX, currentY + 11);
-      }
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.text("L U X U R Y   E S T A T E S   &   V I L L A S", marginX, currentY + 10);
 
       // Invoice Header metadata (Right Aligned)
-      doc.setFontSize(15);
+      doc.setFontSize(14);
       doc.setFont("Helvetica", "bold");
       doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.text("TAX INVOICE STATEMENT", 210 - marginX, currentY + 4, { align: "right" });
+      doc.text("RESERVATION INVOICE", 210 - marginX, currentY + 4, { align: "right" });
 
       doc.setFontSize(8.5);
       doc.setFont("Helvetica", "normal");
@@ -541,10 +599,9 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
         year: "numeric",
       });
       doc.text(`Invoice ID: ${invoiceNum}`, 210 - marginX, currentY + 9, { align: "right" });
-      doc.text(`Date Issued: ${invoiceDate}`, 210 - marginX, currentY + 13, { align: "right" });
-      doc.text(`Billing Mode: LIVE RESERVATION`, 210 - marginX, currentY + 17, { align: "right" });
+      doc.text(`Date: ${invoiceDate}`, 210 - marginX, currentY + 13, { align: "right" });
 
-      currentY += 24;
+      currentY += 22;
 
       // Gold Divider Line
       doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
@@ -553,9 +610,9 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
 
       currentY += 6;
 
-      // Guest Info Box (Left) & Property Operator Box (Right)
+      // Guest Info & Property Operator Cards
       const cardWidth = 87;
-      const cardHeight = 26;
+      const cardHeight = 24;
 
       // Left Card: Prepared For Guest
       doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
@@ -577,8 +634,8 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       doc.setFont("Helvetica", "normal");
       doc.setFontSize(8);
       doc.setTextColor(100, 100, 100);
-      doc.text(`Contact: ${guestPhone || "N/A"}`, marginX + 4, currentY + 15);
-      doc.text(`Email: ${guestEmail || "N/A"}`, marginX + 4, currentY + 19);
+      doc.text(`Phone: ${guestPhone || "N/A"}`, marginX + 4, currentY + 14.5);
+      doc.text(`Email: ${guestEmail || "N/A"}`, marginX + 4, currentY + 18.5);
 
       // Right Card: Property Operator
       const rightCardX = 210 - marginX - cardWidth;
@@ -589,55 +646,53 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       doc.rect(rightCardX, currentY, cardWidth, cardHeight, "S");
 
       doc.setFont("Helvetica", "bold");
-      doc.setFont("Helvetica", "bold");
       doc.setFontSize(8);
       doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
       doc.text("PROPERTY OPERATOR:", rightCardX + 4, currentY + 5);
 
       doc.setFont("Helvetica", "bold");
-      doc.setFontSize(9.5);
+      doc.setFontSize(9);
       doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
-      doc.text("Stay Willas", rightCardX + 4, currentY + 10);
+      doc.text("Stay Willas Luxury Estates", rightCardX + 4, currentY + 10);
 
       doc.setFont("Helvetica", "normal");
-      doc.setFontSize(7.5);
+      doc.setFontSize(8);
       doc.setTextColor(100, 100, 100);
-      doc.text("Ghatkopar West, Mumbai, MH 400084", rightCardX + 4, currentY + 15);
-      doc.text("Concierge Hotline: +91 9619042310", rightCardX + 4, currentY + 19);
+      doc.text("Concierge: +91 9619042310", rightCardX + 4, currentY + 14.5);
+      doc.text("Website: www.staywillas.com", rightCardX + 4, currentY + 18.5);
 
       currentY += cardHeight + 6;
 
-      // Reservation Overview Banner
-      const reservationBoxHeight = (checkInDate || checkOutDate) ? 20 : 14;
+      // Summary Banner
+      const activeVillaName = getSelectedVillaName();
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.rect(marginX, currentY, 210 - marginX * 2, reservationBoxHeight, "F");
+      doc.rect(marginX, currentY, 210 - marginX * 2, 16, "F");
       doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
       doc.setLineWidth(0.4);
-      doc.rect(marginX, currentY, 210 - marginX * 2, reservationBoxHeight, "S");
+      doc.rect(marginX, currentY, 210 - marginX * 2, 16, "S");
 
       doc.setFont("Helvetica", "bold");
-      doc.setFontSize(8);
+      doc.setFontSize(8.5);
       doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
       doc.text("RESERVATION SUMMARY", marginX + 4, currentY + 5);
 
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(255, 255, 255);
-      const reservationDetails = `${activeVillaName}  |  ${nights} Night(s) (${weekdayNights} Weekday, ${weekendNights} Weekend)  |  ${guestsCount} Guests`;
-      doc.text(reservationDetails, marginX + 4, currentY + 10);
+      doc.text(`${activeVillaName}  |  ${numNights} Night(s)  |  ${numGuestsCount} Guests`, marginX + 4, currentY + 10);
 
       if (checkInDate || checkOutDate) {
         doc.setFont("Helvetica", "normal");
         doc.setFontSize(8);
-        doc.setTextColor(218, 165, 32); // Gold color
+        doc.setTextColor(218, 165, 32);
         const cinStr = checkInDate ? formatDateLabel(checkInDate) : "N/A";
         const coutStr = checkOutDate ? formatDateLabel(checkOutDate) : "N/A";
-        doc.text(`Check-In: ${cinStr} (2:00 PM)   |   Check-Out: ${coutStr} (11:00 AM)`, marginX + 4, currentY + 15);
+        doc.text(`Check-In: ${cinStr} (2:00 PM)   |   Check-Out: ${coutStr} (11:00 AM)`, marginX + 4, currentY + 14);
       }
 
-      currentY += reservationBoxHeight + 5;
+      currentY += 21;
 
-      // Tariff Itemization Table Header
+      // Itemized Table Header
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
       doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
 
@@ -645,19 +700,18 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       doc.setFontSize(8);
       doc.setTextColor(255, 255, 255);
       doc.text("ITEM DESCRIPTION", marginX + 4, currentY + 5);
-      doc.text("QTY / DURATION", 100, currentY + 5);
+      doc.text("QTY / PAX", 105, currentY + 5);
       doc.text("RATE", 145, currentY + 5);
       doc.text("TOTAL TARIFF", 175, currentY + 5);
 
       currentY += 7.5;
 
-      // Table rows helper
       let isRowEven = false;
       const drawTableRow = (desc: string, qty: string, rate: string, total: string) => {
         doc.setFont("Helvetica", "normal");
         doc.setFontSize(8.5);
         doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
-        
+
         if (isRowEven) {
           doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
           doc.rect(marginX, currentY, 210 - marginX * 2, 7.5, "F");
@@ -668,7 +722,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
         doc.line(marginX, currentY + 7.5, 210 - marginX, currentY + 7.5);
 
         doc.text(desc, marginX + 4, currentY + 5);
-        doc.text(qty, 100, currentY + 5);
+        doc.text(qty, 105, currentY + 5);
         doc.text(rate, 145, currentY + 5);
         doc.setFont("Helvetica", "bold");
         doc.text(total, 175, currentY + 5);
@@ -677,67 +731,35 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
         currentY += 7.5;
       };
 
-      // Row 1: Weekday Stay
-      if (weekdayNights > 0) {
+      // Rows: Each Night Tariff
+      nightRates.forEach((r, idx) => {
+        const nightLbl = getNightDateLabel(idx);
+        const amt = typeof r === "number" ? r : 0;
         drawTableRow(
-          `Stay Tariff - Weekday Nights`,
-          `${weekdayNights} Night(s)`,
-          `Rs. ${ratePerNight.toLocaleString("en-IN")}`,
-          `Rs. ${weekdayStayCost.toLocaleString("en-IN")}`
-        );
-      }
-
-      // Row 2: Weekend Stay
-      if (weekendNights > 0) {
-        drawTableRow(
-          `Stay Tariff - Weekend Nights`,
-          `${weekendNights} Night(s)`,
-          `Rs. ${weekendRatePerNight.toLocaleString("en-IN")}`,
-          `Rs. ${weekendStayCost.toLocaleString("en-IN")}`
-        );
-      }
-
-      // Row 3: Extra Guests Fee
-      if (extraGuestsCount > 0) {
-        drawTableRow(
-          `Extra Guests Fee`,
-          `${extraGuestsCount} Pax * ${nights} Nights`,
-          `Rs. ${extraGuestFee.toLocaleString("en-IN")}`,
-          `Rs. ${extraGuestsCost.toLocaleString("en-IN")}`
-        );
-      }
-
-      // Row 4: Food plan cost
-      if (foodPlan !== "none") {
-        const foodPlanTitle =
-          foodPlan === "standard"
-            ? "STANDARD MENU"
-            : foodPlan === "deluxe"
-            ? "DELUXE MENU"
-            : "CUSTOM MENU";
-        drawTableRow(
-          `Catering Package - ${foodPlanTitle}`,
-          `${foodGuestsCount} Pax * ${nights} Days`,
-          `Rs. ${foodRatePerPersonPerDay.toLocaleString("en-IN")}`,
-          `Rs. ${totalFoodCost.toLocaleString("en-IN")}`
-        );
-      }
-
-      // Custom Extras rows
-      extraCharges.forEach((c) => {
-        drawTableRow(
-          c.description,
-          "Add-on Service",
-          `Rs. ${c.amount.toLocaleString("en-IN")}`,
-          `Rs. ${c.amount.toLocaleString("en-IN")}`
+          `Stay Tariff - ${nightLbl}`,
+          `1 Night`,
+          `Rs. ${amt.toLocaleString("en-IN")}`,
+          `Rs. ${amt.toLocaleString("en-IN")}`
         );
       });
 
-      currentY += 8;
+      if (totalInvoiceFoodCost > 0) {
+        drawTableRow(
+          invoiceFoodNote ? `Catering Plan: ${invoiceFoodNote}` : `Catering & Meal Plan`,
+          `${numGuestsCount} Pax`,
+          `Package`,
+          `Rs. ${totalInvoiceFoodCost.toLocaleString("en-IN")}`
+        );
+      }
 
-      // Subtotal, Discounts, Tax & Grand Total (Right Aligned Summary Block)
+      extraCharges.forEach((c) => {
+        drawTableRow(c.description, `Add-on`, `Rs. ${c.amount.toLocaleString("en-IN")}`, `Rs. ${c.amount.toLocaleString("en-IN")}`);
+      });
+
+      currentY += 6;
+
+      // Right summary block
       const rightAlignX = 135;
-
       const drawSummaryRow = (label: string, value: string, isBold = false, textColor = darkCharcoal) => {
         doc.setFont("Helvetica", isBold ? "bold" : "normal");
         doc.setFontSize(isBold ? 9.5 : 8.5);
@@ -749,728 +771,1083 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
 
       drawSummaryRow("Gross Subtotal:", `Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}`);
       if (totalDiscount > 0) {
-        drawSummaryRow("Discount Applied:", `- Rs. ${totalDiscount.toLocaleString("en-IN")}`, false, [180, 40, 40]);
+        drawSummaryRow("Discount:", `- Rs. ${totalDiscount.toLocaleString("en-IN")}`, false, [180, 40, 40]);
       }
-      drawSummaryRow(`Net Taxable Amount:`, `Rs. ${subtotal.toLocaleString("en-IN")}`);
-      drawSummaryRow(`GST Tax (${gstPercent}%):`, `Rs. ${gstAmount.toLocaleString("en-IN")}`);
-      if (securityDeposit > 0) {
-        drawSummaryRow("Security Deposit (Refundable):", `Rs. ${securityDeposit.toLocaleString("en-IN")}`, false, [180, 100, 20]);
+      if (activeGstPercent > 0) {
+        drawSummaryRow(`GST Tax (${activeGstPercent}%):`, `Rs. ${gstAmount.toLocaleString("en-IN")}`);
       }
-      
-      // Grand Total Highlight Bar
+      if (numDeposit > 0) {
+        drawSummaryRow("Refundable Deposit:", `Rs. ${numDeposit.toLocaleString("en-IN")}`);
+      }
+
       currentY += 1;
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
       doc.rect(rightAlignX - 2, currentY - 4, 210 - marginX - (rightAlignX - 2), 9, "F");
 
-      const finalNetPayable = grandTotal;
-
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-      doc.text("NET PAYABLE AMOUNT:", rightAlignX, currentY + 1.5);
+      doc.text("NET GRAND TOTAL:", rightAlignX, currentY + 1.5);
 
       doc.setFontSize(10);
       doc.setTextColor(255, 255, 255);
-      doc.text(`Rs. ${finalNetPayable.toLocaleString("en-IN")}`, 175, currentY + 1.5);
+      doc.text(`Rs. ${grandTotal.toLocaleString("en-IN")}`, 175, currentY + 1.5);
 
       currentY += 10;
 
-      if (advancePaid > 0) {
-        drawSummaryRow("Advance Paid:", `Rs. ${advancePaid.toLocaleString("en-IN")}`, false, [16, 122, 68]);
-        const finalBalance = balanceDue;
-        const balanceText = finalBalance <= 0 ? "PAID IN FULL" : `Rs. ${finalBalance.toLocaleString("en-IN")}`;
-        drawSummaryRow("BALANCE REMAINING:", balanceText, true, finalBalance <= 0 ? [16, 122, 68] : navyColor);
+      if (numAdvance > 0) {
+        drawSummaryRow("Advance Paid:", `Rs. ${numAdvance.toLocaleString("en-IN")}`, false, [16, 122, 68]);
+        drawSummaryRow("Balance Remaining:", balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`, true, [27, 53, 100]);
       }
 
-      // Terms & Conditions Block (Bottom Left)
-      let tcY = currentY - 28;
-      if (tcY < 150) tcY = 175; // ensure proper position on page
+      currentY += 6;
+
+      // Bank Payment Box
+      doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 22, "F");
+      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 22, "S");
 
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(8);
       doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.text("TERMS & BOOKING CONDITIONS:", marginX, tcY);
+      doc.text("PAYMENT DETAILS & BANK TRANSFER:", marginX + 4, currentY + 5);
 
       doc.setFont("Helvetica", "normal");
-      doc.setFontSize(7);
-      doc.setTextColor(110, 110, 110);
-      const depCond = securityDeposit > 0
-        ? `1. Refundable Security Deposit of Rs. ${securityDeposit.toLocaleString("en-IN")} is refunded within 48 hours post check-out.`
-        : "1. Security deposit is refundable within 48 hours post check-out verification.";
-      doc.text(depCond, marginX, tcY + 4);
-      doc.text("2. Standard Check-in is 2:00 PM and Check-out is 11:00 AM.", marginX, tcY + 7.5);
-      doc.text("3. Quiet hours apply in residential zones after 10:00 PM.", marginX, tcY + 11);
-      doc.text("4. Meal plans once confirmed cannot be partially cancelled during stay.", marginX, tcY + 14.5);
+      doc.setFontSize(8);
+      doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
+      doc.text("Bank Name: HDFC Bank   |   Account Name: STAY WILLAS ENTERPRISES", marginX + 4, currentY + 10);
+      doc.text("A/C No: 50200084729103   |   IFSC Code: HDFC0000241", marginX + 4, currentY + 14.5);
+      doc.text("UPI / PhonePe / GPay: 9619042310@okbizaxis", marginX + 4, currentY + 19);
 
-      // Thank you banner & Footer
-      doc.setFont("Helvetica", "bold");
-      doc.setFontSize(9);
-      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-      doc.text("THANK YOU FOR CHOOSING STAY WILLAS!", marginX, tcY + 23);
-
-      // Footer border line
-      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
-      doc.setLineWidth(0.3);
-      doc.line(marginX, 282, 210 - marginX, 282);
-
-      doc.setFont("Helvetica", "normal");
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 140);
-      doc.text("Stay Willas  |  www.staywillas.com  |  WhatsApp Concierge: +91 9619042310", marginX, 286);
-      doc.text("Page 1 of 1", 210 - marginX, 286, { align: "right" });
-
-      // Trigger PDF download
-      const safeGuestName = (guestName || "Guest").replace(/[^a-zA-Z0-9]/g, "_");
-      doc.save(`StayWillas_Invoice_${safeGuestName}.pdf`);
+      // Save PDF
+      doc.save(`StayWillas_Invoice_${guestName.replace(/[^a-zA-Z0-9]/g, "_") || "Guest"}.pdf`);
     } catch (err) {
-      console.error("Failed to generate PDF:", err);
-      alert("Notice: PDF download encountered an issue. Check browser permissions.");
+      console.error("PDF generation failed", err);
+      alert("Failed to generate PDF. Please verify details and try again.");
     }
   };
 
   return (
-    <div className="bg-[#FAF8F5] border border-border-subtle rounded-3xl p-4 md:p-8 max-w-7xl mx-auto shadow-sm text-left">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-subtle pb-6 mb-8">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-[#1B3564] text-white flex items-center justify-center shadow-md shrink-0">
-            <Calculator className="w-6 h-6 text-[#DAA520]" />
-          </div>
+    <div className="space-y-6 animate-fade-in font-sans">
+      {/* Top Header & Simple Mode Switcher */}
+      <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-heading font-bold text-[#1B3564]">Admin Invoice & Bill Calculator</h2>
-            <p className="text-xs text-text-primary/60 mt-0.5">Calculate tariffs, food plans, add custom charges, and download invoice PDFs instantly.</p>
+            <div className="flex items-center gap-2.5 text-[#1B3564]">
+              <span className="p-2 rounded-xl bg-[#1B3564]/5 text-[#1B3564]">
+                <Calculator className="w-5 h-5 text-[#DAA520]" />
+              </span>
+              <h2 className="text-xl font-bold font-serif tracking-tight">Stay Willas Quotation & Billing Suite</h2>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Create clean villa invoices or catering quotes. All pricing fields start completely blank so you can enter custom rates directly.
+            </p>
+          </div>
+
+          {/* Simple Tab Switcher */}
+          <div className="flex items-center bg-[#FAF8F5] p-1.5 rounded-2xl border border-slate-200">
+            <button
+              onClick={() => setActiveCalculator("invoice")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                activeCalculator === "invoice"
+                  ? "bg-[#1B3564] text-white shadow-xs"
+                  : "text-slate-600 hover:text-[#1B3564]"
+              }`}
+            >
+              <FileText className="w-4 h-4 text-[#DAA520]" />
+              <span>Invoice Calculator</span>
+              {totalInvoiceFoodCost > 0 && (
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveCalculator("food")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                activeCalculator === "food"
+                  ? "bg-[#1B3564] text-white shadow-xs"
+                  : "text-slate-600 hover:text-[#1B3564]"
+              }`}
+            >
+              <Utensils className="w-4 h-4 text-[#DAA520]" />
+              <span>Food Calculator</span>
+              {totalFoodCostCalculated > 0 && (
+                <span className="text-[10px] bg-amber-500/20 text-amber-700 px-1.5 py-0.5 rounded-md font-semibold">
+                  ₹{totalFoodCostCalculated.toLocaleString("en-IN")}
+                </span>
+              )}
+            </button>
           </div>
         </div>
-        
-        {/* Quick Info Badge */}
-        {selectedVillaSlug && (
-          <div className="bg-white border border-[#DAA520]/40 rounded-2xl px-4 py-2 flex items-center gap-3 shadow-xs">
-            <div className="text-right">
-              <span className="text-[10px] font-black uppercase text-slate-400 block">Selected Property</span>
-              <span className="text-xs font-bold text-[#1B3564]">
-                {villas.find(v => v.slug === selectedVillaSlug)?.name}
+
+        {/* Sync notification if food was applied */}
+        {foodAppliedToInvoice && activeCalculator === "invoice" && (
+          <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-800">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>
+                <strong>Food Applied:</strong> {invoiceFoodNote} — <strong>₹{totalInvoiceFoodCost.toLocaleString("en-IN")}</strong>
               </span>
             </div>
+            <button
+              onClick={() => setFoodAppliedToInvoice(false)}
+              className="text-emerald-700 hover:underline font-semibold cursor-pointer"
+            >
+              Dismiss
+            </button>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        {/* Form Container (Takes 2 columns) */}
-        <div className="lg:col-span-2 space-y-6">
-          
-          {/* Section 1: Guest Details */}
-          <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
-                <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">1</span>
-                <User size={16} className="text-[#DAA520]" />
-                <span>Guest Details</span>
-              </div>
-              <span className="text-[10px] font-semibold text-slate-400">Primary Contact Info</span>
-            </div>
+      {/* =================================================================== */}
+      {/* 1. INVOICE CALCULATOR TAB */}
+      {/* =================================================================== */}
+      {activeCalculator === "invoice" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          {/* Form Container (2 Columns) */}
+          <div className="lg:col-span-2 space-y-6">
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Primary Guest Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Rahul Sharma"
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 transition-colors font-medium"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Phone Number</label>
-                <input
-                  type="text"
-                  placeholder="e.g. 9876543210"
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 transition-colors font-medium"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Email Address</label>
-                <input
-                  type="email"
-                  placeholder="e.g. rahul@gmail.com"
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 transition-colors font-medium"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Section 2: Stay Configuration */}
-          <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
-                <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">2</span>
-                <Calendar size={16} className="text-[#DAA520]" />
-                <span>Stay Configuration & Rates</span>
-              </div>
-              <span className="text-[10px] font-semibold text-slate-400">Property & Tariff Setup</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Select Villa Location *</label>
-                <select
-                  value={selectedVillaSlug}
-                  onChange={(e) => setSelectedVillaSlug(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-[#1B3564]"
-                >
-                  <option value="">-- Select Villa Property --</option>
-                  {villas.map((v) => (
-                    <option key={v.slug} value={v.slug}>
-                      {v.name} ({v.location}) - Rs. {v.price.toLocaleString("en-IN")}/n
-                    </option>
-                  ))}
-                </select>
+            {/* 1. Guest Information */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1B3564]">
+                  <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px]">1</span>
+                  <User className="w-4 h-4 text-[#DAA520]" />
+                  <span>Guest Information</span>
+                </div>
+                <span className="text-[11px] text-slate-400">Primary guest contact</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1.5">Weekday Rate (₹)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">Primary Guest Name</label>
                   <input
-                    type="number"
-                    placeholder="0"
-                    value={ratePerNight || ""}
-                    onChange={(e) => setRatePerNight(e.target.value === "" ? 0 : Number(e.target.value))}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-slate-900"
+                    type="text"
+                    placeholder="e.g. Rahul Sharma"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1.5">Weekend Rate (₹)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">Phone Number</label>
                   <input
-                    type="number"
-                    placeholder="0"
-                    value={weekendRatePerNight || ""}
-                    onChange={(e) => setWeekendRatePerNight(e.target.value === "" ? 0 : Number(e.target.value))}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-slate-900"
+                    type="text"
+                    placeholder="e.g. 9876543210"
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">Email Address</label>
+                  <input
+                    type="email"
+                    placeholder="e.g. rahul@gmail.com"
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] transition-colors"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Check-In & Check-Out Date Pickers */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-              <div>
-                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1.5">
-                  <Calendar size={13} className="text-[#DAA520]" />
-                  Check-In Date
-                </label>
-                <input
-                  type="date"
-                  value={checkInDate}
-                  onChange={(e) => handleDateChange(e.target.value, checkOutDate)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-[#1B3564]"
-                />
+            {/* 2. Villa & Dates */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-5">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1B3564]">
+                  <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px]">2</span>
+                  <Building2 className="w-4 h-4 text-[#DAA520]" />
+                  <span>Villa Property & Stay Dates</span>
+                </div>
+                <span className="text-[11px] text-slate-400">Select estate & schedule</span>
               </div>
-              <div>
-                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1.5">
-                  <Calendar size={13} className="text-[#DAA520]" />
-                  Check-Out Date
-                </label>
-                <input
-                  type="date"
-                  min={checkInDate || undefined}
-                  value={checkOutDate}
-                  onChange={(e) => handleDateChange(checkInDate, e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold text-[#1B3564]"
-                />
-              </div>
-            </div>
 
-            <div className="pt-2 border-t border-slate-100">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Total Stay Nights</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">Select Villa Property</label>
+                  <select
+                    value={selectedVillaSlug}
+                    onChange={(e) => setSelectedVillaSlug(e.target.value)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] font-medium text-slate-900"
+                  >
+                    <option value="">-- Choose Villa Property --</option>
+                    {villas.map((v) => (
+                      <option key={v.slug} value={v.slug}>
+                        {v.name} ({v.location})
+                      </option>
+                    ))}
+                    <option value="custom">✨ Custom Property / Other Estate</option>
+                  </select>
+                </div>
+
+                {selectedVillaSlug === "custom" && (
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 block mb-1.5">Custom Property Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Whispering Pines Villa, Lonavala"
+                      value={customPropertyName}
+                      onChange={(e) => setCustomPropertyName(e.target.value)}
+                      className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Dates */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-[#DAA520]" />
+                    Check-In Date
+                  </label>
+                  <input
+                    type="date"
+                    value={checkInDate}
+                    onChange={(e) => handleDateChange(e.target.value, checkOutDate)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-2.5 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5 mb-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-[#DAA520]" />
+                    Check-Out Date
+                  </label>
+                  <input
+                    type="date"
+                    min={checkInDate || undefined}
+                    value={checkOutDate}
+                    onChange={(e) => handleDateChange(checkInDate, e.target.value)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-2.5 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] font-medium"
+                  />
+                </div>
+              </div>
+
+              {/* Nights & Guests Count */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[11px] font-semibold text-slate-700">Total Nights Duration</label>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleNightsChange(nights + 1)}
+                        className="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded cursor-pointer transition-colors"
+                      >
+                        + 1 Night
+                      </button>
+                      {nights > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleNightsChange(nights - 1)}
+                          className="text-[10px] font-bold bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-600 px-2 py-0.5 rounded cursor-pointer transition-colors"
+                        >
+                          - 1 Night
+                        </button>
+                      )}
+                    </div>
+                  </div>
                   <input
                     type="number"
                     min={1}
-                    placeholder="1"
                     value={nights || ""}
-                    onChange={(e) => setNights(e.target.value === "" ? 0 : Math.max(0, Number(e.target.value)))}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
+                    onChange={(e) => handleNightsChange(e.target.value === "" ? 1 : Number(e.target.value))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-[#FAF8F5] focus:bg-white focus:outline-none font-bold text-[#1B3564]"
                   />
                 </div>
+
                 <div>
-                  <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Weekend Nights</label>
-                  <input
-                    type="number"
-                    min={0}
-                    max={nights}
-                    placeholder="0"
-                    value={weekendNights || ""}
-                    onChange={(e) => setWeekendNights(e.target.value === "" ? 0 : Math.min(nights, Math.max(0, Number(e.target.value))))}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold text-amber-700"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Total Guests Count</label>
+                  <label className="text-[11px] font-semibold text-slate-700 block mb-1">Total Guests (Pax Count)</label>
                   <input
                     type="number"
                     min={1}
-                    placeholder="1"
-                    value={guestsCount || ""}
-                    onChange={(e) => setGuestsCount(e.target.value === "" ? 0 : Math.max(0, Number(e.target.value)))}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none focus:border-[#1B3564]/50 font-bold"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] font-bold text-slate-700 block mb-1.5">Base Included Guests</label>
-                  <input
-                    type="number"
-                    placeholder="12"
-                    value={baseGuests || ""}
-                    onChange={(e) => setBaseGuests(e.target.value === "" ? 0 : Number(e.target.value))}
-                    className="w-full text-xs border border-border-subtle rounded-xl px-3.5 py-2.5 bg-[#FAF8F5] focus:outline-none font-bold"
-                  />
-                </div>
-              </div>
-
-              {extraGuestsCount > 0 && (
-                <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex justify-between items-center text-xs text-emerald-900 font-semibold">
-                  <span>Extra Guest Tariff ({extraGuestsCount} Pax @ ₹{extraGuestFee.toLocaleString("en-IN")}/night):</span>
-                  <span className="font-bold text-emerald-950">₹{extraGuestsCost.toLocaleString("en-IN")}</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Section 3: Food Packages */}
-          <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
-                <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">3</span>
-                <Sparkles size={16} className="text-[#DAA520]" />
-                <span>Catering & Food Plans</span>
-              </div>
-              <span className="text-[10px] font-semibold text-slate-400">Meal Package Options</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Select Food Plan</label>
-                <select
-                  value={foodPlan}
-                  onChange={(e) => setFoodPlan(e.target.value as any)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold"
-                >
-                  <option value="none">No Meal Plan</option>
-                  <option value="standard">Standard Pricing (Rs. 1,250/day)</option>
-                  <option value="deluxe">Deluxe Pricing (Rs. 1,500/day)</option>
-                  <option value="custom">Custom Rate Package</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Rate per Person / Day (₹)</label>
-                <input
-                  type="number"
-                  placeholder="0"
-                  disabled={foodPlan === "none"}
-                  value={foodRatePerPersonPerDay || ""}
-                  onChange={(e) => setFoodRatePerPersonPerDay(e.target.value === "" ? 0 : Number(e.target.value))}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold disabled:opacity-50"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Total Eating Guest Count</label>
-                <input
-                  type="number"
-                  min={0}
-                  placeholder="0"
-                  disabled={foodPlan === "none"}
-                  value={foodGuestsCount || ""}
-                  onChange={(e) => setFoodGuestsCount(e.target.value === "" ? 0 : Number(e.target.value))}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]/50 font-bold disabled:opacity-50"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Section 4: Extra Custom Charges & Security Deposit */}
-          <div className="bg-white border border-border-subtle/60 rounded-2xl p-6 shadow-xs space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-[#1B3564]">
-                <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px] font-bold">4</span>
-                <Plus size={16} className="text-[#DAA520]" />
-                <span>Custom Add-ons & Security Deposit</span>
-              </div>
-              <span className="text-[10px] font-semibold text-slate-400">Pool heating, BBQ, Security Deposit</span>
-            </div>
-
-            {/* Refundable Security Deposit Field */}
-            <div className="bg-amber-50/60 border border-amber-200/80 rounded-2xl p-4.5 space-y-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <label className="text-xs font-bold text-[#1B3564] block">Refundable Security Deposit (₹)</label>
-                  <p className="text-[11px] text-slate-500 font-light">100% refunded within 48 hours post check-out inspection.</p>
-                </div>
-                <div className="w-full sm:w-48">
-                  <input
-                    type="number"
-                    min={0}
-                    placeholder="e.g. 5000"
-                    value={securityDeposit || ""}
-                    onChange={(e) => setSecurityDeposit(e.target.value === "" ? 0 : Math.max(0, Number(e.target.value)))}
-                    className="w-full text-xs border border-amber-300 rounded-xl px-4 py-2.5 bg-white focus:outline-none font-bold text-[#1B3564]"
+                    placeholder="e.g. 12"
+                    value={guestsCount}
+                    onChange={(e) => setGuestsCount(e.target.value === "" ? "" : Math.max(1, Number(e.target.value)))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-[#FAF8F5] focus:bg-white focus:outline-none font-bold"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Add-on Charges Form with WIDER input boxes */}
-            <form onSubmit={handleAddExtra} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end bg-[#FAF8F5] p-4.5 rounded-2xl border border-border-subtle/40">
-              <div className="sm:col-span-6">
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Charge Description</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Pool Heating, BBQ Setup, Hookah Set"
-                  value={newExtraDesc}
-                  onChange={(e) => setNewExtraDesc(e.target.value)}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:border-[#1B3564]/50"
-                />
+            {/* 3. Night-by-Night Pricing (Night 1, Night 2, etc. - Empty by Default) */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1B3564]">
+                  <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px]">3</span>
+                  <Calendar className="w-4 h-4 text-[#DAA520]" />
+                  <span>Nightly Stay Rates ({nights} Night{nights > 1 ? "s" : ""})</span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  {nights > 1 && nightRates[0] !== "" && (
+                    <button
+                      type="button"
+                      onClick={handleCopyNight1ToAll}
+                      className="text-[11px] font-bold text-[#1B3564] hover:text-[#152a50] bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1"
+                    >
+                      <Sparkles className="w-3 h-3 text-[#DAA520]" />
+                      <span>Apply Night 1 to All</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleNightsChange(nights + 1)}
+                    className="text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg cursor-pointer transition-all flex items-center gap-1"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Add Night</span>
+                  </button>
+                  {nights > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleNightsChange(nights - 1)}
+                      className="text-[11px] font-bold text-red-600 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-lg cursor-pointer transition-all"
+                    >
+                      Remove Night
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="sm:col-span-3">
-                <label className="text-xs font-bold text-slate-700 block mb-1.5">Amount (₹)</label>
-                <input
-                  type="number"
-                  placeholder="e.g. 3000"
-                  value={newExtraAmount}
-                  onChange={(e) => setNewExtraAmount(e.target.value !== "" ? Number(e.target.value) : "")}
-                  className="w-full text-xs border border-border-subtle rounded-xl px-4 py-2.5 bg-white focus:outline-none font-bold text-slate-900"
-                />
+
+              <p className="text-xs text-slate-500">
+                Enter tariff for each booked night (Night 1, Night 2, etc.). Pricing fields are left blank so you can enter the agreed rates directly.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 pt-1">
+                {nightRates.map((rate, index) => {
+                  const nightLabel = getNightDateLabel(index);
+                  return (
+                    <div key={index} className="bg-[#FAF8F5] border border-slate-200 rounded-2xl p-3.5 space-y-1.5 focus-within:border-[#1B3564] focus-within:bg-white transition-all">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                          <span className="w-5 h-5 rounded-full bg-[#1B3564] text-white text-[10px] flex items-center justify-center font-black">
+                            {index + 1}
+                          </span>
+                          <span>{nightLabel}</span>
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Tariff</span>
+                      </div>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 select-none">₹</span>
+                        <input
+                          type="number"
+                          placeholder="Enter tariff..."
+                          value={rate}
+                          onChange={(e) => handleNightRateChange(index, e.target.value)}
+                          className="w-full text-xs border border-slate-200 rounded-xl pl-7 pr-3 py-2.5 bg-white focus:outline-none focus:border-[#1B3564] font-bold text-slate-900"
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="sm:col-span-3">
+
+              <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <span className="text-slate-600 font-medium">
+                  Total Stay Tariff ({nights} Night{nights > 1 ? "s" : ""}):
+                </span>
+                <span className="text-sm font-black text-[#1B3564]">
+                  ₹{totalStayCost.toLocaleString("en-IN")}
+                </span>
+              </div>
+            </div>
+
+            {/* 4. Food & Catering Options */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1B3564]">
+                  <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px]">4</span>
+                  <Utensils className="w-4 h-4 text-[#DAA520]" />
+                  <span>Food & Catering Cost</span>
+                </div>
                 <button
-                  type="submit"
-                  className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider transition-colors shrink-0 flex items-center justify-center cursor-pointer shadow-sm"
+                  type="button"
+                  onClick={() => setActiveCalculator("food")}
+                  className="text-xs text-[#1B3564] hover:text-[#DAA520] font-bold inline-flex items-center gap-1 cursor-pointer"
                 >
-                  Add Charge
+                  <span>Open Food Calculator</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
-            </form>
 
-            {extraCharges.length > 0 && (
-              <div className="border border-border-subtle/30 rounded-2xl overflow-hidden text-xs">
-                <div className="bg-slate-50 px-4 py-2.5 border-b border-border-subtle/30 flex justify-between font-bold text-[#1B3564]">
-                  <span>Item Description</span>
-                  <span>Total Amount</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">Total Food / Catering Amount (₹)</label>
+                  <input
+                    type="number"
+                    placeholder="Enter total food cost or use Food Calculator..."
+                    value={invoiceFoodCost}
+                    onChange={(e) => setInvoiceFoodCost(e.target.value === "" ? "" : Number(e.target.value))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] font-bold text-slate-900"
+                  />
                 </div>
-                <div className="divide-y divide-border-subtle/20 bg-white">
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">Meal Notes / Package Description</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Veg & Non-Veg Menu, 12 Pax for 2 Days"
+                    value={invoiceFoodNote}
+                    onChange={(e) => setInvoiceFoodNote(e.target.value)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Custom Add-ons, Adjustments & Advance */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-5">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1B3564]">
+                  <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px]">5</span>
+                  <ShieldCheck className="w-4 h-4 text-[#DAA520]" />
+                  <span>Add-ons, Taxes & Payment Advance</span>
+                </div>
+                <span className="text-[11px] text-slate-400">Discounts, GST, Deposit</span>
+              </div>
+
+              {/* Add-on form */}
+              <form onSubmit={handleAddInvoiceExtra} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end bg-[#FAF8F5] p-4 rounded-2xl border border-slate-200">
+                <div className="sm:col-span-6">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Add-on Item Description</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Pool Heating, Bonfire Setup, Decor"
+                    value={newExtraDesc}
+                    onChange={(e) => setNewExtraDesc(e.target.value)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-3.5 py-2.5 bg-white focus:outline-none focus:border-[#1B3564]"
+                  />
+                </div>
+                <div className="sm:col-span-4">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Amount (₹)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 3000"
+                    value={newExtraAmount}
+                    onChange={(e) => setNewExtraAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-3.5 py-2.5 bg-white focus:outline-none font-bold"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <button
+                    type="submit"
+                    className="w-full bg-[#1B3564] text-white py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-[#1B3564]/90 transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add</span>
+                  </button>
+                </div>
+              </form>
+
+              {/* Extras List */}
+              {extraCharges.length > 0 && (
+                <div className="space-y-2">
                   {extraCharges.map((item) => (
-                    <div key={item.id} className="px-4 py-3 flex items-center justify-between">
+                    <div key={item.id} className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                       <span className="font-medium text-slate-800">{item.description}</span>
                       <div className="flex items-center gap-3">
                         <span className="font-bold text-[#1B3564]">₹{item.amount.toLocaleString("en-IN")}</span>
                         <button
                           type="button"
-                          onClick={() => handleRemoveExtra(item.id)}
-                          className="text-red-500 hover:text-red-700 cursor-pointer p-1"
+                          onClick={() => setExtraCharges(extraCharges.filter((c) => c.id !== item.id))}
+                          className="text-red-500 hover:text-red-700 p-1 cursor-pointer"
                         >
-                          <Trash2 size={15} />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
+              )}
 
-        {/* Invoice Summary Card Column (Sticky & Smooth Scrollable) */}
-        <div className="lg:col-span-1">
-          <div className="bg-white border border-[#DAA520]/40 rounded-3xl shadow-xl sticky top-20 max-h-[calc(100vh-6rem)] flex flex-col overflow-hidden transition-all duration-300">
-            
-            {/* Header (Fixed at top of summary) */}
-            <div className="px-5 py-3.5 bg-[#1B3564] text-white flex items-center justify-between shrink-0 rounded-t-3xl">
-              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider">
-                <FileText size={16} className="text-[#DAA520]" />
-                <span>Bill Breakdown Summary</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={handleResetAll}
-                  title="Reset calculator inputs"
-                  className="text-[10px] text-white/80 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-1 rounded-lg font-bold uppercase transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <RotateCcw size={11} />
-                  Reset
-                </button>
-                <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-widest bg-white/10 px-2 py-1 rounded-lg">Live Calc</span>
-              </div>
-            </div>
-
-            {/* Body Content (Scrollable with overscroll containment) */}
-            <div className="p-5 space-y-4 text-xs flex-1 overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth">
-              {/* Dates Badge */}
-              {(checkInDate || checkOutDate) && (
-                <div className="bg-[#1B3564]/5 border border-[#1B3564]/15 rounded-xl p-2.5 space-y-1 text-slate-700">
-                  <div className="flex justify-between items-center text-[11px] font-semibold">
-                    <span className="text-[#1B3564] font-bold">Check-In:</span>
-                    <span>{checkInDate ? formatDateLabel(checkInDate) : "N/A"} (2:00 PM)</span>
+              {/* Advance Paid & Security Deposit Dedicated Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gradient-to-br from-[#FAF8F5] to-slate-50 p-4 rounded-2xl border border-slate-200/90 shadow-xs">
+                {/* Advance Paid */}
+                <div className="bg-white p-4 rounded-xl border border-emerald-300/80 shadow-xs space-y-1.5 focus-within:ring-2 focus-within:ring-emerald-400/30 transition-all">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>Advance Received / Paid (₹)</span>
+                    </label>
+                    <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      Already Received
+                    </span>
                   </div>
-                  <div className="flex justify-between items-center text-[11px] font-semibold">
-                    <span className="text-[#1B3564] font-bold">Check-Out:</span>
-                    <span>{checkOutDate ? formatDateLabel(checkOutDate) : "N/A"} (11:00 AM)</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Stays Cost */}
-              <div className="flex justify-between items-start pb-3 border-b border-slate-100">
-                <span className="text-slate-600 font-medium">Stay Tariff ({nights} Nights)</span>
-                <div className="text-right">
-                  <span className="font-bold text-slate-900 block text-sm">₹{totalStayCost.toLocaleString("en-IN")}</span>
-                  {extraGuestsCount > 0 && (
-                    <span className="text-[10px] text-emerald-700 block font-semibold">(Incl. {extraGuestsCount} Extra Guests)</span>
-                  )}
-                </div>
-              </div>
-
-              {/* Food Cost */}
-              {foodPlan !== "none" && (
-                <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-                  <span className="text-slate-600 font-medium">Food Package ({foodGuestsCount} Pax)</span>
-                  <span className="font-bold text-slate-900 text-sm">₹{totalFoodCost.toLocaleString("en-IN")}</span>
-                </div>
-              )}
-
-              {/* Extras Cost */}
-              {totalExtrasCost > 0 && (
-                <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-                  <span className="text-slate-600 font-medium">Add-ons & Extras</span>
-                  <span className="font-bold text-slate-900 text-sm">₹{totalExtrasCost.toLocaleString("en-IN")}</span>
-                </div>
-              )}
-
-              {/* Security Deposit Badge */}
-              {securityDeposit > 0 && (
-                <div className="flex justify-between items-center pb-3 border-b border-slate-100 text-amber-900 bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/80">
-                  <span className="font-bold text-xs">Security Deposit (Refundable)</span>
-                  <span className="font-extrabold text-sm">₹{securityDeposit.toLocaleString("en-IN")}</span>
-                </div>
-              )}
-
-              {/* Gross Subtotal */}
-              <div className="flex justify-between items-center font-bold text-slate-900 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-                <span>Subtotal:</span>
-                <span className="text-sm">₹{subtotalBeforeDiscount.toLocaleString("en-IN")}</span>
-              </div>
-
-              {/* Discounts & Taxes Inputs */}
-              <div className="bg-[#FAF8F5] p-3.5 rounded-2xl border border-border-subtle/50 space-y-3">
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-1">Discount %</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-emerald-700 select-none">₹</span>
                     <input
                       type="number"
-                      min={0}
-                      max={100}
                       placeholder="0"
-                      value={discountPercent || ""}
-                      onChange={(e) => setDiscountPercent(e.target.value === "" ? 0 : Number(e.target.value))}
-                      className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-1.5 bg-white focus:outline-none font-bold text-slate-900 focus:border-[#1B3564]"
+                      value={advancePaid}
+                      onChange={(e) => setAdvancePaid(e.target.value === "" ? "" : Number(e.target.value))}
+                      className="w-full text-sm font-black border border-emerald-200 rounded-xl pl-7 pr-3 py-2.5 bg-emerald-50/40 focus:bg-white focus:outline-none focus:border-emerald-500 text-emerald-950"
                     />
                   </div>
-                  <div>
-                    <label className="text-[9px] font-black uppercase tracking-wider text-slate-500 block mb-1">Flat Discount (₹)</label>
+                  <span className="text-[10.5px] text-slate-500 block">Deducted from the total to show remaining balance at check-in</span>
+                </div>
+
+                {/* Security Deposit */}
+                <div className="bg-white p-4 rounded-xl border border-amber-300/80 shadow-xs space-y-1.5 focus-within:ring-2 focus-within:ring-amber-400/30 transition-all">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-[#DAA520]" />
+                      <span>Security Deposit (₹)</span>
+                    </label>
+                    <span className="text-[10px] font-black text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      Refundable
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-amber-700 select-none">₹</span>
                     <input
                       type="number"
-                      min={0}
                       placeholder="0"
-                      value={discountFlat || ""}
-                      onChange={(e) => setDiscountFlat(e.target.value === "" ? 0 : Number(e.target.value))}
-                      className="w-full text-xs border border-border-subtle rounded-xl px-2.5 py-1.5 bg-white focus:outline-none font-bold text-slate-900 focus:border-[#1B3564]"
+                      value={securityDeposit}
+                      onChange={(e) => setSecurityDeposit(e.target.value === "" ? "" : Number(e.target.value))}
+                      className="w-full text-sm font-black border border-amber-200 rounded-xl pl-7 pr-3 py-2.5 bg-amber-50/40 focus:bg-white focus:outline-none focus:border-[#DAA520] text-slate-900"
                     />
                   </div>
+                  <span className="text-[10.5px] text-slate-500 block">Refundable deposit held for property care during the stay</span>
                 </div>
+              </div>
 
-                {/* Preset Discount Chips */}
-                <div className="flex items-center gap-1.5 pt-0.5">
-                  <span className="text-[9px] font-bold text-slate-400 uppercase">Quick %:</span>
-                  {[0, 5, 10, 15, 20].map((pct) => (
-                    <button
-                      key={pct}
-                      type="button"
-                      onClick={() => setDiscountPercent(pct)}
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md border transition-all cursor-pointer ${
-                        discountPercent === pct
-                          ? "bg-[#1B3564] text-white border-[#1B3564]"
-                          : "bg-white text-slate-600 border-slate-200 hover:border-[#1B3564]/50"
-                      }`}
-                    >
-                      {pct === 0 ? "Off" : `${pct}%`}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex justify-between items-center pt-2 border-t border-border-subtle/30">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-[#1B3564]">GST Rate</label>
-                  <select
-                    value={gstPercent}
-                    onChange={(e) => setGstPercent(Number(e.target.value))}
-                    className="text-xs border border-border-subtle rounded-xl px-2.5 py-1.5 bg-white focus:outline-none font-bold cursor-pointer"
-                  >
-                    <option value={18}>18% GST (Standard)</option>
-                    <option value={12}>12% GST</option>
-                    <option value={5}>5% GST</option>
-                    <option value={0}>0% (Tax Exempt)</option>
-                  </select>
-                </div>
-
-                {/* Advance Payment Field */}
-                <div className="pt-2 border-t border-border-subtle/30 flex justify-between items-center">
-                  <label className="text-[10px] font-black uppercase tracking-wider text-[#1B3564]">Advance Paid (₹)</label>
+              {/* Discounts & GST */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-slate-100">
+                {/* Discount */}
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Discount Flat (₹)</label>
                   <input
                     type="number"
-                    min={0}
                     placeholder="0"
-                    value={advancePaid || ""}
-                    onChange={(e) => setAdvancePaid(e.target.value === "" ? 0 : Number(e.target.value))}
-                    className="w-32 text-xs border border-emerald-300 rounded-xl px-3 py-1.5 bg-emerald-50 focus:outline-none font-bold text-right text-emerald-800 focus:border-emerald-500"
+                    value={discountFlat}
+                    onChange={(e) => setDiscountFlat(e.target.value === "" ? "" : Number(e.target.value))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-[#FAF8F5] focus:bg-white focus:outline-none font-medium"
                   />
+                </div>
+
+                {/* GST Chips */}
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">GST Tax</label>
+                  <div className="flex items-center gap-1.5">
+                    {[0, 5, 12, 18].map((pct) => (
+                      <button
+                        key={pct}
+                        type="button"
+                        onClick={() => {
+                          setGstPercent(pct);
+                          setCustomGst("");
+                        }}
+                        className={`flex-1 py-2 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${
+                          gstPercent === pct && customGst === ""
+                            ? "bg-[#1B3564] text-white border-[#1B3564]"
+                            : "bg-[#FAF8F5] text-slate-600 border-slate-200 hover:border-slate-300"
+                        }`}
+                      >
+                        {pct === 0 ? "0%" : `${pct}%`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Instant Live Invoice Summary */}
+          <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-24">
+            <div className="bg-white border-2 border-[#1B3564]/15 rounded-3xl p-6 shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="text-base font-bold text-[#1B3564] font-serif">Invoice Breakdown</h3>
+                <button
+                  onClick={handleResetInvoice}
+                  type="button"
+                  className="text-xs text-slate-400 hover:text-red-600 flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Reset</span>
+                </button>
+              </div>
+
+              {/* Property summary pill */}
+              <div className="p-3 bg-[#FAF8F5] rounded-xl border border-slate-200 text-xs space-y-1">
+                <div className="font-bold text-[#1B3564]">{getSelectedVillaName()}</div>
+                <div className="text-slate-500 text-[11px]">
+                  {numNights} Night(s) | {numGuestsCount} Guests
+                  {checkInDate && ` | In: ${formatDateLabel(checkInDate)}`}
                 </div>
               </div>
 
-              {/* Net Taxable Value & GST Amount & Security Deposit */}
-              <div className="space-y-1 text-xs text-slate-600 font-medium">
+              {/* Breakdown Rows */}
+              <div className="space-y-3 text-xs">
+                <div className="space-y-1.5 pb-2 border-b border-slate-100">
+                  <div className="flex justify-between font-bold text-slate-800">
+                    <span>Villa Stay Tariff ({numNights}N):</span>
+                    <span className="text-[#1B3564]">₹{totalStayCost.toLocaleString("en-IN")}</span>
+                  </div>
+                  {/* Night-by-night breakdown */}
+                  <div className="space-y-1 pl-2 border-l-2 border-slate-200 text-[11px] text-slate-500">
+                    {nightRates.map((rate, i) => (
+                      <div key={i} className="flex justify-between">
+                        <span>{getNightDateLabel(i)}:</span>
+                        <span className="font-semibold text-slate-700">
+                          {typeof rate === "number" ? `₹${rate.toLocaleString("en-IN")}` : "₹0"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {totalInvoiceFoodCost > 0 && (
+                  <div className="flex justify-between text-slate-600">
+                    <span>Food & Catering:</span>
+                    <span className="font-bold text-slate-900">₹{totalInvoiceFoodCost.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
+
+                {totalExtrasCost > 0 && (
+                  <div className="flex justify-between text-slate-600">
+                    <span>Add-ons & Extras:</span>
+                    <span className="font-bold text-slate-900">₹{totalExtrasCost.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between text-slate-600 border-t border-slate-100 pt-2 font-medium">
+                  <span>Gross Subtotal:</span>
+                  <span className="font-bold text-slate-900">₹{subtotalBeforeDiscount.toLocaleString("en-IN")}</span>
+                </div>
+
                 {totalDiscount > 0 && (
                   <div className="flex justify-between text-red-600">
                     <span>Discount Applied:</span>
-                    <span className="font-semibold">- ₹{totalDiscount.toLocaleString("en-IN")}</span>
+                    <span className="font-bold">- ₹{totalDiscount.toLocaleString("en-IN")}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span>Net Taxable Value:</span>
-                  <span className="font-semibold text-slate-800">₹{subtotal.toLocaleString("en-IN")}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>GST Tax ({gstPercent}%):</span>
-                  <span className="font-semibold text-slate-800">₹{gstAmount.toLocaleString("en-IN")}</span>
-                </div>
-                {securityDeposit > 0 && (
-                  <div className="flex justify-between text-amber-800">
-                    <span>Security Deposit (Refundable):</span>
-                    <span className="font-semibold">₹{securityDeposit.toLocaleString("en-IN")}</span>
+
+                {activeGstPercent > 0 && (
+                  <div className="flex justify-between text-slate-600">
+                    <span>GST ({activeGstPercent}%):</span>
+                    <span className="font-bold text-slate-900">₹{gstAmount.toLocaleString("en-IN")}</span>
                   </div>
                 )}
-              </div>
 
-              {/* Grand Total */}
-              <div className="bg-[#1B3564]/5 border border-[#1B3564]/15 rounded-2xl p-3.5 flex justify-between items-center font-bold text-[#1B3564]">
-                <span className="font-heading text-xs uppercase tracking-wider">NET PAYABLE GRAND TOTAL:</span>
-                <span className="font-sans text-lg text-slate-900 font-extrabold">₹{grandTotal.toLocaleString("en-IN")}</span>
-              </div>
-
-              {/* Advance Paid & Remaining Balance Display */}
-              {advancePaid > 0 && (
-                <div className="space-y-2 pt-2 border-t border-dashed border-border-subtle/40">
-                  <div className="flex justify-between text-xs text-slate-600 font-medium">
-                    <span>Advance Received:</span>
-                    <span className="font-bold text-emerald-700">₹{advancePaid.toLocaleString("en-IN")}</span>
+                {numDeposit > 0 && (
+                  <div className="flex justify-between text-amber-700">
+                    <span>Refundable Deposit:</span>
+                    <span className="font-bold">₹{numDeposit.toLocaleString("en-IN")}</span>
                   </div>
-                  <div className="bg-[#1B3564] text-white rounded-2xl p-3.5 flex justify-between items-center font-bold shadow-sm">
-                    <span className="font-heading text-[#DAA520] tracking-wider text-xs">BALANCE REMAINING:</span>
-                    <span className="text-base text-white">
+                )}
+
+                {/* Grand Total Bar */}
+                <div className="p-4 bg-[#1B3564] text-white rounded-2xl flex items-center justify-between mt-4">
+                  <div>
+                    <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-wider block">Net Payable</span>
+                    <span className="text-xl font-black font-serif">₹{grandTotal.toLocaleString("en-IN")}</span>
+                  </div>
+                  {balanceDue <= 0 && numAdvance > 0 ? (
+                    <span className="text-[11px] bg-emerald-500 text-white font-bold px-2 py-1 rounded-lg">PAID FULL</span>
+                  ) : null}
+                </div>
+
+                {/* Advance & Balance Due Section */}
+                <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-2 mt-2">
+                  <div className="flex justify-between text-emerald-800 text-xs font-bold">
+                    <span className="flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      Advance Received:
+                    </span>
+                    <span>{numAdvance > 0 ? `₹${numAdvance.toLocaleString("en-IN")}` : "₹0"}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center pt-2 border-t border-slate-200 text-xs font-black">
+                    <span className="text-slate-700 uppercase tracking-wider text-[10px]">
+                      Balance at Check-In:
+                    </span>
+                    <span className={`text-base font-black font-heading ${balanceDue <= 0 ? "text-emerald-600" : "text-amber-900"}`}>
                       {balanceDue <= 0 ? "PAID IN FULL" : `₹${balanceDue.toLocaleString("en-IN")}`}
                     </span>
                   </div>
                 </div>
-              )}
-            </div>
-
-            {/* Permanent Compact Action Footer */}
-            <div className="p-3.5 bg-slate-50 border-t border-slate-200 shrink-0 space-y-2">
-              {/* PDF Download Button (Always active & instant) */}
-              <button
-                type="button"
-                onClick={handleDownloadPDF}
-                className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl py-2.5 text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md"
-              >
-                <Download size={15} />
-                Download PDF Invoice
-              </button>
-
-              {/* Email & WhatsApp Quick Action 3-Grid */}
-              <div className="grid grid-cols-3 gap-1.5">
-                {/* WhatsApp Share */}
-                <button
-                  type="button"
-                  disabled={!selectedVillaSlug}
-                  onClick={handleShareWhatsApp}
-                  title="Share summary on WhatsApp"
-                  className="bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl py-2 px-2 text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40 shadow-xs"
-                >
-                  <Share2 size={13} />
-                  WhatsApp
-                </button>
-
-                {/* Mail App */}
-                <button
-                  type="button"
-                  disabled={!selectedVillaSlug}
-                  onClick={handleDraftMailto}
-                  title="Open default email client"
-                  className="bg-white hover:bg-slate-100 text-[#1B3564] border border-[#1B3564]/30 rounded-xl py-2 px-2 text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40"
-                >
-                  <Mail size={13} className="text-[#DAA520]" />
-                  Mail App
-                </button>
-
-                {/* Direct Mail */}
-                <button
-                  type="button"
-                  disabled={!selectedVillaSlug || !guestEmail || isSendingEmail}
-                  onClick={handleSendDirectEmail}
-                  title="Send direct email via server"
-                  className="bg-[#1B3564] hover:bg-[#152a50] text-white rounded-xl py-2 px-2 text-[10px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 cursor-pointer disabled:opacity-40"
-                >
-                  {isSendingEmail ? (
-                    <span className="animate-spin text-xs">🌀</span>
-                  ) : (
-                    <Send size={13} className="text-[#DAA520]" />
-                  )}
-                  {isSendingEmail ? "Sending" : "Direct Mail"}
-                </button>
               </div>
 
-              {/* Feedback Alerts */}
-              {emailFeedback && (
-                <div
-                  className={`p-2 rounded-xl text-[11px] font-semibold flex items-center gap-1.5 ${
-                    emailFeedback.type === "success"
-                      ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                      : "bg-red-50 text-red-800 border border-red-200"
-                  }`}
+              {/* Action Buttons */}
+              <div className="space-y-2.5 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={handleDownloadPDF}
+                  className="w-full bg-[#1B3564] text-white py-3 px-4 rounded-xl text-xs font-bold hover:bg-[#1B3564]/90 transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                 >
-                  {emailFeedback.type === "success" ? (
-                    <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
-                  ) : (
-                    <AlertCircle size={14} className="text-red-600 shrink-0" />
-                  )}
-                  <span className="truncate">{emailFeedback.msg}</span>
-                </div>
-              )}
+                  <Download className="w-4 h-4 text-[#DAA520]" />
+                  <span>Download PDF Invoice</span>
+                </button>
 
-              {!selectedVillaSlug && (
-                <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-1 text-center block font-semibold">
-                  ⚠️ Select a villa property to enable invoice actions
-                </span>
-              )}
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleShareWhatsApp}
+                    className="bg-[#25D366] text-white py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-[#20ba5a] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <span>💬 WhatsApp</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyInvoiceText}
+                    className="bg-slate-100 text-slate-700 py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    {copiedInvoice ? <CheckCheck className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                    <span>{copiedInvoice ? "Copied!" : "Copy Quote"}</span>
+                  </button>
+                </div>
+
+                {guestEmail && (
+                  <button
+                    type="button"
+                    onClick={handleSendDirectEmail}
+                    disabled={isSendingEmail}
+                    className="w-full border border-slate-300 text-slate-700 py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    <Mail className="w-4 h-4 text-[#1B3564]" />
+                    <span>{isSendingEmail ? "Sending Email..." : "Email to Guest"}</span>
+                  </button>
+                )}
+
+                {emailFeedback && (
+                  <div
+                    className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2 ${
+                      emailFeedback.type === "success"
+                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        : "bg-red-50 text-red-800 border border-red-200"
+                    }`}
+                  >
+                    {emailFeedback.type === "success" ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                    <span>{emailFeedback.msg}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* =================================================================== */}
+      {/* 2. FOOD / CATERING CALCULATOR TAB */}
+      {/* =================================================================== */}
+      {activeCalculator === "food" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          {/* Form Container */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* Step 1: Menu Package Selection */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1B3564]">
+                  <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px]">1</span>
+                  <Utensils className="w-4 h-4 text-[#DAA520]" />
+                  <span>Choose Menu Type</span>
+                </div>
+                <span className="text-[11px] text-slate-400">Pure Veg, Non-Veg or Mix</span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { id: "veg", label: "🥗 Veg Menu", desc: "Pure vegetarian spread" },
+                  { id: "non-veg", label: "🍗 Non-Veg Menu", desc: "Chicken & Mutton dishes" },
+                  { id: "mix", label: "🍲 Mix Menu", desc: "Veg & Non-Veg combo" },
+                  { id: "custom", label: "✨ Custom Package", desc: "Bespoke meal plan" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setFoodMenuType(item.id as any)}
+                    className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                      foodMenuType === item.id
+                        ? "bg-[#1B3564] text-white border-[#1B3564] shadow-xs"
+                        : "bg-[#FAF8F5] text-slate-700 border-slate-200 hover:border-slate-300"
+                    }`}
+                  >
+                    <div className="font-bold text-xs">{item.label}</div>
+                    <div className={`text-[10px] mt-0.5 ${foodMenuType === item.id ? "text-slate-200" : "text-slate-400"}`}>
+                      {item.desc}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Step 2: Pax, Days & Rate (PRICING FIELD STARTS BLANK PER CLIENT REQUIREMENT) */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1B3564]">
+                  <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px]">2</span>
+                  <Calendar className="w-4 h-4 text-[#DAA520]" />
+                  <span>Guests, Duration & Custom Rate</span>
+                </div>
+                <span className="text-[11px] text-amber-700 font-semibold bg-amber-50 px-2.5 py-0.5 rounded-full">
+                  Pricing field is empty for manual input
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">Number of Guests (Pax)</label>
+                  <input
+                    type="number"
+                    min={1}
+                    placeholder="e.g. 12"
+                    value={foodPax}
+                    onChange={(e) => setFoodPax(e.target.value === "" ? "" : Math.max(1, Number(e.target.value)))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] font-bold"
+                  />
+                  <span className="text-[10px] text-slate-400 mt-1 block">Total eating guests</span>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">Number of Days / Meals</label>
+                  <input
+                    type="number"
+                    min={1}
+                    placeholder="e.g. 2"
+                    value={foodDays}
+                    onChange={(e) => setFoodDays(e.target.value === "" ? "" : Math.max(1, Number(e.target.value)))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] font-bold"
+                  />
+                  <span className="text-[10px] text-slate-400 mt-1 block">Days of catering service</span>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                    Rate per Person / Day (₹) <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="Enter rate per person..."
+                    value={foodRatePerPerson}
+                    onChange={(e) => setFoodRatePerPerson(e.target.value === "" ? "" : Number(e.target.value))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] font-bold text-slate-900"
+                  />
+                  <span className="text-[10px] text-slate-400 mt-1 block">Empty by default — type agreed rate</span>
+                </div>
+              </div>
+
+              {numFoodPax > 0 && numFoodDays > 0 && numFoodRate > 0 && (
+                <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl flex justify-between items-center text-xs">
+                  <span className="text-slate-700">
+                    Base Meals: <strong>{numFoodPax} Pax</strong> × <strong>{numFoodDays} Day(s)</strong> @ <strong>₹{numFoodRate.toLocaleString("en-IN")}</strong>:
+                  </span>
+                  <span className="font-bold text-[#1B3564] text-sm">₹{baseFoodCost.toLocaleString("en-IN")}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Step 3: Catering Extras (BBQ, High Tea, Chef fees) */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1B3564]">
+                  <span className="w-6 h-6 rounded-full bg-[#1B3564] text-[#DAA520] flex items-center justify-center text-[11px]">3</span>
+                  <Plus className="w-4 h-4 text-[#DAA520]" />
+                  <span>Optional Food Extras & Add-ons</span>
+                </div>
+                <span className="text-[11px] text-slate-400">BBQ, High-tea, Starters</span>
+              </div>
+
+              {/* Quick Preset Buttons */}
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "Barbeque (BBQ) Setup",
+                  "High Tea & Evening Snacks",
+                  "Live Tandoor Counter",
+                  "Dedicated Chef / Helper Fee",
+                ].map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setNewFoodExtraDesc(preset)}
+                    className="px-3 py-1.5 bg-[#FAF8F5] hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+                  >
+                    + {preset}
+                  </button>
+                ))}
+              </div>
+
+              <form onSubmit={handleAddFoodExtra} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end bg-[#FAF8F5] p-4 rounded-2xl border border-slate-200">
+                <div className="sm:col-span-6">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Add-on Description</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Barbeque Setup"
+                    value={newFoodExtraDesc}
+                    onChange={(e) => setNewFoodExtraDesc(e.target.value)}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-3.5 py-2.5 bg-white focus:outline-none focus:border-[#1B3564]"
+                  />
+                </div>
+                <div className="sm:col-span-4">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Amount (₹)</label>
+                  <input
+                    type="number"
+                    placeholder="Enter amount..."
+                    value={newFoodExtraAmount}
+                    onChange={(e) => setNewFoodExtraAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                    className="w-full text-xs border border-slate-200 rounded-xl px-3.5 py-2.5 bg-white focus:outline-none font-bold"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <button
+                    type="submit"
+                    className="w-full bg-[#1B3564] text-white py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-[#1B3564]/90 transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add</span>
+                  </button>
+                </div>
+              </form>
+
+              {foodExtras.length > 0 && (
+                <div className="space-y-2">
+                  {foodExtras.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                      <span className="font-medium text-slate-800">{item.description}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="font-bold text-[#1B3564]">₹{item.amount.toLocaleString("en-IN")}</span>
+                        <button
+                          type="button"
+                          onClick={() => setFoodExtras(foodExtras.filter((c) => c.id !== item.id))}
+                          className="text-red-500 hover:text-red-700 p-1 cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Food GST toggle */}
+              <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                <span className="text-xs font-semibold text-slate-700">Food GST / Tax:</span>
+                <div className="flex items-center gap-2">
+                  {[0, 5, 18].map((pct) => (
+                    <button
+                      key={pct}
+                      type="button"
+                      onClick={() => setFoodGstPercent(pct)}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
+                        foodGstPercent === pct
+                          ? "bg-[#1B3564] text-white border-[#1B3564]"
+                          : "bg-[#FAF8F5] text-slate-600 border-slate-200"
+                      }`}
+                    >
+                      {pct === 0 ? "No GST (0%)" : `${pct}% GST`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Live Food Quotation Summary */}
+          <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-24">
+            <div className="bg-white border-2 border-[#1B3564]/15 rounded-3xl p-6 shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="text-base font-bold text-[#1B3564] font-serif">Food Quotation</h3>
+                <button
+                  onClick={handleResetFood}
+                  type="button"
+                  className="text-xs text-slate-400 hover:text-red-600 flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Reset</span>
+                </button>
+              </div>
+
+              {/* Menu Plan Badge */}
+              <div className="p-3 bg-[#FAF8F5] rounded-xl border border-slate-200 text-xs space-y-1">
+                <div className="font-bold text-[#1B3564] uppercase tracking-wide">
+                  {foodMenuType === "veg"
+                    ? "🥗 Pure Vegetarian Menu"
+                    : foodMenuType === "non-veg"
+                    ? "🍗 Non-Vegetarian Menu"
+                    : foodMenuType === "mix"
+                    ? "🍲 Mix Veg & Non-Veg Menu"
+                    : "✨ Custom Catering Package"}
+                </div>
+                <div className="text-slate-500 text-[11px]">
+                  {numFoodPax} Pax | {numFoodDays} Day(s)
+                </div>
+              </div>
+
+              {/* Calculation lines */}
+              <div className="space-y-3 text-xs">
+                <div className="flex justify-between text-slate-600">
+                  <span>Base Meal Tariff:</span>
+                  <span className="font-bold text-slate-900">₹{baseFoodCost.toLocaleString("en-IN")}</span>
+                </div>
+
+                {foodExtrasCost > 0 && (
+                  <div className="flex justify-between text-slate-600">
+                    <span>Food Add-ons:</span>
+                    <span className="font-bold text-slate-900">₹{foodExtrasCost.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
+
+                {foodGstAmount > 0 && (
+                  <div className="flex justify-between text-slate-600">
+                    <span>GST ({foodGstPercent}%):</span>
+                    <span className="font-bold text-slate-900">₹{foodGstAmount.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
+
+                {/* Total Box */}
+                <div className="p-4 bg-[#1B3564] text-white rounded-2xl flex items-center justify-between mt-4">
+                  <div>
+                    <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-wider block">Total Food Cost</span>
+                    <span className="text-xl font-black font-serif">₹{totalFoodCostCalculated.toLocaleString("en-IN")}</span>
+                  </div>
+                  {numFoodPax > 0 && (
+                    <div className="text-right">
+                      <span className="text-[10px] text-slate-300 block">Per Person</span>
+                      <span className="text-xs font-bold text-[#DAA520]">₹{perPersonTotalFoodCost.toLocaleString("en-IN")}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 1-Click Action to Apply into Invoice */}
+              <div className="space-y-2.5 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={handleApplyFoodToInvoice}
+                  disabled={totalFoodCostCalculated <= 0}
+                  className="w-full bg-[#DAA520] hover:bg-[#c6951b] text-slate-950 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:opacity-50"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                  <span>Apply to Invoice Calculator</span>
+                </button>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleShareFoodWhatsApp}
+                    className="bg-[#25D366] text-white py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-[#20ba5a] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <span>💬 WhatsApp</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyFoodText}
+                    className="bg-slate-100 text-slate-700 py-2.5 px-3 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    {copiedFood ? <CheckCheck className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                    <span>{copiedFood ? "Copied!" : "Copy Quote"}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

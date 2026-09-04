@@ -43,6 +43,7 @@ import Image from "next/image";
 import AvailabilityCalendar from "@/components/admin/availability-calendar";
 import DailyPricingCalendar from "@/components/admin/daily-pricing-calendar";
 import BillCalculator from "@/components/admin/bill-calculator";
+import MonthlyReport from "@/components/admin/monthly-report";
 import { 
   updateVillaDetails, 
   getChannelConfigs, 
@@ -122,7 +123,7 @@ const AdminDashboard = ({
   initialInquiries = [],
   userEmail 
 }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "awaiting_verification" | "leads" | "calendar" | "pricing" | "calculator">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "stays" | "bookings" | "awaiting_verification" | "leads" | "calendar" | "pricing" | "calculator" | "reports">("overview");
 
   // Lift properties and bookings to states for high reactivity
   const [villas, setVillas] = useState<Villa[]>(initialVillas);
@@ -877,7 +878,17 @@ const AdminDashboard = ({
               : "border-transparent text-slate-400 hover:text-[#1B3564]"
           }`}
         >
-          🧮 Invoice Calculator
+          🧮 Invoice & Food Calculator
+        </button>
+        <button
+          onClick={() => setActiveTab("reports")}
+          className={`pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+            activeTab === "reports" 
+              ? "border-[#1B3564] text-[#1B3564]" 
+              : "border-transparent text-slate-400 hover:text-[#1B3564]"
+          }`}
+        >
+          <span>📊 Monthly Revenue & Booking Report</span>
         </button>
       </div>
 
@@ -1273,6 +1284,15 @@ const AdminDashboard = ({
         <BillCalculator villas={villas as any} prefillData={calculatorPrefill} />
       )}
 
+      {activeTab === "reports" && (
+        <MonthlyReport
+          villas={villas as any}
+          bookings={bookings as any}
+          onSelectBooking={(b) => setSelectedBookingDetails(b)}
+          onOpenInCalculator={(b) => handleOpenInCalculator(b)}
+        />
+      )}
+
       {activeTab === "pricing" && (
         <DailyPricingCalendar 
           villas={villas} 
@@ -1305,6 +1325,13 @@ const AdminDashboard = ({
                     <span>Browse Villa Grid</span>
                     <ExternalLink size={14} />
                   </a>
+                  <button 
+                    onClick={() => setActiveTab("reports")}
+                    className="w-full flex items-center justify-between p-5 rounded-2xl bg-[#1B3564]/5 border border-[#1B3564]/20 text-[#1B3564] hover:bg-[#1B3564]/10 transition-all text-xs font-bold uppercase tracking-widest cursor-pointer shadow-2xs"
+                  >
+                    <span>Monthly Revenue & Booking Report</span>
+                    <TrendingUp size={14} className="text-[#DAA520]" />
+                  </button>
                   <button 
                     onClick={() => setActiveTab("pricing")}
                     className="w-full flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition-all text-xs font-bold uppercase tracking-widest cursor-pointer"
@@ -1387,35 +1414,6 @@ const AdminDashboard = ({
                   ))}
                 </div>
               )}
-            </div>
-
-            {/* Quick Actions Panel */}
-            <div className="glass border border-slate-200 rounded-[32px] p-8">
-              <h3 className="text-xl font-cormorant font-bold italic mb-8">Quick Operations</h3>
-              <div className="space-y-4">
-                <a 
-                  href="/villas"
-                  target="_blank"
-                  className="w-full flex items-center justify-between p-5 rounded-2xl bg-blue-500/5 border border-blue-500/20 text-blue-400 hover:bg-blue-500/10 transition-all text-xs font-bold uppercase tracking-widest"
-                >
-                  <span>Browse Villa Grid</span>
-                  <ExternalLink size={14} />
-                </a>
-                <button 
-                  onClick={() => setActiveTab("pricing")}
-                  className="w-full flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 hover:bg-slate-100 transition-all text-xs font-bold uppercase tracking-widest cursor-pointer"
-                >
-                  <span>Everyday Pricing Calendar</span>
-                  <TrendingUp size={14} />
-                </button>
-                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 border border-slate-100">
-                  <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-2">Prisma Client Status</p>
-                  <div className="flex items-center gap-2 text-blue-400 text-xs">
-                    <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
-                    <span>Database Synchronized (Supabase AP-SE-2)</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
