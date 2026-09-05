@@ -109,18 +109,28 @@ const Footer = () => {
             <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Featured Offers</h4>
             <ul className="flex flex-col gap-4">
               {[
-                { name: "The Angle House", href: "/villa/the-angle-house" },
-                { name: "Canopy Crest", href: "/villa/canopy-crest" },
-                { name: "Willow Peak", href: "/villa/willow-peak" },
+                { name: "26% Off Weekday Stays", href: "/villas?offer=weekday" },
                 { name: "Lonavala Villas", href: "/areas/lonavala" },
                 { name: "Khopoli Villas", href: "/areas/khopoli" },
-                { name: "Group Villas in Lonavala", href: "/escape" },
-                { name: "Travel Blog", href: "/blog" }
+                { name: "Private Pool Villas", href: "/villas-in-lonavala-with-private-pool" },
+                { name: "Luxury Villas Near Mumbai", href: "/destinations" },
+                { name: "Book Your Villa", href: "https://wa.me/919619042310?text=Hi%20Stay%20Willas!%20%F0%9F%8F%A1%20I'd%20like%20to%20check%20dates%20and%20villa%20options.", isExternal: true },
               ].map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">
-                    {link.name}
-                  </Link>
+                  {link.isExternal ? (
+                    <a 
+                      href={link.href} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium"
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

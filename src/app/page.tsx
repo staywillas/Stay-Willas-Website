@@ -45,6 +45,7 @@ import BookingBar from "@/components/home/booking-bar";
 
 // Below-the-fold components (lazy-loaded, only rendered when scrolled into view)
 const DestinationShowcase = dynamic(() => import("@/components/home/destination-showcase"));
+const HomeSitelinks = dynamic(() => import("@/components/home/home-sitelinks"));
 const FeaturedVillas = dynamic(() => import("@/components/home/featured-villas"));
 const InfiniteMarquee = dynamic(() => import("@/components/home/infinite-marquee"));
 const WhyChooseUs = dynamic(() => import("@/components/home/why-choose-us"));
@@ -100,6 +101,7 @@ export default async function Home() {
       <Navbar />
       <Hero />
       <BookingBar />
+      <HomeSitelinks />
       <DestinationShowcase />
       <FeaturedVillas villas={featuredVillas} />
       <WhyChooseUs />

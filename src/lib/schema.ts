@@ -332,3 +332,56 @@ export function generateDestinationCollectionSchema(input: DestinationSchemaInpu
     ],
   };
 }
+
+// 7. Homepage Google Sitelinks (SiteNavigationElement Schema)
+export const HOMEPAGE_SITELINKS_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": `${BASE_URL}/#sitelinks`,
+  name: "Stay Willas Quick Sitelinks",
+  description: "Official sitelinks for Stay Willas private luxury pool villas across Maharashtra.",
+  itemListElement: [
+    {
+      "@type": "SiteNavigationElement",
+      position: 1,
+      name: "26% Off Weekday Stays",
+      description: "Save 26% on weekdays. Book your villa today.",
+      url: `${BASE_URL}/villas?offer=weekday`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 2,
+      name: "Lonavala Villas",
+      description: "Explore villas in Lonavala. Check prices & availability.",
+      url: `${BASE_URL}/areas/lonavala`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 3,
+      name: "Khopoli Villas",
+      description: "Discover private villas. View amenities & prices.",
+      url: `${BASE_URL}/areas/khopoli`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 4,
+      name: "Private Pool Villas",
+      description: "Enjoy your own private pool. Perfect for groups & families.",
+      url: `${BASE_URL}/villas-in-lonavala-with-private-pool`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 5,
+      name: "Luxury Villas Near Mumbai",
+      description: "Premium villas for getaways. Easy weekend escape.",
+      url: `${BASE_URL}/destinations`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 6,
+      name: "Book Your Villa",
+      description: "Check dates & villa options. Call or WhatsApp us.",
+      url: `${BASE_URL}/villas`,
+    },
+  ],
+};

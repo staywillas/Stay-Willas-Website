@@ -6,7 +6,7 @@ import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
 import FloatingWidgets from "@/components/layout/floating-widgets";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 import Script from "next/script";
-import { ORGANIZATION_SCHEMA, WEBSITE_SCHEMA } from "@/lib/schema";
+import { ORGANIZATION_SCHEMA, WEBSITE_SCHEMA, HOMEPAGE_SITELINKS_SCHEMA } from "@/lib/schema";
 
 // Fonts: swap display for fastest text paint
 const outfit = Outfit({
@@ -105,6 +105,7 @@ export default function RootLayout({
               "@graph": [
                 ORGANIZATION_SCHEMA,
                 WEBSITE_SCHEMA,
+                HOMEPAGE_SITELINKS_SCHEMA,
               ],
             }),
           }}
