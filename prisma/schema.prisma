@@ -123,3 +123,19 @@ model User {
 
   @@index([verificationToken])
 }
+
+model CareLog {
+  id        String   @id @default(cuid())
+  role      String   // "caretaker" | "chef"
+  staffName String   // e.g. "Caretaker (The Angle House)" or "Chef (The Angle House)"
+  villaSlug String   @default("the-angle-house")
+  category  String   // "POOL", "BEDROOMS", "BATHROOMS", "LIVING", "BREAKFAST", "LUNCH", "HI_TEA", "DINNER", "GENERAL"
+  notes     String?
+  images    String[] // Base64 or image URLs
+  timestamp DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([villaSlug, createdAt])
+  @@index([role, createdAt])
+}
+
