@@ -180,10 +180,10 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
           {title}
         </span>
         <div className="text-2xl font-black text-white tracking-wide font-heading">
-          28% DISCOUNT
+          26% DISCOUNT
         </div>
-        <p className="text-[9px] text-white/90 uppercase tracking-widest font-semibold border border-dashed border-[#DAA520]/50 px-3 py-1 rounded bg-[#DAA520]/15 inline-block">
-          PROMO: STAYW28
+        <p className="text-[9px] text-white/90 uppercase tracking-widest font-semibold border border-dashed border-[#DAA520]/50 px-3 py-1 rounded bg-[#DAA520]/15 inline-block font-mono">
+          PROMO: Stayw26
         </p>
       </div>
 
@@ -244,15 +244,15 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   const extraGuestsTotal = extraGuestsCount * extraGuestFee * nights;
   const estimatedTotal = baseStayTotal + extraGuestsTotal;
 
-  // 28% discount with promo coupon
-  const discountPercent = isDiscountApplied ? 0.28 : 0;
+  // 26% discount with promo coupon
+  const discountPercent = isDiscountApplied ? 0.26 : 0;
   const discountAmount = Math.round(estimatedTotal * discountPercent);
   const finalTotal = Math.max(0, estimatedTotal - discountAmount);
 
   // WhatsApp prefilled message link builder
   const whatsappNumber = "919619042310";
   const whatsappText = isDiscountApplied
-    ? `Hello Stay Willas! 🌟 I unlocked the special *28% OFF* Promo discount (Coupon: *STAYW28*)!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (28% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Discounted Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and confirm our 28% discount?`
+    ? `Hello Stay Willas! 🌟 I unlocked the special *26% OFF* Promo discount (Coupon: *Stayw26*)!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (26% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Discounted Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and confirm our 26% discount?`
     : `Hello Stay Willas! 🌟 I am interested in booking an exclusive getaway at *${selectedVilla.name}* in ${selectedVilla.location} for a ${stayType === "weekday" ? "Weekday" : "Weekend"} stay.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Estimated Total: ₹${estimatedTotal.toLocaleString("en-IN")}\n\nCan you please check availability for our group?`;
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`;
 
@@ -353,7 +353,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           {/* Header text container */}
           <div className="space-y-6 max-w-3xl mx-auto">
             <span className="text-[#DAA520] font-semibold tracking-[0.4em] uppercase text-xs sm:text-sm block animate-pulse">
-              🍻 GROUP ESCAPE SPECIAL • 28% OFF CODE: STAYW28
+              🍻 GROUP ESCAPE SPECIAL • 26% OFF CODE: Stayw26
             </span>
             
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight leading-[1.08] text-balance bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
@@ -387,7 +387,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 onClick={() => scrollToSection("calculator-section")}
                 className="border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 text-white font-bold px-7 py-3.5 rounded-full text-xs tracking-widest uppercase transition-all duration-300 backdrop-blur-md cursor-pointer"
               >
-                Check Rates & 28% Off
+                Check Rates & 26% Off
               </button>
             </div>
           </div>
@@ -397,8 +397,8 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             <QuickMobileLeadForm 
               villaName="Group Luxury Villas" 
               location="Lonavala & Khopoli" 
-              defaultCoupon="STAYW28" 
-              discountPercent={28} 
+              defaultCoupon="Stayw26" 
+              discountPercent={26} 
             />
           </div>
 
@@ -417,7 +417,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               <ScratchCard 
                 id="card-angle-house"
                 title="The Angle House Secret"
-                subtitle="Scratch to reveal 28% Lonavala discount"
+                subtitle="Scratch to reveal 26% Lonavala discount"
                 isUnlocked={isCard1Scratched}
                 onScratchComplete={() => {
                   setIsCard1Scratched(true);
@@ -438,7 +438,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               <ScratchCard 
                 id="card-canopy-crest"
                 title="Canopy Crest Secret"
-                subtitle="Scratch to reveal 28% Khopoli discount"
+                subtitle="Scratch to reveal 26% Khopoli discount"
                 isUnlocked={isCard2Scratched}
                 onScratchComplete={() => {
                   setIsCard2Scratched(true);
@@ -456,14 +456,14 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               className="bg-[#130f24]/50 backdrop-blur-2xl rounded-3xl p-6 md:p-8 border border-[#DAA520]/30 shadow-[0_0_30px_rgba(218,165,32,0.15)] max-w-2xl w-full mx-auto space-y-6 text-center"
             >
               <div className="space-y-2">
-                <span className="text-xs uppercase font-bold tracking-[0.25em] text-[#DAA520] bg-[#DAA520]/10 px-4 py-1.5 rounded-full inline-block border border-[#DAA520]/20">
-                  🎉 28% DISCOUNT ACTIVATED (STAYW28)
+                <span className="text-xs uppercase font-bold tracking-[0.25em] text-[#DAA520] bg-[#DAA520]/10 px-4 py-1.5 rounded-full inline-block border border-[#DAA520]/20 font-mono">
+                  🎉 26% DISCOUNT ACTIVATED (Stayw26)
                 </span>
                 <h3 className="text-2xl font-heading font-extrabold text-white">
                   Your Luxury Escape Awaits!
                 </h3>
                 <p className="text-xs text-slate-300 max-w-md mx-auto font-light">
-                  Select your private villa below to automatically apply the 28% discount and start chatting on WhatsApp instantly.
+                  Select your private villa below to automatically apply the 26% discount and start chatting on WhatsApp instantly.
                 </p>
               </div>
 
@@ -1209,7 +1209,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                       <div className="flex justify-between text-emerald-400 font-semibold bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/30">
                         <span className="flex items-center gap-1.5">
                           <Sparkles size={13} className="text-[#DAA520]" />
-                          Special 28% Promo Discount:
+                          Special 26% Promo Discount:
                         </span>
                         <span className="font-black text-emerald-300">-₹{discountAmount.toLocaleString("en-IN")}</span>
                       </div>
@@ -1222,7 +1222,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                     <div className="bg-[#120d1c] p-3 rounded-xl border border-[#DAA520]/25 flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 flex-1">
                         <span className="text-xs">🏷️</span>
-                        <span className="text-xs text-slate-300 font-bold uppercase">Code: <strong className="text-[#DAA520]">STAYW28</strong></span>
+                        <span className="text-xs text-slate-300 font-bold uppercase">Code: <strong className="text-[#DAA520]">Stayw26</strong></span>
                       </div>
                       <button
                         type="button"
@@ -1232,7 +1232,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                         }}
                         className="bg-[#DAA520] hover:bg-[#c4941a] text-black px-3.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
                       >
-                        {isDiscountApplied ? "✓ 28% Applied" : "Apply 28% Off"}
+                        {isDiscountApplied ? "✓ 26% Applied" : "Apply 26% Off"}
                       </button>
                     </div>
                   </div>
@@ -1240,14 +1240,14 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                   <div className="bg-[#120d1c] p-4 rounded-2xl flex items-center justify-between border border-[#DAA520]/25 shadow-lg">
                     <div>
                       <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                        {isDiscountApplied ? "Est. 28% Discounted Total" : "Est. Base Total"}
+                        {isDiscountApplied ? "Est. 26% Discounted Total" : "Est. Base Total"}
                       </span>
                       <div className="text-2xl md:text-3xl font-black text-white font-heading">
                         ₹{finalTotal.toLocaleString("en-IN")}
                       </div>
                       {isDiscountApplied && (
                         <span className="text-[9px] text-[#DAA520] font-bold uppercase tracking-wider block mt-0.5 animate-pulse">
-                          Code STAYW28 applied (28% OFF)
+                          Code Stayw26 applied (26% OFF)
                         </span>
                       )}
                     </div>

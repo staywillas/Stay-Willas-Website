@@ -691,7 +691,7 @@ export const blogsData: BlogPost[] = [
         paragraphs: [
           "Nestled at the foothills of the Western Ghats, <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest</a> is designed specifically for large families, friend reunions, and company offsites visiting Khopoli. Featuring air-conditioned suites, premium spring mattresses, high-speed Wi-Fi, and 5 clean ensuite bathrooms, every guest enjoys five-star comfort.",
           "Kids and adults can continue the water fun in your own private pool without time restrictions, followed by late-night board games, music in the indoor entertainment lounge, or starlit conversations around a cozy outdoor bonfire pit.",
-          "Planning a weekday trip? Apply direct booking coupon code <strong class=\"text-accent-secondary\">STAYW28</strong> to claim a flat 28% discount on your Monday-to-Thursday stay."
+          "Planning a weekday trip? Apply direct booking coupon code <strong class=\"text-accent-secondary\">Stayw26</strong> to claim a flat 26% discount on your Monday-to-Thursday stay."
         ]
       },
       {
@@ -753,7 +753,7 @@ export const blogsData: BlogPost[] = [
         paragraphs: [
           "Climbing the 350+ stone steps leading up to the Ekvira Devi Temple and exploring the massive Chaitya hall of Karla Caves is spiritually fulfilling but physically taxing. Returning to a crowded commercial hotel can feel hectic.",
           "At <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House</a>, you can immediately immerse yourself in your own private waterfall swimming pool or enjoy the soothing hydrotherapy jets of the master suite jacuzzi. Floor-to-ceiling double-height glass facades provide sweeping views of the misty Sahyadri mountains, creating an atmosphere of pure peace.",
-          "Planning a trip with family? Use promo code <strong class=\"text-accent-secondary\">STAYW28</strong> during booking to enjoy a flat 28% discount on weekday stays."
+          "Planning a trip with family? Use promo code <strong class=\"text-accent-secondary\">Stayw26</strong> during booking to enjoy a flat 26% discount on weekday stays."
         ]
       },
       {
@@ -784,7 +784,7 @@ export const blogsData: BlogPost[] = [
           "How many guests can stay at The Angle House? The villa comfortably accommodates up to 16 guests across 3 spacious master suites with ensuite bathrooms.",
           "Is the swimming pool completely private? Yes, the waterfall pool is 100% private to your booking with zero shared access.",
           "Are pet dogs allowed? Yes! The Angle House features secure, fully fenced lawns where pets can roam safely.",
-          "How can I book directly with the 28% discount? You can book directly via our WhatsApp Concierge by mentioning coupon code STAYW28."
+          "How can I book directly with the 26% discount? You can book directly via our WhatsApp Concierge by mentioning coupon code Stayw26."
         ]
       }
     ],
@@ -895,7 +895,7 @@ export const blogsData: BlogPost[] = [
         paragraphs: [
           "Situated against the backdrop of the Western Ghats, <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest</a> combines rustic countryside serenity with high-end luxury amenities. The property features double-height ceilings, high-speed Wi-Fi, air-conditioned lounges, and custom charpais under canopy trees.",
           "Whether you are hosting a multi-family holiday, an anniversary milestone, or a college reunion after visiting Imagicaa, Canopy Crest delivers space and freedom that commercial resorts simply cannot match.",
-          "Direct Booking Perk: Apply coupon code <strong class=\"text-accent-secondary\">STAYW28</strong> on checkout for an exclusive 28% off weekday reservations."
+          "Direct Booking Perk: Apply coupon code <strong class=\"text-accent-secondary\">Stayw26</strong> on checkout for an exclusive 26% off weekday reservations."
         ]
       },
       {
@@ -926,7 +926,7 @@ export const blogsData: BlogPost[] = [
           "How far is the villa from Imagicaa? Canopy Crest is situated approximately 14 km away, a smooth 15 to 18-minute drive via state highway.",
           "Can you arrange cabs to and from Imagicaa? Yes! Our concierge team coordinates private cabs and tempo travellers for hassle-free roundtrip park transfers.",
           "Are pets allowed at the villa? Yes, Canopy Crest is a fully pet-friendly estate with secure gated grounds.",
-          "Is direct booking cheaper than Airbnb or MakeMyTrip? Absolutely. Booking directly through Stay Willas saves up to 28% on OTA commission fees with instant confirmation."
+          "Is direct booking cheaper than Airbnb or MakeMyTrip? Absolutely. Booking directly through Stay Willas saves up to 26% on OTA commission fees with instant confirmation."
         ]
       }
     ],
@@ -1070,7 +1070,7 @@ export const blogsData: BlogPost[] = [
         list: [
           "Private En-Suite Jacuzzi: Indulge in hot bubble baths overlooking hill slopes.",
           "Authentic Wooden Chalets: High cathedral ceilings, ambient warm lighting, and private balconies.",
-          "Direct Booking Discounts: Apply promo code <strong class=\"text-accent-secondary\">STAYW28</strong> on weekday stays to bring your booking right under the ₹5,000 mark.",
+          "Direct Booking Discounts: Apply promo code <strong class=\"text-accent-secondary\">Stayw26</strong> on weekday stays to bring your booking right under the ₹5,000 mark.",
           "Peaceful Kurwande Location: Away from Lonavala market traffic, yet only 15 minutes from key viewpoints."
         ]
       },

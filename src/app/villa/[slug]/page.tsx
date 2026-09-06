@@ -855,20 +855,20 @@ export default async function VillaDetailPage({ params }: PageProps) {
           <div className="mb-4 sm:mb-6 bg-gradient-to-r from-red-600/10 via-amber-500/10 to-[#DAA520]/15 border border-[#DAA520]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-4 shadow-xs">
             <div className="flex items-center gap-2.5 sm:gap-3">
               <span className="bg-gradient-to-r from-red-600 to-amber-600 text-white font-black text-[10px] sm:text-xs uppercase px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-xs animate-pulse shrink-0">
-                🔥 28% OFF
+                🔥 26% OFF
               </span>
               <div>
                 <h3 className="text-xs sm:text-base font-bold text-[#1B3564] leading-tight">
-                  Weekday Special: 28% OFF (Monday – Thursday Stays)
+                  Weekday Special: 26% OFF (Monday – Thursday Stays)
                 </h3>
                 <p className="text-[11px] sm:text-xs text-slate-600 font-light mt-0.5">
-                  Direct discount on Mon–Thu getaways. Use coupon <strong className="text-[#1B3564] font-bold">STAYW28</strong> on checkout.
+                  Direct discount on Mon–Thu getaways. Use coupon <strong className="text-[#1B3564] font-bold font-mono">Stayw26</strong> on checkout.
                 </p>
               </div>
             </div>
 
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🔥 I would like to book *${villaData.name}* with the 28% Weekday Discount. Please share available dates and final quote.`)}`}
+              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🔥 I would like to book *${villaData.name}* with the 26% Weekday Discount. Please share available dates and final quote.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider py-2 px-3.5 sm:py-2.5 sm:px-4 rounded-lg sm:rounded-xl shadow-xs shrink-0 flex items-center justify-center gap-1.5 transition-all w-full sm:w-auto text-center"

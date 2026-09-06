@@ -231,8 +231,8 @@ export async function createCheckoutSession(formData: {
     if (formData.couponCode) {
       const code = formData.couponCode.trim().toUpperCase();
 
-      if (code === "STAYW28" || code.includes("28") || code === "ESCAPE28" || code === "LONAVALA28" || code === "KHOPOLI28") {
-        discount = Math.round(weekdayEligibleTotal * 0.28);
+      if (code === "STAYW26" || code.includes("26") || code === "ESCAPE26" || code === "LONAVALA26" || code === "KHOPOLI26" || code === "STAYW28" || code.includes("28")) {
+        discount = Math.round(weekdayEligibleTotal * 0.26);
       } else if (code === "STAY5") {
         discount = Math.round(weekdayEligibleTotal * 0.05);
       } else if (code === "STAY10" || code.includes("10")) {

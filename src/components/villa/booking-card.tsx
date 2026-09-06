@@ -465,11 +465,11 @@ const BookingCard = ({
 
   const calculateDiscount = () => {
     if (!isCouponApplied || nights <= 0) return 0;
-    const clean = (couponCode || "STAYW28").trim().toUpperCase();
+    const clean = (couponCode || "STAYW26").trim().toUpperCase();
 
-    if (clean.includes("28") || clean === "STAYW28" || clean === "WEEKDAY28") {
-      // Flat 28% discount strictly on Mon-Thu (Weekday) nights only!
-      return Math.round(weekdayEligibleBase * 0.28);
+    if (clean.includes("26") || clean === "STAYW26" || clean === "WEEKDAY26" || clean.includes("28") || clean === "STAYW28") {
+      // Flat 26% discount strictly on Mon-Thu (Weekday) nights only!
+      return Math.round(weekdayEligibleBase * 0.26);
     }
 
     if (clean === "STAY5") {
@@ -480,7 +480,7 @@ const BookingCard = ({
       return Math.round(weekdayEligibleBase * 0.10);
     }
 
-    return Math.round(weekdayEligibleBase * 0.28);
+    return Math.round(weekdayEligibleBase * 0.26);
   };
 
   const discount = calculateDiscount();
@@ -573,7 +573,7 @@ We are so excited about this getaway! Could you please check availability and he
         checkOut,
         guests,
         addOns: selectedAddOns,
-        couponCode: isCouponApplied ? (couponCode || "STAYW28") : undefined,
+        couponCode: isCouponApplied ? (couponCode || "STAYW26") : undefined,
         totalPrice: total,
         cottageSelection: isWillowPeak ? cottageSelection : undefined,
       });
@@ -1055,7 +1055,7 @@ We are so excited about this getaway! Could you please check availability and he
               <div>
                 <span className="text-[10px] text-[#DAA520] uppercase tracking-wider font-black block">Weekday Special Direct Offer</span>
                 <p className="text-xs text-slate-800 font-bold mt-0.5 leading-tight">
-                  Flat <span className="text-emerald-600 font-black">28% OFF</span> on Weekdays (Mon–Thu) with coupon <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all">STAYW28</strong>
+                  Flat <span className="text-emerald-600 font-black">26% OFF</span> on Weekdays (Mon–Thu) with coupon <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all font-mono">Stayw26</strong>
                 </p>
               </div>
             </div>
@@ -1064,11 +1064,11 @@ We are so excited about this getaway! Could you please check availability and he
                 type="button"
                 onClick={() => {
                   setIsCouponApplied(true);
-                  setCouponCode("STAYW28");
+                  setCouponCode("STAYW26");
                 }}
                 className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 shadow-xs active:scale-95"
               >
-                Apply 28% Off
+                Apply 26% Off
               </button>
             ) : (
               <button
@@ -1080,7 +1080,7 @@ We are so excited about this getaway! Could you please check availability and he
                 className="text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 px-3 py-1.5 rounded-xl uppercase flex items-center gap-1.5 w-full sm:w-auto shrink-0 justify-center cursor-pointer transition-all active:scale-95"
               >
                 <Check size={12} className="stroke-[3] text-emerald-700" />
-                <span>28% Applied (-₹{discount.toLocaleString("en-IN")}) ✕</span>
+                <span>26% Applied (-₹{discount.toLocaleString("en-IN")}) ✕</span>
               </button>
             )}
           </div>
@@ -1088,7 +1088,7 @@ We are so excited about this getaway! Could you please check availability and he
           <div className="flex gap-2 w-full">
             <input
               type="text"
-              placeholder="Enter coupon code (e.g. STAYW28)"
+              placeholder="Enter coupon code (e.g. Stayw26)"
               className="flex-1 min-w-0 bg-white border border-border-subtle rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wider placeholder:text-text-primary/30 placeholder:normal-case outline-none focus:border-[#DAA520] focus:ring-1 focus:ring-[#DAA520]/20"
               value={couponCode}
               onChange={(e) => {
@@ -1109,7 +1109,7 @@ We are so excited about this getaway! Could you please check availability and he
                     setIsCouponApplied(true);
                   } else {
                     setIsCouponApplied(true);
-                    setCouponCode("STAYW28");
+                    setCouponCode("STAYW26");
                   }
                 }
               }}
@@ -1255,7 +1255,7 @@ We are so excited about this getaway! Could you please check availability and he
               <div className="flex items-center gap-1.5 text-left">
                 <Sparkles size={14} className="text-emerald-700 shrink-0" />
                 <div>
-                  <span>28% Weekday Discount ({couponCode || "STAYW28"})</span>
+                  <span>26% Weekday Discount ({couponCode || "STAYW26"})</span>
                   <span className="text-[10px] text-emerald-700 font-normal block">
                     Applied on {weekdayNightsCount} weekday night{weekdayNightsCount > 1 ? "s" : ""} (Mon–Thu)
                   </span>
@@ -1267,7 +1267,7 @@ We are so excited about this getaway! Could you please check availability and he
 
           {isCouponApplied && discount === 0 && nights > 0 && (
             <div className="text-[11px] text-amber-800 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200 text-left">
-              ℹ️ <strong>Coupon STAYW28:</strong> Flat 28% discount applies exclusively to Monday–Thursday nights. Your selected dates are charged at standard weekend rates.
+              ℹ️ <strong>Coupon Stayw26:</strong> Flat 26% discount applies exclusively to Monday–Thursday nights. Your selected dates are charged at standard weekend rates.
             </div>
           )}
 

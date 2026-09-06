@@ -169,13 +169,13 @@ export default async function LonavalaPage() {
                   <span className="text-[#DAA520] font-bold">Lonavala</span>
                 </div>
 
-                {/* Big Floating 28% Off on Weekdays Button */}
+                {/* Big Floating 26% Off on Weekdays Button */}
                 <Link 
                   href="/villa/the-angle-house"
                   className="group inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 via-amber-600 to-[#DAA520] hover:from-red-500 hover:to-amber-500 text-white px-4.5 sm:px-8 py-2.5 sm:py-4 rounded-full shadow-[0_4px_20px_rgba(220,38,38,0.45)] hover:shadow-[0_8px_35px_rgba(218,165,32,0.6)] transition-all duration-300 transform hover:-translate-y-1 mb-3 sm:mb-5 cursor-pointer border border-white/25"
                 >
                   <span className="text-xs sm:text-base md:text-lg font-black tracking-wide flex items-center gap-1.5 sm:gap-2">
-                    🔥 28% Off on Weekdays
+                    🔥 26% Off on Weekdays
                   </span>
                   <ChevronRight size={15} className="group-hover:translate-x-1.5 transition-transform" />
                 </Link>

@@ -108,7 +108,7 @@ export default function AdLandingShowcase({
                   <span className="text-3xl sm:text-4xl font-black text-white font-heading">₹{discounted2NightPrice.toLocaleString("en-IN")}</span>
                 </div>
                 <span className="text-[11px] text-[#DAA520] font-bold block mt-0.5">
-                  Total for 2 Nights (Incl. 28%+ Saver)
+                  Total for 2 Nights (Incl. 26%+ Saver)
                 </span>
               </div>
 
@@ -142,7 +142,7 @@ export default function AdLandingShowcase({
             Why Smart Travelers Book Direct With Us
           </h3>
           <p className="text-xs sm:text-sm text-text-primary/70 max-w-xl mx-auto mt-1">
-            Skip middleman OTA commissions & unlock flat 28% to 35% weekday discounts + VIP concierge care.
+            Skip middleman OTA commissions & unlock flat 26% to 35% weekday discounts + VIP concierge care.
           </p>
         </div>
 
@@ -183,7 +183,7 @@ export default function AdLandingShowcase({
                 </li>
                 <li className="flex items-center gap-2">
                   <Check size={16} className="text-emerald-400 shrink-0 stroke-[3]" />
-                  <span><strong>Flat 28% Off</strong> with coupon <code className="text-[#DAA520] font-bold font-mono">{couponCode}</code></span>
+                  <span><strong>Flat 26% Off</strong> with coupon <code className="text-[#DAA520] font-bold font-mono">{couponCode}</code></span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check size={16} className="text-emerald-400 shrink-0 stroke-[3]" />

@@ -16,8 +16,8 @@ interface QuickMobileLeadFormProps {
 export default function QuickMobileLeadForm({
   villaName = "Luxury Private Pool Villas",
   location = "Lonavala / Khopoli",
-  defaultCoupon = "STAYW28",
-  discountPercent = 28,
+  defaultCoupon = "Stayw26",
+  discountPercent = 26,
   className = "",
   offerTitle = "Monsoon Escape",
   highlightText = "Stay 2 Nights & Save More (Weekdays Only)",

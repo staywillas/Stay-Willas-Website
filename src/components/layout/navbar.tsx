@@ -597,7 +597,7 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                {/* 2. Special 28% Off Offers Dropdown */}
+                {/* 2. Special 26% Off Offers Dropdown */}
                 <div className="bg-[#DAA520]/10 border border-[#DAA520]/30 rounded-2xl p-2.5">
                   <button
                     type="button"
@@ -609,7 +609,7 @@ const Navbar = () => {
                         %
                       </span>
                       <span className="text-[12px] font-black uppercase tracking-wider text-[#DAA520]">
-                        MEGA 28% OFF OFFERS
+                        MEGA 26% OFF OFFERS
                       </span>
                     </div>
                     <ChevronDown 
@@ -626,7 +626,7 @@ const Navbar = () => {
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <span>Lonavala Villas</span>
-                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">28% OFF</span>
+                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">26% OFF</span>
                       </Link>
                       <Link
                         href="/areas/khopoli"
@@ -634,7 +634,7 @@ const Navbar = () => {
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <span>Khopoli Villas</span>
-                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">28% OFF</span>
+                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">26% OFF</span>
                       </Link>
                       <Link
                         href="/escape"
@@ -642,7 +642,7 @@ const Navbar = () => {
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <span>Group Villas in Lonavala</span>
-                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">28% OFF</span>
+                        <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">26% OFF</span>
                       </Link>
                     </div>
                   )}

@@ -275,7 +275,7 @@ export default function BookingModalFlow({
           </div>
           <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
             <CheckCircle2 size={14} className="text-[#DAA520] shrink-0" />
-            <span className="text-slate-700 font-bold text-[11px]">28% Promo Active</span>
+            <span className="text-slate-700 font-bold text-[11px]">26% Promo Active</span>
           </div>
           <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
             <CheckCircle2 size={14} className="text-[#1B3564] shrink-0" />
