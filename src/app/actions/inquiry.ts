@@ -76,3 +76,16 @@ export async function getInquiries(type?: "GUEST" | "OWNER" | "BOOKING_LEAD") {
   }
 }
 
+export async function deleteInquiry(id: string) {
+  try {
+    await prisma.inquiry.delete({
+      where: { id },
+    });
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete inquiry:", error);
+    return { success: false, error: error.message || "Failed to delete lead" };
+  }
+}
+

@@ -56,6 +56,7 @@ import {
   approveVerificationBooking,
   rejectVerificationBooking
 } from "@/app/actions/admin";
+import { deleteInquiry } from "@/app/actions/inquiry";
 
 interface SeasonalPrice {
   id: string;
@@ -1251,23 +1252,43 @@ const AdminDashboard = ({
                                 : "Recent"}
                             </td>
 
-                            {/* 1-Click WhatsApp Action */}
+                            {/* 1-Click WhatsApp & Delete Action */}
                             <td className="py-4 text-right">
-                              {cleanPhone ? (
+                              <div className="flex items-center justify-end gap-2">
+                                {cleanPhone ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const dialPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
+                                      const msg = `Hello ${lead.name || "there"}! 🌟 This is Stay Willas management. We noticed your interest in our luxury villas on our website and would love to help you plan your perfect getaway! How can we assist you today? ✨`;
+                                      window.open(`https://wa.me/${dialPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+                                    }}
+                                    className="px-3.5 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border-none"
+                                  >
+                                    💬 Chat on WhatsApp
+                                  </button>
+                                ) : (
+                                  <span className="text-xs text-slate-400 italic">No Phone</span>
+                                )}
+
                                 <button
                                   type="button"
-                                  onClick={() => {
-                                    const dialPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
-                                    const msg = `Hello ${lead.name || "there"}! 🌟 This is Stay Willas management. We noticed your interest in our luxury villas on our website and would love to help you plan your perfect getaway! How can we assist you today? ✨`;
-                                    window.open(`https://wa.me/${dialPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+                                  onClick={async () => {
+                                    if (confirm(`Remove lead for ${lead.name || "this guest"} from CRM?`)) {
+                                      const res = await deleteInquiry(lead.id);
+                                      if (res.success) {
+                                        setInquiries(inquiries.filter((i: any) => i.id !== lead.id));
+                                      } else {
+                                        alert(res.error || "Failed to remove lead.");
+                                      }
+                                    }
                                   }}
-                                  className="px-3.5 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border-none"
+                                  className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer border border-red-200"
+                                  title="Remove Lead"
                                 >
-                                  💬 Chat on WhatsApp
+                                  <Trash2 size={13} />
                                 </button>
-                              ) : (
-                                <span className="text-xs text-slate-400 italic">No Phone</span>
-                              )}
+                              </div>
                             </td>
                           </tr>
                         );

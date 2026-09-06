@@ -104,33 +104,22 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 3: Featured Stays & Special Offers */}
+          {/* Column 3: Sitelinks & Popular Collections */}
           <div className="md:col-span-2">
-            <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Featured Offers</h4>
+            <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Popular Sitelinks</h4>
             <ul className="flex flex-col gap-4">
               {[
-                { name: "26% Off Weekday Stays", href: "/villas?offer=weekday" },
-                { name: "Lonavala Villas", href: "/areas/lonavala" },
-                { name: "Khopoli Villas", href: "/areas/khopoli" },
-                { name: "Private Pool Villas", href: "/villas-in-lonavala-with-private-pool" },
-                { name: "Luxury Villas Near Mumbai", href: "/destinations" },
-                { name: "Book Your Villa", href: "https://wa.me/919619042310?text=Hi%20Stay%20Willas!%20%F0%9F%8F%A1%20I'd%20like%20to%20check%20dates%20and%20villa%20options.", isExternal: true },
+                { name: "Lonavala Villa Pool", href: "/villas-in-lonavala-with-private-pool" },
+                { name: "Luxury Villas in Khopoli", href: "/areas/khopoli" },
+                { name: "Luxury Villas Near Mumbai", href: "/villas" },
+                { name: "About Stay Willas", href: "/about" },
+                { name: "Villa Destinations", href: "/destinations" },
+                { name: "Luxury Experiences", href: "/experiences" },
               ].map((link) => (
                 <li key={link.name}>
-                  {link.isExternal ? (
-                    <a 
-                      href={link.href} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium"
-                    >
-                      {link.name}
-                    </a>
-                  ) : (
-                    <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">
-                      {link.name}
-                    </Link>
-                  )}
+                  <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
