@@ -1,14 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { Lock, Delete, Loader2, Sparkles, ShieldCheck } from "lucide-react";
+import { Lock, Delete, Loader2, ShieldCheck, Globe } from "lucide-react";
+import { CareLanguage, translations } from "@/lib/care-translations";
 
 interface PinPadProps {
   onSuccess: (session: any) => void;
   verifyPinAction: (pin: string) => Promise<{ success: boolean; session?: any; error?: string }>;
+  lang: CareLanguage;
+  onLangChange: (lang: CareLanguage) => void;
 }
 
-export default function PinPad({ onSuccess, verifyPinAction }: PinPadProps) {
+export default function PinPad({ onSuccess, verifyPinAction, lang, onLangChange }: PinPadProps) {
+  const t = translations[lang] || translations.en;
+  
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
@@ -29,7 +34,7 @@ export default function PinPad({ onSuccess, verifyPinAction }: PinPadProps) {
           onSuccess(result.session);
         } else {
           setIsShaking(true);
-          setError(result.error || "Incorrect PIN code");
+          setError(result.error || t.invalidPin);
           setTimeout(() => {
             setPin("");
             setIsShaking(false);
@@ -37,7 +42,7 @@ export default function PinPad({ onSuccess, verifyPinAction }: PinPadProps) {
         }
       } catch (err: any) {
         setIsShaking(true);
-        setError("Verification error");
+        setError(t.invalidPin);
         setTimeout(() => {
           setPin("");
           setIsShaking(false);
@@ -61,28 +66,60 @@ export default function PinPad({ onSuccess, verifyPinAction }: PinPadProps) {
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto flex flex-col items-center justify-center p-6 text-white select-none">
+    <div className="w-full max-w-sm mx-auto flex flex-col items-center justify-center p-4 text-white select-none">
+      {/* Language Switcher Pill */}
+      <div className="w-full flex items-center justify-center gap-1.5 mb-6 bg-slate-900/90 border border-slate-700/80 p-1 rounded-2xl shadow-md">
+        <Globe size={14} className="text-[#DAA520] ml-2 mr-1 shrink-0" />
+        <button
+          type="button"
+          onClick={() => onLangChange("en")}
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            lang === "en" ? "bg-[#DAA520] text-[#1B3564] shadow-sm" : "text-slate-300 hover:text-white"
+          }`}
+        >
+          English
+        </button>
+        <button
+          type="button"
+          onClick={() => onLangChange("hi")}
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            lang === "hi" ? "bg-[#DAA520] text-[#1B3564] shadow-sm" : "text-slate-300 hover:text-white"
+          }`}
+        >
+          हिंदी
+        </button>
+        <button
+          type="button"
+          onClick={() => onLangChange("mr")}
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            lang === "mr" ? "bg-[#DAA520] text-[#1B3564] shadow-sm" : "text-slate-300 hover:text-white"
+          }`}
+        >
+          मराठी
+        </button>
+      </div>
+
       {/* Brand Header */}
       <div className="text-center mb-6">
-        <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center mx-auto mb-3 shadow-[0_10px_30px_rgba(218,165,32,0.3)]">
-          <ShieldCheck size={32} className="text-[#1B3564] stroke-[2.5]" />
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center mx-auto mb-2.5 shadow-[0_8px_24px_rgba(218,165,32,0.3)]">
+          <ShieldCheck size={28} className="text-[#1B3564] stroke-[2.5]" />
         </div>
         <h1 className="text-2xl font-black tracking-wider uppercase font-heading text-white">
           Stay Willas <span className="text-[#DAA520]">Care</span>
         </h1>
-        <p className="text-xs text-slate-300 font-medium mt-1">
-          The Angle House Operations • Kamshet, Lonavala
+        <p className="text-xs text-slate-300 font-medium mt-0.5">
+          {t.villaName}
         </p>
       </div>
 
-      {/* PIN Dots Display */}
+      {/* PIN Indicator Dots */}
       <div className="mb-6 w-full flex flex-col items-center">
         <div className="text-xs uppercase tracking-widest text-slate-300 font-bold mb-3 flex items-center gap-1.5">
           <Lock size={12} className="text-[#DAA520]" />
-          <span>Enter 4-Digit Access PIN</span>
+          <span>{t.enterPin}</span>
         </div>
 
-        <div className={`flex items-center gap-4 py-3 transition-transform ${isShaking ? "animate-shake" : ""}`}>
+        <div className={`flex items-center gap-4 py-2 transition-transform ${isShaking ? "animate-shake" : ""}`}>
           {[0, 1, 2, 3].map((index) => {
             const isFilled = pin.length > index;
             return (
@@ -98,34 +135,30 @@ export default function PinPad({ onSuccess, verifyPinAction }: PinPadProps) {
           })}
         </div>
 
-        {/* Status / Error Message */}
-        <div className="h-6 mt-2 flex items-center justify-center">
+        {/* Error / Loading Feedback */}
+        <div className="h-6 flex items-center justify-center mt-1">
           {isVerifying ? (
-            <div className="flex items-center gap-2 text-xs text-[#DAA520] font-bold animate-pulse">
-              <Loader2 size={14} className="animate-spin" />
-              <span>Verifying PIN...</span>
+            <div className="flex items-center gap-1.5 text-xs text-[#DAA520] font-bold">
+              <Loader2 size={13} className="animate-spin" />
+              <span>{t.loggingIn}</span>
             </div>
           ) : error ? (
-            <span className="text-xs font-bold text-rose-400">{error}</span>
-          ) : (
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
-              Instant access • No password needed
-            </span>
-          )}
+            <span className="text-xs text-red-400 font-bold text-center">{error}</span>
+          ) : null}
         </div>
       </div>
 
-      {/* Numeric Keypad */}
-      <div className="w-full grid grid-cols-3 gap-3 mb-6">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+      {/* Tactile Touch Keypad */}
+      <div className="grid grid-cols-3 gap-3 w-full max-w-[290px] mb-6">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
           <button
-            key={num}
+            key={digit}
             type="button"
-            onClick={() => handleDigit(num.toString())}
+            onClick={() => handleDigit(digit.toString())}
             disabled={isVerifying}
-            className="h-16 rounded-2xl bg-white/10 hover:bg-white/20 active:bg-[#DAA520] active:text-[#1B3564] border border-white/10 text-2xl font-black text-white transition-all shadow-md active:scale-95 flex items-center justify-center cursor-pointer disabled:opacity-50"
+            className="w-full aspect-square rounded-2xl bg-slate-800/90 hover:bg-[#1B3564] border border-slate-700/80 active:bg-[#DAA520] active:text-[#1B3564] active:scale-95 text-2xl font-bold font-mono transition-all flex items-center justify-center cursor-pointer shadow-md disabled:opacity-50"
           >
-            {num}
+            {digit}
           </button>
         ))}
 
@@ -134,51 +167,46 @@ export default function PinPad({ onSuccess, verifyPinAction }: PinPadProps) {
           type="button"
           onClick={handleClear}
           disabled={isVerifying || pin.length === 0}
-          className="h-16 rounded-2xl bg-white/5 hover:bg-white/10 text-xs font-bold uppercase tracking-wider text-slate-400 border border-white/5 active:scale-95 transition-all flex items-center justify-center cursor-pointer disabled:opacity-30"
+          className="w-full aspect-square rounded-2xl bg-slate-800/40 hover:bg-slate-800 text-xs uppercase font-bold text-slate-400 transition-all flex items-center justify-center cursor-pointer disabled:opacity-30"
         >
-          Clear
+          C
         </button>
 
-        {/* 0 Key */}
+        {/* Digit 0 */}
         <button
           type="button"
           onClick={() => handleDigit("0")}
           disabled={isVerifying}
-          className="h-16 rounded-2xl bg-white/10 hover:bg-white/20 active:bg-[#DAA520] active:text-[#1B3564] border border-white/10 text-2xl font-black text-white transition-all shadow-md active:scale-95 flex items-center justify-center cursor-pointer disabled:opacity-50"
+          className="w-full aspect-square rounded-2xl bg-slate-800/90 hover:bg-[#1B3564] border border-slate-700/80 active:bg-[#DAA520] active:text-[#1B3564] active:scale-95 text-2xl font-bold font-mono transition-all flex items-center justify-center cursor-pointer shadow-md disabled:opacity-50"
         >
           0
         </button>
 
-        {/* Backspace Key */}
+        {/* Backspace Button */}
         <button
           type="button"
           onClick={handleDelete}
           disabled={isVerifying || pin.length === 0}
-          className="h-16 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-200 border border-white/5 active:scale-95 transition-all flex items-center justify-center cursor-pointer disabled:opacity-30"
+          aria-label="Delete"
+          className="w-full aspect-square rounded-2xl bg-slate-800/40 hover:bg-slate-800 text-slate-300 transition-all flex items-center justify-center cursor-pointer disabled:opacity-30"
         >
           <Delete size={20} />
         </button>
       </div>
 
-      {/* Role PIN Quick Reference Pill for Staff */}
-      <div className="w-full bg-[#122A54]/80 border border-[#DAA520]/20 rounded-2xl p-3.5 text-center">
-        <span className="text-[10px] uppercase font-bold text-[#DAA520] tracking-wider block mb-1.5 flex items-center justify-center gap-1">
-          <Sparkles size={11} />
-          Role PIN Quick Reference
-        </span>
-        <div className="grid grid-cols-3 gap-2 text-[11px] font-semibold text-slate-200">
-          <div className="bg-black/20 py-1 px-2 rounded-lg">
-            <span className="text-slate-400 block text-[9px] uppercase">Caretaker</span>
-            <strong className="text-[#DAA520] font-mono font-bold">1122</strong>
-          </div>
-          <div className="bg-black/20 py-1 px-2 rounded-lg">
-            <span className="text-slate-400 block text-[9px] uppercase">Chef</span>
-            <strong className="text-[#DAA520] font-mono font-bold">3344</strong>
-          </div>
-          <div className="bg-black/20 py-1 px-2 rounded-lg">
-            <span className="text-slate-400 block text-[9px] uppercase">Admin</span>
-            <strong className="text-[#DAA520] font-mono font-bold">9900</strong>
-          </div>
+      {/* Role PIN Quick-Reference Cards (Super Easy for Staff) */}
+      <div className="w-full max-w-[290px] grid grid-cols-3 gap-2">
+        <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-xl text-center">
+          <span className="text-[10px] text-slate-400 font-bold block">{t.caretakerRole}</span>
+          <span className="text-xs font-mono font-bold text-[#DAA520] block mt-0.5">1122</span>
+        </div>
+        <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-xl text-center">
+          <span className="text-[10px] text-slate-400 font-bold block">{t.chefRole}</span>
+          <span className="text-xs font-mono font-bold text-[#DAA520] block mt-0.5">3344</span>
+        </div>
+        <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-xl text-center">
+          <span className="text-[10px] text-slate-400 font-bold block">{t.adminRole}</span>
+          <span className="text-xs font-mono font-bold text-[#DAA520] block mt-0.5">9900</span>
         </div>
       </div>
     </div>

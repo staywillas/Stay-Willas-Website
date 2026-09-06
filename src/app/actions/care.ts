@@ -123,7 +123,8 @@ export async function verifyCarePin(pin: string) {
 export async function submitCareLog(data: {
   category: string;
   notes?: string;
-  imageBase64: string;
+  imageBase64?: string;
+  images?: string[];
   villaSlug?: string;
 }) {
   try {
@@ -146,6 +147,18 @@ export async function submitCareLog(data: {
       hour12: true,
     }) + " IST";
 
+    // Combine images
+    const imageList: string[] = [];
+    if (data.images && Array.isArray(data.images)) {
+      imageList.push(...data.images.filter(Boolean));
+    } else if (data.imageBase64) {
+      imageList.push(data.imageBase64);
+    }
+
+    if (imageList.length === 0) {
+      return { success: false, error: "At least one live photo is required." };
+    }
+
     // 1. Save to Database
     const log = await prisma.careLog.create({
       data: {
@@ -154,7 +167,7 @@ export async function submitCareLog(data: {
         villaSlug,
         category: data.category,
         notes: data.notes?.trim() || null,
-        images: [data.imageBase64],
+        images: imageList,
         timestamp: now,
       },
     });
@@ -166,7 +179,7 @@ export async function submitCareLog(data: {
       villaName,
       category: data.category,
       notes: data.notes,
-      imageBase64: data.imageBase64,
+      imageBase64: imageList[0],
       timestamp: formattedTimestamp,
     }).catch(err => console.error("Async Telegram alert error:", err));
 

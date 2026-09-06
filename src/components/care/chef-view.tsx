@@ -2,23 +2,19 @@
 
 import React, { useState } from "react";
 import CameraWatermark from "./camera-watermark";
-import { Utensils, Coffee, Moon, Sun, Send, LogOut, CheckCircle2, Sparkles, ChefHat } from "lucide-react";
+import { UtensilsCrossed, Coffee, Sun, Sunset, Moon, Send, LogOut, Check, Sparkles, Globe } from "lucide-react";
+import { CareLanguage, translations } from "@/lib/care-translations";
 
 interface ChefViewProps {
   staffName: string;
   villaName: string;
   villaSlug: string;
   onLogout: () => void;
-  onSubmitLog: (data: { category: string; notes?: string; imageBase64: string; villaSlug?: string }) => Promise<{ success: boolean; error?: string }>;
+  onSubmitLog: (data: { category: string; notes?: string; images: string[]; villaSlug?: string }) => Promise<{ success: boolean; error?: string }>;
   existingLogs: any[];
+  lang: CareLanguage;
+  onLangChange: (lang: CareLanguage) => void;
 }
-
-const MEAL_TYPES = [
-  { id: "BREAKFAST", label: "Breakfast", time: "8:00 AM – 10:30 AM", icon: Sun },
-  { id: "LUNCH", label: "Lunch", time: "1:00 PM – 3:00 PM", icon: Utensils },
-  { id: "HI_TEA", label: "High-Tea", time: "5:00 PM – 6:30 PM", icon: Coffee },
-  { id: "DINNER", label: "Dinner / BBQ", time: "8:30 PM – 10:30 PM", icon: Moon },
-];
 
 export default function ChefView({
   staffName,
@@ -27,47 +23,75 @@ export default function ChefView({
   onLogout,
   onSubmitLog,
   existingLogs = [],
+  lang,
+  onLangChange,
 }: ChefViewProps) {
-  const [selectedMeal, setSelectedMeal] = useState("LUNCH");
+  const t = translations[lang] || translations.en;
+
+  const MEAL_TYPES = [
+    { id: "BREAKFAST", label: t.breakfast, icon: Coffee, time: "8:30 AM - 10:30 AM" },
+    { id: "LUNCH", label: t.lunch, icon: Sun, time: "1:00 PM - 3:00 PM" },
+    { id: "HI_TEA", label: t.highTea, icon: Sunset, time: "5:00 PM - 6:30 PM" },
+    { id: "DINNER", label: t.dinner, icon: Moon, time: "8:30 PM - 10:30 PM" },
+  ];
+
+  const DIETARY_OPTIONS = [
+    { id: "veg", label: t.pureVeg, color: "border-emerald-500 text-emerald-400 bg-emerald-500/10" },
+    { id: "nonveg", label: t.nonVeg, color: "border-amber-500 text-amber-400 bg-amber-500/10" },
+    { id: "jain", label: t.jain, color: "border-teal-500 text-teal-400 bg-teal-500/10" },
+    { id: "kids", label: t.kids, color: "border-purple-500 text-purple-400 bg-purple-500/10" },
+  ];
+
+  const [selectedMeal, setSelectedMeal] = useState<string>("LUNCH");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [menuNotes, setMenuNotes] = useState("");
-  const [dietaryType, setDietaryType] = useState<string[]>(["Pure Veg"]);
-  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>(["veg"]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [recentLogs, setRecentLogs] = useState<any[]>(
+    existingLogs.filter((l) => l.role === "chef")
+  );
 
-  const chefLogsToday = existingLogs.filter((l) => l.role === "chef");
-
-  const toggleDiet = (type: string) => {
-    setDietaryType((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+  const toggleTag = (tagId: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
     );
   };
 
   const handleMealSubmit = async () => {
-    if (!capturedPhoto) {
-      alert("Please capture a live photo of the meal spread before submitting.");
+    if (photos.length === 0) {
+      alert(lang === "hi" ? "कृपया पहले खाने की कम से कम एक लाइव फोटो खींचें।" : lang === "mr" ? "कृपया आधी जेवणाचा किमान एक थेट फोटो काढा." : "Please snap at least one live food photo first.");
       return;
     }
 
     setIsSubmitting(true);
     try {
       const activeMeal = MEAL_TYPES.find((m) => m.id === selectedMeal);
-      const combinedNotes = `${dietaryType.join(", ")} | Menu: ${menuNotes || "Standard Meal Spread"}`;
+      const tagsText = selectedTags.length > 0 ? `[Tags: ${selectedTags.join(", ")}] ` : "";
+      const fullNotes = `${tagsText}${menuNotes || `${activeMeal?.label} prepared and served to guests.`}`;
 
       const res = await onSubmitLog({
         category: selectedMeal,
-        notes: combinedNotes,
-        imageBase64: capturedPhoto,
+        notes: fullNotes,
+        images: photos,
         villaSlug,
       });
 
       if (res.success) {
-        setSubmitSuccess(true);
-        setCapturedPhoto(null);
+        setRecentLogs((prev) => [
+          {
+            id: Date.now().toString(),
+            category: selectedMeal,
+            notes: fullNotes,
+            images: photos,
+            timestamp: new Date().toISOString(),
+          },
+          ...prev,
+        ]);
+        setPhotos([]);
         setMenuNotes("");
-        setTimeout(() => setSubmitSuccess(false), 4000);
+        alert(t.submitSuccess);
       } else {
-        alert(res.error || "Failed to log meal spread.");
+        alert(res.error || "Submission failed. Please try again.");
       }
     } catch (err: any) {
       alert("Error: " + (err.message || err));
@@ -76,76 +100,100 @@ export default function ChefView({
     }
   };
 
-  const activeMealObj = MEAL_TYPES.find((m) => m.id === selectedMeal) || MEAL_TYPES[1];
+  const activeMealObj = MEAL_TYPES.find((m) => m.id === selectedMeal);
 
   return (
-    <div className="w-full max-w-xl mx-auto p-4 sm:p-6 text-slate-100">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
-        <div>
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#DAA520] block">
-            Chef Culinary Portal
-          </span>
-          <h2 className="text-xl font-black font-heading text-white">{villaName}</h2>
-          <span className="text-xs text-slate-300 font-medium">Logged in: {staffName}</span>
+    <div className="w-full max-w-xl mx-auto p-3 sm:p-5 text-slate-100">
+      {/* Top Header & Language Switcher */}
+      <div className="flex items-center justify-between mb-4 bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl shadow-md">
+        {/* Language Switcher */}
+        <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-xl">
+          <Globe size={13} className="text-[#DAA520] ml-1 mr-0.5" />
+          <button
+            type="button"
+            onClick={() => onLangChange("en")}
+            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              lang === "en" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            }`}
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onClick={() => onLangChange("hi")}
+            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              lang === "hi" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            }`}
+          >
+            हिंदी
+          </button>
+          <button
+            type="button"
+            onClick={() => onLangChange("mr")}
+            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              lang === "mr" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            }`}
+          >
+            मराठी
+          </button>
         </div>
+
+        {/* Logout */}
         <button
           type="button"
           onClick={onLogout}
-          className="bg-white/10 hover:bg-white/20 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+          className="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded-xl transition-all cursor-pointer font-bold"
         >
           <LogOut size={13} />
-          <span>Exit</span>
+          <span>{t.logout}</span>
         </button>
       </div>
 
-      {/* Success Notification */}
-      {submitSuccess && (
-        <div className="mb-5 p-4 rounded-2xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 flex items-center gap-3 animate-fadeIn">
-          <CheckCircle2 size={22} className="text-emerald-400 shrink-0" />
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider">Meal Proof Successfully Logged!</h4>
-            <p className="text-[11px] text-slate-200 mt-0.5">
-              Timestamped photo and menu details have been archived and dispatched.
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Title */}
+      <div className="text-center mb-5">
+        <span className="text-[10px] uppercase tracking-widest text-[#DAA520] font-black block">
+          {t.staffPortal} • {staffName}
+        </span>
+        <h1 className="text-xl sm:text-2xl font-black text-white font-heading mt-0.5">
+          {t.chefTitle}
+        </h1>
+        <p className="text-xs text-slate-300 font-medium mt-1">
+          {t.chefSubtitle}
+        </p>
+      </div>
 
-      {/* Meal Selection Tabs */}
-      <div className="mb-6">
-        <label className="text-[10px] uppercase font-bold text-slate-300 tracking-wider block mb-2">
-          Select Meal To Log:
+      {/* Meal Category Selector Grid */}
+      <div className="mb-5">
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 block">
+          {t.selectMeal}
         </label>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
           {MEAL_TYPES.map((meal) => {
-            const Icon = meal.icon;
             const isSelected = selectedMeal === meal.id;
-            const isAlreadyLogged = chefLogsToday.some((l) => l.category === meal.id);
-
+            const Icon = meal.icon;
             return (
               <button
                 key={meal.id}
                 type="button"
-                onClick={() => {
-                  setSelectedMeal(meal.id);
-                  setCapturedPhoto(null);
-                }}
-                className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                onClick={() => setSelectedMeal(meal.id)}
+                className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-3 ${
                   isSelected
-                    ? "bg-[#1B3564] border-[#DAA520] shadow-[0_0_15px_rgba(218,165,32,0.25)]"
-                    : "bg-[#0d172e] border-white/10 hover:border-white/20"
+                    ? "bg-[#1B3564] border-[#DAA520] text-white shadow-[0_4px_20px_rgba(218,165,32,0.2)] scale-[1.02]"
+                    : "bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800"
                 }`}
               >
-                <div className="flex items-center justify-between w-full mb-1">
-                  <Icon size={16} className={isSelected ? "text-[#DAA520]" : "text-slate-400"} />
-                  {isAlreadyLogged && (
-                    <span className="w-2 h-2 rounded-full bg-emerald-400" title="Already logged today" />
-                  )}
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                    isSelected ? "bg-[#DAA520] text-[#1B3564]" : "bg-slate-800 text-slate-400"
+                  }`}
+                >
+                  <Icon size={18} className="stroke-[2.5]" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-white block">{meal.label}</span>
-                  <span className="text-[9px] text-slate-400 block">{meal.time}</span>
+                  <span className="text-xs font-black block">{meal.label}</span>
+                  <span className="text-[10px] text-slate-400 font-medium block mt-0.5">
+                    {meal.time}
+                  </span>
                 </div>
               </button>
             );
@@ -153,114 +201,144 @@ export default function ChefView({
         </div>
       </div>
 
-      {/* Menu & Dietary Specification Form */}
-      <div className="bg-[#0d172e] rounded-3xl p-5 border border-white/10 mb-6 space-y-4">
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-bold text-white flex items-center gap-1.5">
-              <ChefHat size={14} className="text-[#DAA520]" />
-              <span>Today&apos;s {activeMealObj.label} Menu Description:</span>
-            </label>
+      {/* Main Submission Form Card */}
+      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4 mb-6">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+            <UtensilsCrossed size={16} className="text-[#DAA520]" />
+            <span className="text-sm font-bold text-white uppercase tracking-wider">
+              {activeMealObj?.label} Spread Proof
+            </span>
           </div>
-          <textarea
-            rows={2}
-            placeholder="e.g. Paneer Butter Masala, Dal Tadka, Jeera Rice, Hot Phulkas, Fresh Salad"
-            value={menuNotes}
-            onChange={(e) => setMenuNotes(e.target.value)}
-            className="w-full bg-white/5 border border-white/15 rounded-xl p-3 text-xs text-white placeholder:text-slate-400 outline-none focus:border-[#DAA520] leading-relaxed"
+          <span className="text-[11px] text-[#DAA520] font-mono font-bold">
+            {activeMealObj?.time}
+          </span>
+        </div>
+
+        {/* Camera Live Snap Area (Multi-Photo) */}
+        <div>
+          <label className="text-xs font-bold text-slate-300 mb-2 block">
+            📸 Live Photos of Buffet & Cooking Station ({photos.length} added)
+          </label>
+          <CameraWatermark
+            roleName="Chef"
+            categoryName={activeMealObj?.label || "Meal Spread"}
+            villaName={villaName}
+            photos={photos}
+            onPhotosChange={setPhotos}
+            lang={lang}
+            maxPhotos={6}
           />
         </div>
 
-        {/* Dietary Tag Badges */}
+        {/* Dietary Highlights Tags */}
         <div>
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-2">
-            Dietary Category:
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {["Pure Veg", "Non-Veg", "Jain Food", "Live BBQ", "Kids Special"].map((tag) => {
-              const active = dietaryType.includes(tag);
+          <label className="text-xs font-bold text-slate-300 mb-2 block">
+            {t.dietaryBadges}
+          </label>
+          <div className="flex flex-wrap gap-1.5">
+            {DIETARY_OPTIONS.map((tag) => {
+              const isSelected = selectedTags.includes(tag.id);
               return (
                 <button
-                  key={tag}
+                  key={tag.id}
                   type="button"
-                  onClick={() => toggleDiet(tag)}
-                  className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                    active
-                      ? "bg-[#DAA520] text-black border-[#DAA520]"
-                      : "bg-white/5 text-slate-300 border-white/10 hover:border-white/20"
+                  onClick={() => toggleTag(tag.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                    isSelected ? tag.color : "bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  {active ? `✓ ${tag}` : `+ ${tag}`}
+                  {isSelected && "✓ "}
+                  {tag.label}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Live Camera Watermark */}
-        <div className="pt-2">
-          <span className="text-[10px] uppercase font-bold text-slate-300 tracking-wider block mb-2">
-            Capture Live Dining Table / Buffet Setup:
-          </span>
-          <CameraWatermark
-            roleName="Chef"
-            categoryName={`${activeMealObj.label} Meal`}
-            villaName={villaName}
-            buttonLabel={`Capture ${activeMealObj.label} Photo`}
-            onPhotoCaptured={(b64) => setCapturedPhoto(b64)}
-            existingPhoto={capturedPhoto}
+        {/* Menu Notes Input */}
+        <div>
+          <label className="text-xs font-bold text-slate-300 mb-1.5 block">
+            {t.menuNotesPlaceholder}
+          </label>
+          <textarea
+            value={menuNotes}
+            onChange={(e) => setMenuNotes(e.target.value)}
+            rows={2}
+            placeholder={t.menuNotesPlaceholder}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-[#DAA520] transition-colors resize-none"
           />
         </div>
 
-        {/* Submit Meal Proof Button */}
+        {/* Submit Button */}
         <button
           type="button"
           onClick={handleMealSubmit}
-          disabled={isSubmitting || !capturedPhoto}
-          className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-black font-black text-xs uppercase tracking-wider py-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-98 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          disabled={isSubmitting || photos.length === 0}
+          className="w-full bg-[#DAA520] hover:bg-[#c5961d] active:scale-98 text-[#1B3564] font-black py-3.5 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Send size={14} className="stroke-[2.5]" />
-          <span>{isSubmitting ? "Uploading Meal Proof..." : `Submit ${activeMealObj.label} Proof`}</span>
+          {isSubmitting ? (
+            <span>{t.submitting}</span>
+          ) : (
+            <>
+              <Send size={15} className="stroke-[2.5]" />
+              <span>
+                {t.submitProof} ({photos.length} {t.photosTaken})
+              </span>
+            </>
+          )}
         </button>
       </div>
 
-      {/* Today's Meals Timeline */}
-      {chefLogsToday.length > 0 && (
-        <div className="border-t border-white/10 pt-5">
-          <h4 className="text-xs uppercase font-bold text-slate-400 tracking-wider mb-3">
-            Today&apos;s Submitted Meal Proofs:
-          </h4>
-          <div className="space-y-3">
-            {chefLogsToday.map((log) => (
+      {/* Today's Logged Meals History */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+          {t.todaysMeals} ({recentLogs.length})
+        </h3>
+        {recentLogs.length === 0 ? (
+          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 text-center text-xs text-slate-400">
+            {t.noMealsYet}
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            {recentLogs.map((log, idx) => (
               <div
-                key={log.id}
-                className="bg-white/5 border border-white/10 rounded-2xl p-3 flex items-center justify-between gap-3"
+                key={log.id || idx}
+                className="bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center justify-between gap-3 shadow-md"
               >
                 <div className="flex items-center gap-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={log.images[0]}
-                    alt={log.category}
-                    className="w-14 h-14 rounded-xl object-cover border border-white/10"
-                  />
+                  {log.images && log.images[0] && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={log.images[0]}
+                      alt="Meal Proof"
+                      className="w-12 h-12 rounded-lg object-cover border border-emerald-500/40"
+                    />
+                  )}
                   <div>
-                    <div className="flex items-center gap-2">
-                      <strong className="text-xs text-white uppercase">{log.category}</strong>
-                      <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">
-                        Logged
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-300 line-clamp-1 mt-0.5">{log.notes || "Standard Spread"}</p>
-                    <span className="text-[9px] text-slate-400 block font-mono mt-0.5">
-                      {new Date(log.timestamp).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
+                    <span className="text-xs font-black text-white block">
+                      {log.category}
+                    </span>
+                    <span className="text-[10px] text-slate-300 block line-clamp-1">
+                      {log.notes || "Meal verified."}
+                    </span>
+                    <span className="text-[9px] text-[#DAA520] font-mono block mt-0.5">
+                      {new Date(log.timestamp).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
                     </span>
                   </div>
+                </div>
+                <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                  ✓ {log.images?.length || 1} Photos
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

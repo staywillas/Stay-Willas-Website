@@ -2,49 +2,19 @@
 
 import React, { useState } from "react";
 import CameraWatermark from "./camera-watermark";
-import { CheckCircle2, AlertCircle, Clock, ShieldCheck, Waves, BedDouble, Bath, Armchair, Trees, Send, LogOut, Check } from "lucide-react";
+import { CheckCircle2, Waves, BedDouble, Bath, Armchair, Trees, Send, LogOut, Check, Globe } from "lucide-react";
+import { CareLanguage, translations } from "@/lib/care-translations";
 
 interface CaretakerViewProps {
   staffName: string;
   villaName: string;
   villaSlug: string;
   onLogout: () => void;
-  onSubmitLog: (data: { category: string; notes?: string; imageBase64: string; villaSlug?: string }) => Promise<{ success: boolean; error?: string }>;
+  onSubmitLog: (data: { category: string; notes?: string; images: string[]; villaSlug?: string }) => Promise<{ success: boolean; error?: string }>;
   existingLogs: any[];
+  lang: CareLanguage;
+  onLangChange: (lang: CareLanguage) => void;
 }
-
-const CHECKLIST_ITEMS = [
-  {
-    id: "POOL",
-    title: "Swimming Pool",
-    desc: "Water is crystal clear, filter is running, pool lights working.",
-    icon: Waves,
-  },
-  {
-    id: "BEDROOMS",
-    title: "Bedrooms & Linen",
-    desc: "Beds neatly made with fresh crisp linen, extra blankets placed, AC operational.",
-    icon: BedDouble,
-  },
-  {
-    id: "BATHROOMS",
-    title: "Bathrooms & Jacuzzi",
-    desc: "Dry sanitised floors, fresh towels & toiletries stocked, clean jacuzzi.",
-    icon: Bath,
-  },
-  {
-    id: "LIVING",
-    title: "Living Hall & Kitchen",
-    desc: "Clean furniture, sanitized countertops, refrigerator cleaned.",
-    icon: Armchair,
-  },
-  {
-    id: "OUTDOOR",
-    title: "Lawn & Patio",
-    desc: "Lawns swept, outdoor deck chairs arranged, ambient lights checked.",
-    icon: Trees,
-  },
-];
 
 export default function CaretakerView({
   staffName,
@@ -53,22 +23,59 @@ export default function CaretakerView({
   onLogout,
   onSubmitLog,
   existingLogs = [],
+  lang,
+  onLangChange,
 }: CaretakerViewProps) {
-  const [capturedPhotos, setCapturedPhotos] = useState<Record<string, string>>({});
+  const t = translations[lang] || translations.en;
+
+  const CHECKLIST_ITEMS = [
+    {
+      id: "POOL",
+      title: t.poolTitle,
+      desc: t.poolDesc,
+      icon: Waves,
+    },
+    {
+      id: "BEDROOMS",
+      title: t.bedroomsTitle,
+      desc: t.bedroomsDesc,
+      icon: BedDouble,
+    },
+    {
+      id: "BATHROOMS",
+      title: t.bathroomsTitle,
+      desc: t.bathroomsDesc,
+      icon: Bath,
+    },
+    {
+      id: "LIVING",
+      title: t.livingTitle,
+      desc: t.livingDesc,
+      icon: Armchair,
+    },
+    {
+      id: "OUTDOOR",
+      title: t.lawnTitle,
+      desc: t.lawnDesc,
+      icon: Trees,
+    },
+  ];
+
+  const [capturedPhotos, setCapturedPhotos] = useState<Record<string, string[]>>({});
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [submittingId, setSubmittingId] = useState<string | null>(null);
   const [submittedItems, setSubmittedItems] = useState<string[]>(
     existingLogs.filter((l) => l.role === "caretaker").map((l) => l.category)
   );
 
-  const handlePhotoCaptured = (categoryId: string, base64: string) => {
-    setCapturedPhotos((prev) => ({ ...prev, [categoryId]: base64 }));
+  const handlePhotosChange = (categoryId: string, photos: string[]) => {
+    setCapturedPhotos((prev) => ({ ...prev, [categoryId]: photos }));
   };
 
   const handleSubmitItem = async (item: typeof CHECKLIST_ITEMS[0]) => {
-    const photo = capturedPhotos[item.id];
-    if (!photo) {
-      alert(`Please snap a photo for ${item.title} first.`);
+    const photos = capturedPhotos[item.id] || [];
+    if (photos.length === 0) {
+      alert(lang === "hi" ? "कृपया पहले कम से कम एक लाइव फोटो खींचें।" : lang === "mr" ? "कृपया आधी किमान एक थेट फोटो काढा." : "Please snap at least one live photo first.");
       return;
     }
 
@@ -77,7 +84,7 @@ export default function CaretakerView({
       const res = await onSubmitLog({
         category: item.id,
         notes: notes[item.id] || `${item.title} verified and clean.`,
-        imageBase64: photo,
+        images: photos,
         villaSlug,
       });
 
@@ -97,142 +104,187 @@ export default function CaretakerView({
   const isAllComplete = verifiedCount >= CHECKLIST_ITEMS.length;
 
   return (
-    <div className="w-full max-w-xl mx-auto p-4 sm:p-6 text-slate-100">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
-        <div>
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#DAA520] block">
-            Caretaker Operations Portal
-          </span>
-          <h2 className="text-xl font-black font-heading text-white">{villaName}</h2>
-          <span className="text-xs text-slate-300 font-medium">Logged in: {staffName}</span>
+    <div className="w-full max-w-xl mx-auto p-3 sm:p-5 text-slate-100">
+      {/* Top Header & Language Switcher */}
+      <div className="flex items-center justify-between mb-4 bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl shadow-md">
+        {/* Language Switcher */}
+        <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-xl">
+          <Globe size={13} className="text-[#DAA520] ml-1 mr-0.5" />
+          <button
+            type="button"
+            onClick={() => onLangChange("en")}
+            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              lang === "en" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            }`}
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onClick={() => onLangChange("hi")}
+            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              lang === "hi" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            }`}
+          >
+            हिंदी
+          </button>
+          <button
+            type="button"
+            onClick={() => onLangChange("mr")}
+            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              lang === "mr" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            }`}
+          >
+            मराठी
+          </button>
         </div>
+
+        {/* Logout */}
         <button
           type="button"
           onClick={onLogout}
-          className="bg-white/10 hover:bg-white/20 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+          className="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded-xl transition-all cursor-pointer font-bold"
         >
           <LogOut size={13} />
-          <span>Exit</span>
+          <span>{t.logout}</span>
         </button>
       </div>
 
-      {/* Target Notice Banner */}
-      <div className={`p-4 rounded-2xl border mb-6 ${
-        isAllComplete 
-          ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-300"
-          : "bg-[#1B3564]/80 border-[#DAA520]/40 text-white"
-      }`}>
-        <div className="flex items-start gap-3">
-          {isAllComplete ? (
-            <CheckCircle2 size={24} className="text-emerald-400 shrink-0 mt-0.5" />
-          ) : (
-            <Clock size={24} className="text-[#DAA520] shrink-0 mt-0.5" />
-          )}
-          <div className="flex-1">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-black uppercase tracking-wider">
-                {isAllComplete ? "🎉 Villa 100% Ready for Guests" : "Pre-Check-in Turnover Checklist"}
-              </h4>
-              <span className="text-xs font-mono font-bold bg-black/30 px-2.5 py-0.5 rounded-full">
-                {verifiedCount}/{CHECKLIST_ITEMS.length} Verified
-              </span>
-            </div>
-            <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-              {isAllComplete
-                ? "All 5 areas have been timestamped and verified! Management has received the readiness report."
-                : "Please take live photos of all 5 areas before 1:00 PM so management can approve guest check-in."}
-            </p>
-          </div>
-        </div>
+      {/* Villa Name & Title */}
+      <div className="text-center mb-5">
+        <span className="text-[10px] uppercase tracking-widest text-[#DAA520] font-black block">
+          {t.staffPortal} • {staffName}
+        </span>
+        <h1 className="text-xl sm:text-2xl font-black text-white font-heading mt-0.5">
+          {t.caretakerTitle}
+        </h1>
+        <p className="text-xs text-slate-300 font-medium mt-1">
+          {t.caretakerSubtitle}
+        </p>
+      </div>
 
-        {/* Progress bar */}
-        <div className="w-full bg-black/40 h-2 rounded-full mt-3 overflow-hidden">
+      {/* Visual Progress Bar */}
+      <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl mb-6 shadow-md">
+        <div className="flex items-center justify-between text-xs font-bold mb-2">
+          <span className="text-slate-300">
+            {t.progress}: {verifiedCount} / {CHECKLIST_ITEMS.length}
+          </span>
+          <span className={isAllComplete ? "text-emerald-400" : "text-[#DAA520]"}>
+            {Math.round((verifiedCount / CHECKLIST_ITEMS.length) * 100)}%
+          </span>
+        </div>
+        <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700">
           <div
-            className={`h-full transition-all duration-500 ${
-              isAllComplete ? "bg-emerald-400" : "bg-[#DAA520]"
+            className={`h-full rounded-full transition-all duration-500 ${
+              isAllComplete
+                ? "bg-gradient-to-r from-emerald-500 to-teal-400 shadow-[0_0_12px_rgba(16,185,129,0.5)]"
+                : "bg-gradient-to-r from-[#DAA520] to-amber-500"
             }`}
             style={{ width: `${(verifiedCount / CHECKLIST_ITEMS.length) * 100}%` }}
           />
         </div>
+        {isAllComplete && (
+          <div className="mt-3 p-2 bg-emerald-500/15 border border-emerald-500/30 rounded-xl text-center text-xs font-bold text-emerald-300 flex items-center justify-center gap-1.5">
+            <CheckCircle2 size={14} className="text-emerald-400" />
+            <span>{t.allComplete}</span>
+          </div>
+        )}
       </div>
 
-      {/* Checklist Cards */}
+      {/* 5 Checklist Items Cards */}
       <div className="space-y-4">
         {CHECKLIST_ITEMS.map((item) => {
-          const Icon = item.icon;
           const isSubmitted = submittedItems.includes(item.id);
-          const hasCaptured = !!capturedPhotos[item.id];
-          const isCurrentSubmitting = submittingId === item.id;
+          const currentPhotos = capturedPhotos[item.id] || [];
+          const Icon = item.icon;
+          const isCurrentlySubmitting = submittingId === item.id;
 
           return (
             <div
               key={item.id}
-              className={`bg-[#0d172e] rounded-2xl p-4 sm:p-5 border transition-all ${
+              className={`rounded-2xl p-4 sm:p-5 transition-all shadow-md border ${
                 isSubmitted
-                  ? "border-emerald-500/50 bg-emerald-950/20"
-                  : hasCaptured
-                  ? "border-[#DAA520] shadow-[0_0_15px_rgba(218,165,32,0.15)]"
-                  : "border-white/10"
+                  ? "bg-emerald-950/20 border-emerald-500/50"
+                  : currentPhotos.length > 0
+                  ? "bg-slate-900 border-[#DAA520]/60 shadow-[0_4px_20px_rgba(218,165,32,0.1)]"
+                  : "bg-slate-900/80 border-slate-800"
               }`}
             >
-              {/* Header */}
+              {/* Card Header */}
               <div className="flex items-start justify-between gap-3 mb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                    isSubmitted ? "bg-emerald-500/20 text-emerald-400" : "bg-[#DAA520]/20 text-[#DAA520]"
-                  }`}>
-                    <Icon size={18} />
+                <div className="flex items-start gap-3">
+                  <div
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                      isSubmitted
+                        ? "bg-emerald-500/20 text-emerald-400"
+                        : "bg-[#1B3564]/80 text-[#DAA520]"
+                    }`}
+                  >
+                    <Icon size={20} className="stroke-[2.5]" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white">{item.title}</h3>
-                    <p className="text-[11px] text-slate-400 leading-snug">{item.desc}</p>
+                    <h2 className="text-sm sm:text-base font-black text-white">
+                      {item.title}
+                    </h2>
+                    <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                      {item.desc}
+                    </p>
                   </div>
                 </div>
 
-                {/* Badge */}
-                {isSubmitted ? (
-                  <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1 shrink-0">
-                    <Check size={11} className="stroke-[3]" />
-                    Verified
-                  </span>
-                ) : (
-                  <span className="bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full shrink-0">
-                    Pending
-                  </span>
-                )}
+                {/* Status Badge */}
+                <div className="shrink-0">
+                  {isSubmitted ? (
+                    <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                      <Check size={12} className="stroke-[3]" />
+                      <span>{t.verifiedDone}</span>
+                    </div>
+                  ) : (
+                    <div className="bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                      {t.pending}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Camera Trigger / Watermarked Preview */}
-              <div className="my-3">
+              {/* Camera Multi-Photo Upload Area */}
+              <div className="mt-3">
                 <CameraWatermark
                   roleName="Caretaker"
                   categoryName={item.title}
                   villaName={villaName}
-                  buttonLabel={`Capture ${item.title} Photo`}
-                  onPhotoCaptured={(b64) => handlePhotoCaptured(item.id, b64)}
-                  existingPhoto={capturedPhotos[item.id] || null}
+                  photos={currentPhotos}
+                  onPhotosChange={(photos) => handlePhotosChange(item.id, photos)}
+                  lang={lang}
+                  maxPhotos={5}
                 />
               </div>
 
-              {/* Submit Single Item Button */}
-              {!isSubmitted && hasCaptured && (
-                <div className="mt-3 pt-3 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              {/* Notes & Submit Button */}
+              {currentPhotos.length > 0 && !isSubmitted && (
+                <div className="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
                   <input
                     type="text"
-                    placeholder="Optional note (e.g. fresh towels placed)"
                     value={notes[item.id] || ""}
-                    onChange={(e) => setNotes((prev) => ({ ...prev, [item.id]: e.target.value }))}
-                    className="flex-1 bg-white/5 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-400 outline-none focus:border-[#DAA520]"
+                    onChange={(e) => setNotes({ ...notes, [item.id]: e.target.value })}
+                    placeholder={t.notesPlaceholder}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-[#DAA520]"
                   />
+
                   <button
                     type="button"
                     onClick={() => handleSubmitItem(item)}
-                    disabled={isCurrentSubmitting}
-                    className="bg-[#25D366] hover:bg-[#20ba5a] text-black font-black text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer whitespace-nowrap disabled:opacity-50"
+                    disabled={isCurrentlySubmitting}
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg disabled:opacity-50"
                   >
-                    <Send size={12} className="stroke-[2.5]" />
-                    <span>{isCurrentSubmitting ? "Uploading..." : "Save Proof"}</span>
+                    {isCurrentlySubmitting ? (
+                      <span>{t.submitting}</span>
+                    ) : (
+                      <>
+                        <Send size={14} />
+                        <span>{t.submitProof} ({currentPhotos.length} {t.photosTaken})</span>
+                      </>
+                    )}
                   </button>
                 </div>
               )}
