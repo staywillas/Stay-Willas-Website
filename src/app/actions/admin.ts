@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import fs from "fs";
 import path from "path";
 import { sendEmail } from "@/lib/mail";
+import { requireAdminSession } from "@/lib/session";
 
 // -------------------------------------------------------------------------
 // 1. Manual Bookings / Stays Operations
@@ -39,6 +40,8 @@ export async function createManualBooking(formData: {
   balanceDue?: number;
 }) {
   try {
+    await requireAdminSession();
+
     const checkInDate = new Date(formData.checkIn);
     const checkOutDate = new Date(formData.checkOut);
 
@@ -197,6 +200,8 @@ export async function createManualBooking(formData: {
 
 export async function deleteBooking(bookingId: string) {
   try {
+    await requireAdminSession();
+
     await prisma.booking.delete({
       where: { id: bookingId },
     });
@@ -210,6 +215,8 @@ export async function deleteBooking(bookingId: string) {
 
 export async function updateBookingPayment(bookingId: string, advancePaid: number) {
   try {
+    await requireAdminSession();
+
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
     });
@@ -273,6 +280,8 @@ export async function updateVillaDetails(data: {
   description: string;
 }) {
   try {
+    await requireAdminSession();
+
     const updated = await prisma.villa.update({
       where: { id: data.id },
       data: {
@@ -316,6 +325,8 @@ const getConfigFilePath = () => {
 
 export async function getChannelConfigs() {
   try {
+    await requireAdminSession();
+
     const filePath = getConfigFilePath();
     if (!fs.existsSync(filePath)) {
       return {};
@@ -333,6 +344,8 @@ export async function updateChannelConfig(
   configs: { airbnb?: string; booking?: string; vrbo?: string; mmt?: string }
 ) {
   try {
+    await requireAdminSession();
+
     const filePath = getConfigFilePath();
     let data: Record<string, typeof configs> = {};
     if (fs.existsSync(filePath)) {
@@ -417,6 +430,8 @@ export async function syncExternalChannels() {
   let syncedCount = 0;
 
   try {
+    await requireAdminSession();
+
     const configs = await getChannelConfigs();
     const villas = await prisma.villa.findMany();
 
@@ -499,6 +514,8 @@ export async function syncExternalChannels() {
 
 export async function setDailyPrice(villaId: string, dateStr: string, price: number) {
   try {
+    await requireAdminSession();
+
     const targetDate = new Date(dateStr);
     targetDate.setUTCHours(0, 0, 0, 0);
 
@@ -546,6 +563,8 @@ export async function setDailyPrice(villaId: string, dateStr: string, price: num
 
 export async function deleteDailyPrice(villaId: string, dateStr: string) {
   try {
+    await requireAdminSession();
+
     const targetDate = new Date(dateStr);
     targetDate.setUTCHours(0, 0, 0, 0);
 
@@ -574,6 +593,8 @@ export async function setDailyPriceRange(
   daysOfWeek?: number[] // Array of day indexes [0=Sun, 1=Mon, ..., 6=Sat]
 ) {
   try {
+    await requireAdminSession();
+
     const start = new Date(startDateStr);
     const end = new Date(endDateStr);
     
@@ -673,6 +694,8 @@ export async function deleteDailyPriceRange(
   daysOfWeek?: number[] // Array of day indexes [0=Sun, 1=Mon, ..., 6=Sat]
 ) {
   try {
+    await requireAdminSession();
+
     const start = new Date(startDateStr);
     const end = new Date(endDateStr);
     start.setUTCHours(0, 0, 0, 0);
@@ -751,6 +774,8 @@ export async function updateBookingFullDetails(formData: {
   status?: string;
 }) {
   try {
+    await requireAdminSession();
+
     const booking = await prisma.booking.findUnique({
       where: { id: formData.bookingId },
     });
@@ -847,6 +872,8 @@ export async function sendInvoiceEmailAction(data: {
   balanceDue: number;
 }) {
   try {
+    await requireAdminSession();
+
     if (!data.guestEmail || !data.guestEmail.includes("@")) {
       return { success: false, error: "Please enter a valid guest email address." };
     }
@@ -1025,6 +1052,8 @@ export async function sendInvoiceEmailAction(data: {
  */
 export async function approveVerificationBooking(bookingId: string) {
   try {
+    await requireAdminSession();
+
     const booking = await prisma.booking.update({
       where: { id: bookingId },
       data: {
@@ -1193,6 +1222,8 @@ export async function approveVerificationBooking(bookingId: string) {
  */
 export async function rejectVerificationBooking(bookingId: string) {
   try {
+    await requireAdminSession();
+
     const booking = await prisma.booking.delete({
       where: { id: bookingId },
       include: {

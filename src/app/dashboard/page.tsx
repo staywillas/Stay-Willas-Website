@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { verifySessionToken } from "@/lib/session";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import DashboardClient from "@/components/dashboard/dashboard-client";
@@ -19,13 +20,13 @@ export default async function DashboardPage() {
   let userId = "";
   let userEmail = "";
 
-  // 1. Secure Server-side Cookie Authentication check
+  // 1. Secure Server-side Cryptographically Signed Cookie check
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("staywillas_session");
     if (sessionCookie?.value) {
-      const session = JSON.parse(sessionCookie.value);
-      if (session.role === "guest" || session.role === "admin" || session.role === "partner") {
+      const session = verifySessionToken(sessionCookie.value);
+      if (session && (session.role === "guest" || session.role === "admin" || session.role === "partner")) {
         userId = session.id || "GUEST_USER";
         userEmail = session.email;
       }

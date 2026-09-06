@@ -38,11 +38,13 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
     notFound();
   }
 
-  // 2. Perform payment validation (fallback gracefully to mock confirm in development)
+  // 2. Perform payment validation (strictly required in production)
   let isPaymentVerified = false;
+  const isDev = process.env.NODE_ENV !== "production";
+
   try {
     const stripeKey = process.env.STRIPE_SECRET_KEY;
-    if (stripeKey && !stripeKey.includes("sk_test_...")) {
+    if (stripeKey && !stripeKey.includes("placeholder") && !stripeKey.includes("sk_test_...")) {
       const stripe = new Stripe(stripeKey, {
         apiVersion: "2026-04-22.dahlia",
       });
@@ -52,13 +54,18 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
           isPaymentVerified = true;
         }
       }
-    } else {
-      // Graceful development bypass
+    } else if (isDev) {
+      // Local development bypass only
       isPaymentVerified = true;
     }
   } catch (error) {
-    console.warn("Stripe verification bypassed: confirming booking for development/demo.", error);
-    isPaymentVerified = true;
+    if (isDev) {
+      console.warn("Stripe verification bypassed: confirming booking for local development only.", error);
+      isPaymentVerified = true;
+    } else {
+      console.error("Stripe payment verification failed:", error);
+      isPaymentVerified = false;
+    }
   }
 
   // 3. Mark booking as CONFIRMED in the database

@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { getPartnerDashboardData } from "@/app/actions/partner";
+import { verifySessionToken } from "@/lib/session";
 import PartnerPortal from "@/components/partner/partner-portal";
 import LoginForm from "@/components/auth/login-form";
 
@@ -17,14 +18,14 @@ export default async function HomeownerPortalPage() {
   let userEmail = "";
   let isAuthenticated = false;
 
-  // 1. Authenticate user using secure staywillas_session cookie
+  // 1. Authenticate user using cryptographically signed staywillas_session cookie
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("staywillas_session");
     
     if (sessionCookie?.value) {
-      const session = JSON.parse(sessionCookie.value);
-      if (session.role === "partner") {
+      const session = verifySessionToken(sessionCookie.value);
+      if (session && (session.role === "partner" || session.role === "admin")) {
         userEmail = session.email;
         isAuthenticated = true;
       }

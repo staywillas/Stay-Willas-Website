@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import ownerConfig from "@/data/owner-config.json";
+import { requirePartnerSession } from "@/lib/session";
 
 // Typed helper for retrieving owner mapped villa IDs
 export async function getOwnerVillaIds(email: string): Promise<string[]> {
@@ -10,9 +11,11 @@ export async function getOwnerVillaIds(email: string): Promise<string[]> {
   return config[email] || [];
 }
 
-export async function getPartnerDashboardData(ownerEmail: string) {
+export async function getPartnerDashboardData(ownerEmail?: string) {
   try {
-    const mappedVillaIds = await getOwnerVillaIds(ownerEmail);
+    const session = await requirePartnerSession();
+    const effectiveEmail = session.role === "admin" && ownerEmail ? ownerEmail : session.email;
+    const mappedVillaIds = await getOwnerVillaIds(effectiveEmail);
     
     if (mappedVillaIds.length === 0) {
       return {
@@ -141,8 +144,11 @@ export async function blockPartnerDates(
   }
 ) {
   try {
+    const session = await requirePartnerSession();
+    const effectiveEmail = session.role === "admin" && ownerEmail ? ownerEmail : session.email;
+
     // Security check: ensure partner owns this villa
-    const ownedVillas = await getOwnerVillaIds(ownerEmail);
+    const ownedVillas = await getOwnerVillaIds(effectiveEmail);
     if (!ownedVillas.includes(formData.villaId)) {
       return { success: false, error: "Access Denied: You do not own this property." };
     }
@@ -210,6 +216,9 @@ export async function blockPartnerDates(
 
 export async function deletePartnerBlock(ownerEmail: string, bookingId: string) {
   try {
+    const session = await requirePartnerSession();
+    const effectiveEmail = session.role === "admin" && ownerEmail ? ownerEmail : session.email;
+
     // 1. Fetch the booking to delete
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId }
@@ -220,7 +229,7 @@ export async function deletePartnerBlock(ownerEmail: string, bookingId: string) 
     }
 
     // 2. Security check: verify this partner owns the villa of the booking
-    const ownedVillas = await getOwnerVillaIds(ownerEmail);
+    const ownedVillas = await getOwnerVillaIds(effectiveEmail);
     if (!ownedVillas.includes(booking.villaId)) {
       return { success: false, error: "Access Denied: You do not own this property." };
     }

@@ -5,7 +5,24 @@ import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { sendEmail } from "@/lib/mail";
+import { signSessionPayload, SessionPayload } from "@/lib/session";
 import ownerConfig from "@/data/owner-config.json";
+
+const getSessionCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  maxAge: 60 * 60 * 24 * 30, // 30 days session
+  path: "/"
+});
+
+const getUserCookieOptions = () => ({
+  httpOnly: false,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  maxAge: 60 * 60 * 24 * 30, // 30 days session
+  path: "/"
+});
 
 interface LoginResponse {
   success: boolean;
@@ -61,27 +78,16 @@ export async function verifyAndSetupPasswordAction(
       }
     });
 
-    const payload = {
+    const payload: SessionPayload = {
       email: user.email,
-      role: user.role,
+      role: user.role as "admin" | "partner" | "guest",
       name: user.name,
       id: user.id
     };
 
     const cookieStore = await cookies();
-    cookieStore.set("staywillas_session", JSON.stringify(payload), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 30, // 30 days session
-      path: "/"
-    });
-
-    cookieStore.set("staywillas_user", JSON.stringify(payload), {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 30, // 30 days session
-      path: "/"
-    });
+    cookieStore.set("staywillas_session", signSessionPayload(payload), getSessionCookieOptions());
+    cookieStore.set("staywillas_user", JSON.stringify(payload), getUserCookieOptions());
 
     return { success: true, redirectTo: redirectUrl || "/dashboard" };
   } catch (error: any) {
@@ -106,29 +112,21 @@ export async function loginAction(
   }
 
   // 1. Validate Admin Portal Access
+  const configuredAdminUser = (process.env.ADMIN_USERNAME || "admin").trim().toLowerCase();
+  const configuredAdminPass = process.env.ADMIN_PASSWORD || "staywillas2026";
+
   if (role === "admin") {
-    if (username.trim() === "admin" && password === "staywillas2026") {
+    if (username.trim().toLowerCase() === configuredAdminUser && password === configuredAdminPass) {
       const cookieStore = await cookies();
-      const payload = {
+      const payload: SessionPayload = {
         email: "admin@staywillas.com",
         role: "admin",
         name: "Stay Willas Admin",
         id: "ADMIN_SUITE"
       };
       
-      cookieStore.set("staywillas_session", JSON.stringify(payload), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 30, // 30 days session
-        path: "/"
-      });
-
-      cookieStore.set("staywillas_user", JSON.stringify(payload), {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 30, // 30 days session
-        path: "/"
-      });
+      cookieStore.set("staywillas_session", signSessionPayload(payload), getSessionCookieOptions());
+      cookieStore.set("staywillas_user", JSON.stringify(payload), getUserCookieOptions());
 
       return { success: true, redirectTo: "/admin" };
     } else {
@@ -137,6 +135,8 @@ export async function loginAction(
   }
 
   // 2. Validate Partner/Homeowner Portal Access
+  const configuredPartnerPass = process.env.PARTNER_PASSWORD || "partner2026";
+
   if (role === "partner") {
     const config = ownerConfig as Record<string, string[]>;
     const partnerEmail = username.trim().toLowerCase();
@@ -145,28 +145,17 @@ export async function loginAction(
       return { success: false, error: "This email address is not registered as an active homeowner partner." };
     }
 
-    if (password === "partner2026") {
+    if (password === configuredPartnerPass) {
       const cookieStore = await cookies();
-      const payload = {
+      const payload: SessionPayload = {
         email: partnerEmail,
         role: "partner",
         name: partnerEmail.split("@")[0].toUpperCase(),
         id: "OWNER_" + partnerEmail.replace(/[^a-zA-Z0-9]/g, "")
       };
 
-      cookieStore.set("staywillas_session", JSON.stringify(payload), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 30, // 30 days session
-        path: "/"
-      });
-
-      cookieStore.set("staywillas_user", JSON.stringify(payload), {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 30, // 30 days session
-        path: "/"
-      });
+      cookieStore.set("staywillas_session", signSessionPayload(payload), getSessionCookieOptions());
+      cookieStore.set("staywillas_user", JSON.stringify(payload), getUserCookieOptions());
 
       return { success: true, redirectTo: "/homeowner" };
     } else {
@@ -278,27 +267,16 @@ export async function loginAction(
       return { success: false, error: "Incorrect password. Please verify your credentials and try again." };
     }
 
-    const payload = {
+    const payload: SessionPayload = {
       email: user.email,
-      role: user.role,
+      role: user.role as "admin" | "partner" | "guest",
       name: user.name,
       id: user.id
     };
 
     const cookieStore = await cookies();
-    cookieStore.set("staywillas_session", JSON.stringify(payload), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 30, // 30 days session
-      path: "/"
-    });
-
-    cookieStore.set("staywillas_user", JSON.stringify(payload), {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 30, // 30 days session
-      path: "/"
-    });
+    cookieStore.set("staywillas_session", signSessionPayload(payload), getSessionCookieOptions());
+    cookieStore.set("staywillas_user", JSON.stringify(payload), getUserCookieOptions());
 
     return { success: true, redirectTo: redirectVal };
   }

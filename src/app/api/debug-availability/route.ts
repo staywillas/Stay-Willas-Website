@@ -1,7 +1,19 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { getSessionUser } from "@/lib/session";
 
-export async function GET() {
+export async function GET(req: Request) {
+  // Prevent unauthorized access in production
+  if (process.env.NODE_ENV === "production") {
+    const session = await getSessionUser();
+    const authHeader = req.headers.get("x-admin-key");
+    const adminKey = process.env.ADMIN_API_KEY;
+    const isKeyValid = Boolean(adminKey && authHeader === adminKey);
+
+    if (!isKeyValid && (!session || session.role !== "admin")) {
+      return NextResponse.json({ error: "Not Found" }, { status: 404 });
+    }
+  }
   try {
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 

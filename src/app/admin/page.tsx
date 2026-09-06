@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { verifySessionToken } from "@/lib/session";
 import AdminDashboard from "@/components/admin/admin-dashboard";
 import LoginForm from "@/components/auth/login-form";
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  // 1. Authenticate user using secure staywillas_session cookie
+  // 1. Authenticate user using cryptographically signed staywillas_session cookie
   let userEmail = "";
   let isAuthenticated = false;
 
@@ -24,8 +25,8 @@ export default async function AdminPage() {
     const sessionCookie = cookieStore.get("staywillas_session");
     
     if (sessionCookie?.value) {
-      const session = JSON.parse(sessionCookie.value);
-      if (session.role === "admin") {
+      const session = verifySessionToken(sessionCookie.value);
+      if (session && session.role === "admin") {
         userEmail = session.email || "admin@staywillas.com";
         isAuthenticated = true;
       }
