@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion', '@clerk/nextjs', 'date-fns', 'swiper'],
+    optimizePackageImports: ['lucide-react', 'framer-motion', '@clerk/nextjs', 'date-fns', 'swiper', 'clsx', 'tailwind-merge', '@prisma/client'],
   },
   redirects: async () => [
     {
@@ -146,7 +146,7 @@ const nextConfig: NextConfig = {
         { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
         { key: 'X-DNS-Prefetch-Control', value: 'on' },
         { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-        { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(self)' },
+        { key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=(), payment=(self)' },
         { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
         { key: 'X-Robots-Tag', value: defaultRobotsHeader },
         { key: 'Link', value: '<https://images.unsplash.com>; rel=preconnect' },
@@ -163,6 +163,16 @@ const nextConfig: NextConfig = {
       headers: [
         { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
       ],
+    },
+    {
+      source: '/fonts/:path*',
+      headers: [
+        { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+      ],
+    },
+    {
+      source: '/care/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
     },
     {
       source: '/admin/:path*',

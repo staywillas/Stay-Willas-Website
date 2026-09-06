@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { dispatchTelegramCareAlert } from "@/lib/telegram";
@@ -17,18 +17,32 @@ export interface CareSession {
   villaName: string;
 }
 
+// In-Memory Rate Limiting for PIN attempts (protects against brute-force)
+interface RateLimitRecord {
+  failures: number;
+  lockoutUntil: number;
+}
+const pinRateLimitMap = new Map<string, RateLimitRecord>();
+
+const MAX_FAILURES = 5;
+const LOCKOUT_DURATION_MS = 10 * 60 * 1000; // 10 minutes
+
 /**
- * Signs the care session payload using HMAC-SHA256
+ * Signs the care session payload using HMAC-SHA256 with 7-day expiration
  */
 function signCareToken(session: CareSession): string {
-  const data = JSON.stringify({ ...session, iat: Date.now() });
-  const encoded = Buffer.from(data, "utf-8").toString("base64url");
+  const payload = {
+    ...session,
+    iat: Date.now(),
+    exp: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+  };
+  const encoded = Buffer.from(JSON.stringify(payload), "utf-8").toString("base64url");
   const signature = crypto.createHmac("sha256", CARE_SESSION_SECRET).update(encoded).digest("base64url");
   return `${encoded}.${signature}`;
 }
 
 /**
- * Verifies signed care token
+ * Verifies signed care token and checks expiration
  */
 function verifyCareToken(token: string | undefined): CareSession | null {
   if (!token) return null;
@@ -45,7 +59,17 @@ function verifyCareToken(token: string | undefined): CareSession | null {
 
   try {
     const json = Buffer.from(encoded, "base64url").toString("utf-8");
-    return JSON.parse(json) as CareSession;
+    const parsed = JSON.parse(json);
+    // Expiration check
+    if (parsed.exp && typeof parsed.exp === "number" && parsed.exp < Date.now()) {
+      return null;
+    }
+    return {
+      role: parsed.role,
+      staffName: parsed.staffName,
+      villaSlug: parsed.villaSlug,
+      villaName: parsed.villaName,
+    };
   } catch (e) {
     return null;
   }
@@ -64,13 +88,28 @@ export async function logoutCareAction() {
 }
 
 /**
- * Fast 1-Step PIN Authentication
- * - Caretaker PIN: 1122 (default)
- * - Chef PIN: 3344 (default)
- * - Admin PIN: 9900 (default)
+ * Fast 1-Step PIN Authentication with Anti-Brute-Force Rate Limiting
  */
 export async function verifyCarePin(pin: string) {
   const cleanPin = pin.trim();
+
+  // 1. Get Client IP for Rate Limiting
+  const headerList = await headers();
+  const clientIp =
+    headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    headerList.get("x-real-ip") ||
+    "127.0.0.1";
+
+  const now = Date.now();
+  const record = pinRateLimitMap.get(clientIp);
+
+  if (record && record.lockoutUntil > now) {
+    const remainingMins = Math.ceil((record.lockoutUntil - now) / 60000);
+    return {
+      success: false,
+      error: `Too many failed attempts. Locked for ${remainingMins} min(s).`,
+    };
+  }
 
   const CARETAKER_PIN = process.env.CARETAKER_PIN || "1122";
   const CHEF_PIN = process.env.CHEF_PIN || "3344";
@@ -90,9 +129,32 @@ export async function verifyCarePin(pin: string) {
     staffName = "Admin / Operations Head";
   }
 
+  // Failed PIN Attempt
   if (!role) {
-    return { success: false, error: "Incorrect PIN. Please check and try again." };
+    const currentFailures = (record?.failures || 0) + 1;
+    if (currentFailures >= MAX_FAILURES) {
+      pinRateLimitMap.set(clientIp, {
+        failures: currentFailures,
+        lockoutUntil: now + LOCKOUT_DURATION_MS,
+      });
+      return {
+        success: false,
+        error: "Too many incorrect attempts. Please wait 10 minutes.",
+      };
+    } else {
+      pinRateLimitMap.set(clientIp, {
+        failures: currentFailures,
+        lockoutUntil: 0,
+      });
+      return {
+        success: false,
+        error: `Incorrect PIN code. (${MAX_FAILURES - currentFailures} attempts remaining)`,
+      };
+    }
   }
+
+  // Successful Login: Reset Rate Limit
+  pinRateLimitMap.delete(clientIp);
 
   const sessionPayload: CareSession = {
     role,
@@ -107,7 +169,7 @@ export async function verifyCarePin(pin: string) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days session
+    maxAge: 60 * 60 * 24 * 7, // 7 days
     path: "/",
   });
 
@@ -117,8 +179,24 @@ export async function verifyCarePin(pin: string) {
   };
 }
 
+const VALID_CATEGORIES = new Set([
+  "POOL",
+  "BEDROOMS",
+  "BATHROOMS",
+  "LIVING",
+  "OUTDOOR",
+  "BREAKFAST",
+  "LUNCH",
+  "HI_TEA",
+  "DINNER",
+  "GENERAL",
+]);
+
+const CARETAKER_ALLOWED = new Set(["POOL", "BEDROOMS", "BATHROOMS", "LIVING", "OUTDOOR", "GENERAL"]);
+const CHEF_ALLOWED = new Set(["BREAKFAST", "LUNCH", "HI_TEA", "DINNER", "GENERAL"]);
+
 /**
- * Submits an operational proof log with timestamped watermarked photo
+ * Submits an operational proof log with validation and sanitization
  */
 export async function submitCareLog(data: {
   category: string;
@@ -133,21 +211,26 @@ export async function submitCareLog(data: {
       return { success: false, error: "Session expired. Please enter PIN again." };
     }
 
-    const villaSlug = data.villaSlug || session.villaSlug || "the-angle-house";
-    const villaName = session.villaName || "The Angle House (Lonavala)";
-    const now = new Date();
+    // 1. Validate Category
+    const category = data.category?.trim().toUpperCase();
+    if (!VALID_CATEGORIES.has(category)) {
+      return { success: false, error: "Invalid operational category." };
+    }
 
-    const formattedTimestamp = now.toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    }) + " IST";
+    // 2. Role-Based Authorization
+    if (session.role === "caretaker" && !CARETAKER_ALLOWED.has(category)) {
+      return { success: false, error: "Unauthorized category for caretaker." };
+    }
+    if (session.role === "chef" && !CHEF_ALLOWED.has(category)) {
+      return { success: false, error: "Unauthorized category for chef." };
+    }
 
-    // Combine images
+    // 3. Validate & Sanitize Notes
+    const sanitizedNotes = data.notes
+      ? data.notes.slice(0, 500).replace(/[<>]/g, "").trim()
+      : null;
+
+    // 4. Validate Images (Array constraint & size)
     const imageList: string[] = [];
     if (data.images && Array.isArray(data.images)) {
       imageList.push(...data.images.filter(Boolean));
@@ -158,30 +241,58 @@ export async function submitCareLog(data: {
     if (imageList.length === 0) {
       return { success: false, error: "At least one live photo is required." };
     }
+    if (imageList.length > 6) {
+      return { success: false, error: "Maximum 6 photos allowed per submission." };
+    }
 
-    // 1. Save to Database
+    for (const img of imageList) {
+      if (!img.startsWith("data:image/") && !img.startsWith("https://")) {
+        return { success: false, error: "Invalid image format received." };
+      }
+      // Safety limit: 1.5MB per image string
+      if (img.length > 2_000_000) {
+        return { success: false, error: "Image file size exceeds allowed limit." };
+      }
+    }
+
+    const villaSlug = data.villaSlug || session.villaSlug || "the-angle-house";
+    const villaName = session.villaName || "The Angle House (Lonavala)";
+    const now = new Date();
+
+    const formattedTimestamp =
+      now.toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }) + " IST";
+
+    // 5. Save to Database
     const log = await prisma.careLog.create({
       data: {
         role: session.role,
         staffName: session.staffName,
         villaSlug,
-        category: data.category,
-        notes: data.notes?.trim() || null,
+        category,
+        notes: sanitizedNotes,
         images: imageList,
         timestamp: now,
       },
     });
 
-    // 2. Dispatch to Telegram (if configured)
+    // 6. Dispatch to Telegram (if configured)
     dispatchTelegramCareAlert({
       role: session.role,
       staffName: session.staffName,
       villaName,
-      category: data.category,
-      notes: data.notes,
+      category,
+      notes: sanitizedNotes || undefined,
       imageBase64: imageList[0],
       timestamp: formattedTimestamp,
-    }).catch(err => console.error("Async Telegram alert error:", err));
+    }).catch((err) => console.error("Async Telegram alert error:", err));
 
     revalidatePath("/care");
     return { success: true, log };
