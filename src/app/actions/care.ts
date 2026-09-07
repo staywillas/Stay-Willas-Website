@@ -181,9 +181,17 @@ export async function verifyCarePin(pin: string) {
 
 const VALID_CATEGORIES = new Set([
   "POOL",
+  "BEDROOM_1",
+  "BEDROOM_2",
+  "BEDROOM_3",
+  "BATHROOM_1",
+  "BATHROOM_2",
+  "LIVING",
+  "LOUNGE",
+  "EXTRA",
+  // Legacy / Chef categories
   "BEDROOMS",
   "BATHROOMS",
-  "LIVING",
   "OUTDOOR",
   "BREAKFAST",
   "LUNCH",
@@ -192,7 +200,21 @@ const VALID_CATEGORIES = new Set([
   "GENERAL",
 ]);
 
-const CARETAKER_ALLOWED = new Set(["POOL", "BEDROOMS", "BATHROOMS", "LIVING", "OUTDOOR", "GENERAL"]);
+const CARETAKER_ALLOWED = new Set([
+  "POOL",
+  "BEDROOM_1",
+  "BEDROOM_2",
+  "BEDROOM_3",
+  "BATHROOM_1",
+  "BATHROOM_2",
+  "LIVING",
+  "LOUNGE",
+  "EXTRA",
+  "BEDROOMS",
+  "BATHROOMS",
+  "OUTDOOR",
+  "GENERAL",
+]);
 const CHEF_ALLOWED = new Set(["BREAKFAST", "LUNCH", "HI_TEA", "DINNER", "GENERAL"]);
 
 /**

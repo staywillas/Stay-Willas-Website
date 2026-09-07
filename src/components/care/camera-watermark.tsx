@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { Camera, Check, RotateCcw, Sparkles, Loader2, Trash2, Plus, X, RefreshCw } from "lucide-react";
+import { Camera, Check, Loader2, Trash2, Plus, X, RefreshCw } from "lucide-react";
 import { CareLanguage, translations } from "@/lib/care-translations";
 
 interface CameraWatermarkProps {
   roleName: string; // "Caretaker" | "Chef"
-  categoryName: string; // "Swimming Pool" | "Lunch Spread" etc.
+  categoryName: string; // "Swimming Pool" | "Bedroom 1" etc.
   villaName?: string;
   photos: string[];
   onPhotosChange: (photos: string[]) => void;
@@ -21,10 +21,10 @@ export default function CameraWatermark({
   photos,
   onPhotosChange,
   lang = "en",
-  maxPhotos = 6,
+  maxPhotos = 4,
 }: CameraWatermarkProps) {
   const t = translations[lang] || translations.en;
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -32,9 +32,29 @@ export default function CameraWatermark({
   const [isProcessing, setIsProcessing] = useState(false);
   const [showLiveViewfinder, setShowLiveViewfinder] = useState(false);
   const [cameraFacing, setCameraFacing] = useState<"environment" | "user">("environment");
-  const [cameraError, setCameraError] = useState<string | null>(null);
 
-  // Stop camera stream on unmount or when modal closes
+  // Lock background body scroll completely when camera modal is open
+  useEffect(() => {
+    if (showLiveViewfinder) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPosition = document.body.style.position;
+      const originalTouchAction = document.body.style.touchAction;
+
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.touchAction = "none";
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.position = originalPosition;
+        document.body.style.width = "";
+        document.body.style.touchAction = originalTouchAction;
+      };
+    }
+  }, [showLiveViewfinder]);
+
+  // Clean up media stream on unmount
   useEffect(() => {
     return () => {
       stopCameraStream();
@@ -51,15 +71,14 @@ export default function CameraWatermark({
   /**
    * Launch strictly live camera:
    * Try in-app WebRTC live video viewfinder first.
-   * If not supported or denied, fall back to native device camera via capture="environment".
+   * If not supported or denied, fall back to native mobile camera via capture="environment".
    */
   const handleOpenLiveCamera = async () => {
     if (photos.length >= maxPhotos) {
-      alert(`Maximum ${maxPhotos} photos allowed per item.`);
+      alert(`Maximum ${maxPhotos} photos allowed.`);
       return;
     }
 
-    setCameraError(null);
     setShowLiveViewfinder(true);
 
     try {
@@ -79,14 +98,13 @@ export default function CameraWatermark({
           videoRef.current.play();
         }
       } else {
-        // Fallback to native camera input
+        // Fallback to native mobile camera input
         setShowLiveViewfinder(false);
         fileInputRef.current?.click();
       }
     } catch (err: any) {
-      console.warn("Live WebRTC camera unavailable or blocked, falling back to mobile camera:", err);
+      console.warn("Live WebRTC camera unavailable, triggering native mobile camera:", err);
       setShowLiveViewfinder(false);
-      // Native camera fallback (strictly opens camera app, no gallery)
       fileInputRef.current?.click();
     }
   };
@@ -127,7 +145,7 @@ export default function CameraWatermark({
   const handleSnapFromVideo = () => {
     if (!videoRef.current) return;
     const video = videoRef.current;
-    
+
     setIsProcessing(true);
     handleCloseViewfinder();
 
@@ -186,7 +204,6 @@ export default function CameraWatermark({
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => {
-      // 1. Constrain maximum resolution to 1280px (crisp HD while keeping size ultra-low)
       const maxDim = 1280;
       let width = img.width;
       let height = img.height;
@@ -211,10 +228,10 @@ export default function CameraWatermark({
         return;
       }
 
-      // 2. Draw original photo
+      // 1. Draw photo
       ctx.drawImage(img, 0, 0, width, height);
 
-      // 3. Generate Real-time IST Timestamp
+      // 2. Real-time IST Timestamp
       const now = new Date();
       const timeStr = now.toLocaleTimeString("en-IN", {
         timeZone: "Asia/Kolkata",
@@ -231,55 +248,52 @@ export default function CameraWatermark({
       });
       const fullTimestamp = `${dateStr.toUpperCase()} • ${timeStr.toUpperCase()} IST`;
 
-      // 4. Inscribe Bottom HUD Watermark Banner
-      const bannerHeight = Math.max(100, Math.round(height * 0.15));
+      // 3. Inscribe Bottom HUD Watermark Banner
+      const bannerHeight = Math.max(90, Math.round(height * 0.14));
       const bannerY = height - bannerHeight;
 
-      // Dark gradient overlay
-      const gradient = ctx.createLinearGradient(0, bannerY - 24, 0, height);
+      const gradient = ctx.createLinearGradient(0, bannerY - 20, 0, height);
       gradient.addColorStop(0, "rgba(10, 15, 30, 0)");
-      gradient.addColorStop(0.2, "rgba(10, 15, 30, 0.88)");
+      gradient.addColorStop(0.25, "rgba(10, 15, 30, 0.88)");
       gradient.addColorStop(1, "rgba(8, 12, 24, 0.98)");
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, bannerY - 24, width, bannerHeight + 24);
+      ctx.fillRect(0, bannerY - 20, width, bannerHeight + 20);
 
-      // Golden accent divider line
       ctx.fillStyle = "#DAA520";
       ctx.fillRect(0, bannerY - 2, width, 3);
 
       const baseFontSize = Math.max(13, Math.round(width * 0.022));
       const paddingX = Math.round(width * 0.035);
 
-      // Line 1: Property Name & Brand Badge
+      // Line 1: Property Name
       ctx.font = `bold ${Math.round(baseFontSize * 1.25)}px sans-serif`;
       ctx.fillStyle = "#DAA520";
       ctx.fillText(`🏰 ${villaName.toUpperCase()} • STAY WILLAS`, paddingX, bannerY + baseFontSize * 1.5);
 
-      // Line 2: Category & Role Proof
+      // Line 2: Category Proof
       ctx.font = `bold ${baseFontSize}px sans-serif`;
       ctx.fillStyle = "#FFFFFF";
       ctx.fillText(
-        `✓ ${roleName.toUpperCase()} LIVE PROOF: ${categoryName.toUpperCase()}`,
+        `✓ ${roleName.toUpperCase()} PROOF: ${categoryName.toUpperCase()}`,
         paddingX,
-        bannerY + baseFontSize * 3
+        bannerY + baseFontSize * 2.9
       );
 
-      // Line 3: Verified Timestamp & Location
-      ctx.font = `bold ${Math.round(baseFontSize * 0.92)}px monospace`;
+      // Line 3: Timestamp & Location
+      ctx.font = `bold ${Math.round(baseFontSize * 0.9)}px monospace`;
       ctx.fillStyle = "#A7F3D0";
       ctx.fillText(
-        `🕒 ${fullTimestamp} | 📍 KAMSHET, LONAVALA`,
+        `🕒 ${fullTimestamp} | 📍 LONAVALA`,
         paddingX,
-        bannerY + baseFontSize * 4.3
+        bannerY + baseFontSize * 4.2
       );
 
-      // 5. Intelligent Decompressor / Auto-Compressor: Force file size strictly < 500 KB
+      // 4. Auto-Compressor strictly < 500 KB
       let quality = 0.80;
       let compressedDataUrl = canvas.toDataURL("image/jpeg", quality);
       let sizeKB = calculateBase64SizeKB(compressedDataUrl);
 
-      // Iteratively reduce quality if exceeding 480 KB until guaranteed < 500 KB
-      const qualitySteps = [0.72, 0.62, 0.52, 0.42, 0.35];
+      const qualitySteps = [0.70, 0.60, 0.50, 0.40, 0.35];
       let stepIndex = 0;
 
       while (sizeKB > 480 && stepIndex < qualitySteps.length) {
@@ -289,7 +303,6 @@ export default function CameraWatermark({
         stepIndex++;
       }
 
-      // Add to photos array
       onPhotosChange([...photos, compressedDataUrl]);
       setIsProcessing(false);
     };
@@ -307,8 +320,8 @@ export default function CameraWatermark({
   };
 
   return (
-    <div className="w-full space-y-3">
-      {/* Hidden native camera file input (strict environment capture, no gallery allowed) */}
+    <div className="w-full space-y-2">
+      {/* Hidden native camera file input (fallback) */}
       <input
         ref={fileInputRef}
         type="file"
@@ -318,9 +331,9 @@ export default function CameraWatermark({
         className="hidden"
       />
 
-      {/* Grid of Snapped Watermarked Photos */}
+      {/* Photos Grid */}
       {photos.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {photos.map((photo, idx) => {
             const kb = calculateBase64SizeKB(photo);
             return (
@@ -335,9 +348,9 @@ export default function CameraWatermark({
                   className="w-full h-full object-cover"
                 />
 
-                {/* Size Badge (<500KB indicator) */}
-                <div className="absolute top-1.5 left-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded-md text-[10px] font-mono text-emerald-400 font-bold border border-emerald-500/30 flex items-center gap-1">
-                  <Check size={10} className="stroke-[3]" />
+                {/* Size Badge */}
+                <div className="absolute top-1 left-1 bg-black/80 backdrop-blur-md px-1.5 py-0.5 rounded text-[9px] font-mono text-emerald-400 font-bold border border-emerald-500/30 flex items-center gap-0.5">
+                  <Check size={9} className="stroke-[3]" />
                   <span>{kb} KB</span>
                 </div>
 
@@ -346,64 +359,58 @@ export default function CameraWatermark({
                   type="button"
                   onClick={() => handleDeletePhoto(idx)}
                   aria-label={t.delete}
-                  className="absolute top-1.5 right-1.5 bg-red-600/90 hover:bg-red-700 active:scale-95 text-white p-1.5 rounded-full backdrop-blur-md transition-all cursor-pointer shadow-lg"
+                  className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 active:scale-95 text-white p-1 rounded-full backdrop-blur-md transition-all cursor-pointer shadow-md"
                 >
-                  <Trash2 size={13} />
+                  <Trash2 size={12} />
                 </button>
-
-                <div className="absolute bottom-1 right-1 bg-black/70 px-1.5 py-0.5 rounded text-[9px] text-slate-300 font-mono">
-                  #{idx + 1}
-                </div>
               </div>
             );
           })}
         </div>
       )}
 
-      {/* Trigger Button: Strictly Live Camera */}
+      {/* Snap Button */}
       {photos.length < maxPhotos && (
         <button
           type="button"
           onClick={handleOpenLiveCamera}
           disabled={isProcessing}
-          className={`w-full py-3.5 px-4 rounded-xl border-2 border-dashed transition-all active:scale-98 flex items-center justify-center gap-2.5 cursor-pointer shadow-md ${
+          className={`w-full py-2.5 px-3 rounded-xl border transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer shadow-sm ${
             photos.length === 0
-              ? "bg-[#1B3564] hover:bg-[#152A50] border-[#DAA520]/70 text-white"
-              : "bg-slate-800/80 hover:bg-slate-800 border-slate-600 text-slate-200"
+              ? "bg-[#1B3564] hover:bg-[#152A50] border-[#DAA520]/60 text-white font-bold text-xs"
+              : "bg-slate-800 hover:bg-slate-750 border-slate-700 text-slate-300 font-medium text-[11px]"
           }`}
         >
           {isProcessing ? (
             <div className="flex items-center gap-2">
-              <Loader2 size={18} className="animate-spin text-[#DAA520]" />
+              <Loader2 size={15} className="animate-spin text-[#DAA520]" />
               <span className="text-xs font-bold text-[#DAA520]">{t.compressing}</span>
             </div>
           ) : (
             <>
-              <div className="w-8 h-8 rounded-full bg-[#DAA520]/20 flex items-center justify-center text-[#DAA520]">
-                {photos.length === 0 ? <Camera size={18} className="stroke-[2.5]" /> : <Plus size={18} className="stroke-[2.5]" />}
-              </div>
-              <div className="text-left">
-                <span className="text-sm font-bold block leading-tight">
-                  {photos.length === 0 ? t.takePhoto : t.takeAnotherPhoto}
-                </span>
-                <span className="text-[10px] text-slate-400 font-medium block">
-                  {t.noGalleryNotice}
-                </span>
-              </div>
+              {photos.length === 0 ? (
+                <Camera size={16} className="text-[#DAA520] stroke-[2.5]" />
+              ) : (
+                <Plus size={15} className="text-[#DAA520]" />
+              )}
+              <span>{photos.length === 0 ? t.takePhoto : t.takeAnotherPhoto}</span>
             </>
           )}
         </button>
       )}
 
-      {/* Full-Screen In-App Live Camera Viewfinder Modal */}
+      {/* FULLY FIXED IN-APP LIVE CAMERA VIEWFINDER (NO VERTICAL SCROLLING) */}
       {showLiveViewfinder && (
-        <div className="fixed inset-0 z-50 bg-black flex flex-col justify-between">
-          {/* Header Bar */}
-          <div className="p-4 flex items-center justify-between bg-black/60 backdrop-blur-md z-10">
+        <div
+          className="fixed inset-0 z-[99999] h-screen h-[100dvh] w-screen overflow-hidden bg-black flex flex-col justify-between select-none touch-none overscroll-none"
+          style={{ overscrollBehavior: "none" }}
+        >
+          {/* Top Bar (Fixed) */}
+          <div className="w-full h-14 bg-black/80 px-4 flex items-center justify-between z-20 shrink-0 select-none">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-white text-xs font-bold tracking-wider uppercase">
-                {t.liveCameraOnly} • {categoryName}
+              <span className="text-white text-xs font-black tracking-wider uppercase">
+                {categoryName}
               </span>
             </div>
             <button
@@ -415,56 +422,56 @@ export default function CameraWatermark({
             </button>
           </div>
 
-          {/* Video Stream Viewfinder */}
-          <div className="relative flex-1 flex items-center justify-center bg-black overflow-hidden">
+          {/* Video Stream Area (Fixed, No Scroll) */}
+          <div className="relative flex-1 w-full h-full overflow-hidden bg-black flex items-center justify-center">
             <video
               ref={videoRef}
               playsInline
               autoPlay
               muted
-              className="w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             />
-            {/* Live Crosshair Overlay */}
+            {/* Camera Viewfinder Reticle */}
             <div className="absolute inset-8 border border-white/20 rounded-2xl pointer-events-none flex items-center justify-center">
-              <div className="w-6 h-6 border-t-2 border-l-2 border-[#DAA520] absolute top-2 left-2" />
-              <div className="w-6 h-6 border-t-2 border-r-2 border-[#DAA520] absolute top-2 right-2" />
-              <div className="w-6 h-6 border-b-2 border-l-2 border-[#DAA520] absolute bottom-2 left-2" />
-              <div className="w-6 h-6 border-b-2 border-r-2 border-[#DAA520] absolute bottom-2 right-2" />
-              <span className="text-white/60 text-[11px] font-medium tracking-wide bg-black/50 px-2 py-0.5 rounded backdrop-blur-xs">
-                {villaName}
-              </span>
+              <div className="w-5 h-5 border-t-2 border-l-2 border-[#DAA520] absolute top-2 left-2" />
+              <div className="w-5 h-5 border-t-2 border-r-2 border-[#DAA520] absolute top-2 right-2" />
+              <div className="w-5 h-5 border-b-2 border-l-2 border-[#DAA520] absolute bottom-2 left-2" />
+              <div className="w-5 h-5 border-b-2 border-r-2 border-[#DAA520] absolute bottom-2 right-2" />
             </div>
           </div>
 
-          {/* Shutter Controls */}
-          <div className="p-6 bg-black/80 backdrop-blur-md flex items-center justify-around z-10 pb-10">
-            {/* Flip Camera Button */}
+          {/* Shutter Controls Bar (Fixed at bottom) */}
+          <div
+            className="w-full bg-black/90 px-6 pt-3 pb-8 flex items-center justify-around z-20 shrink-0 select-none border-t border-white/10"
+            style={{ paddingBottom: "max(2rem, env(safe-area-inset-bottom))" }}
+          >
+            {/* Flip Camera */}
             <button
               type="button"
               onClick={handleFlipCamera}
-              className="text-white/80 hover:text-white flex flex-col items-center gap-1 cursor-pointer"
+              className="text-white/80 hover:text-white flex flex-col items-center gap-1 cursor-pointer p-2"
             >
               <RefreshCw size={22} />
-              <span className="text-[10px] font-medium">{t.switchCamera}</span>
+              <span className="text-[10px] font-bold">{t.switchCamera}</span>
             </button>
 
-            {/* Big Live Shutter Button */}
+            {/* Shutter Button */}
             <button
               type="button"
               onClick={handleSnapFromVideo}
-              className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center p-1.5 transition-transform active:scale-90 cursor-pointer shadow-2xl"
+              className="w-18 h-18 rounded-full border-4 border-white flex items-center justify-center p-1.5 transition-transform active:scale-90 cursor-pointer shadow-2xl"
             >
               <div className="w-full h-full rounded-full bg-white hover:bg-slate-200 transition-colors" />
             </button>
 
-            {/* Cancel Button */}
+            {/* Cancel */}
             <button
               type="button"
               onClick={handleCloseViewfinder}
-              className="text-white/80 hover:text-white flex flex-col items-center gap-1 cursor-pointer"
+              className="text-white/80 hover:text-white flex flex-col items-center gap-1 cursor-pointer p-2"
             >
               <X size={22} />
-              <span className="text-[10px] font-medium">{t.cancel}</span>
+              <span className="text-[10px] font-bold">{t.cancel}</span>
             </button>
           </div>
         </div>

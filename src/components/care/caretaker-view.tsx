@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import CameraWatermark from "./camera-watermark";
-import { CheckCircle2, Waves, BedDouble, Bath, Armchair, Trees, Send, LogOut, Check, Globe } from "lucide-react";
+import { CheckCircle2, Waves, BedDouble, Bath, Armchair, Wine, Sparkles, Send, LogOut, Check, Globe } from "lucide-react";
 import { CareLanguage, translations } from "@/lib/care-translations";
 
 interface CaretakerViewProps {
@@ -28,41 +28,20 @@ export default function CaretakerView({
 }: CaretakerViewProps) {
   const t = translations[lang] || translations.en;
 
-  const CHECKLIST_ITEMS = [
-    {
-      id: "POOL",
-      title: t.poolTitle,
-      desc: t.poolDesc,
-      icon: Waves,
-    },
-    {
-      id: "BEDROOMS",
-      title: t.bedroomsTitle,
-      desc: t.bedroomsDesc,
-      icon: BedDouble,
-    },
-    {
-      id: "BATHROOMS",
-      title: t.bathroomsTitle,
-      desc: t.bathroomsDesc,
-      icon: Bath,
-    },
-    {
-      id: "LIVING",
-      title: t.livingTitle,
-      desc: t.livingDesc,
-      icon: Armchair,
-    },
-    {
-      id: "OUTDOOR",
-      title: t.lawnTitle,
-      desc: t.lawnDesc,
-      icon: Trees,
-    },
+  // The 9 Clean & Simple Sections
+  const SECTIONS = [
+    { id: "POOL", title: t.poolTitle, icon: Waves },
+    { id: "BEDROOM_1", title: t.bedroom1Title, icon: BedDouble },
+    { id: "BEDROOM_2", title: t.bedroom2Title, icon: BedDouble },
+    { id: "BEDROOM_3", title: t.bedroom3Title, icon: BedDouble },
+    { id: "BATHROOM_1", title: t.bathroom1Title, icon: Bath },
+    { id: "BATHROOM_2", title: t.bathroom2Title, icon: Bath },
+    { id: "LIVING", title: t.livingTitle, icon: Armchair },
+    { id: "LOUNGE", title: t.loungeTitle, icon: Wine },
+    { id: "EXTRA", title: t.extraTitle, icon: Sparkles },
   ];
 
   const [capturedPhotos, setCapturedPhotos] = useState<Record<string, string[]>>({});
-  const [notes, setNotes] = useState<Record<string, string>>({});
   const [submittingId, setSubmittingId] = useState<string | null>(null);
   const [submittedItems, setSubmittedItems] = useState<string[]>(
     existingLogs.filter((l) => l.role === "caretaker").map((l) => l.category)
@@ -72,26 +51,26 @@ export default function CaretakerView({
     setCapturedPhotos((prev) => ({ ...prev, [categoryId]: photos }));
   };
 
-  const handleSubmitItem = async (item: typeof CHECKLIST_ITEMS[0]) => {
-    const photos = capturedPhotos[item.id] || [];
+  const handleSubmitSection = async (section: typeof SECTIONS[0]) => {
+    const photos = capturedPhotos[section.id] || [];
     if (photos.length === 0) {
-      alert(lang === "hi" ? "कृपया पहले कम से कम एक लाइव फोटो खींचें।" : lang === "mr" ? "कृपया आधी किमान एक थेट फोटो काढा." : "Please snap at least one live photo first.");
+      alert(lang === "hi" ? "कृपया पहले फोटो खींचें।" : lang === "mr" ? "कृपया आधी फोटो काढा." : "Please snap a photo first.");
       return;
     }
 
-    setSubmittingId(item.id);
+    setSubmittingId(section.id);
     try {
       const res = await onSubmitLog({
-        category: item.id,
-        notes: notes[item.id] || `${item.title} verified and clean.`,
+        category: section.id,
+        notes: `${section.title} proof verified.`,
         images: photos,
         villaSlug,
       });
 
       if (res.success) {
-        setSubmittedItems((prev) => [...prev, item.id]);
+        setSubmittedItems((prev) => [...prev, section.id]);
       } else {
-        alert(res.error || "Failed to submit proof. Please try again.");
+        alert(res.error || "Failed to submit. Please try again.");
       }
     } catch (err: any) {
       alert("Submission error: " + (err.message || err));
@@ -100,11 +79,11 @@ export default function CaretakerView({
     }
   };
 
-  const verifiedCount = submittedItems.length;
-  const isAllComplete = verifiedCount >= CHECKLIST_ITEMS.length;
+  const completedCount = submittedItems.length;
+  const isAllComplete = completedCount >= SECTIONS.length;
 
   return (
-    <div className="w-full max-w-xl mx-auto p-3 sm:p-5 text-slate-100">
+    <div className="w-full max-w-lg mx-auto p-3 sm:p-5 text-slate-100 pb-20">
       {/* Top Header & Language Switcher */}
       <div className="flex items-center justify-between mb-4 bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl shadow-md">
         {/* Language Switcher */}
@@ -151,138 +130,108 @@ export default function CaretakerView({
       </div>
 
       {/* Villa Name & Title */}
-      <div className="text-center mb-5">
-        <span className="text-[10px] uppercase tracking-widest text-[#DAA520] font-black block">
-          {t.staffPortal} • {staffName}
-        </span>
-        <h1 className="text-xl sm:text-2xl font-black text-white font-heading mt-0.5">
-          {t.caretakerTitle}
+      <div className="text-center mb-4">
+        <h1 className="text-xl sm:text-2xl font-black text-white font-heading">
+          {villaName}
         </h1>
-        <p className="text-xs text-slate-300 font-medium mt-1">
-          {t.caretakerSubtitle}
+        <p className="text-xs text-slate-300 font-medium mt-0.5">
+          {t.caretakerTitle} ({completedCount} / {SECTIONS.length})
         </p>
       </div>
 
-      {/* Visual Progress Bar */}
-      <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl mb-6 shadow-md">
-        <div className="flex items-center justify-between text-xs font-bold mb-2">
-          <span className="text-slate-300">
-            {t.progress}: {verifiedCount} / {CHECKLIST_ITEMS.length}
-          </span>
-          <span className={isAllComplete ? "text-emerald-400" : "text-[#DAA520]"}>
-            {Math.round((verifiedCount / CHECKLIST_ITEMS.length) * 100)}%
-          </span>
-        </div>
-        <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ${
-              isAllComplete
-                ? "bg-gradient-to-r from-emerald-500 to-teal-400 shadow-[0_0_12px_rgba(16,185,129,0.5)]"
-                : "bg-gradient-to-r from-[#DAA520] to-amber-500"
-            }`}
-            style={{ width: `${(verifiedCount / CHECKLIST_ITEMS.length) * 100}%` }}
-          />
-        </div>
-        {isAllComplete && (
-          <div className="mt-3 p-2 bg-emerald-500/15 border border-emerald-500/30 rounded-xl text-center text-xs font-bold text-emerald-300 flex items-center justify-center gap-1.5">
-            <CheckCircle2 size={14} className="text-emerald-400" />
-            <span>{t.allComplete}</span>
-          </div>
-        )}
+      {/* Progress Bar */}
+      <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden mb-5 border border-slate-700">
+        <div
+          className={`h-full transition-all duration-500 ${
+            isAllComplete
+              ? "bg-gradient-to-r from-emerald-500 to-teal-400"
+              : "bg-gradient-to-r from-[#DAA520] to-amber-500"
+          }`}
+          style={{ width: `${(completedCount / SECTIONS.length) * 100}%` }}
+        />
       </div>
 
-      {/* 5 Checklist Items Cards */}
-      <div className="space-y-4">
-        {CHECKLIST_ITEMS.map((item) => {
-          const isSubmitted = submittedItems.includes(item.id);
-          const currentPhotos = capturedPhotos[item.id] || [];
-          const Icon = item.icon;
-          const isCurrentlySubmitting = submittingId === item.id;
+      {/* 9 Simple Clean Cards */}
+      <div className="space-y-3">
+        {SECTIONS.map((section, idx) => {
+          const isSubmitted = submittedItems.includes(section.id);
+          const currentPhotos = capturedPhotos[section.id] || [];
+          const Icon = section.icon;
+          const isCurrentlySubmitting = submittingId === section.id;
 
           return (
             <div
-              key={item.id}
-              className={`rounded-2xl p-4 sm:p-5 transition-all shadow-md border ${
+              key={section.id}
+              className={`rounded-2xl p-3.5 sm:p-4 transition-all border shadow-md ${
                 isSubmitted
-                  ? "bg-emerald-950/20 border-emerald-500/50"
+                  ? "bg-emerald-950/20 border-emerald-500/40"
                   : currentPhotos.length > 0
-                  ? "bg-slate-900 border-[#DAA520]/60 shadow-[0_4px_20px_rgba(218,165,32,0.1)]"
-                  : "bg-slate-900/80 border-slate-800"
+                  ? "bg-slate-900 border-[#DAA520]/70"
+                  : "bg-slate-900/90 border-slate-800"
               }`}
             >
-              {/* Card Header */}
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <div className="flex items-start gap-3">
+              {/* Top Row: Title + Status */}
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="flex items-center gap-2.5">
                   <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
                       isSubmitted
                         ? "bg-emerald-500/20 text-emerald-400"
-                        : "bg-[#1B3564]/80 text-[#DAA520]"
+                        : "bg-[#1B3564] text-[#DAA520]"
                     }`}
                   >
-                    <Icon size={20} className="stroke-[2.5]" />
+                    <Icon size={16} className="stroke-[2.5]" />
                   </div>
                   <div>
-                    <h2 className="text-sm sm:text-base font-black text-white">
-                      {item.title}
+                    <h2 className="text-sm font-black text-white">
+                      {idx + 1}. {section.title}
                     </h2>
-                    <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                      {item.desc}
-                    </p>
                   </div>
                 </div>
 
-                {/* Status Badge */}
-                <div className="shrink-0">
-                  {isSubmitted ? (
-                    <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                      <Check size={12} className="stroke-[3]" />
-                      <span>{t.verifiedDone}</span>
-                    </div>
-                  ) : (
-                    <div className="bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                      {t.pending}
-                    </div>
-                  )}
-                </div>
+                {/* Status Pill */}
+                {isSubmitted ? (
+                  <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full text-[10px] font-black uppercase flex items-center gap-1">
+                    <Check size={11} className="stroke-[3]" />
+                    <span>{t.verifiedDone}</span>
+                  </div>
+                ) : (
+                  <div className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">
+                    {t.pending}
+                  </div>
+                )}
               </div>
 
-              {/* Camera Multi-Photo Upload Area */}
-              <div className="mt-3">
+              {/* Camera Trigger & Photos */}
+              <div className="mt-2">
                 <CameraWatermark
                   roleName="Caretaker"
-                  categoryName={item.title}
+                  categoryName={section.title}
                   villaName={villaName}
                   photos={currentPhotos}
-                  onPhotosChange={(photos) => handlePhotosChange(item.id, photos)}
+                  onPhotosChange={(photos) => handlePhotosChange(section.id, photos)}
                   lang={lang}
-                  maxPhotos={5}
+                  maxPhotos={4}
                 />
               </div>
 
-              {/* Notes & Submit Button */}
+              {/* One-Tap Big Submit Button when photo is clicked */}
               {currentPhotos.length > 0 && !isSubmitted && (
-                <div className="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
-                  <input
-                    type="text"
-                    value={notes[item.id] || ""}
-                    onChange={(e) => setNotes({ ...notes, [item.id]: e.target.value })}
-                    placeholder={t.notesPlaceholder}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-[#DAA520]"
-                  />
-
+                <div className="mt-3 pt-2 border-t border-slate-800">
                   <button
                     type="button"
-                    onClick={() => handleSubmitItem(item)}
+                    onClick={() => handleSubmitSection(section)}
                     disabled={isCurrentlySubmitting}
-                    className="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg disabled:opacity-50"
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-black py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg disabled:opacity-50"
                   >
                     {isCurrentlySubmitting ? (
                       <span>{t.submitting}</span>
                     ) : (
                       <>
-                        <Send size={14} />
-                        <span>{t.submitProof} ({currentPhotos.length} {t.photosTaken})</span>
+                        <Send size={13} />
+                        <span>
+                          {t.submitProof} ({currentPhotos.length})
+                        </span>
                       </>
                     )}
                   </button>
