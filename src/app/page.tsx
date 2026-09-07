@@ -4,13 +4,13 @@ import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
   title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
-  description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala, Khopoli & Mahabaleshwar. Direct rates with 0% platform fee.",
+  description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala & Khopoli. Best direct rates with 0% platform fee.",
   keywords: [
     "private pool villas near Mumbai",
     "villas in lonavala with private pool",
     "villas in khopoli with private pool",
-    "villas in mahabaleshwar with private pool",
     "weekend getaway villas near mumbai",
+    "luxury villas in lonavala",
     "exclusive villas near Mumbai"
   ],
   alternates: {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
-    description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala, Khopoli & Mahabaleshwar. Direct rates with 0% platform fee.",
+    description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala & Khopoli. Best direct rates with 0% platform fee.",
     url: "https://www.staywillas.com",
     images: [
       {
@@ -103,6 +103,37 @@ export default async function Home() {
     <main className="min-h-screen bg-bg-primary">
       <Navbar />
       <Hero />
+
+      {/* Primary Semantic H1 Header Section for Google Search SEO */}
+      <section className="pt-8 pb-3 sm:pt-12 sm:pb-5 px-4 sm:px-6 md:px-8 max-w-5xl mx-auto text-center animate-fade-in">
+        <div className="inline-flex items-center gap-2 bg-[#DAA520]/10 border border-[#DAA520]/30 px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-bold text-[#1B3564] uppercase tracking-[0.2em] mb-3 sm:mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520] animate-pulse" />
+          Curated Private Sanctuaries
+        </div>
+        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#1B3564] leading-tight tracking-tight">
+          Private Pool Villas Near <span className="italic text-[#DAA520] font-serif font-light">Mumbai &amp; Pune</span> for Weekend Getaways
+        </h1>
+        <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-light">
+          Handpicked luxury villas across Lonavala and Khopoli featuring private swimming pools, in-room jacuzzis, dedicated personal chefs, and lush green lawns. Book direct with best rates and 0% OTA platform fees.
+        </p>
+
+        {/* Value Highlights Pill Bar */}
+        <div className="mt-6 sm:mt-7 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold text-[#1B3564]/80">
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="text-emerald-600 font-bold">✓</span> 100% Private Swimming Pool
+          </div>
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="text-emerald-600 font-bold">✓</span> Personal Chef &amp; BBQ Dining
+          </div>
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="text-emerald-600 font-bold">✓</span> Pet-Friendly Fenced Lawns
+          </div>
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="text-emerald-600 font-bold">✓</span> 0% Platform Commission
+          </div>
+        </div>
+      </section>
+
       <HomeSitelinks />
       <DestinationShowcase />
       <FeaturedVillas villas={featuredVillas} />
