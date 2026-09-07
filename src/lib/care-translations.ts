@@ -15,11 +15,8 @@ export const translations = {
     caretakerRole: "Caretaker",
     chefRole: "Chef",
     adminRole: "Admin",
-    caretakerPinHint: "Caretaker PIN: 1122",
-    chefPinHint: "Chef PIN: 3344",
-    adminPinHint: "Manager PIN: 9900",
     invalidPin: "Incorrect PIN. Please try again.",
-    helpText: "Need help? Contact Villa Operations Manager.",
+    helpText: "Authorized Staff Only • Contact Operations for PIN",
     
     // Caretaker
     caretakerTitle: "Villa Readiness Checklist",
@@ -105,11 +102,8 @@ export const translations = {
     caretakerRole: "केयरटेकर",
     chefRole: "शेफ (रसोइया)",
     adminRole: "मैनेजर / एडमिन",
-    caretakerPinHint: "केयरटेकर पिन: 1122",
-    chefPinHint: "शेफ पिन: 3344",
-    adminPinHint: "मैनेजर पिन: 9900",
     invalidPin: "गलत पिन! कृपया दोबारा जांचें और डालें।",
-    helpText: "मदद चाहिए? विला मैनेजर से संपर्क करें।",
+    helpText: "केवल अधिकृत स्टाफ • पिन के लिए ऑपरेशन्स से संपर्क करें",
     
     // Caretaker
     caretakerTitle: "विला चेक-इन तैयारी चेकलिस्ट",
@@ -195,11 +189,8 @@ export const translations = {
     caretakerRole: "केअरटेकर",
     chefRole: "शेफ (आचारी)",
     adminRole: "मॅनेजर / ॲडमिन",
-    caretakerPinHint: "केअरटेकर पिन: 1122",
-    chefPinHint: "शेफ पिन: 3344",
-    adminPinHint: "मॅनेजर पिन: 9900",
     invalidPin: "चुकीचा पिन! कृपया तपासून पुन्हा टाका.",
-    helpText: "मदत हवी आहे? विला मॅनेजरशी संपर्क साधा.",
+    helpText: "केवळ अधिकृत कर्मचारी • पिनसाठी ऑपरेशन्सशी संपर्क साधा",
     
     // Caretaker
     caretakerTitle: "विला चेक-इन तयारी चेकलिस्ट",

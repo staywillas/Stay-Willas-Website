@@ -194,19 +194,11 @@ export default function PinPad({ onSuccess, verifyPinAction, lang, onLangChange 
         </button>
       </div>
 
-      {/* Role PIN Quick-Reference Cards (Super Easy for Staff) */}
-      <div className="w-full max-w-[290px] grid grid-cols-3 gap-2">
-        <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-xl text-center">
-          <span className="text-[10px] text-slate-400 font-bold block">{t.caretakerRole}</span>
-          <span className="text-xs font-mono font-bold text-[#DAA520] block mt-0.5">1122</span>
-        </div>
-        <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-xl text-center">
-          <span className="text-[10px] text-slate-400 font-bold block">{t.chefRole}</span>
-          <span className="text-xs font-mono font-bold text-[#DAA520] block mt-0.5">3344</span>
-        </div>
-        <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-xl text-center">
-          <span className="text-[10px] text-slate-400 font-bold block">{t.adminRole}</span>
-          <span className="text-xs font-mono font-bold text-[#DAA520] block mt-0.5">9900</span>
+      {/* Secure Authorized Access Notice */}
+      <div className="w-full max-w-[290px] text-center pt-2">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-[11px] text-slate-400 shadow-sm">
+          <Lock size={12} className="text-[#DAA520]" />
+          <span>{t.helpText}</span>
         </div>
       </div>
     </div>
