@@ -46,7 +46,18 @@ export default function MobileBottomNav() {
     };
   }, []);
 
-  if (isVillaDetailPage || isMenuOpen || isCarePage) return null;
+  const [isCareDomain, setIsCareDomain] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const host = window.location.host;
+      if (host.startsWith("care.") || host.includes("carestaywillas")) {
+        setIsCareDomain(true);
+      }
+    }
+  }, []);
+
+  if (isVillaDetailPage || isMenuOpen || isCarePage || isCareDomain) return null;
 
   const handleMenuClick = () => {
     window.dispatchEvent(new CustomEvent("toggle-mobile-menu"));
@@ -54,7 +65,8 @@ export default function MobileBottomNav() {
 
   return (
     <div
-      className="xl:hidden fixed bottom-0 left-0 right-0 z-50"
+      id="mobile-bottom-nav"
+      className="xl:hidden fixed bottom-0 left-0 right-0 z-50 mobile-bottom-nav-root"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       {/* Frosted Glass Bar */}

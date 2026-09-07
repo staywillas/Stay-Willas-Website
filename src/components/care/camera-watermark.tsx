@@ -408,8 +408,8 @@ export default function CameraWatermark({
       {/* FULLY FIXED IN-APP LIVE CAMERA VIEWFINDER (NO VERTICAL SCROLLING) */}
       {showLiveViewfinder && (
         <div
-          className="fixed inset-0 z-[99999] h-screen h-[100dvh] w-screen overflow-hidden bg-black flex flex-col justify-between select-none touch-none overscroll-none"
-          style={{ overscrollBehavior: "none" }}
+          className="fixed inset-0 h-screen h-[100dvh] w-screen overflow-hidden bg-black flex flex-col justify-between select-none touch-none overscroll-none"
+          style={{ overscrollBehavior: "none", zIndex: 9999999 }}
         >
           {/* Top Bar (Fixed) */}
           <div className="w-full h-14 bg-black/80 px-4 flex items-center justify-between z-20 shrink-0 select-none">
