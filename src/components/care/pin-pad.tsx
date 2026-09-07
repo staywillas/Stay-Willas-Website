@@ -68,13 +68,13 @@ export default function PinPad({ onSuccess, verifyPinAction, lang, onLangChange 
   return (
     <div className="w-full max-w-sm mx-auto flex flex-col items-center justify-center p-4 text-white select-none">
       {/* Language Switcher Pill */}
-      <div className="w-full flex items-center justify-center gap-1.5 mb-6 bg-slate-900/90 border border-slate-700/80 p-1 rounded-2xl shadow-md">
-        <Globe size={14} className="text-[#DAA520] ml-2 mr-1 shrink-0" />
+      <div className="w-full flex items-center justify-center gap-1.5 mb-6 bg-slate-900 border border-slate-800 p-1.5 rounded-2xl shadow-md">
+        <Globe size={16} className="text-[#DAA520] ml-2 mr-1 shrink-0" />
         <button
           type="button"
           onClick={() => onLangChange("en")}
-          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            lang === "en" ? "bg-[#DAA520] text-[#1B3564] shadow-sm" : "text-slate-300 hover:text-white"
+          className={`flex-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
+            lang === "en" ? "bg-[#DAA520] text-black shadow" : "text-slate-300 hover:text-white"
           }`}
         >
           English
@@ -82,8 +82,8 @@ export default function PinPad({ onSuccess, verifyPinAction, lang, onLangChange 
         <button
           type="button"
           onClick={() => onLangChange("hi")}
-          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            lang === "hi" ? "bg-[#DAA520] text-[#1B3564] shadow-sm" : "text-slate-300 hover:text-white"
+          className={`flex-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
+            lang === "hi" ? "bg-[#DAA520] text-black shadow" : "text-slate-300 hover:text-white"
           }`}
         >
           हिंदी
@@ -91,8 +91,8 @@ export default function PinPad({ onSuccess, verifyPinAction, lang, onLangChange 
         <button
           type="button"
           onClick={() => onLangChange("mr")}
-          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            lang === "mr" ? "bg-[#DAA520] text-[#1B3564] shadow-sm" : "text-slate-300 hover:text-white"
+          className={`flex-1 py-2 px-2 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
+            lang === "mr" ? "bg-[#DAA520] text-black shadow" : "text-slate-300 hover:text-white"
           }`}
         >
           मराठी
@@ -102,20 +102,17 @@ export default function PinPad({ onSuccess, verifyPinAction, lang, onLangChange 
       {/* Brand Header */}
       <div className="text-center mb-6">
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center mx-auto mb-2.5 shadow-[0_8px_24px_rgba(218,165,32,0.3)]">
-          <ShieldCheck size={28} className="text-[#1B3564] stroke-[2.5]" />
+          <ShieldCheck size={28} className="text-black stroke-[2.5]" />
         </div>
-        <h1 className="text-2xl font-black tracking-wider uppercase font-heading text-white">
-          Stay Willas <span className="text-[#DAA520]">Care</span>
-        </h1>
-        <p className="text-xs text-slate-300 font-medium mt-0.5">
+        <h1 className="text-2xl sm:text-3xl font-black font-heading text-white tracking-wide">
           {t.villaName}
-        </p>
+        </h1>
       </div>
 
       {/* PIN Indicator Dots */}
       <div className="mb-6 w-full flex flex-col items-center">
-        <div className="text-xs uppercase tracking-widest text-slate-300 font-bold mb-3 flex items-center gap-1.5">
-          <Lock size={12} className="text-[#DAA520]" />
+        <div className="text-sm sm:text-base font-black text-[#DAA520] mb-3 flex items-center gap-2">
+          <Lock size={15} className="text-[#DAA520]" />
           <span>{t.enterPin}</span>
         </div>
 

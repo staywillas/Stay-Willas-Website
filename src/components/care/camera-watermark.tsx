@@ -369,31 +369,37 @@ export default function CameraWatermark({
         </div>
       )}
 
-      {/* Snap Button */}
+      {/* Big Bright White Button (Easy for Village Caretakers) */}
       {photos.length < maxPhotos && (
         <button
           type="button"
           onClick={handleOpenLiveCamera}
           disabled={isProcessing}
-          className={`w-full py-2.5 px-3 rounded-xl border transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer shadow-sm ${
+          className={`w-full py-3.5 sm:py-4 px-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-3 cursor-pointer shadow-xl ${
             photos.length === 0
-              ? "bg-[#1B3564] hover:bg-[#152A50] border-[#DAA520]/60 text-white font-bold text-xs"
-              : "bg-slate-800 hover:bg-slate-750 border-slate-700 text-slate-300 font-medium text-[11px]"
+              ? "bg-white hover:bg-slate-100 text-black border-2 border-slate-200"
+              : "bg-slate-100 hover:bg-white text-black border-2 border-slate-300"
           }`}
         >
           {isProcessing ? (
             <div className="flex items-center gap-2">
-              <Loader2 size={15} className="animate-spin text-[#DAA520]" />
-              <span className="text-xs font-bold text-[#DAA520]">{t.compressing}</span>
+              <Loader2 size={20} className="animate-spin text-black" />
+              <span className="text-sm font-black text-black">{t.compressing}</span>
             </div>
           ) : (
             <>
               {photos.length === 0 ? (
-                <Camera size={16} className="text-[#DAA520] stroke-[2.5]" />
+                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-black">
+                  <Camera size={20} className="stroke-[2.5]" />
+                </div>
               ) : (
-                <Plus size={15} className="text-[#DAA520]" />
+                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-black">
+                  <Plus size={20} className="stroke-[2.5]" />
+                </div>
               )}
-              <span>{photos.length === 0 ? t.takePhoto : t.takeAnotherPhoto}</span>
+              <span className="text-base sm:text-lg font-black tracking-wide text-black">
+                {photos.length === 0 ? t.takePhoto : t.takeAnotherPhoto}
+              </span>
             </>
           )}
         </button>

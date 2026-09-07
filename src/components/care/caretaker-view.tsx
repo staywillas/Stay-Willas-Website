@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import CameraWatermark from "./camera-watermark";
-import { CheckCircle2, Waves, BedDouble, Bath, Armchair, Wine, Sparkles, Send, LogOut, Check, Globe } from "lucide-react";
+import { Waves, BedDouble, Bath, Armchair, Wine, Sparkles, Send, LogOut, Check, Globe } from "lucide-react";
 import { CareLanguage, translations } from "@/lib/care-translations";
 
 interface CaretakerViewProps {
@@ -28,7 +28,7 @@ export default function CaretakerView({
 }: CaretakerViewProps) {
   const t = translations[lang] || translations.en;
 
-  // The 9 Clean & Simple Sections
+  // The 9 Clean Sections (No subtitles, pure headings)
   const SECTIONS = [
     { id: "POOL", title: t.poolTitle, icon: Waves },
     { id: "BEDROOM_1", title: t.bedroom1Title, icon: BedDouble },
@@ -62,7 +62,7 @@ export default function CaretakerView({
     try {
       const res = await onSubmitLog({
         category: section.id,
-        notes: `${section.title} proof verified.`,
+        notes: `${section.title} proof.`,
         images: photos,
         villaSlug,
       });
@@ -83,26 +83,26 @@ export default function CaretakerView({
   const isAllComplete = completedCount >= SECTIONS.length;
 
   return (
-    <div className="w-full max-w-lg mx-auto p-3 sm:p-5 text-slate-100 pb-20">
-      {/* Top Header & Language Switcher */}
-      <div className="flex items-center justify-between mb-4 bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl shadow-md">
-        {/* Language Switcher */}
+    <div className="w-full max-w-lg mx-auto p-3 sm:p-5 text-white pb-24 select-none">
+      {/* Top Bar: Language & Logout */}
+      <div className="flex items-center justify-between mb-5 bg-slate-900 border border-slate-800 p-2 rounded-2xl shadow-md">
+        {/* Big 1-Tap Language Toggle */}
         <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-xl">
-          <Globe size={13} className="text-[#DAA520] ml-1 mr-0.5" />
+          <Globe size={15} className="text-[#DAA520] ml-1 mr-0.5" />
           <button
             type="button"
             onClick={() => onLangChange("en")}
-            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              lang === "en" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+              lang === "en" ? "bg-[#DAA520] text-black shadow" : "text-slate-300 hover:text-white"
             }`}
           >
-            EN
+            English
           </button>
           <button
             type="button"
             onClick={() => onLangChange("hi")}
-            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              lang === "hi" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+              lang === "hi" ? "bg-[#DAA520] text-black shadow" : "text-slate-300 hover:text-white"
             }`}
           >
             हिंदी
@@ -110,49 +110,50 @@ export default function CaretakerView({
           <button
             type="button"
             onClick={() => onLangChange("mr")}
-            className={`px-2 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              lang === "mr" ? "bg-[#DAA520] text-[#1B3564]" : "text-slate-300"
+            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+              lang === "mr" ? "bg-[#DAA520] text-black shadow" : "text-slate-300 hover:text-white"
             }`}
           >
             मराठी
           </button>
         </div>
 
-        {/* Logout */}
+        {/* Big Logout Button */}
         <button
           type="button"
           onClick={onLogout}
-          className="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded-xl transition-all cursor-pointer font-bold"
+          className="flex items-center gap-1.5 text-xs text-rose-300 hover:text-white bg-rose-500/20 hover:bg-rose-500/30 px-3 py-2 rounded-xl transition-all cursor-pointer font-black"
         >
-          <LogOut size={13} />
+          <LogOut size={14} />
           <span>{t.logout}</span>
         </button>
       </div>
 
-      {/* Villa Name & Title */}
-      <div className="text-center mb-4">
-        <h1 className="text-xl sm:text-2xl font-black text-white font-heading">
+      {/* Header (No Subtitles - Clean Heading Only) */}
+      <div className="text-center mb-5">
+        <h1 className="text-2xl sm:text-3xl font-black text-white font-heading tracking-wide">
           {villaName}
         </h1>
-        <p className="text-xs text-slate-300 font-medium mt-0.5">
-          {t.caretakerTitle} ({completedCount} / {SECTIONS.length})
-        </p>
+        {/* Simple Big Counter Pill */}
+        <div className="inline-flex items-center gap-2 mt-2 px-4 py-1.5 rounded-full bg-slate-900 border border-slate-700 text-sm font-black text-[#DAA520]">
+          <span>{completedCount} / {SECTIONS.length} {t.verifiedDone}</span>
+        </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden mb-5 border border-slate-700">
+      {/* Big Visual Progress Bar */}
+      <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden mb-6 border border-slate-700">
         <div
           className={`h-full transition-all duration-500 ${
             isAllComplete
-              ? "bg-gradient-to-r from-emerald-500 to-teal-400"
-              : "bg-gradient-to-r from-[#DAA520] to-amber-500"
+              ? "bg-emerald-500"
+              : "bg-gradient-to-r from-[#DAA520] to-amber-400"
           }`}
           style={{ width: `${(completedCount / SECTIONS.length) * 100}%` }}
         />
       </div>
 
-      {/* 9 Simple Clean Cards */}
-      <div className="space-y-3">
+      {/* 9 Clean Cards with Big Headings & White Photo Buttons */}
+      <div className="space-y-4">
         {SECTIONS.map((section, idx) => {
           const isSubmitted = submittedItems.includes(section.id);
           const currentPhotos = capturedPhotos[section.id] || [];
@@ -162,47 +163,45 @@ export default function CaretakerView({
           return (
             <div
               key={section.id}
-              className={`rounded-2xl p-3.5 sm:p-4 transition-all border shadow-md ${
+              className={`rounded-3xl p-4 sm:p-5 transition-all border-2 shadow-lg ${
                 isSubmitted
-                  ? "bg-emerald-950/20 border-emerald-500/40"
+                  ? "bg-emerald-950/30 border-emerald-500/70"
                   : currentPhotos.length > 0
-                  ? "bg-slate-900 border-[#DAA520]/70"
+                  ? "bg-slate-900 border-[#DAA520]"
                   : "bg-slate-900/90 border-slate-800"
               }`}
             >
-              {/* Top Row: Title + Status */}
-              <div className="flex items-center justify-between mb-2.5">
-                <div className="flex items-center gap-2.5">
+              {/* Header: Pure Big Heading + Status */}
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div className="flex items-center gap-3">
                   <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+                    className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
                       isSubmitted
-                        ? "bg-emerald-500/20 text-emerald-400"
+                        ? "bg-emerald-500 text-black"
                         : "bg-[#1B3564] text-[#DAA520]"
                     }`}
                   >
-                    <Icon size={16} className="stroke-[2.5]" />
+                    <Icon size={20} className="stroke-[2.5]" />
                   </div>
-                  <div>
-                    <h2 className="text-sm font-black text-white">
-                      {idx + 1}. {section.title}
-                    </h2>
-                  </div>
+                  <h2 className="text-lg sm:text-xl font-black text-white tracking-wide">
+                    {idx + 1}. {section.title}
+                  </h2>
                 </div>
 
-                {/* Status Pill */}
+                {/* Status Badge */}
                 {isSubmitted ? (
-                  <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full text-[10px] font-black uppercase flex items-center gap-1">
-                    <Check size={11} className="stroke-[3]" />
+                  <div className="bg-emerald-500 text-black px-3 py-1 rounded-full text-xs font-black uppercase flex items-center gap-1 shadow-md shrink-0">
+                    <Check size={14} className="stroke-[3]" />
                     <span>{t.verifiedDone}</span>
                   </div>
                 ) : (
-                  <div className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium">
+                  <div className="bg-slate-800 text-slate-400 px-3 py-1 rounded-full text-xs font-bold shrink-0">
                     {t.pending}
                   </div>
                 )}
               </div>
 
-              {/* Camera Trigger & Photos */}
+              {/* White Camera Trigger Button & Photo Grid */}
               <div className="mt-2">
                 <CameraWatermark
                   roleName="Caretaker"
@@ -215,20 +214,20 @@ export default function CaretakerView({
                 />
               </div>
 
-              {/* One-Tap Big Submit Button when photo is clicked */}
+              {/* Big Green Send Button (Shows when photo is taken) */}
               {currentPhotos.length > 0 && !isSubmitted && (
-                <div className="mt-3 pt-2 border-t border-slate-800">
+                <div className="mt-4 pt-3 border-t border-slate-800">
                   <button
                     type="button"
                     onClick={() => handleSubmitSection(section)}
                     disabled={isCurrentlySubmitting}
-                    className="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-black py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg disabled:opacity-50"
+                    className="w-full bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-black font-black py-4 px-5 rounded-2xl text-base sm:text-lg uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-2xl disabled:opacity-50"
                   >
                     {isCurrentlySubmitting ? (
                       <span>{t.submitting}</span>
                     ) : (
                       <>
-                        <Send size={13} />
+                        <Send size={18} className="stroke-[2.5]" />
                         <span>
                           {t.submitProof} ({currentPhotos.length})
                         </span>
