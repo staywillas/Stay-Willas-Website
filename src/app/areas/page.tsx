@@ -43,6 +43,9 @@ export default async function AreasPage() {
 
   const mahabaleshwarCount = await prisma.villa.count({
     where: {
+      slug: {
+        notIn: ["terra-cotta-villa", "mahabaleshwar-terra-cotta"],
+      },
       OR: [
         { location: { contains: "Mahabaleshwar", mode: "insensitive" } },
         { location: { contains: "Panchgani", mode: "insensitive" } }
@@ -75,8 +78,8 @@ export default async function AreasPage() {
       slug: "mahabaleshwar",
       name: "Mahabaleshwar & Panchgani",
       tagline: "The Strawberry Highland",
-      desc: "Fresh strawberry plantations, tranquil valley viewpoints, and rustic terracotta architecture estates.",
-      image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+      desc: "Fresh strawberry plantations, tranquil valley viewpoints, and scenic hillside retreats.",
+      image: "/images/destinations/mahabaleshwar.jpg",
       count: mahabaleshwarCount,
       isLaunchingSoon: mahabaleshwarCount === 0,
       link: "/areas/mahabaleshwar"

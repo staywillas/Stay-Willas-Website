@@ -133,6 +133,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let villaRoutes: MetadataRoute.Sitemap = [];
   try {
     const villas = await prisma.villa.findMany({
+      where: {
+        slug: {
+          notIn: ["terra-cotta-villa", "mahabaleshwar-terra-cotta"],
+        },
+      },
       select: { slug: true, updatedAt: true },
     });
     villaRoutes = villas.map((villa) => ({
@@ -179,12 +184,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: currentDate,
         changeFrequency: "weekly" as const,
         priority: 0.85,
-      },
-      {
-        url: `${BASE_URL}/villa/terra-cotta-villa`,
-        lastModified: currentDate,
-        changeFrequency: "weekly" as const,
-        priority: 0.9,
       },
     ];
   }

@@ -12,7 +12,7 @@ const destinations = [
     name: "The Angle House",
     location: "Lonavala",
     fullLocation: "Kurwande, Lonavala",
-    image: "/assets/villas/the-angle-house/gallery-11.webp",
+    image: "/images/destinations/ANGLE%20HOUSE%20FINAL.jpg",
     link: "/villa/the-angle-house",
     tag: "Mountain Escapes",
     badge: "Signature Stay",
@@ -24,7 +24,7 @@ const destinations = [
     name: "Canopy Crest",
     location: "Khopoli",
     fullLocation: "Near Imagicaa, Khopoli",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    image: "/images/destinations/CANOPY%20CREST%20-2.png",
     link: "/villa/canopy-crest",
     tag: "Nature Getaways",
     badge: "Family Favorite",
@@ -36,19 +36,23 @@ const destinations = [
     name: "Willow Peak",
     location: "Lonavala",
     fullLocation: "Kurwande, Lonavala",
-    image: "/assets/villas/willow-peak/main.webp",
+    image: "/images/destinations/WILLOW%20PEAK%20-%202.jpeg",
     link: "/villa/willow-peak",
     tag: "A-Frame Chalets",
     badge: "Romantic Stays",
     features: ["Private Jacuzzi", "Timber Balcony", "Lake Proximity"],
     desc: "Boutique wooden chalets nestled in nature with en-suite heated jacuzzi tubs."
-  },
+  }
+];
+
+// Preserved for when property goes live
+const hiddenDestinations = [
   {
     id: "terra-cotta-villa",
     name: "Terra Cotta Villa",
     location: "Mahabaleshwar",
     fullLocation: "Panchgani-Mahabaleshwar Road",
-    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+    image: "/images/destinations/TERRA%20COTTA%20FINAL.jpg",
     link: "/villa/terra-cotta-villa",
     tag: "Strawberry Valleys",
     badge: "Valley Retreat",

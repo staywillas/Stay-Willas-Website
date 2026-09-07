@@ -37,9 +37,9 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
   mahabaleshwar: {
     name: "Mahabaleshwar & Panchgani",
     tagline: "The Strawberry Highland",
-    desc: "Misty Sahyadri valleys, fresh strawberry farms, and rustic private pool estates like Terra Cotta Villa.",
-    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
-    isLaunchingSoon: false
+    desc: "Misty Sahyadri valleys, fresh strawberry farms, and tranquil hillside retreats.",
+    image: "/images/destinations/mahabaleshwar.jpg",
+    isLaunchingSoon: true
   },
   pawna: {
     name: "Pawna Lake",
@@ -155,6 +155,9 @@ export default async function AreaRegionPage({ params }: PageProps) {
   // Fetch villas belonging to this region
   const dbVillas = await prisma.villa.findMany({
     where: {
+      slug: {
+        notIn: ["terra-cotta-villa", "mahabaleshwar-terra-cotta"],
+      },
       location: {
         contains: area.name,
         mode: "insensitive"

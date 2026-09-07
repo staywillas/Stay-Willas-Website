@@ -45,6 +45,11 @@ export const revalidate = 60; // Instant TTFB via ISR cache
 
 export async function generateStaticParams() {
   const villas = await prisma.villa.findMany({
+    where: {
+      slug: {
+        notIn: ["terra-cotta-villa", "mahabaleshwar-terra-cotta"],
+      },
+    },
     select: { slug: true },
   });
   return villas.map((v) => ({ slug: v.slug }));
@@ -226,6 +231,39 @@ const defaultRules = [
   "Please don't smoke inside (but feel free to use the deck!)",
   "Your furry friends are more than welcome!",
   "Keep the music low after 10:00 PM so we stay friends with the neighbors",
+];
+
+const angleHouseSpaces = [
+  {
+    title: "Master Suite & Jacuzzi",
+    image: "/assets/villas/the-angle-house/gallery-1.webp",
+    description: "Glass-fronted master suite with king bed & private jacuzzi bath."
+  },
+  {
+    title: "Bedroom 2",
+    image: "/assets/villas/the-angle-house/gallery-2.webp",
+    description: "Air-conditioned suite with mountain views & ensuite bathroom."
+  },
+  {
+    title: "Bedroom 3",
+    image: "/assets/villas/the-angle-house/gallery-5.webp",
+    description: "Cozy bedroom suite with king bed, AC & serene garden views."
+  },
+  {
+    title: "Double-Height Glass Lounge",
+    image: "/assets/villas/the-angle-house/gallery-7.webp",
+    description: "Architectural glass hall with plush seating, dining & smart TV."
+  },
+  {
+    title: "Waterfall Swimming Pool",
+    image: "/assets/villas/the-angle-house/gallery-11.webp",
+    description: "Private swimming pool featuring cascading natural waterfall."
+  },
+  {
+    title: "Private Lawns & Deck",
+    image: "/assets/villas/the-angle-house/gallery-12.webp",
+    description: "Expansive green fenced lawn with outdoor barbecue setup."
+  }
 ];
 
 const canopyCrestSpaces = [
@@ -450,6 +488,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
 
+  if (slug === "terra-cotta-villa" || slug === "mahabaleshwar-terra-cotta") {
+    return {
+      title: "Requested Luxury Villa Was Not Found | Stay Willas",
+      robots: { index: false, follow: false },
+    };
+  }
+
   const villa = await getCachedVilla(slug);
 
   if (!villa) {
@@ -552,6 +597,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function VillaDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
+
+  if (slug === "terra-cotta-villa" || slug === "mahabaleshwar-terra-cotta") {
+    notFound();
+  }
 
   const villa = await getCachedVilla(slug);
 
@@ -1002,57 +1051,93 @@ export default async function VillaDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* FULL-WIDTH SECTION: Rooms & Spaces Layout (For Canopy Crest, Terra Cotta Villa & Willow Peak) */}
-        {(villaData.slug === "canopy-crest" || villaData.slug === "terra-cotta-villa" || villaData.slug.includes("willow-peak")) && (
-          <div className="mb-12 sm:mb-16 animate-fade-in text-left">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 sm:mb-8 pb-3 sm:pb-4 border-b border-[#DAA520]/20 gap-2 sm:gap-4">
-              <div>
-                <span className="text-accent-secondary text-[9px] sm:text-[10px] tracking-[0.3em] uppercase font-black block mb-1">
-                  Estate Layout
-                </span>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading text-[#1B3564] font-bold">
-                  Rooms & Spaces
-                </h2>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-md">
-                {villaData.slug === "terra-cotta-villa"
-                  ? "Rustic 4 BHK private pool estate in Panchgani / Mahabaleshwar accommodating up to 16 guests."
-                  : villaData.slug === "canopy-crest"
-                  ? "Sprawling 4 BHK mountain sanctuary accommodating up to 16 guests with private pool & lawns."
-                  : "Exclusive 3-cottage mountain estate in Kurwande, Lonavala with private in-room jacuzzis for up to 12 guests."}
-              </p>
-            </div>
+        {/* FULL-WIDTH SECTION: Rooms & Spaces Layout (For All Villas) */}
+        {(() => {
+          const spaces = villaData.slug === "the-angle-house"
+            ? angleHouseSpaces
+            : villaData.slug === "canopy-crest"
+            ? canopyCrestSpaces
+            : villaData.slug.includes("willow-peak")
+            ? willowPeakSpaces
+            : villaData.slug === "terra-cotta-villa"
+            ? terraCottaSpaces
+            : null;
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
-              {(villaData.slug === "terra-cotta-villa"
-                ? terraCottaSpaces 
-                : villaData.slug === "canopy-crest"
-                ? canopyCrestSpaces 
-                : willowPeakSpaces
-              ).map((space, idx) => (
-                <div key={idx} className="bg-white border border-[#DAA520]/20 hover:border-[#DAA520]/45 rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col group">
-                  <div className="relative aspect-[4/3] w-full bg-slate-100 overflow-hidden">
-                    <Image
-                      src={space.image}
-                      alt={space.title}
-                      fill
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="p-2.5 sm:p-3.5 flex flex-col justify-center text-left">
-                    <h3 className="text-xs sm:text-sm font-bold text-[#1B3564] truncate leading-tight mb-0.5">
-                      {space.title}
-                    </h3>
-                    <p className="text-[10px] sm:text-xs text-slate-500 font-light truncate leading-tight">
-                      {space.description}
-                    </p>
+          if (!spaces || spaces.length === 0) return null;
+
+          const estateSubtitle = villaData.slug === "the-angle-house"
+            ? "Signature 3 BHK glass villa accommodating up to 14 guests with private waterfall pool & jacuzzi."
+            : villaData.slug === "canopy-crest"
+            ? "Sprawling 4 BHK mountain sanctuary accommodating up to 16 guests with private pool & lawns."
+            : villaData.slug.includes("willow-peak")
+            ? "Exclusive 3-cottage mountain estate in Kurwande, Lonavala with private in-room jacuzzis for up to 12 guests."
+            : "Handpicked private estate with curated luxury rooms and spaces.";
+
+          return (
+            <div className="mb-12 sm:mb-16 animate-fade-in text-left">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 sm:mb-8 pb-3 sm:pb-4 border-b border-[#DAA520]/20 gap-2 sm:gap-4">
+                <div>
+                  <span className="text-accent-secondary text-[9px] sm:text-[10px] tracking-[0.3em] uppercase font-black block mb-1">
+                    Estate Layout
+                  </span>
+                  <div className="flex items-center gap-2.5">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading text-[#1B3564] font-bold">
+                      Rooms &amp; Spaces
+                    </h2>
+                    <span className="md:hidden inline-flex items-center gap-1 text-[10px] font-bold text-[#DAA520] bg-[#DAA520]/10 px-2.5 py-0.5 rounded-full border border-[#DAA520]/30">
+                      Swipe &rarr;
+                    </span>
                   </div>
                 </div>
-              ))}
+                <p className="text-xs sm:text-sm text-slate-600 max-w-md">
+                  {estateSubtitle}
+                </p>
+              </div>
+
+              {/* Mobile: Horizontal scroll (one room at a time, touch-friendly, no motion); Desktop: Multi-column Grid */}
+              <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 overflow-x-auto md:overflow-x-visible pb-4 pt-1 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 gap-3.5 sm:gap-4 md:gap-5 snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                {spaces.map((space, idx) => (
+                  <div
+                    key={idx}
+                    className="w-[85vw] sm:w-[65vw] md:w-auto shrink-0 snap-center md:shrink md:snap-align-none bg-white border border-[#DAA520]/20 hover:border-[#DAA520]/45 rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col group"
+                  >
+                    <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full bg-slate-100 overflow-hidden">
+                      <Image
+                        src={space.image}
+                        alt={space.title}
+                        fill
+                        sizes="(max-width: 768px) 85vw, (max-width: 1200px) 33vw, 25vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      {/* Mobile Room Index Badge */}
+                      <div className="md:hidden absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[10px] font-bold text-[#DAA520] border border-white/10">
+                        {idx + 1} / {spaces.length}
+                      </div>
+                    </div>
+                    <div className="p-3.5 sm:p-4 flex flex-col justify-center text-left">
+                      <h3 className="text-sm sm:text-base font-bold text-[#1B3564] leading-tight mb-1">
+                        {space.title}
+                      </h3>
+                      <p className="text-xs text-slate-600 font-light leading-relaxed">
+                        {space.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Mobile Swipe Guidance Bar */}
+              <div className="md:hidden flex items-center justify-between text-[11px] text-slate-500 pt-1 px-1">
+                <span className="font-medium text-[#DAA520]">
+                  ← Swipe horizontally to explore all {spaces.length} spaces →
+                </span>
+                <span className="text-[10px] font-bold text-slate-400">
+                  {spaces.length} Spaces
+                </span>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* FULL-WIDTH SECTION: The Story */}
         <div className="mb-16 text-left">

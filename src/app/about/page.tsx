@@ -201,13 +201,13 @@ export default function AboutPage() {
             {/* SEO Pillar 3: Signature Hospitality */}
             <div className="bg-white p-8 rounded-3xl border border-[#DAA520]/20 shadow-sm space-y-4">
               <h3 className="text-xl font-heading font-bold text-[#1B3564]">
-                Mahabaleshwar & Panchgani Stays
+                Kurwande & Lonavala Chalets
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Experience hillside serenity at <strong className="font-semibold text-[#1B3564]">Terra Cotta Villa</strong> in Panchgani. 4 BHK rustic terracotta brick architecture with private pool, near Mapro Garden with 24/7 caretaker support.
+                Experience mountain serenity at <strong className="font-semibold text-[#1B3564]">Willow Peak</strong> in Kurwande, Lonavala. Standalone A-frame chalets with private in-room jacuzzi baths, valley views, barbecue lawns, and 24/7 caretaker support.
               </p>
-              <a href="/areas/mahabaleshwar" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
-                Explore Mahabaleshwar &rarr;
+              <a href="/villa/willow-peak" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
+                Explore Willow Peak &rarr;
               </a>
             </div>
           </div>

@@ -499,10 +499,9 @@ class App {
   }
   createMedias(items: any[], bend = 1, textColor: string, borderRadius: number, font: string) {
     const defaultItems = [
-      { image: '/assets/villas/the-angle-house/gallery-11.webp', text: 'The Angle House (Lonavala)', link: '/villa/the-angle-house' },
-      { image: '/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg', text: 'Canopy Crest (Khopoli)', link: '/villa/canopy-crest' },
-      { image: '/assets/villas/willow-peak/main.webp', text: 'Willow Peak (Lonavala)', link: '/villa/willow-peak' },
-      { image: '/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg', text: 'Terra Cotta Villa (Mahabaleshwar)', link: '/villa/terra-cotta-villa' }
+      { image: '/images/destinations/ANGLE%20HOUSE%20FINAL.jpg', text: 'The Angle House (Lonavala)', link: '/villa/the-angle-house' },
+      { image: '/images/destinations/CANOPY%20CREST%20-2.png', text: 'Canopy Crest (Khopoli)', link: '/villa/canopy-crest' },
+      { image: '/images/destinations/WILLOW%20PEAK%20-%202.jpeg', text: 'Willow Peak (Lonavala)', link: '/villa/willow-peak' }
     ];
     const galleryItems = items && items.length ? items : defaultItems;
     // Repeat for continuous seamless infinite rotation

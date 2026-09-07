@@ -54,7 +54,11 @@ interface VillaResult {
   image: string;
 }
 
-const BookingBar = () => {
+interface BookingBarProps {
+  className?: string;
+}
+
+const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   const router = useRouter();
   const [checkIn, setCheckIn] = useState<Date | null>(null);
   const [checkOut, setCheckOut] = useState<Date | null>(null);
@@ -271,7 +275,10 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
     : 1;
 
   return (
-    <div id="booking-bar-section" className="relative z-40 max-w-[1100px] w-full mx-auto px-6 -mt-8 md:-mt-12 lg:-mt-14 mb-8 scroll-mt-28">
+    <div 
+      id="booking-bar-section" 
+      className={`relative z-40 max-w-[1100px] w-full mx-auto scroll-mt-28 ${className ? className : "px-6 mt-4 md:mt-6 mb-10"}`}
+    >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -522,7 +529,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
               <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsCalendarOpen(false)} />
               <div 
                 onClick={(e) => e.stopPropagation()} 
-                className="absolute top-full left-1/2 -translate-x-1/2 translate-y-0 mt-4 z-50 w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left"
+                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.2)] p-5 text-left"
               >
                 <div className="flex items-center justify-between mb-4">
                   <button type="button" aria-label="Previous month" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>

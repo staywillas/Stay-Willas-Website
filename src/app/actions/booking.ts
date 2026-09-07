@@ -508,8 +508,10 @@ export async function checkAvailableVillasForDates(data: {
       }
     });
 
-    // Sort to prioritize The Angle House and Canopy Crest
-    const villas = [...rawVillas].sort((a, b) => {
+    // Sort to prioritize The Angle House and Canopy Crest, and hide unlaunched properties (Terra Cotta)
+    const villas = rawVillas
+      .filter(v => v.slug !== "terra-cotta-villa" && !v.slug.includes("terra-cotta"))
+      .sort((a, b) => {
       if (a.slug === "the-angle-house" && b.slug !== "the-angle-house") return -1;
       if (b.slug === "the-angle-house" && a.slug !== "the-angle-house") return 1;
       if (a.slug === "canopy-crest" && b.slug !== "canopy-crest") return -1;

@@ -31,7 +31,7 @@ const locationModules = [
     slug: "/areas/lonavala",
     featuredVilla: "The Angle House",
     villaSlug: "/villa/the-angle-house",
-    image: "/assets/villas/the-angle-house/gallery-11.webp",
+    image: "/images/destinations/ANGLE%20HOUSE%20FINAL.jpg",
     travelTime: "2 – 2.5 Hours from Mumbai • 1.5 – 2 Hours from Pune",
     bestFor: "Family Getaways, Birthday Celebrations & Large Group Stays",
     insights: [
@@ -49,7 +49,7 @@ const locationModules = [
     slug: "/areas/khopoli",
     featuredVilla: "Canopy Crest",
     villaSlug: "/villa/canopy-crest",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    image: "/images/destinations/CANOPY%20CREST%20-2.png",
     travelTime: "1.5 – 2 Hours from Mumbai • 2 – 2.5 Hours from Pune",
     bestFor: "Multi-Generational Families & Imagicaa Theme Park Trips",
     insights: [
@@ -67,7 +67,7 @@ const locationModules = [
     slug: "/areas/lonavala",
     featuredVilla: "Willow Peak",
     villaSlug: "/villa/willow-peak",
-    image: "/assets/villas/willow-peak/main.webp",
+    image: "/images/destinations/WILLOW%20PEAK%20-%202.jpeg",
     travelTime: "2 – 2.5 Hours from Mumbai • 1.5 – 2 Hours from Pune",
     bestFor: "Couples, Anniversaries & Intimate Weekend Getaways",
     insights: [
@@ -78,14 +78,18 @@ const locationModules = [
     ],
     highlightText: "Discover serene hillside living and book",
     groupLink: false
-  },
+  }
+];
+
+// Preserved for when property goes live
+const hiddenAreaGuides = [
   {
     location: "Mahabaleshwar",
     primaryKeyword: "Private Villas in Mahabaleshwar with Mountain View",
     slug: "/areas/mahabaleshwar",
     featuredVilla: "Terra Cotta Villa",
     villaSlug: "/villa/terra-cotta-villa",
-    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+    image: "/images/destinations/TERRA%20COTTA%20FINAL.jpg",
     travelTime: "4.5 – 5.5 Hours from Mumbai • 2.5 – 3 Hours from Pune",
     bestFor: "Strawberry Orchard Tours, Cool Highlands & Quiet Rejuvenation",
     insights: [
@@ -110,7 +114,7 @@ const faqs: FAQItem[] = [
   },
   {
     question: "How far are your weekend villas from Mumbai and Pune?",
-    answer: "Our holiday villas in Lonavala and Khopoli are located within a scenic 90-minute to 2-hour drive via the Expressway, while our Mahabaleshwar estate offers a serene highland escape without long, exhausting travel."
+    answer: "Our holiday villas in Lonavala and Khopoli are located within a scenic 90-minute to 2-hour drive via the Expressway, offering convenient weekend accessibility without exhausting travel."
   },
   {
     question: "Are your private villas near Mumbai pet-friendly?",

@@ -56,12 +56,15 @@ export default async function VillasPage({ searchParams }: PageProps) {
     orderBy: { createdAt: "desc" },
   });
 
+  // Hidden for now until property goes live
+  const hiddenSlugs = ["terra-cotta-villa", "mahabaleshwar-terra-cotta"];
+
   // Prioritize signature properties
-  const prioritySlugs = ["the-angle-house", "canopy-crest", "terra-cotta-villa", "willow-peak"];
+  const prioritySlugs = ["the-angle-house", "canopy-crest", "willow-peak"];
   const prioritized = allVillas
     .filter((v) => prioritySlugs.includes(v.slug))
     .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
-  const remaining = allVillas.filter((v) => !prioritySlugs.includes(v.slug));
+  const remaining = allVillas.filter((v) => !prioritySlugs.includes(v.slug) && !hiddenSlugs.includes(v.slug));
   const dbVillas = [...prioritized, ...remaining];
 
   // Map the database format to the UI client model structure
@@ -72,11 +75,12 @@ export default async function VillasPage({ searchParams }: PageProps) {
     location: villa.location,
     priceRaw: villa.price,
     priceFormatted: villa.price.toLocaleString("en-IN"),
-    image: villa.slug === "terra-cotta-villa"
-      ? (villa.images[0] || "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg")
-      : villa.slug.includes("willow-peak") 
-      ? "/assets/villas/willow-peak/main.webp" 
-      : (villa.images[0] || "/images/hero-villa.webp"),
+    image: villa.images[0] || (
+      villa.slug === "the-angle-house" ? "/images/destinations/ANGLE%20HOUSE%20FINAL.jpg" :
+      villa.slug === "canopy-crest" ? "/images/destinations/CANOPY%20CREST%20-2.png" :
+      villa.slug.includes("willow-peak") ? "/images/destinations/WILLOW%20PEAK%20-%202.jpeg" :
+      "/images/hero-villa.webp"
+    ),
     bedrooms: villa.bedrooms,
     bathrooms: villa.bathrooms,
     guests: villa.guests,

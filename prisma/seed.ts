@@ -26,6 +26,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 3,
     bathrooms: 3,
     images: [
+      "/images/destinations/ANGLE HOUSE FINAL.jpg",
       "/assets/villas/the-angle-house/gallery-11.webp",
       "/assets/villas/the-angle-house/gallery-14.webp",
       "/assets/villas/the-angle-house/gallery-16.webp",
@@ -77,6 +78,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 4,
     bathrooms: 5,
     images: [
+      "/images/destinations/CANOPY CREST -2.png",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0014.jpg",
@@ -121,6 +123,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
+      "/images/destinations/WILLOW PEAK - 2.jpeg",
       "/assets/villas/willow-peak/gallery-12.webp",
       "/assets/villas/willow-peak/gallery-6.webp",
       "/assets/villas/willow-peak/gallery-7.webp",
@@ -164,6 +167,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
+      "/images/destinations/WILLOW PEAK - 2.jpeg",
       "/assets/villas/willow-peak/gallery-12.webp",
       "/assets/villas/willow-peak/gallery-6.webp",
       "/assets/villas/willow-peak/gallery-7.webp",
@@ -207,6 +211,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
+      "/images/destinations/WILLOW PEAK - 2.jpeg",
       "/assets/villas/willow-peak/gallery-12.webp",
       "/assets/villas/willow-peak/gallery-7.webp",
       "/assets/villas/willow-peak/gallery-6.webp",
@@ -250,6 +255,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 3,
     bathrooms: 3,
     images: [
+      "/images/destinations/WILLOW PEAK - 2.jpeg",
       "/assets/villas/willow-peak/gallery-12.webp",
       "/assets/villas/willow-peak/gallery-6.webp",
       "/assets/villas/willow-peak/gallery-7.webp",
@@ -311,6 +317,7 @@ Located near Kaswand along the scenic Panchgani-Mahabaleshwar road, Terra Cotta 
     bedrooms: 4,
     bathrooms: 4,
     images: [
+      "/images/destinations/TERRA COTTA FINAL.jpg",
       "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg", // 1. Illuminated Luxury Exterior & Pool
       "/assets/villas/terra-cotta-villa/IMG-20260901-WA0035.jpg", // 2. Master Bedroom Suite
       "/assets/villas/terra-cotta-villa/IMG-20260901-WA0037.jpg", // 3. Private Swimming Pool & Mountain Greenery

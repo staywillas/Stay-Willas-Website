@@ -12,7 +12,8 @@ export async function getConciergeRecommendation(params: ConciergeRecommendation
   try {
     console.log("AI Concierge: Matching params:", params);
     // 1. Fetch all available villas
-    const villas = await prisma.villa.findMany();
+    const allDbVillas = await prisma.villa.findMany();
+    const villas = allDbVillas.filter(v => v.slug !== "terra-cotta-villa" && !v.slug.includes("terra-cotta"));
     console.log("AI Concierge: Total villas retrieved from DB:", villas.length);
     if (villas.length === 0) {
       console.log("AI Concierge: No villas found in DB.");

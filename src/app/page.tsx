@@ -41,7 +41,6 @@ export const metadata: Metadata = {
 // Critical above-the-fold components (loaded immediately)
 import Hero from "@/components/home/hero";
 import TopTicker from "@/components/home/top-ticker";
-import BookingBar from "@/components/home/booking-bar";
 
 // Below-the-fold components (lazy-loaded, only rendered when scrolled into view)
 const DestinationShowcase = dynamic(() => import("@/components/home/destination-showcase"));
@@ -73,23 +72,27 @@ export default async function Home() {
     }
   });
 
+  // Hidden for now until property goes live
+  const hiddenSlugs = ["terra-cotta-villa", "mahabaleshwar-terra-cotta"];
+
   // Prioritize signature stays always at top
-  const prioritySlugs = ["the-angle-house", "canopy-crest", "terra-cotta-villa", "willow-peak"];
+  const prioritySlugs = ["the-angle-house", "canopy-crest", "willow-peak"];
   const prioritized = allVillas
     .filter((v) => prioritySlugs.includes(v.slug))
     .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
-  const remaining = allVillas.filter((v) => !prioritySlugs.includes(v.slug));
+  const remaining = allVillas.filter((v) => !prioritySlugs.includes(v.slug) && !hiddenSlugs.includes(v.slug));
   const dbVillas = [...prioritized, ...remaining];
 
   const featuredVillas = dbVillas.map((villa) => ({
     id: villa.slug,
     name: villa.slug === "willow-peak" ? "Willow Peak" : villa.name,
     location: villa.location,
-    image: villa.slug === "terra-cotta-villa"
-      ? (villa.images[0] || "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg")
-      : villa.slug.includes("willow-peak") 
-      ? "/assets/villas/willow-peak/main.webp" 
-      : (villa.images[0] || "/images/hero-villa.webp"),
+    image: villa.images[0] || (
+      villa.slug === "the-angle-house" ? "/images/destinations/ANGLE%20HOUSE%20FINAL.jpg" :
+      villa.slug === "canopy-crest" ? "/images/destinations/CANOPY%20CREST%20-2.png" :
+      villa.slug.includes("willow-peak") ? "/images/destinations/WILLOW%20PEAK%20-%202.jpeg" :
+      "/images/hero-villa.webp"
+    ),
     price: villa.price.toLocaleString("en-IN"),
     guests: villa.guests,
     bedrooms: villa.bedrooms,
@@ -100,7 +103,6 @@ export default async function Home() {
     <main className="min-h-screen bg-bg-primary">
       <Navbar />
       <Hero />
-      <BookingBar />
       <HomeSitelinks />
       <DestinationShowcase />
       <FeaturedVillas villas={featuredVillas} />

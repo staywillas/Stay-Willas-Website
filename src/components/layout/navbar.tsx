@@ -210,7 +210,6 @@ const Navbar = () => {
                   <Link href="/destinations" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Destinations</Link>
                   <Link href="/areas/lonavala" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Lonavala Villas</Link>
                   <Link href="/areas/khopoli" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Khopoli Villas</Link>
-                  <Link href="/areas/mahabaleshwar" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Mahabaleshwar Villas</Link>
                   <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Group Stays in Lonavala</Link>
                   <Link href="/partner" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Partner</Link>
                   <Link href="/contact" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Contact</Link>
@@ -465,6 +464,7 @@ const Navbar = () => {
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
                             <span>Willow Peak (Lonavala)</span>
                           </Link>
+                          {/* Preserved for when Terra Cotta Villa goes live
                           <Link
                             href="/villa/terra-cotta-villa"
                             className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
@@ -473,6 +473,7 @@ const Navbar = () => {
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
                             <span>Terra Cotta Villa (Mahabaleshwar)</span>
                           </Link>
+                          */}
                         </motion.div>
                       )}
                     </div>
@@ -529,14 +530,6 @@ const Navbar = () => {
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
                             <span>Khopoli Villas</span>
-                          </Link>
-                          <Link
-                            href="/areas/mahabaleshwar"
-                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
-                            <span>Mahabaleshwar Villas</span>
                           </Link>
                           <Link
                             href="/areas"
