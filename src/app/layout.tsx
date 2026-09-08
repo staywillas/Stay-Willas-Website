@@ -66,9 +66,6 @@ export const metadata: Metadata = {
     description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Khopoli today.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
-  },
 };
 
 export default function RootLayout({
