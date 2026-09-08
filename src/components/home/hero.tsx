@@ -101,23 +101,23 @@ const slides: VillaSlide[] = [
     highlights: ["A-Frame Architecture", "In-Room Jacuzzi", "Mountain Views", "Outdoor Dining Deck"],
   },
   {
-    id: "terra-cotta-villa",
-    slug: "terra-cotta-villa",
-    name: "Terra Cotta Villa",
-    location: "Panchgani - Mahabaleshwar",
-    tagline: "Rustic Brick Sanctuary & Private Pool",
+    id: "coming-soon",
+    slug: "coming-soon",
+    name: "Coming Soon",
+    location: "Mahabaleshwar",
+    tagline: "Exclusive Mountain Sanctuary & Private Pool",
     bedrooms: 4,
     bathrooms: 4,
     guests: 16,
     price: "Coming Soon",
     priceNumeric: 0,
-    rating: 4.99,
-    reviewsCount: 29,
+    rating: 5.0,
+    reviewsCount: 0,
     heroBadge: "Coming Soon",
-    accentColor: "#E06D53",
+    accentColor: "#DAA520",
     image: "/images/destinations/TERRA%20COTTA%20FINAL.jpg",
-    href: "/villa/terra-cotta-villa",
-    highlights: ["Private Pool & Gazebo", "Near Mapro Garden", "Terracotta Architecture", "Bespoke Chef"],
+    href: "#",
+    highlights: ["Private Pool & Lawn", "Misty Valley Views", "Bespoke Chef Dining", "Early Access Waitlist"],
     isComingSoon: true,
   },
 ];
@@ -204,7 +204,7 @@ const Hero = () => {
   const openWhatsApp = () => {
     const text = currentSlide.isComingSoon
       ? encodeURIComponent(
-          `Hello Stay Willas! 🌟 I'd love to join the exclusive waitlist for *${currentSlide.name}* in ${currentSlide.location}. Please notify me as soon as bookings go live!`
+          `Hello Stay Willas! 🌟 I'd love to join the exclusive launch waitlist for your upcoming luxury villa in ${currentSlide.location}. Please notify me as soon as bookings go live!`
         )
       : encodeURIComponent(
           `Hello Stay Willas! 🌟 I'm interested in booking *${currentSlide.name}* in ${currentSlide.location}. Could you share current availability and best direct rates?`
@@ -337,13 +337,24 @@ const Hero = () => {
 
                   {/* CTA Action Buttons */}
                   <div className="flex items-center gap-2.5">
-                    <Link
-                      href={currentSlide.href}
-                      className="flex-1 inline-flex items-center justify-center gap-2 bg-[#DAA520] hover:bg-[#c99518] text-[#0A1426] font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-[#DAA520]/20 hover:scale-[1.02] active:scale-[0.98]"
-                    >
-                      <span>{currentSlide.isComingSoon ? "Preview Villa" : "Explore Villa Details"}</span>
-                      <ArrowRight size={15} />
-                    </Link>
+                    {currentSlide.isComingSoon ? (
+                      <button
+                        type="button"
+                        onClick={openWhatsApp}
+                        className="flex-1 inline-flex items-center justify-center gap-2 bg-[#DAA520] hover:bg-[#c99518] text-[#0A1426] font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-[#DAA520]/20 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                      >
+                        <span>Join Launch Waitlist</span>
+                        <ArrowRight size={15} />
+                      </button>
+                    ) : (
+                      <Link
+                        href={currentSlide.href}
+                        className="flex-1 inline-flex items-center justify-center gap-2 bg-[#DAA520] hover:bg-[#c99518] text-[#0A1426] font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-[#DAA520]/20 hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        <span>Explore Villa Details</span>
+                        <ArrowRight size={15} />
+                      </Link>
+                    )}
 
                     <button
                       type="button"
@@ -395,32 +406,63 @@ const Hero = () => {
                   exit="exit"
                   className="absolute inset-0 w-full h-full"
                 >
-                  <Link
-                    href={currentSlide.href}
-                    className="relative block w-full h-full cursor-pointer"
-                    aria-label={`View ${currentSlide.name}`}
-                  >
-                    {/* Ken Burns Subtle Drift */}
-                    <motion.div
-                      className="relative w-full h-full"
-                      initial={{ scale: 1 }}
-                      animate={{ scale: 1.04 }}
-                      transition={{ duration: 6, ease: "linear" }}
+                  {currentSlide.isComingSoon ? (
+                    <div
+                      onClick={openWhatsApp}
+                      className="relative block w-full h-full cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Join Launch Waitlist for upcoming Mahabaleshwar retreat"
                     >
-                      <Image
-                        src={currentSlide.image}
-                        alt={currentSlide.name}
-                        fill
-                        priority={true}
-                        quality={90}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 60vw, 800px"
-                        className="object-cover object-center"
-                      />
-                    </motion.div>
+                      {/* Ken Burns Subtle Drift */}
+                      <motion.div
+                        className="relative w-full h-full"
+                        initial={{ scale: 1 }}
+                        animate={{ scale: 1.04 }}
+                        transition={{ duration: 6, ease: "linear" }}
+                      >
+                        <Image
+                          src={currentSlide.image}
+                          alt="Coming Soon - Luxury Mountain Sanctuary"
+                          fill
+                          priority={true}
+                          quality={90}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 60vw, 800px"
+                          className="object-cover object-center"
+                        />
+                      </motion.div>
 
-                    {/* Gradient Overlays for readable badges */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40 pointer-events-none" />
-                  </Link>
+                      {/* Gradient Overlays for readable badges */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40 pointer-events-none" />
+                    </div>
+                  ) : (
+                    <Link
+                      href={currentSlide.href}
+                      className="relative block w-full h-full cursor-pointer"
+                      aria-label={`View ${currentSlide.name}`}
+                    >
+                      {/* Ken Burns Subtle Drift */}
+                      <motion.div
+                        className="relative w-full h-full"
+                        initial={{ scale: 1 }}
+                        animate={{ scale: 1.04 }}
+                        transition={{ duration: 6, ease: "linear" }}
+                      >
+                        <Image
+                          src={currentSlide.image}
+                          alt={currentSlide.name}
+                          fill
+                          priority={true}
+                          quality={90}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 60vw, 800px"
+                          className="object-cover object-center"
+                        />
+                      </motion.div>
+
+                      {/* Gradient Overlays for readable badges */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40 pointer-events-none" />
+                    </Link>
+                  )}
                 </motion.div>
               </AnimatePresence>
 
@@ -440,8 +482,8 @@ const Hero = () => {
               <div className="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 pointer-events-none">
                 <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full shadow-lg text-white text-xs font-semibold">
                   <Star size={13} className="fill-[#DAA520] text-[#DAA520]" />
-                  <span>{currentSlide.rating}</span>
-                  <span className="text-white/50 text-[11px]">Verified</span>
+                  <span>{currentSlide.isComingSoon ? "5.0" : currentSlide.rating}</span>
+                  <span className="text-white/50 text-[11px]">{currentSlide.isComingSoon ? "Launching Soon" : "Verified"}</span>
                 </div>
               </div>
 

@@ -42,22 +42,19 @@ const destinations = [
     badge: "Romantic Stays",
     features: ["Private Jacuzzi", "Timber Balcony", "Lake Proximity"],
     desc: "Boutique wooden chalets nestled in nature with en-suite heated jacuzzi tubs."
-  }
-];
-
-// Preserved for when property goes live
-const hiddenDestinations = [
+  },
   {
-    id: "terra-cotta-villa",
-    name: "Terra Cotta Villa",
+    id: "coming-soon",
+    name: "Coming Soon",
     location: "Mahabaleshwar",
-    fullLocation: "Panchgani-Mahabaleshwar Road",
+    fullLocation: "Mahabaleshwar & Panchgani",
     image: "/images/destinations/TERRA%20COTTA%20FINAL.jpg",
-    link: "/villa/terra-cotta-villa",
-    tag: "Strawberry Valleys",
-    badge: "Valley Retreat",
-    features: ["Private Pool", "Luxury En-Suites", "Lawn Gazebo"],
-    desc: "4 BHK rustic terracotta estate with misty valley views and fresh berry orchards."
+    link: "https://wa.me/919619042310?text=Hello%20Stay%20Willas!%20%F0%9F%8C%9F%20I%20would%20love%20to%20join%20the%20launch%20waitlist%20for%20your%20upcoming%20luxury%20villa%20in%20Mahabaleshwar.",
+    tag: "Highland Sanctuary",
+    badge: "Coming Soon",
+    features: ["Private Pool", "Valley Views", "Chef Dining"],
+    desc: "A brand new luxury mountain sanctuary nestled in the Sahyadris, launching soon.",
+    isComingSoon: true,
   }
 ];
 
@@ -158,13 +155,25 @@ const DestinationShowcase = () => {
                 </div>
 
                 {/* CTA Link */}
-                <Link
-                  href={dest.link}
-                  className="w-full bg-[#DAA520] hover:bg-[#c99619] text-[#1B3564] font-black py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:shadow-glow-gold hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-                >
-                  <span>Explore Villa</span>
-                  <ArrowUpRight size={14} className="stroke-[2.5]" />
-                </Link>
+                {dest.isComingSoon ? (
+                  <a
+                    href={dest.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-[#DAA520] hover:bg-[#c99619] text-[#1B3564] font-black py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:shadow-glow-gold hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                  >
+                    <span>Join Launch Waitlist</span>
+                    <ArrowUpRight size={14} className="stroke-[2.5]" />
+                  </a>
+                ) : (
+                  <Link
+                    href={dest.link}
+                    className="w-full bg-[#DAA520] hover:bg-[#c99619] text-[#1B3564] font-black py-3 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:shadow-glow-gold hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                  >
+                    <span>Explore Villa</span>
+                    <ArrowUpRight size={14} className="stroke-[2.5]" />
+                  </Link>
+                )}
               </div>
 
             </motion.div>
