@@ -196,9 +196,9 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
       "@type": "QuantitativeValue",
       value: villa.guests,
     },
-    amenityFeature: (villa.amenities || []).map((a) => ({
+    amenityFeature: (villa.amenities || []).map((a: any) => ({
       "@type": "LocationFeatureSpecification",
-      name: a.name,
+      name: typeof a === "string" ? a : (a?.name || "Luxury Amenity"),
       value: true,
     })),
     brand: {

@@ -6,7 +6,7 @@ const EscapeClientPage = dynamic(() => import('./escape-client-page'));
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "Villas for Groups in Lonavala | Private Pool Stays | Stay Willas",
+  title: "Group Staycation Villas in Lonavala | Stay Willas",
   description: "Find private villas for groups in Lonavala with pools, spacious rooms and premium amenities. Perfect for friends, families and weekend getaways.",
   keywords: [
     "villas for groups in Lonavala",
@@ -16,7 +16,6 @@ export const metadata: Metadata = {
     "villa for friends in Lonavala",
     "private villa for groups in Lonavala",
     "villas for family groups in Lonavala",
-    "weekend villa in Lonavala",
     "large group villa in Lonavala"
   ],
   alternates: {

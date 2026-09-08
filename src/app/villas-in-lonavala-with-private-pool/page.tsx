@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { permanentRedirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
@@ -118,22 +119,14 @@ const angleHouseReviews = [
 ];
 
 export const metadata: Metadata = {
-  title: "Villas in Lonavala with Private Pool | Luxury Staycations | Stay Willas",
-  description: "Book verified luxury villas in Lonavala with private pool, master suite jacuzzi, pet-friendly lawns & in-house chef. Best direct booking deals from ₹13,000/night.",
-  keywords: [
-    "villas in lonavala with private pool",
-    "lonavala villa with private pool",
-    "private pool villas in lonavala",
-    "villas in lonavala",
-    "villa in lonavala",
-    "best villas in lonavala",
-    "luxury villas in lonavala",
-    "the angle house lonavala",
-    "villa for rent in lonavala with swimming pool",
-    "private villa in lonavala"
-  ],
+  title: "Villas in Lonavala with Private Pool | Stay Willas",
+  description: "Book verified luxury villas in Lonavala with private pool. Redirecting to Lonavala villas...",
+  robots: {
+    index: false,
+    follow: true,
+  },
   alternates: {
-    canonical: "https://www.staywillas.com/villas-in-lonavala-with-private-pool",
+    canonical: "https://www.staywillas.com/areas/lonavala",
   },
   openGraph: {
     title: "Villas in Lonavala with Private Pool | Luxury Staycations | Stay Willas",
@@ -160,6 +153,7 @@ export const metadata: Metadata = {
 };
 
 export default async function LonavalaGlassHousePage() {
+  permanentRedirect("/areas/lonavala");
   const villa = await prisma.villa.findFirst({
     where: { slug: "the-angle-house" },
   });

@@ -10,9 +10,14 @@ import { prisma } from "@/lib/db";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "Weekend Getaway Villas Near Mumbai & Pune | Stay Willas",
-  description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala, Khopoli & Mahabaleshwar. Book verified private estates with in-house chef service.",
-  keywords: ["weekend getaway villas near mumbai", "private pool destinations", "villas in lonavala", "villas in khopoli", "villas in mahabaleshwar"],
+  title: "Villa Holiday Regions Near Mumbai | Stay Willas",
+  description: "Explore luxury villa holiday regions near Mumbai and Pune across Lonavala, Khopoli and Western Ghats. Book verified private estates with chef service.",
+  keywords: [
+    "villa holiday regions near mumbai",
+    "luxury villa locations maharashtra",
+    "staycation destinations near pune",
+    "western ghats villa locations"
+  ],
   alternates: {
     canonical: "https://www.staywillas.com/areas",
   },

@@ -9,14 +9,14 @@ import ContactForm from "@/components/contact/contact-form";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "Contact Stay Willas | Book Lonavala Villa with Pool",
-  description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or Khopoli staycation estate. 24/7 WhatsApp customer support available.",
+  title: "Contact Stay Willas | Villa Booking Concierge",
+  description: "Contact Stay Willas concierge to book private pool luxury villas. 24/7 WhatsApp customer support and direct reservations.",
   keywords: [
     "stay willas contact", 
-    "lonavala villa with pool booking", 
-    "best villa in lonavala", 
-    "khopoli villa staycation",
-    "private pool villa near mumbai"
+    "villa booking concierge", 
+    "stay willas support", 
+    "villa reservations mumbai", 
+    "contact villa host maharashtra"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/contact",

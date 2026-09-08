@@ -3,14 +3,13 @@ import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
-  title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
+  title: "Private Pool Villas Near Mumbai | Stay Willas",
   description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala & Khopoli. Best direct rates with 0% platform fee.",
   keywords: [
     "private pool villas near Mumbai",
-    "villas in lonavala with private pool",
-    "villas in khopoli with private pool",
     "weekend getaway villas near mumbai",
-    "luxury villas in lonavala",
+    "luxury villa staycations near pune",
+    "private pool villas for rent maharashtra",
     "exclusive villas near Mumbai"
   ],
   alternates: {

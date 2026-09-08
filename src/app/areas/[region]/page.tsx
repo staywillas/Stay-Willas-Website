@@ -58,9 +58,6 @@ export const revalidate = 60; // Instant TTFB via ISR cache
 
 export function generateStaticParams() {
   return [
-    { region: "lonavala" },
-    { region: "khopoli" },
-    { region: "mahabaleshwar" },
     { region: "pawna" },
   ];
 }

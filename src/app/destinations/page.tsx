@@ -10,8 +10,13 @@ import { prisma } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Villa Destinations in Maharashtra | Stay Willas",
-  description: "Discover top villa destinations in maharashtra for family staycations. Reserve verified villas in lonavala with private pool & chef service.",
-  keywords: ["villa destinations in maharashtra", "villas in lonavala with private pool", "luxury villas in lonavala"],
+  description: "Discover top villa destinations in Maharashtra for family staycations. Reserve verified private pool villas with chef service.",
+  keywords: [
+    "villa destinations in maharashtra",
+    "maharashtra holiday destinations",
+    "weekend getaway spots near mumbai",
+    "hill station villa destinations"
+  ],
   alternates: {
     canonical: "https://www.staywillas.com/destinations",
   },

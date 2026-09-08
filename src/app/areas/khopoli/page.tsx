@@ -11,7 +11,7 @@ import { generateDestinationCollectionSchema, generateBreadcrumbSchema, generate
 export const revalidate = 60; // Instant TTFB via ISR cache
 
 export const metadata: Metadata = {
-  title: "Villas in Khopoli with Private Pool | Exclusive Group Estates | Stay Willas",
+  title: "Villas in Khopoli with Private Pool | Stay Willas",
   description: "Discover private pool villas in Khopoli with sprawling green lawns & in-house chef dining near Imagicaa. Book verified 4 BHK group estates from ₹12,000/night.",
   keywords: [
     "villas in khopoli with private pool",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     canonical: "https://www.staywillas.com/areas/khopoli",
   },
   openGraph: {
-    title: "Villas in Khopoli with Private Pool | Exclusive Group Estates | Stay Willas",
+    title: "Villas in Khopoli with Private Pool | Stay Willas",
     description: "Discover private pool villas in Khopoli with sprawling green lawns & in-house chef dining near Imagicaa. Book verified 4 BHK group estates from ₹12,000/night.",
     url: "https://www.staywillas.com/areas/khopoli",
     siteName: "Stay Willas",
@@ -304,65 +304,74 @@ export default async function KhopoliPage() {
 
         {/* Signature Villa Hero Highlight (Canopy Crest) */}
         {signatureVilla && (
-          <section id="khopoli-signature-villa" className="py-16 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto scroll-mt-20">
-            <div className="bg-[#FAF8F5]/80 backdrop-blur-md rounded-3xl border border-[#DAA520]/25 overflow-hidden flex flex-col lg:flex-row shadow-xl transform hover:scale-[1.01] transition-transform duration-500">
-              {/* Image side */}
-              <div className="lg:w-3/5 relative min-h-[300px] md:min-h-[450px] overflow-hidden">
+          <section id="khopoli-signature-villa" className="py-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto scroll-mt-20">
+            <div className="bg-[#FAF8F5]/90 backdrop-blur-md rounded-3xl border border-[#DAA520]/30 overflow-hidden flex flex-col shadow-2xl transform hover:scale-[1.005] transition-all duration-500">
+              {/* Full Width Image Container */}
+              <div className="w-full relative aspect-[16/9] sm:aspect-[16/8.5] md:aspect-[21/9] min-h-[340px] sm:min-h-[440px] md:min-h-[520px] overflow-hidden group">
                 <Image 
                   src={signatureVilla.image}
                   alt="Canopy Crest Khopoli Signature Pool Villa"
                   fill
-                  className="object-cover"
+                  priority
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 />
-                <span className="absolute top-6 left-6 bg-[#1B3564] text-white text-[10px] font-bold tracking-widest uppercase px-4 py-2 rounded-xl shadow-lg border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+                
+                {/* Floating Top Badge */}
+                <span className="absolute top-6 left-6 bg-[#1B3564]/90 backdrop-blur-md text-[#DAA520] text-xs font-black tracking-widest uppercase px-4 py-2 rounded-xl shadow-lg border border-[#DAA520]/30">
                   Signature Escape
                 </span>
-              </div>
-              
-              {/* Content side */}
-              <div className="lg:w-2/5 p-8 md:p-12 flex flex-col justify-between items-start text-left">
-                <div>
-                  <span className="text-accent-secondary text-[10px] tracking-[0.3em] uppercase font-bold mb-3 block">
-                    Featured Masterpiece
-                  </span>
-                  <h2 className="text-3xl md:text-4xl font-heading font-semibold text-text-primary mb-4">
-                    {signatureVilla.name}
-                  </h2>
-                  <p className="text-text-primary/75 text-sm font-light leading-relaxed mb-6">
-                    Escape to a stunning nature sanctuary. Perched amidst the Sahyadri mountains, this villa offers a spectacular private pool, sprawling green layout, five-star hospitality services, and ultimate seclusion.
-                  </p>
-                  
-                  <div className="grid grid-cols-3 gap-4 border-t border-b border-[#DAA520]/15 py-6 mb-8 w-full">
-                    <div>
-                      <span className="text-[10px] uppercase text-text-primary/40 block mb-1">Guests</span>
-                      <span className="font-semibold text-sm">{signatureVilla.guests} Guests</span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] uppercase text-text-primary/40 block mb-1">Bedrooms</span>
-                      <span className="font-semibold text-sm">{signatureVilla.bedrooms} BHK</span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] uppercase text-text-primary/40 block mb-1">Bathrooms</span>
-                      <span className="font-semibold text-sm">{signatureVilla.bathrooms} Baths</span>
-                    </div>
+
+                {/* Floating Bottom Overlays */}
+                <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-end justify-between gap-3 text-white pointer-events-none">
+                  <div>
+                    <span className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#DAA520] block mb-1 drop-shadow-sm">
+                      Khopoli Nature Sanctuary
+                    </span>
+                    <h3 className="text-2xl sm:text-4xl font-heading font-extrabold text-white drop-shadow-md">
+                      {signatureVilla.name}
+                    </h3>
                   </div>
 
-                  <div className="flex items-center gap-3 mb-6 bg-white/70 px-4 py-2 rounded-xl border border-[#DAA520]/20 w-fit">
-                    <span className="flex items-center gap-1 text-xs font-bold text-[#1B3564]">
-                      <Star size={13} className="text-[#DAA520] fill-[#DAA520]" /> 4.9/5
+                  <div className="bg-black/70 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-3">
+                    <span className="flex items-center gap-1 text-sm font-bold text-[#DAA520]">
+                      <Star size={15} className="fill-[#DAA520]" /> 4.9/5
                     </span>
-                    <span className="text-slate-300">|</span>
-                    <span className="text-xs font-bold text-emerald-700">From ₹15,000 / night</span>
-                    <span className="text-[10px] text-amber-700 italic font-medium">(*Prices may vary due to demand)</span>
-                    <span className="text-slate-300">|</span>
-                    <span className="text-[11px] text-slate-500 font-medium">0% Commission</span>
+                    <span className="text-white/40">|</span>
+                    <span className="text-sm font-bold text-white">From ₹15,000 / night</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Full Width Content & Actions Bar Below */}
+              <div className="p-6 sm:p-8 md:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 text-left">
+                <div className="flex-1 max-w-2xl">
+                  <span className="text-accent-secondary text-[11px] tracking-[0.25em] uppercase font-bold mb-2 block">
+                    Expansive Mountain Estate
+                  </span>
+                  <p className="text-text-primary/80 text-sm sm:text-base font-light leading-relaxed mb-4">
+                    Escape to a stunning nature sanctuary. Perched amidst the Sahyadri mountains, this villa offers a spectacular 22ft private swimming pool, sprawling green layout, poolside barbecue, five-star hospitality services, and ultimate seclusion.
+                  </p>
+                  <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-text-primary/70">
+                    <span className="bg-white px-3 py-1.5 rounded-lg border border-[#DAA520]/20 flex items-center gap-1.5">
+                      ✓ 16 Guests Capacity
+                    </span>
+                    <span className="bg-white px-3 py-1.5 rounded-lg border border-[#DAA520]/20 flex items-center gap-1.5">
+                      ✓ 4 BHK Sprawling Bedrooms
+                    </span>
+                    <span className="bg-white px-3 py-1.5 rounded-lg border border-[#DAA520]/20 flex items-center gap-1.5">
+                      ✓ 22ft Pool & Manicured Lawn
+                    </span>
+                    <span className="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-200">
+                      0% Commission Direct Booking
+                    </span>
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3.5 w-full">
+                <div className="w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 min-w-[280px]">
                   <Link 
                     href={`/villa/${signatureVilla.id}#booking-card-section`}
-                    className="flex-1 bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] hover:text-white text-xs font-black tracking-widest uppercase text-center py-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+                    className="w-full bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] hover:text-white text-xs font-black tracking-widest uppercase text-center py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                   >
                     <span>CHECK DATES & BOOK</span>
                     <ChevronRight size={14} />
@@ -371,7 +380,7 @@ export default async function KhopoliPage() {
                     href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas! 🌟 I'd like to check group discounts, available dates, and meal menus for *${signatureVilla.name}* in Khopoli.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black tracking-widest uppercase text-center py-4 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+                    className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black tracking-widest uppercase text-center py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                   >
                     <MessageCircle size={15} />
                     <span>GET GROUP QUOTE</span>

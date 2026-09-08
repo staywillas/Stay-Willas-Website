@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 const GhostCursor = dynamic(() => import('@/components/ui/GhostCursor'), { ssr: false });
 import WarpLines from "@/components/ui/WarpLines";
 import Navbar from "@/components/layout/navbar";
+import Footer from "@/components/layout/footer";
 import QuickMobileLeadForm from "@/components/common/quick-mobile-lead-form";
 import MegaDiscountAdBanner from "@/components/common/mega-discount-ad-banner";
 import Image from "next/image";
@@ -1542,17 +1543,8 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-[#050308]/90 text-white/40 text-xs py-8 border-t border-white/5 text-center px-6 relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} Stay Willas. All rights reserved. Crafted for slow luxury.</p>
-          <div className="flex gap-6">
-            <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
-            <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-            <Link href="/" className="hover:text-white transition-colors">Home Page</Link>
-          </div>
-        </div>
-      </footer>
+      {/* UNIFIED GLOBAL FOOTER */}
+      <Footer />
 
     </div>
   );

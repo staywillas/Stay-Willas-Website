@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { permanentRedirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
@@ -117,22 +118,19 @@ const canopyCrestReviews = [
 ];
 
 export const metadata: Metadata = {
-  title: "Monsoon Escape: Khopoli Villas for Groups | Canopy Crest Estate",
-  description: "Experience the Monsoon Escape at Canopy Crest in Khopoli. Stay 2 nights & save more on weekdays (Mon–Thu). 22ft private pool, charpai lawns, bonfire & chef service.",
-  keywords: [
-    "khopoli villas",
-    "monsoon escape khopoli",
-    "canopy crest khopoli",
-    "villas in khopoli",
-    "large group villa khopoli"
-  ],
+  title: "Khopoli Villas for Groups | Stay Willas",
+  description: "Experience the Monsoon Escape at Canopy Crest in Khopoli. Redirecting to Khopoli villas...",
+  robots: {
+    index: false,
+    follow: true,
+  },
   alternates: {
-    canonical: "https://www.staywillas.com/khopoli-villas",
+    canonical: "https://www.staywillas.com/areas/khopoli",
   },
   openGraph: {
-    title: "Monsoon Escape: Khopoli Villas for Groups | Canopy Crest Estate",
-    description: "Experience the Monsoon Escape at Canopy Crest in Khopoli. Stay 2 nights & save more on weekdays (Mon–Thu). 22ft private pool, charpai lawns, bonfire & chef service.",
-    url: "https://www.staywillas.com/khopoli-villas",
+    title: "Khopoli Villas for Groups | Stay Willas",
+    description: "Experience the Monsoon Escape at Canopy Crest in Khopoli. Stay 2 nights & save more on weekdays.",
+    url: "https://www.staywillas.com/areas/khopoli",
     siteName: "Stay Willas",
     locale: "en_IN",
     images: [
@@ -140,20 +138,21 @@ export const metadata: Metadata = {
         url: "https://www.staywillas.com/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
         width: 1200,
         height: 630,
-        alt: "Canopy Crest — Monsoon Escape Khopoli Villas for Groups",
+        alt: "Canopy Crest — Khopoli Villas for Groups",
       }
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Monsoon Escape: Khopoli Villas for Groups | Canopy Crest Estate",
-    description: "Experience the Monsoon Escape at Canopy Crest in Khopoli. Stay 2 nights & save more on weekdays (Mon–Thu). 22ft private pool, charpai lawns, bonfire & chef service.",
+    title: "Khopoli Villas for Groups | Stay Willas",
+    description: "Experience the Monsoon Escape at Canopy Crest in Khopoli. Stay 2 nights & save more on weekdays.",
     images: ["https://www.staywillas.com/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg"],
   },
 };
 
 export default async function KhopoliGroupEstatePage() {
+  permanentRedirect("/areas/khopoli");
   const villa = await prisma.villa.findFirst({
     where: { slug: "canopy-crest" },
   });

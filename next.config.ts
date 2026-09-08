@@ -67,6 +67,16 @@ const nextConfig: NextConfig = {
       permanent: true,
     },
     {
+      source: '/villas-in-lonavala-with-private-pool',
+      destination: '/areas/lonavala',
+      permanent: true,
+    },
+    {
+      source: '/lonavala-villas',
+      destination: '/areas/lonavala',
+      permanent: true,
+    },
+    {
       source: '/khopoli-group-estate',
       destination: '/areas/khopoli',
       permanent: true,

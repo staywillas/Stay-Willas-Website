@@ -42,6 +42,9 @@ export const metadata: Metadata = {
   keywords: ["luxury villas in maharashtra"],
   authors: [{ name: "Stay Willas" }],
   robots: { index: true, follow: true },
+  verification: {
+    google: "399989e08043e0b8",
+  },
   openGraph: {
     type: "website",
     siteName: "Stay Willas",

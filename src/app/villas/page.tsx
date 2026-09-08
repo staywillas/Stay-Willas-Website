@@ -9,13 +9,13 @@ import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 export const revalidate = 60; // Instant TTFB via ISR cache
 
 export const metadata: Metadata = {
-  title: "Luxury Villas for Rent Near Mumbai & Lonavala | Stay Willas",
+  title: "Luxury Villas for Rent Near Mumbai | Stay Willas",
   description: "Browse our handpicked collection of luxury villas for rent near Mumbai, Lonavala, and Khopoli. Enjoy private pools, chef service, and complete privacy.",
   keywords: [
     "luxury villas for rent near Mumbai",
-    "villas for rent in Lonavala",
-    "luxury villas in Maharashtra",
-    "private pool villas near Mumbai"
+    "villas for rent in Maharashtra",
+    "rent luxury villas near pune",
+    "luxury villa rental catalog"
   ],
   alternates: {
     canonical: "https://www.staywillas.com/villas",

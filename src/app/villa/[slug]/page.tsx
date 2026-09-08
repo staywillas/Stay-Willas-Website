@@ -526,10 +526,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     keywordsList = [
       "canopy crest khopoli",
       "khopoli villa with swimming pool",
-      "4 BHK villa in khopoli with private pool",
+      "4 BHK villa in khopoli",
       "large group villa khopoli",
-      "corporate offsite villa khopoli",
-      "villas in khopoli with private pool"
+      "corporate offsite villa khopoli"
     ];
   } else if (villa.slug === "willow-peak") {
     titleText = "Willow Peak | A-Frame Cottages in Lonavala | Stay Willas";
