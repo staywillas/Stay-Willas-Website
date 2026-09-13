@@ -21,7 +21,21 @@ import { motion } from "framer-motion";
 //   isComingSoon: true,
 // }
 
-const destinations = [
+interface DestinationItem {
+  id: string;
+  name: string;
+  location: string;
+  fullLocation: string;
+  image: string;
+  link: string;
+  tag: string;
+  badge: string;
+  features: string[];
+  desc: string;
+  isComingSoon?: boolean;
+}
+
+const destinations: DestinationItem[] = [
   {
     id: "the-angle-house",
     name: "The Angle House",
