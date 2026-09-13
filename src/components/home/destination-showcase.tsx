@@ -6,6 +6,21 @@ import Link from "next/link";
 import { ArrowUpRight, MapPin, Sparkles, Waves, Bath, Trees, UtensilsCrossed } from "lucide-react";
 import { motion } from "framer-motion";
 
+// Preserved for when Terra Cotta Villa (Mahabaleshwar) goes live
+// {
+//   id: "coming-soon",
+//   name: "Terra Cotta Villa",
+//   location: "Mahabaleshwar",
+//   fullLocation: "Mahabaleshwar & Panchgani",
+//   image: "/images/destinations/TERRA%20COTTA%20FINAL.jpg",
+//   link: "/villa/terra-cotta-villa",
+//   tag: "Highland Sanctuary",
+//   badge: "Coming Soon",
+//   features: ["Private Pool", "Valley Views", "Chef Dining"],
+//   desc: "A brand new luxury mountain sanctuary nestled in the Sahyadris, launching soon.",
+//   isComingSoon: true,
+// }
+
 const destinations = [
   {
     id: "the-angle-house",
@@ -42,19 +57,6 @@ const destinations = [
     badge: "Romantic Stays",
     features: ["Private Jacuzzi", "Timber Balcony", "Lake Proximity"],
     desc: "Boutique wooden chalets nestled in nature with en-suite heated jacuzzi tubs."
-  },
-  {
-    id: "coming-soon",
-    name: "Coming Soon",
-    location: "Mahabaleshwar",
-    fullLocation: "Mahabaleshwar & Panchgani",
-    image: "/images/destinations/TERRA%20COTTA%20FINAL.jpg",
-    link: "https://wa.me/919619042310?text=Hello%20Stay%20Willas!%20%F0%9F%8C%9F%20I%20would%20love%20to%20join%20the%20launch%20waitlist%20for%20your%20upcoming%20luxury%20villa%20in%20Mahabaleshwar.",
-    tag: "Highland Sanctuary",
-    badge: "Coming Soon",
-    features: ["Private Pool", "Valley Views", "Chef Dining"],
-    desc: "A brand new luxury mountain sanctuary nestled in the Sahyadris, launching soon.",
-    isComingSoon: true,
   }
 ];
 
@@ -88,8 +90,8 @@ const DestinationShowcase = () => {
           </motion.div>
         </div>
 
-        {/* High-Performance Interactive Destination Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+        {/* High-Performance Interactive Destination Grid: 3 Live Signature Properties */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
           {destinations.map((dest, idx) => (
             <motion.div
               key={dest.id}
@@ -107,7 +109,7 @@ const DestinationShowcase = () => {
                   src={dest.image}
                   alt={`${dest.name} in ${dest.location}, Maharashtra`}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   quality={80}
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />

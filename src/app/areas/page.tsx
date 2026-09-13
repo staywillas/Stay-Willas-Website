@@ -78,17 +78,18 @@ export default async function AreasPage() {
       count: khopoliCount,
       isLaunchingSoon: khopoliCount === 0,
       link: "/areas/khopoli"
-    },
-    {
-      slug: "mahabaleshwar",
-      name: "Mahabaleshwar & Panchgani",
-      tagline: "The Strawberry Highland",
-      desc: "Fresh strawberry plantations, tranquil valley viewpoints, and scenic hillside retreats.",
-      image: "/images/destinations/mahabaleshwar.jpg",
-      count: mahabaleshwarCount,
-      isLaunchingSoon: mahabaleshwarCount === 0,
-      link: "/areas/mahabaleshwar"
     }
+    // Preserved for when Terra Cotta Villa goes live:
+    // {
+    //   slug: "mahabaleshwar",
+    //   name: "Mahabaleshwar & Panchgani",
+    //   tagline: "The Strawberry Highland",
+    //   desc: "Fresh strawberry plantations, tranquil valley viewpoints, and scenic hillside retreats.",
+    //   image: "/images/destinations/mahabaleshwar.jpg",
+    //   count: mahabaleshwarCount,
+    //   isLaunchingSoon: mahabaleshwarCount === 0,
+    //   link: "/areas/mahabaleshwar"
+    // }
   ];
 
   const breadcrumbSchema = generateBreadcrumbSchema([
@@ -144,7 +145,7 @@ export default async function AreasPage() {
 
         {/* Grid Section */}
         <section className="pb-24 px-6 md:px-12 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 max-w-5xl mx-auto">
             {areas.map((area) => (
               <div 
                 key={area.slug}
@@ -157,7 +158,7 @@ export default async function AreasPage() {
                       src={area.image} 
                       alt={`${area.name} Luxury Villas`}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-80" />

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import ReactDOM from "react-dom";
 import Navbar from "@/components/layout/navbar";
 import dynamic from "next/dynamic";
 
@@ -56,6 +57,13 @@ import { prisma } from "@/lib/db";
 export const revalidate = 60; // Instant TTFB via ISR cache
 
 export default async function Home() {
+  // Preload hero background image immediately in HTML head
+  ReactDOM.preload("/images/angle-house-hero-clean.webp", {
+    as: "image",
+    type: "image/webp",
+    fetchPriority: "high",
+  });
+
   // Query all villas in a single roundtrip
   const allVillas = await prisma.villa.findMany({
     orderBy: { createdAt: "desc" },

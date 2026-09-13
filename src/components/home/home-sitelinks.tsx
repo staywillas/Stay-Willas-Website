@@ -2,16 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { 
-  Waves, 
-  Trees, 
-  Crown, 
-  Award, 
-  MapPin, 
-  Sparkles, 
-  ArrowUpRight 
-} from "lucide-react";
+import { Sparkles, ArrowUpRight } from "lucide-react";
 
 export interface SitelinkItem {
   id: string;
@@ -20,7 +13,7 @@ export interface SitelinkItem {
   line2: string;
   href: string;
   badge?: string;
-  icon: React.ElementType;
+  image: string;
   isExternal?: boolean;
 }
 
@@ -32,7 +25,7 @@ export const homeSitelinksData: SitelinkItem[] = [
     line2: "What makes The Angle House one of the top villas with private pool...",
     href: "/villas-in-lonavala-with-private-pool",
     badge: "Private Pool",
-    icon: Waves,
+    image: "/images/sitelinks/angle-house-pool-exact.webp",
   },
   {
     id: "luxury-villas-khopoli",
@@ -41,16 +34,16 @@ export const homeSitelinksData: SitelinkItem[] = [
     line2: "Escape to a stunning nature sanctuary with mountain views & hospitality...",
     href: "/areas/khopoli",
     badge: "Nature Escape",
-    icon: Trees,
+    image: "/images/sitelinks/khopoli-canopy.webp",
   },
   {
     id: "luxury-villas-mumbai",
     title: "Luxury Villas Near Mumbai",
     line1: "Browse our handpicked collection for rent",
-    line2: "Curated private estates across Lonavala, Khopoli & Mahabaleshwar...",
+    line2: "Curated private estates across Lonavala & Khopoli with private pools...",
     href: "/villas",
     badge: "All Villas",
-    icon: Crown,
+    image: "/images/sitelinks/willow-peak-chalets.webp",
   },
   {
     id: "about-stay-willas",
@@ -59,7 +52,7 @@ export const homeSitelinksData: SitelinkItem[] = [
     line2: "Discover our curation process & bespoke villa hospitality...",
     href: "/about",
     badge: "Our Story",
-    icon: Award,
+    image: "/images/sitelinks/about-story.webp",
   },
   {
     id: "villa-destinations",
@@ -68,7 +61,7 @@ export const homeSitelinksData: SitelinkItem[] = [
     line2: "Explore premium getaways across Lonavala, Khopoli & beyond...",
     href: "/destinations",
     badge: "Destinations",
-    icon: MapPin,
+    image: "/images/sitelinks/maharashtra-hills-villa.webp",
   },
   {
     id: "luxury-experiences",
@@ -77,7 +70,7 @@ export const homeSitelinksData: SitelinkItem[] = [
     line2: "Curated dining, celebrations, and serene weekend escapes...",
     href: "/experiences",
     badge: "Experiences",
-    icon: Sparkles,
+    image: "/images/sitelinks/luxury-experiences.webp",
   },
 ];
 
@@ -116,10 +109,9 @@ export default function HomeSitelinks() {
           </Link>
         </div>
 
-        {/* Sitelinks 6-Card Responsive Grid */}
-        <nav aria-label="Homepage Sitelinks Grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        {/* Sitelinks 6-Card Responsive Grid with Image Backgrounds */}
+        <nav aria-label="Homepage Sitelinks Grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {homeSitelinksData.map((item, idx) => {
-            const Icon = item.icon;
             const CardWrapper = item.isExternal ? "a" : Link;
             const linkProps = item.isExternal 
               ? { href: item.href, target: "_blank", rel: "noopener noreferrer" }
@@ -132,45 +124,56 @@ export default function HomeSitelinks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
+                className="h-full"
               >
                 <CardWrapper
                   {...linkProps}
-                  className="group block h-full bg-white hover:bg-gradient-to-br hover:from-white hover:to-[#FAF8F5] border border-slate-200/80 hover:border-[#DAA520] rounded-2xl p-5 sm:p-6 transition-all duration-300 shadow-xs hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden"
+                  className="group relative block h-[240px] sm:h-[260px] rounded-2xl overflow-hidden border border-slate-200/80 hover:border-[#DAA520] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
                 >
-                  {/* Subtle Top Border Glow on Hover */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-transparent group-hover:bg-gradient-to-r group-hover:from-[#1B3564] group-hover:via-[#DAA520] group-hover:to-[#1B3564] transition-all duration-300" />
-
-                  <div className="flex items-start justify-between gap-4">
-                    {/* Icon Box */}
-                    <div className="w-11 h-11 rounded-xl bg-[#1B3564]/5 group-hover:bg-[#DAA520]/15 text-[#1B3564] group-hover:text-[#DAA520] flex items-center justify-center transition-colors shrink-0 border border-slate-100 group-hover:border-[#DAA520]/30 shadow-xs">
-                      <Icon size={20} className="stroke-[2]" />
-                    </div>
-
-                    {/* Badge & Arrow */}
-                    <div className="flex items-center gap-2 shrink-0">
-                      {item.badge && (
-                        <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 group-hover:bg-[#DAA520]/20 group-hover:text-[#1B3564] transition-colors border border-slate-200/50">
-                          {item.badge}
-                        </span>
-                      )}
-                      <span className="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-[#DAA520] text-slate-500 group-hover:text-[#1B3564] flex items-center justify-center transition-all duration-300 group-hover:scale-105">
-                        <ArrowUpRight size={13} className="stroke-[2.5]" />
-                      </span>
-                    </div>
+                  {/* Category Background Image */}
+                  <div className="absolute inset-0 z-0 overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                    />
+                    {/* Multi-stop Luxury Dark Overlay for High Legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#070E1A]/95 via-[#070E1A]/55 to-[#070E1A]/30 group-hover:via-[#070E1A]/45 transition-colors duration-500" />
                   </div>
 
-                  {/* Sitelink Content (Text, Description Line 1, Description Line 2) */}
-                  <div className="mt-4">
-                    <h3 className="text-base sm:text-lg font-heading font-bold text-[#1B3564] group-hover:text-[#DAA520] transition-colors leading-snug">
-                      {item.title}
-                    </h3>
-                    <div className="mt-1.5 space-y-0.5 text-xs text-slate-600 leading-relaxed font-normal">
-                      <p className="text-slate-800 font-medium">
-                        {item.line1}
-                      </p>
-                      <p className="text-slate-500 text-[11px]">
-                        {item.line2}
-                      </p>
+                  {/* Subtle Top Gold Border Glow on Hover */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-transparent group-hover:bg-gradient-to-r group-hover:from-[#1B3564] group-hover:via-[#DAA520] group-hover:to-[#1B3564] transition-all duration-300 z-10" />
+
+                  {/* Content Container */}
+                  <div className="relative z-10 h-full p-5 sm:p-6 flex flex-col justify-between">
+                    {/* Top Row: Category Badge + Arrow Icon */}
+                    <div className="flex items-center justify-between gap-3">
+                      {item.badge ? (
+                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-[#070E1A]/60 backdrop-blur-md text-[#DAA520] border border-[#DAA520]/40 shadow-xs">
+                          {item.badge}
+                        </span>
+                      ) : <span />}
+
+                      <span className="w-8 h-8 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white group-hover:bg-[#DAA520] group-hover:text-[#0B1528] group-hover:border-[#DAA520] flex items-center justify-center transition-all duration-300 group-hover:scale-110 shrink-0 shadow-xs">
+                        <ArrowUpRight size={15} className="stroke-[2.5]" />
+                      </span>
+                    </div>
+
+                    {/* Bottom Row: Title + Descriptions */}
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-heading font-bold text-white group-hover:text-[#DAA520] transition-colors leading-snug drop-shadow-sm">
+                        {item.title}
+                      </h3>
+                      <div className="mt-1.5 space-y-0.5">
+                        <p className="text-white/95 text-xs sm:text-sm font-medium leading-snug line-clamp-1 drop-shadow-xs">
+                          {item.line1}
+                        </p>
+                        <p className="text-white/75 text-[11px] sm:text-xs leading-relaxed line-clamp-2 drop-shadow-xs">
+                          {item.line2}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </CardWrapper>

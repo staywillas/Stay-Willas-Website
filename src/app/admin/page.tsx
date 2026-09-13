@@ -73,6 +73,10 @@ export default async function AdminPage() {
     if (a.slug === "canopy-crest" && b.slug !== "canopy-crest") return -1;
     if (b.slug === "canopy-crest" && a.slug !== "canopy-crest") return 1;
     
+    // 3rd Priority
+    if (a.slug === "willow-peak" && b.slug !== "willow-peak") return -1;
+    if (b.slug === "willow-peak" && a.slug !== "willow-peak") return 1;
+    
     return 0;
   });
 

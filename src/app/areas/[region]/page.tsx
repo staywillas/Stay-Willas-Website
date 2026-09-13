@@ -312,12 +312,14 @@ export default async function AreaRegionPage({ params }: PageProps) {
               >
                 Khopoli
               </Link>
+              {/* Preserved for when Mahabaleshwar goes live:
               <Link 
                 href="/areas/mahabaleshwar"
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${regionKey === 'mahabaleshwar' ? 'bg-[#1B3564] text-white shadow-sm' : 'bg-[#FAF8F5] text-slate-700 hover:bg-[#1B3564] hover:text-white border border-slate-200'}`}
               >
                 Mahabaleshwar & Panchgani
               </Link>
+              */}
               <Link 
                 href="/areas"
                 className="px-4 py-2 rounded-full text-xs font-bold bg-transparent text-[#DAA520] hover:underline"

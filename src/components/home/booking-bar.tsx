@@ -759,6 +759,9 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                 src={villa.image || "/images/hero-villa.webp"}
                                 alt={villa.name}
                                 fill
+                                sizes="(max-width: 768px) 100vw, 240px"
+                                quality={75}
+                                loading="lazy"
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                               />
                               {/* Overlay Pill / Tag */}

@@ -1,5 +1,6 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+﻿import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import type { NextRequest, NextFetchEvent } from "next/server";
 
 // Only protect booking and wishlist — everything else is freely browsable
 const isProtectedRoute = createRouteMatcher([
@@ -8,7 +9,7 @@ const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
+const clerkHandler = clerkMiddleware(async (auth, req) => {
   const host = req.headers.get("host") || "";
   const { pathname } = req.nextUrl;
 
@@ -25,6 +26,22 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect();
   }
 });
+
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
+  const res = await clerkHandler(request, event);
+
+  // Next.js 16 compatibility: Clerk's decorateRequest sets x-middleware-rewrite to req.url
+  // to pass request headers. In Next.js 16, self-rewriting results in a 404 router bailout.
+  if (res && res.headers.has("x-middleware-rewrite")) {
+    const rewriteHeader = res.headers.get("x-middleware-rewrite");
+    if (rewriteHeader === request.url || rewriteHeader === request.nextUrl.pathname) {
+      res.headers.delete("x-middleware-rewrite");
+      res.headers.set("x-middleware-next", "1");
+    }
+  }
+
+  return res;
+}
 
 export const config = {
   matcher: [
