@@ -22,7 +22,7 @@ interface AreaDetails {
 const AREA_DATA: { [key: string]: AreaDetails } = {
   lonavala: {
     name: "Lonavala",
-    tagline: "The Mountain Sanctuary",
+    tagline: "The Mountain Villa",
     desc: "Cool mountain breeze, misty green valleys, and spacious private pool villas perched on lush hills.",
     image: "/assets/villas/the-angle-house/gallery-11.webp",
     isLaunchingSoon: false
@@ -40,13 +40,6 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
     desc: "Misty Sahyadri valleys, fresh strawberry farms, and tranquil hillside retreats.",
     image: "/images/destinations/mahabaleshwar.jpg",
     isLaunchingSoon: true
-  },
-  pawna: {
-    name: "Pawna Lake",
-    tagline: "The Lakeside Oasis",
-    desc: "Tranquil waters, scenic mountain views, and serene private pool villas near Pawna Lake.",
-    image: "/assets/villas/the-angle-house/gallery-4.webp",
-    isLaunchingSoon: true
   }
 };
 
@@ -58,7 +51,7 @@ export const revalidate = 60; // Instant TTFB via ISR cache
 
 export function generateStaticParams() {
   return [
-    { region: "pawna" },
+    { region: "mahabaleshwar" },
   ];
 }
 
@@ -99,11 +92,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "corporate offsite villa Khopoli",
       "large group villa khopoli"
     ];
-  } else if (regionKey === "pawna") {
-    titleText = "Pawna Lake Villas & Private Pool Stays | Stay Willas";
-    descText = "Book private pool villas near Pawna Lake Lonavala with serene lake views and in-house chef service.";
-    keywordList = ["pawna lake villas", "villas near pawna lake lonavala"];
-    indexRobots = true;
   }
 
   return {
@@ -341,7 +329,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
                 Stay Willas is coming to {area.name}
               </h2>
               <p className="text-slate-700 text-base md:text-lg leading-relaxed font-normal max-w-md mx-auto">
-                We are actively curating premium private pool sanctuaries in {area.name} to offer you the signature Stay Willas experience. Join the waitlist to be notified first!
+                We are actively curating premium private pool villas in {area.name} to offer you the signature Stay Willas experience. Join the waitlist to be notified first!
               </p>
               <div className="pt-4">
                 <a

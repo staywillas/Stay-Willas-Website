@@ -6,9 +6,7 @@ import Link from "next/link";
 import { 
   Sparkles, 
   ArrowUpRight, 
-  Building2, 
-  Palmtree, 
-  Mountain 
+  MapPin 
 } from "lucide-react";
 import BookingBar from "@/components/home/booking-bar";
 import RotatingText from "@/components/ui/RotatingText";
@@ -18,32 +16,32 @@ const HERO_BLUR_DATA_URL = "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwA
 
 const ROTATING_PHRASES = [
   {
-    text: "Luxury Begins",
-    bgClass: "bg-[#4D7C0F]", // Solid Stay Willas Signature Brand Olive Green
-    borderClass: "border-[#65A30D]/60",
-    shadowClass: "shadow-[0_4px_20px_rgba(77,124,15,0.35)]",
-    textClass: "text-white",
+    text: "Memories Are Made",
+    bgClass: "bg-white/[0.10] backdrop-blur-xl",
+    borderClass: "border-[#DAA520]/45",
+    shadowClass: "shadow-[0_4px_24px_rgba(218,165,32,0.18),inset_0_1px_1.5px_rgba(255,255,255,0.4)]",
+    textClass: "text-[#F5C042]", // Brand Gold/Yellow
   },
   {
-    text: "Memories Unfold",
-    bgClass: "bg-[#B45309]", // Solid Warm Luxury Amber
-    borderClass: "border-[#D97706]/60",
-    shadowClass: "shadow-[0_4px_20px_rgba(180,83,9,0.35)]",
-    textClass: "text-white",
+    text: "Families Unwind",
+    bgClass: "bg-white/[0.10] backdrop-blur-xl",
+    borderClass: "border-[#559C24]/45",
+    shadowClass: "shadow-[0_4px_24px_rgba(85,156,36,0.2),inset_0_1px_1.5px_rgba(255,255,255,0.4)]",
+    textClass: "text-[#86EFAC]", // Light Botanical Brand Green
   },
   {
-    text: "Serenity Awakens",
-    bgClass: "bg-[#0F766E]", // Solid Deep Emerald Teal
-    borderClass: "border-[#14B8A6]/60",
-    shadowClass: "shadow-[0_4px_20px_rgba(15,118,110,0.35)]",
-    textClass: "text-white",
+    text: "Peace Begins",
+    bgClass: "bg-white/[0.10] backdrop-blur-xl",
+    borderClass: "border-[#DAA520]/45",
+    shadowClass: "shadow-[0_4px_24px_rgba(218,165,32,0.18),inset_0_1px_1.5px_rgba(255,255,255,0.4)]",
+    textClass: "text-[#DAA520]", // Brand Gold
   },
   {
-    text: "Grandeur Awaits",
-    bgClass: "bg-[#1E40AF]", // Solid Royal Sapphire Blue
-    borderClass: "border-[#3B82F6]/60",
-    shadowClass: "shadow-[0_4px_20px_rgba(30,64,175,0.35)]",
-    textClass: "text-white",
+    text: "You Truly Relax",
+    bgClass: "bg-white/[0.10] backdrop-blur-xl",
+    borderClass: "border-[#559C24]/45",
+    shadowClass: "shadow-[0_4px_24px_rgba(85,156,36,0.2),inset_0_1px_1.5px_rgba(255,255,255,0.4)]",
+    textClass: "text-[#6EE7B7]", // Luminous Mint Brand Green
   },
 ];
 
@@ -70,40 +68,33 @@ export default function Hero() {
           className="object-cover object-center scale-[1.02] transform transition-transform duration-1000"
         />
         
-        {/* 2. Bespoke Luxury Blue Tint Overlay (Vibrant Royal / Deep Sapphire Gradient) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#07162C]/90 via-[#0B254A]/75 to-[#040C1A]/95 backdrop-blur-[1px]" />
+        {/* 2. Soft Tint Overlay (Reduced tint for luminous architectural depth) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#07162C]/65 via-[#0B254A]/40 to-[#040C1A]/80" />
 
-        {/* Ambient Radial Lighting for Dramatic Architectural Glow (Optimized for Mobile) */}
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-[#2563EB]/25 via-[#1D4ED8]/10 to-transparent rounded-full blur-[80px] sm:blur-[140px] pointer-events-none" />
-        <div className="hidden sm:block absolute bottom-10 right-0 w-[500px] h-[400px] bg-[#DAA520]/15 rounded-full blur-[130px] pointer-events-none" />
-        <div className="hidden sm:block absolute bottom-10 left-0 w-[500px] h-[400px] bg-blue-600/15 rounded-full blur-[130px] pointer-events-none" />
+        {/* Subtle Ambient Radial Lighting in Brand Gold & Green */}
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-[#559C24]/15 via-[#DAA520]/8 to-transparent rounded-full blur-[80px] sm:blur-[140px] pointer-events-none" />
+        <div className="hidden sm:block absolute bottom-10 right-0 w-[500px] h-[400px] bg-[#DAA520]/10 rounded-full blur-[130px] pointer-events-none" />
+        <div className="hidden sm:block absolute bottom-10 left-0 w-[500px] h-[400px] bg-[#559C24]/10 rounded-full blur-[130px] pointer-events-none" />
       </div>
 
       {/* 3. Hero Content Container */}
       <div className="max-w-[1400px] w-full mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10 flex flex-col justify-between flex-1">
         
         {/* Top Centered Editorial Headline Block */}
-        <div className="text-center max-w-4xl mx-auto flex flex-col items-center pt-1 sm:pt-4">
+        <div className="text-center max-w-4xl mx-auto flex flex-col items-center pt-2 sm:pt-6">
           
-          {/* Gold Luxury Pill Badge */}
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-white/10 hover:bg-white/15 backdrop-blur-md border border-[#DAA520]/50 rounded-full px-3 sm:px-4 py-1 sm:py-1.5 mb-2 sm:mb-6 shadow-[0_4px_20px_rgba(218,165,32,0.2)]">
-            <Sparkles size={13} className="text-[#F3C065] animate-pulse shrink-0" />
-            <span className="text-[9px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#F3C065]">
-              THE STAY WILLAS COLLECTION
+          {/* Sleek Headline with Brand Signature Colors & React Bits RotatingText */}
+          <h1 className="font-heading text-center tracking-tight text-[1.65rem] xs:text-2xl sm:text-3xl md:text-[2.65rem] lg:text-[3.35rem] font-light text-white leading-[1.18] sm:leading-[1.22] drop-shadow-md max-w-4xl mx-auto flex flex-col items-center justify-center">
+            <span className="block text-center font-light tracking-[-0.01em]">
+              Where Time <span className="font-cormorant italic font-semibold sm:font-bold text-[#86EFAC] drop-shadow-sm">Slows</span>{" "}
+              <span className="font-cormorant italic font-semibold sm:font-bold text-[#DAA520] drop-shadow-sm">Down &amp;</span>
             </span>
-          </div>
-
-          {/* Bold Centered Headline with React Bits RotatingText */}
-          <h1 className="font-heading text-center tracking-tight text-[1.85rem] xs:text-[2.15rem] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.14] sm:leading-[1.18] drop-shadow-lg max-w-5xl mx-auto flex flex-col items-center justify-center">
-            <span className="block text-center">
-              Where Time Slows <span className="whitespace-nowrap">Down &amp;</span>
-            </span>
-            <span className="inline-flex items-center justify-center mt-1 sm:mt-2.5">
+            <span className="inline-flex items-center justify-center mt-2 sm:mt-3">
               <RotatingText
                 texts={ROTATING_PHRASES.map((p) => p.text)}
                 onNext={(index: number) => setPhraseIndex(index)}
                 mainClassName={cn(
-                  "px-3 sm:px-5 py-0.5 sm:py-1.5 justify-center rounded-xl sm:rounded-2xl font-heading italic font-serif inline-flex items-center align-middle whitespace-nowrap flex-nowrap border transition-all duration-500 ease-out",
+                  "pl-4 sm:pl-7 pr-6 sm:pr-9 py-1 sm:py-1.5 justify-center rounded-2xl sm:rounded-full font-cormorant italic font-semibold inline-flex items-center align-middle whitespace-nowrap flex-nowrap border transition-all duration-500 ease-out",
                   currentPhrase.bgClass,
                   currentPhrase.borderClass,
                   currentPhrase.shadowClass,
@@ -113,7 +104,8 @@ export default function Hero() {
                 initial={{ y: "40%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "-40%", opacity: 0 }}
-                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1"
+                splitLevelClassName="overflow-visible pb-0.5 sm:pb-1 pr-1.5"
+                elementLevelClassName="inline-block pr-[0.06em]"
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 rotationInterval={2800}
                 splitBy="words"
@@ -121,81 +113,47 @@ export default function Hero() {
                 loop
               />
             </span>
-            <span className="sr-only"> — Luxury Private Pool Villas in Maharashtra Near Mumbai &amp; Pune</span>
+            <span className="sr-only"> — Private Pool Villas in Lonavala &amp; Khopoli Near Mumbai &amp; Pune</span>
           </h1>
 
           {/* Subheadline / Brand Promise */}
-          <p className="mt-2 sm:mt-5 text-xs sm:text-base md:text-lg text-slate-200/90 max-w-2xl mx-auto font-light leading-snug sm:leading-relaxed drop-shadow-sm px-2 line-clamp-2 sm:line-clamp-none">
-            Discover premier private pool villas across Maharashtra with bespoke in-house chefs, panoramic mountain views, and total seclusion.
+          <p className="mt-2.5 sm:mt-5 text-xs sm:text-base md:text-lg text-white/80 max-w-2xl mx-auto font-light leading-relaxed tracking-wide drop-shadow-sm px-2 line-clamp-2 sm:line-clamp-none">
+            Enjoy private pool villas in Lonavala and Khopoli with fresh home-cooked meals, scenic mountain views, and complete privacy for your family and friends.
           </p>
 
-          {/* 4. Well-Placed 3 Main Properties (In 1 Single Row on Mobile, Glassmorphic 3D Icons) */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full max-w-3xl mx-auto mt-3.5 sm:mt-8">
+          {/* 4. Well-Placed Destination Location Badges (2 Buttons Only: Lonavala & Khopoli) */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 w-full max-w-xs sm:max-w-sm mx-auto mt-3.5 sm:mt-8">
             
-            {/* Property 1: The Angle House */}
+            {/* Location 1: Lonavala */}
             <Link
-              href="/villa/the-angle-house"
-              className="group relative flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1.5 sm:gap-3.5 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/[0.10] hover:bg-white/[0.18] backdrop-blur-xl border border-white/20 hover:border-[#DAA520]/70 shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.35)] hover:shadow-[0_12px_36px_rgba(37,99,235,0.3)] transition-all duration-300 transform hover:-translate-y-1"
+              href="/areas/lonavala"
+              className="group relative flex items-center justify-between gap-2 sm:gap-3 px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.16] backdrop-blur-xl border border-white/20 hover:border-[#DAA520]/60 shadow-[0_4px_20px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:shadow-[0_8px_28px_rgba(218,165,32,0.2)] transition-all duration-300 transform hover:-translate-y-0.5"
             >
-              {/* 3D Glassmorphism Icon */}
-              <div className="relative w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-[#60A5FA] via-[#2563EB] to-[#1E3A8A] shadow-[0_4px_12px_rgba(37,99,235,0.45),inset_0_1.5px_2px_rgba(255,255,255,0.8),inset_0_-1.5px_2px_rgba(0,0,0,0.4)] border border-white/40 transform group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                <Building2 className="w-4 h-4 sm:w-6 sm:h-6 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-center sm:justify-between">
-                  <span className="font-heading font-bold text-white text-[11px] sm:text-base lg:text-lg group-hover:text-[#F3C065] transition-colors leading-tight truncate">
-                    The Angle House
-                  </span>
-                  <ArrowUpRight size={16} className="hidden sm:inline-block text-white/60 group-hover:text-[#F3C065] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="relative w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shrink-0 bg-white/[0.16] group-hover:bg-white/[0.28] backdrop-blur-md border border-white/35 group-hover:border-white/60 shadow-[0_2px_6px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.6)] transform group-hover:scale-105 transition-all duration-300">
+                  <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" strokeWidth={2.2} />
                 </div>
-                <p className="hidden sm:block text-[11px] sm:text-xs text-slate-300 truncate font-light mt-0.5">
-                  Lonavala • Pool Villa
-                </p>
+                <span className="font-heading font-medium sm:font-semibold text-white text-xs sm:text-sm lg:text-base group-hover:text-[#DAA520] transition-colors leading-tight truncate">
+                  Lonavala
+                </span>
               </div>
+              <ArrowUpRight size={14} className="text-white/50 group-hover:text-[#DAA520] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
             </Link>
 
-            {/* Property 2: Canopy Crest */}
+            {/* Location 2: Khopoli */}
             <Link
-              href="/villa/canopy-crest"
-              className="group relative flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1.5 sm:gap-3.5 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/[0.10] hover:bg-white/[0.18] backdrop-blur-xl border border-white/20 hover:border-[#10B981]/70 shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.35)] hover:shadow-[0_12px_36px_rgba(16,185,129,0.3)] transition-all duration-300 transform hover:-translate-y-1"
+              href="/areas/khopoli"
+              className="group relative flex items-center justify-between gap-2 sm:gap-3 px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.16] backdrop-blur-xl border border-white/20 hover:border-[#DAA520]/60 shadow-[0_4px_20px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:shadow-[0_8px_28px_rgba(218,165,32,0.2)] transition-all duration-300 transform hover:-translate-y-0.5"
             >
-              {/* 3D Glassmorphism Icon */}
-              <div className="relative w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-[#34D399] via-[#059669] to-[#064E3B] shadow-[0_4px_12px_rgba(16,185,129,0.45),inset_0_1.5px_2px_rgba(255,255,255,0.8),inset_0_-1.5px_2px_rgba(0,0,0,0.4)] border border-white/40 transform group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                <Palmtree className="w-4 h-4 sm:w-6 sm:h-6 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-center sm:justify-between">
-                  <span className="font-heading font-bold text-white text-[11px] sm:text-base lg:text-lg group-hover:text-[#34D399] transition-colors leading-tight truncate">
-                    Canopy Crest
-                  </span>
-                  <ArrowUpRight size={16} className="hidden sm:inline-block text-white/60 group-hover:text-[#34D399] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="relative w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shrink-0 bg-white/[0.16] group-hover:bg-white/[0.28] backdrop-blur-md border border-white/35 group-hover:border-white/60 shadow-[0_2px_6px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.6)] transform group-hover:scale-105 transition-all duration-300">
+                  <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" strokeWidth={2.2} />
                 </div>
-                <p className="hidden sm:block text-[11px] sm:text-xs text-slate-300 truncate font-light mt-0.5">
-                  Khopoli • 4 BHK Estate
-                </p>
+                <span className="font-heading font-medium sm:font-semibold text-white text-xs sm:text-sm lg:text-base group-hover:text-[#DAA520] transition-colors leading-tight truncate">
+                  Khopoli
+                </span>
               </div>
-            </Link>
-
-            {/* Property 3: Willow Peak */}
-            <Link
-              href="/villa/willow-peak"
-              className="group relative flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1.5 sm:gap-3.5 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl bg-white/[0.10] hover:bg-white/[0.18] backdrop-blur-xl border border-white/20 hover:border-[#DAA520]/70 shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.35)] hover:shadow-[0_12px_36px_rgba(218,165,32,0.3)] transition-all duration-300 transform hover:-translate-y-1"
-            >
-              {/* 3D Glassmorphism Icon */}
-              <div className="relative w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-[#FBBF24] via-[#D97706] to-[#78350F] shadow-[0_4px_12px_rgba(245,158,11,0.45),inset_0_1.5px_2px_rgba(255,255,255,0.8),inset_0_-1.5px_2px_rgba(0,0,0,0.4)] border border-white/40 transform group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                <Mountain className="w-4 h-4 sm:w-6 sm:h-6 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-center sm:justify-between">
-                  <span className="font-heading font-bold text-white text-[11px] sm:text-base lg:text-lg group-hover:text-[#F3C065] transition-colors leading-tight truncate">
-                    Willow Peak
-                  </span>
-                  <ArrowUpRight size={16} className="hidden sm:inline-block text-white/60 group-hover:text-[#F3C065] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-                </div>
-                <p className="hidden sm:block text-[11px] sm:text-xs text-slate-300 truncate font-light mt-0.5">
-                  Lonavala • A-Frame Chalets
-                </p>
-              </div>
+              <ArrowUpRight size={14} className="text-white/50 group-hover:text-[#DAA520] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
             </Link>
 
           </div>

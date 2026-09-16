@@ -544,7 +544,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       }
 
       const targetVilla = customBookingData?.villa || villas.find((v) => v.id === selectedVillaId);
-      const activeVillaName = targetVilla?.name || "Stay Willas Sanctuary";
+      const activeVillaName = targetVilla?.name || "Stay Willas Villa";
       const targetGuestName = customBookingData?.guestName || guestName || "Valued Guest";
       const targetGuestPhone = customBookingData?.guestPhone || guestPhone || "N/A";
       const targetGuestEmail = customBookingData?.guestEmail || guestEmail || "N/A";
@@ -1196,7 +1196,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
           </div>
           <div className="flex items-center gap-2">
             <span className="w-3.5 h-3.5 rounded bg-white border border-slate-300"></span>
-            <span className="font-medium text-slate-700">Available Sanctuary (Click to Block)</span>
+            <span className="font-medium text-slate-700">Available Villa (Click to Block)</span>
           </div>
         </div>
 
@@ -2073,7 +2073,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
             {/* Inspector Content */}
             <div className="space-y-4 text-xs">
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-widest block mb-0.5 font-bold">Sanctuary Estate</span>
+                <span className="text-[9px] text-slate-400 uppercase tracking-widest block mb-0.5 font-bold">Villa Estate</span>
                 <span className="font-heading text-lg text-slate-900 font-bold">{villas.find(v => v.id === selectedBooking.villaId)?.name}</span>
               </div>
 
@@ -2122,7 +2122,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                 <div className="text-xl font-black">
                   {selectedBooking.totalPrice > 0 
                     ? `₹${selectedBooking.totalPrice.toLocaleString("en-IN")}` 
-                    : "₹0 (Blocked Sanctuary)"}
+                    : "₹0 (Blocked Villa)"}
                 </div>
                 {activeDetails.advancePaid !== undefined && (
                   <div className="text-[11px] text-slate-300 pt-1 flex justify-between">

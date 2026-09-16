@@ -134,7 +134,7 @@ const Navbar = () => {
         // Mobile override: always float like a card at the top
         hasTopPromoBanner
           ? "max-xl:top-12 max-xl:left-3 max-xl:right-3 max-xl:w-auto max-xl:p-0"
-          : "max-xl:top-4 max-xl:left-4 max-xl:right-4 max-xl:w-auto max-xl:p-0",
+          : "max-xl:top-3.5 max-xl:left-3 max-xl:right-3 max-xl:w-auto max-xl:p-0",
         // Scroll-direction-aware mobile hide/show
         !isNavVisible && !isMobileMenuOpen ? "max-xl:-translate-y-[calc(100%+4rem)] max-xl:opacity-0" : "max-xl:translate-y-0 max-xl:opacity-100"
       )}
@@ -142,17 +142,15 @@ const Navbar = () => {
     >
       <div
         className={cn(
-          "mx-auto transition-all duration-500 ease-in-out flex items-center justify-between gap-6 md:gap-8 w-full",
+          "mx-auto transition-all duration-500 ease-in-out flex items-center justify-between gap-2.5 sm:gap-4 md:gap-8 w-full",
           isScrolled
-            ? "rounded-none bg-[#F5F2EA]/95 backdrop-blur-md shadow-md border-b border-[#DAA520]/15 px-6 md:px-8 lg:px-12 py-3 md:py-4"
-            : "max-w-[1400px] rounded-full px-6 md:px-8 lg:px-12 py-3 md:py-4 bg-[#F5F2EA]/90 backdrop-blur-md border border-[#DAA520]/20 shadow-xl",
-          // Mobile overrides: always rounded-full, with clean spacing
-          "max-xl:rounded-full max-xl:bg-[#F5F2EA]/90 max-xl:border max-xl:border-[#DAA520]/20 max-xl:shadow-xl max-xl:px-4 max-xl:py-2.5"
+            ? "rounded-none bg-[#F5F2EA]/95 backdrop-blur-md shadow-md border-b border-[#DAA520]/15 px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-3 md:py-4"
+            : "max-w-[1400px] rounded-2xl xl:rounded-full px-3.5 sm:px-5 xl:px-12 py-2 xl:py-3.5 bg-[#F5F2EA]/95 backdrop-blur-md border border-[#DAA520]/25 shadow-xl"
         )}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-          <div className="relative w-8 h-8 sm:w-11 sm:h-11 md:w-13 md:h-13 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
+        <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group shrink-0 min-w-0">
+          <div className="relative w-7 h-7 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
             <Image 
               src="/images/logo.webp" 
               alt="Stay Willas Logo" 
@@ -163,7 +161,7 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col">
             <span className={cn(
-              "font-heading text-xs sm:text-lg md:text-2xl tracking-widest leading-tight transition-colors duration-500 whitespace-nowrap font-bold",
+              "font-heading text-[13px] sm:text-lg md:text-2xl tracking-widest leading-tight transition-colors duration-500 whitespace-nowrap font-bold",
               isDarkTheme ? "text-brand-navy" : "text-white"
             )}>STAY WILLAS</span>
             <span className={cn(
@@ -288,42 +286,32 @@ const Navbar = () => {
           </div>
         </div>
         {/* Mobile Header Quick Actions */}
-        <div className="xl:hidden flex items-center gap-2 shrink-0">
-          {/* Quick WhatsApp Action Button */}
-          <a
-            href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I am browsing your villas and would love to check dates and rates.")}`}
+        <div className="xl:hidden flex items-center gap-1.5 xs:gap-2 shrink-0">
+          <a 
+            href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas Concierge! 🏡 I would love to check availability and book a luxury villa near Mumbai. Could you share details and best direct pricing?")}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Direct WhatsApp Concierge"
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white flex items-center justify-center shadow-sm active:scale-95 transition-all"
+            className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-2.5 xs:px-3 py-1.5 text-[9.5px] xs:text-[10px] font-black tracking-wider uppercase transition-all duration-300 flex items-center justify-center whitespace-nowrap shadow-xs active:scale-95"
           >
-            <WhatsAppIcon size={18} className="fill-white" />
+            BOOK DIRECT
           </a>
 
           {isSignedIn ? (
             <UserButton
               appearance={{
                 elements: {
-                  avatarBox: "w-8 h-8 border-2 border-[#DAA520] rounded-full shadow-sm",
+                  avatarBox: "w-6 h-6 xs:w-7 xs:h-7 border-2 border-[#DAA520] rounded-full shadow-sm",
                 },
               }}
             />
-          ) : (
-            <SignInButton mode="modal">
-              <button
-                className="px-3 py-1 border border-[#1B3564]/20 hover:border-[#DAA520] text-[#1B3564] hover:text-[#DAA520] text-[10px] font-black uppercase tracking-widest transition-all duration-300 rounded-full bg-white/90 hover:bg-[#DAA520]/10 whitespace-nowrap cursor-pointer shadow-sm hidden sm:inline-flex"
-                aria-label="Login"
-              >
-                Login
-              </button>
-            </SignInButton>
-          )}
+          ) : null}
+
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1B3564] border border-[#DAA520] flex items-center justify-center text-[#DAA520] hover:bg-[#152A50] hover:scale-105 active:scale-95 transition-all duration-300 shadow-md cursor-pointer"
+            className="w-7 h-7 xs:w-8 xs:h-8 rounded-lg flex items-center justify-center text-[#1B3564] hover:text-[#DAA520] hover:bg-black/5 active:scale-90 transition-all cursor-pointer shrink-0"
             aria-label="Open Navigation Menu"
           >
-            <Menu size={19} className="stroke-[2.5]" />
+            <Menu size={19} className="stroke-[2.2]" />
           </button>
         </div>
       </div>

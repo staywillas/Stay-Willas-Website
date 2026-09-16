@@ -897,7 +897,7 @@ export async function sendInvoiceEmailAction(data: {
           <tr>
             <td style="background-color: #1B3564; padding: 24px; text-align: center;">
               <h1 style="color: #DAA520; margin: 0; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; font-weight: bold;">STAY WILLAS</h1>
-              <p style="color: #ffffff; margin: 4px 0 0 0; font-size: 11px; tracking: 1px; text-transform: uppercase;">Luxury Estates & Private Sanctuary</p>
+              <p style="color: #ffffff; margin: 4px 0 0 0; font-size: 11px; tracking: 1px; text-transform: uppercase;">Luxury Estates & Private Villa</p>
             </td>
           </tr>
 
@@ -1131,7 +1131,7 @@ export async function approveVerificationBooking(bookingId: string) {
           <body>
             <div class="container">
               <div class="header">
-                <p>Stay Willas Luxury Sanctuary</p>
+                <p>Stay Willas Luxury Villa</p>
                 <h1>Booking Confirmed! 🥂</h1>
               </div>
               <div class="content">

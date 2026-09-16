@@ -401,7 +401,7 @@ const defaultVillaReviews: Record<string, { id: string; villaId: string; userId:
       villaId: "lonavala-estate",
       userId: "guest_vikram_singhania",
       userName: "Vikram Singhania",
-      rating: 5,
+      rating: 4,
       comment: "Booked directly via WhatsApp for our weekday stay. Saved significantly compared to OTA platforms, and the caretaker had the master jacuzzi ready before check-in.",
       createdAt: new Date("2026-06-20"),
     },
@@ -419,7 +419,7 @@ const defaultVillaReviews: Record<string, { id: string; villaId: string; userId:
       villaId: "lonavala-estate",
       userId: "guest_sameer_kulkarni",
       userName: "Sameer Kulkarni",
-      rating: 5,
+      rating: 4,
       comment: "Celebrated my 30th birthday here with 12 friends on a weekday. Cleanest pool in Lonavala and zero noise disturbances.",
       createdAt: new Date("2026-08-04"),
     },
@@ -457,7 +457,7 @@ const defaultVillaReviews: Record<string, { id: string; villaId: string; userId:
       villaId: "khopoli-canopy-crest",
       userId: "guest_pooja_hegde",
       userName: "Pooja Hegde",
-      rating: 5,
+      rating: 4,
       comment: "Cleanest bathrooms, powerful air conditioning, and absolute seclusion without noisy neighbors. We are coming back every monsoon!",
       createdAt: new Date("2026-08-12"),
     },
@@ -477,9 +477,36 @@ const defaultVillaReviews: Record<string, { id: string; villaId: string; userId:
       villaId: "lonavala-willow-peak",
       userId: "guest_siddharth_rao",
       userName: "Siddharth Rao",
-      rating: 5,
+      rating: 4,
       comment: "We booked 2 cottages for a weekend getaway with friends. The garden sit-out, barbecue setup, and quiet surroundings were wonderful.",
       createdAt: new Date("2026-08-01"),
+    },
+    {
+      id: "rev_wp_3",
+      villaId: "lonavala-willow-peak",
+      userId: "guest_tanvi_joshi",
+      userName: "Tanvi Joshi",
+      rating: 5,
+      comment: "Wonderful location close to Tiger Point with peaceful mountain breeze. Beautiful wooden interior architecture and very courteous caretaking staff.",
+      createdAt: new Date("2026-08-10"),
+    },
+    {
+      id: "rev_wp_4",
+      villaId: "lonavala-willow-peak",
+      userId: "guest_manish_shah",
+      userName: "Manish Shah",
+      rating: 4,
+      comment: "Private open lawns and jacuzzi tub in the master room were highlight features. Delicious hot poha and masala chai in the morning.",
+      createdAt: new Date("2026-08-18"),
+    },
+    {
+      id: "rev_wp_5",
+      villaId: "lonavala-willow-peak",
+      userId: "guest_aarav_sharma",
+      userName: "Aarav Sharma",
+      rating: 5,
+      comment: "Super comfortable beds and spotlessly clean cottages. Perfect peaceful retreat away from city traffic.",
+      createdAt: new Date("2026-08-25"),
     },
   ],
 };
@@ -968,7 +995,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
                     <PawPrint size={22} className="animate-pulse" />
                   </div>
                   <div className="text-left">
-                    <h4 className="font-heading text-base sm:text-lg text-[#1B3564] font-bold">Pet Friendly Sanctuary</h4>
+                    <h4 className="font-heading text-base sm:text-lg text-[#1B3564] font-bold">Pet Friendly Villa</h4>
                     <p className="text-[11px] sm:text-xs text-text-primary/60 leading-relaxed mt-0.5 font-medium">
                       Your furry friends are more than welcome here! Sprawling outdoor space and safe layouts await.
                     </p>
@@ -1075,7 +1102,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
           const estateSubtitle = villaData.slug === "the-angle-house"
             ? "Signature 3 BHK glass villa accommodating up to 14 guests with private waterfall pool & jacuzzi."
             : villaData.slug === "canopy-crest"
-            ? "Sprawling 4 BHK mountain sanctuary accommodating up to 16 guests with private pool & lawns."
+            ? "Sprawling 4 BHK mountain villa accommodating up to 16 guests with private pool & lawns."
             : villaData.slug.includes("willow-peak")
             ? "Exclusive 3-cottage mountain estate in Kurwande, Lonavala with private in-room jacuzzis for up to 12 guests."
             : "Handpicked private estate with curated luxury rooms and spaces.";

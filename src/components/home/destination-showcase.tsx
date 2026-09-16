@@ -6,20 +6,13 @@ import Link from "next/link";
 import { ArrowUpRight, MapPin, Compass, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-// Preserved for when Terra Cotta Villa (Mahabaleshwar) goes live:
-// {
-//   id: "mahabaleshwar",
-//   name: "Mahabaleshwar",
-//   image: "/images/destinations/TERRA%20COTTA%20FINAL.jpg",
-//   link: "/areas/mahabaleshwar",
-//   isComingSoon: true
-// }
-
 export interface DestinationLocation {
   id: string;
   name: string;
   image: string;
   link: string;
+  villaCountText: string;
+  villasText: string;
   isComingSoon?: boolean;
 }
 
@@ -29,23 +22,21 @@ const locations: DestinationLocation[] = [
     name: "Lonavala",
     image: "/assets/villas/the-angle-house/gallery-11.webp",
     link: "/areas/lonavala",
+    villaCountText: "2 Luxury Villas",
+    villasText: "The Angle House • Willow Peak",
   },
   {
     id: "khopoli",
     name: "Khopoli",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
     link: "/areas/khopoli",
+    villaCountText: "1 Luxury Villa",
+    villasText: "Canopy Crest",
   },
-  {
-    id: "pawna",
-    name: "Pawna Lake",
-    image: "/assets/villas/willow-peak/gallery-12.webp",
-    link: "/areas/pawna",
-  }
 ];
 
 const DestinationShowcase = () => {
-  const [activeIndex, setActiveIndex] = useState(1); // Default to middle card (Khopoli)
+  const [activeIndex, setActiveIndex] = useState(0); // 0: Lonavala, 1: Khopoli
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -60,12 +51,12 @@ const DestinationShowcase = () => {
   const total = locations.length;
 
   const handleNext = useCallback(() => {
-    setActiveIndex((prev) => Math.min(total - 1, prev + 1));
+    setActiveIndex((prev) => (prev + 1) % total);
   }, [total]);
 
   const handlePrev = useCallback(() => {
-    setActiveIndex((prev) => Math.max(0, prev - 1));
-  }, []);
+    setActiveIndex((prev) => (prev - 1 + total) % total);
+  }, [total]);
 
   // Keyboard arrow navigation
   useEffect(() => {
@@ -77,17 +68,18 @@ const DestinationShowcase = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Linear offset calculation (no circular looping): returns negative for left, 0 for center, positive for right
+  // Offset calculation: 0 = center, -1 = left, +1 = right
   const getOffset = (index: number) => {
     return index - activeIndex;
   };
 
   return (
-    <section className="py-12 md:py-20 bg-bg-primary relative overflow-hidden">
+    <section className="py-14 md:py-24 bg-bg-primary relative overflow-hidden">
       {/* Background Ambient Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#DAA520]/5 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[380px] bg-[#DAA520]/6 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-6 md:mb-10">
           <motion.div
@@ -105,25 +97,23 @@ const DestinationShowcase = () => {
           </motion.div>
         </div>
 
-        {/* 3D Coverflow Gallery Stage - Spread out to acquire more horizontal space */}
-        <div className="relative w-full max-w-6xl xl:max-w-7xl mx-auto h-[380px] sm:h-[430px] md:h-[470px] flex items-center justify-center select-none">
+        {/* 3D Coverflow Gallery Stage (2 Locations: Lonavala & Khopoli) */}
+        <div className="relative w-full max-w-5xl mx-auto h-[410px] sm:h-[460px] md:h-[510px] flex items-center justify-center select-none">
           
-          {/* Left Arrow Button (disabled at left edge) */}
+          {/* Left Arrow Button */}
           <button
             onClick={handlePrev}
-            disabled={activeIndex === 0}
-            aria-label="Previous Location"
-            className="absolute left-1 sm:left-3 md:left-5 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0E1B35]/85 hover:bg-[#DAA520] disabled:opacity-20 disabled:hover:bg-[#0E1B35]/85 disabled:hover:text-white disabled:cursor-not-allowed disabled:hover:scale-100 text-white hover:text-[#0E1B35] border border-white/20 hover:border-[#DAA520] backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl hover:scale-110 active:scale-95 cursor-pointer group"
+            aria-label="Previous Destination"
+            className="absolute left-1 sm:left-4 md:left-8 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0E1B35]/85 hover:bg-[#DAA520] text-white hover:text-[#0E1B35] border border-white/20 hover:border-[#DAA520] backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl hover:scale-110 active:scale-95 cursor-pointer group"
           >
             <ChevronLeft size={20} className="transition-transform group-hover:-translate-x-0.5" />
           </button>
 
-          {/* Right Arrow Button (disabled at right edge) */}
+          {/* Right Arrow Button */}
           <button
             onClick={handleNext}
-            disabled={activeIndex === total - 1}
-            aria-label="Next Location"
-            className="absolute right-1 sm:right-3 md:right-5 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0E1B35]/85 hover:bg-[#DAA520] disabled:opacity-20 disabled:hover:bg-[#0E1B35]/85 disabled:hover:text-white disabled:cursor-not-allowed disabled:hover:scale-100 text-white hover:text-[#0E1B35] border border-white/20 hover:border-[#DAA520] backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl hover:scale-110 active:scale-95 cursor-pointer group"
+            aria-label="Next Destination"
+            className="absolute right-1 sm:right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0E1B35]/85 hover:bg-[#DAA520] text-white hover:text-[#0E1B35] border border-white/20 hover:border-[#DAA520] backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl hover:scale-110 active:scale-95 cursor-pointer group"
           >
             <ChevronRight size={20} className="transition-transform group-hover:translate-x-0.5" />
           </button>
@@ -139,7 +129,7 @@ const DestinationShowcase = () => {
               const isLeft = offset === -1;
               const isRight = offset === 1;
 
-              // Compute 3D transforms with generous horizontal spread
+              // Compute 3D transforms for 2 locations
               let xPos = "0%";
               let zPos = 0;
               let rotY = 0;
@@ -155,34 +145,19 @@ const DestinationShowcase = () => {
                 opacity = 1;
                 zIndex = 30;
               } else if (isLeft) {
-                xPos = isMobile ? "-74%" : "-94%";
+                xPos = isMobile ? "-56%" : "-68%";
                 zPos = -70;
-                rotY = 16;
-                scale = isMobile ? 0.84 : 0.88;
-                opacity = 0.75;
+                rotY = 18;
+                scale = isMobile ? 0.82 : 0.88;
+                opacity = 0.65;
                 zIndex = 20;
               } else if (isRight) {
-                xPos = isMobile ? "74%" : "94%";
+                xPos = isMobile ? "56%" : "68%";
                 zPos = -70;
-                rotY = -16;
-                scale = isMobile ? 0.84 : 0.88;
-                opacity = 0.75;
+                rotY = -18;
+                scale = isMobile ? 0.82 : 0.88;
+                opacity = 0.65;
                 zIndex = 20;
-              } else if (offset <= -2) {
-                xPos = isMobile ? "-130%" : "-178%";
-                zPos = -160;
-                rotY = 24;
-                scale = isMobile ? 0.72 : 0.78;
-                opacity = 0.35;
-                zIndex = 10;
-              } else {
-                // offset >= 2
-                xPos = isMobile ? "130%" : "178%";
-                zPos = -160;
-                rotY = -24;
-                scale = isMobile ? 0.72 : 0.78;
-                opacity = 0.35;
-                zIndex = 10;
               }
 
               return (
@@ -197,9 +172,9 @@ const DestinationShowcase = () => {
                   }}
                   transition={{
                     type: "spring",
-                    stiffness: 210,
-                    damping: 25,
-                    mass: 0.75,
+                    stiffness: 280,
+                    damping: 28,
+                    mass: 0.5,
                   }}
                   style={{
                     transformStyle: "preserve-3d",
@@ -220,82 +195,66 @@ const DestinationShowcase = () => {
                       handleNext();
                     }
                   }}
-                  className={`absolute w-[225px] sm:w-[265px] md:w-[295px] lg:w-[315px] h-[340px] sm:h-[390px] md:h-[430px] rounded-[24px] sm:rounded-[28px] overflow-hidden cursor-pointer select-none transition-shadow duration-500 ${
+                  className={`absolute w-[235px] sm:w-[275px] md:w-[315px] lg:w-[345px] h-[360px] sm:h-[410px] md:h-[460px] rounded-[24px] sm:rounded-[28px] overflow-hidden cursor-pointer select-none transform-gpu will-change-transform transition-shadow duration-300 ${
                     isCenter
-                      ? "border-2 border-[#DAA520] shadow-[0_20px_50px_rgba(0,0,0,0.65),0_0_30px_rgba(218,165,32,0.3)]"
-                      : "border border-white/20 shadow-[0_12px_30px_rgba(0,0,0,0.5)] hover:opacity-80"
+                      ? "border-2 border-[#DAA520] shadow-[0_16px_40px_rgba(0,0,0,0.5),0_0_20px_rgba(218,165,32,0.25)]"
+                      : "border border-white/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:opacity-85"
                   } bg-[#0E1B35]`}
                 >
-                  {/* Clean HQ Background Image (No text watermarks) */}
+                  {/* Clean HQ Background Image */}
                   <div className="absolute inset-0 overflow-hidden">
                     <Image
                       src={loc.image}
-                      alt={`${loc.name}, Maharashtra`}
+                      alt={`${loc.name}, Maharashtra - Stay Willas`}
                       fill
-                      sizes="(max-width: 768px) 80vw, 350px"
+                      sizes="(max-width: 768px) 80vw, 360px"
                       priority={isCenter}
                       quality={85}
-                      className={`object-cover transition-transform duration-700 ease-out ${
-                        isCenter ? "scale-105" : "scale-100 filter brightness-65"
+                      className={`object-cover transition-transform duration-500 ease-out ${
+                        isCenter ? "scale-105" : "scale-100"
                       }`}
                     />
                     
-                    {/* Clean Gradient Overlay */}
+                    {/* Clean Gradient Overlay - Bottom Focused for Maximum Photo Visibility */}
                     <div
-                      className={`absolute inset-0 transition-opacity duration-500 ${
+                      className={`absolute inset-0 transition-opacity duration-300 ${
                         isCenter
-                          ? "bg-gradient-to-t from-[#071324] via-[#0E1B35]/35 to-black/15 opacity-90"
-                          : "bg-gradient-to-t from-[#071324] via-black/55 to-black/40 opacity-95"
+                          ? "bg-gradient-to-t from-[#071324]/95 via-[#071324]/30 to-transparent"
+                          : "bg-gradient-to-t from-[#071324]/95 via-black/40 to-black/30"
                       }`}
                     />
                   </div>
 
-                  {/* Card Content */}
+                  {/* Card Content - Streamlined & Minimal to Showcase the Property */}
                   {isCenter ? (
-                    /* Center Card: Clean Location Name + Explore Button */
-                    <motion.div
-                      key={`center-${loc.id}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.08 }}
-                      className="relative z-20 p-5 sm:p-6 flex flex-col items-center justify-end text-white h-full mt-auto"
-                    >
-                      <div className="flex items-center gap-1.5 mb-1.5 opacity-90">
-                        <MapPin size={13} className="text-[#DAA520]" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#DAA520]">
-                          Maharashtra
-                        </span>
-                      </div>
-
-                      <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3 text-center tracking-wide uppercase">
+                    <div className="relative z-20 p-5 sm:p-6 flex flex-col items-center justify-end text-white h-full mt-auto w-full text-center pb-5 sm:pb-6">
+                      <h3 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-white text-center tracking-wide uppercase drop-shadow-md">
                         {loc.name}
                       </h3>
 
-                      {/* Clean Explore Button */}
+                      <p className="text-xs sm:text-sm text-[#DAA520] font-semibold uppercase tracking-widest mt-1 drop-shadow-sm">
+                        {loc.villaCountText}
+                      </p>
+
+                      {/* Small Explore Button at the Bottom */}
                       <Link
                         href={loc.link}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full bg-[#DAA520] hover:bg-[#E6B830] text-[#1B3564] font-black py-2.5 sm:py-3 px-4 rounded-xl text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg hover:shadow-[0_8px_20px_rgba(218,165,32,0.45)] transition-all duration-300 group/btn"
+                        className="mt-3.5 inline-flex items-center gap-1.5 bg-[#DAA520] hover:bg-[#E6B830] text-[#1B3564] font-bold text-xs uppercase tracking-wider px-5 py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
                       >
                         <span>Explore</span>
-                        <ArrowUpRight
-                          size={14}
-                          className="stroke-[2.5] transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
-                        />
+                        <ArrowUpRight size={13} className="stroke-[2.5]" />
                       </Link>
-                    </motion.div>
+                    </div>
                   ) : (
-                    /* Side Cards: Clean, minimal location name at bottom */
-                    <div className="relative z-20 p-5 flex flex-col items-center justify-end text-center text-white h-full mt-auto pb-6">
-                      <div className="flex items-center gap-1.5 mb-1.5 opacity-85">
-                        <MapPin size={12} className="text-[#DAA520]" />
-                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#DAA520]">
-                          Maharashtra
-                        </span>
-                      </div>
-                      <h3 className="text-lg sm:text-2xl font-heading font-bold text-white tracking-wide uppercase">
+                    /* Side Inactive Card: Minimal Location Name + Count */
+                    <div className="relative z-20 p-4 sm:p-5 flex flex-col items-center justify-end text-center text-white h-full mt-auto pb-5 w-full">
+                      <h3 className="text-xl sm:text-2xl font-heading font-bold text-white tracking-wide uppercase drop-shadow-md">
                         {loc.name}
                       </h3>
+                      <p className="text-[11px] sm:text-xs text-[#DAA520] font-semibold uppercase tracking-wider mt-0.5">
+                        {loc.villaCountText}
+                      </p>
                     </div>
                   )}
                 </motion.div>
@@ -304,8 +263,8 @@ const DestinationShowcase = () => {
           </div>
         </div>
 
-        {/* Carousel Indicator Dots */}
-        <div className="flex items-center justify-center gap-2 mt-6 sm:mt-8">
+        {/* Carousel Indicator Dots (2 Dots) */}
+        <div className="flex items-center justify-center gap-2 mt-4 sm:mt-6">
           {locations.map((loc, idx) => (
             <button
               key={loc.id}
@@ -319,6 +278,7 @@ const DestinationShowcase = () => {
             />
           ))}
         </div>
+
       </div>
     </section>
   );

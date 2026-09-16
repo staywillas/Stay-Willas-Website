@@ -216,7 +216,7 @@ export default function VillasClient({
                 <div className="text-left">
                   <span className="text-[10px] text-accent-secondary font-black uppercase tracking-[0.25em] block mb-1">Stay Filter Suite</span>
                   <h3 className="text-2xl font-heading text-[#1B3564] italic">
-                    Filter <span className="not-italic font-bold font-sans text-accent-primary">Sanctuaries</span>
+                    Filter <span className="not-italic font-bold font-sans text-accent-primary">Villas</span>
                   </h3>
                 </div>
                 <button
@@ -378,7 +378,7 @@ export default function VillasClient({
         {/* Dynamic Stays Counter */}
         <div className="flex justify-between items-center mb-8 border-b border-border-subtle pb-4">
           <span className="text-charcoal/60 text-xs font-sans">
-            Showing <span className="text-charcoal font-bold">{filteredVillas.length}</span> of {initialVillas.length} sanctuaries
+            Showing <span className="text-charcoal font-bold">{filteredVillas.length}</span> of {initialVillas.length} villas
           </span>
           {activeFilterCount > 0 && (
             <span className="text-[10px] bg-accent-secondary/15 text-accent-secondary border border-accent-secondary/35 px-3 py-1 rounded-full uppercase tracking-widest font-black">
@@ -425,7 +425,7 @@ export default function VillasClient({
               className="col-span-full text-center py-24 bg-white rounded-[32px] border border-border-subtle px-6 max-w-3xl mx-auto my-12 shadow-md"
             >
               <ShieldAlert size={48} className="text-accent-primary mx-auto mb-6" />
-              <h3 className="text-3xl font-heading text-charcoal mb-4 italic">No matching sanctuaries found</h3>
+              <h3 className="text-3xl font-heading text-charcoal mb-4 italic">No matching villas found</h3>
               <p className="text-charcoal/60 mb-8 max-w-md mx-auto leading-relaxed text-sm">
                 We couldn't find any stays matching your filters. Try increasing your max budget or reducing bedroom requirements to see more handpicked retreats!
               </p>

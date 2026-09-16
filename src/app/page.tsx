@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
   title: "Private Pool Villas Near Mumbai | Stay Willas",
-  description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala & Khopoli. Best direct rates with 0% platform fee.",
+  description: "Book beautiful private pool villas near Mumbai with delicious home-cooked meals & chef services in Lonavala and Khopoli. Best direct rates with 0% booking fee.",
   keywords: [
     "private pool villas near Mumbai",
     "weekend getaway villas near mumbai",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
-    description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala & Khopoli. Best direct rates with 0% platform fee.",
+    description: "Book beautiful private pool villas near Mumbai with delicious home-cooked meals & chef services in Lonavala and Khopoli. Best direct rates with 0% booking fee.",
     url: "https://www.staywillas.com",
     images: [
       {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
-    description: "Discover premier private pool villas near Mumbai with bespoke hospitality & chef services across Lonavala, Khopoli & Mahabaleshwar.",
+    description: "Book beautiful private pool villas near Mumbai with delicious home-cooked meals & chef services in Lonavala and Khopoli.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -79,16 +79,12 @@ export default async function Home() {
     }
   });
 
-  // Hidden for now until property goes live
-  const hiddenSlugs = ["terra-cotta-villa", "mahabaleshwar-terra-cotta"];
-
-  // Prioritize signature stays always at top
-  const prioritySlugs = ["the-angle-house", "canopy-crest", "willow-peak"];
-  const prioritized = allVillas
-    .filter((v) => prioritySlugs.includes(v.slug))
-    .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
-  const remaining = allVillas.filter((v) => !prioritySlugs.includes(v.slug) && !hiddenSlugs.includes(v.slug));
-  const dbVillas = [...prioritized, ...remaining];
+  // Keep exactly 3 signature properties on homepage: The Angle House, Canopy Crest, Willow Peak
+  // (Terra Cotta Villa and individual cottages are hidden)
+  const signatureSlugs = ["the-angle-house", "canopy-crest", "willow-peak"];
+  const dbVillas = signatureSlugs
+    .map((slug) => allVillas.find((v) => v.slug === slug))
+    .filter((v): v is NonNullable<typeof v> => Boolean(v));
 
   const featuredVillas = dbVillas.map((villa) => ({
     id: villa.slug,
@@ -115,13 +111,13 @@ export default async function Home() {
       <section className="pt-8 pb-3 sm:pt-12 sm:pb-5 px-4 sm:px-6 md:px-8 max-w-5xl mx-auto text-center animate-fade-in">
         <div className="inline-flex items-center gap-2 bg-[#DAA520]/10 border border-[#DAA520]/30 px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-bold text-[#1B3564] uppercase tracking-[0.2em] mb-3 sm:mb-4">
           <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520] animate-pulse" />
-          Curated Private Sanctuaries
+          Handpicked Private Villas
         </div>
         <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#1B3564] leading-tight tracking-tight">
           Private Pool Villas Near <span className="italic text-[#DAA520] font-serif font-light">Mumbai &amp; Pune</span> for Weekend Getaways
         </h1>
         <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-light">
-          Handpicked luxury villas across Lonavala and Khopoli featuring private swimming pools, in-room jacuzzis, dedicated personal chefs, and lush green lawns. Book direct with best rates and 0% OTA platform fees.
+          Handpicked private villas across Lonavala and Khopoli with private swimming pools, delicious home-cooked meals, and peaceful green lawns. Book direct with best rates and 0% booking fees.
         </p>
 
         {/* Value Highlights Pill Bar */}

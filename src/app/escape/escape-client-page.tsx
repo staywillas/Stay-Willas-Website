@@ -270,7 +270,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       amenities: ["High-Decibel Sound System", "Open-air BBQ Grill", "Private Swimming Pool", "Spacious Pool Lounges"]
     },
     romantic: {
-      headline: "Escape to your private sanctuary.",
+      headline: "Escape to your private villa.",
       description: "Sip wine overlooking sweeping mountain silhouettes, enjoy a hot bath in your private master suite Jacuzzi, and enjoy absolute quiet with personalized chef service.",
       amenities: ["Private Master Jacuzzi", "Scenic Balconies", "Candlelit Dinners on Call", "Panoramic Glass Views"]
     },
@@ -627,7 +627,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               />
               {/* Blur gradient cover */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
-                <span className="text-xs uppercase tracking-widest text-[#DAA520] font-semibold mb-2">Flagship Sanctuary</span>
+                <span className="text-xs uppercase tracking-widest text-[#DAA520] font-semibold mb-2">Flagship Villa</span>
                 <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white">The Angle House</h3>
                 <p className="text-white/80 text-sm flex items-center gap-1.5 mt-1 font-light">
                   <MapPin size={12} className="text-[#DAA520]" /> Lonavala, Maharashtra
@@ -643,7 +643,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       <section id="properties-section" className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto space-y-16 z-10 relative">
         <div className="text-center space-y-4">
           <span className="text-[#DAA520] font-medium tracking-[0.4em] uppercase text-xs block">
-            Handpicked Group Sanctuaries
+            Handpicked Group Villas
           </span>
           <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white">
             Best Villas for Groups in Lonavala
@@ -764,7 +764,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             <div className="p-6 md:p-8 flex-1 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 <p className="text-sm text-slate-300 leading-relaxed line-clamp-3 font-light">
-                  A sprawling sanctuary enveloped in a lush verdant forest. Features huge manicured lawns, indoor/outdoor sports, open-air BBQ by the pool, and wide windows framing misty green hills.
+                  A sprawling villa enveloped in a lush verdant forest. Features huge manicured lawns, indoor/outdoor sports, open-air BBQ by the pool, and wide windows framing misty green hills.
                 </p>
                 
                 {/* Stats */}
@@ -979,7 +979,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               Why Lonavala Works for a Group Getaway
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-              Lonavala combines cool Sahyadri mountain breezes, mist-laden valleys, and convenient highway access. Groups can easily explore local viewpoints like Tiger Point, visit Pawna Lake, or trek up Lohagad Fort before returning to their private villa.
+              Lonavala combines cool Sahyadri mountain breezes, mist-laden valleys, and convenient highway access. Groups can easily explore local viewpoints like Tiger Point, Lion&apos;s Point, or trek up Lohagad Fort before returning to their private villa.
             </p>
             <div className="pt-2">
               <Link 
@@ -1483,7 +1483,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               The Ultimate Guide to Booking Villas for Groups in Lonavala
             </h2>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-6">
-              The concept of weekend getaways near Mumbai and Pune has undergone a massive evolution. Instead of booking multiple detached hotel rooms where groups are separated, travelers are seeking cohesive, private sanctuaries. Selecting private <strong className="text-[#DAA520] font-semibold">villas for groups in Lonavala</strong> provides the space, freedom, and exclusivity required for memorable group getaways. From infinity pools overlooking deep green valley panoramas to customized gourmet meals prepared by dedicated in-house chefs, private estates represent a complete shift in leisure travel.
+              The concept of weekend getaways near Mumbai and Pune has undergone a massive evolution. Instead of booking multiple detached hotel rooms where groups are separated, travelers are seeking cohesive, Private Villas. Selecting private <strong className="text-[#DAA520] font-semibold">villas for groups in Lonavala</strong> provides the space, freedom, and exclusivity required for memorable group getaways. From infinity pools overlooking deep green valley panoramas to customized gourmet meals prepared by dedicated in-house chefs, private estates represent a complete shift in leisure travel.
             </p>
           </div>
 
@@ -1492,7 +1492,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               Why Lonavala Works Best for Group Stays
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-6">
-              Lonavala has always been the primary choice for weekenders. Whether it is trekking up the historic Lohagad Fort, enjoying picnics at Pawna Lake, or buying local chikki, there is something for everyone. Checking into premier <strong className="text-[#DAA520] font-semibold">group villas in Lonavala</strong> like The Angle House seamlessly combines modern architecture with high-end hospitality services. When planning an escape with friends, features like temperature-filtered pools, spacious deck spaces, and custom sound systems make a massive difference. Opting for a private <strong className="text-[#DAA520] font-semibold">villa for friends in Lonavala</strong> ensures your group enjoys complete freedom without hotel curfews or sharing facilities with strangers.
+              Lonavala has always been the primary choice for weekenders. Whether it is trekking up the historic Lohagad Fort, enjoying scenic valley picnics, or buying local chikki, there is something for everyone. Checking into premier <strong className="text-[#DAA520] font-semibold">group villas in Lonavala</strong> like The Angle House seamlessly combines modern architecture with high-end hospitality services. When planning an escape with friends, features like temperature-filtered pools, spacious deck spaces, and custom sound systems make a massive difference. Opting for a private <strong className="text-[#DAA520] font-semibold">villa for friends in Lonavala</strong> ensures your group enjoys complete freedom without hotel curfews or sharing facilities with strangers.
             </p>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light">
               Furthermore, the proximity of Lonavala makes it incredibly easy to coordinate travel logistics for large groups. Whether your friends are arriving from different parts of Mumbai or Pune, Lonavala serves as a central meeting point. Many high-end <strong className="text-[#DAA520] font-semibold">villas for family groups in Lonavala</strong> also offer specialized workspaces and high-speed internet connectivity, making them popular for corporate offsites and family reunions.
@@ -1504,7 +1504,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               Discovering Nearby Group Estates in Khopoli
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-light mb-6">
-              For groups seeking absolute peace away from tourist crowds, Khopoli is a rising favorite. Situated at the base of Bhor Ghat, it offers pristine scenery, raw forests, and beautiful seasonal waterfalls. If you want a sanctuary where you only hear bird calls and the rustle of leaves, booking a <strong className="text-[#DAA520] font-semibold">large group villa in Lonavala</strong> or nearby Khopoli is highly recommended. Estates like Canopy Crest offer a dramatic escape from urban density, providing gorgeous mountain-view pools and glass-front layouts that immerse your group in nature.
+              For groups seeking absolute peace away from tourist crowds, Khopoli is a rising favorite. Situated at the base of Bhor Ghat, it offers pristine scenery, raw forests, and beautiful seasonal waterfalls. If you want a villa where you only hear bird calls and the rustle of leaves, booking a <strong className="text-[#DAA520] font-semibold">large group villa in Lonavala</strong> or nearby Khopoli is highly recommended. Estates like Canopy Crest offer a dramatic escape from urban density, providing gorgeous mountain-view pools and glass-front layouts that immerse your group in nature.
             </p>
           </div>
 

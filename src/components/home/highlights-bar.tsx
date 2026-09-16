@@ -75,11 +75,11 @@ const highlightsData = [
       desc: "Stunning valley views in the heart of Lonavala",
     },
   ],
-  // Slide 2: Khopoli Valley Sanctuary / Nature Retreats
+  // Slide 2: Khopoli Valley Villa / Nature Retreats
   [
     {
       icon: "Sun",
-      title: "Valley Sanctuaries",
+      title: "Valley Villas",
       desc: "Sprawling private estates surrounded by nature",
     },
     {

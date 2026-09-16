@@ -62,7 +62,7 @@ const locationModules = [
     groupLink: false
   },
   {
-    location: "Kurwande / Lakeside",
+    location: "Kurwande, Lonavala",
     primaryKeyword: "A-Frame Cottages in Lonavala with Jacuzzi",
     slug: "/areas/lonavala",
     featuredVilla: "Willow Peak",
@@ -72,7 +72,7 @@ const locationModules = [
     bestFor: "Couples, Anniversaries & Intimate Weekend Getaways",
     insights: [
       "Private En-Suite Heated Jacuzzi: Every standalone wooden chalet features a temperature-controlled bubble jacuzzi bath.",
-      "Proximity to Scenic Lakes & Viewpoints: Located in peaceful Kurwande near Lion's Point, Tiger's Leap, and Pawna Lake streams.",
+      "Proximity to Scenic Mountain Viewpoints: Located in peaceful Kurwande near Lion's Point and Tiger's Leap with mist-kissed valley breezes.",
       "Flexible Booking Options: Book 1 single A-frame chalet suite for 2–4 guests, or reserve all 3 chalets for an intimate private estate of up to 12 guests.",
       "Artisanal Hill Hospitality: Candlelight garden dining, bonfire setups under starry skies, and customized Jain meal options on demand."
     ],
@@ -106,11 +106,11 @@ const hiddenAreaGuides = [
 const faqs: FAQItem[] = [
   {
     question: "What makes Stay Willas the top choice for private villas near Mumbai?",
-    answer: "Stay Willas provides handpicked private pool villas near Mumbai featuring crystal-clear swimming pools, bespoke architecture, lush green lawns, and dedicated in-house chef services for unmatched privacy and relaxation."
+    answer: "Stay Willas provides handpicked private pool villas near Mumbai featuring crystal-clear swimming pools, beautiful architecture, lush green lawns, and dedicated in-house chef services for unmatched privacy and relaxation."
   },
   {
     question: "Why choose a private villa stay over a hotel?",
-    answer: "Our private villa stays offer total seclusion, private swimming pools, mountain valley views, master suite jacuzzis, dedicated concierge support, and pet-friendly fenced grounds without sharing amenities with strangers."
+    answer: "Our private villa stays offer complete privacy, private swimming pools, mountain valley views, master suite jacuzzis, dedicated concierge support, and pet-friendly fenced grounds without sharing amenities with strangers."
   },
   {
     question: "How far are your weekend villas from Mumbai and Pune?",
@@ -321,7 +321,7 @@ export default function SEOContent() {
             { 
               icon: MapPin, 
               title: "Scenic 90-Min Drives", 
-              desc: "Private hillside sanctuaries located within an effortless drive from Mumbai and Pune via the Expressway." 
+              desc: "Private hillside villas located within an effortless drive from Mumbai and Pune via the Expressway." 
             }
           ].map((pillar, i) => (
             <div key={i} className="bg-[#FAF8F5] border border-[#DAA520]/25 rounded-3xl p-6 text-left hover:border-[#DAA520]/60 transition-colors shadow-sm">

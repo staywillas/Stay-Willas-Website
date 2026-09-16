@@ -322,7 +322,6 @@ export interface DestinationSchemaInput {
 const WIKIDATA_REGIONS: Record<string, string> = {
   lonavala: "https://www.wikidata.org/wiki/Q1140889",
   khopoli: "https://www.wikidata.org/wiki/Q2248559",
-  pawna: "https://www.wikidata.org/wiki/Q1140889",
 };
 
 export function generateDestinationCollectionSchema(input: DestinationSchemaInput) {
@@ -412,7 +411,7 @@ export const HOMEPAGE_SITELINKS_SCHEMA = {
       "@type": "SiteNavigationElement",
       position: 2,
       name: "Luxury Villas in Khopoli",
-      description: "Canopy Crest. Escape to a stunning nature sanctuary with mountain views and five-star hospitality.",
+      description: "Canopy Crest. Escape to a stunning nature villa with mountain views and five-star hospitality.",
       url: `${BASE_URL}/areas/khopoli`,
     },
     {

@@ -53,7 +53,7 @@ export default function WishlistClient({ allVillas }: WishlistClientProps) {
     return (
       <div className="flex flex-col items-center justify-center py-32 text-charcoal/40">
         <div className="w-8 h-8 rounded-full border-2 border-navy border-t-transparent animate-spin mb-4" />
-        <span className="text-xs uppercase tracking-widest font-bold">Loading Saved Sanctuaries...</span>
+        <span className="text-xs uppercase tracking-widest font-bold">Loading Saved Villas...</span>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function WishlistClient({ allVillas }: WishlistClientProps) {
       ) : (
         <div className="text-center py-24 bg-white border border-border-subtle rounded-[32px] px-6 max-w-3xl mx-auto my-12 shadow-md">
           <Heart className="mx-auto text-charcoal/10 mb-6" size={56} />
-          <h3 className="text-3xl font-heading text-charcoal mb-4 italic">No saved sanctuaries found</h3>
+          <h3 className="text-3xl font-heading text-charcoal mb-4 italic">No saved villas found</h3>
           <p className="text-charcoal/60 mb-10 max-w-md mx-auto leading-relaxed text-sm">
             You haven't added any luxury properties to your wishlist yet. Explore our handpicked retreats in Maharashtra to save your favorites!
           </p>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Outfit, Montserrat } from "next/font/google";
+import { Cormorant_Garamond, Outfit, Montserrat, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
@@ -25,7 +25,16 @@ const montserrat = Montserrat({
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -121,7 +130,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} antialiased font-sans overflow-x-hidden max-w-full w-full relative`}
+        className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} ${playfair.variable} antialiased font-sans overflow-x-hidden max-w-full w-full relative`}
         suppressHydrationWarning
       >
         <ClerkProvider>

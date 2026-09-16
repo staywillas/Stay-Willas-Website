@@ -333,7 +333,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                 <div className="inline-flex items-center gap-2 bg-[#DAA520]/15 border border-[#DAA520]/40 rounded-full px-4 py-1.5 mb-3 shadow-sm">
                   <Sparkles size={14} className="text-[#B8860B] animate-pulse" />
                   <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#B8860B]">
-                    Signature Lonavala Sanctuaries
+                    Signature Lonavala Villas
                   </span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-[#1B3564] tracking-tight">

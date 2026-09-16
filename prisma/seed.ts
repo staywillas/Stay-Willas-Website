@@ -8,7 +8,7 @@ const villasData = [
     name: "The Angle House",
     location: "Kamshet, Lonavala, Maharashtra",
     category: "Infinity Pools",
-    description: `Imagine waking up to the gentle breeze of the hills, surrounded by sleek glass walls and towering trees. Welcome to The Angle House, a stunning designer villa where dramatic modern architecture meets forest serenity. Characterized by its striking angular glass-facade design, this estate is a genuinely unique retreat that stands out in Lonavala's landscape. Located a short, convenient drive from Mumbai and Pune, it is the perfect sanctuary to unwind with your loved ones.
+    description: `Imagine waking up to the gentle breeze of the hills, surrounded by sleek glass walls and towering trees. Welcome to The Angle House, a stunning designer villa where dramatic modern architecture meets forest serenity. Characterized by its striking angular glass-facade design, this estate is a genuinely unique retreat that stands out in Lonavala's landscape. Located a short, convenient drive from Mumbai and Pune, it is the perfect villa to unwind with your loved ones.
 
 Step outside onto the main deck, and you will find your own private swimming pool, complete with a soothing waterfall feature, outdoor lounge chairs, and cozy corners to sit. It is a perfect setting for family getaways, milestone birthdays, or quiet weekend escapes.
 
@@ -66,7 +66,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     name: "Canopy Crest",
     location: "Khopoli, Maharashtra",
     category: "Private Estates",
-    description: `Spread across an expansive field, this sprawling holiday getaway home is tucked away from bustling city life to provide you with a perfect window of relaxation. Located near Khopoli, it is the perfect sanctuary to rejuvenate, detox, and unwind. The villa features eclectic interiors, along with lavish amenities. Rejuvenate, detox, and unwind at this serene home, that is enveloped in lush verdant cover of greenery and towering hills. Savour the misty breeze in the mornings, relax on the lounge-worthy sit-outs, and make the most of the relaxing swimming pool, one of the key features of this beautiful villa. Guests can take a peaceful walk in the lawn and embrace the beauty of the overlooking mountainscapes and the horizon of the manicured fields around the villa. Imagine yourself, relishing a delicious barbeque by the pool living your best getaway, at the Canopy Crest.`,
+    description: `Spread across an expansive field, this sprawling holiday getaway home is tucked away from bustling city life to provide you with a perfect window of relaxation. Located near Khopoli, it is the perfect villa to rejuvenate, detox, and unwind. The villa features eclectic interiors, along with lavish amenities. Rejuvenate, detox, and unwind at this serene home, that is enveloped in lush verdant cover of greenery and towering hills. Savour the misty breeze in the mornings, relax on the lounge-worthy sit-outs, and make the most of the relaxing swimming pool, one of the key features of this beautiful villa. Guests can take a peaceful walk in the lawn and embrace the beauty of the overlooking mountainscapes and the horizon of the manicured fields around the villa. Imagine yourself, relishing a delicious barbeque by the pool living your best getaway, at the Canopy Crest.`,
     price: 15000,
     weekendPrice: 22000,
     fridayPrice: 18000,
@@ -111,7 +111,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     name: "Willow Peak - Cottage A",
     location: "Kurwande, Lonavala, Maharashtra",
     category: "Mountain Cottages",
-    description: `Escape to Willow Peak - Cottage A in Kurwande, Lonavala — a charming private 1 BHK A-frame cottage accommodating up to 4 guests. Nestled in the serene hills of Kurwande near Lonavala, this cottage features an air-conditioned bedroom with a comfortable double bed, an attached modern bathroom with shower, a soothing in-room jacuzzi bath, and a private outdoor sit-out with lush garden views. Complete with Wi-Fi, television, BBQ facility, and peaceful mountain ambiance, it is the ideal romantic or small-family sanctuary.`,
+    description: `Escape to Willow Peak - Cottage A in Kurwande, Lonavala — a charming private 1 BHK A-frame cottage accommodating up to 4 guests. Nestled in the serene hills of Kurwande near Lonavala, this cottage features an air-conditioned bedroom with a comfortable double bed, an attached modern bathroom with shower, a soothing in-room jacuzzi bath, and a private outdoor sit-out with lush garden views. Complete with Wi-Fi, television, BBQ facility, and peaceful mountain ambiance, it is the ideal romantic or small-family villa.`,
     price: 4999,
     weekendPrice: 6999,
     fridayPrice: 5999,
@@ -299,7 +299,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     name: "Terra Cotta Villa",
     location: "Panchgani - Mahabaleshwar, Maharashtra",
     category: "Private Estates",
-    description: `Immerse yourself in rustic mountain serenity at Terra Cotta Villa, a premier 4-BHK private pool sanctuary perched on the picturesque hills of Panchgani and Mahabaleshwar. Built with warm, earthy terracotta brick-style architecture, this private estate seamlessly blends timeless countryside charm with modern luxury amenities.
+    description: `Immerse yourself in rustic mountain serenity at Terra Cotta Villa, a premier 4-BHK private pool villa perched on the picturesque hills of Panchgani and Mahabaleshwar. Built with warm, earthy terracotta brick-style architecture, this private estate seamlessly blends timeless countryside charm with modern luxury amenities.
 
 Step outside onto your private poolside deck surrounded by manicured lawns and towering hillscapes. Take a refreshing swim in the crystal-clear pool, relax under the private gazebo with misty valley breezes, or host memorable evening barbecues under the stars.
 

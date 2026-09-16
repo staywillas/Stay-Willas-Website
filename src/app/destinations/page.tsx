@@ -56,7 +56,7 @@ export default async function DestinationsPage() {
   const destinations = [
     {
       name: "Lonavala (The Angle House)",
-      tagline: "The Mountain Sanctuary",
+      tagline: "The Mountain Villa",
       desc: "Cool mountain breeze, misty green valleys, and spacious pool estates perched on lush hills.",
       image: "/assets/villas/the-angle-house/gallery-11.webp",
       count: lonavalaCount,
@@ -202,7 +202,7 @@ export default async function DestinationsPage() {
                     LAUNCHING SOON
                   </div>
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello! 🌟 I noticed you are launching soon in *${dest.name}*! It looks absolutely beautiful. I would love to be notified as soon as these sanctuaries are open for bookings.`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello! 🌟 I noticed you are launching soon in *${dest.name}*! It looks absolutely beautiful. I would love to be notified as soon as these villas are open for bookings.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-[#1B3564]/60 hover:text-[#1B3564] text-xs font-bold tracking-wider uppercase transition-all duration-300 w-fit"
@@ -226,7 +226,7 @@ export default async function DestinationsPage() {
               Exploring Premier Villa Destinations in Maharashtra for Unforgettable Holiday Stays
             </h2>
             <p className="text-sm md:text-base text-text-primary/75 leading-relaxed font-light">
-              Finding the ideal holiday escape requires a balance of scenic natural surroundings, exclusive solitude, and world-class hospitality. Across the Western Ghats and coastal stretches, villa destinations in maharashtra have emerged as the leading choice for discerning travelers seeking luxury holiday rentals. Whether you are planning a weekend getaway with family, celebrating a milestone anniversary, or organizing a peaceful corporate retreat, Stay Willas offers handpicked luxury sanctuaries across top regional locations. From mountain sanctuaries perched high in hill stations to tranquil coastal retreats near the Arabian Sea, our curated collection provides an unmatched hospitality experience tailored to your precise desires.
+              Finding the ideal holiday escape requires a balance of scenic natural surroundings, exclusive solitude, and world-class hospitality. Across the Western Ghats and coastal stretches, villa destinations in maharashtra have emerged as the leading choice for discerning travelers seeking luxury holiday rentals. Whether you are planning a weekend getaway with family, celebrating a milestone anniversary, or organizing a peaceful corporate retreat, Stay Willas offers handpicked luxury villas across top regional locations. From mountain villas perched high in hill stations to tranquil coastal retreats near the Arabian Sea, our curated collection provides an unmatched hospitality experience tailored to your precise desires.
             </p>
           </div>
 
@@ -277,7 +277,7 @@ export default async function DestinationsPage() {
 
           <div className="space-y-4 pt-4">
             <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-              Essential Amenities Included in Every Luxury Sanctuary
+              Essential Amenities Included in Every Luxury Villa
             </h3>
             <p className="text-xs sm:text-sm text-text-primary/75 leading-relaxed font-light">
               When you book an exclusive estate through Stay Willas, you enjoy top-tier amenities designed for comfort, safety, and convenience:

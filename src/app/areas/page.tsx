@@ -62,7 +62,7 @@ export default async function AreasPage() {
     {
       slug: "lonavala",
       name: "Lonavala",
-      tagline: "The Mountain Sanctuary",
+      tagline: "The Mountain Villa",
       desc: "Cool mountain breeze, misty green valleys, and spacious private pool villas perched on lush Sahyadri hills.",
       image: "/assets/villas/the-angle-house/gallery-11.webp",
       count: lonavalaCount,
@@ -73,7 +73,7 @@ export default async function AreasPage() {
       slug: "khopoli",
       name: "Khopoli",
       tagline: "The Nature Escape",
-      desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet large-group private pool sanctuaries.",
+      desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet large-group private pool villas.",
       image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
       count: khopoliCount,
       isLaunchingSoon: khopoliCount === 0,
@@ -282,7 +282,7 @@ export default async function AreasPage() {
                 Our carefully curated portfolio highlights premium properties in the most scenic locations of Maharashtra. From the misty heights of Lonavala to the serene base of the Sahyadri mountains in Khopoli and scenic valleys of the Western Ghats, we offer a diverse selection of private estates to match every group&apos;s requirement.
               </p>
               <p>
-                What makes renting private villas near Mumbai so popular is the travel time. You don&apos;t need to book plane tickets or plan weeks in advance. You can simply load your bags into the car on a Friday afternoon and arrive at your private sanctuary within 1.5 to 2 hours via the Mumbai-Pune Expressway.
+                What makes renting private villas near Mumbai so popular is the travel time. You don&apos;t need to book plane tickets or plan weeks in advance. You can simply load your bags into the car on a Friday afternoon and arrive at your private villa within 1.5 to 2 hours via the Mumbai-Pune Expressway.
               </p>
             </article>
 

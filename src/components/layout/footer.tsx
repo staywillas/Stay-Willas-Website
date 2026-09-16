@@ -136,7 +136,6 @@ const Footer = () => {
                 { name: "Destinations", href: "/destinations" },
                 { name: "Villas in Lonavala with Private Pool", href: "/areas/lonavala" },
                 { name: "Luxury Villas in Khopoli", href: "/areas/khopoli" },
-                { name: "Pawna Lake Villas", href: "/areas/pawna" },
                 { name: "Experiences", href: "/experiences" },
                 { name: "Guest Stories", href: "/stories" }
               ].map((link) => (

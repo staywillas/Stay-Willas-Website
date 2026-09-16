@@ -98,8 +98,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 2. Dynamic Area Destination Hubs
   const regions = [
     "lonavala",
-    "khopoli",
-    "pawna"
+    "khopoli"
   ];
   const areaRoutes: MetadataRoute.Sitemap = regions.map((region) => ({
     url: `${BASE_URL}/areas/${region}`,

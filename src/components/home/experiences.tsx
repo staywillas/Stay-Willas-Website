@@ -36,7 +36,7 @@ const categories = [
     link: "/villas?category=Couple+Retreats",
   },
   {
-    title: "Pet Play Sanctuaries",
+    title: "Pet Play Villas",
     tag: "FURRY FRIENDS WELCOME",
     description: "Vacation is better together. Our premium pet-friendly villas feature sprawling lawns, secure play zones, and specialized services so your pets can run free and enjoy a true holiday.",
     image: "/images/villa-mahabaleshwar.webp",

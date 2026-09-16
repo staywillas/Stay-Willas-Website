@@ -527,7 +527,7 @@ export default function DailyPricingCalendar({ villas, onVillasChange }: DailyPr
 
         {/* Villa Picker & Month Navigation */}
         <div className="flex flex-wrap items-center gap-3 font-sans shrink-0">
-          <span className="text-xs uppercase tracking-widest font-bold text-slate-500">SANCTUARY:</span>
+          <span className="text-xs uppercase tracking-widest font-bold text-slate-500">VILLA:</span>
           <select 
             value={selectedVillaId}
             onChange={(e) => {

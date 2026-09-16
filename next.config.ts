@@ -87,6 +87,16 @@ const nextConfig: NextConfig = {
       permanent: true,
     },
     {
+      source: '/areas/pawna',
+      destination: '/areas/lonavala',
+      permanent: true,
+    },
+    {
+      source: '/pawna',
+      destination: '/areas/lonavala',
+      permanent: true,
+    },
+    {
       source: '/areas/alibaug',
       destination: '/areas',
       permanent: true,

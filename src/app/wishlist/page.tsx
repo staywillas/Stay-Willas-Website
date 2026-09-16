@@ -86,7 +86,7 @@ export default async function WishlistPage() {
       {/* Header Section */}
       <section className="pt-48 pb-12 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto text-center">
         <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">
-          Your Saved Sanctuary
+          Your Saved Villa
         </span>
         <h1 className="text-5xl md:text-8xl font-heading mb-6 leading-tight">
           My <span className="italic text-accent-primary pr-4 font-heading font-medium">Wishlist of Premium Luxury Retreats</span>

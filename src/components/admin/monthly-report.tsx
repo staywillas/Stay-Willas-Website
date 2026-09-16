@@ -335,7 +335,7 @@ export default function MonthlyReport({
         doc.setFontSize(8);
         doc.setFont("Helvetica", "bold");
         doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-        doc.text("LUXURY SANCTUARY ESTATES — FINANCIAL AUDIT & REVENUE STATEMENT", margin, currentY + 8);
+        doc.text("LUXURY Private Estates — FINANCIAL AUDIT & REVENUE STATEMENT", margin, currentY + 8);
 
         // Month Title (Right Aligned)
         doc.setFontSize(14);

@@ -2181,13 +2181,13 @@ const AdminDashboard = ({
             <div className="flex items-start justify-between pb-3.5 border-b border-slate-200 shrink-0">
               <div>
                 <span className="text-[10px] text-blue-600 font-black uppercase tracking-widest block">
-                  Sanctuary PMS & Channel Manager
+                  Villa PMS & Channel Manager
                 </span>
                 <h4 className="text-xl sm:text-2xl font-heading font-bold text-[#1B3564]">
                   Property Management Console
                 </h4>
                 <p className="text-slate-500 text-xs mt-0.5">
-                  Specify sanctuary base pricing, parameters, and sync calendars.
+                  Specify villa base pricing, parameters, and sync calendars.
                 </p>
               </div>
               <button
@@ -2426,7 +2426,7 @@ const AdminDashboard = ({
                 disabled={isSavingVilla}
                 className="flex-grow bg-[#1B3564] text-white hover:bg-[#3B82F6] py-3.5 rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
               >
-                {isSavingVilla ? <Loader2 size={14} className="animate-spin" /> : "Save Sanctuary Specs"}
+                {isSavingVilla ? <Loader2 size={14} className="animate-spin" /> : "Save Villa Specs"}
               </button>
               <button 
                 type="button"

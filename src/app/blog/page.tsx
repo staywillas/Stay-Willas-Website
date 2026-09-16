@@ -162,7 +162,7 @@ export default function BlogIndexPage() {
                 Own a Villa or Estate in Maharashtra?
               </h3>
               <p className="text-white/75 text-xs sm:text-sm font-light max-w-xl leading-relaxed">
-                Partner with Stay Willas to monetize your private sanctuary with verified elite guests, zero management stress, and transparent monthly returns.
+                Partner with Stay Willas to monetize your private villa with verified elite guests, zero management stress, and transparent monthly returns.
               </p>
             </div>
             <Link

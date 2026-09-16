@@ -237,7 +237,7 @@ export default async function KhopoliPage() {
                         Direct Rates
                       </span>
                       <h3 className="font-heading text-xl sm:text-2xl font-bold text-white">
-                        Khopoli Sanctuary
+                        Khopoli Villa
                       </h3>
                     </div>
                     <div className="text-right">
@@ -326,7 +326,7 @@ export default async function KhopoliPage() {
                 <div className="absolute bottom-6 left-6 right-6 flex flex-wrap items-end justify-between gap-3 text-white pointer-events-none">
                   <div>
                     <span className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#DAA520] block mb-1 drop-shadow-sm">
-                      Khopoli Nature Sanctuary
+                      Khopoli Nature Villa
                     </span>
                     <h3 className="text-2xl sm:text-4xl font-heading font-extrabold text-white drop-shadow-md">
                       {signatureVilla.name}
@@ -350,7 +350,7 @@ export default async function KhopoliPage() {
                     Expansive Mountain Estate
                   </span>
                   <p className="text-text-primary/80 text-sm sm:text-base font-light leading-relaxed mb-4">
-                    Escape to a stunning nature sanctuary. Perched amidst the Sahyadri mountains, this villa offers a spectacular 22ft private swimming pool, sprawling green layout, poolside barbecue, five-star hospitality services, and ultimate seclusion.
+                    Escape to a stunning nature villa. Perched amidst the Sahyadri mountains, this villa offers a spectacular 22ft private swimming pool, sprawling green layout, poolside barbecue, five-star hospitality services, and ultimate seclusion.
                   </p>
                   <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-text-primary/70">
                     <span className="bg-white px-3 py-1.5 rounded-lg border border-[#DAA520]/20 flex items-center gap-1.5">
@@ -451,7 +451,7 @@ export default async function KhopoliPage() {
         <section className="py-16 px-4 sm:px-8 md:px-12 lg:px-20 max-w-7xl mx-auto w-full text-left">
           <div className="bg-white rounded-3xl p-6 sm:p-10 md:p-14 border border-[#DAA520]/20 shadow-sm">
             <article className="prose prose-lg md:prose-xl max-w-none text-left select-text prose-p:text-slate-800 prose-p:text-base md:prose-p:text-lg prose-p:leading-relaxed prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-10 prose-h3:text-[#DAA520] prose-h3:font-heading prose-h3:text-xl prose-a:text-[#DAA520]">
-              <h2>The Undiscovered Sanctuary at the Base of the Ghats</h2>
+              <h2>The Undiscovered Villa at the Base of the Ghats</h2>
               <p>
                 When planning a drive out of Mumbai or Pune along the Expressway, Lonavala is usually the first destination that comes to mind. Yet right before the steep, traffic-congested climb up the ghats lies Khopoli—a tranquil valley nestled against the base of the Sahyadri mountains. For travelers seeking nature without highway gridlock, choosing a khopoli villa staycation offers a peaceful, refreshing alternative.
               </p>
@@ -553,7 +553,7 @@ export default async function KhopoliPage() {
                   </thead>
                   <tbody className="divide-y divide-[#DAA520]/15">
                     <tr>
-                      <td className="px-6 py-4 font-bold text-[#1B3564] whitespace-nowrap">Monsoon Sanctuary</td>
+                      <td className="px-6 py-4 font-bold text-[#1B3564] whitespace-nowrap">Monsoon Villa</td>
                       <td className="px-6 py-4 font-medium text-slate-700 whitespace-nowrap">June – September</td>
                       <td className="px-6 py-4 text-slate-600 leading-relaxed">Roaring waterfalls like Zenith Falls, swollen forest streams, emerald lawns, and misty mountain backdrops.</td>
                     </tr>
@@ -607,7 +607,7 @@ export default async function KhopoliPage() {
           <div className="p-8 bg-[#FAF8F5] rounded-3xl border border-[#DAA520]/15">
             <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Related Guides</h3>
             <ul className="space-y-3 text-sm text-slate-700 font-light">
-              <li>→ <Link href="/blog/khopoli-vs-lonavala-villa-comparison" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Khopoli vs Lonavala Villa Comparison: Valley Views or Quiet Sanctuary?</Link></li>
+              <li>→ <Link href="/blog/khopoli-vs-lonavala-villa-comparison" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Khopoli vs Lonavala Villa Comparison: Valley Views or Quiet Villa?</Link></li>
               <li>→ <Link href="/blog/khopoli-waterfall-monsoon-villa-guide" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Khopoli Waterfall & Monsoon Villa Guide</Link></li>
               <li>→ <Link href="/blog/best-khopoli-villa-for-large-groups" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Best Khopoli Villa for Large Groups & Corporate Offsites</Link></li>
               <li>→ <Link href="/blog/corporate-offsite-checklist-for-a-khopoli-villa" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Corporate Offsite Checklist for a Khopoli Villa</Link></li>

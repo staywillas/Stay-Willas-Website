@@ -276,7 +276,7 @@ export default function AdLandingShowcase({
             Visual Tour
           </span>
           <h3 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-[#1B3564]">
-            Explore the Sanctuary & Amenities
+            Explore the Villa & Amenities
           </h3>
           <p className="text-xs sm:text-sm text-text-primary/70 max-w-xl mx-auto mt-1">
             Real untouched photos of the private pool, master suites, lawns, and dining spaces.

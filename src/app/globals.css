@@ -10,6 +10,9 @@
   --font-sans: var(--font-outfit);
   --font-heading: var(--font-outfit);
   --font-montserrat: var(--font-montserrat);
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-cormorant: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-playfair: var(--font-playfair), "Playfair Display", Georgia, serif;
 
   /* ── Brand Palette (from logo) ─────────────────────── */
   --color-brand-beige:  #F5F2EA;   /* Ultra premium beige */

@@ -215,7 +215,7 @@ export default function BookingModalFlow({
             <div className="flex items-center gap-1.5 mb-1">
               <Sparkles size={13} className="text-[#DAA520]" />
               <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-[0.2em]">
-                Direct Sanctuary Booking
+                Direct Villa Booking
               </span>
             </div>
             <span className="text-[9.5px] sm:text-[10.5px] text-slate-500 font-bold uppercase tracking-widest block mb-0.5">
@@ -243,7 +243,7 @@ export default function BookingModalFlow({
         {isWillowPeak && (
           <div className="p-3 bg-[#FAF8F5] border border-[#DAA520]/25 rounded-2xl space-y-2">
             <div className="flex items-center justify-between text-[11px] font-bold text-[#1B3564]">
-              <span>Select Sanctuary Unit:</span>
+              <span>Select Villa Unit:</span>
               <span className="text-[#DAA520] font-black">
                 {cottageSelection === "ALL" ? "Full Estate (12 Guests)" : `Cottage ${cottageSelection} (4 Guests)`}
               </span>

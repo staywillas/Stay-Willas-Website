@@ -7,9 +7,11 @@ import Image from "next/image";
 import { 
   ChevronRight, 
   ChevronLeft, 
+  ChevronDown,
   Calendar as CalendarIcon,
   MapPin,
   ArrowRight,
+  Search,
   Users,
   MessageCircle,
   Loader2,
@@ -72,6 +74,8 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   const [isLoadingBookings, setIsLoadingBookings] = useState(false);
 
   // Property Selection / Availability Modal State
+  const [selectedDestination, setSelectedDestination] = useState<string>("All Maharashtra Villas");
+  const [isDestinationOpen, setIsDestinationOpen] = useState(false);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [availabilityModalOpen, setAvailabilityModalOpen] = useState(false);
   const [availableVillasList, setAvailableVillasList] = useState<VillaResult[]>([]);
@@ -166,11 +170,17 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   };
 
   // Fetch villas for given dates and open the property selection modal
-  const fetchVillasAndOpenModal = async (selectedCheckIn: Date | null, selectedCheckOut: Date | null, guestCount: string) => {
+  const fetchVillasAndOpenModal = async (
+    selectedCheckIn: Date | null, 
+    selectedCheckOut: Date | null, 
+    guestCount: string,
+    dest: string = selectedDestination
+  ) => {
     setIsCheckingAvailability(true);
     try {
+      const targetDest = !dest || dest === "All Maharashtra Villas" ? "all" : dest;
       const res = await checkAvailableVillasForDates({
-        destination: "all",
+        destination: targetDest,
         checkIn: selectedCheckIn ? formatDateOnly(selectedCheckIn) : undefined,
         checkOut: selectedCheckOut ? formatDateOnly(selectedCheckOut) : undefined,
         guests: Number(guestCount) || 1,
@@ -220,7 +230,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
           setCheckOut(newCheckOut);
           setIsCalendarOpen(false);
           // Automatically trigger popup when dates are completed!
-          fetchVillasAndOpenModal(checkIn, newCheckOut, guests);
+          fetchVillasAndOpenModal(checkIn, newCheckOut, guests, selectedDestination);
         }
       }
     }
@@ -230,7 +240,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   const handleCheckAvailability = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsCalendarOpen(false);
-    await fetchVillasAndOpenModal(checkIn, checkOut, guests);
+    await fetchVillasAndOpenModal(checkIn, checkOut, guests, selectedDestination);
   };
 
   // WhatsApp Inquiry handler
@@ -373,177 +383,142 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
             </div>
           </div>
 
-          {/* Mobile Layout */}
-          <div className="md:hidden flex flex-col gap-3">
-            <div className="grid grid-cols-1 gap-2.5 pb-1">
-              
-              {/* DATES ROW */}
-              <div className="grid grid-cols-2 gap-2.5">
-                <div 
-                  onClick={() => setIsCalendarOpen(true)}
-                  className="flex flex-col gap-1 cursor-pointer select-none text-left bg-slate-50/70 p-3 rounded-2xl border border-slate-200/70"
-                >
-                  <label className="text-[9px] font-extrabold text-[#1B3564]/60 uppercase tracking-widest flex items-center gap-1">
-                    <CalendarIcon size={10} className="text-[#DAA520]" />
-                    CHECK-IN
-                  </label>
-                  <div className="text-xs font-bold text-[#1B3564] h-5 flex items-center font-heading">
-                    {checkIn ? format(checkIn, "dd MMM, yyyy") : <span className="text-[#1B3564]/40 font-normal">Add date</span>}
+          {/* Mobile Layout Matching Reference Mockup */}
+          <div className="md:hidden flex flex-col gap-2.5">
+            {/* WHERE TO? Destination Row */}
+            <div className="relative">
+              <div 
+                onClick={() => setIsDestinationOpen(!isDestinationOpen)}
+                className="flex items-center justify-between p-3 rounded-2xl bg-white border border-slate-200/80 hover:border-[#DAA520]/60 cursor-pointer select-none transition-colors shadow-2xs"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 shrink-0">
+                    <MapPin size={15} className="text-slate-600" />
+                  </div>
+                  <div className="text-left min-w-0">
+                    <div className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest leading-none">WHERE TO?</div>
+                    <div className="text-xs font-bold text-slate-900 font-heading leading-tight mt-1 truncate">
+                      {selectedDestination}
+                    </div>
                   </div>
                 </div>
+                <ChevronDown size={16} className={`text-slate-400 shrink-0 ml-2 transition-transform duration-200 ${isDestinationOpen ? "rotate-180 text-[#1B3564]" : ""}`} />
+              </div>
 
-                <div 
-                  onClick={() => setIsCalendarOpen(true)}
-                  className="flex flex-col gap-1 cursor-pointer select-none text-left bg-slate-50/70 p-3 rounded-2xl border border-slate-200/70"
-                >
-                  <label className="text-[9px] font-extrabold text-[#1B3564]/60 uppercase tracking-widest flex items-center gap-1">
-                    <CalendarIcon size={10} className="text-[#DAA520]" />
-                    CHECK-OUT
-                  </label>
-                  <div className="text-xs font-bold text-[#1B3564] h-5 flex items-center font-heading">
-                    {checkOut ? format(checkOut, "dd MMM, yyyy") : <span className="text-[#1B3564]/40 font-normal">Add date</span>}
-                  </div>
+              {/* Destination Dropdown */}
+              {isDestinationOpen && (
+                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left">
+                  {["All Maharashtra Villas", "Lonavala", "Khopoli", "Alibaug", "Karjat"].map((dest) => (
+                    <button
+                      key={dest}
+                      type="button"
+                      onClick={() => {
+                        setSelectedDestination(dest);
+                        setModalLocationFilter(dest === "All Maharashtra Villas" ? "ALL" : dest);
+                        setIsDestinationOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${
+                        selectedDestination === dest 
+                          ? "bg-[#1B3564] text-[#DAA520]" 
+                          : "text-slate-700 hover:bg-slate-100"
+                      }`}
+                    >
+                      <span>{dest}</span>
+                      {selectedDestination === dest && <CheckCircle2 size={13} className="text-[#DAA520]" />}
+                    </button>
+                  ))}
                 </div>
-              </div>
-
-              {/* GUESTS ROW */}
-              <div className="flex items-center justify-between bg-slate-50/70 p-3 rounded-2xl border border-slate-200/70">
-                <div className="flex flex-col gap-1 text-left flex-1 mr-2">
-                  <label className="text-[9px] font-extrabold text-[#1B3564]/60 uppercase tracking-widest flex items-center gap-1">
-                    <Users size={10} className="text-[#DAA520]" />
-                    GUESTS CAPACITY
-                  </label>
-                  <div className="relative flex items-center mt-0.5">
-                    <input
-                      type="number"
-                      min="1"
-                      max="50"
-                      value={guests}
-                      onChange={(e) => setGuests(e.target.value)}
-                      aria-label="Number of Guests"
-                      className="bg-transparent text-xs font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-full font-heading"
-                      placeholder="Enter guests"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons Row */}
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <button
-                  type="submit"
-                  disabled={isCheckingAvailability}
-                  aria-label="Check Availability"
-                  className="bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-[10px] tracking-widest uppercase rounded-full py-3.5 px-2 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-none flex items-center justify-center gap-1.5"
-                >
-                  {isCheckingAvailability ? (
-                    <Loader2 size={13} className="animate-spin text-[#1B3564]" />
-                  ) : (
-                    <>
-                      <span>CHECK VILLAS</span>
-                      <ArrowRight size={11} className="stroke-[2.5]" />
-                    </>
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={(e) => handleWhatsAppInquiry(e)}
-                  aria-label="WhatsApp Inquiry"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] tracking-widest uppercase rounded-full py-3.5 px-2 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-none flex items-center justify-center gap-1.5"
-                >
-                  <MessageCircle size={13} />
-                  <span>WHATSAPP</span>
-                </button>
-              </div>
-
+              )}
             </div>
+
+            {/* DATES ROW (Side by Side in 2 Columns) */}
+            <div className="grid grid-cols-2 gap-2">
+              {/* CHECK-IN */}
+              <div 
+                onClick={() => setIsCalendarOpen(true)}
+                className="flex items-center gap-2.5 p-2.5 rounded-2xl bg-white border border-slate-200/80 hover:border-[#DAA520]/60 cursor-pointer select-none transition-colors shadow-2xs text-left"
+              >
+                <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/50 flex items-center justify-center text-[#DAA520] shrink-0">
+                  <CalendarIcon size={14} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest leading-none">CHECK IN</div>
+                  <div className="text-xs font-bold text-slate-800 font-heading leading-tight mt-1 truncate">
+                    {checkIn ? format(checkIn, "dd-MM-yyyy") : "dd-mm-yyyy"}
+                  </div>
+                </div>
+              </div>
+
+              {/* CHECK-OUT */}
+              <div 
+                onClick={() => setIsCalendarOpen(true)}
+                className="flex items-center gap-2.5 p-2.5 rounded-2xl bg-white border border-slate-200/80 hover:border-[#DAA520]/60 cursor-pointer select-none transition-colors shadow-2xs text-left"
+              >
+                <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/50 flex items-center justify-center text-[#DAA520] shrink-0">
+                  <CalendarIcon size={14} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest leading-none">CHECK OUT</div>
+                  <div className="text-xs font-bold text-slate-800 font-heading leading-tight mt-1 truncate">
+                    {checkOut ? format(checkOut, "dd-MM-yyyy") : "dd-mm-yyyy"}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SEARCH VILLAS BUTTON (Golden Full-Width) */}
+            <button
+              type="submit"
+              disabled={isCheckingAvailability}
+              aria-label="Search Villas"
+              className="w-full bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-xs tracking-wider uppercase rounded-2xl py-3.5 px-4 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-none flex items-center justify-center gap-2 active:scale-[0.98]"
+            >
+              {isCheckingAvailability ? (
+                <Loader2 size={15} className="animate-spin text-[#1B3564]" />
+              ) : (
+                <>
+                  <Search size={15} className="stroke-[2.5]" />
+                  <span>Search Villas</span>
+                </>
+              )}
+            </button>
           </div>
         </form>
       </motion.div>
 
-      {/* Calendar Popover */}
-      {isMobile && mounted ? (
-        createPortal(
-          <AnimatePresence>
-            {isCalendarOpen && (
-              <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-0" onClick={() => setIsCalendarOpen(false)} />
-                <div 
-                  onClick={(e) => e.stopPropagation()} 
-                  className="relative z-10 w-full max-w-[350px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.15)] p-5 text-left"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <button type="button" aria-label="Previous month" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
-                    <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
-                    <button type="button" aria-label="Next month" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
-                  </div>
-                  
-                  <div className="grid grid-cols-7 text-center mb-1.5">
-                    {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
-                      <span key={idx} className="text-[9px] font-extrabold text-[#E2A63B] uppercase tracking-widest">{day}</span>
-                    ))}
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-0.5">
-                    {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => <div key={`empty-${i}`} />)}
-                    {eachDayOfInterval({ start: startOfMonth(calendarViewMonth), end: endOfMonth(calendarViewMonth) }).map((day) => {
-                      const isPast = isBefore(day, startOfDay(new Date()));
-                      const isBooked = isDateFullyBooked(day);
-                      const isSelectedCheckIn = checkIn && isSameDay(day, checkIn);
-                      const isSelectedCheckOut = checkOut && isSameDay(day, checkOut);
-                      const isInRange = checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
-                      const isDisabled = isPast || isBooked;
-
-                      return (
-                        <button
-                          key={day.toString()} type="button" disabled={isDisabled} onClick={() => handleDateSelect(day)}
-                          className={`w-8 h-8 rounded-full text-[11px] font-bold flex flex-col items-center justify-center transition-all
-                            ${isDisabled ? 'text-slate-300 cursor-not-allowed' : ''}
-                            ${isBooked ? 'bg-[#FFB800]/10 text-slate-400' : ''}
-                            ${isSelectedCheckIn || isSelectedCheckOut ? 'bg-[#2563EB] text-white shadow-md scale-105 z-10' : ''}
-                            ${isInRange ? 'bg-[#2563EB]/10 text-[#2563EB]' : ''}
-                            ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange ? 'text-[#1B3564] hover:bg-slate-100 cursor-pointer' : ''}
-                          `}
-                        >
-                          <span>{format(day, "d")}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div className="flex items-center justify-between mt-5 pt-3 border-t border-slate-100">
-                    <button type="button" aria-label="Clear Dates" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
-                    <button type="button" aria-label="Done" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </AnimatePresence>,
-          document.body
-        )
-      ) : (
+      {/* Calendar Popover (Portaled to document.body for both Desktop & Mobile to prevent any clipping) */}
+      {mounted && createPortal(
         <AnimatePresence>
           {isCalendarOpen && (
-            <>
-              <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsCalendarOpen(false)} />
-              <div 
+            <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/50 backdrop-blur-xs z-0" 
+                onClick={() => setIsCalendarOpen(false)} 
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                transition={{ duration: 0.2 }}
                 onClick={(e) => e.stopPropagation()} 
-                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-50 w-[380px] bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(27,53,100,0.2)] p-5 text-left"
+                className="relative z-10 w-full max-w-[380px] bg-white border border-slate-200/80 rounded-[2rem] shadow-[0_25px_60px_rgba(27,53,100,0.25)] p-5 sm:p-6 text-left"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <button type="button" aria-label="Previous month" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronLeft size={14} /></button>
-                  <span className="text-[#1B3564] font-bold text-xs tracking-wide">{format(calendarViewMonth, "MMMM yyyy")}</span>
-                  <button type="button" aria-label="Next month" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-50"><ChevronRight size={14} /></button>
+                  <button type="button" aria-label="Previous month" onClick={() => setCalendarViewMonth(subMonths(calendarViewMonth, 1))} className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"><ChevronLeft size={16} /></button>
+                  <span className="text-[#1B3564] font-bold text-sm tracking-wide font-heading">{format(calendarViewMonth, "MMMM yyyy")}</span>
+                  <button type="button" aria-label="Next month" onClick={() => setCalendarViewMonth(addMonths(calendarViewMonth, 1))} className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"><ChevronRight size={16} /></button>
                 </div>
                 
-                <div className="grid grid-cols-7 text-center mb-1.5">
+                <div className="grid grid-cols-7 text-center mb-2">
                   {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day, idx) => (
-                    <span key={idx} className="text-[9px] font-extrabold text-[#E2A63B] uppercase tracking-widest">{day}</span>
+                    <span key={idx} className="text-[10px] font-extrabold text-[#DAA520] uppercase tracking-widest">{day}</span>
                   ))}
                 </div>
 
-                <div className="grid grid-cols-7 gap-0.5">
+                <div className="grid grid-cols-7 gap-1">
                   {Array.from({ length: getDay(startOfMonth(calendarViewMonth)) }).map((_, i) => <div key={`empty-${i}`} />)}
                   {eachDayOfInterval({ start: startOfMonth(calendarViewMonth), end: endOfMonth(calendarViewMonth) }).map((day) => {
                     const isPast = isBefore(day, startOfDay(new Date()));
@@ -556,11 +531,11 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                     return (
                       <button
                         key={day.toString()} type="button" disabled={isDisabled} onClick={() => handleDateSelect(day)}
-                        className={`w-8 h-8 rounded-full text-[11px] font-bold flex flex-col items-center justify-center transition-all
+                        className={`w-9 h-9 rounded-full text-xs font-bold flex flex-col items-center justify-center transition-all
                           ${isDisabled ? 'text-slate-300 cursor-not-allowed' : ''}
                           ${isBooked ? 'bg-[#FFB800]/10 text-slate-400' : ''}
-                          ${isSelectedCheckIn || isSelectedCheckOut ? 'bg-[#2563EB] text-white shadow-md scale-105 z-10' : ''}
-                          ${isInRange ? 'bg-[#2563EB]/10 text-[#2563EB]' : ''}
+                          ${isSelectedCheckIn || isSelectedCheckOut ? 'bg-[#1B3564] text-[#DAA520] shadow-md scale-105 z-10 font-black' : ''}
+                          ${isInRange ? 'bg-[#DAA520]/20 text-[#1B3564]' : ''}
                           ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange ? 'text-[#1B3564] hover:bg-slate-100 cursor-pointer' : ''}
                         `}
                       >
@@ -571,13 +546,14 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 </div>
 
                 <div className="flex items-center justify-between mt-5 pt-3 border-t border-slate-100">
-                  <button type="button" aria-label="Clear Dates" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-[10px] text-slate-500 hover:text-slate-800 font-bold tracking-wider">CLEAR</button>
-                  <button type="button" aria-label="Done" onClick={() => setIsCalendarOpen(false)} className="px-4 py-1.5 bg-[#1B3564] text-white rounded-full text-[10px] font-bold tracking-widest shadow-md">DONE</button>
+                  <button type="button" aria-label="Clear Dates" onClick={() => { setCheckIn(null); setCheckOut(null); }} className="text-xs text-slate-500 hover:text-slate-800 font-bold tracking-wider cursor-pointer">CLEAR</button>
+                  <button type="button" aria-label="Done" onClick={() => setIsCalendarOpen(false)} className="px-5 py-2 bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] rounded-full text-xs font-bold tracking-wider shadow-md cursor-pointer transition-colors">DONE</button>
                 </div>
-              </div>
-            </>
+              </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
       )}
 
       {/* Property Selection Pop-up Modal */}
@@ -632,7 +608,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-cormorant font-bold text-xl sm:text-2xl text-[#DAA520] tracking-wide">
-                          Select Your Luxury Sanctuary
+                          Select Your Luxury Villa
                         </h3>
                         <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">
                           Live Available
@@ -836,7 +812,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                     }}
                                     className="px-5 py-2.5 rounded-xl bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] hover:text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-1.5 cursor-pointer border-none"
                                   >
-                                    <span>Book Sanctuary</span>
+                                    <span>Book Villa</span>
                                     <ArrowRight size={13} className="stroke-[2.5]" />
                                   </button>
                                 </div>
@@ -863,7 +839,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                           onClick={() => setModalLocationFilter("ALL")}
                           className="px-4 py-2 bg-[#1B3564] text-white rounded-xl text-xs font-bold cursor-pointer border-none shadow-sm"
                         >
-                          View All Sanctuaries
+                          View All Villas
                         </button>
                       </div>
                     </div>

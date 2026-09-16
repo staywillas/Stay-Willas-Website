@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Luxury Villas in Lonavala with Private Pool | Stay Willas",
-    description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services. Book verified lonavala villa stays near Bhushi Dam & Pawna Lake today.",
+    description: "Explore luxury villas in Lonavala with private pool, lush greenery, and in-house chef services. Book verified lonavala villa stays near Bhushi Dam & Tiger Point today.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -190,7 +190,7 @@ export default async function LonavalaPage() {
 
                 {/* Subtitle */}
                 <p className="text-slate-200 text-xs sm:text-base md:text-lg leading-relaxed max-w-xl font-light mb-4 sm:mb-8">
-                  A scenic 2-hour drive from Mumbai and Pune. Discover architectural glass-facade sanctuaries, private waterfall pools, on-demand gourmet chefs, and cozy mountain cottages.
+                  A scenic 2-hour drive from Mumbai and Pune. Discover architectural glass-facade villas, private waterfall pools, on-demand gourmet chefs, and cozy mountain cottages.
                 </p>
 
                 {/* Direct Booking Hero CTA Group */}
@@ -396,7 +396,7 @@ export default async function LonavalaPage() {
                 Curated Collection • {villas.length} Properties
               </span>
               <h3 className="text-3xl md:text-4xl font-heading text-[#1B3564]">
-                Available Private Sanctuaries in Lonavala
+                Available Private Villas in Lonavala
               </h3>
               <p className="text-text-primary/60 text-xs sm:text-sm font-light mt-2 max-w-xl">
                 Explore our handpicked range of architectural glass villas, private pool estates, and cozy mountain cottages.
@@ -504,7 +504,7 @@ export default async function LonavalaPage() {
                 We have all felt it: Friday afternoon in Mumbai or Pune, watching city traffic crawl while yearning for the cool, mist-laden air of the Sahyadri mountains. For travelers across western Maharashtra, escaping to the hills isn&apos;t just a leisure activity—it is a vital reset. Lonavala offers an unmatchable retreat when monsoon clouds roll over Khandala ghats and carpet the valleys in lush greenery.
               </p>
               <p>
-                Whether you are searching for a serene <strong>private villa</strong>, a secluded <strong>pool villa</strong>, or an exclusive mountain sanctuary, booking a <strong>villa in lonavala with private pool</strong> gives your group complete independence. Unlike crowded commercial hotels, Stay Willas offers handpicked estates equipped with high-speed super-fast Wi-Fi, private pools, and dedicated chef hospitality.
+                Whether you are searching for a serene <strong>private villa</strong>, a secluded <strong>pool villa</strong>, or an exclusive mountain villa, booking a <strong>villa in lonavala with private pool</strong> gives your group complete independence. Unlike crowded commercial hotels, Stay Willas offers handpicked estates equipped with high-speed super-fast Wi-Fi, private pools, and dedicated chef hospitality.
               </p>
 
               <h2>Why Choose a Private Estate Over Traditional Hotels</h2>
@@ -601,7 +601,7 @@ export default async function LonavalaPage() {
                   </thead>
                   <tbody className="divide-y divide-[#DAA520]/15">
                     <tr>
-                      <td className="px-6 py-4 font-bold text-[#1B3564] whitespace-nowrap">Monsoon Sanctuary</td>
+                      <td className="px-6 py-4 font-bold text-[#1B3564] whitespace-nowrap">Monsoon Villa</td>
                       <td className="px-6 py-4 font-medium text-slate-700 whitespace-nowrap">June – September</td>
                       <td className="px-6 py-4 text-slate-600 leading-relaxed">Dense Sahyadri fog, roaring valley streams, and lush greenery across Khandala ghats. Watch the rain cascade down The Angle House's double-height glass facade while enjoying hot pakodas.</td>
                     </tr>

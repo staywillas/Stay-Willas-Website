@@ -150,7 +150,7 @@ export default function DashboardClient({ initialStays }: DashboardClientProps) 
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#DAA520]/5 rounded-full blur-3xl pointer-events-none" />
         
         <span className="text-accent-secondary font-bold tracking-[0.3em] uppercase text-xs mb-3 block">
-          MEMBERS SANCTUARY PORTAL
+          MEMBERS VILLA PORTAL
         </span>
         <h1 className="text-4xl md:text-6xl font-heading leading-tight mb-4 text-[#1B3564]">
           My Guest <span className="italic font-serif pr-2 text-[#DAA520]">Dashboard</span>

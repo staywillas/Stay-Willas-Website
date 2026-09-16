@@ -133,7 +133,7 @@ export default function BlogHorizontalMarquee({
         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-[#DAA520]/50 rounded-full px-4 py-1.5 mb-3 shadow-[0_4px_20px_rgba(218,165,32,0.25)]">
           <Sparkles size={13} className="text-[#F3C065] animate-pulse shrink-0" />
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#F3C065]">
-            Featured Lonavala Sanctuaries
+            Featured Lonavala Villas
           </span>
         </div>
         <h3 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-white tracking-tight">
