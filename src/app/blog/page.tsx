@@ -150,6 +150,28 @@ export default function BlogIndexPage() {
               </div>
             ))}
           </div>
+
+          {/* Homeowner & Property Partner Callout Banner */}
+          <div className="mt-16 p-8 md:p-12 rounded-3xl bg-gradient-to-r from-[#1B3564] via-[#152A50] to-[#0D1B33] text-white border border-[#DAA520]/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 text-left relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#DAA520]/10 rounded-full blur-[90px] pointer-events-none" />
+            <div className="relative z-10 space-y-2">
+              <span className="text-[#DAA520] text-[10px] font-bold uppercase tracking-[0.25em] block">
+                For Luxury Homeowners
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white leading-tight">
+                Own a Villa or Estate in Maharashtra?
+              </h3>
+              <p className="text-white/75 text-xs sm:text-sm font-light max-w-xl leading-relaxed">
+                Partner with Stay Willas to monetize your private sanctuary with verified elite guests, zero management stress, and transparent monthly returns.
+              </p>
+            </div>
+            <Link
+              href="/partner"
+              className="relative z-10 bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] font-black text-xs uppercase tracking-widest px-8 py-4 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all whitespace-nowrap shrink-0"
+            >
+              PARTNER WITH US &rarr;
+            </Link>
+          </div>
         </section>
       </div>
 

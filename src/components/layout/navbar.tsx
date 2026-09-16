@@ -211,7 +211,10 @@ const Navbar = () => {
                   <Link href="/areas/lonavala" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Lonavala Villas</Link>
                   <Link href="/areas/khopoli" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Khopoli Villas</Link>
                   <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Group Stays in Lonavala</Link>
-                  <Link href="/partner" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Partner</Link>
+                  <Link href="/partner" className="text-[14px] font-bold text-[#1B3564] hover:text-[#559C24] tracking-wide transition-colors flex items-center justify-between group/partner">
+                    <span>Partner With Us</span>
+                    <span className="text-[9px] bg-[#559C24]/15 text-[#4D7C0F] px-2 py-0.5 rounded-full font-black uppercase tracking-wider group-hover/partner:bg-[#559C24] group-hover/partner:text-white transition-colors">Host</span>
+                  </Link>
                   <Link href="/contact" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Contact</Link>
                 </div>
               </div>

@@ -146,6 +146,16 @@ const nextConfig: NextConfig = {
       destination: '/areas',
       permanent: true,
     },
+    {
+      source: '/partner-with-us',
+      destination: '/partner',
+      permanent: true,
+    },
+    {
+      source: '/homeowner',
+      destination: '/partner',
+      permanent: true,
+    },
   ],
   headers: async () => [
     {
@@ -190,10 +200,6 @@ const nextConfig: NextConfig = {
     },
     {
       source: '/dashboard/:path*',
-      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
-    },
-    {
-      source: '/homeowner/:path*',
       headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
     },
     {

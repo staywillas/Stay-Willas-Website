@@ -1,6 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
@@ -8,14 +9,14 @@ import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Stay Willas | Private Villa Rentals in Maharashtra",
-  description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala, Khopoli & Mahabaleshwar with warm hospitality.",
-  keywords: ["about Stay Willas", "private villa rentals in maharashtra", "premium villa management"],
+  description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
+  keywords: ["about Stay Willas", "private villa rentals in maharashtra", "premium villa management", "luxury villas in lonavala", "villas in khopoli"],
   alternates: {
     canonical: "https://www.staywillas.com/about",
   },
   openGraph: {
     title: "About Stay Willas | Private Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala, Khopoli & Mahabaleshwar with warm hospitality.",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
     url: "https://www.staywillas.com/about",
     images: [
       {
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "About Stay Willas | Private Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala, Khopoli & Mahabaleshwar with warm hospitality.",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -46,7 +47,7 @@ export default function AboutPage() {
     "@id": `${BASE_URL}/about#webpage`,
     url: `${BASE_URL}/about`,
     name: "About Stay Willas | Private Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala, Khopoli & Mahabaleshwar with warm hospitality.",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
     isPartOf: {
       "@id": `${BASE_URL}/#website`,
     },
@@ -89,8 +90,8 @@ export default function AboutPage() {
           </div>
           <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
             <Image 
-              src="/images/hero-villa.webp" 
-              alt="Stay Willas Private Estate" 
+              src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" 
+              alt="Canopy Crest Khopoli - Luxury Private Pool Villa by Stay Willas" 
               fill 
               priority
               sizes="(max-width: 768px) 95vw, (max-width: 1200px) 45vw, 550px"
@@ -178,10 +179,10 @@ export default function AboutPage() {
                 Lonavala Villa with Pool
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Looking for the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Our handpicked collection features signature architectural icons like <a href="/villa/the-angle-house" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">The Angle House</a>. Enjoy a private waterfall swimming pool, master suite Jacuzzi, double-height glass facades, and pet-friendly fenced lawns.
+                Looking for the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala with private pool</strong>? Our handpicked collection features signature architectural icons like <a href="/villa/the-angle-house" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">The Angle House</a>. Enjoy a private waterfall swimming pool, master suite Jacuzzi, double-height glass facades, and pet-friendly fenced lawns.
               </p>
               <a href="/areas/lonavala" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
-                Explore Lonavala Villas &rarr;
+                Explore Lonavala Villas with Private Pool &rarr;
               </a>
             </div>
 
@@ -228,6 +229,28 @@ export default function AboutPage() {
                 <li><strong className="font-semibold text-[#1B3564]">Prime Western Ghats Locations:</strong> Conveniently located within 2 hours of drive time from Mumbai and Pune.</li>
               </ul>
             </div>
+          </div>
+
+          {/* Dedicated Homeowner Partnership Banner */}
+          <div className="bg-gradient-to-r from-[#1B3564] via-[#152A50] to-[#0D1B33] text-white p-8 md:p-12 rounded-3xl border border-[#DAA520]/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 text-left relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#DAA520]/10 rounded-full blur-[90px] pointer-events-none" />
+            <div className="relative z-10 space-y-3">
+              <span className="text-[#DAA520] font-black uppercase text-[10px] tracking-[0.25em] block">
+                Partner With Us
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white leading-tight">
+                Are You a Villa Owner in Maharashtra?
+              </h3>
+              <p className="text-white/75 text-xs sm:text-sm font-light max-w-2xl leading-relaxed">
+                We partner with owners of exceptional private pool villas, farmhouses, and chalets across Lonavala, Khopoli, Karjat, and Alibaug. Enjoy 30% to 50% higher net yields, verified family guests, and complete turnkey property care with zero headaches.
+              </p>
+            </div>
+            <Link
+              href="/partner"
+              className="relative z-10 bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] font-black text-xs uppercase tracking-widest px-8 py-4 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all whitespace-nowrap shrink-0"
+            >
+              LEARN MORE &amp; APPLY &rarr;
+            </Link>
           </div>
         </div>
       </section>

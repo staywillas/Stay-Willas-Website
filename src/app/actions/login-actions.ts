@@ -157,7 +157,7 @@ export async function loginAction(
       cookieStore.set("staywillas_session", signSessionPayload(payload), getSessionCookieOptions());
       cookieStore.set("staywillas_user", JSON.stringify(payload), getUserCookieOptions());
 
-      return { success: true, redirectTo: "/homeowner" };
+      return { success: true, redirectTo: "/partner" };
     } else {
       return { success: false, error: "Invalid Partner Password." };
     }

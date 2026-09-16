@@ -174,7 +174,7 @@ export default async function LonavalaGlassHousePage() {
                 "@context": "https://schema.org",
                 "@type": "VacationRental",
                 "name": "The Angle House — Premier Villas in Lonavala with Private Pool (Monsoon Escape)",
-                "description": "Book the best villa in Lonavala featuring a waterfall pool, master suite jacuzzi, pet-friendly lawns, and chef service. Special Monsoon Escape weekday offer: Stay 2 nights & save more.",
+                "description": "Book the best villa in Lonavala with private pool featuring a waterfall pool, master suite jacuzzi, pet-friendly lawns, and chef service. Special Monsoon Escape weekday offer: Stay 2 nights & save more.",
                 "url": "https://www.staywillas.com/villas-in-lonavala-with-private-pool",
                 "address": {
                   "@type": "PostalAddress",
@@ -229,10 +229,10 @@ export default async function LonavalaGlassHousePage() {
                   },
                   {
                     "@type": "Question",
-                    "name": "Why is The Angle House considered the best villa in Lonavala for families?",
+                    "name": "Why is The Angle House considered the best villa in Lonavala with private pool for families?",
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": "It is widely recognized as the best villa in Lonavala because it offers full privacy, secure pet-friendly green lawns, spacious 3 BHK suites, and tailored meal options."
+                      "text": "It is widely recognized as the best villa in Lonavala with private pool because it offers full privacy, secure pet-friendly green lawns, spacious 3 BHK suites, and tailored meal options."
                     }
                   }
                 ]
@@ -298,7 +298,7 @@ export default async function LonavalaGlassHousePage() {
             </div>
 
             <p className="text-text-primary/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl font-light mb-8">
-              Discover <strong className="font-semibold text-[#1B3564]">The Angle House</strong>, voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>. If you are searching for a premier <strong className="font-semibold text-[#1B3564]">villa for rent in Lonavala</strong>, enjoy our private waterfall pool, master jacuzzi, pet-friendly lawns, and in-house chef service.
+              Discover <strong className="font-semibold text-[#1B3564]">The Angle House</strong>, voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala with private pool</strong>. If you are searching for a premier <strong className="font-semibold text-[#1B3564]">villa in Lonavala with private pool</strong>, enjoy our private waterfall pool, master jacuzzi, pet-friendly lawns, and in-house chef service.
             </p>
 
             {/* Strong Action CTAs */}
@@ -414,10 +414,10 @@ export default async function LonavalaGlassHousePage() {
         <section className="py-12 sm:py-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-[#1B3564] mb-3">
-              Why We Are Voted the Best Villa in Lonavala
+              Why We Are Voted the Best Villa in Lonavala with Private Pool
             </h2>
             <p className="text-text-primary/70 text-xs sm:text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
-              Designed for families, pet parents, and groups looking for an exclusive villa for rent in Lonavala with total privacy and signature hospitality.
+              Designed for families, pet parents, and groups looking for an exclusive villa in Lonavala with private pool, total privacy and signature hospitality.
             </p>
           </div>
 
@@ -480,12 +480,12 @@ export default async function LonavalaGlassHousePage() {
               Under our special <strong>Monsoon Escape</strong> promotion, groups who <strong>stay for 2 nights save more</strong> on weekdays (Monday to Thursday). Having access to a secluded waterfall pool lets you swim and relax at any time of day, making your stay genuinely refreshing and private.
             </p>
 
-            <h2>Why The Angle House is the Best Villa in Lonavala for Your Staycation</h2>
+            <h2>Why The Angle House is the Best Villa in Lonavala with Private Pool for Your Staycation</h2>
             <p>
-              Consistently recognized as the <strong>best villa in lonavala</strong>, The Angle House boasts 3 oversized master BHK suites with plush bedding, split air conditioning, private balconies, and an indulgent master suite jacuzzi bath. Double-height floor-to-ceiling glass facades allow natural sunlight to flood the living hall while offering sweeping views of the Sahyadri mountains.
+              Consistently recognized as the <strong>best villa in Lonavala with private pool</strong>, The Angle House boasts 3 oversized master BHK suites with plush bedding, split air conditioning, private balconies, and an indulgent master suite jacuzzi bath. Double-height floor-to-ceiling glass facades allow natural sunlight to flood the living hall while offering sweeping views of the Sahyadri mountains.
             </p>
             <p>
-              Whether you are hosting a milestone family reunion, a corporate retreat, or a quiet celebration, choosing the <strong>best villa in lonavala</strong> guarantees personalized hospitality tailored to your preferences.
+              Whether you are hosting a milestone family reunion, a corporate retreat, or a quiet celebration, choosing the <strong>best villa in Lonavala with private pool</strong> guarantees personalized hospitality tailored to your preferences.
             </p>
 
             <h2>Choosing the Perfect Villa for Rent in Lonavala</h2>
@@ -518,9 +518,9 @@ export default async function LonavalaGlassHousePage() {
                 </p>
               </div>
               <div className="bg-[#FAF8F5] p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-[#DAA520]/15">
-                <h3 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">Why is The Angle House considered the best villa in Lonavala for families?</h3>
+                <h3 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">Why is The Angle House considered the best villa in Lonavala with private pool for families?</h3>
                 <p className="text-text-primary/70 text-sm font-light leading-relaxed">
-                  It is widely recognized as the best villa in Lonavala because it offers full privacy, secure pet-friendly green lawns, spacious 3 BHK suites, and tailored meal options.
+                  It is widely recognized as the best villa in Lonavala with private pool because it offers full privacy, secure pet-friendly green lawns, spacious 3 BHK suites, and tailored meal options.
                 </p>
               </div>
             </div>

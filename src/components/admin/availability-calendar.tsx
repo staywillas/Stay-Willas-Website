@@ -308,7 +308,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   // GST & Total
   const gstAmount = Math.round(subtotal * (gstPercent / 100));
   const taxInclusiveTotal = modalMode === "GUEST_BOOKING" ? (subtotal + gstAmount) : 0;
-  const grandTotal = modalMode === "GUEST_BOOKING" ? Math.round(taxInclusiveTotal + (securityDeposit || 0)) : 0;
+  const grandTotal = modalMode === "GUEST_BOOKING" ? Math.round(taxInclusiveTotal) : 0;
   const balanceDue = Math.max(0, grandTotal - (advancePaid || 0));
 
   const year = currentDate.getFullYear();
@@ -799,9 +799,6 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       }
       drawSummaryRow(`Net Taxable Amount:`, `Rs. ${targetSubtotal.toLocaleString("en-IN")}`);
       drawSummaryRow(`GST Tax (${targetGstPercent}%):`, `Rs. ${targetGstAmount.toLocaleString("en-IN")}`);
-      if (targetSecurityDeposit > 0) {
-        drawSummaryRow("Security Deposit (Refundable):", `Rs. ${targetSecurityDeposit.toLocaleString("en-IN")}`, false, [180, 100, 20]);
-      }
       
       currentY += 1;
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
@@ -817,7 +814,30 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       doc.setTextColor(255, 255, 255);
       doc.text(`Rs. ${finalNetPayable.toLocaleString("en-IN")}`, 175, currentY + 1.5);
 
-      currentY += 14;
+      currentY += 10;
+
+      // Prominent Refundable Deposit Banner below Grand Total in BOLD CAPITAL LETTERS
+      if (targetSecurityDeposit > 0) {
+        currentY += 2;
+        doc.setFillColor(254, 243, 199); // #FEF3C7 Amber
+        doc.rect(marginX, currentY, 210 - marginX * 2, 9, "F");
+        doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+        doc.setLineWidth(0.4);
+        doc.rect(marginX, currentY, 210 - marginX * 2, 9, "S");
+
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(8.5);
+        doc.setTextColor(146, 64, 14); // Dark Amber
+        doc.text(
+          `REFUNDABLE DEPOSIT IS RS. ${targetSecurityDeposit.toLocaleString("en-IN")} (NOT INCLUDED IN GRAND TOTAL - REFUNDABLE POST-CHECKOUT)`,
+          105,
+          currentY + 5.8,
+          { align: "center" }
+        );
+        currentY += 13;
+      } else {
+        currentY += 4;
+      }
 
       // Payment Box
       doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
@@ -999,6 +1019,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     const numNights = specificBookingData?.nights || nights;
     const numGuests = specificBookingData?.guests || guestCount;
     const total = specificBookingData?.grandTotal || grandTotal;
+    const targetDeposit = specificBookingData?.securityDeposit !== undefined ? specificBookingData.securityDeposit : securityDeposit;
     const advance = specificBookingData?.advancePaid !== undefined ? specificBookingData.advancePaid : advancePaid;
     const balance = specificBookingData?.balanceDue !== undefined ? specificBookingData.balanceDue : balanceDue;
 
@@ -1016,8 +1037,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       `\n   *Total Stay Tariff:* Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
       (totalFoodCost > 0 ? `🍽️ *Catering Plan:* Rs. ${totalFoodCost.toLocaleString("en-IN")}\n` : "") +
       (totalExtrasCost > 0 ? `✨ *Add-ons & Extras:* Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
-      (securityDeposit > 0 ? `🛡️ *Refundable Deposit:* Rs. ${securityDeposit.toLocaleString("en-IN")}\n` : "") +
       `💰 *Grand Total:* Rs. ${total.toLocaleString("en-IN")}\n` +
+      (targetDeposit > 0 ? `🛡️ *REFUNDABLE DEPOSIT IS RS. ${targetDeposit.toLocaleString("en-IN")}* (NOT INCLUDED IN GRAND TOTAL • REFUNDABLE AT CHECK-OUT)\n` : "") +
       (advance > 0 ? `💳 *Advance Received:* Rs. ${advance.toLocaleString("en-IN")}\n` : "") +
       `📌 *Balance Due on Check-In:* ${balance <= 0 ? "PAID IN FULL" : `Rs. ${balance.toLocaleString("en-IN")}`}\n` +
       `------------------------------------------\n` +
@@ -1898,17 +1919,21 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       </div>
                     )}
 
-                    {securityDeposit > 0 && (
-                      <div className="flex justify-between items-center text-xs text-amber-300 border-b border-white/10 pb-2">
-                        <span>+ Refundable Security Deposit:</span>
-                        <span className="font-bold">₹{securityDeposit.toLocaleString("en-IN")}</span>
-                      </div>
-                    )}
-
                     <div className="flex justify-between items-center text-sm font-bold text-[#DAA520]">
                       <span>NET GRAND TOTAL:</span>
                       <span className="text-xl font-black">₹{grandTotal.toLocaleString("en-IN")}</span>
                     </div>
+
+                    {securityDeposit > 0 && (
+                      <div className="bg-amber-500/20 border border-amber-400/40 rounded-xl p-2.5 text-center my-1">
+                        <span className="text-xs font-black text-amber-300 uppercase tracking-wide block">
+                          REFUNDABLE DEPOSIT IS ₹{securityDeposit.toLocaleString("en-IN")}
+                        </span>
+                        <span className="text-[10px] text-amber-200/80 font-medium block mt-0.5">
+                          (NOT INCLUDED IN GRAND TOTAL • REFUNDABLE POST-CHECKOUT)
+                        </span>
+                      </div>
+                    )}
 
                     <div className="flex justify-between items-center text-xs font-bold pt-2 border-t border-white/10">
                       <span className="text-emerald-300">Advance Paid: ₹{advancePaid.toLocaleString("en-IN")}</span>
@@ -2105,6 +2130,16 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                     <span>Balance: ₹{(activeDetails.balanceDue || 0).toLocaleString("en-IN")}</span>
                   </div>
                 )}
+                {activeDetails.securityDeposit > 0 && (
+                  <div className="mt-2 pt-2 border-t border-white/15 text-center">
+                    <span className="text-xs font-black text-amber-300 uppercase tracking-wide block">
+                      REFUNDABLE DEPOSIT IS ₹{activeDetails.securityDeposit.toLocaleString("en-IN")}
+                    </span>
+                    <span className="text-[10px] text-amber-200/80 font-medium block mt-0.5">
+                      (NOT INCLUDED IN GRAND TOTAL • REFUNDABLE POST-CHECKOUT)
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -2135,7 +2170,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                 const bGstPercent = activeDetails.gst?.percent !== undefined ? activeDetails.gst.percent : (activeDetails.gstPercent !== undefined ? activeDetails.gstPercent : 18);
                 const bGstAmount = activeDetails.gst?.total !== undefined ? activeDetails.gst.total : Math.round(bTaxable * (bGstPercent / 100));
                 const bDeposit = activeDetails.securityDeposit || 0;
-                const bGrandTotal = selectedBooking.totalPrice || (bTaxable + bGstAmount + bDeposit);
+                const bGrandTotal = selectedBooking.totalPrice || (bTaxable + bGstAmount);
                 const bAdvance = activeDetails.advancePaid || 0;
                 const bBalance = activeDetails.balanceDue !== undefined ? activeDetails.balanceDue : Math.max(0, bGrandTotal - bAdvance);
 
@@ -2187,6 +2222,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                         nights: bNights,
                         guests: bGuests,
                         grandTotal: bGrandTotal,
+                        securityDeposit: bDeposit,
                         advancePaid: bAdvance,
                         balanceDue: bBalance,
                       })}

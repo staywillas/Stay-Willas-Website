@@ -6,8 +6,9 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { blogsData } from "@/data/blogs";
-import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle } from "lucide-react";
+import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle, Sparkles, ArrowRight, BedDouble, Users, Waves, Flame, MapPin } from "lucide-react";
 import { prisma } from "@/lib/db";
+import BlogHorizontalMarquee from "@/components/blog/blog-horizontal-marquee";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -68,24 +69,82 @@ export default async function BlogDetailsPage({ params }: PageProps) {
   const otherBlogs = blogsData.filter((b) => b.slug !== slug).slice(0, 2);
 
   let relatedVilla = null;
-  if ((blog as any).relatedVillaSlug) {
+  let featuredVillas: Array<{
+    name: string;
+    slug: string;
+    images: string[];
+    location: string;
+    price: number;
+    bedrooms: number;
+    guests: number;
+  }> = [];
+
+  if (blog.featuredVillaSlugs && blog.featuredVillaSlugs.length > 0) {
+    const fetched = await prisma.villa.findMany({
+      where: { slug: { in: blog.featuredVillaSlugs } },
+      select: { name: true, slug: true, images: true, location: true, price: true, bedrooms: true, guests: true }
+    });
+    featuredVillas = blog.featuredVillaSlugs
+      .map(s => fetched.find(v => v.slug === s))
+      .filter((v): v is NonNullable<typeof v> => Boolean(v));
+  } else if ((blog as any).relatedVillaSlug) {
     relatedVilla = await prisma.villa.findUnique({
       where: { slug: (blog as any).relatedVillaSlug },
       select: { name: true, slug: true, images: true, location: true }
     });
   }
 
-  // Structured Data Schema for Search Engines (JSON-LD BlogPosting & FAQPage)
-  const faqList = blog.sections
-    .filter(s => s.list && s.list.length > 0)
-    .map(s => ({
-      "@type": "Question",
-      "name": `What should I consider for ${s.heading.toLowerCase()}?`,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": s.paragraphs.join(" ") + " " + s.list?.join(", ")
+  // Extract genuine FAQ items for Google Rich Results & AI Search
+  const genuineFaqs: Array<{ "@type": string; name: string; acceptedAnswer: { "@type": string; text: string } }> = [];
+  
+  blog.sections.forEach((section) => {
+    const isFaqHeading = /faq|frequently\s+asked/i.test(section.heading);
+    if (section.list && section.list.length > 0) {
+      section.list.forEach((item) => {
+        const qIndex = item.indexOf("?");
+        if (qIndex !== -1 && (isFaqHeading || qIndex < 140)) {
+          const question = item.slice(0, qIndex + 1).trim();
+          const answer = item.slice(qIndex + 1).trim();
+          if (question.length > 10 && answer.length > 10) {
+            genuineFaqs.push({
+              "@type": "Question",
+              name: question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: answer,
+              },
+            });
+          }
+        }
+      });
+    }
+  });
+
+  const isKhopoli = /khopoli/i.test(blog.title + " " + blog.slug);
+  const isLonavala = /lonavala/i.test(blog.title + " " + blog.slug);
+  const blogAboutEntity = isKhopoli
+    ? {
+        "@type": "Place",
+        name: "Khopoli, Maharashtra",
+        sameAs: "https://www.wikidata.org/wiki/Q2248559",
       }
-    }));
+    : isLonavala
+    ? {
+        "@type": "Place",
+        name: "Lonavala, Maharashtra",
+        sameAs: "https://www.wikidata.org/wiki/Q1140889",
+      }
+    : {
+        "@type": "Place",
+        name: "Maharashtra, India",
+        sameAs: "https://www.wikidata.org/wiki/Q1191",
+      };
+
+  const articleWordCount = (
+    blog.intro + " " + 
+    blog.sections.map(s => s.paragraphs.join(" ") + " " + (s.list?.join(" ") || "")).join(" ") + " " + 
+    blog.conclusion
+  ).replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -95,6 +154,9 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     "image": `https://www.staywillas.com${blog.image}`,
     "datePublished": new Date(blog.date).toISOString(),
     "dateModified": new Date(blog.date).toISOString(),
+    "inLanguage": "en-IN",
+    "wordCount": articleWordCount,
+    "about": blogAboutEntity,
     "author": {
       "@type": "Organization",
       "name": "Stay Willas",
@@ -142,10 +204,10 @@ export default async function BlogDetailsPage({ params }: PageProps) {
   const schemaToInject = [
     articleSchema,
     breadcrumbSchema,
-    ...(faqList.length > 0 ? [{
+    ...(genuineFaqs.length > 0 ? [{
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": faqList
+      "mainEntity": genuineFaqs
     }] : [])
   ];
 
@@ -259,6 +321,168 @@ export default async function BlogDetailsPage({ params }: PageProps) {
             dangerouslySetInnerHTML={{ __html: blog.intro }}
           />
 
+          {/* High-Impact Horizontal Image Marquee */}
+          {blog.showMarquee && (
+            <BlogHorizontalMarquee />
+          )}
+
+          {/* Dual Featured Villas Showcase */}
+          {featuredVillas.length > 1 && (
+            <div className="my-14 bg-gradient-to-br from-[#FAF8F5] via-white to-[#FAF8F5] rounded-3xl p-6 sm:p-8 md:p-10 border border-[#DAA520]/30 shadow-xl">
+              <div className="text-center max-w-2xl mx-auto mb-10">
+                <div className="inline-flex items-center gap-2 bg-[#DAA520]/15 border border-[#DAA520]/40 rounded-full px-4 py-1.5 mb-3 shadow-sm">
+                  <Sparkles size={14} className="text-[#B8860B] animate-pulse" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#B8860B]">
+                    Signature Lonavala Sanctuaries
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-[#1B3564] tracking-tight">
+                  Featured Lonavala Villa Stays
+                </h3>
+                <p className="text-slate-600 text-sm mt-2 font-normal">
+                  Reserve directly with Stay Willas to unlock guaranteed best tariffs, zero platform commissions, and personalized concierge coordination.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {featuredVillas.map((villa) => {
+                  const isAngleHouse = villa.slug === "the-angle-house";
+                  const displayName = isAngleHouse
+                    ? "The Angle House"
+                    : villa.slug.includes("willow-peak") && villa.name.includes("(")
+                    ? "Willow Peak"
+                    : villa.name;
+                  const startingPrice = isAngleHouse ? villa.price : 4999;
+
+                  return (
+                    <div 
+                      key={villa.slug}
+                      className="bg-white rounded-2xl sm:rounded-3xl border border-[#DAA520]/25 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group transform hover:-translate-y-1"
+                    >
+                      <div>
+                        {/* Image Banner */}
+                        <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900">
+                          <Image
+                            src={
+                              isAngleHouse
+                                ? "/assets/villas/the-angle-house/gallery-11.webp"
+                                : "/assets/villas/willow-peak/gallery-1.webp"
+                            }
+                            alt={displayName}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                          
+                          {/* Badge */}
+                          <div className="absolute top-4 left-4">
+                            <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-md border shadow-md flex items-center gap-1.5 ${
+                              isAngleHouse
+                                ? "bg-[#1B3564]/90 text-[#F3C065] border-[#DAA520]/50"
+                                : "bg-[#064E3B]/90 text-[#34D399] border-[#10B981]/50"
+                            }`}>
+                              {isAngleHouse ? <Waves size={12} /> : <Flame size={12} />}
+                              {isAngleHouse ? "Architectural Glass & Waterfall Pool" : "Alpine A-Frame Chalets & Jacuzzi"}
+                            </span>
+                          </div>
+
+                          {/* Price Tag & Villa Name in Official Brand Green */}
+                          <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between z-10">
+                            <div className="pr-2">
+                              <h4 
+                                style={{ color: "#6B9E1D" }}
+                                className="font-heading text-2xl sm:text-3xl font-black leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] !text-[#6B9E1D] tracking-tight"
+                              >
+                                {displayName}
+                              </h4>
+                              <p className="text-xs text-slate-100 font-medium flex items-center gap-1.5 mt-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
+                                <MapPin size={13} className="text-[#6B9E1D] shrink-0" />
+                                <span>{villa.location}</span>
+                              </p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <span className="text-[10px] uppercase tracking-wider text-slate-200 block font-semibold drop-shadow-sm">Starting from</span>
+                              <span className="text-xl sm:text-2xl font-black text-[#F3C065] drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                                ₹{startingPrice?.toLocaleString("en-IN")}
+                              </span>
+                              <span className="text-[10px] text-slate-200 font-medium drop-shadow-sm"> / night</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Specs & Highlights */}
+                        <div className="p-5 sm:p-6">
+                          <div className="grid grid-cols-2 gap-3 pb-4 mb-4 border-b border-slate-100 text-xs text-slate-700">
+                            <div className="flex items-center gap-2 font-medium">
+                              <BedDouble size={16} className="text-[#DAA520] shrink-0" />
+                              <span>{isAngleHouse ? "3 BHK Glass Villa" : "3 Standalone Chalets"}</span>
+                            </div>
+                            <div className="flex items-center gap-2 font-medium">
+                              <Users size={16} className="text-[#DAA520] shrink-0" />
+                              <span>{isAngleHouse ? "Sleeps up to 12 Guests" : "2 to 12 Guests"}</span>
+                            </div>
+                          </div>
+
+                          <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 mb-6">
+                            {isAngleHouse ? (
+                              <>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-[#DAA520] font-bold">✓</span>
+                                  <span>Private cascading waterfall pool with underwater mood lighting</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-[#DAA520] font-bold">✓</span>
+                                  <span>Master suite with in-room hydrotherapy jacuzzi overlooking mountain vistas</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-[#DAA520] font-bold">✓</span>
+                                  <span>100% pet-friendly sprawling turf lawn with secure boundary fencing</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-[#DAA520] font-bold">✓</span>
+                                  <span>Dedicated private chef serving fresh Maharashtrian & Jain menus</span>
+                                </li>
+                              </>
+                            ) : (
+                              <>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-[#10B981] font-bold">✓</span>
+                                  <span>En-suite heated bubble jacuzzi in every chalet with mountain mist views</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-[#10B981] font-bold">✓</span>
+                                  <span>Authentic pine wood A-frame architecture with modern climate control</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-[#10B981] font-bold">✓</span>
+                                  <span>Manicured central lawn with open-sky bonfire pit & live BBQ grill setup</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <span className="text-[#10B981] font-bold">✓</span>
+                                  <span>Secluded Kurwande clifftop setting near Lion's Point & Tiger's Leap</span>
+                                </li>
+                              </>
+                            )}
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div className="p-5 sm:p-6 pt-0">
+                        <Link
+                          href={`/villa/${villa.slug}`}
+                          className="w-full flex items-center justify-center gap-2 bg-[#1B3564] hover:bg-[#6B9E1D] text-white font-bold py-3.5 px-6 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md group-hover:shadow-lg"
+                        >
+                          <span>Explore {displayName}</span>
+                          <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {blog.sections.map((section, idx) => (
             <div key={idx} className="my-12">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading text-[#1B3564] font-bold mb-6 mt-10 leading-snug">
@@ -291,6 +515,31 @@ export default async function BlogDetailsPage({ params }: PageProps) {
             </p>
           </div>
         </article>
+
+        {/* Villa Homeowner Partner Callout Banner */}
+        <div className="my-16 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#1B3564] via-[#152A50] to-[#0A162B] text-white border border-[#DAA520]/40 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#DAA520]/10 rounded-full blur-[90px] pointer-events-none" />
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div>
+              <span className="text-[#DAA520] font-black uppercase text-[10px] tracking-[0.25em] block mb-2">
+                For Villa &amp; Estate Owners
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white leading-tight">
+                Own a Luxury Villa in Maharashtra? <br className="hidden sm:block" />
+                <span className="italic text-[#DAA520] font-serif font-light">Partner With Stay Willas</span>
+              </h3>
+              <p className="text-slate-300 text-xs sm:text-sm mt-2 max-w-xl font-light leading-relaxed">
+                Turn your private holiday home into a high-yielding luxury asset. We manage marketing, verified family guests, swimming pool care, and 24/7 on-site maintenance with full owner stay flexibility.
+              </p>
+            </div>
+            <Link
+              href="/partner"
+              className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-8 py-4 text-xs font-black tracking-widest uppercase transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 whitespace-nowrap shrink-0 border border-white/20"
+            >
+              PARTNER WITH US &rarr;
+            </Link>
+          </div>
+        </div>
 
         {/* Recommendation Cards */}
         {otherBlogs.length > 0 && (

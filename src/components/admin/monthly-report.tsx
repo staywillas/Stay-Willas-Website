@@ -190,7 +190,7 @@ export default function MonthlyReport({
     const extrasTotal = extraCharges.reduce((sum, x) => sum + (x.amount || 0), 0);
     const grossSubtotal = stayTariff + foodTotal + extrasTotal;
     const taxableSubtotal = Math.max(0, grossSubtotal - discountTotal);
-    const grandTotal = b.totalPrice > 0 ? b.totalPrice : Math.round(taxableSubtotal + gstTotal + securityDeposit);
+    const grandTotal = b.totalPrice > 0 ? b.totalPrice : Math.round(taxableSubtotal + gstTotal);
     const finalBalance = balanceDue > 0 ? balanceDue : Math.max(0, grandTotal - advancePaid);
 
     return {

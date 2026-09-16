@@ -3,7 +3,25 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Camera, Mail, MapPin, Phone, ArrowUp, ArrowRight } from "lucide-react";
+import { MapPin, Phone, ArrowUp, ArrowRight, Mail } from "lucide-react";
+
+const InstagramIcon = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -17,7 +35,7 @@ const Footer = () => {
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#DAA520]/5 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
       {/* Plan Your Stay CTA Banner */}
-      <div className="max-w-7xl mx-auto relative z-10 mb-24">
+      <div className="max-w-7xl mx-auto relative z-10 mb-10">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1b3564]/80 to-[#0F2341]/95 p-10 md:p-16 border border-[#DAA520]/20 backdrop-blur-md">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#DAA520]/10 rounded-full blur-[80px] translate-x-1/4 -translate-y-1/4 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#DAA520]/5 rounded-full blur-[60px] -translate-x-1/4 translate-y-1/4 pointer-events-none" />
@@ -43,6 +61,36 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Homeowner & Property Partner Callout Banner (Global Across Entire Website) */}
+      <div className="max-w-7xl mx-auto relative z-10 mb-20">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#173010]/90 via-[#224415]/95 to-[#173010]/90 p-8 md:p-12 border border-[#559C24]/30 backdrop-blur-md shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-[#559C24]/10 rounded-full blur-[90px] pointer-events-none" />
+          <div className="relative z-10 flex items-center gap-4 text-center md:text-left">
+            <div className="w-12 h-12 rounded-2xl bg-[#559C24]/20 border border-[#559C24]/40 flex items-center justify-center shrink-0 hidden sm:flex text-xl">
+              🏡
+            </div>
+            <div>
+              <span className="text-[#559C24] font-black tracking-[0.25em] uppercase text-[10px] block mb-1">
+                For Luxury Homeowners
+              </span>
+              <h4 className="text-2xl md:text-3xl font-heading text-white font-bold">
+                Own a Luxury Villa in Maharashtra? <span className="italic text-[#DAA520] font-serif font-light">Partner With Stay Willas</span>
+              </h4>
+              <p className="text-white/75 text-xs md:text-sm mt-2 max-w-2xl font-light leading-relaxed">
+                Turn your private holiday home into a high-yielding, hands-free asset. We manage turnkey operations, verified elite guests, pool care, and dynamic pricing with unlimited owner stay flexibility.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/partner"
+            className="relative z-10 bg-[#559C24] hover:bg-[#46821d] text-white rounded-full px-8 py-4 text-xs font-black tracking-[0.2em] uppercase transition-all duration-300 shadow-xl shadow-[#559C24]/25 hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap shrink-0 border border-white/20"
+          >
+            PARTNER WITH US
+            <ArrowRight size={14} />
+          </Link>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 mb-24">
@@ -63,22 +111,19 @@ const Footer = () => {
                 <span className="font-sans text-xs tracking-[0.3em] text-[#DAA520] uppercase font-bold">Willas</span>
               </div>
             </Link>
-            <p className="text-white/70 mb-12 max-w-xs leading-relaxed text-sm">
+            <p className="text-white/70 mb-8 max-w-xs leading-relaxed text-sm">
               Discover luxury redefined. We curate extraordinary homes for unforgettable escapes across Maharashtra.
             </p>
             <div className="flex gap-4">
-              {[
-                { Icon: Camera, href: "#" },
-                { Icon: Mail, href: "mailto:staywillas@gmail.com" }
-              ].map((item, i) => (
-                <a
-                  key={i}
-                  href={item.href}
-                  className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#DAA520] hover:border-[#DAA520] hover:text-[#1B3564] hover:shadow-lg transition-all duration-300 group"
-                >
-                  <item.Icon size={18} className="group-hover:scale-110 transition-transform" />
-                </a>
-              ))}
+              <a
+                href="https://www.instagram.com/stay.willas?stkn=bngzaTBrZXMxcTJl"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow Stay Willas on Instagram"
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#DAA520] hover:border-[#DAA520] hover:text-[#1B3564] hover:shadow-lg transition-all duration-300 group"
+              >
+                <InstagramIcon size={18} className="group-hover:scale-110 transition-transform" />
+              </a>
             </div>
           </div>
 
@@ -89,7 +134,7 @@ const Footer = () => {
               {[
                 { name: "All Stays", href: "/villas" },
                 { name: "Destinations", href: "/destinations" },
-                { name: "Villas in Lonavala", href: "/areas/lonavala" },
+                { name: "Villas in Lonavala with Private Pool", href: "/areas/lonavala" },
                 { name: "Luxury Villas in Khopoli", href: "/areas/khopoli" },
                 { name: "Pawna Lake Villas", href: "/areas/pawna" },
                 { name: "Experiences", href: "/experiences" },
@@ -109,7 +154,7 @@ const Footer = () => {
             <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Popular Sitelinks</h4>
             <ul className="flex flex-col gap-4">
               {[
-                { name: "Lonavala Villa Pool", href: "/villas-in-lonavala-with-private-pool" },
+                { name: "Lonavala Villa Pool", href: "/areas/lonavala" },
                 { name: "Luxury Villas in Khopoli", href: "/areas/khopoli" },
                 { name: "Luxury Villas Near Mumbai", href: "/villas" },
                 { name: "About Stay Willas", href: "/about" },
@@ -131,13 +176,21 @@ const Footer = () => {
             <ul className="flex flex-col gap-4">
               {[
                 { name: "About Us", href: "/about" },
-                { name: "Partner With Us", href: "/partner" },
+                { name: "Partner / List Property", href: "/partner", highlight: true },
                 { name: "Contact Us", href: "/contact" },
                 { name: "My Wishlist", href: "/wishlist" }
               ].map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">
+                  <Link 
+                    href={link.href} 
+                    className={
+                      link.highlight
+                        ? "text-[#559C24] hover:text-[#DAA520] transition-colors duration-300 text-sm font-bold flex items-center gap-1"
+                        : "text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium"
+                    }
+                  >
                     {link.name}
+                    {link.highlight && <span className="text-[9px] bg-[#559C24]/20 text-[#559C24] px-1.5 py-0.5 rounded font-black uppercase">Host</span>}
                   </Link>
                 </li>
               ))}

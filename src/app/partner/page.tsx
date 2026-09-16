@@ -3,23 +3,33 @@ import { Metadata } from "next";
 import Navbar from "@/components/layout/navbar";
 
 export const metadata: Metadata = {
-  title: "Luxury Villa Property Management Partner | Stay Willas",
-  description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest check-ins, cleaning & payouts.",
-  keywords: ["luxury villa property management"],
+  title: "Partner With Us | Luxury Villa Property Management & Hosting | Stay Willas",
+  description: "Monetize your luxury villa or holiday home in Maharashtra with Stay Willas. We provide turnkey villa management, verified HNI guest curation, dynamic revenue optimization, and 24/7 care.",
+  keywords: [
+    "partner with stay willas",
+    "luxury villa property management",
+    "list villa for rent maharashtra",
+    "villa management services lonavala",
+    "holiday home management mumbai pune",
+    "monetize luxury villa",
+    "holiday home hosting partner",
+    "khopoli villa property management",
+    "alibaug luxury villa partner"
+  ],
   alternates: {
     canonical: "https://www.staywillas.com/partner",
   },
   openGraph: {
-    title: "Luxury Villa Property Management Partner | Stay Willas",
-    description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest check-ins, cleaning & payouts.",
+    title: "Partner With Us | Luxury Villa Property Management | Stay Willas",
+    description: "Monetize your luxury villa or holiday home in Maharashtra with Stay Willas. We provide turnkey villa management, verified HNI guest curation, dynamic revenue optimization, and 24/7 care.",
     url: "https://www.staywillas.com/partner",
     images: [{ url: "https://www.staywillas.com/images/hero-villa.webp" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Villa Property Management Partner | Stay Willas",
-    description: "List your holiday home for luxury villa property management with Stay Willas. We handle marketing, guest check-ins, cleaning & payouts.",
+    title: "Partner With Us | Luxury Villa Property Management | Stay Willas",
+    description: "Monetize your luxury villa or holiday home in Maharashtra with Stay Willas. We provide turnkey villa management, verified HNI guest curation, dynamic revenue optimization, and 24/7 care.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -36,8 +46,51 @@ export default function PartnerPage() {
     { title: "Go Live", desc: "Your home goes live on our site, and we start welcoming guests!" }
   ];
 
+  const partnerPageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://www.staywillas.com/partner#webpage",
+        "url": "https://www.staywillas.com/partner",
+        "name": "Partner With Stay Willas - Luxury Villa Property Management",
+        "description": "Comprehensive property management and hosting services for luxury villas and holiday homes in Maharashtra.",
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.staywillas.com" },
+            { "@type": "ListItem", "position": 2, "name": "Partner With Us", "item": "https://www.staywillas.com/partner" }
+          ]
+        }
+      },
+      {
+        "@type": "Service",
+        "@id": "https://www.staywillas.com/partner#service",
+        "name": "Luxury Villa Property Management & Hosting",
+        "provider": {
+          "@type": "Organization",
+          "name": "Stay Willas",
+          "url": "https://www.staywillas.com"
+        },
+        "areaServed": [
+          { "@type": "AdministrativeArea", "name": "Maharashtra", "sameAs": "https://www.wikidata.org/wiki/Q1191" },
+          { "@type": "City", "name": "Lonavala", "sameAs": "https://www.wikidata.org/wiki/Q1140889" },
+          { "@type": "City", "name": "Khopoli", "sameAs": "https://www.wikidata.org/wiki/Q2248559" },
+          { "@type": "City", "name": "Alibaug" },
+          { "@type": "City", "name": "Karjat" }
+        ],
+        "serviceType": "Vacation Rental & Luxury Villa Management",
+        "description": "Full-stack hospitality management for luxury villas: guest vetting, housekeeping, dynamic yield pricing, pool maintenance, marketing, and 0% commission direct reservations."
+      }
+    ]
+  };
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(partnerPageSchema) }}
+      />
       <h1 className="sr-only">Partner With Stay Willas - Luxury Villa Property Management</h1>
       <Navbar />
       
@@ -58,14 +111,14 @@ export default function PartnerPage() {
           <a href="#partner-form" className="btn-glow-gold px-12 py-6 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 shadow-2xl inline-block w-full sm:w-auto text-center">
             INQUIRE NOW
           </a>
-          <a href="/homeowner" className="border border-accent-secondary hover:bg-accent-secondary/10 px-12 py-6 rounded-full text-[10px] font-bold tracking-widest text-accent-secondary uppercase transition-all duration-300 inline-block w-full sm:w-auto text-center">
-            OWNER LOG IN
+          <a href="#benefits" className="border border-[#1B3564]/30 hover:border-[#1B3564] bg-white/40 hover:bg-white/80 px-10 py-6 rounded-full text-[10px] font-bold tracking-widest text-[#1B3564] uppercase transition-all duration-300 inline-block w-full sm:w-auto text-center">
+            EXPLORE BENEFITS
           </a>
         </div>
       </section>
 
       {/* Benefits Grid */}
-      <section className="py-24 px-6 md:px-12 lg:px-24 bg-bg-secondary">
+      <section id="benefits" className="py-24 px-6 md:px-12 lg:px-24 bg-bg-secondary scroll-mt-20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[

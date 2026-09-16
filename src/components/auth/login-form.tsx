@@ -15,10 +15,10 @@ export default function LoginForm({ role }: LoginFormProps) {
 
   useEffect(() => {
     if (state?.success && state.redirectTo) {
-      router.push(role === "admin" ? "/admin" : "/homeowner");
+      router.push(state.redirectTo);
       router.refresh();
     }
-  }, [state, router, role]);
+  }, [state, router]);
 
   return (
     <div className="w-full max-w-md mx-auto px-4">

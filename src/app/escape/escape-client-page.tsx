@@ -966,7 +966,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               Plan a Weekend Villa Getaway in Lonavala
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-              Planning a weekend villa in Lonavala is the fastest way to reset after a hectic work week in Mumbai or Pune. Located just a scenic 2-hour drive via the Expressway, Lonavala allows groups to escape the city noise without spending half their weekend stuck in transit.
+              Planning a weekend villa in Lonavala with private pool is the fastest way to reset after a hectic work week in Mumbai or Pune. Located just a scenic 2-hour drive via the Expressway, Lonavala allows groups to escape the city noise without spending half their weekend stuck in transit.
             </p>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
               From Friday evening arrival to Sunday afternoon poolside brunch, spending a weekend villa staycation with your favorite people creates lasting memories.
@@ -986,7 +986,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 href="/areas/lonavala"
                 className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#DAA520] hover:text-white underline transition-colors"
               >
-                Explore luxury villas in Lonavala <ArrowRight size={14} />
+                Explore luxury villas in Lonavala with private pool <ArrowRight size={14} />
               </Link>
             </div>
           </div>
@@ -1384,7 +1384,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 },
                 {
                   "@type": "Question",
-                  "name": "Can I book a weekend villa in Lonavala for my group?",
+                  "name": "Can I book a weekend villa in Lonavala with private pool for my group?",
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": "Yes, you can easily check weekend availability and reserve group stays via our website or directly with our StayWillas concierge team on WhatsApp."
@@ -1445,7 +1445,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 a: "Absolutely. Our properties feature ground-floor bedrooms for elders, manicured grassy lawns for children, spacious common lounges, and dedicated caretaker support for family gatherings."
               },
               {
-                q: "Can I book a weekend villa in Lonavala for my group?",
+                q: "Can I book a weekend villa in Lonavala with private pool for my group?",
                 a: "Yes, you can easily check weekend availability and reserve group stays via our website or directly with our StayWillas concierge team on WhatsApp."
               },
               {

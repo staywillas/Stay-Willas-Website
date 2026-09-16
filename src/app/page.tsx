@@ -141,12 +141,12 @@ export default async function Home() {
         </div>
       </section>
 
-      <HomeSitelinks />
       <DestinationShowcase />
       <FeaturedVillas villas={featuredVillas} />
+      <HomeSitelinks />
       <WhyChooseUs />
-      <SEOContent />
       <PartnerSection />
+      <SEOContent />
       <Footer />
     </main>
   );

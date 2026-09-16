@@ -745,8 +745,6 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                     <div className="space-y-4">
                       {filteredModalVillas.map((villa) => {
                         const cityName = villa.location.split(",")[0].trim();
-                        const isTheAngleHouse = villa.slug === "the-angle-house";
-                        const isCanopyCrest = villa.slug === "canopy-crest";
 
                         return (
                           <div 
@@ -764,10 +762,6 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                 loading="lazy"
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                               />
-                              {/* Overlay Pill / Tag */}
-                              <div className="absolute top-2.5 left-2.5 bg-[#0E1B35]/85 backdrop-blur-md text-[#DAA520] text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/20">
-                                {isTheAngleHouse ? "Architectural Icon" : isCanopyCrest ? "Sprawling Estate" : (villa.category || "Luxury Stay")}
-                              </div>
                             </div>
 
                             {/* Property Details & Specs */}

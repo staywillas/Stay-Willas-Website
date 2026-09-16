@@ -324,9 +324,9 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
   const activeGstPercent = customGst !== "" ? Number(customGst) : gstPercent;
   const gstAmount = Math.round(subtotal * (activeGstPercent / 100));
 
-  // Security deposit & Grand total
+  // Security deposit & Grand total (Refundable deposit is NOT included in grand total)
   const numDeposit = typeof securityDeposit === "number" ? securityDeposit : 0;
-  const grandTotal = subtotal + gstAmount + numDeposit;
+  const grandTotal = subtotal + gstAmount;
 
   // Advance paid & Balance due
   const numAdvance = typeof advancePaid === "number" ? advancePaid : 0;
@@ -429,10 +429,10 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       `• *Gross Subtotal:* Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}\n` +
       (totalDiscount > 0 ? `🎁 *Discount:* - Rs. ${totalDiscount.toLocaleString("en-IN")}\n` : "") +
       (activeGstPercent > 0 ? `🏛️ *GST (${activeGstPercent}%):* Rs. ${gstAmount.toLocaleString("en-IN")}\n` : "") +
-      (numDeposit > 0 ? `🛡️ *Refundable Deposit:* Rs. ${numDeposit.toLocaleString("en-IN")}\n` : "") +
       `💰 *GRAND TOTAL (Net Payable):* Rs. ${grandTotal.toLocaleString("en-IN")}\n` +
+      (numDeposit > 0 ? `\n🛡️ *REFUNDABLE DEPOSIT IS RS. ${numDeposit.toLocaleString("en-IN")}*\n*(NOT INCLUDED IN GRAND TOTAL • REFUNDABLE AT CHECK-OUT)*\n` : "") +
       (numAdvance > 0 ? `💳 *Advance Received:* Rs. ${numAdvance.toLocaleString("en-IN")}\n` : "") +
-      `📌 *BALANCE DUE:* ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
+      `📌 *BALANCE DUE ON CHECK-IN:* ${balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`}\n` +
       `------------------------------------------\n` +
       `For inquiries: +91 9619042310 | www.staywillas.com 🥂`
     );
@@ -776,9 +776,6 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       if (activeGstPercent > 0) {
         drawSummaryRow(`GST Tax (${activeGstPercent}%):`, `Rs. ${gstAmount.toLocaleString("en-IN")}`);
       }
-      if (numDeposit > 0) {
-        drawSummaryRow("Refundable Deposit:", `Rs. ${numDeposit.toLocaleString("en-IN")}`);
-      }
 
       currentY += 1;
       doc.setFillColor(navyColor[0], navyColor[1], navyColor[2]);
@@ -800,7 +797,28 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
         drawSummaryRow("Balance Remaining:", balanceDue <= 0 ? "PAID IN FULL" : `Rs. ${balanceDue.toLocaleString("en-IN")}`, true, [27, 53, 100]);
       }
 
-      currentY += 6;
+      // Prominent Refundable Deposit Banner below Grand Total in BOLD CAPITAL LETTERS
+      if (numDeposit > 0) {
+        currentY += 2;
+        doc.setFillColor(254, 243, 199); // #FEF3C7 Amber
+        doc.rect(marginX, currentY, 210 - marginX * 2, 9, "F");
+        doc.setDrawColor(goldColor[0], goldColor[1], goldColor[2]);
+        doc.setLineWidth(0.4);
+        doc.rect(marginX, currentY, 210 - marginX * 2, 9, "S");
+
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(8.5);
+        doc.setTextColor(146, 64, 14); // Dark Amber
+        doc.text(
+          `REFUNDABLE DEPOSIT IS RS. ${numDeposit.toLocaleString("en-IN")} (NOT INCLUDED IN GRAND TOTAL - REFUNDABLE POST-CHECKOUT)`,
+          105,
+          currentY + 5.8,
+          { align: "center" }
+        );
+        currentY += 13;
+      } else {
+        currentY += 4;
+      }
 
       // Bank Payment Box
       doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
@@ -1432,23 +1450,28 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   </div>
                 )}
 
-                {numDeposit > 0 && (
-                  <div className="flex justify-between text-amber-700">
-                    <span>Refundable Deposit:</span>
-                    <span className="font-bold">₹{numDeposit.toLocaleString("en-IN")}</span>
-                  </div>
-                )}
-
                 {/* Grand Total Bar */}
-                <div className="p-4 bg-[#1B3564] text-white rounded-2xl flex items-center justify-between mt-4">
+                <div className="p-4 bg-[#1B3564] text-white rounded-2xl flex items-center justify-between mt-4 shadow-sm">
                   <div>
-                    <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-wider block">Net Payable</span>
+                    <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-wider block">Net Stay Payable (Grand Total)</span>
                     <span className="text-xl font-black font-serif">₹{grandTotal.toLocaleString("en-IN")}</span>
                   </div>
                   {balanceDue <= 0 && numAdvance > 0 ? (
                     <span className="text-[11px] bg-emerald-500 text-white font-bold px-2 py-1 rounded-lg">PAID FULL</span>
                   ) : null}
                 </div>
+
+                {/* Prominent Refundable Deposit Notice Below Grand Total in BOLD CAPS */}
+                {numDeposit > 0 && (
+                  <div className="p-3.5 bg-amber-50 border-2 border-[#DAA520] rounded-2xl text-center shadow-xs">
+                    <p className="text-xs sm:text-sm font-black text-amber-950 tracking-wide uppercase">
+                      REFUNDABLE DEPOSIT IS ₹{numDeposit.toLocaleString("en-IN")}
+                    </p>
+                    <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wider mt-0.5">
+                      (NOT INCLUDED IN GRAND TOTAL • FULLY REFUNDABLE AT CHECK-OUT)
+                    </p>
+                  </div>
+                )}
 
                 {/* Advance & Balance Due Section */}
                 <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-2 mt-2">

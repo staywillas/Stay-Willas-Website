@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -11,10 +11,46 @@ import {
   Mountain 
 } from "lucide-react";
 import BookingBar from "@/components/home/booking-bar";
+import RotatingText from "@/components/ui/RotatingText";
+import { cn } from "@/lib/utils";
 
 const HERO_BLUR_DATA_URL = "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwAwCdASoYAA4APzmEuVOvKKWisAgB4CcJQBhQBA0gSkzLs9U/wAD90+5FfJMbgJdgz2St07HhIsCuVBCVclMA82z1cq8XO0ZllrT76uZTqmnFCXRgcmkUCakBRV+X0piDoyhQiVxjb5TRvGCHLQa/z97F2rB2MwYZjIvSnAIAAA==";
 
+const ROTATING_PHRASES = [
+  {
+    text: "Luxury Begins",
+    bgClass: "bg-[#4D7C0F]", // Solid Stay Willas Signature Brand Olive Green
+    borderClass: "border-[#65A30D]/60",
+    shadowClass: "shadow-[0_4px_20px_rgba(77,124,15,0.35)]",
+    textClass: "text-white",
+  },
+  {
+    text: "Memories Unfold",
+    bgClass: "bg-[#B45309]", // Solid Warm Luxury Amber
+    borderClass: "border-[#D97706]/60",
+    shadowClass: "shadow-[0_4px_20px_rgba(180,83,9,0.35)]",
+    textClass: "text-white",
+  },
+  {
+    text: "Serenity Awakens",
+    bgClass: "bg-[#0F766E]", // Solid Deep Emerald Teal
+    borderClass: "border-[#14B8A6]/60",
+    shadowClass: "shadow-[0_4px_20px_rgba(15,118,110,0.35)]",
+    textClass: "text-white",
+  },
+  {
+    text: "Grandeur Awaits",
+    bgClass: "bg-[#1E40AF]", // Solid Royal Sapphire Blue
+    borderClass: "border-[#3B82F6]/60",
+    shadowClass: "shadow-[0_4px_20px_rgba(30,64,175,0.35)]",
+    textClass: "text-white",
+  },
+];
+
 export default function Hero() {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const currentPhrase = ROTATING_PHRASES[phraseIndex] || ROTATING_PHRASES[0];
+
   return (
     <section className="relative min-h-[88vh] sm:min-h-[94vh] flex flex-col justify-between pt-20 pb-5 sm:pt-36 sm:pb-14 overflow-hidden bg-[#07162C]">
       {/* 1. Ultra-HQ Static Background: The Angle House */}
@@ -37,10 +73,10 @@ export default function Hero() {
         {/* 2. Bespoke Luxury Blue Tint Overlay (Vibrant Royal / Deep Sapphire Gradient) */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#07162C]/90 via-[#0B254A]/75 to-[#040C1A]/95 backdrop-blur-[1px]" />
 
-        {/* Ambient Radial Lighting for Dramatic Architectural Glow */}
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-[#2563EB]/25 via-[#1D4ED8]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-10 right-0 w-[500px] h-[400px] bg-[#DAA520]/15 rounded-full blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-10 left-0 w-[500px] h-[400px] bg-blue-600/15 rounded-full blur-[130px] pointer-events-none" />
+        {/* Ambient Radial Lighting for Dramatic Architectural Glow (Optimized for Mobile) */}
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-[#2563EB]/25 via-[#1D4ED8]/10 to-transparent rounded-full blur-[80px] sm:blur-[140px] pointer-events-none" />
+        <div className="hidden sm:block absolute bottom-10 right-0 w-[500px] h-[400px] bg-[#DAA520]/15 rounded-full blur-[130px] pointer-events-none" />
+        <div className="hidden sm:block absolute bottom-10 left-0 w-[500px] h-[400px] bg-blue-600/15 rounded-full blur-[130px] pointer-events-none" />
       </div>
 
       {/* 3. Hero Content Container */}
@@ -57,16 +93,39 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Bold Centered Headline - Enhanced Text Size for Mobile Impact */}
-          <h1 className="font-heading text-[2.25rem] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.08] sm:leading-[1.12] drop-shadow-lg max-w-4xl">
-            Where Time Slows Down{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FCE59F] via-[#DAA520] to-[#E5B54C] italic font-serif block sm:inline">
-              &amp; Luxury Begins
+          {/* Bold Centered Headline with React Bits RotatingText */}
+          <h1 className="font-heading text-center tracking-tight text-[1.85rem] xs:text-[2.15rem] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.14] sm:leading-[1.18] drop-shadow-lg max-w-5xl mx-auto flex flex-col items-center justify-center">
+            <span className="block text-center">
+              Where Time Slows <span className="whitespace-nowrap">Down &amp;</span>
             </span>
+            <span className="inline-flex items-center justify-center mt-1 sm:mt-2.5">
+              <RotatingText
+                texts={ROTATING_PHRASES.map((p) => p.text)}
+                onNext={(index: number) => setPhraseIndex(index)}
+                mainClassName={cn(
+                  "px-3 sm:px-5 py-0.5 sm:py-1.5 justify-center rounded-xl sm:rounded-2xl font-heading italic font-serif inline-flex items-center align-middle whitespace-nowrap flex-nowrap border transition-all duration-500 ease-out",
+                  currentPhrase.bgClass,
+                  currentPhrase.borderClass,
+                  currentPhrase.shadowClass,
+                  currentPhrase.textClass
+                )}
+                staggerDuration={0}
+                initial={{ y: "40%", opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: "-40%", opacity: 0 }}
+                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1"
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                rotationInterval={2800}
+                splitBy="words"
+                auto
+                loop
+              />
+            </span>
+            <span className="sr-only"> — Luxury Private Pool Villas in Maharashtra Near Mumbai &amp; Pune</span>
           </h1>
 
           {/* Subheadline / Brand Promise */}
-          <p className="mt-2.5 sm:mt-5 text-xs sm:text-base md:text-lg text-slate-200/90 max-w-2xl mx-auto font-light leading-snug sm:leading-relaxed drop-shadow-sm px-2 line-clamp-2 sm:line-clamp-none">
+          <p className="mt-2 sm:mt-5 text-xs sm:text-base md:text-lg text-slate-200/90 max-w-2xl mx-auto font-light leading-snug sm:leading-relaxed drop-shadow-sm px-2 line-clamp-2 sm:line-clamp-none">
             Discover premier private pool villas across Maharashtra with bespoke in-house chefs, panoramic mountain views, and total seclusion.
           </p>
 

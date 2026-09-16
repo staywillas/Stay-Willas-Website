@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   keywords: [
     "villas in lonavala with private pool",
     "lonavala villa with private pool",
-    "villas in lonavala",
+    "luxury villa in lonavala with pool",
     "private pool villa in lonavala",
     "villa in lonavala for family",
     "lonavala villa staycation",
@@ -203,7 +203,7 @@ export default async function LonavalaPage() {
                     <span>BOOK DIRECT (0% FEE)</span>
                   </a>
                   <a 
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and catering menus for luxury villas in Lonavala.")}`}
+                    href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and catering menus for luxury private pool villas in Lonavala.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs sm:text-sm tracking-wider uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
@@ -509,7 +509,7 @@ export default async function LonavalaPage() {
 
               <h2>Why Choose a Private Estate Over Traditional Hotels</h2>
               <p>
-                When evaluating <strong>villas in lonavala</strong>, discerning travelers prioritize absolute privacy over standard resort rooms. Reserving a dedicated <strong>lonavala villa</strong> ensures your family has exclusive access to manicured lawns, sun decks, and living rooms without sharing amenities with strangers.
+                When evaluating <strong>villas in Lonavala with private pool</strong>, discerning travelers prioritize absolute privacy over standard resort rooms. Reserving a dedicated <strong>lonavala villa</strong> ensures your family has exclusive access to manicured lawns, sun decks, and living rooms without sharing amenities with strangers.
               </p>
               <p>
                 If you are planning a weekend trip for large family groups, a <strong>lonavala villa with private pool</strong> offers ground-floor bedrooms for elderly grandparents and safe outdoor play areas for children. Waking up to panoramic mountain vistas and fresh mountain breezes makes every staycation truly memorable.
@@ -709,7 +709,7 @@ export default async function LonavalaPage() {
                 Explore All Villas
               </Link>
               <a 
-                href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Lonavala.")}`}
+                href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Lonavala with private pool.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-4 px-8 rounded-full shadow-lg transition-all flex items-center justify-center gap-2"

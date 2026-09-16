@@ -39,9 +39,18 @@ export const metadata: Metadata = {
   title: "Luxury Villas in Maharashtra | Stay Willas",
   description: "Experience premium luxury villas in maharashtra with private pool villas & personal chefs. Book verified staycations in Lonavala & Khopoli today.",
   metadataBase: new URL("https://www.staywillas.com"),
-  keywords: ["luxury villas in maharashtra"],
+  keywords: ["luxury villas in maharashtra", "private pool villas near mumbai", "villas in lonavala", "villas in khopoli"],
   authors: [{ name: "Stay Willas" }],
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: "./",
+  },
+  other: {
+    "geo.region": "IN-MH",
+    "geo.placename": "Mumbai, Lonavala, Khopoli, Maharashtra, India",
+    "geo.position": "18.7557;73.4091",
+    "ICBM": "18.7557, 73.4091",
+  },
   verification: {
     google: "399989e08043e0b8",
   },

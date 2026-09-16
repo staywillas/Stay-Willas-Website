@@ -17,6 +17,7 @@ export const ORGANIZATION_SCHEMA = {
   description: "Stay Willas is a premier luxury villa rental and hospitality brand in Maharashtra, specializing in verified private pool villas and mountain retreats in Lonavala and Khopoli.",
   telephone: "+91-9619042310",
   email: "bookings@staywillas.com",
+  priceRange: "₹₹₹",
   address: {
     "@type": "PostalAddress",
     streetAddress: "Kim Cottage, 14, PR Kadam Marg, Maneklal Estate, Ghatkopar West",
@@ -25,8 +26,40 @@ export const ORGANIZATION_SCHEMA = {
     postalCode: "400084",
     addressCountry: "IN",
   },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 19.0860,
+    longitude: 72.9090,
+  },
   sameAs: [
-    "https://www.instagram.com/staywillas",
+    "https://www.instagram.com/stay.willas?stkn=bngzaTBrZXMxcTJl",
+  ],
+  areaServed: [
+    {
+      "@type": "AdministrativeArea",
+      name: "Maharashtra",
+      sameAs: "https://www.wikidata.org/wiki/Q1191",
+    },
+    {
+      "@type": "City",
+      name: "Mumbai",
+      sameAs: "https://www.wikidata.org/wiki/Q1156",
+    },
+    {
+      "@type": "City",
+      name: "Pune",
+      sameAs: "https://www.wikidata.org/wiki/Q1538",
+    },
+    {
+      "@type": "City",
+      name: "Lonavala",
+      sameAs: "https://www.wikidata.org/wiki/Q1140889",
+    },
+    {
+      "@type": "City",
+      name: "Khopoli",
+      sameAs: "https://www.wikidata.org/wiki/Q2248559",
+    },
   ],
   contactPoint: {
     "@type": "ContactPoint",
@@ -136,11 +169,23 @@ const VILLA_COORDINATES: Record<string, { lat: number; lng: number; street: stri
     street: "Kurwande",
     locality: "Lonavala",
   },
-  "terra-cotta-villa": {
-    lat: 17.9237,
-    lng: 73.7438,
-    street: "Kaswand, Panchgani-Mahabaleshwar Road",
-    locality: "Panchgani",
+  "willow-peak-cottage-a": {
+    lat: 18.7490,
+    lng: 73.4070,
+    street: "Kurwande",
+    locality: "Lonavala",
+  },
+  "willow-peak-cottage-b": {
+    lat: 18.7490,
+    lng: 73.4070,
+    street: "Kurwande",
+    locality: "Lonavala",
+  },
+  "willow-peak-cottage-c": {
+    lat: 18.7490,
+    lng: 73.4070,
+    street: "Kurwande",
+    locality: "Lonavala",
   },
 };
 
@@ -164,6 +209,10 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
     : 5.0;
 
   const numericPrice = typeof villa.price === "string" ? parseInt(villa.price.replace(/[^\d]/g, ""), 10) : villa.price;
+  const isPetFriendly = villa.slug === "the-angle-house" || (villa.amenities || []).some((a: any) => {
+    const text = typeof a === "string" ? a : (a?.name || "");
+    return text.toLowerCase().includes("pet");
+  });
 
   return {
     "@context": "https://schema.org",
@@ -176,6 +225,9 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
     url: propertyUrl,
     telephone: "+91-9619042310",
     priceRange: `₹${(numericPrice || 0).toLocaleString("en-IN")}/night`,
+    checkinTime: "14:00",
+    checkoutTime: "11:00",
+    petsAllowed: isPetFriendly,
     address: {
       "@type": "PostalAddress",
       streetAddress: coords.street,
@@ -267,8 +319,15 @@ export interface DestinationSchemaInput {
   }>;
 }
 
+const WIKIDATA_REGIONS: Record<string, string> = {
+  lonavala: "https://www.wikidata.org/wiki/Q1140889",
+  khopoli: "https://www.wikidata.org/wiki/Q2248559",
+  pawna: "https://www.wikidata.org/wiki/Q1140889",
+};
+
 export function generateDestinationCollectionSchema(input: DestinationSchemaInput) {
   const pageUrl = `${BASE_URL}/areas/${input.regionSlug}`;
+  const wikidataUrl = WIKIDATA_REGIONS[input.regionSlug.toLowerCase()];
   
   return {
     "@context": "https://schema.org",
@@ -285,6 +344,7 @@ export function generateDestinationCollectionSchema(input: DestinationSchemaInpu
         about: {
           "@type": "Place",
           name: input.regionName,
+          ...(wikidataUrl ? { sameAs: wikidataUrl } : {}),
           address: {
             "@type": "PostalAddress",
             addressLocality: input.regionName,
@@ -345,8 +405,8 @@ export const HOMEPAGE_SITELINKS_SCHEMA = {
       "@type": "SiteNavigationElement",
       position: 1,
       name: "Lonavala Villa Pool",
-      description: "Top villas in Lonavala with private pool. What makes The Angle House one of the top villas with private pool.",
-      url: `${BASE_URL}/villas-in-lonavala-with-private-pool`,
+      description: "Top villas in Lonavala with private pool. Discover The Angle House and luxury private pool retreats.",
+      url: `${BASE_URL}/areas/lonavala`,
     },
     {
       "@type": "SiteNavigationElement",
@@ -373,7 +433,7 @@ export const HOMEPAGE_SITELINKS_SCHEMA = {
       "@type": "SiteNavigationElement",
       position: 5,
       name: "Villa Destinations in Maharashtra",
-      description: "Q: How do I book an exclusive stay through Stay Willas? Explore Lonavala, Khopoli and Mahabaleshwar.",
+      description: "Explore premier private staycation destinations across Lonavala and Khopoli.",
       url: `${BASE_URL}/destinations`,
     },
     {

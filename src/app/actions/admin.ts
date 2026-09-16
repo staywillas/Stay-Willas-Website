@@ -983,23 +983,25 @@ export async function sendInvoiceEmailAction(data: {
                        </tr>`
                     : ""
                 }
-                <tr style="border-bottom: 1px solid #E2E8F0;">
-                  <td style="color: #64748B;">GST (${data.gstPercent}%)</td>
-                  <td align="right" style="color: #0F172A;">₹${data.gstAmount.toLocaleString("en-IN")}</td>
-                </tr>
-                ${
-                  depositVal > 0
-                    ? `<tr style="border-bottom: 1px solid #E2E8F0;">
-                        <td style="color: #B45309; font-weight: 500;">Refundable Security Deposit</td>
-                        <td align="right" style="color: #B45309; font-weight: bold;">₹${depositVal.toLocaleString("en-IN")}</td>
-                       </tr>`
-                    : ""
-                }
                 <tr style="background-color: #FEF3C7;">
-                  <td style="font-weight: bold; color: #92400E; font-size: 15px;">NET PAYABLE AMOUNT</td>
+                  <td style="font-weight: bold; color: #92400E; font-size: 15px;">NET PAYABLE AMOUNT (GRAND TOTAL)</td>
                   <td align="right" style="font-weight: bold; color: #92400E; font-size: 16px;">₹${finalGrandTotal.toLocaleString("en-IN")}</td>
                 </tr>
               </table>
+
+              <!-- Prominent Refundable Deposit Notice Below Grand Total in BOLD CAPS -->
+              ${
+                depositVal > 0
+                  ? `<div style="background-color: #FEF3C7; border: 2px solid #DAA520; border-radius: 10px; padding: 14px; margin: 12px 0; text-align: center;">
+                      <p style="margin: 0; font-size: 14px; font-weight: bold; color: #92400E; letter-spacing: 0.5px; text-transform: uppercase;">
+                        REFUNDABLE DEPOSIT IS ₹${depositVal.toLocaleString("en-IN")}
+                      </p>
+                      <p style="margin: 4px 0 0 0; font-size: 11px; font-weight: bold; color: #B45309; text-transform: uppercase;">
+                        (NOT INCLUDED IN GRAND TOTAL &bull; FULLY REFUNDABLE POST CHECK-OUT)
+                      </p>
+                    </div>`
+                  : ""
+              }
 
               <!-- Payment Status Card -->
               <table width="100%" border="0" cellpadding="12" cellspacing="0" style="background-color: #1B3564; border-radius: 12px; color: #ffffff; margin-top: 10px;">

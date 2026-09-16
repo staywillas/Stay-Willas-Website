@@ -509,13 +509,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   let keywordsList = [`${villa.bedrooms} BHK private pool villa in ${city}`, `${villa.name.toLowerCase()}`, `villa in ${city.toLowerCase()}`, `private pool villa ${city.toLowerCase()}`];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "The Angle House | 3 BHK Villa in Lonavala | Stay Willas";
+    titleText = "The Angle House | 3 BHK Villa in Lonavala with Private Pool | Stay Willas";
     descText = "Book The Angle House in Kamshet, Lonavala — a 3 BHK luxury glass house villa featuring private waterfall pool, master suite jacuzzi, pet-friendly fenced lawns, and in-house chef service. Direct bookings from ₹13,000/night.";
     keywordsList = [
       "the angle house lonavala",
       "glass house villa lonavala",
       "the angle house kamshet",
-      "3 BHK glass house villa in lonavala",
+      "3 BHK glass house villa in lonavala with private pool",
       "villa with waterfall pool in lonavala",
       "pet friendly villa lonavala",
       "jacuzzi villa lonavala"
@@ -541,9 +541,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "a frame villa lonavala",
       "couples villa with jacuzzi lonavala"
     ];
-  } else if (villa.slug === "terra-cotta-villa") {
-    titleText = "Terra Cotta Villa | 4 BHK Villa in Mahabaleshwar | Stay Willas";
-    descText = "Book Terra Cotta Villa in Mahabaleshwar — a 4 BHK mountain-view private estate with swimming pool, garden gazebos, and on-demand chef service.";
+  } else if (villa.slug.startsWith("willow-peak-cottage")) {
+    const letter = villa.slug.replace("willow-peak-cottage-", "").toUpperCase();
+    titleText = `Willow Peak Cottage ${letter} | A-Frame Chalet with Jacuzzi in Lonavala | Stay Willas`;
+    descText = `Book Willow Peak Cottage ${letter} in Kurwande, Lonavala — a private 1 BHK wooden A-frame chalet featuring an ensuite jacuzzi bath, scenic mountain sit-out, and on-demand chef dining. Direct bookings from ₹5,999/night.`;
+    keywordsList = [
+      `willow peak cottage ${letter.toLowerCase()} lonavala`,
+      "a frame cottage lonavala with jacuzzi",
+      "couples cottage lonavala",
+      "kurwande cottage stay",
+      "chalet with jacuzzi lonavala"
+    ];
   }
 
   const ogImageUrl = villa.images[0] 

@@ -2,26 +2,26 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck, Sparkles, Award, Clock } from "lucide-react";
+import { BadgeCheck, UtensilsCrossed, HeartHandshake, CalendarCheck2 } from "lucide-react";
 
 const reasons = [
   {
-    icon: ShieldCheck,
+    icon: BadgeCheck,
     title: "Strictly Handpicked",
     description: "We visit every home ourselves to make sure everything is absolutely perfect before you arrive.",
   },
   {
-    icon: Sparkles,
+    icon: UtensilsCrossed,
     title: "Unforgettable Extras",
     description: "Want a private chef or a guided local tour? Just ask, and we'll handle the rest.",
   },
   {
-    icon: Award,
+    icon: HeartHandshake,
     title: "Warm Hospitality",
     description: "You're our guest. We're here to make sure you have everything you need to feel at home.",
   },
   {
-    icon: Clock,
+    icon: CalendarCheck2,
     title: "We Handle the Details",
     description: "We make booking easy. Tell us what you need, and we'll take care of everything else.",
   },
@@ -72,14 +72,14 @@ const WhyChooseUs = () => {
               }}
               className="group"
             >
-              <div className="h-full flex flex-col items-center text-center p-3 sm:p-6 rounded-2xl transition-all duration-500 hover:bg-blue-50 hover:shadow-lg">
-                {/* Icon */}
-                <div className="w-10 h-10 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 flex items-center justify-center mb-3 sm:mb-6 group-hover:from-blue-500 group-hover:to-blue-600 group-hover:border-blue-600 transition-all duration-500">
-                  <reason.icon className="text-blue-600 group-hover:text-white transition-colors duration-500 w-5 h-5 sm:w-8 sm:h-8" />
+              <div className="h-full flex flex-col items-center text-center p-3 sm:p-6 rounded-2xl transition-all duration-500 hover:bg-[#FAF8F5] border border-transparent hover:border-[#DAA520]/25 hover:shadow-xl">
+                {/* Luxury Icon Badge */}
+                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-[#1B3564]/5 via-[#DAA520]/10 to-[#1B3564]/10 border border-[#DAA520]/30 flex items-center justify-center mb-3 sm:mb-6 shadow-xs group-hover:from-[#1B3564] group-hover:to-[#0E1B35] group-hover:border-[#DAA520] group-hover:shadow-[0_8px_24px_rgba(218,165,32,0.3)] transition-all duration-500">
+                  <reason.icon className="text-[#DAA520] group-hover:text-[#F3C065] transition-colors duration-500 w-6 h-6 sm:w-8 sm:h-8 stroke-[1.8]" />
                 </div>
                 
                 {/* Title */}
-                <h3 className="text-sm sm:text-xl font-heading text-text-primary mb-1.5 sm:mb-4 tracking-wide">
+                <h3 className="text-sm sm:text-xl font-heading text-text-primary mb-1.5 sm:mb-4 tracking-wide group-hover:text-[#1B3564] transition-colors">
                   {reason.title}
                 </h3>
                 

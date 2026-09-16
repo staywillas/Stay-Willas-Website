@@ -185,14 +185,17 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="p-10 rounded-[32px] bg-accent-primary/5 border border-accent-primary/10">
-              <h2 className="text-xl font-heading mb-4 text-accent-primary italic underline underline-offset-8">Property Owners</h2>
-              <p className="text-text-primary/55 text-sm leading-relaxed mb-6">
-                Want to list your home with us? We&apos;d love to share it with our guests.
+            <div className="p-10 rounded-[32px] bg-gradient-to-br from-[#1B3564]/10 via-[#559C24]/10 to-transparent border border-[#559C24]/30 shadow-sm">
+              <span className="text-[#559C24] font-black uppercase text-[10px] tracking-[0.2em] block mb-2">Homeowner Network</span>
+              <h2 className="text-xl font-heading mb-3 text-[#1B3564] font-bold">Villa &amp; Estate Owners</h2>
+              <p className="text-text-primary/70 text-sm leading-relaxed mb-6 font-light">
+                Own a private pool villa or holiday retreat in Maharashtra? Partner with Stay Willas for turnkey management, verified HNI guests, and maximum net yields.
               </p>
-              <Button className="w-full bg-accent-primary text-white hover:bg-accent-secondary rounded-full font-bold">
-                PARTNER WITH US
-              </Button>
+              <Link href="/partner" className="block w-full">
+                <Button className="w-full bg-[#1B3564] text-white hover:bg-[#152A50] rounded-full font-bold text-xs uppercase tracking-wider py-6 cursor-pointer shadow-md hover:shadow-lg transition-all">
+                  PARTNER WITH US &rarr;
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -225,7 +228,7 @@ export default function ContactPage() {
                 Lonavala Villa with Pool Desk
               </h3>
               <p className="text-text-primary/75 text-xs md:text-sm leading-relaxed font-light">
-                Interested in reserving <a href="/villa/the-angle-house" className="underline font-semibold text-accent-primary">The Angle House</a>—voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala</strong>? Get instant availability checks, tariff details, and private waterfall pool customization via WhatsApp.
+                Interested in reserving <a href="/villa/the-angle-house" className="underline font-semibold text-accent-primary">The Angle House</a>—voted the <strong className="font-semibold text-[#1B3564]">best villa in Lonavala with private pool</strong>? Get instant availability checks, tariff details, and private waterfall pool customization via WhatsApp.
               </p>
             </div>
 

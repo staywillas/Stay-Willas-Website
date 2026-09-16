@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Weekend Getaway Villas Near Mumbai & Pune | Stay Willas",
-    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala, Khopoli & Mahabaleshwar. Book verified private estates with in-house chef service.",
+    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala and Khopoli. Book verified private estates with in-house chef service.",
     url: "https://www.staywillas.com/areas",
     images: [{ url: "https://www.staywillas.com/images/hero-villa.webp" }],
     type: "website",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Weekend Getaway Villas Near Mumbai & Pune | Stay Willas",
-    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala, Khopoli & Mahabaleshwar. Book verified private estates with in-house chef service.",
+    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala and Khopoli. Book verified private estates with in-house chef service.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -279,7 +279,7 @@ export default async function AreasPage() {
                 Are you tired of the repetitive city routine and seeking a relaxing break close to home? Finding private <strong>weekend getaway villas</strong> has become the preferred choice for discerning travelers who want to escape traffic, noise, and pollution. Whether it is a quick family gathering or a private pool party with friends, booking independent <strong>private pool rentals</strong> near Mumbai and Pune provides the perfect solution. You get the space, privacy, and specialized concierge services that traditional hotels simply cannot deliver.
               </p>
               <p>
-                Our carefully curated portfolio highlights premium properties in the most scenic locations of Maharashtra. From the misty heights of Lonavala to the serene base of the Sahyadri mountains in Khopoli and the strawberry highlands of Mahabaleshwar & Panchgani, we offer a diverse selection of private estates to match every group&apos;s requirement.
+                Our carefully curated portfolio highlights premium properties in the most scenic locations of Maharashtra. From the misty heights of Lonavala to the serene base of the Sahyadri mountains in Khopoli and scenic valleys of the Western Ghats, we offer a diverse selection of private estates to match every group&apos;s requirement.
               </p>
               <p>
                 What makes renting private villas near Mumbai so popular is the travel time. You don&apos;t need to book plane tickets or plan weeks in advance. You can simply load your bags into the car on a Friday afternoon and arrive at your private sanctuary within 1.5 to 2 hours via the Mumbai-Pune Expressway.

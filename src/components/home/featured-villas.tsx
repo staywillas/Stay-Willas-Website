@@ -50,8 +50,8 @@ const FeaturedVillas = ({ villas }: FeaturedVillasProps) => {
             <span className="inline-block text-[#559C24] font-bold tracking-[0.3em] uppercase text-xs mb-4 bg-[#559C24]/10 px-4 py-2 rounded-full">
               Handpicked Properties
             </span>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-text-primary mt-6">
-              Places We <span className="italic bg-gradient-to-r from-[#1B3564] to-[#DAA520] bg-clip-text text-transparent pr-2 inline-block">Love</span>
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-heading text-[#1B3564] mt-6">
+              Places We <span className="italic font-serif">Love</span>
             </h2>
             <p className="text-lg text-text-primary/65 mt-8">
               Every villa in our collection has been carefully selected for its unique architecture, 

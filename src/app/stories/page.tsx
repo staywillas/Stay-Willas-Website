@@ -88,10 +88,6 @@ export default function StoriesPage() {
             poster="/thumbnails/stories/video_20260712_123243.webp" 
           />
           <VideoCard 
-            src="/assets/villas/testimonials/video_20260710_120159.mp4" 
-            poster="/thumbnails/stories/video_20260710_120159.webp" 
-          />
-          <VideoCard 
             src="/assets/villas/testimonials/video_20260706_104802.mp4" 
             poster="/thumbnails/stories/video_20260706_104802.webp" 
           />

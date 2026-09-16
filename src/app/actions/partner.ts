@@ -205,7 +205,6 @@ export async function blockPartnerDates(
       },
     });
 
-    revalidatePath("/homeowner");
     revalidatePath("/admin");
     return { success: true };
   } catch (error: any) {
@@ -244,7 +243,6 @@ export async function deletePartnerBlock(ownerEmail: string, bookingId: string) 
       where: { id: bookingId }
     });
 
-    revalidatePath("/homeowner");
     revalidatePath("/admin");
     return { success: true };
   } catch (error: any) {

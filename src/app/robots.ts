@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin", "/dashboard", "/homeowner", "/login", "/booking", "/api"],
+        disallow: ["/admin", "/dashboard", "/login", "/booking", "/api"],
       },
       {
         userAgent: [
@@ -20,7 +20,7 @@ export default function robots(): MetadataRoute.Robots {
           "Bytespider"
         ],
         allow: "/",
-        disallow: ["/admin", "/dashboard", "/homeowner", "/login", "/api"],
+        disallow: ["/admin", "/dashboard", "/login", "/api"],
       }
     ],
     sitemap: "https://www.staywillas.com/sitemap.xml",

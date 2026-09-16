@@ -158,10 +158,10 @@ export default function VillasClient({
       <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 border-b border-border-subtle pb-6 select-none">
         <div className="text-left w-full sm:w-auto">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-heading text-[#1B3564] italic">
-            Staycation Villas in <span className="not-italic font-bold font-sans text-accent-primary">Maharashtra</span>
+            Luxury Villas for Rent in <span className="not-italic font-bold font-sans text-accent-primary">Maharashtra &amp; Near Mumbai</span>
           </h1>
-          <p className="text-[10px] text-[#1B3564]/50 font-black uppercase tracking-widest mt-1">
-            Handpicked verified luxury retreats and private pool estates
+          <p className="text-xs sm:text-sm text-[#1B3564]/70 font-medium mt-1.5 max-w-xl">
+            Handpicked private pool villas and luxury staycation estates across Lonavala and Khopoli with dedicated in-house chef service.
           </p>
         </div>
         
@@ -527,6 +527,28 @@ export default function VillasClient({
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Villa Homeowner Partner Callout */}
+          <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-r from-[#1B3564] via-[#152A50] to-[#0D1B33] text-white border border-[#DAA520]/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 text-left relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#DAA520]/10 rounded-full blur-[90px] pointer-events-none" />
+            <div className="relative z-10 space-y-2">
+              <span className="text-[#DAA520] text-[10px] font-bold uppercase tracking-[0.25em] block">
+                For Luxury Homeowners
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white">
+                Own a Luxury Villa or Estate in Maharashtra?
+              </h3>
+              <p className="text-white/75 text-xs sm:text-sm font-light max-w-xl leading-relaxed">
+                Partner with Stay Willas for hassle-free villa property management, verified HNI guests, dynamic revenue optimization, and zero operational headaches.
+              </p>
+            </div>
+            <Link
+              href="/partner"
+              className="relative z-10 bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-8 py-4 text-xs font-black tracking-widest uppercase transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 whitespace-nowrap shrink-0"
+            >
+              PARTNER WITH US &rarr;
+            </Link>
           </div>
 
         </div>

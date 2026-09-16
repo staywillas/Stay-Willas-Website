@@ -359,7 +359,7 @@ const AdminDashboard = ({
       
       const taxable = Math.max(0, subtotal - discountVal);
       const gstTotal = Math.round(taxable * ((newBookingGstPercent || 0) / 100));
-      const grandTotal = Math.round(taxable + gstTotal + (newBookingSecurityDeposit || 0));
+      const grandTotal = Math.round(taxable + gstTotal);
 
       setNewBookingPrice(grandTotal);
     }
@@ -409,7 +409,7 @@ const AdminDashboard = ({
       const discountVal = Math.round(discFlat + (subtotal * (discPct / 100)));
       const taxable = Math.max(0, subtotal - discountVal);
       const gstTotal = Math.round(taxable * ((newBookingGstPercent || 0) / 100));
-      const grandTotal = Math.round(taxable + gstTotal + (newBookingSecurityDeposit || 0));
+      const grandTotal = Math.round(taxable + gstTotal);
       const balanceDue = Math.max(0, grandTotal - (newBookingAdvancePaid || 0));
 
       const result = await createManualBooking({
@@ -2126,6 +2126,17 @@ const AdminDashboard = ({
                   </div>
                 </div>
 
+                {newBookingSecurityDeposit > 0 && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-center">
+                    <span className="text-[11px] font-black text-amber-900 uppercase tracking-wide block">
+                      REFUNDABLE DEPOSIT IS ₹{newBookingSecurityDeposit.toLocaleString("en-IN")}
+                    </span>
+                    <span className="text-[9px] text-amber-700 font-medium block mt-0.5">
+                      (NOT INCLUDED IN GRAND TOTAL • REFUNDABLE POST-CHECKOUT)
+                    </span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={isSavingBooking}
@@ -2786,7 +2797,7 @@ const AdminDashboard = ({
                           const discountVal = Math.round(editBillDiscountFlat + (subtotal * (editBillDiscountPercent / 100)));
                           const taxable = Math.max(0, subtotal - discountVal);
                           const gstTotal = Math.round(taxable * (editBillGstPercent / 100));
-                          const grandTotal = Math.round(taxable + gstTotal + editBillSecurityDeposit);
+                          const grandTotal = Math.round(taxable + gstTotal);
                           const balanceDue = editBillBalanceDue !== "" ? Number(editBillBalanceDue) : Math.max(0, grandTotal - editBillAdvancePaid);
 
                           const res = await updateBookingFullDetails({
@@ -2958,13 +2969,6 @@ const AdminDashboard = ({
                         <span className="font-semibold text-slate-200">₹{parsedGstTotal.toLocaleString("en-IN")}</span>
                       </div>
                     )}
-
-                    {parsedSecurityDeposit > 0 && (
-                      <div className="flex justify-between items-center text-amber-300 text-xs">
-                        <span>Refundable Security Deposit</span>
-                        <span className="font-semibold">₹{parsedSecurityDeposit.toLocaleString("en-IN")}</span>
-                      </div>
-                    )}
                   </div>
 
                   {/* Summary Totals & Payments */}
@@ -3011,6 +3015,17 @@ const AdminDashboard = ({
                         <span className="font-bold text-amber-400 text-base mt-0.5">₹{calculatedBalance.toLocaleString("en-IN")}</span>
                       </div>
                     </div>
+
+                    {parsedSecurityDeposit > 0 && (
+                      <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-center">
+                        <span className="text-xs font-black text-amber-300 uppercase tracking-wide block">
+                          REFUNDABLE DEPOSIT IS ₹{parsedSecurityDeposit.toLocaleString("en-IN")}
+                        </span>
+                        <span className="text-[10px] text-amber-200/80 font-medium block mt-0.5">
+                          (NOT INCLUDED IN GRAND TOTAL • REFUNDABLE POST-CHECKOUT)
+                        </span>
+                      </div>
+                    )}
 
                     {/* Inline Payment Editor */}
                     {isEditingPayment && (

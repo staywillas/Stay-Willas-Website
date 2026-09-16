@@ -7,6 +7,7 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
+import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Villa Destinations in Maharashtra | Stay Willas",
@@ -73,8 +74,40 @@ export default async function DestinationsPage() {
     }
   ];
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Destinations", url: "/destinations" },
+  ]);
+
+  const collectionSchema = {
+    "@type": "CollectionPage",
+    "@id": `${BASE_URL}/destinations#webpage`,
+    url: `${BASE_URL}/destinations`,
+    name: "Villa Destinations in Maharashtra | Stay Willas",
+    description: "Discover top villa destinations in Maharashtra for family staycations across Lonavala and Khopoli.",
+    isPartOf: {
+      "@id": `${BASE_URL}/#website`,
+    },
+    about: {
+      "@type": "AdministrativeArea",
+      name: "Maharashtra",
+      sameAs: "https://www.wikidata.org/wiki/Q1191",
+    },
+  };
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
+      {/* Structured Data: CollectionPage & BreadcrumbList */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [collectionSchema, breadcrumbSchema],
+          }),
+        }}
+      />
+
       <Navbar />
       
       {/* Header */}
@@ -212,10 +245,10 @@ export default async function DestinationsPage() {
 
             <div className="bg-bg-primary p-8 rounded-3xl border border-[#1B3564]/10 space-y-4">
               <h3 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-                Discovering Luxury Villas in Lonavala with Customized Concierge Service
+                Discovering Luxury Villas in Lonavala with Private Pool & Concierge Service
               </h3>
               <p className="text-xs sm:text-sm text-text-primary/70 leading-relaxed font-light">
-                For those seeking an elevated vacation experience, luxury villas in lonavala deliver an extraordinary blend of modern architectural design and personalized hospitality. Every luxury property in our collection is outfitted with plush designer furnishings, floor-to-ceiling glass windows framing panoramic mountain views, high-speed fiber-optic internet, en-suite bathrooms, and state-of-the-art entertainment systems.
+                For those seeking an elevated vacation experience, luxury villas in Lonavala with private pool deliver an extraordinary blend of modern architectural design and personalized hospitality. Every luxury property in our collection is outfitted with plush designer furnishings, floor-to-ceiling glass windows framing panoramic mountain views, high-speed fiber-optic internet, en-suite bathrooms, and state-of-the-art entertainment systems.
               </p>
               <p className="text-xs sm:text-sm text-text-primary/70 leading-relaxed font-light">
                 To ensure complete peace of mind, every booking at our premier retreats includes a dedicated stay concierge who oversees every aspect of your staycation. From organizing resident chef services preparing authentic local cuisine to coordinating airport transfers, bonfire arrangements, and poolside setup, our goal is to deliver five-star hotel luxury combined with the intimacy of a dedicated home.
