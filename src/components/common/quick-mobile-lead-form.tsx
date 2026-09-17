@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Phone, ArrowRight, CheckCircle2, Sparkles, ShieldCheck, Loader2, CloudRain } from "lucide-react";
+import { captureBookingLead } from "@/app/actions/inquiry";
 
 interface QuickMobileLeadFormProps {
   villaName?: string;
@@ -35,6 +36,15 @@ export default function QuickMobileLeadForm({
     }
 
     setIsSubmitting(true);
+
+    // Automatically capture lead to Admin CRM & notify staywillas@gmail.com
+    captureBookingLead({
+      name: `Guest (...${cleanNumber.slice(-4)})`,
+      phone: `+91 ${cleanNumber}`,
+      villaName,
+      couponCode: defaultCoupon,
+      message: `Direct Promo Lead: Claimed ${offerTitle} (${highlightText}) for ${villaName} in ${location}. Coupon: ${defaultCoupon}.`,
+    }).catch(err => console.error("Error capturing quick mobile lead:", err));
 
     const message = `Hi Stay Willas! 🌧️ I want to claim the *${offerTitle}* Direct Weekday Offer (*${highlightText}*) for *${villaName}* in ${location} (Coupon: *${defaultCoupon}*).\n\n📱 My Contact Number: *+91 ${cleanNumber}*\n\nPlease send the available Monday–Thursday dates and the 2-night saver quote! ✨`;
     const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(message)}`;

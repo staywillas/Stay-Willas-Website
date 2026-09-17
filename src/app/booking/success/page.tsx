@@ -8,6 +8,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { CheckCircle2, Calendar, MapPin, ArrowRight, ShieldCheck, Download, Sparkles } from "lucide-react";
 import { format } from "date-fns";
+import { sendAdminLeadNotification } from "@/lib/lead-notifications";
 
 export const metadata: Metadata = {
   title: "Book Your Luxury Staycation Successfully | Stay Willas",
@@ -75,6 +76,27 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
       data: { status: "CONFIRMED" }
     });
     booking.status = "CONFIRMED";
+
+    let parsedPayload: any = {};
+    try {
+      if (booking.userId && booking.userId.startsWith("{")) {
+        parsedPayload = JSON.parse(booking.userId);
+      }
+    } catch {}
+
+    sendAdminLeadNotification({
+      type: "CONFIRMED_BOOKING",
+      name: parsedPayload.name || booking.kycName || "Online Guest",
+      phone: parsedPayload.phone || "Checked Out Online",
+      email: parsedPayload.email || undefined,
+      villaName: booking.villa?.name,
+      checkIn: booking.checkIn,
+      checkOut: booking.checkOut,
+      guests: parsedPayload.guests,
+      totalPrice: booking.totalPrice,
+      addOns: (booking.addOns as string[]) || undefined,
+      message: `Online payment received & verified via Stripe (Session: ${sessionId || "Direct"}).`,
+    }).catch(err => console.error("❌ Failed to dispatch confirmed booking email:", err));
   }
 
   const checkInStr = format(new Date(booking.checkIn), "EEEE, MMM dd, yyyy");

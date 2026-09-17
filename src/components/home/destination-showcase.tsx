@@ -33,6 +33,14 @@ const locations: DestinationLocation[] = [
     villaCountText: "1 Luxury Villa",
     villasText: "Canopy Crest",
   },
+  {
+    id: "panchgani",
+    name: "Panchgani",
+    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+    link: "/areas/panchgani",
+    villaCountText: "1 Luxury Villa",
+    villasText: "Casa De Reva",
+  },
 ];
 
 const DestinationShowcase = () => {
@@ -68,9 +76,12 @@ const DestinationShowcase = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Offset calculation: 0 = center, -1 = left, +1 = right
+  // Circular offset calculation: 0 = center, -1 = left, +1 = right
   const getOffset = (index: number) => {
-    return index - activeIndex;
+    let diff = (index - activeIndex) % total;
+    if (diff > total / 2) diff -= total;
+    if (diff < -total / 2) diff += total;
+    return diff;
   };
 
   return (
@@ -97,7 +108,7 @@ const DestinationShowcase = () => {
           </motion.div>
         </div>
 
-        {/* 3D Coverflow Gallery Stage (2 Locations: Lonavala & Khopoli) */}
+        {/* 3D Coverflow Gallery Stage (3 Locations: Lonavala, Khopoli & Panchgani) */}
         <div className="relative w-full max-w-5xl mx-auto h-[410px] sm:h-[460px] md:h-[510px] flex items-center justify-center select-none">
           
           {/* Left Arrow Button */}
@@ -129,13 +140,13 @@ const DestinationShowcase = () => {
               const isLeft = offset === -1;
               const isRight = offset === 1;
 
-              // Compute 3D transforms for 2 locations
+              // Compute 3D transforms for 3 locations
               let xPos = "0%";
-              let zPos = 0;
+              let zPos = -120;
               let rotY = 0;
-              let scale = 1;
-              let opacity = 1;
-              let zIndex = 30;
+              let scale = 0.75;
+              let opacity = 0;
+              let zIndex = 5;
 
               if (isCenter) {
                 xPos = "0%";
@@ -145,18 +156,18 @@ const DestinationShowcase = () => {
                 opacity = 1;
                 zIndex = 30;
               } else if (isLeft) {
-                xPos = isMobile ? "-56%" : "-68%";
+                xPos = isMobile ? "-56%" : "-70%";
                 zPos = -70;
-                rotY = 18;
+                rotY = 16;
                 scale = isMobile ? 0.82 : 0.88;
-                opacity = 0.65;
+                opacity = 0.7;
                 zIndex = 20;
               } else if (isRight) {
-                xPos = isMobile ? "56%" : "68%";
+                xPos = isMobile ? "56%" : "70%";
                 zPos = -70;
-                rotY = -18;
+                rotY = -16;
                 scale = isMobile ? 0.82 : 0.88;
-                opacity = 0.65;
+                opacity = 0.7;
                 zIndex = 20;
               }
 
@@ -179,6 +190,7 @@ const DestinationShowcase = () => {
                   style={{
                     transformStyle: "preserve-3d",
                     zIndex,
+                    pointerEvents: isCenter || isLeft || isRight ? "auto" : "none",
                   }}
                   onClick={() => {
                     if (!isCenter) {

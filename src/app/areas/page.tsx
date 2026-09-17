@@ -46,15 +46,9 @@ export default async function AreasPage() {
     where: { location: { contains: "Khopoli", mode: "insensitive" } }
   });
 
-  const mahabaleshwarCount = await prisma.villa.count({
+  const panchganiCount = await prisma.villa.count({
     where: {
-      slug: {
-        notIn: ["terra-cotta-villa", "mahabaleshwar-terra-cotta"],
-      },
-      OR: [
-        { location: { contains: "Mahabaleshwar", mode: "insensitive" } },
-        { location: { contains: "Panchgani", mode: "insensitive" } }
-      ]
+      location: { contains: "Panchgani", mode: "insensitive" }
     }
   });
   
@@ -78,18 +72,17 @@ export default async function AreasPage() {
       count: khopoliCount,
       isLaunchingSoon: khopoliCount === 0,
       link: "/areas/khopoli"
+    },
+    {
+      slug: "panchgani",
+      name: "Panchgani",
+      tagline: "The Strawberry Highland",
+      desc: "Fresh strawberry plantations, tranquil valley viewpoints, and scenic hillside retreats.",
+      image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+      count: panchganiCount,
+      isLaunchingSoon: panchganiCount === 0,
+      link: "/areas/panchgani"
     }
-    // Preserved for when Terra Cotta Villa goes live:
-    // {
-    //   slug: "mahabaleshwar",
-    //   name: "Mahabaleshwar & Panchgani",
-    //   tagline: "The Strawberry Highland",
-    //   desc: "Fresh strawberry plantations, tranquil valley viewpoints, and scenic hillside retreats.",
-    //   image: "/images/destinations/mahabaleshwar.jpg",
-    //   count: mahabaleshwarCount,
-    //   isLaunchingSoon: mahabaleshwarCount === 0,
-    //   link: "/areas/mahabaleshwar"
-    // }
   ];
 
   const breadcrumbSchema = generateBreadcrumbSchema([

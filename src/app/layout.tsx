@@ -8,11 +8,13 @@ import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 import Script from "next/script";
 import { ORGANIZATION_SCHEMA, WEBSITE_SCHEMA, HOMEPAGE_SITELINKS_SCHEMA } from "@/lib/schema";
 
-// Fonts: swap display for fastest text paint
+// Fonts: swap display and preload for fastest text paint with zero CLS
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const montserrat = Montserrat({
@@ -20,6 +22,8 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const cormorant = Cormorant_Garamond({
@@ -28,6 +32,8 @@ const cormorant = Cormorant_Garamond({
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const playfair = Playfair_Display({
@@ -36,6 +42,8 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 export const viewport: Viewport = {
@@ -94,6 +102,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Resource Hints for Analytics and CDN */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://analytics.ahrefs.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://analytics.ahrefs.com" crossOrigin="anonymous" />
+
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-YFK9H723YJ"

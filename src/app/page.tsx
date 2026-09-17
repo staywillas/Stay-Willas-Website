@@ -38,21 +38,15 @@ export const metadata: Metadata = {
   },
 };
 
-// Critical above-the-fold components (loaded immediately)
-import Hero from "@/components/home/hero";
-import TopTicker from "@/components/home/top-ticker";
+import HeroConcept2 from "@/components/home/hero-concept-2";
 
 // Below-the-fold components (lazy-loaded, only rendered when scrolled into view)
 const DestinationShowcase = dynamic(() => import("@/components/home/destination-showcase"));
 const HomeSitelinks = dynamic(() => import("@/components/home/home-sitelinks"));
-const FeaturedVillas = dynamic(() => import("@/components/home/featured-villas"));
-const InfiniteMarquee = dynamic(() => import("@/components/home/infinite-marquee"));
 const WhyChooseUs = dynamic(() => import("@/components/home/why-choose-us"));
 const SEOContent = dynamic(() => import("@/components/home/seo-content"));
 const PartnerSection = dynamic(() => import("@/components/home/partner-section"));
 const Footer = dynamic(() => import("@/components/layout/footer"));
-
-import { prisma } from "@/lib/db";
 
 export const revalidate = 60; // Instant TTFB via ISR cache
 
@@ -64,81 +58,48 @@ export default async function Home() {
     fetchPriority: "high",
   });
 
-  // Query all villas in a single roundtrip
-  const allVillas = await prisma.villa.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      slug: true,
-      name: true,
-      location: true,
-      price: true,
-      guests: true,
-      bedrooms: true,
-      bathrooms: true,
-      images: true,
-    }
-  });
-
-  // Keep exactly 3 signature properties on homepage: The Angle House, Canopy Crest, Willow Peak
-  // (Terra Cotta Villa and individual cottages are hidden)
-  const signatureSlugs = ["the-angle-house", "canopy-crest", "willow-peak"];
-  const dbVillas = signatureSlugs
-    .map((slug) => allVillas.find((v) => v.slug === slug))
-    .filter((v): v is NonNullable<typeof v> => Boolean(v));
-
-  const featuredVillas = dbVillas.map((villa) => ({
-    id: villa.slug,
-    name: villa.slug === "willow-peak" ? "Willow Peak" : villa.name,
-    location: villa.location,
-    image: villa.images[0] || (
-      villa.slug === "the-angle-house" ? "/images/destinations/ANGLE%20HOUSE%20FINAL.jpg" :
-      villa.slug === "canopy-crest" ? "/images/destinations/CANOPY%20CREST%20-2.png" :
-      villa.slug.includes("willow-peak") ? "/images/destinations/WILLOW%20PEAK%20-%202.jpeg" :
-      "/images/hero-villa.webp"
-    ),
-    price: villa.price.toLocaleString("en-IN"),
-    guests: villa.guests,
-    bedrooms: villa.bedrooms,
-    bathrooms: villa.bathrooms,
-  }));
-
   return (
     <main className="min-h-screen bg-bg-primary">
       <Navbar />
-      <Hero />
+      <HeroConcept2 />
 
       {/* Primary Semantic H1 Header Section for Google Search SEO */}
-      <section className="pt-8 pb-3 sm:pt-12 sm:pb-5 px-4 sm:px-6 md:px-8 max-w-5xl mx-auto text-center animate-fade-in">
+      <section className="pt-10 pb-4 sm:pt-14 sm:pb-6 px-4 sm:px-6 md:px-8 max-w-5xl mx-auto text-center animate-fade-in">
         <div className="inline-flex items-center gap-2 bg-[#DAA520]/10 border border-[#DAA520]/30 px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-bold text-[#1B3564] uppercase tracking-[0.2em] mb-3 sm:mb-4">
           <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520] animate-pulse" />
-          Handpicked Private Villas
+          Curated Private Villas
         </div>
-        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#1B3564] leading-tight tracking-tight">
-          Private Pool Villas Near <span className="italic text-[#DAA520] font-serif font-light">Mumbai &amp; Pune</span> for Weekend Getaways
+        <h1 className="text-xl xs:text-2xl sm:text-4xl md:text-5xl font-heading font-bold text-[#1B3564] leading-snug tracking-tight max-w-2xl mx-auto">
+          <span className="block">Private Pool Villas Near Mumbai &amp; Pune</span>
+          <span className="block italic text-[#DAA520] font-serif font-light mt-0.5 sm:mt-1">
+            for Weekend Getaways
+          </span>
         </h1>
         <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-light">
-          Handpicked private villas across Lonavala and Khopoli with private swimming pools, delicious home-cooked meals, and peaceful green lawns. Book direct with best rates and 0% booking fees.
+          Handpicked luxury villas across Lonavala, Khopoli, and Panchgani featuring private swimming pools, in-room jacuzzis, dedicated personal chefs, and lush green lawns. Book direct with best rates and 0% OTA platform fees.
         </p>
 
-        {/* Value Highlights Pill Bar */}
-        <div className="mt-6 sm:mt-7 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold text-[#1B3564]/80">
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
-            <span className="text-emerald-600 font-bold">✓</span> 100% Private Swimming Pool
+        {/* Value Highlights Pill Bar - Compact 2x2 Grid on Mobile, Flex on Desktop */}
+        <div className="mt-5 sm:mt-7 grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-semibold text-[#1B3564]/85 max-w-sm sm:max-w-none mx-auto">
+          <div className="flex items-center justify-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="text-emerald-600 font-bold">✓</span> Private Pools
           </div>
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
-            <span className="text-emerald-600 font-bold">✓</span> Personal Chef &amp; BBQ Dining
+          <div className="flex items-center justify-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="text-emerald-600 font-bold">✓</span> Personal Chef
           </div>
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
-            <span className="text-emerald-600 font-bold">✓</span> Pet-Friendly Fenced Lawns
+          <div className="flex items-center justify-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="text-emerald-600 font-bold">✓</span> Pet Friendly
           </div>
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
-            <span className="text-emerald-600 font-bold">✓</span> 0% Platform Commission
+          <div className="flex items-center justify-center gap-1.5 bg-white border border-slate-200/80 px-3 py-1.5 rounded-full shadow-2xs">
+            <span className="text-emerald-600 font-bold">✓</span> Direct Rates
           </div>
         </div>
       </section>
 
+      {/* 3D Coverflow Destinations Carousel (Lonavala, Khopoli & Panchgani) */}
       <DestinationShowcase />
-      <FeaturedVillas villas={featuredVillas} />
+
+      {/* Sitelinks, Why Choose Us, Partner Section, and Rich SEO Content */}
       <HomeSitelinks />
       <WhyChooseUs />
       <PartnerSection />

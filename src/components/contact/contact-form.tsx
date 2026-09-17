@@ -31,29 +31,9 @@ const ContactForm = () => {
       });
 
       if (!dbRes.success) {
-        throw new Error("Local DB submission failed");
+        throw new Error("Submission failed");
       }
 
-      // 2. Best effort email notification via FormSubmit
-      try {
-        await fetch("https://formsubmit.co/ajax/staywillas@gmail.com", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({
-            Phone: phone,
-            Message: "Customer requested a phone callback from the contact page.",
-            _subject: `🏰 Stay Willas - New Callback Request from ${phone}`,
-            _template: "box"
-          })
-        });
-      } catch (emailErr) {
-        console.warn("Best effort FormSubmit notification failed:", emailErr);
-      }
-
-      // 3. Mark as success since DB write succeeded
       setSuccess(true);
       setPhone("");
     } catch (err: any) {

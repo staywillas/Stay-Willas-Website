@@ -130,6 +130,9 @@ export default function BookingModalFlow({
       email: guestEmail?.trim() || undefined,
       villaName,
       villaId,
+      totalPrice: displayPrice,
+      guests: maxGuests,
+      message: `Guest opened reservation gate for ${villaName}.${isWillowPeak ? ` (${cottageSelection === "ALL" ? "All 3 Cottages" : `Cottage ${cottageSelection}`})` : ""} Rate: ₹${displayPrice.toLocaleString("en-IN")}/night.`,
     }).catch(err => console.error("Lead capture background error:", err));
 
     // Transition from lead gate to full booking modal

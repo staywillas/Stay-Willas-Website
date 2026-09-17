@@ -73,7 +73,7 @@ const ESTATES: EstateSlide[] = [
     weekendRate: "₹6,999 (Cottage) / ₹23,997 (Full)",
     capacityText: "Up to 12 Guests",
     bedroomsText: "3 A-Frame Chalets",
-    image: "/images/destinations/WILLOW PEAK FINAL.jpg",
+    image: "/assets/villas/willow-peak/gallery-12.webp",
     rating: "4.95",
     features: ["Jacuzzi in Each Cottage", "Outdoor BBQ & Dining", "Sahyadri Panorama"],
   },

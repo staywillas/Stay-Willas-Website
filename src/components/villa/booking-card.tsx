@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
 import { createCheckoutSession, createAwaitingVerificationBooking } from "@/app/actions/booking";
+import { captureBookingLead } from "@/app/actions/inquiry";
 import { useUser, SignInButton } from "@clerk/nextjs";
 
 interface DailyPriceProp {
@@ -122,8 +123,16 @@ const BookingCard = ({
   const isWillowPeak = villaId.includes("willow") || villaName.toLowerCase().includes("willow");
   const actualMaxGuests = isWillowPeak ? 12 : (villaName.toLowerCase().includes("canopy") ? 16 : maxGuests);
 
-  const [checkIn, setCheckIn] = useState<Date>(new Date());
-  const [checkOut, setCheckOut] = useState<Date>(addDays(new Date(), 3));
+  const [checkIn, setCheckIn] = useState<Date>(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
+  const [checkOut, setCheckOut] = useState<Date>(() => {
+    const d = addDays(new Date(), 2);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
   const [guests, setGuests] = useState(2);
   const [clientName, setClientName] = useState(initialGuestName || "");
   const [clientEmail, setClientEmail] = useState("");
@@ -196,15 +205,17 @@ const BookingCard = ({
 
   // Date range overlap check
   const isRangeInvalid = React.useCallback((start: Date, end: Date) => {
-    if (start >= end) return true;
+    const startNorm = new Date(start);
+    startNorm.setHours(0, 0, 0, 0);
+    const endNorm = new Date(end);
+    endNorm.setHours(0, 0, 0, 0);
+
+    if (startNorm.getTime() >= endNorm.getTime()) return true;
 
     if (isWillowPeak) {
-      let cur = new Date(start);
-      cur.setHours(0, 0, 0, 0);
-      const endNorm = new Date(end);
-      endNorm.setHours(0, 0, 0, 0);
+      let cur = new Date(startNorm);
 
-      while (cur < endNorm) {
+      while (cur.getTime() < endNorm.getTime()) {
         let bookedCottages = 0;
         for (const b of bookings) {
           if (b.status === "CANCELLED") continue;
@@ -212,12 +223,13 @@ const BookingCard = ({
           const bEnd = new Date(b.checkOut);
           bStart.setHours(0, 0, 0, 0);
           bEnd.setHours(0, 0, 0, 0);
-          if (cur >= bStart && cur < bEnd) {
+          if (cur.getTime() >= bStart.getTime() && cur.getTime() < bEnd.getTime()) {
             bookedCottages += (b.cottagesCount || 1);
           }
         }
         if (bookedCottages + cottagesCount > 3) return true;
         cur = addDays(cur, 1);
+        cur.setHours(0, 0, 0, 0);
       }
       return false;
     }
@@ -228,7 +240,7 @@ const BookingCard = ({
       const bEnd = new Date(b.checkOut);
       bStart.setHours(0, 0, 0, 0);
       bEnd.setHours(0, 0, 0, 0);
-      return bStart < end && bEnd > start;
+      return bStart.getTime() < endNorm.getTime() && bEnd.getTime() > startNorm.getTime();
     });
   }, [bookings, isWillowPeak, cottagesCount]);
 
@@ -248,14 +260,17 @@ const BookingCard = ({
     
     if (isDateBooked(checkIn)) {
       setCheckIn(tempDate);
-      let checkOutTemp = addDays(tempDate, 3);
+      let checkOutTemp = addDays(tempDate, 2);
+      checkOutTemp.setHours(0, 0, 0, 0);
       
       // Shift checkOut if the range overlaps
       let rangeShift = 0;
       if (isRangeInvalid(tempDate, checkOutTemp)) {
         checkOutTemp = addDays(tempDate, 1);
+        checkOutTemp.setHours(0, 0, 0, 0);
         while (isRangeInvalid(tempDate, checkOutTemp) && rangeShift < 365) {
           checkOutTemp = addDays(checkOutTemp, 1);
+          checkOutTemp.setHours(0, 0, 0, 0);
           rangeShift++;
         }
       }
@@ -277,34 +292,60 @@ const BookingCard = ({
     }
     
     for (let d = 1; d <= totalDays; d++) {
-      daysArray.push(new Date(y, m, d));
+      const dObj = new Date(y, m, d);
+      dObj.setHours(0, 0, 0, 0);
+      daysArray.push(dObj);
     }
     
     return daysArray;
   };
 
+  const normalizedCheckIn = React.useMemo(() => {
+    const d = new Date(checkIn);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, [checkIn]);
+
+  const normalizedCheckOut = React.useMemo(() => {
+    const d = new Date(checkOut);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, [checkOut]);
+
+  // Safe and exact calendar night calculation (immune to timezone/hour truncation)
+  const nights = React.useMemo(() => {
+    const diffTime = normalizedCheckOut.getTime() - normalizedCheckIn.getTime();
+    const computed = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    return computed > 0 ? computed : 0;
+  }, [normalizedCheckIn, normalizedCheckOut]);
+
   const handleDayClick = (day: Date) => {
+    const targetDay = new Date(day);
+    targetDay.setHours(0, 0, 0, 0);
+
     if (calendarTarget === "checkIn") {
-      setCheckIn(day);
-      if (day >= checkOut || isRangeInvalid(day, checkOut)) {
+      setCheckIn(targetDay);
+      if (targetDay.getTime() >= normalizedCheckOut.getTime() || isRangeInvalid(targetDay, normalizedCheckOut)) {
         // Automatically find next available checkout date
-        let tempOut = addDays(day, 1);
-        while (isRangeInvalid(day, tempOut)) {
+        let tempOut = addDays(targetDay, 1);
+        tempOut.setHours(0, 0, 0, 0);
+        while (isRangeInvalid(targetDay, tempOut)) {
           tempOut = addDays(tempOut, 1);
+          tempOut.setHours(0, 0, 0, 0);
         }
         setCheckOut(tempOut);
       }
       setCalendarTarget("checkOut");
     } else {
-      if (day <= checkIn) {
+      if (targetDay.getTime() <= normalizedCheckIn.getTime()) {
         alert("Check-out date must be after check-in date.");
         return;
       }
-      if (isRangeInvalid(checkIn, day)) {
+      if (isRangeInvalid(normalizedCheckIn, targetDay)) {
         alert("This range overlaps with an existing reservation. Please select another check-out date.");
         return;
       }
-      setCheckOut(day);
+      setCheckOut(targetDay);
       setShowCalendar(false);
     }
   };
@@ -318,10 +359,6 @@ const BookingCard = ({
       setClientEmail(email);
     }
   }, [user]);
-
-
-
-  const nights = differenceInDays(checkOut, checkIn);
 
   // Timezone-safe daily rate calculation from dynamic pricing scheduler
   const getDayPriceDetails = (date: Date) => {
@@ -399,7 +436,8 @@ const BookingCard = ({
     if (nights <= 0) return breakdownList;
 
     for (let i = 0; i < nights; i++) {
-      const dayDate = addDays(checkIn, i);
+      const dayDate = addDays(normalizedCheckIn, i);
+      dayDate.setHours(0, 0, 0, 0);
       const details = getDayPriceDetails(dayDate);
       breakdownList.push({
         date: dayDate,
@@ -527,6 +565,22 @@ const BookingCard = ({
         ? `\n🏷️ *Discount Applied:* -₹${discount.toLocaleString("en-IN")} (Coupon: ${couponCode.toUpperCase()})`
         : "";
 
+      // Immediately capture lead & dispatch email notification to staywillas@gmail.com
+      captureBookingLead({
+        name: clientName.trim(),
+        phone: clientPhone.trim(),
+        email: clientEmail.trim(),
+        villaName,
+        villaId,
+        checkIn,
+        checkOut,
+        guests,
+        totalPrice: total,
+        couponCode: isCouponApplied ? (couponCode || "STAYW26") : undefined,
+        addOns: selectedAddOns,
+        message: `Guest clicked Reserve on WhatsApp for ${villaName}.${isWillowPeak ? ` Unit: ${cottageSelection}.` : ""} Dates: ${formattedCheckIn} to ${formattedCheckOut}. Total: ₹${total.toLocaleString("en-IN")}.`,
+      }).catch(err => console.error("❌ Failed to capture WhatsApp booking lead:", err));
+
       const msg = `Hello Stay Willas team! 🌟 I'm planning our next luxury staycation and would love to reserve *${villaName}* for our group of *${guests}* guest(s). 🏰✨
 ${cottageInfoSection}
 Here are our stay details:
@@ -610,6 +664,22 @@ We are so excited about this getaway! Could you please check availability and he
 
     setIsOnlinePaying(true);
     try {
+      // Capture lead in background before gateway redirect
+      captureBookingLead({
+        name: clientName.trim(),
+        phone: clientPhone.trim(),
+        email: clientEmail.trim(),
+        villaName,
+        villaId,
+        checkIn,
+        checkOut,
+        guests,
+        totalPrice: total,
+        couponCode: isCouponApplied ? (couponCode || "STAYW26") : undefined,
+        addOns: selectedAddOns,
+        message: `Guest initiated online payment for ${villaName}.${isWillowPeak ? ` Unit: ${cottageSelection}.` : ""} Dates: ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Total: ₹${total.toLocaleString("en-IN")}.`,
+      }).catch(err => console.error("❌ Failed to capture online checkout lead:", err));
+
       const res = await createCheckoutSession({
         villaId,
         villaName,
@@ -826,7 +896,7 @@ We are so excited about this getaway! Could you please check availability and he
           >
             <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block font-bold mb-1">Check-in</span>
             <div className="flex items-center justify-between text-text-primary text-xs sm:text-sm">
-              <span className="font-extrabold text-[#1B3564]">{format(checkIn, "MMM dd, yyyy")}</span>
+              <span className="font-extrabold text-[#1B3564]">{format(normalizedCheckIn, "MMM dd, yyyy")}</span>
               <CalendarIcon size={16} className="text-[#DAA520] shrink-0 ml-1" />
             </div>
           </div>
@@ -838,7 +908,7 @@ We are so excited about this getaway! Could you please check availability and he
           >
             <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block font-bold mb-1">Check-out</span>
             <div className="flex items-center justify-between text-text-primary text-xs sm:text-sm">
-              <span className="font-extrabold text-[#1B3564]">{format(checkOut, "MMM dd, yyyy")}</span>
+              <span className="font-extrabold text-[#1B3564]">{format(normalizedCheckOut, "MMM dd, yyyy")}</span>
               <CalendarIcon size={16} className="text-[#DAA520] shrink-0 ml-1" />
             </div>
           </div>
@@ -902,9 +972,9 @@ We are so excited about this getaway! Could you please check availability and he
                 const isPast = day < new Date(new Date().setHours(0,0,0,0));
                 const isBooked = isDateBooked(day);
                 
-                const isSelCheckIn = checkIn && day.toDateString() === checkIn.toDateString();
-                const isSelCheckOut = checkOut && day.toDateString() === checkOut.toDateString();
-                const isInSelectedRange = checkIn && checkOut && day > checkIn && day < checkOut;
+                const isSelCheckIn = normalizedCheckIn && day.toDateString() === normalizedCheckIn.toDateString();
+                const isSelCheckOut = normalizedCheckOut && day.toDateString() === normalizedCheckOut.toDateString();
+                const isInSelectedRange = normalizedCheckIn && normalizedCheckOut && day > normalizedCheckIn && day < normalizedCheckOut;
                 
                 let dayClass = "text-xs py-2 rounded-xl transition-all relative font-bold ";
                 let buttonDisabled = false;
@@ -1302,7 +1372,28 @@ We are so excited about this getaway! Could you please check availability and he
           Choose Your Preferred Booking Mode:
         </span>
 
-        {/* Option 1: WhatsApp Instant Booking */}
+        {/* Option 1: Book & Await Verification */}
+        <button
+          type="button"
+          onClick={handleAwaitVerificationBooking}
+          disabled={isSubmittingVerification || nights <= 0 || isOverlapping}
+          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-4 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border border-[#DAA520]/50 active:scale-[0.98] ring-2 ring-[#DAA520]/20"
+        >
+          <div className="flex items-center gap-2.5">
+            {isSubmittingVerification ? (
+              <Loader2 className="animate-spin text-[#DAA520]" size={20} />
+            ) : (
+              <ShieldCheck size={20} className="text-[#DAA520] shrink-0" />
+            )}
+            <div className="text-left">
+              <span className="block font-black text-xs sm:text-sm text-white">Option 1: Book & Await Verification</span>
+              <span className="text-[10px] text-slate-300 font-normal block">Hold dates • Verified by concierge within 24 hours</span>
+            </div>
+          </div>
+          <span className="text-[11px] font-black bg-[#DAA520] text-[#1B3564] px-2.5 py-1 rounded-lg shadow-sm">Hold for ₹{total > 0 ? total.toLocaleString("en-IN") : "Total"} ➔</span>
+        </button>
+
+        {/* Option 2: Book via WhatsApp */}
         <button
           type="button"
           onClick={handleBooking}
@@ -1314,32 +1405,11 @@ We are so excited about this getaway! Could you please check availability and he
               <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
             </svg>
             <div className="text-left">
-              <span className="block font-black text-xs sm:text-sm">Option 1: Book via WhatsApp</span>
+              <span className="block font-black text-xs sm:text-sm">Option 2: Book via WhatsApp</span>
               <span className="text-[10px] text-white/80 font-normal block">Instant chat with concierge • ₹{total > 0 ? total.toLocaleString("en-IN") : "Quote"}</span>
             </div>
           </div>
           <span className="text-[11px] font-black bg-white/20 px-2.5 py-1 rounded-lg">Instant ➔</span>
-        </button>
-
-        {/* Option 2: Book & Await Admin Verification (Will be verified within 24 hours) */}
-        <button
-          type="button"
-          onClick={handleAwaitVerificationBooking}
-          disabled={isSubmittingVerification || nights <= 0 || isOverlapping}
-          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-4 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border border-[#DAA520]/40 active:scale-[0.98]"
-        >
-          <div className="flex items-center gap-2.5">
-            {isSubmittingVerification ? (
-              <Loader2 className="animate-spin text-[#DAA520]" size={20} />
-            ) : (
-              <ShieldCheck size={20} className="text-[#DAA520] shrink-0" />
-            )}
-            <div className="text-left">
-              <span className="block font-black text-xs sm:text-sm">Option 2: Book & Await Verification</span>
-              <span className="text-[10px] text-slate-300 font-normal block">Hold dates • Will be verified within 24 hours</span>
-            </div>
-          </div>
-          <span className="text-[11px] font-black bg-[#DAA520]/30 text-[#DAA520] px-2.5 py-1 rounded-lg">Hold for ₹{total > 0 ? total.toLocaleString("en-IN") : "Total"} ➔</span>
         </button>
       </div>
 

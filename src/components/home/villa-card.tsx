@@ -111,7 +111,7 @@ const VillaCard = ({
             <div className="flex flex-col text-left">
               <span className="text-[7.5px] sm:text-[8px] text-[#1B3564]/60 uppercase tracking-widest font-extrabold">Starting at</span>
               <span className="text-[#1B3564] text-xs sm:text-base font-black whitespace-nowrap">
-                ₹{id === "terra-cotta-villa" || id === "mahabaleshwar-terra-cotta"
+                ₹{id === "casa-de-reva" || id.includes("reva") || id.includes("terra")
                   ? "14,000"
                   : id === "lonavala-willow-peak" || id === "willow-peak" 
                   ? "17,997" 

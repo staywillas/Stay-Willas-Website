@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 import { parseICal } from "@/lib/ical-sync";
 import { startOfDay, parseISO } from "date-fns";
+import { sendAdminLeadNotification } from "@/lib/lead-notifications";
 
 function getStripe() {
   const apiKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder_build_key_0000000000000000";
@@ -32,7 +33,10 @@ export async function calculateStayPrice(
   let weekdayStayPrice = 0;
   let weekdayNights = 0;
   let currentDate = new Date(checkIn);
+  currentDate.setHours(0, 0, 0, 0);
   const end = new Date(checkOut);
+  end.setHours(0, 0, 0, 0);
+  const start = new Date(currentDate);
 
   while (currentDate.getTime() < end.getTime()) {
     let nightPrice = 0;
@@ -104,7 +108,7 @@ export async function calculateStayPrice(
     weekdayStayPrice = Math.round(weekdayStayPrice * (cottagesCount / 3));
   }
 
-  const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+  const nights = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
   const baseGuestsCount = isWillowPeak ? (cottagesCount * 4) : (villa.baseGuests ?? villa.guests);
   const extraGuests = Math.max(0, guests - baseGuestsCount);
   const extraGuestsCostPerNight = villa.extraGuestFee ? extraGuests * villa.extraGuestFee : 0;
@@ -508,14 +512,15 @@ export async function checkAvailableVillasForDates(data: {
       }
     });
 
-    // Sort to prioritize The Angle House and Canopy Crest, and hide unlaunched properties (Terra Cotta)
-    const villas = rawVillas
-      .filter(v => v.slug !== "terra-cotta-villa" && !v.slug.includes("terra-cotta"))
+    // Sort to prioritize signature properties
+    const villas = [...rawVillas]
       .sort((a, b) => {
       if (a.slug === "the-angle-house" && b.slug !== "the-angle-house") return -1;
       if (b.slug === "the-angle-house" && a.slug !== "the-angle-house") return 1;
       if (a.slug === "canopy-crest" && b.slug !== "canopy-crest") return -1;
       if (b.slug === "canopy-crest" && a.slug !== "canopy-crest") return 1;
+      if (a.slug === "casa-de-reva" && b.slug !== "casa-de-reva") return -1;
+      if (b.slug === "casa-de-reva" && a.slug !== "casa-de-reva") return 1;
       return 0;
     });
 
@@ -716,6 +721,22 @@ export async function createAwaitingVerificationBooking(data: {
         villa: true,
       },
     });
+
+    // Trigger instant email notification to staywillas@gmail.com
+    sendAdminLeadNotification({
+      type: "BOOKING_REQUEST",
+      name: data.guestName.trim(),
+      phone: data.guestPhone.trim(),
+      email: data.guestEmail?.trim() || undefined,
+      villaName: booking.villa?.name,
+      checkIn: checkInDate,
+      checkOut: checkOutDate,
+      guests: data.guests,
+      totalPrice: data.totalPrice,
+      couponCode: data.couponCode || undefined,
+      addOns: data.addOns || undefined,
+      message: `Direct Booking submitted for verification. Payment Option: Pay at Villa / Bank Transfer. Unit: ${data.cottageSelection || "ALL"}.`,
+    }).catch(err => console.error("❌ Failed to dispatch booking request email:", err));
 
     return {
       success: true,

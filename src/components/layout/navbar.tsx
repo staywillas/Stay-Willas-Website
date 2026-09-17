@@ -173,24 +173,71 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden xl:flex items-center justify-center gap-2.5 xl:gap-4.5 flex-initial min-w-max px-2">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={cn(
-                "text-sm font-semibold transition-all duration-300 tracking-wider relative group/link whitespace-nowrap",
-                isDarkTheme
-                  ? "text-brand-navy hover:text-brand-gold"
-                  : "text-white hover:text-brand-gold"
-              )}
-            >
-              {link.name}
-              <span className={cn(
-                "absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover/link:scale-x-100",
-                "bg-brand-gold"
-              )} />
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            if (link.name === "Areas") {
+              return (
+                <div key="Areas" className="relative group cursor-pointer">
+                  <Link
+                    href="/areas"
+                    className={cn(
+                      "flex items-center gap-1 text-sm font-semibold transition-all duration-300 tracking-wider relative group/link whitespace-nowrap",
+                      isDarkTheme
+                        ? "text-brand-navy hover:text-brand-gold"
+                        : "text-white hover:text-brand-gold"
+                    )}
+                  >
+                    Areas <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
+                    <span className={cn(
+                      "absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover/link:scale-x-100",
+                      "bg-brand-gold"
+                    )} />
+                  </Link>
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none group-hover:pointer-events-auto z-50">
+                    <div className="glass-premium border border-yellow-200/50 rounded-2xl p-5 min-w-[210px] shadow-xl shadow-yellow-900/5 bg-[#FAF8F5]/95 backdrop-blur-md">
+                      <div className="flex flex-col gap-3 text-left">
+                        <Link href="/areas/lonavala" className="text-[13px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors flex items-center justify-between group/item">
+                          <span>Lonavala Villas</span>
+                          <ChevronRight size={13} className="text-brand-gold/60 group-hover/item:translate-x-1 transition-transform" />
+                        </Link>
+                        <Link href="/areas/khopoli" className="text-[13px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors flex items-center justify-between group/item">
+                          <span>Khopoli Villas</span>
+                          <ChevronRight size={13} className="text-brand-gold/60 group-hover/item:translate-x-1 transition-transform" />
+                        </Link>
+                        <Link href="/areas/panchgani" className="text-[13px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors flex items-center justify-between group/item">
+                          <span>Panchgani Villas</span>
+                          <ChevronRight size={13} className="text-brand-gold/60 group-hover/item:translate-x-1 transition-transform" />
+                        </Link>
+                        <div className="pt-2 mt-1 border-t border-[#DAA520]/20">
+                          <Link href="/areas" className="text-[12px] font-semibold text-brand-gold hover:text-brand-navy tracking-wide transition-colors flex items-center gap-1">
+                            <span>All Destination Areas</span>
+                            <ChevronRight size={11} />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={cn(
+                  "text-sm font-semibold transition-all duration-300 tracking-wider relative group/link whitespace-nowrap",
+                  isDarkTheme
+                    ? "text-brand-navy hover:text-brand-gold"
+                    : "text-white hover:text-brand-gold"
+                )}
+              >
+                {link.name}
+                <span className={cn(
+                  "absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-[2px] w-full origin-center scale-x-0 transition-transform duration-300 group-hover/link:scale-x-100",
+                  "bg-brand-gold"
+                )} />
+              </Link>
+            );
+          })}
 
           <div className="relative group cursor-pointer">
             <div className={cn(
@@ -206,8 +253,6 @@ const Navbar = () => {
                 <div className="flex flex-col gap-4">
                   <Link href="/about" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">About</Link>
                   <Link href="/destinations" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Destinations</Link>
-                  <Link href="/areas/lonavala" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Lonavala Villas</Link>
-                  <Link href="/areas/khopoli" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Khopoli Villas</Link>
                   <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Group Stays in Lonavala</Link>
                   <Link href="/partner" className="text-[14px] font-bold text-[#1B3564] hover:text-[#559C24] tracking-wide transition-colors flex items-center justify-between group/partner">
                     <span>Partner With Us</span>
@@ -455,16 +500,14 @@ const Navbar = () => {
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
                             <span>Willow Peak (Lonavala)</span>
                           </Link>
-                          {/* Preserved for when Terra Cotta Villa goes live
                           <Link
-                            href="/villa/terra-cotta-villa"
+                            href="/villa/casa-de-reva"
                             className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
-                            <span>Terra Cotta Villa (Mahabaleshwar)</span>
+                            <span>Casa De Reva (Panchgani)</span>
                           </Link>
-                          */}
                         </motion.div>
                       )}
                     </div>
@@ -521,6 +564,14 @@ const Navbar = () => {
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
                             <span>Khopoli Villas</span>
+                          </Link>
+                          <Link
+                            href="/areas/panchgani"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Panchgani Villas</span>
                           </Link>
                           <Link
                             href="/areas"

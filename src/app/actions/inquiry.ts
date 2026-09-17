@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/session";
+import { sendAdminLeadNotification } from "@/lib/lead-notifications";
+import { format } from "date-fns";
 
 export async function submitInquiry(formData: {
   name: string;
@@ -34,8 +36,42 @@ export async function submitInquiry(formData: {
       },
     });
 
+    // Optional: resolve villa name if villaId is present
+    let villaName = "";
+    if (formData.villaId) {
+      try {
+        const v = await prisma.villa.findUnique({
+          where: { id: formData.villaId },
+          select: { name: true }
+        });
+        if (v) villaName = v.name;
+      } catch {}
+    }
+
+    const isOwner = (formData.type || "GUEST") === "OWNER";
+    const isBookingLead = (formData.type || "GUEST") === "BOOKING_LEAD";
+    const isCallback = name === "Phone Callback Request";
+    const leadType = isOwner 
+      ? "PARTNER_APPLICATION" 
+      : isBookingLead
+      ? "CALLBACK_REQUEST"
+      : isCallback 
+      ? "CALLBACK_REQUEST" 
+      : "GENERAL_INQUIRY";
+
+    sendAdminLeadNotification({
+      type: leadType,
+      name,
+      phone,
+      email: email && email !== "no-email@staywillas.com" ? email : undefined,
+      villaName: villaName || undefined,
+      message,
+    }).catch(err => console.error("❌ Failed to dispatch admin inquiry email:", err));
+
     // Revalidate the admin dashboard so the new inquiry shows up instantly
-    revalidatePath("/admin");
+    try {
+      revalidatePath("/admin");
+    } catch {}
     
     return { success: true, inquiryId: inquiry.id };
   } catch (error: any) {
@@ -45,7 +81,7 @@ export async function submitInquiry(formData: {
 }
 
 /**
- * Automatically captures a booking lead when a user submits their contact info in the booking gate
+ * Automatically captures a booking lead when a user submits their contact info or reserves for any villa
  */
 export async function captureBookingLead(data: {
   name: string;
@@ -53,6 +89,13 @@ export async function captureBookingLead(data: {
   email?: string;
   villaName: string;
   villaId?: string;
+  checkIn?: string | Date;
+  checkOut?: string | Date;
+  guests?: number | string;
+  totalPrice?: number | string;
+  couponCode?: string;
+  addOns?: string[];
+  message?: string;
 }) {
   try {
     const name = (data.name || "").trim().slice(0, 100);
@@ -64,18 +107,43 @@ export async function captureBookingLead(data: {
       return { success: false, error: "Name and phone are required." };
     }
 
+    const checkInStr = data.checkIn ? (data.checkIn instanceof Date ? format(data.checkIn, "dd MMM yyyy") : String(data.checkIn)) : null;
+    const checkOutStr = data.checkOut ? (data.checkOut instanceof Date ? format(data.checkOut, "dd MMM yyyy") : String(data.checkOut)) : null;
+    const datesDetail = checkInStr && checkOutStr ? ` | Dates: ${checkInStr} to ${checkOutStr}` : "";
+    const guestsDetail = data.guests ? ` | Guests: ${data.guests}` : "";
+    const priceDetail = data.totalPrice ? ` | Price: ₹${typeof data.totalPrice === "number" ? data.totalPrice.toLocaleString("en-IN") : data.totalPrice}` : "";
+
     const inquiry = await prisma.inquiry.create({
       data: {
         name,
         phone,
         email,
-        message: `Direct Booking Lead for ${villaName}. Guest entered name & phone in booking gate.`,
+        message: data.message || `Direct Booking Lead for ${villaName}.${datesDetail}${guestsDetail}${priceDetail}`,
         villaId: data.villaId || null,
         type: "BOOKING_LEAD",
       },
     });
 
-    revalidatePath("/admin");
+    // Trigger instant high-intent email notification to staywillas@gmail.com
+    sendAdminLeadNotification({
+      type: "BOOKING_GATE_LEAD",
+      name,
+      phone,
+      email: email !== "N/A" ? email : undefined,
+      villaName,
+      checkIn: data.checkIn,
+      checkOut: data.checkOut,
+      guests: data.guests,
+      totalPrice: data.totalPrice,
+      couponCode: data.couponCode,
+      addOns: data.addOns,
+      message: data.message || `Guest started booking for ${villaName}.${datesDetail}${guestsDetail}${priceDetail}`,
+    }).catch(err => console.error("❌ Failed to dispatch booking gate lead email:", err));
+
+    try {
+      revalidatePath("/admin");
+    } catch {}
+
     return { success: true, leadId: inquiry.id };
   } catch (error: any) {
     console.error("Failed to capture booking lead:", error);

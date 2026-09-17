@@ -52,6 +52,10 @@ export default async function DestinationsPage() {
   const khopoliCount = await prisma.villa.count({
     where: { location: { contains: "Khopoli", mode: "insensitive" } }
   });
+
+  const panchganiCount = await prisma.villa.count({
+    where: { location: { contains: "Panchgani", mode: "insensitive" } }
+  });
   
   const destinations = [
     {
@@ -71,6 +75,15 @@ export default async function DestinationsPage() {
       count: khopoliCount,
       isLaunchingSoon: khopoliCount === 0,
       link: "/villa/canopy-crest"
+    },
+    {
+      name: "Panchgani (Casa De Reva)",
+      tagline: "The Highland Sanctuary",
+      desc: "Lush green valley views, cool mountain air, rustic terracotta architecture, and private pool serenity.",
+      image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+      count: panchganiCount,
+      isLaunchingSoon: panchganiCount === 0,
+      link: "/villa/casa-de-reva"
     }
   ];
 
@@ -84,7 +97,7 @@ export default async function DestinationsPage() {
     "@id": `${BASE_URL}/destinations#webpage`,
     url: `${BASE_URL}/destinations`,
     name: "Villa Destinations in Maharashtra | Stay Willas",
-    description: "Discover top villa destinations in Maharashtra for family staycations across Lonavala and Khopoli.",
+    description: "Discover top villa destinations in Maharashtra for family staycations across Lonavala, Khopoli, and Panchgani.",
     isPartOf: {
       "@id": `${BASE_URL}/#website`,
     },
@@ -271,6 +284,10 @@ export default async function DestinationsPage() {
               <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm">
                 <strong className="text-[#1B3564] block font-bold mb-1">2. Khopoli</strong>
                 Nestled at the foothills of the Sahyadri range, offering secluded green valleys, cascading streams, and close proximity to popular theme parks and nature trails.
+              </li>
+              <li className="bg-white p-4 rounded-2xl border border-border-subtle shadow-sm sm:col-span-2">
+                <strong className="text-[#1B3564] block font-bold mb-1">3. Panchgani</strong>
+                Known for crisp mountain air, scenic strawberry valleys, and majestic hilltop views. Experience slow highland living at private sanctuary Casa De Reva.
               </li>
             </ul>
           </div>

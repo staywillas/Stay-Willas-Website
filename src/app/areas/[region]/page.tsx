@@ -34,12 +34,12 @@ const AREA_DATA: { [key: string]: AreaDetails } = {
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
     isLaunchingSoon: false
   },
-  mahabaleshwar: {
-    name: "Mahabaleshwar & Panchgani",
+  panchgani: {
+    name: "Panchgani",
     tagline: "The Strawberry Highland",
     desc: "Misty Sahyadri valleys, fresh strawberry farms, and tranquil hillside retreats.",
-    image: "/images/destinations/mahabaleshwar.jpg",
-    isLaunchingSoon: true
+    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+    isLaunchingSoon: false
   }
 };
 
@@ -51,7 +51,9 @@ export const revalidate = 60; // Instant TTFB via ISR cache
 
 export function generateStaticParams() {
   return [
-    { region: "mahabaleshwar" },
+    { region: "lonavala" },
+    { region: "khopoli" },
+    { region: "panchgani" },
   ];
 }
 
@@ -91,6 +93,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "weekend getaway villa Khopoli",
       "corporate offsite villa Khopoli",
       "large group villa khopoli"
+    ];
+  } else if (regionKey === "panchgani") {
+    titleText = "Luxury Villa in Panchgani with Private Pool | Panchgani Staycation | Stay Willas";
+    descText = "Book Casa De Reva in Panchgani with private swimming pool & chef service. Ideal Panchgani villa staycation for family getaways, strawberry tours & celebrations.";
+    keywordList = [
+      "luxury villa in panchgani with private pool",
+      "panchgani villa staycation",
+      "casa de reva panchgani",
+      "villas in panchgani",
+      "private pool villa panchgani"
     ];
   }
 
@@ -140,9 +152,6 @@ export default async function AreaRegionPage({ params }: PageProps) {
   // Fetch villas belonging to this region
   const dbVillas = await prisma.villa.findMany({
     where: {
-      slug: {
-        notIn: ["terra-cotta-villa", "mahabaleshwar-terra-cotta"],
-      },
       location: {
         contains: area.name,
         mode: "insensitive"
@@ -188,10 +197,18 @@ export default async function AreaRegionPage({ params }: PageProps) {
         answer: "Yes, Canopy Crest comfortably accommodates 20 to 25+ guests across 4 spacious master BHK suites, featuring a massive 22x12 ft private pool and sprawling lawns."
       }
     ],
-    karjat: [
+    panchgani: [
       {
-        question: "What amenities do Karjat private pool villas include?",
-        answer: "Our Karjat staycation villas feature private swimming pools, riverfront decks, lush gardens, air conditioning, and full in-house chef dining options."
+        question: "What is the best time to visit Panchgani?",
+        answer: "Panchgani offers cool highland breezes year-round. Monsoon (June to September) brings lush valleys and misty hills, while October to March offers cool weather and fresh strawberry harvesting seasons."
+      },
+      {
+        question: "Is Casa De Reva near popular Panchgani attractions?",
+        answer: "Yes, Casa De Reva is located in Kaswand, Panchgani, just 4.5 km from Mapro Garden and minutes from scenic valley viewpoints."
+      },
+      {
+        question: "What amenities are available at Casa De Reva in Panchgani?",
+        answer: "Casa De Reva features a private swimming pool, 4 luxury air-conditioned bedrooms, private gazebo with hill views, in-house chef dining, and secure on-site parking."
       }
     ]
   };
@@ -300,14 +317,12 @@ export default async function AreaRegionPage({ params }: PageProps) {
               >
                 Khopoli
               </Link>
-              {/* Preserved for when Mahabaleshwar goes live:
               <Link 
-                href="/areas/mahabaleshwar"
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${regionKey === 'mahabaleshwar' ? 'bg-[#1B3564] text-white shadow-sm' : 'bg-[#FAF8F5] text-slate-700 hover:bg-[#1B3564] hover:text-white border border-slate-200'}`}
+                href="/areas/panchgani"
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${regionKey === 'panchgani' ? 'bg-[#1B3564] text-white shadow-sm' : 'bg-[#FAF8F5] text-slate-700 hover:bg-[#1B3564] hover:text-white border border-slate-200'}`}
               >
-                Mahabaleshwar & Panchgani
+                Panchgani
               </Link>
-              */}
               <Link 
                 href="/areas"
                 className="px-4 py-2 rounded-full text-xs font-bold bg-transparent text-[#DAA520] hover:underline"

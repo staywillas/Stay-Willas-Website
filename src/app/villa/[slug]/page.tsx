@@ -45,11 +45,6 @@ export const revalidate = 60; // Instant TTFB via ISR cache
 
 export async function generateStaticParams() {
   const villas = await prisma.villa.findMany({
-    where: {
-      slug: {
-        notIn: ["terra-cotta-villa", "mahabaleshwar-terra-cotta"],
-      },
-    },
     select: { slug: true },
   });
   return villas.map((v) => ({ slug: v.slug }));
@@ -509,18 +504,69 @@ const defaultVillaReviews: Record<string, { id: string; villaId: string; userId:
       createdAt: new Date("2026-08-25"),
     },
   ],
+  "casa-de-reva": [
+    {
+      id: "rev_cr_1",
+      villaId: "casa-de-reva",
+      userId: "guest_tanvi_kapoor",
+      userName: "Tanvi Kapoor (Juhu, Mumbai)",
+      rating: 5,
+      comment: "Casa De Reva in Panchgani exceeded all our expectations! The rustic brick architecture and private swimming pool overlooking the hills made our family holiday magical.",
+      createdAt: new Date("2026-08-15"),
+    },
+    {
+      id: "rev_cr_2",
+      villaId: "casa-de-reva",
+      userId: "guest_harsh_patil",
+      userName: "Harshvardhan Patil (Kothrud, Pune)",
+      rating: 5,
+      comment: "Stayed with a group of 14 friends for a 3-day weekend. Very close to Mapro Garden, huge lawn for evening music, and the on-demand chef made incredible local barbecue!",
+      createdAt: new Date("2026-08-22"),
+    },
+    {
+      id: "rev_cr_3",
+      villaId: "casa-de-reva",
+      userId: "guest_neelam_shah",
+      userName: "Neelam & Rajesh Shah (Ahmedabad)",
+      rating: 5,
+      comment: "Peaceful hillside ambiance and spacious 4 BHK layout. The caretaker was exceptionally polite and helped us with strawberry picking recommendations in Panchgani.",
+      createdAt: new Date("2026-08-28"),
+    }
+  ],
+  "terra-cotta-villa": [
+    {
+      id: "rev_cr_1",
+      villaId: "casa-de-reva",
+      userId: "guest_tanvi_kapoor",
+      userName: "Tanvi Kapoor (Juhu, Mumbai)",
+      rating: 5,
+      comment: "Casa De Reva in Panchgani exceeded all our expectations! The rustic brick architecture and private swimming pool overlooking the hills made our family holiday magical.",
+      createdAt: new Date("2026-08-15"),
+    },
+    {
+      id: "rev_cr_2",
+      villaId: "casa-de-reva",
+      userId: "guest_harsh_patil",
+      userName: "Harshvardhan Patil (Kothrud, Pune)",
+      rating: 5,
+      comment: "Stayed with a group of 14 friends for a 3-day weekend. Very close to Mapro Garden, huge lawn for evening music, and the on-demand chef made incredible local barbecue!",
+      createdAt: new Date("2026-08-22"),
+    },
+    {
+      id: "rev_cr_3",
+      villaId: "casa-de-reva",
+      userId: "guest_neelam_shah",
+      userName: "Neelam & Rajesh Shah (Ahmedabad)",
+      rating: 5,
+      comment: "Peaceful hillside ambiance and spacious 4 BHK layout. The caretaker was exceptionally polite and helped us with strawberry picking recommendations in Panchgani.",
+      createdAt: new Date("2026-08-28"),
+    }
+  ],
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-
-  if (slug === "terra-cotta-villa" || slug === "mahabaleshwar-terra-cotta") {
-    return {
-      title: "Requested Luxury Villa Was Not Found | Stay Willas",
-      robots: { index: false, follow: false },
-    };
-  }
 
   const villa = await getCachedVilla(slug);
 
@@ -579,6 +625,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "kurwande cottage stay",
       "chalet with jacuzzi lonavala"
     ];
+  } else if (villa.slug === "casa-de-reva" || villa.slug === "terra-cotta-villa") {
+    titleText = "Casa De Reva | 4 BHK Luxury Villa in Panchgani with Private Pool | Stay Willas";
+    descText = "Book Casa De Reva in Panchgani — a premier 4 BHK private pool sanctuary featuring terracotta architecture, hillside gazebo, mountain views, and on-demand chef service. Direct bookings from ₹14,000/night.";
+    keywordsList = [
+      "casa de reva panchgani",
+      "panchgani villa with private pool",
+      "luxury villa in panchgani",
+      "4 BHK villa in panchgani",
+      "private pool villa panchgani",
+      "panchgani weekend getaway villa"
+    ];
   }
 
   const ogImageUrl = villa.images[0] 
@@ -631,10 +688,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function VillaDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-
-  if (slug === "terra-cotta-villa" || slug === "mahabaleshwar-terra-cotta") {
-    notFound();
-  }
 
   const villa = await getCachedVilla(slug);
 
@@ -811,18 +864,32 @@ export default async function VillaDetailPage({ params }: PageProps) {
         answer: "Willow Peak offers air-conditioned A-frame cottage suites (Cottage A, B, C), private jacuzzi baths, plush king beds, Wi-Fi, TV, outdoor garden dining, BBQ facilities, carrom board, and secure parking."
       }
     ],
+    "casa-de-reva": [
+      {
+        question: "Where is Casa De Reva located?",
+        answer: "Casa De Reva is located in Kaswand, Panchgani, just 4.5 km from Mapro Garden and 11 km from scenic waterfalls."
+      },
+      {
+        question: "Does Casa De Reva have a private swimming pool and garden lawn?",
+        answer: "Yes, Casa De Reva features an exclusive private swimming pool, a sprawling manicured lawn, and an outdoor gazebo with panoramic mountain and valley views."
+      },
+      {
+        question: "What is the guest capacity of Casa De Reva?",
+        answer: "Casa De Reva is a spacious 4 BHK private estate comfortably accommodating up to 16 guests, with 4 private attached bathrooms, air-conditioned bedrooms, and dedicated caretaker services."
+      }
+    ],
     "terra-cotta-villa": [
       {
-        question: "Where is Terra Cotta Villa located?",
-        answer: "Terra Cotta Villa is located in Kaswand, along the scenic Panchgani - Mahabaleshwar Road, just 4.5 km from Mapro Garden and 11 km from Lingmala Falls."
+        question: "Where is Casa De Reva located?",
+        answer: "Casa De Reva is located in Kaswand, Panchgani, just 4.5 km from Mapro Garden and 11 km from scenic waterfalls."
       },
       {
-        question: "Does Terra Cotta Villa have a private swimming pool and garden lawn?",
-        answer: "Yes, Terra Cotta Villa features an exclusive private swimming pool, a sprawling manicured lawn, and an outdoor gazebo with panoramic mountain and valley views."
+        question: "Does Casa De Reva have a private swimming pool and garden lawn?",
+        answer: "Yes, Casa De Reva features an exclusive private swimming pool, a sprawling manicured lawn, and an outdoor gazebo with panoramic mountain and valley views."
       },
       {
-        question: "What is the guest capacity of Terra Cotta Villa?",
-        answer: "Terra Cotta Villa is a spacious 4 BHK private estate comfortably accommodating up to 16 guests, with 4 private attached bathrooms, air-conditioned bedrooms, and dedicated caretaker services."
+        question: "What is the guest capacity of Casa De Reva?",
+        answer: "Casa De Reva is a spacious 4 BHK private estate comfortably accommodating up to 16 guests, with 4 private attached bathrooms, air-conditioned bedrooms, and dedicated caretaker services."
       }
     ]
   };
@@ -840,17 +907,21 @@ export default async function VillaDetailPage({ params }: PageProps) {
       directUrl: "https://www.google.com/maps?q=P9P9+5XW+Willow+Peak+Resort,+Kurvande,+Maharashtra+410402&ftid=0x3be8070059702d61:0x4182db34c43d1717",
       embedUrl: "https://maps.google.com/maps?q=P9P9+5XW+Willow+Peak+Resort,+Kurvande,+Maharashtra+410402&hl=en&z=16&output=embed"
     },
+    "casa-de-reva": {
+      directUrl: "https://www.google.com/maps/place/StayVista+at+Brick+Beam+with+Private+Plunge+Pool,+Lawn,+BBQ+and+Bonfire+-+Villa/@17.9040603,73.7732925,17z/data=!4m10!1m2!2m1!1sstay+vista+at+brick+beam+with+private+plunge+pool!3m6!1s0x3bc2689509c5ee9f:0xb7ae44a442241384!8m2!3d17.9040603!4d73.7732925!15sCjFzdGF5IHZpc3RhIGF0IGJyaWNrIGJlYW0gd2l0aCBwcml2YXRlIHBsdW5nZSBwb29skgEPdmFjYXRpb25fcmVudGFs4AEA!16s%2Fg%2F11z5q_y1m6",
+      embedUrl: "https://maps.google.com/maps?q=17.9040603,73.7732925&hl=en&z=16&output=embed"
+    },
     "terra-cotta-villa": {
-      directUrl: "https://maps.google.com/?q=Kaswand,+Panchgani,+Maharashtra+412805",
-      embedUrl: "https://maps.google.com/maps?q=Kaswand,+Panchgani,+Maharashtra+412805&hl=en&z=15&output=embed"
+      directUrl: "https://www.google.com/maps/place/StayVista+at+Brick+Beam+with+Private+Plunge+Pool,+Lawn,+BBQ+and+Bonfire+-+Villa/@17.9040603,73.7732925,17z/data=!4m10!1m2!2m1!1sstay+vista+at+brick+beam+with+private+plunge+pool!3m6!1s0x3bc2689509c5ee9f:0xb7ae44a442241384!8m2!3d17.9040603!4d73.7732925!15sCjFzdGF5IHZpc3RhIGF0IGJyaWNrIGJlYW0gd2l0aCBwcml2YXRlIHBsdW5nZSBwb29skgEPdmFjYXRpb25fcmVudGFs4AEA!16s%2Fg%2F11z5q_y1m6",
+      embedUrl: "https://maps.google.com/maps?q=17.9040603,73.7732925&hl=en&z=16&output=embed"
     }
   };
 
   const isLonavala = villa.location.toLowerCase().includes("lonavala");
   const isKhopoli = villa.location.toLowerCase().includes("khopoli");
-  const isMahabaleshwar = villa.location.toLowerCase().includes("mahabaleshwar") || villa.location.toLowerCase().includes("panchgani");
-  const areaName = isLonavala ? "Lonavala" : isKhopoli ? "Khopoli" : "Mahabaleshwar";
-  const areaUrl = isLonavala ? "/areas/lonavala" : isKhopoli ? "/areas/khopoli" : "/areas/mahabaleshwar";
+  const isPanchgani = villa.location.toLowerCase().includes("panchgani");
+  const areaName = isLonavala ? "Lonavala" : isKhopoli ? "Khopoli" : "Panchgani";
+  const areaUrl = isLonavala ? "/areas/lonavala" : isKhopoli ? "/areas/khopoli" : "/areas/panchgani";
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: "/" },
@@ -934,7 +1005,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
         <PropertyGallery images={villaData.images} propertyName={villaData.name} villaId={villaData.slug} />
 
         {/* Weekday Promo Banner for Signature Villas */}
-        {(villaData.slug === "the-angle-house" || villaData.slug === "canopy-crest" || villaData.slug === "terra-cotta-villa" || villaData.slug.includes("willow-peak")) && (
+        {(villaData.slug === "the-angle-house" || villaData.slug === "canopy-crest" || villaData.slug === "casa-de-reva" || villaData.slug === "terra-cotta-villa" || villaData.slug.includes("willow-peak")) && (
           <div className="mb-4 sm:mb-6 bg-gradient-to-r from-red-600/10 via-amber-500/10 to-[#DAA520]/15 border border-[#DAA520]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-4 shadow-xs">
             <div className="flex items-center gap-2.5 sm:gap-3">
               <span className="bg-gradient-to-r from-red-600 to-amber-600 text-white font-black text-[10px] sm:text-xs uppercase px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-xs animate-pulse shrink-0">
@@ -1093,7 +1164,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
             ? canopyCrestSpaces
             : villaData.slug.includes("willow-peak")
             ? willowPeakSpaces
-            : villaData.slug === "terra-cotta-villa"
+            : villaData.slug === "casa-de-reva" || villaData.slug === "terra-cotta-villa"
             ? terraCottaSpaces
             : null;
 
@@ -1103,6 +1174,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
             ? "Signature 3 BHK glass villa accommodating up to 14 guests with private waterfall pool & jacuzzi."
             : villaData.slug === "canopy-crest"
             ? "Sprawling 4 BHK mountain villa accommodating up to 16 guests with private pool & lawns."
+            : villaData.slug === "casa-de-reva" || villaData.slug === "terra-cotta-villa"
+            ? "Premier 4 BHK hillside estate in Panchgani accommodating up to 16 guests with private pool & lawns."
             : villaData.slug.includes("willow-peak")
             ? "Exclusive 3-cottage mountain estate in Kurwande, Lonavala with private in-room jacuzzis for up to 12 guests."
             : "Handpicked private estate with curated luxury rooms and spaces.";
@@ -1252,6 +1325,8 @@ export default async function VillaDetailPage({ params }: PageProps) {
                     ? "Conveniently accessible from Mumbai-Pune Expressway via Kamshet / Old Highway." 
                     : villaData.slug === "canopy-crest"
                     ? "Direct smooth drive from Khopoli toll plaza, 15 mins from Imagicaa."
+                    : (villaData.slug === "casa-de-reva" || villaData.slug === "terra-cotta-villa")
+                    ? "Scenic drive via Wai & Pasarni Ghat in Kaswand, Panchgani — just 4.5 km from Mapro Garden."
                     : "Scenic hilltop drive through Kurwande, close to Tiger Point & Bushi Dam."}
                 </span>
               </div>

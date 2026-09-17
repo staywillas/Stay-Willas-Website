@@ -37,32 +37,9 @@ const PartnerForm = () => {
       });
 
       if (!dbRes.success) {
-        throw new Error("Local DB submission failed");
+        throw new Error("Submission failed");
       }
 
-      // 2. Best effort email notification via FormSubmit
-      try {
-        await fetch("https://formsubmit.co/ajax/staywillas@gmail.com", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({
-            Name: name,
-            Email: email,
-            Phone: phone,
-            Location: location,
-            Message: message,
-            _subject: `🏰 Stay Willas - New Property Partnership Inquiry from ${name} (${location})`,
-            _template: "box"
-          })
-        });
-      } catch (emailErr) {
-        console.warn("Best effort FormSubmit notification failed:", emailErr);
-      }
-
-      // 3. Mark as success since DB save succeeded
       setSuccess(true);
       setName("");
       setEmail("");

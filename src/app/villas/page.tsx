@@ -56,11 +56,11 @@ export default async function VillasPage({ searchParams }: PageProps) {
     orderBy: { createdAt: "desc" },
   });
 
-  // Hidden for now until property goes live
-  const hiddenSlugs = ["terra-cotta-villa", "mahabaleshwar-terra-cotta"];
+  // All properties are live
+  const hiddenSlugs: string[] = [];
 
   // Prioritize signature properties
-  const prioritySlugs = ["the-angle-house", "canopy-crest", "willow-peak"];
+  const prioritySlugs = ["the-angle-house", "canopy-crest", "casa-de-reva", "willow-peak"];
   const prioritized = allVillas
     .filter((v) => prioritySlugs.includes(v.slug))
     .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
@@ -76,10 +76,11 @@ export default async function VillasPage({ searchParams }: PageProps) {
     priceRaw: villa.price,
     priceFormatted: villa.price.toLocaleString("en-IN"),
     image: villa.images[0] || (
-      villa.slug === "the-angle-house" ? "/images/destinations/ANGLE%20HOUSE%20FINAL.jpg" :
-      villa.slug === "canopy-crest" ? "/images/destinations/CANOPY%20CREST%20-2.png" :
-      villa.slug.includes("willow-peak") ? "/images/destinations/WILLOW%20PEAK%20-%202.jpeg" :
-      "/images/hero-villa.webp"
+      villa.slug === "the-angle-house" ? "/assets/villas/the-angle-house/gallery-11.webp" :
+      villa.slug === "canopy-crest" ? "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" :
+      villa.slug === "casa-de-reva" || villa.slug === "terra-cotta-villa" ? "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg" :
+      villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/gallery-12.webp" :
+      "/assets/villas/the-angle-house/gallery-11.webp"
     ),
     bedrooms: villa.bedrooms,
     bathrooms: villa.bathrooms,

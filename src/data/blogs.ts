@@ -1222,7 +1222,7 @@ export const blogsData: BlogPost[] = [
     slug: "best-weekend-getaways-near-mumbai-for-family-and-friends",
     title: "Confused About Weekend Getaways Near Mumbai? The Ultimate Decision Guide",
     metaTitle: "Best Weekend Getaways Near Mumbai for Families & Groups | Stay Willas",
-    description: "Can't decide where to go this weekend? Compare top weekend getaways near Mumbai within 2-3 hours (Lonavala, Khopoli & Mahabaleshwar) with private pool villas.",
+    description: "Can't decide where to go this weekend? Compare top weekend getaways near Mumbai within 2-3 hours (Lonavala, Khopoli & Panchgani) with private pool villas.",
     keywords: [
       "best weekend getaways near mumbai",
       "weekend getaways near mumbai for family",
@@ -1244,7 +1244,7 @@ export const blogsData: BlogPost[] = [
           "Mumbaikars usually fall into three distinct getaway categories depending on how much time they want to spend behind the wheel:",
           "• <strong>Option A: Lonavala & Kurwande (2 to 2.5 hours from Mumbai)</strong>: Perfect when you want cool mountain mist, dramatic valley views, and luxury glass architecture without long travel. Book <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House</a> (with private waterfall pool & jacuzzi) or romantic wooden chalets at <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak</a>.",
           "• <strong>Option B: Khopoli Foothills (1.5 to 2 hours from Mumbai)</strong>: The smartest choice for families traveling with children or elderly members. Located right at the base of the Western Ghats near Imagicaa, you skip the steep monsoon ghat traffic completely. Enjoy expansive 4-BHK lawns and private pools at <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest</a>.",
-          "• <strong>Option C: Mahabaleshwar & Panchgani (4.5 to 5.5 hours from Mumbai)</strong>: Ideal for long weekends (3–4 days), strawberry farm tours, and cool highland breezes."
+          "• <strong>Option C: Panchgani (4.5 to 5.5 hours from Mumbai)</strong>: Ideal for long weekends (3–4 days), strawberry farm tours, scenic cliff views, and cool highland breezes. Book <a href=\"/villa/casa-de-reva\" class=\"underline font-bold text-accent-primary\">Casa De Reva</a> for an exclusive 4 BHK hillside estate with private pool."
         ]
       },
       {
@@ -1288,7 +1288,7 @@ export const blogsData: BlogPost[] = [
     slug: "best-weekend-getaways-near-pune-for-family-and-friends",
     title: "Confused About Weekend Getaways Near Pune? The Ultimate Decision Guide",
     metaTitle: "Best Weekend Getaways Near Pune for Families & Groups | Stay Willas",
-    description: "Can't decide on a weekend trip from Pune? Compare top weekend getaways near Pune within 1.5 to 3 hours (Lonavala, Mahabaleshwar & Khopoli) with private pool villas.",
+    description: "Can't decide on a weekend trip from Pune? Compare top weekend getaways near Pune within 1.5 to 3 hours (Lonavala, Panchgani & Khopoli) with private pool villas.",
     keywords: [
       "best weekend getaways near pune",
       "weekend getaways near pune for family",
@@ -1310,7 +1310,7 @@ export const blogsData: BlogPost[] = [
         paragraphs: [
           "Depending on your preferred vibe and route, here are the top 3 holiday zones from Pune with accurate driving times:",
           "• <strong>Option A: Lonavala & Kurwande (1.5 to 2 Hours • ~65 km via Expressway)</strong>: The quickest and most popular escape from Pune. Smooth expressway driving brings you straight into cool mountain mist. Stay at <a href=\"/villa/the-angle-house\" class=\"underline font-bold text-accent-primary\">The Angle House</a> (featuring a private waterfall pool & master jacuzzi) or explore romantic wooden A-frame chalets at <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak</a>. If traveling with a large group of friends or family, explore our curated <a href=\"/escape\" class=\"underline font-bold text-accent-primary\">villas for groups in Lonavala</a>.",
-          "• <strong>Option B: Mahabaleshwar & Panchgani (2.5 to 3 Hours • ~120 km via NH48 / Wai)</strong>: Pune's favorite high-altitude retreat. Ascend through the scenic Pasarni Ghat into crisp highland air, strawberry orchards, and panoramic valley views.",
+          "• <strong>Option B: Panchgani (2.5 to 3 Hours • ~120 km via NH48 / Wai)</strong>: Pune's favorite high-altitude retreat. Ascend through the scenic Pasarni Ghat into crisp highland air, strawberry orchards, and panoramic valley views. Reserve <a href=\"/villa/casa-de-reva\" class=\"underline font-bold text-accent-primary\">Casa De Reva</a> for an unforgettable private pool villa stay in the hills.",
           "• <strong>Option C: Khopoli Foothills (2 to 2.5 Hours • ~90 km down the Expressway)</strong>: Ideal if your family is visiting Imagicaa Theme Park or looking for an expansive 4 BHK private lawn estate at <a href=\"/villa/canopy-crest\" class=\"underline font-bold text-accent-primary\">Canopy Crest</a> with a 22ft private pool."
         ]
       },
@@ -1347,7 +1347,7 @@ export const blogsData: BlogPost[] = [
         ]
       }
     ],
-    conclusion: "Stop stressing over weekend plans. Whether you crave a cozy A-frame cottage in Lonavala or a grand hillside villa in Mahabaleshwar, explore our verified collection and reserve your dream getaway near Pune with Stay Willas today."
+    conclusion: "Stop stressing over weekend plans. Whether you crave a cozy A-frame cottage in Lonavala, a serene estate in Khopoli, or a grand hillside sanctuary in Panchgani (like Casa De Reva), explore our verified collection and reserve your dream getaway near Pune with Stay Willas today."
   }
 ,
   {
@@ -1765,7 +1765,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "9 min read",
     date: "September 16, 2026",
-    image: "/images/destinations/CANOPY%20CREST%20-2.png",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
     intro: "Owning a luxury second home or private pool villa in Maharashtra is a cherished dream for discerning families and high-net-worth investors. From the mist-draped hilltops of Lonavala and Khandala to the sprawling forest canopies of Khopoli, Karjat, and coastal Alibaug, these estates offer sublime personal villas. However, between escalating monthly maintenance bills, unreliable local caretaker management, and the friction of self-listing on generic travel aggregators, holiday home ownership often transforms into an operational headache. If you are exploring how to monetize your estate with zero stress, learning how to <a href=\"/partner\" class=\"underline font-bold text-accent-primary\">partner with Stay Willas</a> is your gateway to industry-leading net yields, verified elite guests, and white-glove architectural preservation. In this comprehensive 2026 homeowner guide, we unpack all property archetypes we partner with, the pillars of our turnkey hospitality management, and how you can effortlessly list your property with our bespoke collection.",
     sections: [
       {
@@ -1787,7 +1787,7 @@ export const blogsData: BlogPost[] = [
           "Sprawling Countryside Compounds & Farmhouse Estates (4 to 8 BHK): Multi-acre gated Private Villas featuring lush orchards, expansive manicured lawns, gazebos, and room for multi-generational family reunions and corporate retreats. Exemplified by Canopy Crest in Khopoli.",
           "Boutique A-Frame Chalets & Jacuzzi Cottages (1 to 2 BHK): Romantic timber getaways engineered for couples and staycationers seeking mountain tranquility, private heated jacuzzis, and starlit bonfire decks. Exemplified by Willow Peak in Lonavala Kurwande.",
           "Waterfront & Lakeside Retreats: Scenic estates situated directly along the shoreline of Pawna Lake, riverfront estates in Karjat, or coastal beach villas in Alibaug and Kashid.",
-          "Heritage Hilltop Manors & Stone Bungalows: Classic Sahyadri stone masonry, high timber beam ceilings, and panoramic mountain-ridge views in Khandala, Panchgani, and Mahabaleshwar."
+          "Heritage Hilltop Manors & Stone Bungalows: Classic Sahyadri stone masonry, high timber beam ceilings, and panoramic mountain-ridge views in Khandala, Panchgani, and surrounding valleys."
         ]
       },
       {
@@ -1797,7 +1797,7 @@ export const blogsData: BlogPost[] = [
           "• <strong>Lonavala, Khandala & Kamshet</strong>: Maharashtra's highest-demand weekend getaway corridor, boasting 52-week annual tourism demand, quick 90-minute Mumbai-Pune Expressway transit, and high corporate offsite interest.",
           "• <strong>Khopoli & Karjat</strong>: Rapidly emerging as premier nature and valley staycation hubs, known for waterfall hikes, tranquil riversides, and large private acreage compounds.",
           "• <strong>Alibaug, Mandwa & Coastal Konkan</strong>: Unprecedented luxury demand fueled by the 50-minute Ro-Ro car ferry and speedboat connectivity from South Mumbai, perfect for high-tariff private pool villas.",
-          "• <strong>Mahabaleshwar, Panchgani & Wai</strong>: High-altitude hill stations offering pleasant summer weather, scenic strawberry valleys, and extended multi-night family holidays.",
+          "• <strong>Panchgani & Wai</strong>: High-altitude hill stations offering pleasant summer weather, scenic strawberry valleys, and extended multi-night family holidays.",
           "• <strong>Igatpuri & Nashik Wine Country</strong>: Scenic mountain passes, vineyard tours, and tranquil lakeside estates attracting weekenders seeking cool mountain air."
         ]
       },

@@ -136,6 +136,7 @@ const Footer = () => {
                 { name: "Destinations", href: "/destinations" },
                 { name: "Villas in Lonavala with Private Pool", href: "/areas/lonavala" },
                 { name: "Luxury Villas in Khopoli", href: "/areas/khopoli" },
+                { name: "Villas in Panchgani with Pool", href: "/areas/panchgani" },
                 { name: "Experiences", href: "/experiences" },
                 { name: "Guest Stories", href: "/stories" }
               ].map((link) => (
@@ -155,6 +156,7 @@ const Footer = () => {
               {[
                 { name: "Lonavala Villa Pool", href: "/areas/lonavala" },
                 { name: "Luxury Villas in Khopoli", href: "/areas/khopoli" },
+                { name: "Villas in Panchgani with Pool", href: "/areas/panchgani" },
                 { name: "Luxury Villas Near Mumbai", href: "/villas" },
                 { name: "About Stay Willas", href: "/about" },
                 { name: "Villa Destinations", href: "/destinations" },

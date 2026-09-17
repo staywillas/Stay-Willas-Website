@@ -98,7 +98,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 2. Dynamic Area Destination Hubs
   const regions = [
     "lonavala",
-    "khopoli"
+    "khopoli",
+    "panchgani"
   ];
   const areaRoutes: MetadataRoute.Sitemap = regions.map((region) => ({
     url: `${BASE_URL}/areas/${region}`,
@@ -119,11 +120,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let villaRoutes: MetadataRoute.Sitemap = [];
   try {
     const villas = await prisma.villa.findMany({
-      where: {
-        slug: {
-          notIn: ["terra-cotta-villa", "mahabaleshwar-terra-cotta"],
-        },
-      },
       select: { slug: true, updatedAt: true },
     });
     villaRoutes = villas.map((villa) => ({
@@ -135,6 +131,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch {
     // If DB is unavailable during build, fallback to known core villas
     villaRoutes = [
+      {
+        url: `${BASE_URL}/villa/casa-de-reva`,
+        lastModified: currentDate,
+        changeFrequency: "weekly" as const,
+        priority: 0.9,
+      },
       {
         url: `${BASE_URL}/villa/the-angle-house`,
         lastModified: currentDate,

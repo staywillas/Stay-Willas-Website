@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,9 @@ import {
   Star, 
   ChevronRight, 
   Plane, 
-  Heart 
+  Heart,
+  Copy,
+  Check
 } from "lucide-react";
 import BookingBar from "@/components/home/booking-bar";
 import { cn } from "@/lib/utils";
@@ -25,23 +27,10 @@ const VILLAS = [
     weekendRate: "₹20,000",
     rating: "4.5",
     capacity: "12 Guests • 3 Beds",
-    image: "/images/destinations/ANGLE HOUSE FINAL.jpg",
+    image: "/assets/villas/the-angle-house/gallery-11.webp",
     slug: "the-angle-house",
     badge: "Architectural Icon",
     highlight: "Waterfall Pool & Jacuzzi"
-  },
-  {
-    name: "Willow Peak",
-    location: "Kurwande, Lonavala",
-    startingRate: "₹4,999",
-    rateNote: "From ₹4,999 (Full: ₹17,997)",
-    weekendRate: "₹6,999",
-    rating: "4.6",
-    capacity: "Up to 12 Guests • 3 Cottages",
-    image: "/images/destinations/WILLOW PEAK FINAL.jpg",
-    slug: "willow-peak",
-    badge: "A-Frame Chalet",
-    highlight: "In-Room Jacuzzis & BBQ"
   },
   {
     name: "Canopy Crest",
@@ -51,15 +40,52 @@ const VILLAS = [
     weekendRate: "₹22,000",
     rating: "4.8",
     capacity: "16 Guests • 4 Beds",
-    image: "/images/destinations/CANOPY CREST -2.png",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
     slug: "canopy-crest",
     badge: "Hilltop Estate",
     highlight: "Multi-Acre Heated Pool"
+  },
+  {
+    name: "Casa De Reva",
+    location: "Panchgani, Maharashtra",
+    startingRate: "₹14,000",
+    rateNote: "Starting weekday tariff",
+    weekendRate: "₹22,000",
+    rating: "4.9",
+    capacity: "16 Guests • 4 Beds",
+    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+    slug: "casa-de-reva",
+    badge: "Hillside Sanctuary",
+    highlight: "Private Pool & Gazebo"
+  },
+  {
+    name: "Willow Peak",
+    location: "Kurwande, Lonavala",
+    startingRate: "₹4,999",
+    rateNote: "From ₹4,999 (Full: ₹17,997)",
+    weekendRate: "₹6,999",
+    rating: "4.6",
+    capacity: "Up to 12 Guests • 3 Cottages",
+    image: "/assets/villas/willow-peak/gallery-12.webp",
+    slug: "willow-peak",
+    badge: "A-Frame Chalet",
+    highlight: "In-Room Jacuzzis & BBQ"
   },
 ];
 
 export default function HeroConcept2() {
   const router = useRouter();
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  const handleCopyCode = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText("Stayw26");
+    }
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2200);
+  };
 
   return (
     <section className="relative w-full bg-bg-primary text-slate-900 pt-20 sm:pt-28 lg:pt-32 pb-10 sm:pb-18 overflow-hidden">
@@ -95,38 +121,42 @@ export default function HeroConcept2() {
               Handpicked villas and cottages for weekends, celebrations, and unforgettable getaways.
             </p>
 
-            {/* 2 Glass Destination Badges (Lonavala & Khopoli) */}
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full max-w-sm mb-4 sm:mb-6">
+            {/* 3 Glass Destination Badges (Lonavala, Khopoli & Panchgani) - Mobile Optimized without Truncation */}
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 w-full max-w-md mb-4 sm:mb-6">
               {/* Location 1: Lonavala */}
               <Link
                 href="/areas/lonavala"
-                className="group relative flex items-center justify-between gap-2 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-white/80 hover:bg-white backdrop-blur-xl border border-slate-200/90 hover:border-[#DAA520]/70 shadow-[0_4px_16px_rgba(27,53,100,0.06)] hover:shadow-[0_8px_24px_rgba(218,165,32,0.2)] transition-all duration-300 transform hover:-translate-y-0.5"
+                className="group relative flex items-center justify-center gap-1 xs:gap-1.5 px-2 xs:px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-full bg-white/90 hover:bg-white backdrop-blur-xl border border-slate-200/90 hover:border-[#DAA520]/70 shadow-2xs hover:shadow-sm transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95 text-center"
               >
-                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                  <div className="relative w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shrink-0 bg-[#1B3564]/10 group-hover:bg-[#DAA520]/20 border border-[#1B3564]/15 group-hover:border-[#DAA520]/40 transition-colors">
-                    <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#1B3564] group-hover:text-[#B8860B]" strokeWidth={2.4} />
-                  </div>
-                  <span className="font-heading font-semibold text-slate-800 text-xs sm:text-sm group-hover:text-[#1B3564] transition-colors leading-tight truncate">
-                    Lonavala
-                  </span>
-                </div>
-                <ArrowUpRight size={13} className="text-slate-400 group-hover:text-[#DAA520] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+                <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#DAA520] shrink-0" strokeWidth={2.4} />
+                <span className="font-heading font-bold text-slate-800 text-[11px] sm:text-xs group-hover:text-[#1B3564] transition-colors leading-tight whitespace-nowrap">
+                  Lonavala
+                </span>
+                <ArrowUpRight size={11} className="hidden xs:inline text-slate-400 group-hover:text-[#DAA520] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
               </Link>
 
               {/* Location 2: Khopoli */}
               <Link
                 href="/areas/khopoli"
-                className="group relative flex items-center justify-between gap-2 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-white/80 hover:bg-white backdrop-blur-xl border border-slate-200/90 hover:border-[#DAA520]/70 shadow-[0_4px_16px_rgba(27,53,100,0.06)] hover:shadow-[0_8px_24px_rgba(218,165,32,0.2)] transition-all duration-300 transform hover:-translate-y-0.5"
+                className="group relative flex items-center justify-center gap-1 xs:gap-1.5 px-2 xs:px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-full bg-white/90 hover:bg-white backdrop-blur-xl border border-slate-200/90 hover:border-[#DAA520]/70 shadow-2xs hover:shadow-sm transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95 text-center"
               >
-                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                  <div className="relative w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shrink-0 bg-[#1B3564]/10 group-hover:bg-[#DAA520]/20 border border-[#1B3564]/15 group-hover:border-[#DAA520]/40 transition-colors">
-                    <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#1B3564] group-hover:text-[#B8860B]" strokeWidth={2.4} />
-                  </div>
-                  <span className="font-heading font-semibold text-slate-800 text-xs sm:text-sm group-hover:text-[#1B3564] transition-colors leading-tight truncate">
-                    Khopoli
-                  </span>
-                </div>
-                <ArrowUpRight size={13} className="text-slate-400 group-hover:text-[#DAA520] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+                <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#DAA520] shrink-0" strokeWidth={2.4} />
+                <span className="font-heading font-bold text-slate-800 text-[11px] sm:text-xs group-hover:text-[#1B3564] transition-colors leading-tight whitespace-nowrap">
+                  Khopoli
+                </span>
+                <ArrowUpRight size={11} className="hidden xs:inline text-slate-400 group-hover:text-[#DAA520] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+              </Link>
+
+              {/* Location 3: Panchgani */}
+              <Link
+                href="/areas/panchgani"
+                className="group relative flex items-center justify-center gap-1 xs:gap-1.5 px-2 xs:px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-full bg-white/90 hover:bg-white backdrop-blur-xl border border-slate-200/90 hover:border-[#DAA520]/70 shadow-2xs hover:shadow-sm transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95 text-center"
+              >
+                <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#DAA520] shrink-0" strokeWidth={2.4} />
+                <span className="font-heading font-bold text-slate-800 text-[11px] sm:text-xs group-hover:text-[#1B3564] transition-colors leading-tight whitespace-nowrap">
+                  Panchgani
+                </span>
+                <ArrowUpRight size={11} className="hidden xs:inline text-slate-400 group-hover:text-[#DAA520] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
               </Link>
             </div>
 
@@ -153,7 +183,8 @@ export default function HeroConcept2() {
                 alt="The Angle House Luxury Villa"
                 fill
                 priority
-                unoptimized
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 55vw"
+                quality={85}
                 className="object-cover object-center scale-100 group-hover:scale-105 transition-transform duration-1000"
               />
               
@@ -187,27 +218,75 @@ export default function HeroConcept2() {
         <div className="mt-10 sm:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
           {/* Promo Card: 26% Off Weekdays Offer (4 Cols) */}
-          <div className="lg:col-span-4 relative rounded-3xl overflow-hidden p-6 text-white text-left flex flex-col justify-between shadow-xl group min-h-[210px] sm:min-h-[220px] border border-slate-200/60">
+          <div className="lg:col-span-4 relative rounded-3xl overflow-hidden p-5 sm:p-6 text-white text-left flex flex-col justify-between shadow-xl group min-h-[260px] sm:min-h-[270px] border border-slate-200/60">
             <Image
               src="/images/exp-pool.webp"
               alt="26% Off Weekday Offer - Stay Willas"
               fill
-              unoptimized
+              sizes="(max-width: 1024px) 100vw, 33vw"
+              quality={80}
               className="object-cover object-center group-hover:scale-105 transition-transform duration-700 filter brightness-90"
             />
             {/* Deep Dark Gradient Overlay for Maximum Legibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/95 via-[#0A1628]/60 to-[#0A1628]/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/95 via-[#0A1628]/70 to-[#0A1628]/35" />
             
             <div className="relative z-10">
               <span className="inline-flex items-center gap-1.5 bg-[#DAA520]/25 border border-[#DAA520]/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase text-amber-200 shadow-xs">
                 ✦ MON – THU OFFER
               </span>
-              <h4 className="font-heading text-2xl sm:text-[26px] font-bold mt-3 leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              <h4 className="font-heading text-2xl sm:text-[26px] font-bold mt-2.5 leading-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                 26% Off on Weekdays
               </h4>
+              <p className="text-[11px] sm:text-xs text-stone-300 mt-1">
+                Flat 26% off on all villas for stays from Monday to Thursday.
+              </p>
             </div>
 
-            <div className="relative z-10 pt-4">
+            {/* Interactive Coupon Box with Copy Code Option */}
+            <div className="relative z-10 my-3">
+              <div
+                onClick={handleCopyCode}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") handleCopyCode(e as any);
+                }}
+                className="group/coupon cursor-pointer flex items-center justify-between gap-2.5 bg-white/10 hover:bg-white/15 border border-dashed border-[#DAA520]/70 hover:border-[#DAA520] rounded-xl px-3.5 py-2.5 backdrop-blur-md transition-all shadow-inner"
+                title="Click to copy coupon code Stayw26"
+              >
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase tracking-wider text-amber-200/80 font-medium">
+                    Coupon Code
+                  </span>
+                  <span className="font-mono text-sm sm:text-base font-black tracking-widest text-[#DAA520] group-hover/coupon:text-amber-300 transition-colors">
+                    Stayw26
+                  </span>
+                </div>
+
+                <div
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 select-none",
+                    copiedCode
+                      ? "bg-emerald-500 text-white shadow-sm"
+                      : "bg-[#DAA520] hover:bg-[#e2ac24] text-[#0A1628] shadow-xs"
+                  )}
+                >
+                  {copiedCode ? (
+                    <>
+                      <Check size={13} className="stroke-[3]" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={13} className="stroke-[2.5]" />
+                      <span>Copy Code</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10">
               <Link
                 href="/villas"
                 className="inline-flex items-center gap-2 bg-[#DAA520] hover:bg-[#e2ac24] text-[#0A1628] font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-full shadow-[0_4px_16px_rgba(218,165,32,0.35)] hover:shadow-[0_6px_22px_rgba(218,165,32,0.5)] transition-all transform hover:-translate-y-0.5"
@@ -245,7 +324,8 @@ export default function HeroConcept2() {
                       src={villa.image}
                       alt={villa.name}
                       fill
-                      unoptimized
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
+                      quality={80}
                       className="object-cover object-top sm:object-center group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>

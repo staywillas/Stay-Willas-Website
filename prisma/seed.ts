@@ -26,18 +26,14 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 3,
     bathrooms: 3,
     images: [
-      "/images/destinations/ANGLE HOUSE FINAL.jpg",
       "/assets/villas/the-angle-house/gallery-11.webp",
       "/assets/villas/the-angle-house/gallery-14.webp",
       "/assets/villas/the-angle-house/gallery-16.webp",
       "/assets/villas/the-angle-house/gallery-15.webp",
-      "/assets/villas/the-angle-house/gallery-17.webp",
       "/assets/villas/the-angle-house/gallery-6.webp",
-      "/assets/villas/the-angle-house/gallery-9.webp",
       "/assets/villas/the-angle-house/gallery-19.webp",
       "/assets/villas/the-angle-house/main.webp",
       "/assets/villas/the-angle-house/gallery-10.webp",
-      "/assets/villas/the-angle-house/gallery-3.webp",
       "/assets/villas/the-angle-house/gallery-4.webp",
       "/assets/villas/the-angle-house/gallery-2.webp",
       "/assets/villas/the-angle-house/gallery-13.webp",
@@ -78,15 +74,14 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 4,
     bathrooms: 5,
     images: [
-      "/images/destinations/CANOPY CREST -2.png",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0014.jpg",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg",
+      "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
       "/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg"
     ],
     amenities: [
@@ -123,13 +118,10 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
-      "/images/destinations/WILLOW PEAK - 2.jpeg",
       "/assets/villas/willow-peak/gallery-12.webp",
       "/assets/villas/willow-peak/gallery-6.webp",
-      "/assets/villas/willow-peak/gallery-7.webp",
       "/assets/villas/willow-peak/gallery-1.webp",
       "/assets/villas/willow-peak/gallery-4.webp",
-      "/assets/villas/willow-peak/gallery-5.webp",
       "/assets/villas/willow-peak/gallery-2.webp",
       "/assets/villas/willow-peak/gallery-3.webp"
     ],
@@ -167,15 +159,12 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
-      "/images/destinations/WILLOW PEAK - 2.jpeg",
       "/assets/villas/willow-peak/gallery-12.webp",
       "/assets/villas/willow-peak/gallery-6.webp",
-      "/assets/villas/willow-peak/gallery-7.webp",
       "/assets/villas/willow-peak/gallery-13.webp",
       "/assets/villas/willow-peak/gallery-14.webp",
       "/assets/villas/willow-peak/gallery-8.webp",
-      "/assets/villas/willow-peak/gallery-9.webp",
-      "/assets/villas/willow-peak/gallery-10.webp"
+      "/assets/villas/willow-peak/gallery-9.webp"
     ],
     amenities: [
       "1 BHK A-Frame Cottage",
@@ -211,12 +200,9 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
-      "/images/destinations/WILLOW PEAK - 2.jpeg",
       "/assets/villas/willow-peak/gallery-12.webp",
-      "/assets/villas/willow-peak/gallery-7.webp",
       "/assets/villas/willow-peak/gallery-6.webp",
       "/assets/villas/willow-peak/gallery-15.webp",
-      "/assets/villas/willow-peak/gallery-11.webp",
       "/assets/villas/willow-peak/gallery-2.webp",
       "/assets/villas/willow-peak/gallery-3.webp",
       "/assets/villas/willow-peak/main.webp"
@@ -255,13 +241,10 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 3,
     bathrooms: 3,
     images: [
-      "/images/destinations/WILLOW PEAK - 2.jpeg",
       "/assets/villas/willow-peak/gallery-12.webp",
       "/assets/villas/willow-peak/gallery-6.webp",
-      "/assets/villas/willow-peak/gallery-7.webp",
       "/assets/villas/willow-peak/gallery-1.webp",
       "/assets/villas/willow-peak/gallery-4.webp",
-      "/assets/villas/willow-peak/gallery-5.webp",
       "/assets/villas/willow-peak/gallery-2.webp",
       "/assets/villas/willow-peak/gallery-3.webp",
       "/assets/villas/willow-peak/main.webp",
@@ -269,8 +252,6 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
       "/assets/villas/willow-peak/gallery-14.webp",
       "/assets/villas/willow-peak/gallery-8.webp",
       "/assets/villas/willow-peak/gallery-9.webp",
-      "/assets/villas/willow-peak/gallery-10.webp",
-      "/assets/villas/willow-peak/gallery-11.webp",
       "/assets/villas/willow-peak/gallery-15.webp"
     ],
     amenities: [
@@ -295,17 +276,17 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
   },
   {
     id: "mahabaleshwar-terra-cotta",
-    slug: "terra-cotta-villa",
-    name: "Terra Cotta Villa",
-    location: "Panchgani - Mahabaleshwar, Maharashtra",
+    slug: "casa-de-reva",
+    name: "Casa De Reva",
+    location: "Panchgani, Maharashtra",
     category: "Private Estates",
-    description: `Immerse yourself in rustic mountain serenity at Terra Cotta Villa, a premier 4-BHK private pool villa perched on the picturesque hills of Panchgani and Mahabaleshwar. Built with warm, earthy terracotta brick-style architecture, this private estate seamlessly blends timeless countryside charm with modern luxury amenities.
+    description: `Immerse yourself in rustic mountain serenity at Casa De Reva, a premier 4-BHK private pool sanctuary perched on the picturesque hills of Panchgani. Built with warm, earthy terracotta brick-style architecture, this private estate seamlessly blends timeless countryside charm with modern luxury amenities.
 
 Step outside onto your private poolside deck surrounded by manicured lawns and towering hillscapes. Take a refreshing swim in the crystal-clear pool, relax under the private gazebo with misty valley breezes, or host memorable evening barbecues under the stars.
 
 Inside, the villa offers 4 spacious, elegantly furnished air-conditioned bedrooms that comfortably host up to 16 guests, complete with private attached bathrooms, high-speed Wi-Fi, and plush bedding. The sprawling living and dining hall provides ample seating for family reunions, celebrations, and intimate getaways.
 
-Located near Kaswand along the scenic Panchgani-Mahabaleshwar road, Terra Cotta Villa is just minutes away from Mapro Garden (4.5 km) and Lingmala Falls (11 km), offering effortless access to strawberry farms and panoramic viewpoints while remaining a peaceful private retreat.`,
+Located near Kaswand in Panchgani, Casa De Reva is just minutes away from Mapro Garden (4.5 km) and scenic waterfalls, offering effortless access to strawberry farms and panoramic viewpoints while remaining a peaceful private retreat.`,
     price: 14000,
     weekendPrice: 22000,
     fridayPrice: 18000,
@@ -317,7 +298,6 @@ Located near Kaswand along the scenic Panchgani-Mahabaleshwar road, Terra Cotta 
     bedrooms: 4,
     bathrooms: 4,
     images: [
-      "/images/destinations/TERRA COTTA FINAL.jpg",
       "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg", // 1. Illuminated Luxury Exterior & Pool
       "/assets/villas/terra-cotta-villa/IMG-20260901-WA0035.jpg", // 2. Master Bedroom Suite
       "/assets/villas/terra-cotta-villa/IMG-20260901-WA0037.jpg", // 3. Private Swimming Pool & Mountain Greenery
@@ -452,13 +432,13 @@ async function main() {
       rating: 5,
       comment: "We booked 2 cottages for a weekend getaway with friends. The garden sit-out, barbecue setup, and quiet surroundings were wonderful.",
     },
-    // Terra Cotta Villa Reviews
+    // Casa De Reva Reviews
     {
       villaId: "mahabaleshwar-terra-cotta",
       userId: "guest_tanvi_kapoor",
       userName: "Tanvi Kapoor (Juhu, Mumbai)",
       rating: 5,
-      comment: "Terra Cotta Villa in Panchgani exceeded all our expectations! The rustic brick architecture and private swimming pool overlooking the hills made our family holiday magical.",
+      comment: "Casa De Reva in Panchgani exceeded all our expectations! The rustic brick architecture and private swimming pool overlooking the hills made our family holiday magical.",
     },
     {
       villaId: "mahabaleshwar-terra-cotta",
@@ -472,7 +452,7 @@ async function main() {
       userId: "guest_neelam_shah",
       userName: "Neelam & Rajesh Shah (Ahmedabad)",
       rating: 5,
-      comment: "Peaceful hillside ambiance and spacious 4 BHK layout. The caretaker was exceptionally polite and helped us with strawberry picking recommendations nearby.",
+      comment: "Peaceful hillside ambiance and spacious 4 BHK layout. The caretaker was exceptionally polite and helped us with strawberry picking recommendations in Panchgani.",
     }
   ];
 
@@ -496,10 +476,10 @@ async function main() {
 
   await prisma.inquiry.create({
     data: {
-      name: "Sunita Kapoor",
-      email: "sunita@kapoorestates.in",
-      phone: "+91 98200 12345",
-      message: "I own a stunning 6-bedroom clifftop villa in Mahabaleshwar with a private infinity pool. I would love to list it under the Stay Willas brand.",
+      name: "Aditya Deshmukh",
+      email: "aditya.deshmukh@gmail.com",
+      phone: "+919820198201",
+      message: "I own a stunning 6-bedroom clifftop villa in Panchgani with a private infinity pool. I would love to list it under the Stay Willas brand.",
       type: "OWNER",
     }
   });

@@ -22,10 +22,23 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
+  },
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', '@clerk/nextjs', 'date-fns', 'swiper', 'clsx', 'tailwind-merge', '@prisma/client'],
   },
   redirects: async () => [
+    {
+      source: '/test2',
+      destination: '/',
+      permanent: true,
+    },
+    {
+      source: '/test',
+      destination: '/',
+      permanent: true,
+    },
     {
       source: '/villa/angled-house',
       destination: '/villa/the-angle-house',
@@ -54,6 +67,31 @@ const nextConfig: NextConfig = {
     {
       source: '/villa/skytaj-villa',
       destination: '/villas',
+      permanent: true,
+    },
+    {
+      source: '/villa/terra-cotta-villa',
+      destination: '/villa/casa-de-reva',
+      permanent: true,
+    },
+    {
+      source: '/villa/mahabaleshwar-terra-cotta',
+      destination: '/villa/casa-de-reva',
+      permanent: true,
+    },
+    {
+      source: '/areas/mahabaleshwar',
+      destination: '/areas/panchgani',
+      permanent: true,
+    },
+    {
+      source: '/mahabaleshwar',
+      destination: '/areas/panchgani',
+      permanent: true,
+    },
+    {
+      source: '/villas-in-mahabaleshwar',
+      destination: '/areas/panchgani',
       permanent: true,
     },
     {
@@ -180,6 +218,24 @@ const nextConfig: NextConfig = {
         { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
         { key: 'X-Robots-Tag', value: defaultRobotsHeader },
         { key: 'Link', value: '<https://images.unsplash.com>; rel=preconnect' },
+      ],
+    },
+    {
+      source: '/_next/static/:path*',
+      headers: [
+        { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+      ],
+    },
+    {
+      source: '/_next/image/:path*',
+      headers: [
+        { key: 'Cache-Control', value: 'public, max-age=31536000, stale-while-revalidate=86400' },
+      ],
+    },
+    {
+      source: '/favicon.ico',
+      headers: [
+        { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
       ],
     },
     {

@@ -31,7 +31,7 @@ const locationModules = [
     slug: "/areas/lonavala",
     featuredVilla: "The Angle House",
     villaSlug: "/villa/the-angle-house",
-    image: "/images/destinations/ANGLE%20HOUSE%20FINAL.jpg",
+    image: "/assets/villas/the-angle-house/gallery-11.webp",
     travelTime: "2 – 2.5 Hours from Mumbai • 1.5 – 2 Hours from Pune",
     bestFor: "Family Getaways, Birthday Celebrations & Large Group Stays",
     insights: [
@@ -49,7 +49,7 @@ const locationModules = [
     slug: "/areas/khopoli",
     featuredVilla: "Canopy Crest",
     villaSlug: "/villa/canopy-crest",
-    image: "/images/destinations/CANOPY%20CREST%20-2.png",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
     travelTime: "1.5 – 2 Hours from Mumbai • 2 – 2.5 Hours from Pune",
     bestFor: "Multi-Generational Families & Imagicaa Theme Park Trips",
     insights: [
@@ -67,7 +67,7 @@ const locationModules = [
     slug: "/areas/lonavala",
     featuredVilla: "Willow Peak",
     villaSlug: "/villa/willow-peak",
-    image: "/images/destinations/WILLOW%20PEAK%20-%202.jpeg",
+    image: "/assets/villas/willow-peak/gallery-12.webp",
     travelTime: "2 – 2.5 Hours from Mumbai • 1.5 – 2 Hours from Pune",
     bestFor: "Couples, Anniversaries & Intimate Weekend Getaways",
     insights: [
@@ -78,23 +78,19 @@ const locationModules = [
     ],
     highlightText: "Discover serene hillside living and book",
     groupLink: false
-  }
-];
-
-// Preserved for when property goes live
-const hiddenAreaGuides = [
+  },
   {
-    location: "Mahabaleshwar",
-    primaryKeyword: "Private Villas in Mahabaleshwar with Mountain View",
-    slug: "/areas/mahabaleshwar",
-    featuredVilla: "Coming Soon",
-    villaSlug: "#",
-    image: "/images/destinations/TERRA%20COTTA%20FINAL.jpg",
-    travelTime: "4.5 – 5.5 Hours from Mumbai • 2.5 – 3 Hours from Pune",
-    bestFor: "Strawberry Orchard Tours, Cool Highlands & Quiet Rejuvenation",
+    location: "Panchgani",
+    primaryKeyword: "Luxury Villas in Panchgani with Private Pool",
+    slug: "/areas/panchgani",
+    featuredVilla: "Casa De Reva",
+    villaSlug: "/villa/casa-de-reva",
+    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+    travelTime: "4.5 – 5.5 Hours from Mumbai • 2 – 2.5 Hours from Pune",
+    bestFor: "Strawberry Valley Views, Crisp Highlands & Peaceful Getaways",
     insights: [
-      "Rustic Terracotta Architecture: High ceilings, exposed brick textures, and modern luxury furnishings that blend seamlessly into the green hills.",
-      "Private Swimming Pool & Balcony Decks: Marvel at misty valley sunrises and strawberry plantations directly from your bedroom balcony.",
+      "Rustic Terracotta Architecture: High ceilings, exposed brick textures, and modern luxury furnishings that blend seamlessly into the Panchgani hills.",
+      "Private Swimming Pool & Balcony Decks: Marvel at misty valley sunrises and lush greenery directly from your bedroom balcony.",
       "Immaculate Luxury Bathrooms: 4 spacious en-suite bathrooms equipped with premium fixtures, high-pressure hot water, and toiletries.",
       "Authentic Highland Cuisine: Farm-fresh local Maharashtrian thalis and seasonal strawberry desserts prepared by dedicated caretakers."
     ],

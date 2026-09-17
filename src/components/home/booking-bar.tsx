@@ -22,7 +22,8 @@ import {
   Bed,
   Bath,
   Waves,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Phone
 } from "lucide-react";
 import { 
   format, 
@@ -39,6 +40,7 @@ import {
   parseISO 
 } from "date-fns";
 import { getDestinationAvailability, checkAvailableVillasForDates } from "@/app/actions/booking";
+import { submitInquiry } from "@/app/actions/inquiry";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
 
@@ -74,13 +76,20 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   const [isLoadingBookings, setIsLoadingBookings] = useState(false);
 
   // Property Selection / Availability Modal State
-  const [selectedDestination, setSelectedDestination] = useState<string>("All Maharashtra Villas");
+  const [selectedDestination, setSelectedDestination] = useState<string>("All Locations");
   const [isDestinationOpen, setIsDestinationOpen] = useState(false);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [availabilityModalOpen, setAvailabilityModalOpen] = useState(false);
   const [availableVillasList, setAvailableVillasList] = useState<VillaResult[]>([]);
   const [modalLocationFilter, setModalLocationFilter] = useState<string>("ALL");
   const modalBodyRef = useRef<HTMLDivElement>(null);
+
+  // Quick Callback Lead State
+  const [isCallbackOpen, setIsCallbackOpen] = useState(false);
+  const [cbName, setCbName] = useState("");
+  const [cbPhone, setCbPhone] = useState("");
+  const [cbLoading, setCbLoading] = useState(false);
+  const [cbSuccess, setCbSuccess] = useState(false);
 
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -178,7 +187,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   ) => {
     setIsCheckingAvailability(true);
     try {
-      const targetDest = !dest || dest === "All Maharashtra Villas" ? "all" : dest;
+      const targetDest = !dest || dest === "All Maharashtra Villas" || dest === "All Locations" ? "all" : dest;
       const res = await checkAvailableVillasForDates({
         destination: targetDest,
         checkIn: selectedCheckIn ? formatDateOnly(selectedCheckIn) : undefined,
@@ -273,6 +282,34 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
     window.open(whatsappUrl, "_blank");
   };
 
+  const handleCallbackSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!cbName.trim() || !cbPhone.trim()) return;
+    setCbLoading(true);
+    try {
+      const checkInStr = checkIn ? format(checkIn, "dd MMM yyyy") : "Flexible dates";
+      const checkOutStr = checkOut ? format(checkOut, "dd MMM yyyy") : "Flexible dates";
+      await submitInquiry({
+        name: cbName.trim(),
+        phone: cbPhone.trim(),
+        email: "no-email@staywillas.com",
+        message: `Homepage Booking Bar Callback Request | Destination: ${selectedDestination} | Dates: ${checkInStr} to ${checkOutStr} | Guests: ${guests || "2"}`,
+        type: "BOOKING_LEAD"
+      });
+      setCbSuccess(true);
+      setTimeout(() => {
+        setIsCallbackOpen(false);
+        setCbSuccess(false);
+        setCbName("");
+        setCbPhone("");
+      }, 3500);
+    } catch (err) {
+      console.error("Callback submission error:", err);
+    } finally {
+      setCbLoading(false);
+    }
+  };
+
   // Filter villas by location in the modal
   const filteredModalVillas = availableVillasList.filter((villa) => {
     if (modalLocationFilter === "ALL") return true;
@@ -296,50 +333,102 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
         className="bg-white rounded-[2rem] md:rounded-full p-4 md:p-3 pl-4 md:pl-8 pr-4 md:pr-3.5 shadow-[0_25px_60px_rgba(27,53,100,0.16)] border border-[#DAA520]/40 ring-4 ring-[#DAA520]/10"
       >
         <form onSubmit={handleCheckAvailability} className="relative z-30">
-          {/* Desktop Layout (Without Location, Focused on Dates & Guests) */}
-          <div className="hidden md:flex items-center justify-between gap-2">
+          {/* Desktop Layout (Segmented Luxury Pill Bar) */}
+          <div className="hidden md:flex items-center justify-between gap-1 lg:gap-2">
             
-            {/* CHECK-IN */}
+            {/* 1. LOCATION PILL */}
+            <div className="relative flex-[1.1] min-w-0">
+              <div 
+                onClick={() => setIsDestinationOpen(!isDestinationOpen)}
+                className="px-3.5 lg:px-4 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
+              >
+                <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1.5 cursor-pointer">
+                  <MapPin size={12} className="text-[#DAA520] shrink-0" />
+                  <span className="truncate">LOCATION</span>
+                </label>
+                <div className="text-sm font-bold text-[#1B3564] h-5 flex items-center justify-between font-heading">
+                  <span className="truncate">{selectedDestination}</span>
+                  <ChevronDown size={14} className={`text-slate-400 transition-transform duration-200 shrink-0 ml-1 ${isDestinationOpen ? "rotate-180 text-[#1B3564]" : ""}`} />
+                </div>
+              </div>
+
+              {isDestinationOpen && (
+                <div className="absolute top-full left-0 mt-2.5 w-52 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left">
+                  {["All Locations", "Khopoli", "Lonavala", "Panchgani"].map((dest) => (
+                    <button
+                      key={dest}
+                      type="button"
+                      onClick={() => {
+                        setSelectedDestination(dest);
+                        setModalLocationFilter(dest === "All Locations" ? "ALL" : dest);
+                        setIsDestinationOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${
+                        selectedDestination === dest 
+                          ? "bg-[#1B3564] text-[#DAA520]" 
+                          : "text-slate-700 hover:bg-slate-100"
+                      }`}
+                    >
+                      <span>{dest}</span>
+                      {selectedDestination === dest && <CheckCircle2 size={13} className="text-[#DAA520]" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Hairline Divider */}
+            <div className="h-7 w-[1px] bg-slate-200 shrink-0" />
+            
+            {/* 2. CHECK-IN PILL */}
             <div 
               onClick={() => setIsCalendarOpen(true)}
-              className="flex-[1.2] px-5 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-2xl hover:bg-slate-50 transition-colors"
+              className="flex-1 min-w-0 px-3.5 lg:px-4 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
             >
-              <label className="text-[10px] font-extrabold text-[#1B3564]/60 uppercase tracking-widest group-hover:text-[#E2A63B] transition-colors flex items-center gap-1.5 cursor-pointer">
-                <CalendarIcon size={12} className="text-[#DAA520]" />
-                CHECK-IN
+              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1.5 cursor-pointer">
+                <CalendarIcon size={12} className="text-[#DAA520] shrink-0" />
+                <span>CHECK-IN</span>
               </label>
-              <div className="text-sm font-bold text-[#1B3564] h-6 flex items-center font-heading">
-                {checkIn ? format(checkIn, "dd MMM, yyyy") : <span className="text-[#1B3564]/40 font-normal">Choose Check-in</span>}
+              <div className="text-sm font-bold text-[#1B3564] h-5 flex items-center font-heading whitespace-nowrap overflow-hidden text-ellipsis">
+                {checkIn ? (
+                  <span className="truncate">{format(checkIn, "dd MMM, yyyy")}</span>
+                ) : (
+                  <span className="text-slate-400 font-normal">Select date</span>
+                )}
               </div>
             </div>
 
-            {/* Vertical Divider */}
-            <div className="h-9 w-[1px] bg-slate-200/70 self-center" />
+            {/* Hairline Divider */}
+            <div className="h-7 w-[1px] bg-slate-200 shrink-0" />
 
-            {/* CHECK-OUT */}
+            {/* 3. CHECK-OUT PILL */}
             <div 
               onClick={() => setIsCalendarOpen(true)}
-              className="flex-[1.2] px-5 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-2xl hover:bg-slate-50 transition-colors"
+              className="flex-1 min-w-0 px-3.5 lg:px-4 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
             >
-              <label className="text-[10px] font-extrabold text-[#1B3564]/60 uppercase tracking-widest group-hover:text-[#E2A63B] transition-colors flex items-center gap-1.5 cursor-pointer">
-                <CalendarIcon size={12} className="text-[#DAA520]" />
-                CHECK-OUT
+              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1.5 cursor-pointer">
+                <CalendarIcon size={12} className="text-[#DAA520] shrink-0" />
+                <span>CHECK-OUT</span>
               </label>
-              <div className="text-sm font-bold text-[#1B3564] h-6 flex items-center font-heading">
-                {checkOut ? format(checkOut, "dd MMM, yyyy") : <span className="text-[#1B3564]/40 font-normal">Choose Check-out</span>}
+              <div className="text-sm font-bold text-[#1B3564] h-5 flex items-center font-heading whitespace-nowrap overflow-hidden text-ellipsis">
+                {checkOut ? (
+                  <span className="truncate">{format(checkOut, "dd MMM, yyyy")}</span>
+                ) : (
+                  <span className="text-slate-400 font-normal">Select date</span>
+                )}
               </div>
             </div>
 
-            {/* Vertical Divider */}
-            <div className="h-9 w-[1px] bg-slate-200/70 self-center" />
+            {/* Hairline Divider */}
+            <div className="h-7 w-[1px] bg-slate-200 shrink-0" />
 
-            {/* GUESTS */}
-            <div className="flex-1 px-5 py-2 flex flex-col gap-0.5 text-left rounded-2xl hover:bg-slate-50 transition-colors">
-              <label className="text-[10px] font-extrabold text-[#1B3564]/60 uppercase tracking-widest flex items-center gap-1.5">
-                <Users size={12} className="text-[#DAA520]" />
-                GUESTS
+            {/* 4. GUESTS PILL */}
+            <div className="flex-[0.9] min-w-0 px-3.5 lg:px-4 py-2 flex flex-col gap-0.5 text-left rounded-full hover:bg-slate-100/80 transition-colors group">
+              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest flex items-center gap-1.5 group-hover:text-[#DAA520] transition-colors">
+                <Users size={12} className="text-[#DAA520] shrink-0" />
+                <span>GUESTS</span>
               </label>
-              <div className="relative flex items-center h-6">
+              <div className="relative flex items-center h-5">
                 <input
                   type="number"
                   min="1"
@@ -347,26 +436,29 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                   value={guests}
                   onChange={(e) => setGuests(e.target.value)}
                   aria-label="Number of Guests"
-                  className="bg-transparent text-sm font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-full font-heading"
-                  placeholder="2 Guests"
+                  className="bg-transparent text-sm font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-8 font-heading"
+                  placeholder="2"
                 />
+                <span className="text-xs font-semibold text-slate-500 pointer-events-none whitespace-nowrap">
+                  {Number(guests) === 1 ? "Guest" : "Guests"}
+                </span>
               </div>
             </div>
 
-            {/* Action Buttons: Check Availability & WhatsApp */}
-            <div className="flex items-center gap-2.5 shrink-0 self-center pl-2">
+            {/* 5. ACTION BUTTONS: Search & WhatsApp */}
+            <div className="flex items-center gap-2 shrink-0 self-center pl-1">
               <button
                 type="submit"
                 disabled={isCheckingAvailability}
-                aria-label="Check Availability"
-                className="bg-[#DAA520] hover:bg-[#c4941a] text-[#1B3564] font-black text-xs tracking-wider uppercase rounded-full px-7 py-4 shadow-lg shadow-yellow-500/20 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2"
+                aria-label="Search Available Villas"
+                className="bg-gradient-to-r from-[#DAA520] via-[#E5B535] to-[#DAA520] hover:from-[#c4941a] hover:to-[#DAA520] text-[#1B3564] font-black text-xs tracking-wider uppercase rounded-full px-5 lg:px-6 py-3.5 shadow-md shadow-yellow-500/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2"
               >
                 {isCheckingAvailability ? (
                   <Loader2 size={15} className="animate-spin text-[#1B3564]" />
                 ) : (
                   <>
-                    <span>CHECK VILLAS & RATES</span>
-                    <ArrowRight size={14} className="stroke-[2.5]" />
+                    <Search size={14} className="stroke-[2.5]" />
+                    <span className="whitespace-nowrap">Search Villas</span>
                   </>
                 )}
               </button>
@@ -374,11 +466,12 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
               <button
                 type="button"
                 onClick={(e) => handleWhatsAppInquiry(e)}
-                aria-label="Direct to WhatsApp"
-                className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs tracking-wider uppercase rounded-full px-5 py-4 shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2"
+                aria-label="Chat on WhatsApp"
+                title="Chat with WhatsApp Concierge"
+                className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs tracking-wider uppercase rounded-full px-3.5 lg:px-4 py-3.5 shadow-md shadow-emerald-600/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-1.5"
               >
                 <MessageCircle size={15} className="fill-white/20 stroke-[2.5]" />
-                <span className="hidden lg:inline">WHATSAPP</span>
+                <span className="hidden xl:inline text-[11px]">WhatsApp</span>
               </button>
             </div>
           </div>
@@ -408,13 +501,13 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
               {/* Destination Dropdown */}
               {isDestinationOpen && (
                 <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left">
-                  {["All Maharashtra Villas", "Lonavala", "Khopoli", "Alibaug", "Karjat"].map((dest) => (
+                  {["All Locations", "Khopoli", "Lonavala", "Panchgani"].map((dest) => (
                     <button
                       key={dest}
                       type="button"
                       onClick={() => {
                         setSelectedDestination(dest);
-                        setModalLocationFilter(dest === "All Maharashtra Villas" ? "ALL" : dest);
+                        setModalLocationFilter(dest === "All Locations" ? "ALL" : dest);
                         setIsDestinationOpen(false);
                       }}
                       className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${
@@ -444,7 +537,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 <div className="min-w-0">
                   <div className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest leading-none">CHECK IN</div>
                   <div className="text-xs font-bold text-slate-800 font-heading leading-tight mt-1 truncate">
-                    {checkIn ? format(checkIn, "dd-MM-yyyy") : "dd-mm-yyyy"}
+                    {checkIn ? format(checkIn, "dd MMM yyyy") : <span className="text-slate-400 font-normal">Select date</span>}
                   </div>
                 </div>
               </div>
@@ -460,7 +553,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 <div className="min-w-0">
                   <div className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest leading-none">CHECK OUT</div>
                   <div className="text-xs font-bold text-slate-800 font-heading leading-tight mt-1 truncate">
-                    {checkOut ? format(checkOut, "dd-MM-yyyy") : "dd-mm-yyyy"}
+                    {checkOut ? format(checkOut, "dd MMM yyyy") : <span className="text-slate-400 font-normal">Select date</span>}
                   </div>
                 </div>
               </div>
@@ -671,6 +764,18 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                     </button>
                     <button
                       type="button"
+                      onClick={() => setModalLocationFilter("Khopoli")}
+                      className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1 ${
+                        modalLocationFilter === "Khopoli"
+                          ? "bg-[#1B3564] text-white shadow-sm font-black"
+                          : "bg-white text-slate-600 border border-slate-200 hover:border-[#1B3564]"
+                      }`}
+                    >
+                      <MapPin size={10} className="text-[#DAA520]" />
+                      Khopoli
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => setModalLocationFilter("Lonavala")}
                       className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1 ${
                         modalLocationFilter === "Lonavala"
@@ -683,15 +788,15 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                     </button>
                     <button
                       type="button"
-                      onClick={() => setModalLocationFilter("Khopoli")}
+                      onClick={() => setModalLocationFilter("Panchgani")}
                       className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1 ${
-                        modalLocationFilter === "Khopoli"
+                        modalLocationFilter === "Panchgani"
                           ? "bg-[#1B3564] text-white shadow-sm font-black"
                           : "bg-white text-slate-600 border border-slate-200 hover:border-[#1B3564]"
                       }`}
                     >
                       <MapPin size={10} className="text-[#DAA520]" />
-                      Khopoli
+                      Panchgani
                     </button>
                   </div>
 
@@ -833,7 +938,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                           All properties in this location might be booked for these dates or exceed guest capacity. Try adjusting your dates or inquire directly with our concierge on WhatsApp.
                         </p>
                       </div>
-                      <div className="pt-2">
+                      <div className="pt-2 flex items-center justify-center gap-2 flex-wrap">
                         <button
                           type="button"
                           onClick={() => setModalLocationFilter("ALL")}
@@ -841,28 +946,125 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                         >
                           View All Villas
                         </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsCallbackOpen(true)}
+                          className="px-4 py-2 bg-[#DAA520] hover:bg-[#b8860b] text-[#1B3564] font-black rounded-xl text-xs cursor-pointer border-none shadow-sm flex items-center gap-1.5"
+                        >
+                          <Phone size={13} />
+                          <span>Request Instant Callback</span>
+                        </button>
                       </div>
                     </div>
                   )}
                 </div>
 
                 {/* Modal Footer */}
-                <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
-                  <button
-                    type="button"
-                    onClick={(e) => handleWhatsAppInquiry(e)}
-                    className="flex-1 sm:flex-initial px-5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-xl cursor-pointer border-none shadow-md flex items-center justify-center gap-2 transition-all"
-                  >
-                    <MessageCircle size={14} />
-                    <span>Chat with Concierge</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAvailabilityModalOpen(false)}
-                    className="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl cursor-pointer border-none transition-colors"
-                  >
-                    Close
-                  </button>
+                <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 shrink-0 space-y-3">
+                  {/* Callback slide-down form */}
+                  <AnimatePresence>
+                    {isCallbackOpen && (
+                      <motion.form
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        onSubmit={handleCallbackSubmit}
+                        className="p-4 bg-gradient-to-r from-amber-500/10 to-[#1B3564]/10 rounded-2xl border border-amber-300/40 space-y-3 overflow-hidden"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-[#1B3564] text-white flex items-center justify-center">
+                              <Phone size={14} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-[#1B3564]">Request Instant Concierge Callback</p>
+                              <p className="text-[11px] text-slate-600">Our reservations manager will call you within 5 minutes</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setIsCallbackOpen(false)}
+                            className="text-slate-400 hover:text-slate-600 p-1"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+
+                        {cbSuccess ? (
+                          <div className="flex items-center gap-2 p-3 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-semibold">
+                            <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+                            <span>Request received! An email notification has been dispatched to our team. We will call you shortly.</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col sm:flex-row gap-2">
+                            <input
+                              type="text"
+                              required
+                              value={cbName}
+                              onChange={(e) => setCbName(e.target.value)}
+                              placeholder="Your Name *"
+                              className="flex-1 px-3 py-2 text-xs border border-slate-300 rounded-xl focus:outline-none focus:border-[#1B3564] bg-white text-slate-900"
+                            />
+                            <input
+                              type="tel"
+                              required
+                              value={cbPhone}
+                              onChange={(e) => setCbPhone(e.target.value)}
+                              placeholder="Phone / WhatsApp Number *"
+                              className="flex-1 px-3 py-2 text-xs border border-slate-300 rounded-xl focus:outline-none focus:border-[#1B3564] bg-white text-slate-900"
+                            />
+                            <button
+                              type="submit"
+                              disabled={cbLoading}
+                              className="px-5 py-2 bg-[#1B3564] hover:bg-[#152A50] text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 cursor-pointer border-none shrink-0"
+                            >
+                              {cbLoading ? (
+                                <>
+                                  <Loader2 size={14} className="animate-spin" />
+                                  <span>Sending...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Phone size={14} />
+                                  <span>Call Me Back</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </motion.form>
+                    )}
+                  </AnimatePresence>
+
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={(e) => handleWhatsAppInquiry(e)}
+                        className="px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-xl cursor-pointer border-none shadow-md flex items-center gap-2 transition-all"
+                      >
+                        <MessageCircle size={14} />
+                        <span>Chat with Concierge</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsCallbackOpen(!isCallbackOpen)}
+                        className="px-4 bg-white hover:bg-slate-100 text-[#1B3564] border border-[#1B3564]/30 font-bold text-xs py-2.5 rounded-xl cursor-pointer shadow-sm flex items-center gap-2 transition-all"
+                      >
+                        <Phone size={14} className="text-[#DAA520]" />
+                        <span>Request Callback</span>
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setAvailabilityModalOpen(false)}
+                      className="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl cursor-pointer border-none transition-colors ml-auto"
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
 
               </motion.div>

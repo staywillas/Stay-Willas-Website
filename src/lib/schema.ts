@@ -60,6 +60,11 @@ export const ORGANIZATION_SCHEMA = {
       name: "Khopoli",
       sameAs: "https://www.wikidata.org/wiki/Q2248559",
     },
+    {
+      "@type": "City",
+      name: "Panchgani",
+      sameAs: "https://www.wikidata.org/wiki/Q1008272",
+    },
   ],
   contactPoint: {
     "@type": "ContactPoint",
@@ -186,6 +191,18 @@ const VILLA_COORDINATES: Record<string, { lat: number; lng: number; street: stri
     lng: 73.4070,
     street: "Kurwande",
     locality: "Lonavala",
+  },
+  "casa-de-reva": {
+    lat: 17.9040603,
+    lng: 73.7732925,
+    street: "Kaswand",
+    locality: "Panchgani",
+  },
+  "terra-cotta-villa": {
+    lat: 17.9040603,
+    lng: 73.7732925,
+    street: "Kaswand",
+    locality: "Panchgani",
   },
 };
 
@@ -322,6 +339,7 @@ export interface DestinationSchemaInput {
 const WIKIDATA_REGIONS: Record<string, string> = {
   lonavala: "https://www.wikidata.org/wiki/Q1140889",
   khopoli: "https://www.wikidata.org/wiki/Q2248559",
+  panchgani: "https://www.wikidata.org/wiki/Q1008272",
 };
 
 export function generateDestinationCollectionSchema(input: DestinationSchemaInput) {
