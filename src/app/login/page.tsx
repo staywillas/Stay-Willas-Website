@@ -1,69 +1,97 @@
 "use client";
 
-import { SignIn } from "@clerk/nextjs";
-import { Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/layout/navbar";
+import LoginForm from "@/components/auth/login-form";
+import { UserCheck, KeyRound, Building2 } from "lucide-react";
+
+type RoleType = "guest" | "partner" | "admin";
+
+function LoginContent() {
+  const searchParams = useSearchParams();
+  const initialRoleParam = searchParams.get("role");
+  const redirectParam = searchParams.get("redirect") || "";
+
+  const [activeRole, setActiveRole] = useState<RoleType>("guest");
+
+  useEffect(() => {
+    if (initialRoleParam === "admin" || initialRoleParam === "partner" || initialRoleParam === "guest") {
+      setActiveRole(initialRoleParam);
+    }
+  }, [initialRoleParam]);
+
+  const tabs = [
+    {
+      id: "guest" as RoleType,
+      label: "Guest Portal",
+      icon: UserCheck,
+      desc: "For travelers & holiday guests",
+    },
+    {
+      id: "partner" as RoleType,
+      label: "Homeowner",
+      icon: Building2,
+      desc: "For villa owners & partners",
+    },
+    {
+      id: "admin" as RoleType,
+      label: "Admin Suite",
+      icon: KeyRound,
+      desc: "Operations & reservations",
+    },
+  ];
+
+  return (
+    <div className="w-full max-w-lg mx-auto">
+      {/* Role Navigation Pills */}
+      <div className="flex bg-white/80 backdrop-blur-md p-1.5 rounded-2xl border border-[#DAA520]/20 mb-8 shadow-sm">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeRole === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveRole(tab.id)}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 px-3 rounded-xl font-montserrat text-xs font-bold transition-all duration-300 cursor-pointer ${
+                isActive
+                  ? "bg-[#1B3564] text-[#DAA520] shadow-md shadow-[#1B3564]/15"
+                  : "text-[#1B3564]/60 hover:text-[#1B3564] hover:bg-slate-100/50"
+              }`}
+            >
+              <Icon size={15} className={isActive ? "text-[#DAA520]" : "text-[#1B3564]/50"} />
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.id === "guest" ? "Guest" : tab.id === "partner" ? "Partner" : "Admin"}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Render the Login Form */}
+      <LoginForm role={activeRole} redirectUrl={redirectParam} />
+
+      <p className="text-center text-[#1B3564]/40 font-montserrat text-[11px] tracking-wider mt-8 uppercase">
+        Protected by Stay Willas 256-Bit Encrypted Security
+      </p>
+    </div>
+  );
+}
 
 export default function LoginPage() {
   return (
     <main className="min-h-screen bg-[#FAF8F3] flex flex-col">
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center px-4 py-32">
-        <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="text-center mb-10">
-            <span className="text-[#C9A84C] font-montserrat font-semibold tracking-[0.3em] uppercase text-[10px] block mb-3">
-              Welcome Back
-            </span>
-            <h1 className="font-cormorant text-5xl text-[#1B3564] leading-tight mb-3">
-              Sign In to{" "}
-              <span className="italic font-medium text-[#C9A84C]">Stay Willas</span>
-            </h1>
-            <p className="text-[#1B3564]/50 font-montserrat text-sm leading-relaxed">
-              Access your bookings, save your favourite villas, and get exclusive offers.
-            </p>
-          </div>
-
-          {/* Clerk SignIn Component */}
-          <Suspense>
-            <div className="flex justify-center">
-              <SignIn
-                appearance={{
-                  variables: {
-                    colorPrimary: "#1B3564",
-                    colorText: "#1B3564",
-                    colorBackground: "#FFFFFF",
-                    colorInputBackground: "#FAFAFA",
-                    fontFamily: "Montserrat, sans-serif",
-                    borderRadius: "1rem",
-                  },
-                  elements: {
-                    card: "shadow-[0_8px_40px_rgba(27,53,100,0.10)] border border-[#DAA520]/15 rounded-3xl",
-                    headerTitle: "hidden",
-                    headerSubtitle: "hidden",
-                    logoBox: "hidden",
-                    formButtonPrimary:
-                      "bg-[#1B3564] hover:bg-[#152A50] text-white font-montserrat font-black tracking-widest uppercase text-xs rounded-full py-3 transition-all duration-300 shadow-[0_0_20px_rgba(27,53,100,0.25)] hover:shadow-[0_0_30px_rgba(27,53,100,0.4)]",
-                    formFieldInput:
-                      "border-[#DAA520]/25 focus:border-[#1B3564] focus:ring-1 focus:ring-[#1B3564]/20 rounded-xl font-montserrat text-sm",
-                    footerActionLink: "text-[#C9A84C] hover:text-[#1B3564] font-semibold",
-                    identityPreviewEditButton: "text-[#C9A84C]",
-                    socialButtonsBlockButton:
-                      "border border-[#DAA520]/20 hover:border-[#DAA520]/50 rounded-xl font-montserrat font-semibold text-sm transition-all",
-                    dividerLine: "bg-[#DAA520]/20",
-                    dividerText: "text-[#1B3564]/40 font-montserrat text-xs",
-                  },
-                }}
-                routing="hash"
-              />
+      <div className="flex-1 flex items-center justify-center px-4 py-28 sm:py-36">
+        <Suspense
+          fallback={
+            <div className="text-center py-20 font-montserrat text-sm text-[#1B3564]/50">
+              Loading secure access portal...
             </div>
-          </Suspense>
-
-          <p className="text-center text-[#1B3564]/30 font-montserrat text-[10px] tracking-wider mt-8 uppercase">
-            Your personal details are always safe with us
-          </p>
-        </div>
+          }
+        >
+          <LoginContent />
+        </Suspense>
       </div>
     </main>
   );

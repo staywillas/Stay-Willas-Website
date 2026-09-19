@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, 
@@ -49,7 +50,8 @@ const locationModules = [
     slug: "/areas/khopoli",
     featuredVilla: "Canopy Crest",
     villaSlug: "/villa/canopy-crest",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
+    objectPosition: "object-[center_80%]",
     travelTime: "1.5 – 2 Hours from Mumbai • 2 – 2.5 Hours from Pune",
     bestFor: "Multi-Generational Families & Imagicaa Theme Park Trips",
     insights: [
@@ -68,6 +70,7 @@ const locationModules = [
     featuredVilla: "Willow Peak",
     villaSlug: "/villa/willow-peak",
     image: "/assets/villas/willow-peak/gallery-12.webp",
+    objectPosition: "object-[center_72%]",
     travelTime: "2 – 2.5 Hours from Mumbai • 1.5 – 2 Hours from Pune",
     bestFor: "Couples, Anniversaries & Intimate Weekend Getaways",
     insights: [
@@ -86,6 +89,7 @@ const locationModules = [
     featuredVilla: "Casa De Reva",
     villaSlug: "/villa/casa-de-reva",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+    objectPosition: "object-center",
     travelTime: "4.5 – 5.5 Hours from Mumbai • 2 – 2.5 Hours from Pune",
     bestFor: "Strawberry Valley Views, Crisp Highlands & Peaceful Getaways",
     insights: [
@@ -195,7 +199,10 @@ export default function SEOContent() {
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
                     quality={80}
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    className={cn(
+                      "object-cover group-hover:scale-105 transition-transform duration-700",
+                      item.objectPosition || "object-center"
+                    )}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
                   

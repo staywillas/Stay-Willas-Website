@@ -272,7 +272,7 @@ export default async function PanchganiPage() {
                     </div>
                     <div className="text-right">
                       <span className="text-[10px] text-slate-400 uppercase block">Starting From</span>
-                      <span className="text-xl sm:text-2xl font-black text-[#DAA520]">₹14,000</span>
+                      <span className="text-xl sm:text-2xl font-black text-[#DAA520]">₹16,000</span>
                       <span className="text-[10px] text-slate-400"> / night</span>
                       <span className="text-[8px] text-slate-400 block italic mt-0.5">*26% off on weekdays with Stayw26</span>
                     </div>
@@ -337,13 +337,13 @@ export default async function PanchganiPage() {
           <section className="py-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
             <div className="bg-[#FAF8F5]/90 backdrop-blur-md rounded-3xl border border-[#DAA520]/30 overflow-hidden flex flex-col shadow-2xl transform hover:scale-[1.005] transition-all duration-500">
               {/* Full Width Image Container */}
-              <div className="w-full relative aspect-[16/9] sm:aspect-[16/8.5] md:aspect-[21/9] min-h-[340px] sm:min-h-[440px] md:min-h-[520px] overflow-hidden group">
+              <div className="w-full relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[2/1] overflow-hidden group">
                 <Image 
                   src={signatureVilla.image}
                   alt="Casa De Reva Panchgani Signature Private Pool Villa"
                   fill
                   priority
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  className="object-cover object-[center_65%] group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
                 
@@ -373,7 +373,7 @@ export default async function PanchganiPage() {
                       <Star size={15} className="fill-[#DAA520]" /> 4.9/5
                     </span>
                     <span className="text-white/40">|</span>
-                    <span className="text-sm font-bold text-white">From ₹14,000 / night</span>
+                    <span className="text-sm font-bold text-white">From ₹16,000 / night</span>
                   </div>
                 </div>
               </div>
@@ -618,12 +618,12 @@ export default async function PanchganiPage() {
                 Families traveling with elderly grandparents and young children particularly value ground-floor bedroom accessibility, secure perimeter fences, and personalized meal planning. From dawn yoga sessions overlooking the mist-filled Krishna Valley to late-night poolside conversations under starlit skies, a private estate transforms a simple vacation into an unforgettable gathering.
               </p>
 
-              <div className="my-10 relative h-80 sm:h-96 w-full rounded-3xl overflow-hidden shadow-xl not-prose">
+              <div className="my-10 relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-xl not-prose">
                 <Image 
                   src="/assets/villas/terra-cotta-villa/IMG-20260901-WA0037.jpg" 
                   alt="Casa De Reva private pool overlooking misty mountain valley in Panchgani" 
                   fill 
-                  className="object-cover"
+                  className="object-cover object-center"
                 />
               </div>
 
@@ -802,7 +802,7 @@ export default async function PanchganiPage() {
         <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
           <div className="flex flex-col">
             <span className="text-[11px] font-extrabold text-[#DAA520] leading-tight">
-              From ₹14,000<span className="text-[9px] text-slate-300 font-normal"> / nt</span>
+              From ₹16,000<span className="text-[9px] text-slate-300 font-normal"> / nt</span>
             </span>
             <span className="text-[9px] font-bold text-emerald-400 flex items-center gap-1">
               <Zap size={10} className="fill-emerald-400" /> 0% Platform Fee • 26% Off Weekdays

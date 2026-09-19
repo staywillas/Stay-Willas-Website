@@ -627,7 +627,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ];
   } else if (villa.slug === "casa-de-reva" || villa.slug === "terra-cotta-villa") {
     titleText = "Casa De Reva | 4 BHK Luxury Villa in Panchgani with Private Pool | Stay Willas";
-    descText = "Book Casa De Reva in Panchgani — a premier 4 BHK private pool sanctuary featuring terracotta architecture, hillside gazebo, mountain views, and on-demand chef service. Direct bookings from ₹14,000/night.";
+    descText = "Book Casa De Reva in Panchgani — a premier 4 BHK private pool sanctuary featuring terracotta architecture, hillside gazebo, mountain views, and on-demand chef service. Direct bookings from ₹16,000/night.";
     keywordsList = [
       "casa de reva panchgani",
       "panchgani villa with private pool",

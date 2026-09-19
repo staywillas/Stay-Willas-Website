@@ -170,101 +170,54 @@ export async function loginAction(
       return { success: false, error: "Please enter a valid email address." };
     }
 
+    if (!password || password.trim().length < 4) {
+      return { success: false, error: "Password must be at least 4 characters long." };
+    }
+
+    const redirectVal = (formData.get("redirect") as string) || "/dashboard";
+
     // Check if user exists in the database
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { email: guestEmail }
     });
 
-    const redirectVal = formData.get("redirect") as string || "/dashboard";
-
     if (!user) {
-      // 3A. Registration Phase
-      const guestName = password.trim() || "Guest Traveler";
-      const token = crypto.randomBytes(32).toString("hex");
+      // 3A. Auto-create new guest user and sign in immediately
+      const guestName = guestEmail.split("@")[0].replace(/[^a-zA-Z0-9]/g, " ");
+      const formattedName = guestName.charAt(0).toUpperCase() + guestName.slice(1);
+      const hash = hashPassword(password);
 
-      const newUser = await prisma.user.create({
-        data: {
-          email: guestEmail,
-          name: guestName,
-          role: "guest",
-          isVerified: false,
-          verificationToken: token
-        }
-      });
-
-      // Send Verification Email
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-      const verifyLink = `${appUrl}/login/verify?token=${token}${redirectVal ? `&redirect=${encodeURIComponent(redirectVal)}` : ""}`;
-
-      await sendEmail({
-        to: guestEmail,
-        subject: "Activate your Stay Willas Account",
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 24px; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h2 style="color: #1b3564; font-family: Georgia, serif; font-size: 28px; margin: 0;">Stay <span style="font-style: italic; color: #f59e0b;">Willas</span></h2>
-              <p style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 5px; font-weight: bold;">Secure Entry Gate</p>
-            </div>
-            <p style="color: #334155; font-size: 15px; line-height: 1.6;">Hi <strong>${newUser.name}</strong>,</p>
-            <p style="color: #334155; font-size: 15px; line-height: 1.6;">Thank you for choosing Stay Willas for your bespoke holiday experience. To activate your guest account, prevent fake reservation attempts, and set up your password, please click the secure link below:</p>
-            <div style="margin: 35px 0; text-align: center;">
-              <a href="${verifyLink}" style="background-color: #f59e0b; color: #0f172a; padding: 16px 36px; border-radius: 9999px; text-decoration: none; font-weight: 900; font-size: 12px; display: inline-block; text-transform: uppercase; letter-spacing: 0.15em; box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);">ACTIVATE ACCOUNT & SET PASSWORD</a>
-            </div>
-            <p style="color: #64748b; font-size: 13px; line-height: 1.6;">Once verified, you will be automatically signed in and can instantly request bespoke villa bookings with temporary holds directly connected to WhatsApp.</p>
-            <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 30px 0;" />
-            <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">Stay Willas Luxury Collection • Private Estates & Boutique Villa Staycations</p>
-          </div>
-        `
-      });
-
-      return {
-        success: true,
-        isNewUser: true,
-        message: "An activation link has been sent to your email. Please check your inbox to set up your password and secure your stay bookings!"
-      };
-    }
-
-    if (!user.isVerified) {
-      // 3B. Registered but Unverified Resend Link
-      let token = user.verificationToken;
-      if (!token) {
-        token = crypto.randomBytes(32).toString("hex");
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { verificationToken: token }
+      try {
+        user = await prisma.user.create({
+          data: {
+            email: guestEmail,
+            name: formattedName || "Guest Traveler",
+            role: "guest",
+            isVerified: true,
+            passwordHash: hash
+          }
         });
+      } catch (e: any) {
+        console.error("Failed to create guest user:", e);
+        return { success: false, error: "Unable to create account. Please try again." };
       }
-
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-      const verifyLink = `${appUrl}/login/verify?token=${token}${redirectVal ? `&redirect=${encodeURIComponent(redirectVal)}` : ""}`;
-
-      await sendEmail({
-        to: guestEmail,
-        subject: "Activate your Stay Willas Account (Reminder)",
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 24px; background-color: #ffffff;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h2 style="color: #1b3564; font-family: Georgia, serif; font-size: 28px; margin: 0;">Stay <span style="font-style: italic; color: #f59e0b;">Willas</span></h2>
-            </div>
-            <p style="color: #334155; font-size: 15px; line-height: 1.6;">Hi <strong>${user.name}</strong>,</p>
-            <p style="color: #334155; font-size: 15px; line-height: 1.6;">It looks like your email address has not been verified yet. To prevent fake bookings and finalize your registration, please activate your account and choose a security password by clicking below:</p>
-            <div style="margin: 35px 0; text-align: center;">
-              <a href="${verifyLink}" style="background-color: #f59e0b; color: #0f172a; padding: 16px 36px; border-radius: 9999px; text-decoration: none; font-weight: 900; font-size: 12px; display: inline-block; text-transform: uppercase; letter-spacing: 0.15em;">VERIFY EMAIL & SET PASSWORD</a>
-            </div>
-            <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">If you did not request this, please ignore this email.</p>
-          </div>
-        `
-      });
-
-      return {
-        success: false,
-        error: "Your guest email is not verified yet. We have resent the secure activation link to your inbox."
-      };
-    }
-
-    // 3C. Registered & Verified Guest Login
-    if (!verifyPassword(password, user.passwordHash!)) {
-      return { success: false, error: "Incorrect password. Please verify your credentials and try again." };
+    } else {
+      // 3B. User exists: if passwordHash doesn't exist, set it now
+      if (!user.passwordHash) {
+        const hash = hashPassword(password);
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            passwordHash: hash,
+            isVerified: true
+          }
+        });
+      } else {
+        // 3C. Verify existing password
+        if (!verifyPassword(password, user.passwordHash)) {
+          return { success: false, error: "Incorrect password. Please verify your credentials and try again." };
+        }
+      }
     }
 
     const payload: SessionPayload = {

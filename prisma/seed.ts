@@ -287,11 +287,11 @@ Step outside onto your private poolside deck surrounded by manicured lawns and t
 Inside, the villa offers 4 spacious, elegantly furnished air-conditioned bedrooms that comfortably host up to 16 guests, complete with private attached bathrooms, high-speed Wi-Fi, and plush bedding. The sprawling living and dining hall provides ample seating for family reunions, celebrations, and intimate getaways.
 
 Located near Kaswand in Panchgani, Casa De Reva is just minutes away from Mapro Garden (4.5 km) and scenic waterfalls, offering effortless access to strawberry farms and panoramic viewpoints while remaining a peaceful private retreat.`,
-    price: 14000,
+    price: 16000,
     weekendPrice: 22000,
     fridayPrice: 18000,
     saturdayPrice: 22000,
-    sundayPrice: 14000,
+    sundayPrice: 16000,
     baseGuests: 12,
     extraGuestFee: 1000,
     guests: 16,

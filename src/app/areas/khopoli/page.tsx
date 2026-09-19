@@ -145,12 +145,12 @@ export default async function KhopoliPage() {
           {/* High-Resolution Stunning Villa Background Image */}
           <div className="absolute inset-0 z-0 select-none pointer-events-none">
             <Image 
-              src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" 
+              src="/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg" 
               alt="Luxury private pool villa in Khopoli by Stay Willas"
               fill
               priority
               quality={85}
-              className="object-cover object-center"
+              className="object-cover object-[center_75%]"
             />
             {/* Cinematic Luxury Dark Overlays */}
             <div className="absolute inset-0 bg-[#0E1B35]/70 z-10" />
@@ -307,13 +307,13 @@ export default async function KhopoliPage() {
           <section id="khopoli-signature-villa" className="py-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto scroll-mt-20">
             <div className="bg-[#FAF8F5]/90 backdrop-blur-md rounded-3xl border border-[#DAA520]/30 overflow-hidden flex flex-col shadow-2xl transform hover:scale-[1.005] transition-all duration-500">
               {/* Full Width Image Container */}
-              <div className="w-full relative aspect-[16/9] sm:aspect-[16/8.5] md:aspect-[21/9] min-h-[340px] sm:min-h-[440px] md:min-h-[520px] overflow-hidden group">
+              <div className="w-full relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[2/1] overflow-hidden group">
                 <Image 
                   src={signatureVilla.image}
                   alt="Canopy Crest Khopoli Signature Pool Villa"
                   fill
                   priority
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  className="object-cover object-[center_70%] group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
                 
@@ -467,12 +467,12 @@ export default async function KhopoliPage() {
                 By taking the Khalapur exit directly off the Mumbai-Pune Expressway, guests arrive at their private villa within 15 minutes of leaving the highway. You save significant travel time, allowing your group to start relaxing in the pool while others are still stuck in traffic.
               </p>
 
-              <div className="my-10 relative h-80 sm:h-96 w-full rounded-3xl overflow-hidden shadow-xl not-prose">
+              <div className="my-10 relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-xl not-prose">
                 <Image 
-                  src="/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg" 
+                  src="/assets/villas/canopy-crest/IMG-20260607-WA0008.jpg" 
                   alt="Canopy Crest 4 BHK large group private pool estate in Khopoli" 
                   fill 
-                  className="object-cover"
+                  className="object-cover object-center"
                 />
               </div>
 

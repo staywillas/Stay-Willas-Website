@@ -50,8 +50,14 @@ const VillaCard = ({
               fill
               sizes="(max-width: 768px) 50vw, 33vw"
               loading="lazy"
-              quality={75}
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              className={cn(
+                "object-cover transition-transform duration-700 group-hover:scale-105",
+                id.includes("canopy") 
+                  ? "object-[center_80%]" 
+                  : id.includes("willow") 
+                  ? "object-[center_70%]" 
+                  : "object-center"
+              )}
             />
             
             {/* Arrow indicator - Top Right */}
@@ -112,7 +118,7 @@ const VillaCard = ({
               <span className="text-[7.5px] sm:text-[8px] text-[#1B3564]/60 uppercase tracking-widest font-extrabold">Starting at</span>
               <span className="text-[#1B3564] text-xs sm:text-base font-black whitespace-nowrap">
                 ₹{id === "casa-de-reva" || id.includes("reva") || id.includes("terra")
-                  ? "14,000"
+                  ? "16,000"
                   : id === "lonavala-willow-peak" || id === "willow-peak" 
                   ? "17,997" 
                   : id.includes("cottage") 

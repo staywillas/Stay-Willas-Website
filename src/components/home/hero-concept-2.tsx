@@ -30,7 +30,8 @@ const VILLAS = [
     image: "/assets/villas/the-angle-house/gallery-11.webp",
     slug: "the-angle-house",
     badge: "Architectural Icon",
-    highlight: "Waterfall Pool & Jacuzzi"
+    highlight: "Waterfall Pool & Jacuzzi",
+    objectPosition: "object-center"
   },
   {
     name: "Canopy Crest",
@@ -40,15 +41,16 @@ const VILLAS = [
     weekendRate: "₹22,000",
     rating: "4.8",
     capacity: "16 Guests • 4 Beds",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
     slug: "canopy-crest",
     badge: "Hilltop Estate",
-    highlight: "Multi-Acre Heated Pool"
+    highlight: "Multi-Acre Heated Pool",
+    objectPosition: "object-[center_82%]"
   },
   {
     name: "Casa De Reva",
     location: "Panchgani, Maharashtra",
-    startingRate: "₹14,000",
+    startingRate: "₹16,000",
     rateNote: "Starting weekday tariff",
     weekendRate: "₹22,000",
     rating: "4.9",
@@ -56,7 +58,8 @@ const VILLAS = [
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
     slug: "casa-de-reva",
     badge: "Hillside Sanctuary",
-    highlight: "Private Pool & Gazebo"
+    highlight: "Private Pool & Gazebo",
+    objectPosition: "object-center"
   },
   {
     name: "Willow Peak",
@@ -69,7 +72,8 @@ const VILLAS = [
     image: "/assets/villas/willow-peak/gallery-12.webp",
     slug: "willow-peak",
     badge: "A-Frame Chalet",
-    highlight: "In-Room Jacuzzis & BBQ"
+    highlight: "In-Room Jacuzzis & BBQ",
+    objectPosition: "object-[center_72%]"
   },
 ];
 
@@ -326,7 +330,10 @@ export default function HeroConcept2() {
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
                       quality={80}
-                      className="object-cover object-top sm:object-center group-hover:scale-105 transition-transform duration-500"
+                      className={cn(
+                        "object-cover group-hover:scale-105 transition-transform duration-500",
+                        villa.objectPosition || "object-center"
+                      )}
                     />
                   </div>
                   

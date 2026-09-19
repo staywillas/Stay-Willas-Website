@@ -220,18 +220,7 @@ const nextConfig: NextConfig = {
         { key: 'Link', value: '<https://images.unsplash.com>; rel=preconnect' },
       ],
     },
-    {
-      source: '/_next/static/:path*',
-      headers: [
-        { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-      ],
-    },
-    {
-      source: '/_next/image/:path*',
-      headers: [
-        { key: 'Cache-Control', value: 'public, max-age=31536000, stale-while-revalidate=86400' },
-      ],
-    },
+
     {
       source: '/favicon.ico',
       headers: [

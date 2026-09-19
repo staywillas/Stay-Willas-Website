@@ -819,25 +819,6 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       } else {
         currentY += 4;
       }
-
-      // Bank Payment Box
-      doc.setFillColor(lightBeige[0], lightBeige[1], lightBeige[2]);
-      doc.rect(marginX, currentY, 210 - marginX * 2, 22, "F");
-      doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
-      doc.rect(marginX, currentY, 210 - marginX * 2, 22, "S");
-
-      doc.setFont("Helvetica", "bold");
-      doc.setFontSize(8);
-      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.text("PAYMENT DETAILS & BANK TRANSFER:", marginX + 4, currentY + 5);
-
-      doc.setFont("Helvetica", "normal");
-      doc.setFontSize(8);
-      doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
-      doc.text("Bank Name: HDFC Bank   |   Account Name: STAY WILLAS ENTERPRISES", marginX + 4, currentY + 10);
-      doc.text("A/C No: 50200084729103   |   IFSC Code: HDFC0000241", marginX + 4, currentY + 14.5);
-      doc.text("UPI / PhonePe / GPay: 9619042310@okbizaxis", marginX + 4, currentY + 19);
-
       // Save PDF
       doc.save(`StayWillas_Invoice_${guestName.replace(/[^a-zA-Z0-9]/g, "_") || "Guest"}.pdf`);
     } catch (err) {

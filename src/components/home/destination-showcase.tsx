@@ -14,6 +14,7 @@ export interface DestinationLocation {
   villaCountText: string;
   villasText: string;
   isComingSoon?: boolean;
+  objectPosition?: string;
 }
 
 const locations: DestinationLocation[] = [
@@ -24,14 +25,16 @@ const locations: DestinationLocation[] = [
     link: "/areas/lonavala",
     villaCountText: "2 Luxury Villas",
     villasText: "The Angle House • Willow Peak",
+    objectPosition: "object-center",
   },
   {
     id: "khopoli",
     name: "Khopoli",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
     link: "/areas/khopoli",
     villaCountText: "1 Luxury Villa",
     villasText: "Canopy Crest",
+    objectPosition: "object-[center_80%]",
   },
   {
     id: "panchgani",
@@ -40,6 +43,7 @@ const locations: DestinationLocation[] = [
     link: "/areas/panchgani",
     villaCountText: "1 Luxury Villa",
     villasText: "Casa De Reva",
+    objectPosition: "object-center",
   },
 ];
 
@@ -222,7 +226,7 @@ const DestinationShowcase = () => {
                       sizes="(max-width: 768px) 80vw, 360px"
                       priority={isCenter}
                       quality={85}
-                      className={`object-cover transition-transform duration-500 ease-out ${
+                      className={`object-cover ${loc.objectPosition || "object-center"} transition-transform duration-500 ease-out ${
                         isCenter ? "scale-105" : "scale-100"
                       }`}
                     />

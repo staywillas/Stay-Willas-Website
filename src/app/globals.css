@@ -537,3 +537,46 @@ html {
   will-change: transform;
   backface-visibility: hidden;
 }
+
+/* ── Mobile & iOS Performance Optimizations ─────────────────── */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Eliminate iOS 300ms tap delay and highlight flashing on touch */
+a, button, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS momentum scrolling */
+.overflow-y-auto, .overflow-x-auto, .overflow-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent iOS Safari aggressive auto-zoom on input focus */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Smooth GPU rendering for below-the-fold content */
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+
+/* iOS Safe Area Inset Support for Notch / Home Indicator */
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}

@@ -1,4 +1,4 @@
-﻿import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest, NextFetchEvent } from "next/server";
 
@@ -22,8 +22,17 @@ const clerkHandler = clerkMiddleware(async (auth, req) => {
     }
   }
 
-  if (isProtectedRoute(req)) {
-    await auth.protect();
+  // If user has a valid staywillas_session cookie, allow immediate access
+  const staywillasSession = req.cookies.get("staywillas_session")?.value;
+
+  if (isProtectedRoute(req) && !staywillasSession) {
+    try {
+      await auth.protect();
+    } catch {
+      return NextResponse.redirect(
+        new URL(`/login?role=guest&redirect=${encodeURIComponent(pathname)}`, req.url)
+      );
+    }
   }
 });
 
@@ -33,8 +42,16 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
   // Next.js 16 compatibility: Clerk's decorateRequest sets x-middleware-rewrite to req.url
   // to pass request headers. In Next.js 16, self-rewriting results in a 404 router bailout.
   if (res && res.headers.has("x-middleware-rewrite")) {
-    const rewriteHeader = res.headers.get("x-middleware-rewrite");
-    if (rewriteHeader === request.url || rewriteHeader === request.nextUrl.pathname) {
+    const rewriteHeader = res.headers.get("x-middleware-rewrite") || "";
+    const cleanRewrite = rewriteHeader.replace(/\/$/, "");
+    const cleanUrl = request.url.replace(/\/$/, "");
+    const cleanPath = request.nextUrl.pathname.replace(/\/$/, "") || "/";
+    if (
+      cleanRewrite === cleanUrl || 
+      rewriteHeader === cleanPath || 
+      rewriteHeader === request.nextUrl.pathname ||
+      cleanRewrite === request.nextUrl.origin + cleanPath
+    ) {
       res.headers.delete("x-middleware-rewrite");
       res.headers.set("x-middleware-next", "1");
     }
