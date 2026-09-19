@@ -108,7 +108,7 @@ export default function HeroConcept2() {
             
 
             {/* Grand Editorial Headline */}
-            <h1 className="text-3xl xs:text-[38px] sm:text-5xl md:text-6xl lg:text-[64px] leading-[1.08] tracking-tight mb-3 sm:mb-4">
+            <div className="text-3xl xs:text-[38px] sm:text-5xl md:text-6xl lg:text-[64px] leading-[1.08] tracking-tight mb-3 sm:mb-4">
               <span className="font-heading font-semibold text-slate-900 tracking-[-0.03em] block">
                 Beyond the stay.
               </span>
@@ -118,7 +118,7 @@ export default function HeroConcept2() {
               >
                 Into the memories.
               </span>
-            </h1>
+            </div>
 
             {/* Subtext */}
             <p className="text-slate-600/90 text-xs sm:text-[15px] md:text-base leading-relaxed mb-4 sm:mb-6 max-w-lg font-normal tracking-wide">

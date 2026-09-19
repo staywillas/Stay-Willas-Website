@@ -134,9 +134,9 @@ const Footer = () => {
               {[
                 { name: "All Stays", href: "/villas" },
                 { name: "Destinations Hub", href: "/destinations" },
-                { name: "Villas in Lonavala with Private Pool", href: "/villas-in-lonavala-with-private-pool" },
-                { name: "Khopoli Villas with Private Pool", href: "/khopoli-villas" },
-                { name: "Villas in Panchgani with Private Pool", href: "/villas-in-panchgani-with-private-pool" },
+                { name: "Villas in Lonavala with Private Pool", href: "/areas/lonavala" },
+                { name: "Khopoli Villas with Private Pool", href: "/areas/khopoli" },
+                { name: "Villas in Panchgani with Private Pool", href: "/areas/panchgani" },
                 { name: "Experiences", href: "/experiences" },
                 { name: "Guest Stories", href: "/stories" }
               ].map((link) => (
@@ -151,16 +151,15 @@ const Footer = () => {
 
           {/* Column 3: Sitelinks & Popular Collections */}
           <div className="md:col-span-2">
-            <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Destination Hubs</h4>
+            <h4 className="font-heading text-lg mb-8 tracking-wider text-white font-bold">Signature Villas</h4>
             <ul className="flex flex-col gap-4">
               {[
-                { name: "Lonavala Area Guide", href: "/areas/lonavala" },
-                { name: "Khopoli Nature Guide", href: "/areas/khopoli" },
-                { name: "Panchgani Hillside Guide", href: "/areas/panchgani" },
-                { name: "Weekend Getaways Near Mumbai", href: "/villas" },
                 { name: "The Angle House (Lonavala)", href: "/villa/the-angle-house" },
                 { name: "Canopy Crest (Khopoli)", href: "/villa/canopy-crest" },
+                { name: "Willow Peak (Kurvande)", href: "/villa/willow-peak" },
                 { name: "Casa De Reva (Panchgani)", href: "/villa/casa-de-reva" },
+                { name: "Group Stays & Celebrations", href: "/escape" },
+                { name: "Partner With Us", href: "/partner" }
               ].map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-[#FAF8F5]/60 hover:text-[#DAA520] transition-colors duration-300 text-sm font-medium">

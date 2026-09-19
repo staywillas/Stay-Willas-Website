@@ -125,6 +125,11 @@ const nextConfig: NextConfig = {
       permanent: true,
     },
     {
+      source: '/villas-in-panchgani-with-private-pool',
+      destination: '/areas/panchgani',
+      permanent: true,
+    },
+    {
       source: '/areas/pawna',
       destination: '/areas/lonavala',
       permanent: true,

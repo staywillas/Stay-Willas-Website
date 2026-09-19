@@ -23,7 +23,7 @@ export const homeSitelinksData: SitelinkItem[] = [
     title: "Lonavala Villa Pool",
     line1: "Top villas in Lonavala with private pool",
     line2: "What makes The Angle House one of the top villas with private pool...",
-    href: "/villas-in-lonavala-with-private-pool",
+    href: "/areas/lonavala",
     badge: "Private Pool",
     image: "/images/sitelinks/angle-house-pool-exact.webp",
   },

@@ -582,10 +582,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   let keywordsList = [`${villa.bedrooms} BHK private pool villa in ${city}`, `${villa.name.toLowerCase()}`, `villa in ${city.toLowerCase()}`, `private pool villa ${city.toLowerCase()}`];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "The Angle House | 3 BHK Villa in Lonavala with Private Pool | Stay Willas";
-    descText = "Book The Angle House in Kamshet, Lonavala — a 3 BHK luxury glass house villa featuring private waterfall pool, master suite jacuzzi, pet-friendly fenced lawns, and in-house chef service. Direct bookings from ₹13,000/night.";
+    titleText = "The Angle House Lonavala | Glass Villa with Private Waterfall Pool & Jacuzzi | Stay Willas";
+    descText = "Book StayWillas The Angle House in Kamshet, Lonavala (also known as Angel House Lonavala). Premier 3 BHK luxury glass villa featuring a private waterfall swimming pool, master bedroom jacuzzi, pet-friendly fenced lawns, and personal chef dining. Direct bookings from ₹13,000/night.";
     keywordsList = [
+      "staywillas the angle house",
       "the angle house lonavala",
+      "the angle house with jacuzzi lonavala",
+      "angel house lonavala",
+      "staywillas the angle house reviews",
       "glass house villa lonavala",
       "the angle house kamshet",
       "3 BHK glass house villa in lonavala with private pool",
@@ -594,25 +598,32 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "jacuzzi villa lonavala"
     ];
   } else if (villa.slug === "canopy-crest") {
-    titleText = "Canopy Crest | 4 BHK Pool Villa in Khopoli | Stay Willas";
-    descText = "Book Canopy Crest in Khopoli — a sprawling 4 BHK private estate for large groups & corporate offsites featuring a 22ft private pool, charpai lawns, bonfire deck, and on-demand chef service. Direct bookings from ₹15,000/night.";
+    titleText = "StayWillas Canopy Crest Khopoli | Premium Villa with Swimming Pool Chavani";
+    descText = "Book StayWillas Canopy Crest in Chavani, Khopoli — a 4 BHK premium private pool villa estate featuring an expansive 22ft private swimming pool, sprawling charpai lawns, bonfire deck, and on-demand chef service. Direct bookings from ₹15,000/night.";
     keywordsList = [
+      "staywillas canopy crest khopoli",
       "canopy crest khopoli",
+      "premium villa with swimming pool chavani",
+      "canopy crest chavani khopoli",
+      "villas in khopoli with private pool",
       "khopoli villa with swimming pool",
       "4 BHK villa in khopoli",
       "large group villa khopoli",
-      "corporate offsite villa khopoli"
+      "staywillas canopy crest reviews"
     ];
   } else if (villa.slug === "willow-peak") {
-    titleText = "Willow Peak | A-Frame Cottages in Lonavala | Stay Willas";
-    descText = "Book Willow Peak in Kurwande, Lonavala — 3 standalone A-frame cottages (Cottage A, B, and C) with private jacuzzi baths, mountain views, garden barbecue, and scenic sit-outs. Book individual cottages or all 3 from ₹5,999/night/cottage.";
+    titleText = "Willow Peak Resort Kurvande | Luxury A-Frame Cottages with Jacuzzi Lonavala | Stay Willas";
+    descText = "Book Willow Peak Resort in Kurvande (Kurwande), Lonavala — 3 standalone Swiss-style wooden A-frame chalet cottages (Cottage A, B, and C) with private jacuzzi baths, Sahyadri mountain views, garden barbecue deck, and chef dining from ₹5,999/night.";
     keywordsList = [
+      "willow peak resort kurvande",
       "willow peak lonavala",
+      "willow peak resort lonavala",
       "a-frame cottage lonavala",
       "cottage stay in kurwande lonavala",
       "jacuzzi cottage lonavala",
       "a frame villa lonavala",
-      "couples villa with jacuzzi lonavala"
+      "couples villa with jacuzzi lonavala",
+      "resort in kurvande lonavala"
     ];
   } else if (villa.slug.startsWith("willow-peak-cottage")) {
     const letter = villa.slug.replace("willow-peak-cottage-", "").toUpperCase();
@@ -824,44 +835,60 @@ export default async function VillaDetailPage({ params }: PageProps) {
   const villaFaqsMap: Record<string, { question: string; answer: string }[]> = {
     "the-angle-house": [
       {
-        question: "Does The Angle House in Lonavala have a private pool?",
-        answer: "Yes, The Angle House features a private swimming pool with a soothing waterfall feature, outdoor lounging spaces, and comfortable chairs."
+        question: "Does The Angle House in Lonavala have a private pool and jacuzzi?",
+        answer: "Yes, The Angle House features a private swimming pool with a soothing waterfall feature, outdoor lounging deck, as well as a private master suite jacuzzi bath overlooking scenic mountain trees."
+      },
+      {
+        question: "Is The Angle House also known as Angel House Lonavala?",
+        answer: "Yes, guests frequently refer to The Angle House as 'Angel House Lonavala' due to its iconic triangular geometric glass facade architecture in Kamshet, Lonavala."
+      },
+      {
+        question: "Where can I read verified reviews for StayWillas The Angle House?",
+        answer: "Verified guest reviews are featured directly on this page, rated 4.9/5 stars for our heated jacuzzi, clean waterfall pool, and chef Kailash's delicious home-style multi-cuisine meals."
       },
       {
         question: "Is Jain food available at The Angle House?",
-        answer: "Absolutely. The Angle House offers in-house private chef services that can prepare customized veg-only and Jain food spreads in separate kitchen setups."
+        answer: "Absolutely. The Angle House offers in-house private chef services that prepare customized veg-only and Jain food spreads in separate kitchen setups."
       },
       {
         question: "What is the guest capacity of The Angle House?",
-        answer: "The Angle House can comfortably host up to 16 guests, making it ideal for family reunions, birthdays, and celebrations."
+        answer: "The Angle House can comfortably host up to 16 guests across 3 spacious master bedrooms, making it ideal for family reunions, birthdays, and weekend getaways."
       }
     ],
     "canopy-crest": [
       {
-        question: "Is Canopy Crest pet friendly?",
-        answer: "Yes, Canopy Crest is a fully pet-friendly private estate featuring an expansive lawn where your pets can run and play safely."
+        question: "Where is StayWillas Canopy Crest located in Khopoli?",
+        answer: "Canopy Crest is situated in scenic Chavani, Khopoli, Maharashtra (just a 15-minute scenic drive from Adlabs Imagicaa), surrounded by mist-covered mountain valleys and forest greenery."
       },
       {
-        question: "How close is Canopy Crest to Adlabs Imagica in Khopoli?",
-        answer: "Canopy Crest is located in Khopoli, Maharashtra, just a short drive from Adlabs Imagica, making it an ideal base for families visiting the theme park."
+        question: "What are the private pool details at Canopy Crest Khopoli?",
+        answer: "Canopy Crest features an expansive 22x12 ft private swimming pool with evening pool lighting, poolside deck chairs, and an outdoor shaded gazebo lounge for large groups."
+      },
+      {
+        question: "Is Canopy Crest pet friendly?",
+        answer: "Yes, Canopy Crest is a fully pet-friendly private estate featuring sprawling multi-acre charpai green lawns where your dogs and pets can run and play freely."
       },
       {
         question: "What is the guest capacity and amenities at Canopy Crest?",
-        answer: "Canopy Crest comfortably accommodates up to 16 guests across 4 bedrooms, and features a private pool (22x12 ft), spacious lawn, music system, indoor/outdoor games, and dedicated caretaker services."
+        answer: "Canopy Crest comfortably accommodates up to 16 guests across 4 master bedrooms, and features a 22ft private pool, lawn bonfire pit, music system, indoor/outdoor games, and dedicated caretaker and chef services."
       }
     ],
     "willow-peak": [
       {
-        question: "Where is Willow Peak located?",
-        answer: "Willow Peak is located in Kurwande, Lonavala, Maharashtra, enveloped in scenic mountain greenery and tranquil landscapes."
+        question: "What is Willow Peak Resort Kurvande in Lonavala?",
+        answer: "Willow Peak Resort is a boutique hill resort nestled in Kurvande (Kurwande), Lonavala. It features 3 standalone Swiss-style wooden A-frame chalets (Cottages A, B, and C), each with an ensuite private jacuzzi bath and scenic Sahyadri mountain vistas."
       },
       {
-        question: "How does booking individual cottages work at Willow Peak?",
-        answer: "Willow Peak consists of 3 individual A-frame wooden cottages: Cottage A, Cottage B, and Cottage C. Each cottage accommodates up to 4 guests and features its own private en-suite jacuzzi bath. You can book either a single standalone cottage (Cottage A, B, or C for up to 4 guests) or all 3 cottages together (up to 12 guests) to reserve the entire private estate exclusively."
+        question: "How does booking individual cottages work at Willow Peak Resort?",
+        answer: "Willow Peak consists of 3 individual A-frame wooden cottages: Cottage A, Cottage B, and Cottage C. Each cottage accommodates up to 4 guests with an en-suite jacuzzi bath. You can book either a single standalone cottage (from ₹5,999/night) or book all 3 cottages together (up to 12 guests) to reserve the entire private estate exclusively."
+      },
+      {
+        question: "Where is Willow Peak Resort located in Lonavala?",
+        answer: "Willow Peak is located in Kurvande, Lonavala, Maharashtra, near the scenic INS Shivaji road, enveloped in tranquil mountain greenery and cool hill breezes."
       },
       {
         question: "What amenities and activities are available at Willow Peak?",
-        answer: "Willow Peak offers air-conditioned A-frame cottage suites (Cottage A, B, C), private jacuzzi baths, plush king beds, Wi-Fi, TV, outdoor garden dining, BBQ facilities, carrom board, and secure parking."
+        answer: "Willow Peak offers air-conditioned A-frame cottage suites, private heated jacuzzi baths, plush king beds, Wi-Fi, TV, outdoor garden dining, BBQ facilities, carrom board, and secure parking."
       }
     ],
     "casa-de-reva": [

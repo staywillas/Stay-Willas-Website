@@ -499,9 +499,11 @@ export default async function BlogDetailsPage({ params }: PageProps) {
               {section.list && section.list.length > 0 && (
                 <ul className="list-disc list-inside space-y-4 bg-[#FAF8F5] p-6 sm:p-8 rounded-3xl border border-[#DAA520]/25 my-8 text-slate-800 text-base md:text-lg lg:text-xl font-normal leading-relaxed shadow-sm">
                   {section.list.map((item, lIdx) => (
-                    <li key={lIdx} className="leading-relaxed">
-                      {item}
-                    </li>
+                    <li 
+                      key={lIdx} 
+                      className="leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: item }}
+                    />
                   ))}
                 </ul>
               )}

@@ -948,7 +948,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           </p>
           <div className="pt-2">
             <Link 
-              href="/villas-in-lonavala-with-private-pool"
+              href="/areas/lonavala"
               className="inline-flex items-center gap-2 text-sm font-bold text-[#DAA520] hover:text-white underline transition-colors"
             >
               Explore villas in Lonavala with private pools <ArrowRight size={16} />

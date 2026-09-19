@@ -25,31 +25,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}/escape`,
       lastModified: currentDate,
       changeFrequency: "weekly",
-      priority: 0.95,
-    },
-    {
-      url: `${BASE_URL}/villas-in-lonavala-with-private-pool`,
-      lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 0.95,
-    },
-    {
-      url: `${BASE_URL}/khopoli-villas`,
-      lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 0.95,
-    },
-    {
-      url: `${BASE_URL}/villas-in-panchgani-with-private-pool`,
-      lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 0.95,
+      priority: 0.9,
     },
     {
       url: `${BASE_URL}/areas`,
       lastModified: currentDate,
       changeFrequency: "daily",
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${BASE_URL}/destinations`,
@@ -123,18 +105,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${BASE_URL}/areas/${region}`,
     lastModified: currentDate,
     changeFrequency: "daily" as const,
-    priority: 0.9,
+    priority: region === "lonavala" ? 0.98 : 0.95,
   }));
 
   // 3. Blog Post & Travel Guide Sitelinks
+  const highPriorityBlogs = new Set([
+    "lonavala-vs-khandala-villa-comparison",
+    "lonavala-villa-willow-peak-staycation-guide",
+    "affordable-villa-lonavala-willow-peak-budget-luxury"
+  ]);
   const blogRoutes: MetadataRoute.Sitemap = blogsData.map((blog) => ({
     url: `${BASE_URL}/blog/${blog.slug}`,
     lastModified: new Date(blog.date),
-    changeFrequency: "monthly" as const,
-    priority: 0.75,
+    changeFrequency: "weekly" as const,
+    priority: highPriorityBlogs.has(blog.slug) ? 0.92 : 0.75,
   }));
 
   // 4. Dynamic Villa Estate Sitelinks from Database
+  const topVillaSlugs = new Set(["the-angle-house", "canopy-crest", "willow-peak"]);
   let villaRoutes: MetadataRoute.Sitemap = [];
   try {
     const villas = await prisma.villa.findMany({
@@ -143,32 +131,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     villaRoutes = villas.map((villa) => ({
       url: `${BASE_URL}/villa/${villa.slug}`,
       lastModified: villa.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.9,
+      changeFrequency: "daily" as const,
+      priority: topVillaSlugs.has(villa.slug) ? 0.98 : 0.9,
     }));
   } catch {
     // If DB is unavailable during build, fallback to known core villas
     villaRoutes = [
       {
-        url: `${BASE_URL}/villa/casa-de-reva`,
-        lastModified: currentDate,
-        changeFrequency: "weekly" as const,
-        priority: 0.9,
-      },
-      {
         url: `${BASE_URL}/villa/the-angle-house`,
         lastModified: currentDate,
-        changeFrequency: "weekly" as const,
-        priority: 0.9,
+        changeFrequency: "daily" as const,
+        priority: 0.98,
       },
       {
         url: `${BASE_URL}/villa/canopy-crest`,
         lastModified: currentDate,
-        changeFrequency: "weekly" as const,
-        priority: 0.9,
+        changeFrequency: "daily" as const,
+        priority: 0.98,
       },
       {
         url: `${BASE_URL}/villa/willow-peak`,
+        lastModified: currentDate,
+        changeFrequency: "daily" as const,
+        priority: 0.98,
+      },
+      {
+        url: `${BASE_URL}/villa/casa-de-reva`,
         lastModified: currentDate,
         changeFrequency: "weekly" as const,
         priority: 0.9,
