@@ -28,6 +28,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.95,
     },
     {
+      url: `${BASE_URL}/villas-in-lonavala-with-private-pool`,
+      lastModified: currentDate,
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/khopoli-villas`,
+      lastModified: currentDate,
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/villas-in-panchgani-with-private-pool`,
+      lastModified: currentDate,
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
       url: `${BASE_URL}/areas`,
       lastModified: currentDate,
       changeFrequency: "daily",

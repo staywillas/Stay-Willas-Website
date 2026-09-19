@@ -34,52 +34,52 @@ const canopyCrestFeatures: FeatureMarqueeItem[] = [
     title: "22x12 Ft Private Swimming Pool",
     badge: "Massive Pool",
     description: "Expansive private swimming pool designed for large group staycations & pool parties.",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
   },
   {
     id: 2,
     title: "Sprawling Charpai Green Lawns",
     badge: "Multi-Acre Lawn",
     description: "Open manicured lawns with traditional charpai seating for cricket & outdoor sports.",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0012.jpg",
   },
   {
     id: 3,
     title: "4 Master BHK Bedroom Suites",
     badge: "Group Capacity",
     description: "Spacious master suites accommodating up to 16 guests with 5 bathrooms.",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0018.jpg",
   },
   {
     id: 4,
     title: "Outdoor Gazebo & Evening Lounge",
     badge: "Outdoor Lounge",
     description: "Shaded gazebo lounge & dedicated bonfire pit for evening gatherings under the stars.",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0010.jpg",
   },
   {
     id: 5,
     title: "Indoor Games & Music Lounge",
     badge: "Entertainment",
     description: "Carrom board, indoor games & sound system for corporate offsites and family games.",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0008.jpg",
   },
   {
     id: 6,
     title: "In-House Dedicated Chef Dining",
     badge: "Fresh Dining",
     description: "Freshly cooked multi-cuisine meal packages for large group celebrations.",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
+    image: "/assets/villas/canopy-crest/IMG-20260607-WA0013.jpg",
   },
 ];
 
 const canopyCrestShowcaseImages = [
-  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg", title: "22x12 Ft Private Swimming Pool", tag: "Massive Pool" },
-  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg", title: "Charpai Green Lawns", tag: "Multi-Acre" },
-  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg", title: "Spacious 4 BHK Master Suites", tag: "Capacity 16 Guests" },
-  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg", title: "Outdoor Gazebo & Bonfire Pit", tag: "Evening Lounge" },
-  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg", title: "Indoor Games & Music Lounge", tag: "Entertainment" },
-  { url: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg", title: "In-House Gourmet Dining", tag: "Chef Service" },
+  { url: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg", title: "22x12 Ft Private Swimming Pool", tag: "Massive Pool" },
+  { url: "/assets/villas/canopy-crest/IMG-20260607-WA0012.jpg", title: "Charpai Green Lawns", tag: "Multi-Acre" },
+  { url: "/assets/villas/canopy-crest/IMG-20260607-WA0018.jpg", title: "Spacious 4 BHK Master Suites", tag: "Capacity 16 Guests" },
+  { url: "/assets/villas/canopy-crest/IMG-20260607-WA0010.jpg", title: "Outdoor Gazebo & Bonfire Pit", tag: "Evening Lounge" },
+  { url: "/assets/villas/canopy-crest/IMG-20260607-WA0008.jpg", title: "Indoor Games & Music Lounge", tag: "Entertainment" },
+  { url: "/assets/villas/canopy-crest/IMG-20260607-WA0013.jpg", title: "In-House Gourmet Dining", tag: "Chef Service" },
 ];
 
 const canopyCrestReviews = [
@@ -135,7 +135,7 @@ export const metadata: Metadata = {
     locale: "en_IN",
     images: [
       {
-        url: "https://www.staywillas.com/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+        url: "https://www.staywillas.com/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
         width: 1200,
         height: 630,
         alt: "Canopy Crest — Khopoli Villas for Groups",
@@ -147,7 +147,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Khopoli Villas for Groups | Stay Willas",
     description: "Experience the Monsoon Escape at Canopy Crest in Khopoli. Stay 2 nights & save more on weekdays.",
-    images: ["https://www.staywillas.com/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg"],
+    images: ["https://www.staywillas.com/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg"],
   },
 };
 
@@ -258,7 +258,7 @@ export default async function KhopoliGroupEstatePage() {
         <section className="relative pt-36 pb-16 md:pt-52 md:pb-28 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/15 text-center flex flex-col items-center">
           <div className="absolute inset-0 -z-10">
             <Image 
-              src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" 
+              src="/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg" 
               alt="Canopy Crest - Premier khopoli villas with private pool" 
               fill 
               priority 
