@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
   },
   redirects: async () => [
     {
+      source: '/booking-experience',
+      destination: '/bookingexperience',
+      permanent: true,
+    },
+    {
       source: '/test2',
       destination: '/',
       permanent: true,

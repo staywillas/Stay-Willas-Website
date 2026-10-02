@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
-import { Menu, X, User, Phone, ChevronDown, ChevronRight, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen, Flame, ShieldCheck } from "lucide-react";
+import { Menu, X, User, Phone, ChevronDown, ChevronRight, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen, Flame, ShieldCheck, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
@@ -252,6 +252,10 @@ const Navbar = () => {
               <div className="glass-premium border border-yellow-200/50 rounded-2xl p-6 min-w-[200px] shadow-xl shadow-yellow-900/5">
                 <div className="flex flex-col gap-4">
                   <Link href="/about" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">About</Link>
+                  <Link href="/bookingexperience" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors flex items-center justify-between group/booking">
+                    <span>Booking Experience</span>
+                    <span className="text-[9px] bg-amber-500/15 text-amber-700 px-2 py-0.5 rounded-full font-black uppercase tracking-wider group-hover/booking:bg-[#DAA520] group-hover/booking:text-white transition-colors">4 Options</span>
+                  </Link>
                   <Link href="/destinations" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Destinations</Link>
                   <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Group Stays in Lonavala</Link>
                   <Link href="/partner" className="text-[14px] font-bold text-[#1B3564] hover:text-[#559C24] tracking-wide transition-colors flex items-center justify-between group/partner">
@@ -689,6 +693,21 @@ const Navbar = () => {
                     COMPANY & MORE
                   </p>
                   <div className="flex flex-col gap-0.5">
+                    <Link
+                      href="/bookingexperience"
+                      className={cn(
+                        "flex items-center gap-2.5 py-1.5 px-2.5 rounded-xl transition-all duration-200 text-[12px]",
+                        pathname === "/bookingexperience" ? "text-[#DAA520] font-bold" : "text-[#FAF8F5]/80 hover:text-[#DAA520]"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Compass size={14} className="text-[#DAA520]" />
+                      <div className="flex items-center justify-between w-full">
+                        <span>Booking Experience</span>
+                        <span className="text-[9px] bg-[#DAA520] text-[#1B3564] font-black px-1.5 py-0.2 rounded-full">4 Options</span>
+                      </div>
+                    </Link>
+
                     <Link
                       href="/about"
                       className={cn(

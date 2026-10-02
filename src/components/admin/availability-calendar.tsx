@@ -854,6 +854,35 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       doc.setTextColor(targetBalanceDue <= 0 ? 34 : 180, targetBalanceDue <= 0 ? 139 : 40, targetBalanceDue <= 0 ? 34 : 40);
       doc.text(`Balance Due on Check-In: ${targetBalanceDue <= 0 ? "PAID IN FULL" : `Rs. ${targetBalanceDue.toLocaleString("en-IN")}`}`, marginX + 5, currentY + 10.5);
 
+      // Official Bank Settlement Details Box
+      currentY += 18;
+      doc.setFillColor(248, 250, 252);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 22, "F");
+      doc.setDrawColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.setLineWidth(0.3);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 22, "S");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(7.5);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("OFFICIAL SETTLEMENT ACCOUNT DETAILS (NEFT / IMPS / RTGS / UPI):", marginX + 4, currentY + 5);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(7.2);
+      doc.setTextColor(51, 65, 85);
+      doc.text("• Bank: Federal Bank", marginX + 4, currentY + 10);
+      doc.text("• Account Number: 99980100571517", marginX + 45, currentY + 10);
+      doc.text("• Account Name: Sushant Girish Chandra Tiwari", marginX + 115, currentY + 10);
+
+      doc.text("• Branch: Kalyan", marginX + 4, currentY + 15);
+      doc.text("• IFSC Code: FDRL0001542", marginX + 45, currentY + 15);
+      doc.text("• VPA / UPI ID: sushant650@federal", marginX + 115, currentY + 15);
+
+      doc.setFont("Helvetica", "italic");
+      doc.setFontSize(6.8);
+      doc.setTextColor(100, 116, 139);
+      doc.text("MMID: 9049517  |  Please share payment screenshot / UTR to WhatsApp (+91 96190 42310) for instant reconciliation.", marginX + 4, currentY + 19.5);
+
       // Save PDF to browser
       const cleanFileName = `StayWillas_Invoice_${targetGuestName.replace(/[^a-zA-Z0-9]/g, "_")}_${invoiceNum}.pdf`;
       doc.save(cleanFileName);
@@ -1539,15 +1568,21 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                             <span>🏡</span> Willow Peak Cottage Selection:
                           </span>
                           <span className="bg-[#1B3564] text-[#DAA520] px-2.5 py-0.5 rounded-full text-[10px] font-black">
-                            {cottageSelection === "ALL" ? "All 3 Cottages (Full Estate)" : `Cottage ${cottageSelection} (1 Cottage)`}
+                            {cottageSelection === "ALL" 
+                              ? "All 3 Cottages (Breeze, Crest & Heaven)" 
+                              : cottageSelection === "A" 
+                              ? "Breeze (Cottage A)" 
+                              : cottageSelection === "B" 
+                              ? "Crest (Cottage B)" 
+                              : "Heaven (Cottage C)"}
                           </span>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                           {[
-                            { id: "A", label: "Cottage A", sub: "Max 4 Guests" },
-                            { id: "B", label: "Cottage B", sub: "Max 4 Guests" },
-                            { id: "C", label: "Cottage C", sub: "Max 4 Guests" },
-                            { id: "ALL", label: "All 3 Cottages", sub: "Max 12 Guests" },
+                            { id: "A", label: "Breeze", sub: "Max 4 Guests" },
+                            { id: "B", label: "Crest", sub: "Max 4 Guests" },
+                            { id: "C", label: "Heaven", sub: "Max 4 Guests" },
+                            { id: "ALL", label: "All 3 Cottages", sub: "Breeze, Crest, Heaven" },
                           ].map((item) => {
                             const isSel = cottageSelection === item.id;
                             return (

@@ -138,7 +138,7 @@ const VillaCard = ({
           <div className="w-full">
             <Link
               href={`/villa/${id}#booking-card-section`}
-              className="w-full bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white py-2.5 px-3 rounded-xl text-[11px] sm:text-xs font-black tracking-wider uppercase transition-all duration-200 flex items-center justify-center text-center shadow-xs cursor-pointer active:scale-95"
+              className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-2.5 px-3 rounded-xl text-[11px] sm:text-xs font-black tracking-wider uppercase transition-all duration-200 flex items-center justify-center text-center shadow-[0_4px_15px_rgba(224,83,76,0.3)] hover:shadow-[0_6px_20px_rgba(224,83,76,0.45)] cursor-pointer active:scale-95 border border-white/20"
             >
               Dates &amp; Rates
             </Link>

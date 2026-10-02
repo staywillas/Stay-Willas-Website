@@ -248,22 +248,33 @@ export default function BookingModalFlow({
             <div className="flex items-center justify-between text-[11px] font-bold text-[#1B3564]">
               <span>Select Villa Unit:</span>
               <span className="text-[#DAA520] font-black">
-                {cottageSelection === "ALL" ? "Full Estate (12 Guests)" : `Cottage ${cottageSelection} (4 Guests)`}
+                {cottageSelection === "ALL" 
+                  ? "Full Estate: Breeze + Crest + Heaven (12 Guests)" 
+                  : cottageSelection === "A" 
+                  ? "Breeze (Cottage A - 4 Guests)" 
+                  : cottageSelection === "B" 
+                  ? "Crest (Cottage B - 4 Guests)" 
+                  : "Heaven (Cottage C - 4 Guests)"}
               </span>
             </div>
             <div className="grid grid-cols-4 gap-1.5">
-              {(["A", "B", "C", "ALL"] as const).map((opt) => (
+              {[
+                { key: "A", label: "Breeze" },
+                { key: "B", label: "Crest" },
+                { key: "C", label: "Heaven" },
+                { key: "ALL", label: "All 3" }
+              ].map((item) => (
                 <button
-                  key={opt}
+                  key={item.key}
                   type="button"
-                  onClick={() => setCottageSelection(opt)}
-                  className={`py-2 text-[11px] font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
-                    cottageSelection === opt
+                  onClick={() => setCottageSelection(item.key as any)}
+                  className={`py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
+                    cottageSelection === item.key
                       ? "bg-[#1B3564] text-white shadow-md scale-[1.02]"
                       : "bg-white text-slate-700 border border-slate-200 hover:border-[#1B3564]/40"
                   }`}
                 >
-                  {opt === "ALL" ? "All 3" : `Cottage ${opt}`}
+                  {item.label}
                 </button>
               ))}
             </div>
@@ -295,18 +306,18 @@ export default function BookingModalFlow({
           <button
             type="button"
             onClick={handleOpenLeadGate}
-            className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-4 px-6 rounded-2xl text-xs sm:text-sm font-black tracking-[0.15em] uppercase transition-all duration-300 shadow-[0_8px_30px_rgba(27,53,100,0.3)] hover:shadow-[0_12px_40px_rgba(27,53,100,0.45)] hover:scale-[1.01] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer border border-[#DAA520]/40"
+            className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-4 px-6 rounded-2xl text-xs sm:text-sm font-black tracking-[0.15em] uppercase transition-all duration-300 shadow-[0_8px_30px_rgba(224,83,76,0.38)] hover:shadow-[0_12px_40px_rgba(224,83,76,0.5)] hover:scale-[1.01] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer border border-white/25"
           >
-            <Sparkles size={16} className="text-[#DAA520]" />
+            <Sparkles size={16} className="text-amber-200" />
             <span>Book {villaName}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setIsAvailabilityModalOpen(true)}
-            className="w-full bg-white hover:bg-slate-50 text-[#1B3564] py-3.5 px-4 rounded-2xl text-xs font-bold tracking-wider uppercase transition-all border border-slate-200 hover:border-[#1B3564]/40 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-white hover:bg-rose-50/50 text-[#C9332C] py-3.5 px-4 rounded-2xl text-xs font-bold tracking-wider uppercase transition-all border border-rose-200/80 hover:border-[#E0534C]/60 flex items-center justify-center gap-2 cursor-pointer"
           >
-            <CalendarIcon size={14} className="text-[#DAA520]" />
+            <CalendarIcon size={14} className="text-[#E0534C]" />
             <span>View Availability Calendar</span>
           </button>
         </div>
@@ -432,10 +443,10 @@ export default function BookingModalFlow({
               {/* Submit CTA */}
               <button
                 type="submit"
-                className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-4 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-[0.16em] transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer border border-[#DAA520]/40 mt-2 active:scale-[0.99]"
+                className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-4 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-[0.16em] transition-all shadow-[0_8px_25px_rgba(224,83,76,0.35)] hover:shadow-[0_12px_35px_rgba(224,83,76,0.45)] flex items-center justify-center gap-2 cursor-pointer border border-white/20 mt-2 active:scale-[0.99]"
               >
                 <span>Continue to Booking Panel</span>
-                <ArrowRight size={16} className="text-[#DAA520]" />
+                <ArrowRight size={16} className="text-white" />
               </button>
             </form>
           </div>
@@ -623,9 +634,9 @@ export default function BookingModalFlow({
                 setIsAvailabilityModalOpen(false);
                 handleOpenLeadGate();
               }}
-              className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_8px_25px_rgba(224,83,76,0.35)] hover:shadow-[0_12px_35px_rgba(224,83,76,0.45)] flex items-center justify-center gap-2 cursor-pointer border border-white/20 active:scale-[0.99]"
             >
-              <Sparkles size={14} className="text-[#DAA520]" />
+              <Sparkles size={14} className="text-amber-200" />
               <span>Proceed to Reserve Dates</span>
             </button>
           </div>

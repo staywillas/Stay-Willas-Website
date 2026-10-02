@@ -457,22 +457,26 @@ export async function cancelBooking(bookingId: string) {
 
 export async function checkAvailableVillasForDates(data: {
   destination?: string;
+  villaSlug?: string;
   checkIn?: string;
   checkOut?: string;
   guests?: number;
 }) {
   try {
-    const region = data.destination && data.destination !== "all" ? data.destination.trim() : "";
+    const region = data.destination && data.destination !== "all" && data.destination !== "All Locations" ? data.destination.trim() : "";
+    const specificSlug = data.villaSlug && data.villaSlug !== "all" ? data.villaSlug.trim() : "";
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 
     // Helper: extract UTC date-only stamp (ignoring time/timezone)
     const toUTCDay = (d: Date) => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
 
-    console.log("[Availability] Search request:", { region: region || "ALL", checkIn: data.checkIn, checkOut: data.checkOut, guests: data.guests });
+    console.log("[Availability] Search request:", { region: region || "ALL", villaSlug: specificSlug || "ALL", checkIn: data.checkIn, checkOut: data.checkOut, guests: data.guests });
 
-    // 1. Query ALL villas (filtered by location only if specific destination is passed)
+    // 1. Query ALL villas (filtered by location or specific slug)
     const whereClause: any = {};
-    if (region) {
+    if (specificSlug) {
+      whereClause.slug = specificSlug;
+    } else if (region) {
       whereClause.location = { contains: region, mode: "insensitive" };
     }
 
@@ -749,4 +753,127 @@ export async function createAwaitingVerificationBooking(data: {
     return { success: false, error: error.message || "Failed to submit booking for verification." };
   }
 }
+
+/**
+ * Retrieves full villa pricing, bookings, and configuration for Homepage Quick Booking Modal
+ */
+export async function getVillaBookingDetails(slugOrId: string) {
+  try {
+    let villa = await prisma.villa.findUnique({
+      where: { slug: slugOrId },
+      include: {
+        dailyPrices: true,
+        seasonalPrices: true,
+      },
+    });
+
+    if (!villa) {
+      villa = await prisma.villa.findUnique({
+        where: { id: slugOrId },
+        include: {
+          dailyPrices: true,
+          seasonalPrices: true,
+        },
+      });
+    }
+
+    if (!villa) {
+      return { success: false, error: "Villa not found" };
+    }
+
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+    const isWillowCottage = villa.slug.startsWith("willow-peak-cottage");
+    const isWillowEntire = villa.slug === "willow-peak";
+
+    let relatedVillaIds = [villa.id];
+    if (isWillowCottage) {
+      const entireEstate = await prisma.villa.findFirst({ where: { slug: "willow-peak" } });
+      if (entireEstate) relatedVillaIds.push(entireEstate.id);
+    } else if (isWillowEntire) {
+      const allWillow = await prisma.villa.findMany({
+        where: {
+          OR: [
+            { slug: "willow-peak" },
+            { slug: { startsWith: "willow-peak-cottage" } }
+          ]
+        },
+        select: { id: true }
+      });
+      relatedVillaIds = allWillow.map(v => v.id);
+    }
+
+    const activeBookings = await prisma.booking.findMany({
+      where: {
+        villaId: { in: relatedVillaIds },
+        status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] },
+        OR: [
+          { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+          { status: "HELD", createdAt: { gte: tenMinutesAgo } }
+        ]
+      },
+      select: {
+        checkIn: true,
+        checkOut: true,
+        status: true,
+        userId: true,
+      }
+    });
+
+    const serializedBookings = activeBookings.map(b => {
+      let cottagesCount = 1;
+      try {
+        if (b.userId && b.userId.startsWith('{')) {
+          const parsed = JSON.parse(b.userId);
+          if (parsed.cottagesCount) cottagesCount = parsed.cottagesCount;
+          else if (parsed.guests) cottagesCount = Math.max(1, Math.min(3, Math.ceil(parsed.guests / 4)));
+        }
+      } catch (e) {}
+
+      return {
+        checkIn: b.checkIn.toISOString(),
+        checkOut: b.checkOut.toISOString(),
+        status: b.status,
+        cottagesCount,
+      };
+    });
+
+    return {
+      success: true,
+      villa: {
+        id: villa.id,
+        name: villa.name,
+        slug: villa.slug,
+        price: villa.price,
+        weekendPrice: villa.weekendPrice,
+        fridayPrice: villa.fridayPrice,
+        saturdayPrice: villa.saturdayPrice,
+        sundayPrice: villa.sundayPrice,
+        dailyPrices: villa.dailyPrices.map(dp => ({
+          id: dp.id,
+          villaId: dp.villaId,
+          date: dp.date instanceof Date ? dp.date.toISOString() : dp.date,
+          price: dp.price,
+        })),
+        seasonalPrices: villa.seasonalPrices.map(sp => ({
+          id: sp.id,
+          villaId: sp.villaId,
+          startDate: sp.startDate instanceof Date ? sp.startDate.toISOString() : sp.startDate,
+          endDate: sp.endDate instanceof Date ? sp.endDate.toISOString() : sp.endDate,
+          price: sp.price,
+          label: sp.label,
+        })),
+        maxGuests: villa.guests,
+        baseGuests: villa.baseGuests ?? undefined,
+        extraGuestFee: villa.extraGuestFee ?? undefined,
+        location: villa.location,
+        isAngleHouse: villa.slug === "the-angle-house",
+        bookings: serializedBookings,
+      }
+    };
+  } catch (error: any) {
+    console.error("getVillaBookingDetails error:", error);
+    return { success: false, error: error.message || "Failed to fetch villa booking details." };
+  }
+}
+
 

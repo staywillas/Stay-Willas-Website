@@ -1686,12 +1686,12 @@ export const blogsData: BlogPost[] = [
       {
         heading: "3. Willow Peak: Romantic Alpine A-Frame Chalets with Private Jacuzzis",
         paragraphs: [
-          "Perched high on the scenic ridges of Kurwande near Lion's Point and Tiger's Leap, <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak</a> offers an enchanting European mountain retreat right in the heart of Maharashtra. Featuring three standalone Scandinavian-inspired A-frame wooden chalets (Cottage A, B, and C), Willow Peak is tailored for travelers seeking warmth, romance, and misty mountain seclusion.",
+          "Perched high on the scenic ridges of Kurwande near Lion's Point and Tiger's Leap, <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak</a> offers an enchanting European mountain retreat right in the heart of Maharashtra. Featuring three standalone Scandinavian-inspired A-frame wooden chalets (Breeze, Crest, and Heaven), Willow Peak is tailored for travelers seeking warmth, romance, and misty mountain seclusion.",
           "Each private A-frame chalet is crafted with handcrafted pine wood interiors, climate-controlled comfort, and an en-suite private heated bubble jacuzzi tub with dramatic views of forest-clad hills. Step onto your private wooden sit-out veranda with a steaming cup of freshly brewed coffee as the morning clouds roll through the valley.",
           "Willow Peak provides exceptional versatility among <strong>villas in Lonavala</strong>: couples can reserve an individual 1 BHK chalet starting from ₹4,999/night for an intimate anniversary escape, while friend groups and families can book all three chalets together to enjoy a private mountain estate hosting up to 12 guests. At dusk, gather around the central manicured lawn for an open-sky bonfire and live charcoal barbecue grills under a canopy of stars."
         ],
         list: [
-          "Capacity & Layout: 3 standalone A-frame wooden chalets (Cottage A, B, C) hosting 2 to 4 guests each (up to 12 total).",
+          "Capacity & Layout: 3 standalone A-frame wooden chalets (Breeze, Crest, and Heaven) hosting 2 to 4 guests each (up to 12 total).",
           "Private Wellness: En-suite heated bubble jacuzzi in every chalet overlooking Sahyadri mountain mist.",
           "High-Altitude Location: Kurwande hillside setting near Lion's Point, Tiger's Leap, and Bushi Dam.",
           "Evening Gatherings: Dedicated outdoor bonfire pit, live BBQ setup, and open-air lawn seating.",
@@ -1874,7 +1874,7 @@ export const blogsData: BlogPost[] = [
       {
         heading: "1. Architectural Elegance: A-Frame Chalets Meet Modern Luxury",
         paragraphs: [
-          "Unlike generic concrete bungalows, Willow Peak offers a distinctive alpine architectural design rarely seen in Maharashtra. Each standalone wooden A-frame chalet (Cottage A, B, and C) seamlessly blends rustic timber beams with contemporary luxury aesthetics.",
+          "Unlike generic concrete bungalows, Willow Peak offers a distinctive alpine architectural design rarely seen in Maharashtra. Each standalone wooden A-frame chalet (Breeze, Crest, and Heaven) seamlessly blends rustic timber beams with contemporary luxury aesthetics.",
           "Floor-to-ceiling glass gables flood the master bedroom suites with natural mountain light, while secluded private balconies provide uninterrupted views of morning clouds rolling across the Sahyadri ranges. Inside, temperature-controlled en-suite jacuzzi baths await you after a day of mountain hikes, offering therapeutic relaxation in complete privacy."
         ]
       },
@@ -1908,7 +1908,7 @@ export const blogsData: BlogPost[] = [
         ],
         list: [
           "Why is Willow Peak considered the best Lonavala villa for couples? Unlike large 4 BHK bungalows where couples pay for unused bedrooms, Willow Peak offers standalone A-frame chalets with private in-room jacuzzis, secluded balconies, and scenic valley views from ₹5,999/night.",
-          "Does this Lonavala villa feature private jacuzzi amenities? Yes, each of the 3 standalone chalets at Willow Peak (Cottage A, B, and C) comes with its own private en-suite hydrotherapy jacuzzi tub.",
+          "Does this Lonavala villa feature private jacuzzi amenities? Yes, each of the 3 standalone chalets at Willow Peak (Breeze, Crest, and Heaven) comes with its own private en-suite hydrotherapy jacuzzi tub.",
           "What is the total guest capacity of Willow Peak Lonavala villa? Willow Peak can comfortably accommodate 2 to 4 guests in individual cottages, or up to 12 guests when booking the entire 3-cottage private estate exclusively.",
           "How far is Willow Peak Lonavala villa from Mumbai and Pune? Willow Peak is approximately 85 km from Pune (1.5 hours drive) and 95 km from Mumbai (2 to 2.5 hours drive via the Mumbai-Pune Expressway).",
           "How can I book Willow Peak directly with zero platform fees? You can book directly on Stay Willas or connect via our WhatsApp concierge at +91 96190 42310 to enjoy 0% OTA platform fees and complimentary meal planning."
@@ -1944,7 +1944,7 @@ export const blogsData: BlogPost[] = [
         heading: "1. The Dilemma: Why Most Lonavala Villas Overcharge Small Groups",
         paragraphs: [
           "Most rental villas across Lonavala and Khandala are massive 4 BHK to 6 BHK compounds designed for 15 to 25 guests. For a couple or a family of 3 to 4, booking an entire bungalow means paying for empty bedrooms and inflated electricity surcharges.",
-          "Willow Peak solves this problem by offering 3 standalone, fully detached Swiss A-frame chalets (Cottage A, B, and C). You get complete privacy, your own private entrance, and luxury amenities at a fraction of the cost of renting an entire bungalow, making it the most sensible affordable villa in Lonavala."
+          "Willow Peak solves this problem by offering 3 standalone, fully detached Swiss A-frame chalets (Breeze, Crest, and Heaven). You get complete privacy, your own private entrance, and luxury amenities at a fraction of the cost of renting an entire bungalow, making it the most sensible affordable villa in Lonavala."
         ]
       },
       {

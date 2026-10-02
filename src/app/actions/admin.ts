@@ -1015,6 +1015,32 @@ export async function sendInvoiceEmailAction(data: {
                 </tr>
               </table>
 
+              <!-- Official Settlement Bank & UPI Details Card -->
+              <div style="background-color: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 12px; padding: 16px; margin-top: 16px;">
+                <div style="font-size: 12px; font-weight: bold; color: #1B3564; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                  Official Settlement Bank &amp; UPI Details (NEFT / IMPS / RTGS / UPI)
+                </div>
+                <table width="100%" border="0" cellpadding="4" cellspacing="0" style="font-size: 12px; color: #334155;">
+                  <tr>
+                    <td style="width: 50%;"><strong>Bank:</strong> Federal Bank</td>
+                    <td style="width: 50%;"><strong>Account Number:</strong> 99980100571517</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Beneficiary Name:</strong> Sushant Girish Chandra Tiwari</td>
+                    <td><strong>Branch:</strong> Kalyan</td>
+                  </tr>
+                  <tr>
+                    <td><strong>IFSC Code:</strong> FDRL0001542</td>
+                    <td><strong>VPA / UPI ID:</strong> sushant650@federal</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="font-size: 11px; color: #64748B; padding-top: 6px;">
+                      <strong>MMID:</strong> 9049517 &bull; Please send UTR transaction confirmation or screenshot to WhatsApp <strong>+91 9619042310</strong> for instant reconciliation.
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
               <p style="font-size: 13px; color: #64748B; margin-top: 24px; line-height: 1.5;">
                 For any modifications or assistance with your reservation, please contact our concierge team directly on WhatsApp or call <strong>+91 9619042310</strong>.
               </p>

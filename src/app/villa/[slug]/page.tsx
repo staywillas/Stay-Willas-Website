@@ -349,17 +349,17 @@ const terraCottaSpaces = [
 
 const willowPeakSpaces = [
   {
-    title: "Cottage A (A-Frame Chalet)",
+    title: "Breeze (A-Frame Chalet)",
     image: "/assets/villas/willow-peak/gallery-12.webp",
     description: "Chalet with king bed, in-room jacuzzi & garden sit-out."
   },
   {
-    title: "Cottage B (A-Frame Chalet)",
+    title: "Crest (A-Frame Chalet)",
     image: "/assets/villas/willow-peak/gallery-6.webp",
     description: "Alpine A-frame chalet with private jacuzzi & hill views."
   },
   {
-    title: "Cottage C (A-Frame Chalet)",
+    title: "Heaven (A-Frame Chalet)",
     image: "/assets/villas/willow-peak/gallery-7.webp",
     description: "Secluded mountain cottage with private jacuzzi & BBQ deck."
   },
@@ -612,10 +612,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "staywillas canopy crest reviews"
     ];
   } else if (villa.slug === "willow-peak") {
-    titleText = "Willow Peak Resort Kurvande | Luxury A-Frame Cottages with Jacuzzi Lonavala | Stay Willas";
-    descText = "Book Willow Peak Resort in Kurvande (Kurwande), Lonavala — 3 standalone Swiss-style wooden A-frame chalet cottages (Cottage A, B, and C) with private jacuzzi baths, Sahyadri mountain views, garden barbecue deck, and chef dining from ₹5,999/night.";
+    titleText = "Willow Peak Resort Kurvande | Luxury A-Frame Cottages (Breeze, Crest, Heaven) Lonavala | Stay Willas";
+    descText = "Book Willow Peak Resort in Kurvande (Kurwande), Lonavala — 3 standalone Swiss-style wooden A-frame chalet cottages (Breeze, Crest, and Heaven) with private jacuzzi baths, Sahyadri mountain views, garden barbecue deck, and chef dining from ₹5,999/night.";
     keywordsList = [
       "willow peak resort kurvande",
+      "willow peak breeze",
+      "willow peak crest",
+      "willow peak heaven",
       "willow peak lonavala",
       "willow peak resort lonavala",
       "a-frame cottage lonavala",
@@ -626,11 +629,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "resort in kurvande lonavala"
     ];
   } else if (villa.slug.startsWith("willow-peak-cottage")) {
-    const letter = villa.slug.replace("willow-peak-cottage-", "").toUpperCase();
-    titleText = `Willow Peak Cottage ${letter} | A-Frame Chalet with Jacuzzi in Lonavala | Stay Willas`;
-    descText = `Book Willow Peak Cottage ${letter} in Kurwande, Lonavala — a private 1 BHK wooden A-frame chalet featuring an ensuite jacuzzi bath, scenic mountain sit-out, and on-demand chef dining. Direct bookings from ₹5,999/night.`;
+    const letter = villa.slug.replace("willow-peak-cottage-", "").toLowerCase();
+    const cottageName = letter === "a" ? "Breeze" : letter === "b" ? "Crest" : "Heaven";
+    titleText = `${cottageName} (Willow Peak) | A-Frame Chalet with Jacuzzi in Lonavala | Stay Willas`;
+    descText = `Book ${cottageName} (Cottage ${letter.toUpperCase()} at Willow Peak) in Kurwande, Lonavala — a private 1 BHK wooden A-frame chalet featuring an ensuite jacuzzi bath, scenic mountain sit-out, and on-demand chef dining. Direct bookings from ₹5,999/night.`;
     keywordsList = [
-      `willow peak cottage ${letter.toLowerCase()} lonavala`,
+      `willow peak ${cottageName.toLowerCase()} lonavala`,
+      `willow peak cottage ${letter} lonavala`,
       "a frame cottage lonavala with jacuzzi",
       "couples cottage lonavala",
       "kurwande cottage stay",
@@ -876,11 +881,11 @@ export default async function VillaDetailPage({ params }: PageProps) {
     "willow-peak": [
       {
         question: "What is Willow Peak Resort Kurvande in Lonavala?",
-        answer: "Willow Peak Resort is a boutique hill resort nestled in Kurvande (Kurwande), Lonavala. It features 3 standalone Swiss-style wooden A-frame chalets (Cottages A, B, and C), each with an ensuite private jacuzzi bath and scenic Sahyadri mountain vistas."
+        answer: "Willow Peak Resort is a boutique hill resort nestled in Kurvande (Kurwande), Lonavala. It features 3 standalone Swiss-style wooden A-frame chalets (Breeze, Crest, and Heaven), each with an ensuite private jacuzzi bath and scenic Sahyadri mountain vistas."
       },
       {
         question: "How does booking individual cottages work at Willow Peak Resort?",
-        answer: "Willow Peak consists of 3 individual A-frame wooden cottages: Cottage A, Cottage B, and Cottage C. Each cottage accommodates up to 4 guests with an en-suite jacuzzi bath. You can book either a single standalone cottage (from ₹5,999/night) or book all 3 cottages together (up to 12 guests) to reserve the entire private estate exclusively."
+        answer: "Willow Peak consists of 3 individual A-frame wooden cottages: Breeze, Crest, and Heaven. Each cottage accommodates up to 4 guests with an en-suite jacuzzi bath. You can book either a single standalone cottage (from ₹5,999/night) or book all 3 cottages together (up to 12 guests) to reserve the entire private estate exclusively."
       },
       {
         question: "Where is Willow Peak Resort located in Lonavala?",

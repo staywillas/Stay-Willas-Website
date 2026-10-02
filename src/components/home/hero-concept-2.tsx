@@ -166,12 +166,18 @@ export default function HeroConcept2() {
 
             {/* Action Buttons (Desktop) */}
             <div className="hidden sm:flex items-center gap-3 mb-4 sm:mb-7 w-full">
+              <a
+                href="#booking-bar-section"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white font-black text-xs sm:text-sm tracking-wider uppercase px-6 py-3 sm:px-7 sm:py-3.5 rounded-full shadow-[0_8px_25px_rgba(224,83,76,0.38)] hover:shadow-[0_12px_32px_rgba(224,83,76,0.5)] transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer border border-white/20"
+              >
+                <span>⚡ Quick Book</span>
+                <ArrowRight size={14} className="stroke-[2.5]" />
+              </a>
               <Link
                 href="/villas"
-                className="inline-flex items-center justify-center gap-2 bg-[#1B3564] hover:bg-[#122344] text-[#DAA520] hover:text-white font-bold text-xs sm:text-sm tracking-wider uppercase px-6 py-3 sm:px-7 sm:py-3.5 rounded-full shadow-[0_8px_20px_rgba(27,53,100,0.22)] hover:shadow-[0_12px_28px_rgba(27,53,100,0.32)] transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 font-bold text-xs sm:text-sm tracking-wider uppercase px-5 py-3 sm:px-6 sm:py-3.5 rounded-full shadow-2xs hover:shadow-xs transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
               >
                 <span>Explore Stays</span>
-                <ArrowRight size={14} className="stroke-[2.5]" />
               </Link>
             </div>
 
@@ -214,7 +220,7 @@ export default function HeroConcept2() {
         </div>
 
         {/* 2. FLOATING MULTI-SEGMENT BOOKING & AVAILABILITY SEARCH BAR */}
-        <div className="mt-6 sm:mt-10 lg:mt-12 w-full max-w-5xl mx-auto">
+        <div className="mt-6 sm:mt-10 lg:mt-12 w-full max-w-6xl mx-auto">
           <BookingBar className="my-0 px-0 w-full" />
         </div>
 

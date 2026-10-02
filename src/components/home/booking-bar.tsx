@@ -23,7 +23,8 @@ import {
   Bath,
   Waves,
   UtensilsCrossed,
-  Phone
+  Phone,
+  Building2
 } from "lucide-react";
 import { 
   format, 
@@ -39,8 +40,9 @@ import {
   subMonths, 
   parseISO 
 } from "date-fns";
-import { getDestinationAvailability, checkAvailableVillasForDates } from "@/app/actions/booking";
+import { getDestinationAvailability, checkAvailableVillasForDates, getVillaBookingDetails } from "@/app/actions/booking";
 import { submitInquiry } from "@/app/actions/inquiry";
+import BookingCard from "@/components/villa/booking-card";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
 
@@ -78,11 +80,31 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   // Property Selection / Availability Modal State
   const [selectedDestination, setSelectedDestination] = useState<string>("All Locations");
   const [isDestinationOpen, setIsDestinationOpen] = useState(false);
+  const [selectedVillaSlug, setSelectedVillaSlug] = useState<string>("all");
+  const [selectedVillaName, setSelectedVillaName] = useState<string>("All Properties");
+  const [isVillaDropdownOpen, setIsVillaDropdownOpen] = useState(false);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [availabilityModalOpen, setAvailabilityModalOpen] = useState(false);
   const [availableVillasList, setAvailableVillasList] = useState<VillaResult[]>([]);
   const [modalLocationFilter, setModalLocationFilter] = useState<string>("ALL");
   const modalBodyRef = useRef<HTMLDivElement>(null);
+
+  const DIRECT_PROPERTIES = [
+    { slug: "all", name: "All Properties", location: "Maharashtra", rate: "From ₹4,999" },
+    { slug: "the-angle-house", name: "The Angle House", location: "Lonavala", rate: "₹13,000/nt" },
+    { slug: "canopy-crest", name: "Canopy Crest", location: "Khopoli", rate: "₹15,000/nt" },
+    { slug: "casa-de-reva", name: "Casa De Reva", location: "Panchgani", rate: "₹16,000/nt" },
+    { slug: "willow-peak", name: "Willow Peak (All 3 Cottages)", location: "Lonavala", rate: "₹17,997/nt" },
+    { slug: "willow-peak-cottage-a", name: "1. Breeze (Cottage A)", location: "Lonavala", rate: "₹4,999/nt" },
+    { slug: "willow-peak-cottage-b", name: "2. Crest (Cottage B)", location: "Lonavala", rate: "₹4,999/nt" },
+    { slug: "willow-peak-cottage-c", name: "3. Heaven (Cottage C)", location: "Lonavala", rate: "₹4,999/nt" },
+  ];
+
+  // Instant Direct Booking Modal State (Opens right on homepage!)
+  const [instantBookingModalOpen, setInstantBookingModalOpen] = useState(false);
+  const [instantBookingVilla, setInstantBookingVilla] = useState<any>(null);
+  const [isLoadingInstantVilla, setIsLoadingInstantVilla] = useState(false);
+  const [instantCottageSelection, setInstantCottageSelection] = useState<"A" | "B" | "C" | "ALL">("A");
 
   // Quick Callback Lead State
   const [isCallbackOpen, setIsCallbackOpen] = useState(false);
@@ -107,7 +129,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   const lenis = useLenis();
 
   useEffect(() => {
-    if (availabilityModalOpen) {
+    if (availabilityModalOpen || instantBookingModalOpen) {
       document.body.style.overflow = "hidden";
       if (lenis) {
         try { lenis.stop(); } catch {}
@@ -124,7 +146,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
         try { lenis.start(); } catch {}
       }
     };
-  }, [availabilityModalOpen, lenis]);
+  }, [availabilityModalOpen, instantBookingModalOpen, lenis]);
 
   // Load all global availability on demand when user opens calendar or modal
   useEffect(() => {
@@ -183,13 +205,15 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
     selectedCheckIn: Date | null, 
     selectedCheckOut: Date | null, 
     guestCount: string,
-    dest: string = selectedDestination
+    dest: string = selectedDestination,
+    slug: string = selectedVillaSlug
   ) => {
     setIsCheckingAvailability(true);
     try {
       const targetDest = !dest || dest === "All Maharashtra Villas" || dest === "All Locations" ? "all" : dest;
       const res = await checkAvailableVillasForDates({
         destination: targetDest,
+        villaSlug: slug !== "all" ? slug : undefined,
         checkIn: selectedCheckIn ? formatDateOnly(selectedCheckIn) : undefined,
         checkOut: selectedCheckOut ? formatDateOnly(selectedCheckOut) : undefined,
         guests: Number(guestCount) || 1,
@@ -245,11 +269,63 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
     }
   };
 
+  // Instant Quick Book Handler - opens checkout modal directly on homepage
+  const handleInstantQuickBook = async (slugToBook: string = selectedVillaSlug) => {
+    if (!slugToBook || slugToBook === "all") {
+      // If user selected "All Properties", open the property selection modal
+      await fetchVillasAndOpenModal(checkIn, checkOut, guests, selectedDestination, "all");
+      return;
+    }
+
+    setIsLoadingInstantVilla(true);
+    try {
+      // If specific cottage selected, determine cottage letter
+      let targetSlug = slugToBook;
+      let cottageLetter: "A" | "B" | "C" | "ALL" = "A";
+      if (slugToBook === "willow-peak-cottage-a") {
+        targetSlug = "willow-peak";
+        cottageLetter = "A";
+      } else if (slugToBook === "willow-peak-cottage-b") {
+        targetSlug = "willow-peak";
+        cottageLetter = "B";
+      } else if (slugToBook === "willow-peak-cottage-c") {
+        targetSlug = "willow-peak";
+        cottageLetter = "C";
+      } else if (slugToBook === "willow-peak") {
+        targetSlug = "willow-peak";
+        cottageLetter = "ALL";
+      }
+
+      setInstantCottageSelection(cottageLetter);
+
+      const res = await getVillaBookingDetails(targetSlug);
+      if (res.success && res.villa) {
+        setInstantBookingVilla(res.villa);
+        setInstantBookingModalOpen(true);
+      } else {
+        // Fallback: route to villa page if not found
+        router.push(`/villa/${slugToBook}`);
+      }
+    } catch (err) {
+      console.error("Instant quick booking error:", err);
+      router.push(`/villa/${slugToBook}`);
+    } finally {
+      setIsLoadingInstantVilla(false);
+    }
+  };
+
   // Primary Check Availability trigger
   const handleCheckAvailability = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsCalendarOpen(false);
-    await fetchVillasAndOpenModal(checkIn, checkOut, guests, selectedDestination);
+
+    if (selectedVillaSlug !== "all") {
+      // User selected a specific property -> Instant Quick Book!
+      await handleInstantQuickBook(selectedVillaSlug);
+    } else {
+      // User wants to browse all villas matching dates/location
+      await fetchVillasAndOpenModal(checkIn, checkOut, guests, selectedDestination, "all");
+    }
   };
 
   // WhatsApp Inquiry handler
@@ -324,23 +400,88 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
   return (
     <div 
       id="booking-bar-section" 
-      className={`relative z-40 max-w-[1100px] w-full mx-auto scroll-mt-28 ${className ? className : "px-6 mt-4 md:mt-6 mb-10"}`}
+      className={`relative z-40 max-w-[1220px] w-full mx-auto scroll-mt-28 ${className ? className : "px-4 sm:px-6 mt-4 md:mt-6 mb-10"}`}
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="bg-white rounded-[2rem] md:rounded-full p-4 md:p-3 pl-4 md:pl-8 pr-4 md:pr-3.5 shadow-[0_25px_60px_rgba(27,53,100,0.16)] border border-[#DAA520]/40 ring-4 ring-[#DAA520]/10"
+        className="bg-white rounded-[2rem] md:rounded-full p-4 md:p-2.5 pl-4 md:pl-6 pr-4 md:pr-3 shadow-[0_25px_60px_rgba(27,53,100,0.16)] border border-[#DAA520]/40 ring-4 ring-[#DAA520]/10"
       >
         <form onSubmit={handleCheckAvailability} className="relative z-30">
-          {/* Desktop Layout (Segmented Luxury Pill Bar) */}
-          <div className="hidden md:flex items-center justify-between gap-1 lg:gap-2">
+          {/* Desktop Layout (Segmented Luxury Pill Bar with Direct Property Selector) */}
+          <div className="hidden md:flex items-center justify-between gap-1 lg:gap-1.5">
             
-            {/* 1. LOCATION PILL */}
-            <div className="relative flex-[1.1] min-w-0">
+            {/* 1. DIRECT PROPERTY SELECTOR PILL (Wider Width) */}
+            <div className="relative flex-[1.7] min-w-0">
               <div 
-                onClick={() => setIsDestinationOpen(!isDestinationOpen)}
-                className="px-3.5 lg:px-4 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
+                onClick={() => {
+                  setIsVillaDropdownOpen(!isVillaDropdownOpen);
+                  setIsDestinationOpen(false);
+                }}
+                className="px-4 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
+              >
+                <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1.5 cursor-pointer">
+                  <Building2 size={12} className="text-[#DAA520] shrink-0" />
+                  <span className="truncate">SELECT VILLA</span>
+                </label>
+                <div className="text-sm font-bold text-[#1B3564] h-5 flex items-center justify-between font-heading">
+                  <span className="truncate">{selectedVillaName}</span>
+                  <ChevronDown size={14} className={`text-slate-400 transition-transform duration-200 shrink-0 ml-1 ${isVillaDropdownOpen ? "rotate-180 text-[#1B3564]" : ""}`} />
+                </div>
+              </div>
+
+              {isVillaDropdownOpen && (
+                <div 
+                  data-lenis-prevent="true"
+                  onWheel={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                  className="absolute top-full left-0 mt-2.5 w-80 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left max-h-80 overflow-y-auto overscroll-contain touch-pan-y custom-scrollbar"
+                  style={{ overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }}
+                >
+                  <div className="px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 flex items-center justify-between">
+                    <span>Direct Booking Collection</span>
+                    <span className="text-[9px] text-[#DAA520] font-bold">Scroll for all ({DIRECT_PROPERTIES.length})</span>
+                  </div>
+                  {DIRECT_PROPERTIES.map((prop) => (
+                    <button
+                      key={prop.slug}
+                      type="button"
+                      onClick={() => {
+                        setSelectedVillaSlug(prop.slug);
+                        setSelectedVillaName(prop.name);
+                        setIsVillaDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer border-b border-slate-50 last:border-0 ${
+                        selectedVillaSlug === prop.slug 
+                          ? "bg-[#1B3564] text-[#DAA520]" 
+                          : "text-slate-700 hover:bg-slate-100"
+                      }`}
+                    >
+                      <div className="min-w-0 pr-2">
+                        <div className="truncate font-bold">{prop.name}</div>
+                        <div className={`text-[10px] ${selectedVillaSlug === prop.slug ? "text-slate-300" : "text-slate-400"}`}>
+                          {prop.location} • <span className="font-semibold text-emerald-600">{prop.rate}</span>
+                        </div>
+                      </div>
+                      {selectedVillaSlug === prop.slug && <CheckCircle2 size={13} className="text-[#DAA520] shrink-0" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Hairline Divider */}
+            <div className="h-7 w-[1px] bg-slate-200 shrink-0" />
+
+            {/* 2. LOCATION PILL (Wider Width) */}
+            <div className="relative flex-[1.4] min-w-0">
+              <div 
+                onClick={() => {
+                  setIsDestinationOpen(!isDestinationOpen);
+                  setIsVillaDropdownOpen(false);
+                }}
+                className="px-4 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
               >
                 <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1.5 cursor-pointer">
                   <MapPin size={12} className="text-[#DAA520] shrink-0" />
@@ -353,7 +494,13 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
               </div>
 
               {isDestinationOpen && (
-                <div className="absolute top-full left-0 mt-2.5 w-52 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left">
+                <div 
+                  data-lenis-prevent="true"
+                  onWheel={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                  className="absolute top-full left-0 mt-2.5 w-60 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left max-h-72 overflow-y-auto overscroll-contain touch-pan-y custom-scrollbar"
+                  style={{ overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }}
+                >
                   {["All Locations", "Khopoli", "Lonavala", "Panchgani"].map((dest) => (
                     <button
                       key={dest}
@@ -380,20 +527,20 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
             {/* Hairline Divider */}
             <div className="h-7 w-[1px] bg-slate-200 shrink-0" />
             
-            {/* 2. CHECK-IN PILL */}
+            {/* 3. CHECK-IN PILL (Compact Width) */}
             <div 
               onClick={() => setIsCalendarOpen(true)}
-              className="flex-1 min-w-0 px-3.5 lg:px-4 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
+              className="flex-[0.9] min-w-0 px-3 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
             >
-              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1.5 cursor-pointer">
-                <CalendarIcon size={12} className="text-[#DAA520] shrink-0" />
+              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1 cursor-pointer">
+                <CalendarIcon size={11} className="text-[#DAA520] shrink-0" />
                 <span>CHECK-IN</span>
               </label>
-              <div className="text-sm font-bold text-[#1B3564] h-5 flex items-center font-heading whitespace-nowrap overflow-hidden text-ellipsis">
+              <div className="text-xs font-bold text-[#1B3564] h-5 flex items-center font-heading whitespace-nowrap overflow-hidden text-ellipsis">
                 {checkIn ? (
-                  <span className="truncate">{format(checkIn, "dd MMM, yyyy")}</span>
+                  <span className="truncate">{format(checkIn, "dd MMM")}</span>
                 ) : (
-                  <span className="text-slate-400 font-normal">Select date</span>
+                  <span className="text-slate-400 font-normal">Select</span>
                 )}
               </div>
             </div>
@@ -401,20 +548,20 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
             {/* Hairline Divider */}
             <div className="h-7 w-[1px] bg-slate-200 shrink-0" />
 
-            {/* 3. CHECK-OUT PILL */}
+            {/* 4. CHECK-OUT PILL (Compact Width) */}
             <div 
               onClick={() => setIsCalendarOpen(true)}
-              className="flex-1 min-w-0 px-3.5 lg:px-4 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
+              className="flex-[0.9] min-w-0 px-3 py-2 flex flex-col gap-0.5 cursor-pointer select-none group text-left rounded-full hover:bg-slate-100/80 active:bg-slate-200/60 transition-colors"
             >
-              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1.5 cursor-pointer">
-                <CalendarIcon size={12} className="text-[#DAA520] shrink-0" />
+              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest group-hover:text-[#DAA520] transition-colors flex items-center gap-1 cursor-pointer">
+                <CalendarIcon size={11} className="text-[#DAA520] shrink-0" />
                 <span>CHECK-OUT</span>
               </label>
-              <div className="text-sm font-bold text-[#1B3564] h-5 flex items-center font-heading whitespace-nowrap overflow-hidden text-ellipsis">
+              <div className="text-xs font-bold text-[#1B3564] h-5 flex items-center font-heading whitespace-nowrap overflow-hidden text-ellipsis">
                 {checkOut ? (
-                  <span className="truncate">{format(checkOut, "dd MMM, yyyy")}</span>
+                  <span className="truncate">{format(checkOut, "dd MMM")}</span>
                 ) : (
-                  <span className="text-slate-400 font-normal">Select date</span>
+                  <span className="text-slate-400 font-normal">Select</span>
                 )}
               </div>
             </div>
@@ -422,10 +569,10 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
             {/* Hairline Divider */}
             <div className="h-7 w-[1px] bg-slate-200 shrink-0" />
 
-            {/* 4. GUESTS PILL */}
-            <div className="flex-[0.9] min-w-0 px-3.5 lg:px-4 py-2 flex flex-col gap-0.5 text-left rounded-full hover:bg-slate-100/80 transition-colors group">
-              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest flex items-center gap-1.5 group-hover:text-[#DAA520] transition-colors">
-                <Users size={12} className="text-[#DAA520] shrink-0" />
+            {/* 5. GUESTS PILL (Compact Width) */}
+            <div className="flex-[0.7] min-w-0 px-2.5 py-2 flex flex-col gap-0.5 text-left rounded-full hover:bg-slate-100/80 transition-colors group">
+              <label className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-widest flex items-center gap-1 group-hover:text-[#DAA520] transition-colors">
+                <Users size={11} className="text-[#DAA520] shrink-0" />
                 <span>GUESTS</span>
               </label>
               <div className="relative flex items-center h-5">
@@ -436,36 +583,45 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                   value={guests}
                   onChange={(e) => setGuests(e.target.value)}
                   aria-label="Number of Guests"
-                  className="bg-transparent text-sm font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-8 font-heading"
+                  className="bg-transparent text-xs font-bold text-[#1B3564] outline-none border-none p-0 focus:ring-0 w-6 font-heading"
                   placeholder="2"
                 />
-                <span className="text-xs font-semibold text-slate-500 pointer-events-none whitespace-nowrap">
+                <span className="text-[11px] font-semibold text-slate-500 pointer-events-none whitespace-nowrap">
                   {Number(guests) === 1 ? "Guest" : "Guests"}
                 </span>
               </div>
             </div>
 
-            {/* 5. ACTION BUTTONS: Search & WhatsApp */}
+            {/* 6. ACTION BUTTONS: Direct Book / Search & WhatsApp */}
             <div className="flex items-center gap-2 shrink-0 self-center pl-1">
               <button
                 type="submit"
-                disabled={isCheckingAvailability}
-                aria-label="Search Available Villas"
-                className="bg-gradient-to-r from-[#DAA520] via-[#E5B535] to-[#DAA520] hover:from-[#c4941a] hover:to-[#DAA520] text-[#1B3564] font-black text-xs tracking-wider uppercase rounded-full px-5 lg:px-6 py-3.5 shadow-md shadow-yellow-500/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2"
+                disabled={isCheckingAvailability || isLoadingInstantVilla}
+                aria-label="Quick Book or Search Villas"
+                className="bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white font-black text-xs tracking-wider uppercase rounded-full px-5 lg:px-6 py-3.5 shadow-md shadow-rose-500/25 hover:shadow-lg hover:shadow-rose-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-2"
               >
-                {isCheckingAvailability ? (
-                  <Loader2 size={15} className="animate-spin text-[#1B3564]" />
+                {isCheckingAvailability || isLoadingInstantVilla ? (
+                  <>
+                    <Loader2 size={15} className="animate-spin text-white" />
+                    <span className="whitespace-nowrap">Loading...</span>
+                  </>
                 ) : (
                   <>
-                    <Search size={14} className="stroke-[2.5]" />
-                    <span className="whitespace-nowrap">Search Villas</span>
+                    {selectedVillaSlug !== "all" ? (
+                      <Sparkles size={14} className="stroke-[2.5]" />
+                    ) : (
+                      <Search size={14} className="stroke-[2.5]" />
+                    )}
+                    <span className="whitespace-nowrap">
+                      {selectedVillaSlug !== "all" ? "⚡ Quick Book" : "Check Rates"}
+                    </span>
                   </>
                 )}
               </button>
 
               <button
                 type="button"
-                onClick={(e) => handleWhatsAppInquiry(e)}
+                onClick={(e) => handleWhatsAppInquiry(e, selectedVillaSlug !== "all" ? selectedVillaName : undefined)}
                 aria-label="Chat on WhatsApp"
                 title="Chat with WhatsApp Concierge"
                 className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs tracking-wider uppercase rounded-full px-3.5 lg:px-4 py-3.5 shadow-md shadow-emerald-600/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer border-none flex items-center gap-1.5"
@@ -476,12 +632,75 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
             </div>
           </div>
 
-          {/* Mobile Layout Matching Reference Mockup */}
+          {/* Mobile Layout with Direct Villa Picker */}
           <div className="md:hidden flex flex-col gap-2.5">
+            {/* DIRECT VILLA SELECTOR ROW */}
+            <div className="relative">
+              <div 
+                onClick={() => {
+                  setIsVillaDropdownOpen(!isVillaDropdownOpen);
+                  setIsDestinationOpen(false);
+                }}
+                className="flex items-center justify-between p-3 rounded-2xl bg-white border border-[#DAA520]/50 hover:border-[#DAA520] cursor-pointer select-none transition-colors shadow-2xs"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200/50 flex items-center justify-center text-[#DAA520] shrink-0">
+                    <Building2 size={15} />
+                  </div>
+                  <div className="text-left min-w-0">
+                    <div className="text-[9px] font-extrabold text-[#DAA520] uppercase tracking-widest leading-none">QUICK BOOK PROPERTY</div>
+                    <div className="text-xs font-bold text-slate-900 font-heading leading-tight mt-1 truncate">
+                      {selectedVillaName}
+                    </div>
+                  </div>
+                </div>
+                <ChevronDown size={16} className={`text-slate-400 shrink-0 ml-2 transition-transform duration-200 ${isVillaDropdownOpen ? "rotate-180 text-[#1B3564]" : ""}`} />
+              </div>
+
+              {/* Villa Dropdown */}
+              {isVillaDropdownOpen && (
+                <div 
+                  data-lenis-prevent="true"
+                  onWheel={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                  className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left max-h-72 overflow-y-auto overscroll-contain touch-pan-y custom-scrollbar"
+                  style={{ overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }}
+                >
+                  {DIRECT_PROPERTIES.map((prop) => (
+                    <button
+                      key={prop.slug}
+                      type="button"
+                      onClick={() => {
+                        setSelectedVillaSlug(prop.slug);
+                        setSelectedVillaName(prop.name);
+                        setIsVillaDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer border-b border-slate-50 last:border-0 ${
+                        selectedVillaSlug === prop.slug 
+                          ? "bg-[#1B3564] text-[#DAA520]" 
+                          : "text-slate-700 hover:bg-slate-100"
+                      }`}
+                    >
+                      <div className="min-w-0 pr-2">
+                        <div className="truncate font-bold">{prop.name}</div>
+                        <div className={`text-[10px] ${selectedVillaSlug === prop.slug ? "text-slate-300" : "text-slate-400"}`}>
+                          {prop.location} • <span className="font-semibold text-emerald-600">{prop.rate}</span>
+                        </div>
+                      </div>
+                      {selectedVillaSlug === prop.slug && <CheckCircle2 size={13} className="text-[#DAA520] shrink-0" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* WHERE TO? Destination Row */}
             <div className="relative">
               <div 
-                onClick={() => setIsDestinationOpen(!isDestinationOpen)}
+                onClick={() => {
+                  setIsDestinationOpen(!isDestinationOpen);
+                  setIsVillaDropdownOpen(false);
+                }}
                 className="flex items-center justify-between p-3 rounded-2xl bg-white border border-slate-200/80 hover:border-[#DAA520]/60 cursor-pointer select-none transition-colors shadow-2xs"
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -500,7 +719,13 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
 
               {/* Destination Dropdown */}
               {isDestinationOpen && (
-                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left">
+                <div 
+                  data-lenis-prevent="true"
+                  onWheel={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                  className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 text-left max-h-72 overflow-y-auto overscroll-contain touch-pan-y custom-scrollbar"
+                  style={{ overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }}
+                >
                   {["All Locations", "Khopoli", "Lonavala", "Panchgani"].map((dest) => (
                     <button
                       key={dest}
@@ -559,19 +784,28 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
               </div>
             </div>
 
-            {/* SEARCH VILLAS BUTTON (Golden Full-Width) */}
+            {/* QUICK BOOK / SEARCH BUTTON (Light Red Full-Width) */}
             <button
               type="submit"
-              disabled={isCheckingAvailability}
-              aria-label="Search Villas"
-              className="w-full bg-[#E2A63B] hover:bg-[#d0952d] text-[#1B3564] font-black text-xs tracking-wider uppercase rounded-2xl py-3.5 px-4 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-none flex items-center justify-center gap-2 active:scale-[0.98]"
+              disabled={isCheckingAvailability || isLoadingInstantVilla}
+              aria-label="Quick Book Villas"
+              className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white font-black text-xs tracking-wider uppercase rounded-2xl py-3.5 px-4 shadow-[0_8px_25px_rgba(224,83,76,0.35)] hover:shadow-[0_12px_35px_rgba(224,83,76,0.45)] transition-all duration-300 cursor-pointer border-none flex items-center justify-center gap-2 active:scale-[0.98]"
             >
-              {isCheckingAvailability ? (
-                <Loader2 size={15} className="animate-spin text-[#1B3564]" />
+              {isCheckingAvailability || isLoadingInstantVilla ? (
+                <>
+                  <Loader2 size={15} className="animate-spin text-white" />
+                  <span>Loading Booking Engine...</span>
+                </>
               ) : (
                 <>
-                  <Search size={15} className="stroke-[2.5]" />
-                  <span>Search Villas</span>
+                  {selectedVillaSlug !== "all" ? (
+                    <Sparkles size={15} className="stroke-[2.5]" />
+                  ) : (
+                    <Search size={15} className="stroke-[2.5]" />
+                  )}
+                  <span>
+                    {selectedVillaSlug !== "all" ? `⚡ Quick Book ${selectedVillaName}` : "Search & Book Villas"}
+                  </span>
                 </>
               )}
             </button>
@@ -908,17 +1142,32 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                     <span className="hidden sm:inline">WhatsApp</span>
                                   </button>
 
-                                  {/* Explore & Book Button */}
+                                  {/* Instant Quick Book (Opens booking drawer right away) */}
+                                  <button
+                                    type="button"
+                                    onClick={async () => {
+                                      setAvailabilityModalOpen(false);
+                                      await handleInstantQuickBook(villa.slug);
+                                    }}
+                                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-[0_4px_15px_rgba(224,83,76,0.3)] hover:shadow-[0_6px_20px_rgba(224,83,76,0.45)] flex items-center gap-1.5 cursor-pointer border-none"
+                                    title="Instant Quick Book"
+                                  >
+                                    <Sparkles size={13} className="stroke-[2.5]" />
+                                    <span>Quick Book</span>
+                                  </button>
+
+                                  {/* Explore Details Link */}
                                   <button
                                     type="button"
                                     onClick={() => {
                                       setAvailabilityModalOpen(false);
                                       router.push(`/villa/${villa.slug}`);
                                     }}
-                                    className="px-5 py-2.5 rounded-xl bg-[#1B3564] hover:bg-[#152A50] text-[#DAA520] hover:text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-1.5 cursor-pointer border-none"
+                                    className="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer border-none"
+                                    title="View Full Villa Details"
                                   >
-                                    <span>Book Villa</span>
-                                    <ArrowRight size={13} className="stroke-[2.5]" />
+                                    <span>Details</span>
+                                    <ArrowRight size={12} />
                                   </button>
                                 </div>
                               </div>
@@ -1067,6 +1316,94 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                   </div>
                 </div>
 
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {/* ========================================================================= */}
+      {/* 3. INSTANT QUICK BOOKING MODAL (Opens full booking card directly on Home) */}
+      {/* ========================================================================= */}
+      {mounted && typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {instantBookingModalOpen && instantBookingVilla && (
+            <div className="fixed inset-0 z-[999999] flex items-center justify-center p-2 sm:p-4">
+              {/* Dimmed backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setInstantBookingModalOpen(false)}
+                className="fixed inset-0 bg-black/85 backdrop-blur-md"
+              />
+
+              {/* Modal Container */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="relative w-full max-w-2xl max-h-[94vh] flex flex-col bg-white rounded-[28px] sm:rounded-[36px] shadow-[0_24px_80px_rgba(0,0,0,0.6)] border-2 border-[#DAA520]/40 overflow-hidden z-10 my-auto text-left"
+              >
+                {/* Modal Header */}
+                <div className="bg-[#1B3564] text-white px-5 sm:px-6 py-4 flex items-center justify-between flex-shrink-0 border-b border-white/10 z-20">
+                  <div className="text-left">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-widest flex items-center gap-1">
+                        <Sparkles size={12} className="text-[#DAA520]" />
+                        Instant Direct Booking • 0% Platform Fee
+                      </span>
+                    </div>
+                    <h3 className="font-heading font-bold text-lg sm:text-2xl tracking-wide text-white mt-0.5">
+                      {instantBookingVilla.name}
+                    </h3>
+                    <p className="text-slate-300 text-xs mt-0.5">
+                      {instantBookingVilla.location}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setInstantBookingModalOpen(false)}
+                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
+                    aria-label="Close Instant Booking Modal"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+
+                {/* Modal Body: BookingCard */}
+                <div
+                  data-lenis-prevent="true"
+                  className="flex-1 overflow-y-auto overscroll-contain p-3 sm:p-5 bg-slate-50 relative z-10 touch-pan-y"
+                  style={{ maxHeight: "calc(94vh - 80px)", WebkitOverflowScrolling: "touch" }}
+                >
+                  <BookingCard
+                    villaId={instantBookingVilla.id}
+                    villaName={instantBookingVilla.name}
+                    price={instantBookingVilla.price}
+                    basePrice={instantBookingVilla.price}
+                    weekendPrice={instantBookingVilla.weekendPrice}
+                    fridayPrice={instantBookingVilla.fridayPrice}
+                    saturdayPrice={instantBookingVilla.saturdayPrice}
+                    sundayPrice={instantBookingVilla.sundayPrice}
+                    dailyPrices={instantBookingVilla.dailyPrices}
+                    seasonalPrices={instantBookingVilla.seasonalPrices}
+                    maxGuests={instantBookingVilla.maxGuests}
+                    baseGuests={instantBookingVilla.baseGuests}
+                    extraGuestFee={instantBookingVilla.extraGuestFee}
+                    bookings={instantBookingVilla.bookings}
+                    initialCottageSelection={instantCottageSelection}
+                    initialCheckIn={checkIn}
+                    initialCheckOut={checkOut}
+                    initialGuests={Number(guests) || 2}
+                    isModal={true}
+                    onBookingComplete={() => {
+                      // Keep open to display success confirmation
+                    }}
+                  />
+                </div>
               </motion.div>
             </div>
           )}

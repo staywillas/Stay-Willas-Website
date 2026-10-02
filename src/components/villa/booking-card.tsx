@@ -54,6 +54,9 @@ interface BookingCardProps {
   initialCottageSelection?: "A" | "B" | "C" | "ALL";
   initialGuestName?: string;
   initialGuestPhone?: string;
+  initialCheckIn?: Date | null;
+  initialCheckOut?: Date | null;
+  initialGuests?: number;
   onBookingComplete?: () => void;
   isModal?: boolean;
 }
@@ -115,6 +118,9 @@ const BookingCard = ({
   initialCottageSelection,
   initialGuestName = "",
   initialGuestPhone = "",
+  initialCheckIn,
+  initialCheckOut,
+  initialGuests,
   onBookingComplete,
   isModal = false,
 }: BookingCardProps) => {
@@ -124,16 +130,26 @@ const BookingCard = ({
   const actualMaxGuests = isWillowPeak ? 12 : (villaName.toLowerCase().includes("canopy") ? 16 : maxGuests);
 
   const [checkIn, setCheckIn] = useState<Date>(() => {
+    if (initialCheckIn) {
+      const d = new Date(initialCheckIn);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    }
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     return d;
   });
   const [checkOut, setCheckOut] = useState<Date>(() => {
+    if (initialCheckOut) {
+      const d = new Date(initialCheckOut);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    }
     const d = addDays(new Date(), 2);
     d.setHours(0, 0, 0, 0);
     return d;
   });
-  const [guests, setGuests] = useState(2);
+  const [guests, setGuests] = useState(initialGuests || 2);
   const [clientName, setClientName] = useState(initialGuestName || "");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState(initialGuestPhone || "");
@@ -154,6 +170,26 @@ const BookingCard = ({
   useEffect(() => {
     if (initialGuestPhone) setClientPhone(initialGuestPhone);
   }, [initialGuestPhone]);
+
+  useEffect(() => {
+    if (initialCheckIn) {
+      const d = new Date(initialCheckIn);
+      d.setHours(0, 0, 0, 0);
+      setCheckIn(d);
+    }
+  }, [initialCheckIn]);
+
+  useEffect(() => {
+    if (initialCheckOut) {
+      const d = new Date(initialCheckOut);
+      d.setHours(0, 0, 0, 0);
+      setCheckOut(d);
+    }
+  }, [initialCheckOut]);
+
+  useEffect(() => {
+    if (initialGuests) setGuests(initialGuests);
+  }, [initialGuests]);
 
   // Specific Cottage Selection for Willow Peak: "A" | "B" | "C" | "ALL"
   const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">(initialCottageSelection || "A");
@@ -834,16 +870,18 @@ We are so excited about this getaway! Could you please check availability and he
                 <span>🏡</span> Select Cottage Allocation:
               </span>
               <span className="text-[10px] font-bold text-[#DAA520] bg-[#1B3564] px-2 py-0.5 rounded-md">
-                {cottageSelection === "ALL" ? "Full Estate (3 Cottages)" : `Cottage ${cottageSelection} (1 Cottage)`}
+                {cottageSelection === "ALL" 
+                  ? "Full Estate (Breeze, Crest & Heaven)" 
+                  : `${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (1 Cottage)`}
               </span>
             </div>
             
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
               {[
-                { id: "A", label: "Cottage A", sub: "Max 4 Guests" },
-                { id: "B", label: "Cottage B", sub: "Max 4 Guests" },
-                { id: "C", label: "Cottage C", sub: "Max 4 Guests" },
-                { id: "ALL", label: "All 3 Cottages", sub: "Max 12 Guests" },
+                { id: "A", label: "Breeze", sub: "Max 4 Guests" },
+                { id: "B", label: "Crest", sub: "Max 4 Guests" },
+                { id: "C", label: "Heaven", sub: "Max 4 Guests" },
+                { id: "ALL", label: "All 3 Cottages", sub: "Breeze, Crest, Heaven" },
               ].map((item) => {
                 const isSelected = cottageSelection === item.id;
                 return (
@@ -1101,8 +1139,8 @@ We are so excited about this getaway! Could you please check availability and he
             </div>
             <p className="text-xs text-slate-700 leading-relaxed font-medium">
               {cottageSelection === "ALL"
-                ? `Full Estate: All 3 A-frame chalets (Cottage A, B, and C) reserved for your group of ${guests} guests (Max 12).`
-                : `Private Chalet: Cottage ${cottageSelection} allocated for ${guests} guest(s) (Max 4). Features private en-suite jacuzzi and balcony.`
+                ? `Full Estate: All 3 A-frame chalets (Breeze, Crest, and Heaven) reserved for your group of ${guests} guests (Max 12).`
+                : `Private Chalet: ${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (Cottage ${cottageSelection}) allocated for ${guests} guest(s) (Max 4). Features private en-suite jacuzzi and balcony.`
               }
             </p>
             <div className="text-[11px] text-emerald-800 font-semibold pt-1 border-t border-amber-200/60 flex items-center gap-1.5">
@@ -1377,20 +1415,20 @@ We are so excited about this getaway! Could you please check availability and he
           type="button"
           onClick={handleAwaitVerificationBooking}
           disabled={isSubmittingVerification || nights <= 0 || isOverlapping}
-          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white py-4 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border border-[#DAA520]/50 active:scale-[0.98] ring-2 ring-[#DAA520]/20"
+          className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-4 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(224,83,76,0.35)] hover:shadow-[0_12px_35px_rgba(224,83,76,0.45)] flex items-center justify-between cursor-pointer border border-white/20 active:scale-[0.98] ring-2 ring-rose-300/30"
         >
           <div className="flex items-center gap-2.5">
             {isSubmittingVerification ? (
-              <Loader2 className="animate-spin text-[#DAA520]" size={20} />
+              <Loader2 className="animate-spin text-white" size={20} />
             ) : (
-              <ShieldCheck size={20} className="text-[#DAA520] shrink-0" />
+              <ShieldCheck size={20} className="text-white shrink-0" />
             )}
             <div className="text-left">
               <span className="block font-black text-xs sm:text-sm text-white">Option 1: Book & Await Verification</span>
-              <span className="text-[10px] text-slate-300 font-normal block">Hold dates • Verified by concierge within 24 hours</span>
+              <span className="text-[10px] text-rose-100 font-normal block">Hold dates • Verified by concierge within 24 hours</span>
             </div>
           </div>
-          <span className="text-[11px] font-black bg-[#DAA520] text-[#1B3564] px-2.5 py-1 rounded-lg shadow-sm">Hold for ₹{total > 0 ? total.toLocaleString("en-IN") : "Total"} ➔</span>
+          <span className="text-[11px] font-black bg-white text-[#C9332C] px-2.5 py-1 rounded-lg shadow-sm">Hold for ₹{total > 0 ? total.toLocaleString("en-IN") : "Total"} ➔</span>
         </button>
 
         {/* Option 2: Book via WhatsApp */}

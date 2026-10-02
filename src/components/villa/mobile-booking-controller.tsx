@@ -285,15 +285,21 @@ export default function MobileBookingController(props: MobileBookingControllerPr
                 <Home size={12} /> Choose Cottage Setup:
               </span>
               <span className="text-[9px] bg-white/15 text-white font-bold px-2 py-0.5 rounded-md">
-                {cottageSelection === "ALL" ? "3 Cottages" : `Cottage ${cottageSelection}`}
+                {cottageSelection === "ALL" 
+                  ? "Breeze, Crest & Heaven" 
+                  : cottageSelection === "A" 
+                  ? "Breeze (Cottage A)" 
+                  : cottageSelection === "B" 
+                  ? "Crest (Cottage B)" 
+                  : "Heaven (Cottage C)"}
               </span>
             </div>
 
             <div className="grid grid-cols-4 gap-1.5">
               {[
-                { id: "A", label: "Cottage A", sub: "Jacuzzi • 4G" },
-                { id: "B", label: "Cottage B", sub: "Jacuzzi • 4G" },
-                { id: "C", label: "Cottage C", sub: "Jacuzzi • 4G" },
+                { id: "A", label: "Breeze", sub: "Max 4G" },
+                { id: "B", label: "Crest", sub: "Max 4G" },
+                { id: "C", label: "Heaven", sub: "Max 4G" },
                 { id: "ALL", label: "All 3", sub: "Full • 12G" },
               ].map((item) => {
                 const isSelected = cottageSelection === item.id;
@@ -431,9 +437,9 @@ export default function MobileBookingController(props: MobileBookingControllerPr
             {isWillowPeak && (
               <div className="grid grid-cols-4 gap-1 mt-3 pb-2 border-b border-slate-200">
                 {[
-                  { id: "A", label: "Cottage A" },
-                  { id: "B", label: "Cottage B" },
-                  { id: "C", label: "Cottage C" },
+                  { id: "A", label: "Breeze" },
+                  { id: "B", label: "Crest" },
+                  { id: "C", label: "Heaven" },
                   { id: "ALL", label: "All 3" },
                 ].map((item) => (
                   <button

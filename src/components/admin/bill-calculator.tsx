@@ -819,6 +819,36 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       } else {
         currentY += 4;
       }
+
+      // Official Bank Settlement Details Box
+      currentY += 4;
+      doc.setFillColor(248, 250, 252);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 22, "F");
+      doc.setDrawColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.setLineWidth(0.3);
+      doc.rect(marginX, currentY, 210 - marginX * 2, 22, "S");
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(7.5);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("OFFICIAL SETTLEMENT ACCOUNT DETAILS (NEFT / IMPS / RTGS / UPI):", marginX + 4, currentY + 5);
+
+      doc.setFont("Helvetica", "normal");
+      doc.setFontSize(7.2);
+      doc.setTextColor(51, 65, 85);
+      doc.text("• Bank: Federal Bank", marginX + 4, currentY + 10);
+      doc.text("• Account Number: 99980100571517", marginX + 45, currentY + 10);
+      doc.text("• Account Name: Sushant Girish Chandra Tiwari", marginX + 115, currentY + 10);
+
+      doc.text("• Branch: Kalyan", marginX + 4, currentY + 15);
+      doc.text("• IFSC Code: FDRL0001542", marginX + 45, currentY + 15);
+      doc.text("• VPA / UPI ID: sushant650@federal", marginX + 115, currentY + 15);
+
+      doc.setFont("Helvetica", "italic");
+      doc.setFontSize(6.8);
+      doc.setTextColor(100, 116, 139);
+      doc.text("MMID: 9049517  |  Please share payment screenshot / UTR to WhatsApp (+91 96190 42310) for instant reconciliation.", marginX + 4, currentY + 19.5);
+
       // Save PDF
       doc.save(`StayWillas_Invoice_${guestName.replace(/[^a-zA-Z0-9]/g, "_") || "Guest"}.pdf`);
     } catch (err) {
