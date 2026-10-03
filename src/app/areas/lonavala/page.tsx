@@ -651,8 +651,11 @@ export default async function LonavalaPage() {
 
           {/* Internal Blog Links */}
           <div className="mt-16 p-8 bg-[#FAF8F5] rounded-3xl border border-[#DAA520]/15 max-w-7xl mx-auto">
-            <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Related Guides</h3>
+            <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Featured Lonavala Villas & Guides</h3>
             <ul className="space-y-3 text-sm text-slate-700 font-light">
+              <li className="font-semibold">→ <Link href="/villa/willow-peak" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">Willow Peak Resort Kurvande, Lonavala — Luxury A-Frame Chalets with Jacuzzi</Link></li>
+              <li className="font-semibold">→ <Link href="/villa/the-angle-house" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">The Angle House Lonavala — 3 BHK Glass Villa with Private Waterfall Pool & Jacuzzi</Link></li>
+              <li>→ <Link href="/blog/villas-in-lonavala-under-5000-with-pool-willow-peak" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Top Villas in Lonavala Under ₹5000 with Pool (2026 Price List & Deals)</Link></li>
               <li>→ <Link href="/blog/lonavala-villa-willow-peak-staycation-guide" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Ultimate Lonavala Villa Guide: Why Willow Peak is the #1 Sahyadri Retreat</Link></li>
               <li>→ <Link href="/blog/affordable-villa-lonavala-willow-peak-budget-luxury" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Affordable Villa Lonavala: Luxury A-Frame Chalets Under ₹6,000 at Willow Peak</Link></li>
               <li>→ <Link href="/blog/top-villas-in-lonavala-with-private-pool-guide" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">How to Choose the Right Villa in Lonavala: Private Pool vs Jacuzzi Guide</Link></li>

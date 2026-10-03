@@ -2,7 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest, NextFetchEvent } from "next/server";
 
-// Only protect checkout, user dashboard and wishlist — everything else (including /bookingexperience) is freely browsable
+// Only protect checkout, user dashboard and wishlist — everything else is freely browsable
 const isProtectedRoute = createRouteMatcher([
   "/wishlist(.*)",
   "/booking/(.*)",

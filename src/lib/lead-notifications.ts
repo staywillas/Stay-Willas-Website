@@ -114,9 +114,18 @@ export async function sendAdminLeadNotification(data: LeadNotificationData) {
           <!-- Header Banner -->
           <tr>
             <td style="background: linear-gradient(135deg, #0E1B35 0%, #1B3564 100%); padding: 32px 28px; text-align: left; color: #ffffff;">
-              <div style="display: inline-block; background-color: ${badgeBg}; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; padding: 5px 12px; border-radius: 50px; text-transform: uppercase; margin-bottom: 12px;">
-                ${badgeText}
-              </div>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 14px;">
+                <tr>
+                  <td valign="middle" style="width: 44px; padding-right: 12px;">
+                    <img src="https://www.staywillas.com/images/stay-willas-emblem.png" width="44" height="44" alt="Stay Willas Logo" style="display: block; border-radius: 50%; border: 1px solid rgba(218,165,32,0.4);" />
+                  </td>
+                  <td valign="middle">
+                    <div style="display: inline-block; background-color: ${badgeBg}; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; padding: 5px 12px; border-radius: 50px; text-transform: uppercase;">
+                      ${badgeText}
+                    </div>
+                  </td>
+                </tr>
+              </table>
               <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ffffff; line-height: 1.3;">
                 ${heading}
               </h1>

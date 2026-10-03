@@ -149,14 +149,15 @@ const Navbar = () => {
         )}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group shrink-0 min-w-0">
-          <div className="relative w-7 h-7 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-accent-secondary/30 shadow-md transition-transform duration-700 group-hover:rotate-[360deg] bg-white/5 flex items-center justify-center shrink-0">
+        <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-0">
+          <div className="relative w-10 h-10 sm:w-13 sm:h-13 md:w-16 md:h-16 rounded-full overflow-hidden shadow-md transition-transform duration-700 group-hover:rotate-[360deg] flex items-center justify-center shrink-0">
             <Image 
-              src="/images/logo.webp" 
+              src="/images/stay-willas-emblem.webp" 
               alt="Stay Willas Logo" 
-              width={52}
-              height={52}
-              className="w-full h-full object-cover scale-[1.6]" 
+              width={64}
+              height={64}
+              className="w-full h-full object-cover scale-[1.05]" 
+              priority
             />
           </div>
           <div className="flex flex-col">
@@ -252,10 +253,6 @@ const Navbar = () => {
               <div className="glass-premium border border-yellow-200/50 rounded-2xl p-6 min-w-[200px] shadow-xl shadow-yellow-900/5">
                 <div className="flex flex-col gap-4">
                   <Link href="/about" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">About</Link>
-                  <Link href="/bookingexperience" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors flex items-center justify-between group/booking">
-                    <span>Booking Experience</span>
-                    <span className="text-[9px] bg-amber-500/15 text-amber-700 px-2 py-0.5 rounded-full font-black uppercase tracking-wider group-hover/booking:bg-[#DAA520] group-hover/booking:text-white transition-colors">4 Options</span>
-                  </Link>
                   <Link href="/destinations" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Destinations</Link>
                   <Link href="/escape" className="text-[14px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors">Group Stays in Lonavala</Link>
                   <Link href="/partner" className="text-[14px] font-bold text-[#1B3564] hover:text-[#559C24] tracking-wide transition-colors flex items-center justify-between group/partner">
@@ -397,8 +394,8 @@ const Navbar = () => {
             {/* Panel Header */}
             <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-[#DAA520]/15 shrink-0">
               <div className="flex items-center gap-3">
-                <div className="relative w-9 h-9 rounded-full overflow-hidden border border-[#DAA520]/35">
-                  <Image src="/images/logo.webp" alt="Stay Willas" width={36} height={36} className="w-full h-full object-cover scale-[1.6]" />
+                <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-md flex items-center justify-center shrink-0">
+                  <Image src="/images/stay-willas-emblem.webp" alt="Stay Willas" width={48} height={48} className="w-full h-full object-cover scale-[1.05]" />
                 </div>
                 <span className="font-heading text-lg tracking-widest text-[#FAF8F5]">STAY WILLAS</span>
               </div>
@@ -693,21 +690,6 @@ const Navbar = () => {
                     COMPANY & MORE
                   </p>
                   <div className="flex flex-col gap-0.5">
-                    <Link
-                      href="/bookingexperience"
-                      className={cn(
-                        "flex items-center gap-2.5 py-1.5 px-2.5 rounded-xl transition-all duration-200 text-[12px]",
-                        pathname === "/bookingexperience" ? "text-[#DAA520] font-bold" : "text-[#FAF8F5]/80 hover:text-[#DAA520]"
-                      )}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <Compass size={14} className="text-[#DAA520]" />
-                      <div className="flex items-center justify-between w-full">
-                        <span>Booking Experience</span>
-                        <span className="text-[9px] bg-[#DAA520] text-[#1B3564] font-black px-1.5 py-0.2 rounded-full">4 Options</span>
-                      </div>
-                    </Link>
-
                     <Link
                       href="/about"
                       className={cn(

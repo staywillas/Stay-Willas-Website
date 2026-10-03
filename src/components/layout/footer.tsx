@@ -97,13 +97,13 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="md:col-span-3">
             <Link href="/" className="flex items-center gap-3 mb-8 group">
-              <div className="relative w-12 h-12 rounded-full overflow-hidden border border-[#DAA520]/30 shadow-lg bg-white/10 flex items-center justify-center shrink-0 group-hover:border-[#DAA520] transition-colors">
+              <div className="relative w-16 h-16 rounded-full overflow-hidden shadow-lg flex items-center justify-center shrink-0">
                 <Image 
-                  src="/images/logo.webp" 
+                  src="/images/stay-willas-emblem.webp" 
                   alt="Stay Willas Logo" 
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover scale-[1.6]" 
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover scale-[1.05]" 
                 />
               </div>
               <div className="flex flex-col">
@@ -230,6 +230,84 @@ const Footer = () => {
                 <a href="mailto:staywillas@gmail.com" className="text-white/70 hover:text-[#DAA520] transition-colors text-sm font-medium">staywillas@gmail.com</a>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Curated Celebration Stays & Private Parties Hub */}
+        <div className="border-t border-[#DAA520]/15 pt-10 pb-4 mb-16">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
+            <div>
+              <span className="text-[#DAA520] font-black tracking-[0.25em] uppercase text-[10px] block mb-1">
+                Occasions & Gatherings
+              </span>
+              <h4 className="font-heading text-xl text-white font-bold">
+                Curated Celebration Stays & Private Pool Parties
+              </h4>
+            </div>
+            <p className="text-white/50 text-xs max-w-md">
+              Private pools, zero-corkage BYOB, bespoke party styling, and private chefs across Maharashtra.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link
+              href="/private-villa-for-birthday-celebration-near-mumbai"
+              className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-[#DAA520]/40 transition-all duration-300 group"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-sm font-semibold text-white group-hover:text-[#DAA520] transition-colors">
+                  Birthday Celebrations
+                </span>
+                <ArrowRight size={14} className="text-[#DAA520] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              </div>
+              <p className="text-xs text-white/50 font-light">
+                Private villas near Mumbai with lawns, sound systems & party decor.
+              </p>
+            </Link>
+
+            <Link
+              href="/anniversary-celebration-villa-with-private-pool"
+              className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-[#DAA520]/40 transition-all duration-300 group"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-sm font-semibold text-white group-hover:text-[#DAA520] transition-colors">
+                  Romantic Anniversaries
+                </span>
+                <ArrowRight size={14} className="text-[#DAA520] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              </div>
+              <p className="text-xs text-white/50 font-light">
+                Intimate villas with private pool, candlelight dining & floating breakfast.
+              </p>
+            </Link>
+
+            <Link
+              href="/milestone-birthday-celebration-villa-maharashtra"
+              className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-[#DAA520]/40 transition-all duration-300 group"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-sm font-semibold text-white group-hover:text-[#DAA520] transition-colors">
+                  Milestone Birthdays
+                </span>
+                <ArrowRight size={14} className="text-[#DAA520] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              </div>
+              <p className="text-xs text-white/50 font-light">
+                Elderly-friendly ground floor suites, private chefs & multi-generation estates.
+              </p>
+            </Link>
+
+            <Link
+              href="/private-pool-party-villa-near-pune-for-family"
+              className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-[#DAA520]/40 transition-all duration-300 group"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-sm font-semibold text-white group-hover:text-[#DAA520] transition-colors">
+                  Pune Family Pool Parties
+                </span>
+                <ArrowRight size={14} className="text-[#DAA520] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              </div>
+              <p className="text-xs text-white/50 font-light">
+                Gated private pools, BBQ lawns & zero-traffic weekend escapes near Pune.
+              </p>
+            </Link>
           </div>
         </div>
 

@@ -31,7 +31,32 @@ const nextConfig: NextConfig = {
   redirects: async () => [
     {
       source: '/booking-experience',
-      destination: '/bookingexperience',
+      destination: '/villas',
+      permanent: true,
+    },
+    {
+      source: '/bookingexperience',
+      destination: '/villas',
+      permanent: true,
+    },
+    {
+      source: '/blog/villas-near-imagica-khopoli',
+      destination: '/blog/best-villas-near-imagica-khopoli-with-private-pool',
+      permanent: true,
+    },
+    {
+      source: '/khopoli-villas',
+      destination: '/areas/khopoli',
+      permanent: true,
+    },
+    {
+      source: '/villas-in-lonavala-with-private-pool',
+      destination: '/areas/lonavala',
+      permanent: true,
+    },
+    {
+      source: '/villas-in-panchgani-with-private-pool',
+      destination: '/areas/panchgani',
       permanent: true,
     },
     {
@@ -246,7 +271,7 @@ const nextConfig: NextConfig = {
     {
       source: '/images/:path*',
       headers: [
-        { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
       ],
     },
     {

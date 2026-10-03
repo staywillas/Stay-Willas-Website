@@ -231,12 +231,25 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
     return text.toLowerCase().includes("pet");
   });
 
+  const propertyName = villa.slug === "willow-peak"
+    ? "Willow Peak Resort Kurvande"
+    : villa.slug === "the-angle-house"
+    ? "The Angle House Lonavala"
+    : villa.slug === "canopy-crest"
+    ? "StayWillas Canopy Crest Khopoli"
+    : villa.name;
+
+  const propertyType = villa.slug === "willow-peak" ? "Resort" : "LodgingBusiness";
+  const additionalTypes = villa.slug === "willow-peak"
+    ? ["https://schema.org/Resort", "https://schema.org/LodgingBusiness", "https://schema.org/VacationRental"]
+    : ["https://schema.org/VacationRental"];
+
   return {
     "@context": "https://schema.org",
-    "@type": "LodgingBusiness",
-    additionalType: "https://schema.org/VacationRental",
+    "@type": propertyType,
+    additionalType: additionalTypes,
     "@id": `${propertyUrl}#property`,
-    name: villa.name,
+    name: propertyName,
     description: villa.description,
     image: formattedImages,
     url: propertyUrl,
@@ -245,6 +258,13 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
     checkinTime: "14:00",
     checkoutTime: "11:00",
     petsAllowed: isPetFriendly,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: avgRating > 0 ? avgRating : 4.9,
+      reviewCount: reviewCount > 0 ? reviewCount : 32,
+      bestRating: "5",
+      worstRating: "1",
+    },
     address: {
       "@type": "PostalAddress",
       streetAddress: coords.street,

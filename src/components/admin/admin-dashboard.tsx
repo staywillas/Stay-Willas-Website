@@ -670,6 +670,16 @@ const AdminDashboard = ({
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 pb-8 border-b border-slate-100">
         <div>
           <div className="flex items-center gap-3 flex-wrap mb-2">
+            <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-sm shrink-0 flex items-center justify-center">
+              <Image 
+                src="/images/stay-willas-emblem.webp" 
+                alt="Stay Willas Logo" 
+                width={48} 
+                height={48} 
+                className="w-full h-full object-cover scale-[1.05]"
+                priority
+              />
+            </div>
             <h1 className="text-4xl font-cormorant font-bold tracking-wide italic">Admin Dashboard & Operations</h1>
             <span className="bg-blue-500/10 text-blue-400 text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase border border-blue-500/20">
               SYSTEM LIVE
@@ -703,6 +713,15 @@ const AdminDashboard = ({
 
         {/* Clerk User Button & Branding */}
         <div className="flex items-center gap-4 sm:gap-6 mt-6 md:mt-0 glass border border-slate-200 rounded-full px-5 py-2.5">
+          <div className="relative w-9 h-9 rounded-full overflow-hidden shadow-xs shrink-0 hidden sm:flex items-center justify-center">
+            <Image 
+              src="/images/stay-willas-emblem.webp" 
+              alt="Stay Willas" 
+              width={36} 
+              height={36} 
+              className="w-full h-full object-cover scale-[1.05]"
+            />
+          </div>
           <div className="text-right">
             <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Logged In As</p>
             <p className="text-sm font-medium text-blue-400 font-cormorant font-bold italic">Stay Willas Admin</p>

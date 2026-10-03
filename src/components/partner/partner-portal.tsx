@@ -192,14 +192,26 @@ export default function PartnerPortal({ initialData, defaultEmail }: PartnerPort
 
       {/* Main Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-white/5 pb-8">
-        <div>
-          <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs block mb-2">
-            Homeowner Services
-          </span>
-          <h1 className="text-4xl md:text-5xl font-heading font-light tracking-wide text-white">
-            Homeowner Portal <span className="italic text-accent-primary font-serif">Workspace</span>
-          </h1>
-          <p className="text-xs text-white/40 mt-1">Account email address: {email}</p>
+        <div className="flex items-center gap-4">
+          <div className="relative w-15 h-15 rounded-full overflow-hidden shadow-xl shrink-0 flex items-center justify-center">
+            <Image 
+              src="/images/stay-willas-emblem.webp" 
+              alt="Stay Willas Logo" 
+              width={60} 
+              height={60} 
+              className="w-full h-full object-cover scale-[1.05]"
+              priority
+            />
+          </div>
+          <div>
+            <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs block mb-1">
+              Homeowner Services
+            </span>
+            <h1 className="text-3xl md:text-5xl font-heading font-light tracking-wide text-white">
+              Homeowner Portal <span className="italic text-accent-primary font-serif">Workspace</span>
+            </h1>
+            <p className="text-xs text-white/40 mt-1">Account email address: {email}</p>
+          </div>
         </div>
         
         {/* Connection status & Sign Out */}

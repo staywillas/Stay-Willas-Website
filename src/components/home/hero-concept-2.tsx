@@ -208,7 +208,9 @@ export default function HeroConcept2() {
                   <Star size={9} className="fill-[#F5C042]" />
                   <span>Featured Villa</span>
                 </div>
-                <h3 className="font-heading text-sm sm:text-xl lg:text-2xl font-bold leading-tight">The Angle House</h3>
+                <h3 className="font-heading text-sm sm:text-xl lg:text-2xl font-bold leading-tight text-yellow-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+                  The Angle House
+                </h3>
                 <p className="text-[10px] sm:text-xs text-stone-200 mt-0.5">
                   Kurwande, Lonavala • <strong className="text-[#DAA520]">₹13,000/night</strong>
                 </p>

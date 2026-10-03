@@ -182,5 +182,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
   }
 
-  return [...staticRoutes, ...areaRoutes, ...blogRoutes, ...villaRoutes];
+  // 5. High-Intent Celebration & Occasion Landing Pages (Zero-Cannibalization Intent)
+  const occasionRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/private-villa-for-birthday-celebration-near-mumbai`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.92,
+    },
+    {
+      url: `${BASE_URL}/anniversary-celebration-villa-with-private-pool`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.92,
+    },
+    {
+      url: `${BASE_URL}/milestone-birthday-celebration-villa-maharashtra`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.90,
+    },
+    {
+      url: `${BASE_URL}/private-pool-party-villa-near-pune-for-family`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.90,
+    },
+  ];
+
+  return [...staticRoutes, ...areaRoutes, ...blogRoutes, ...villaRoutes, ...occasionRoutes];
 }

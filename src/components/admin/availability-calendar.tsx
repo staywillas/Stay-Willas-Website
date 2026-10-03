@@ -31,6 +31,7 @@ import {
   Eye
 } from "lucide-react";
 import { createManualBooking, deleteBooking, sendInvoiceEmailAction } from "@/app/actions/admin";
+import { STAY_WILLAS_EMBLEM_PNG_DATA_URL } from "@/lib/pdf-logo";
 
 interface SeasonalPrice {
   id: string;
@@ -535,14 +536,6 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         format: "a4",
       });
 
-      let logoData: { dataUrl: string; aspect: number } | null = null;
-      try {
-        const logoImg = await loadImage("/images/STAY WILLAS logo transparent.webp");
-        logoData = getCroppedLogoDataUrl(logoImg);
-      } catch (e) {
-        console.warn("Could not load transparent logo for PDF", e);
-      }
-
       const targetVilla = customBookingData?.villa || villas.find((v) => v.id === selectedVillaId);
       const activeVillaName = targetVilla?.name || "Stay Willas Villa";
       const targetGuestName = customBookingData?.guestName || guestName || "Valued Guest";
@@ -586,22 +579,24 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
       currentY = 14;
 
-      if (logoData && logoData.aspect) {
-        const maxLogoW = 62;
-        const maxLogoH = 16.5;
-        let logoW = maxLogoW;
-        let logoH = logoW / logoData.aspect;
-        if (logoH > maxLogoH) {
-          logoH = maxLogoH;
-          logoW = logoH * logoData.aspect;
-        }
-        doc.addImage(logoData.dataUrl, "PNG", marginX, currentY - 2, logoW, logoH, undefined, "FAST");
-      } else {
-        doc.setFont("Helvetica", "bold");
-        doc.setFontSize(22);
-        doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-        doc.text("STAY WILLAS", marginX, currentY + 6);
+      // Official Stay Willas Circular Emblem
+      const emblemSize = 16;
+      try {
+        doc.addImage(STAY_WILLAS_EMBLEM_PNG_DATA_URL, "PNG", marginX, currentY - 1, emblemSize, emblemSize, undefined, "FAST");
+      } catch (err) {
+        console.warn("Could not render emblem in PDF", err);
       }
+
+      // Brand Title next to Emblem
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+      doc.text("STAY WILLAS", marginX + emblemSize + 3, currentY + 5.5);
+
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(7.5);
+      doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
+      doc.text("LUXURY ESTATES & VILLAS", marginX + emblemSize + 3, currentY + 10.5);
 
       // Invoice Header metadata
       doc.setFontSize(14);

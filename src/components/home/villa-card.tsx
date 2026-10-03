@@ -41,12 +41,16 @@ const VillaCard = ({
       <div className="flex flex-col h-full group w-full justify-between">
         
         {/* Top Link Wrap */}
-        <Link href={`/villa/${id}`} className="block relative w-full">
+        <Link 
+          href={`/villa/${id}`} 
+          className="block relative w-full"
+          title={id === "willow-peak" ? "Willow Peak Resort Kurvande, Lonavala" : id === "canopy-crest" ? "StayWillas Canopy Crest Khopoli - 4 BHK Villa with Swimming Pool Chavani" : id === "the-angle-house" ? "The Angle House Lonavala - Glass Villa with Waterfall Pool & Jacuzzi" : name}
+        >
           {/* Image Container */}
           <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl md:rounded-2xl bg-slate-200 shrink-0">
             <Image
               src={image}
-              alt={`Luxury villas near Mumbai - ${name} in ${location}`}
+              alt={id === "willow-peak" ? "Willow Peak Resort Kurvande Lonavala - Luxury A-Frame Chalet" : id === "canopy-crest" ? "StayWillas Canopy Crest Khopoli - Premium Villa with Swimming Pool Chavani" : id === "the-angle-house" ? "The Angle House Lonavala - Luxury Glass Villa with Waterfall Pool & Jacuzzi" : `${name} in ${location} - Luxury Villa`}
               fill
               sizes="(max-width: 768px) 50vw, 33vw"
               loading="lazy"

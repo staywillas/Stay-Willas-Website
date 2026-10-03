@@ -26,14 +26,15 @@ export default function Loading() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="w-20 h-20 rounded-full flex items-center justify-center border border-border-subtle overflow-hidden bg-white shadow-lg"
+          className="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden shadow-xl"
         >
           <Image 
-            src="/images/logo.webp" 
+            src="/images/stay-willas-emblem.webp" 
             alt="Stay Willas Logo" 
-            width={80}
-            height={80}
-            className="w-full h-full object-cover scale-[1.6]" 
+            width={96}
+            height={96}
+            className="w-full h-full object-cover scale-[1.05]" 
+            priority
           />
         </motion.div>
 

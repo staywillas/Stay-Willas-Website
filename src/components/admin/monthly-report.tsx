@@ -24,6 +24,7 @@ import {
   Receipt,
   HelpCircle
 } from "lucide-react";
+import { STAY_WILLAS_EMBLEM_PNG_DATA_URL } from "@/lib/pdf-logo";
 
 interface Villa {
   id: string;
@@ -326,16 +327,24 @@ export default function MonthlyReport({
 
         currentY = 16;
 
-        // Brand & Title
-        doc.setFont("Helvetica", "bold");
-        doc.setFontSize(18);
-        doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-        doc.text("STAY WILLAS", margin, currentY + 3);
+        // Official Stay Willas Circular Emblem
+        const emblemSize = 14;
+        try {
+          doc.addImage(STAY_WILLAS_EMBLEM_PNG_DATA_URL, "PNG", margin, currentY - 2, emblemSize, emblemSize, undefined, "FAST");
+        } catch (err) {
+          console.warn("Could not render emblem in PDF", err);
+        }
 
-        doc.setFontSize(8);
+        // Brand & Title next to Emblem
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(16);
+        doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
+        doc.text("STAY WILLAS", margin + emblemSize + 3, currentY + 3.5);
+
+        doc.setFontSize(7.5);
         doc.setFont("Helvetica", "bold");
         doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-        doc.text("LUXURY Private Estates — FINANCIAL AUDIT & REVENUE STATEMENT", margin, currentY + 8);
+        doc.text("LUXURY Private Estates — FINANCIAL AUDIT & REVENUE STATEMENT", margin + emblemSize + 3, currentY + 8);
 
         // Month Title (Right Aligned)
         doc.setFontSize(14);

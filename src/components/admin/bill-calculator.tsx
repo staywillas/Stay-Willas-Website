@@ -26,6 +26,7 @@ import {
   CheckCheck,
 } from "lucide-react";
 import { sendInvoiceEmailAction } from "@/app/actions/admin";
+import { STAY_WILLAS_EMBLEM_PNG_DATA_URL } from "@/lib/pdf-logo";
 
 interface Villa {
   id: string;
@@ -572,16 +573,24 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
 
       currentY = 15;
 
-      // Brand Title
+      // Official Stay Willas Circular Emblem
+      const emblemSize = 16;
+      try {
+        doc.addImage(STAY_WILLAS_EMBLEM_PNG_DATA_URL, "PNG", marginX, currentY - 1, emblemSize, emblemSize, undefined, "FAST");
+      } catch (err) {
+        console.warn("Could not render emblem in PDF", err);
+      }
+
+      // Brand Title next to Emblem
       doc.setFont("Helvetica", "bold");
-      doc.setFontSize(22);
+      doc.setFontSize(18);
       doc.setTextColor(navyColor[0], navyColor[1], navyColor[2]);
-      doc.text("STAY WILLAS", marginX, currentY + 5);
+      doc.text("STAY WILLAS", marginX + emblemSize + 3, currentY + 5.5);
 
       doc.setFont("Helvetica", "bold");
-      doc.setFontSize(8);
+      doc.setFontSize(7.5);
       doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-      doc.text("L U X U R Y   E S T A T E S   &   V I L L A S", marginX, currentY + 10);
+      doc.text("LUXURY ESTATES & VILLAS", marginX + emblemSize + 3, currentY + 10.5);
 
       // Invoice Header metadata (Right Aligned)
       doc.setFontSize(14);

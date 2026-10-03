@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Lock, Delete, Loader2, ShieldCheck, Globe } from "lucide-react";
 import { CareLanguage, translations } from "@/lib/care-translations";
 
@@ -101,8 +102,15 @@ export default function PinPad({ onSuccess, verifyPinAction, lang, onLangChange 
 
       {/* Brand Header (Compact) */}
       <div className="text-center mb-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center mx-auto mb-1.5 shadow-md">
-          <ShieldCheck size={20} className="text-black stroke-[2.5]" />
+        <div className="relative w-16 h-16 rounded-full overflow-hidden shadow-lg mx-auto mb-2 flex items-center justify-center">
+          <Image 
+            src="/images/stay-willas-emblem.webp" 
+            alt="Stay Willas Logo" 
+            width={64} 
+            height={64} 
+            className="w-full h-full object-cover scale-[1.05]" 
+            priority
+          />
         </div>
         <h1 className="text-lg font-black font-heading text-white tracking-wide leading-tight">
           {t.villaName}

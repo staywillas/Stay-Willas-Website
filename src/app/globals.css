@@ -125,7 +125,7 @@
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight;
-    color: #0F172A;
+    color: inherit;
   }
 
   /* Custom prose typography styles since @tailwindcss/typography is not installed */

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, startTransition, useActionState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Users, Loader2, AlertCircle, Eye, EyeOff, Sparkles } from "lucide-react";
 import { loginAction } from "@/app/actions/login-actions";
@@ -54,6 +55,18 @@ export default function LoginForm({ role, redirectUrl, showHeader = true }: Logi
       {/* Header */}
       {showHeader && (
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-3">
+            <div className="relative w-18 h-18 rounded-full overflow-hidden shadow-lg flex items-center justify-center">
+              <Image 
+                src="/images/stay-willas-emblem.webp" 
+                alt="Stay Willas Logo" 
+                width={72} 
+                height={72} 
+                className="w-full h-full object-cover scale-[1.05]"
+                priority
+              />
+            </div>
+          </div>
           <span className="text-[#C9A84C] font-montserrat font-semibold tracking-[0.3em] uppercase text-[10px] block mb-2">
             {headerInfo.eyebrow}
           </span>

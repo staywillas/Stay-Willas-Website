@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "khopoli villa with swimming pool",
     "canopy crest khopoli",
     "khopoli villas",
-    "villas near imagica with private pool",
+    "khopoli luxury vacation homes",
     "khopoli villa staycation",
     "corporate offsite villa khopoli"
   ],
@@ -605,13 +605,15 @@ export default async function KhopoliPage() {
         {/* Internal Blog Links */}
         <section className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 mb-16">
           <div className="p-8 bg-[#FAF8F5] rounded-3xl border border-[#DAA520]/15">
-            <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Related Guides</h3>
+            <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Featured Khopoli Villa & Guides</h3>
             <ul className="space-y-3 text-sm text-slate-700 font-light">
+              <li className="font-semibold">→ <Link href="/villa/canopy-crest" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">StayWillas Canopy Crest Khopoli — 4 BHK Premium Villa with Swimming Pool Chavani</Link></li>
+              <li>→ <Link href="/blog/skip-lonavala-traffic-khopoli-weekend-villa-getaway" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Skip Lonavala Traffic: Why Smart Weekend Travelers Choose Khopoli Villas</Link></li>
+              <li>→ <Link href="/blog/large-group-villa-staycation-khopoli-private-pool" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Ultimate Large Group & Multi-Family Villa Staycation in Khopoli (4-5 BHK Private Pool)</Link></li>
+              <li>→ <Link href="/blog/corporate-offsite-startup-team-retreat-villas-khopoli" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Corporate Offsite & Startup Retreats in Khopoli: Why Private Pool Villas Beat Hotels</Link></li>
+              <li>→ <Link href="/blog/best-villas-near-imagica-khopoli-with-private-pool" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Best Villas Near Imagica Khopoli with Private Pool</Link></li>
               <li>→ <Link href="/blog/khopoli-vs-lonavala-villa-comparison" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Khopoli vs Lonavala Villa Comparison: Valley Views or Quiet Villa?</Link></li>
               <li>→ <Link href="/blog/khopoli-waterfall-monsoon-villa-guide" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Khopoli Waterfall & Monsoon Villa Guide</Link></li>
-              <li>→ <Link href="/blog/best-khopoli-villa-for-large-groups" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Best Khopoli Villa for Large Groups & Corporate Offsites</Link></li>
-              <li>→ <Link href="/blog/corporate-offsite-checklist-for-a-khopoli-villa" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Corporate Offsite Checklist for a Khopoli Villa</Link></li>
-              <li>→ <Link href="/blog/things-to-do-near-adlabs-imagica-khopoli" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Things to Do Near Adlabs Imagica, Khopoli</Link></li>
             </ul>
           </div>
         </section>

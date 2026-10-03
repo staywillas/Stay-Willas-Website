@@ -10,7 +10,7 @@ import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
 export const metadata: Metadata = {
   title: "About Stay Willas | Private Villa Rentals in Maharashtra",
   description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
-  keywords: ["about Stay Willas", "private villa rentals in maharashtra", "premium villa management", "luxury villas in lonavala", "villas in khopoli"],
+  keywords: ["about Stay Willas", "stay willas story", "luxury hospitality brand maharashtra", "verified vacation home network", "premium villa management maharashtra"],
   alternates: {
     canonical: "https://www.staywillas.com/about",
   },

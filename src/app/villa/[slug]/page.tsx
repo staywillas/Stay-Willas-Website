@@ -582,8 +582,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   let keywordsList = [`${villa.bedrooms} BHK private pool villa in ${city}`, `${villa.name.toLowerCase()}`, `villa in ${city.toLowerCase()}`, `private pool villa ${city.toLowerCase()}`];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "The Angle House Lonavala | Glass Villa with Private Waterfall Pool & Jacuzzi | Stay Willas";
-    descText = "Book StayWillas The Angle House in Kamshet, Lonavala (also known as Angel House Lonavala). Premier 3 BHK luxury glass villa featuring a private waterfall swimming pool, master bedroom jacuzzi, pet-friendly fenced lawns, and personal chef dining. Direct bookings from ₹13,000/night.";
+    titleText = "The Angle House Lonavala | 3 BHK Villa with Private Waterfall Pool & Jacuzzi | Stay Willas";
+    descText = "Book StayWillas The Angle House in Lonavala (Angel House Lonavala) — luxury 3 BHK architectural glass villa featuring a private waterfall swimming pool, master jacuzzi suite, pet-friendly fenced lawn, and private chef dining. Direct bookings from ₹13,000/night.";
     keywordsList = [
       "staywillas the angle house",
       "the angle house lonavala",
@@ -591,15 +591,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "angel house lonavala",
       "staywillas the angle house reviews",
       "glass house villa lonavala",
-      "the angle house kamshet",
-      "3 BHK glass house villa in lonavala with private pool",
+      "3 bhk villa in lonavala with private pool",
       "villa with waterfall pool in lonavala",
-      "pet friendly villa lonavala",
-      "jacuzzi villa lonavala"
+      "jacuzzi villa lonavala",
+      "pet friendly villa lonavala"
     ];
   } else if (villa.slug === "canopy-crest") {
     titleText = "StayWillas Canopy Crest Khopoli | Premium Villa with Swimming Pool Chavani";
-    descText = "Book StayWillas Canopy Crest in Chavani, Khopoli — a 4 BHK premium private pool villa estate featuring an expansive 22ft private swimming pool, sprawling charpai lawns, bonfire deck, and on-demand chef service. Direct bookings from ₹15,000/night.";
+    descText = "Book StayWillas Canopy Crest in Chavani, Khopoli — 4 BHK premium private pool villa estate featuring a 22ft private swimming pool, scenic mountain views, bonfire lawn, and on-demand chef service. Direct bookings from ₹15,000/night.";
     keywordsList = [
       "staywillas canopy crest khopoli",
       "canopy crest khopoli",
@@ -607,26 +606,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "canopy crest chavani khopoli",
       "villas in khopoli with private pool",
       "khopoli villa with swimming pool",
-      "4 BHK villa in khopoli",
+      "4 bhk villa in khopoli",
       "large group villa khopoli",
       "staywillas canopy crest reviews"
     ];
   } else if (villa.slug === "willow-peak") {
-    titleText = "Willow Peak Resort Kurvande | Luxury A-Frame Cottages (Breeze, Crest, Heaven) Lonavala | Stay Willas";
-    descText = "Book Willow Peak Resort in Kurvande (Kurwande), Lonavala — 3 standalone Swiss-style wooden A-frame chalet cottages (Breeze, Crest, and Heaven) with private jacuzzi baths, Sahyadri mountain views, garden barbecue deck, and chef dining from ₹5,999/night.";
+    titleText = "Willow Peak Resort Kurvande, Lonavala | Luxury A-Frame Chalet | Stay Willas";
+    descText = "Book Willow Peak Resort Kurvande, Lonavala — boutique Swiss-style wooden A-frame chalet cottages with private jacuzzi, mountain views, lawn BBQ & chef dining from ₹4,500/night.";
     keywordsList = [
       "willow peak resort kurvande",
-      "willow peak breeze",
-      "willow peak crest",
-      "willow peak heaven",
       "willow peak lonavala",
-      "willow peak resort lonavala",
+      "willow peak resort",
+      "willow peak resort kurvande lonavala",
+      "willow peak kurwande",
+      "willow peak",
       "a-frame cottage lonavala",
-      "cottage stay in kurwande lonavala",
       "jacuzzi cottage lonavala",
-      "a frame villa lonavala",
-      "couples villa with jacuzzi lonavala",
-      "resort in kurvande lonavala"
+      "resort in kurvande lonavala",
+      "cottage stay in kurwande lonavala",
+      "couples villa with jacuzzi lonavala"
     ];
   } else if (villa.slug.startsWith("willow-peak-cottage")) {
     const letter = villa.slug.replace("willow-peak-cottage-", "").toLowerCase();
