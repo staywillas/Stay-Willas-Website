@@ -62,7 +62,7 @@ const faqs = [
   },
   {
     question: "How far are the birthday villas from Mumbai?",
-    answer: "Our villas are strategically located along the Mumbai-Pune Expressway: Canopy Crest in Khopoli is just 75 to 90 minutes from Vashi/Chembur (bypassing ghat traffic), while The Angle House and Willow Peak in Lonavala are reached within 95 to 110 minutes."
+    answer: "Our villas are strategically located along the Mumbai-Pune Expressway: Canopy Crest in Khopoli is just 75 to 90 minutes from Vashi/Chembur (bypassing ghat traffic), while The Angle House in Kamshet, Lonavala is reached within 95 to 105 minutes."
   }
 ];
 

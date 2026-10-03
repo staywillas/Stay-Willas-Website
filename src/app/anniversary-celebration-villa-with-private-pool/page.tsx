@@ -53,7 +53,7 @@ const faqs = [
   },
   {
     question: "What privacy measures are in place for couples?",
-    answer: "Complete secluded privacy is guaranteed. At Willow Peak, each chalet is oriented towards open Sahyadri valley horizons with independent entrances and private balconies. At The Angle House, the entire 3 BHK estate and waterfall swimming pool are booked exclusively for your private use."
+    answer: "Complete secluded privacy is guaranteed. At Willow Peak, each standalone A-frame chalet is oriented towards open Sahyadri valley horizons with independent entrances, secluded private balconies, and private en-suite hydrotherapy jacuzzis. No shared walls and no intrusions."
   },
   {
     question: "How can we arrange anniversary cakes, flowers, or special decorations?",
@@ -61,7 +61,7 @@ const faqs = [
   },
   {
     question: "What are the drive times from Mumbai and Pune?",
-    answer: "Both Lonavala properties (Willow Peak and The Angle House) are reachable within 90 minutes from Pune via NH 48 and 100 to 110 minutes from Mumbai via the Mumbai-Pune Expressway, making for an effortless romantic road trip."
+    answer: "Willow Peak in Kurwande, Lonavala is reachable within 90 minutes from Pune via NH 48 and 100 to 110 minutes from Mumbai via the Mumbai-Pune Expressway, making for an effortless romantic road trip."
   }
 ];
 
@@ -182,26 +182,26 @@ export default async function AnniversaryCelebrationPage() {
       {/* Featured Romantic Villas */}
       <section id="villas" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-[#B8860B] font-black tracking-widest text-xs uppercase block mb-2">Curated for Two</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0B1528]">Romantic Anniversary Villa Collection</h2>
+          <span className="text-[#B8860B] font-black tracking-widest text-xs uppercase block mb-2">Curated Exclusively for Two</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0B1528]">Romantic Couple Chalets at Willow Peak</h2>
           <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto mt-3">
-            Escape to intimate timber chalets with en-suite jacuzzis or exclusive private pool glass estates.
+            Escape to intimate Swiss-inspired timber chalets with en-suite heated hydrotherapy jacuzzis, clifftop mountain views, and candlelit balcony dining.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Villa 1: Willow Peak */}
+          {/* Chalet 1: Willow Peak Breeze */}
           <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
             <div>
               <div className="relative aspect-[16/10] w-full">
                 <Image
                   src="/assets/villas/willow-peak/gallery-3.webp"
-                  alt="Willow Peak Resort Kurvande Lonavala - Romantic A-Frame Chalet with Private Jacuzzi"
+                  alt="Willow Peak Resort Kurvande Lonavala - Romantic Breeze A-Frame Chalet with Private Jacuzzi"
                   fill
                   className="object-cover"
                 />
                 <div className="absolute top-4 left-4 bg-[#0B1528]/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-white text-xs font-bold shadow-sm">
-                  Kurwande, Lonavala • 1 BHK Chalet
+                  Kurwande, Lonavala • 1 BHK Romantic Chalet
                 </div>
                 <div className="absolute top-4 right-4 bg-[#DAA520] text-[#0B1528] px-3.5 py-1.5 rounded-full text-xs font-black shadow-sm">
                   In-Room Jacuzzi + Mountain Deck
@@ -209,10 +209,10 @@ export default async function AnniversaryCelebrationPage() {
               </div>
               <div className="p-6 sm:p-8">
                 <h3 className="text-2xl font-heading font-bold text-[#0B1528] mb-3">
-                  Willow Peak Resort Kurvande — Alpine A-Frame Chalet
+                  Willow Peak — Breeze Romantic A-Frame Chalet
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                  Swiss-inspired standalone wooden A-frame chalet featuring an en-suite hot hydrotherapy jacuzzi bath, high timber ceilings, panoramic mountain deck, and candlelit balcony dining. Designed exclusively for romantic anniversaries.
+                  Swiss-inspired standalone wooden A-frame chalet featuring an en-suite hot hydrotherapy jacuzzi bath, high timber ceilings, panoramic mountain deck, and candlelit balcony dining. Designed exclusively for romantic couples and intimate anniversaries.
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-slate-800 font-semibold mb-6">
@@ -258,55 +258,55 @@ export default async function AnniversaryCelebrationPage() {
             </div>
           </div>
 
-          {/* Villa 2: The Angle House */}
+          {/* Chalet 2: Willow Peak Crest */}
           <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
             <div>
               <div className="relative aspect-[16/10] w-full">
                 <Image
-                  src="/assets/villas/the-angle-house/gallery-1.webp"
-                  alt="The Angle House Lonavala - Master Jacuzzi Suite & Waterfall Pool for Anniversary"
+                  src="/assets/villas/willow-peak/gallery-1.webp"
+                  alt="Willow Peak Resort Kurvande Lonavala - Crest Romantic Chalet with Sunset Mist & Private Jacuzzi"
                   fill
                   className="object-cover"
                 />
                 <div className="absolute top-4 left-4 bg-[#0B1528]/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-white text-xs font-bold shadow-sm">
-                  Kamshet, Lonavala • 3 BHK Glass Villa
+                  Kurwande, Lonavala • 1 BHK Romantic Chalet
                 </div>
                 <div className="absolute top-4 right-4 bg-[#DAA520] text-[#0B1528] px-3.5 py-1.5 rounded-full text-xs font-black shadow-sm">
-                  Waterfall Pool + Jacuzzi
+                  En-Suite Jacuzzi + Sunset Mist
                 </div>
               </div>
               <div className="p-6 sm:p-8">
                 <h3 className="text-2xl font-heading font-bold text-[#0B1528] mb-3">
-                  The Angle House — Master Jacuzzi Suite & Waterfall Pool
+                  Willow Peak — Crest Romantic Mountain Chalet
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                  For couples wanting absolute grandeur and exclusive estate buyout. Enjoy a master bedroom with glass-fronted jacuzzi, a private cascading waterfall swimming pool, and private gourmet chef service.
+                  Secluded alpine timber chalet nestled along the misty Kurwande ridge near Lion&apos;s Point. Features an en-suite heated hydrotherapy jacuzzi tub, plush king bedding, romantic evening garden sit-out, and starry Sahyadri night skies.
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-slate-800 font-semibold mb-6">
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
-                      <Waves size={14} />
-                    </div>
-                    <span>Private Waterfall Pool</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
-                    <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
                       <Bath size={14} />
                     </div>
-                    <span>Master Jacuzzi Bath</span>
+                    <span>Private Heated Jacuzzi</span>
                   </div>
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
-                      <UtensilsCrossed size={14} />
+                      <Eye size={14} />
                     </div>
-                    <span>Personal Chef Dining</span>
+                    <span>Sunset Valley Panorama</span>
                   </div>
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
-                      <Wine size={14} />
+                      <Heart size={14} />
                     </div>
-                    <span>Sunset Lawn Lounge</span>
+                    <span>Anniversary Room Decor</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
+                    <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
+                      <Flame size={14} />
+                    </div>
+                    <span>Open-Sky Bonfire Setup</span>
                   </div>
                 </div>
               </div>
@@ -314,16 +314,39 @@ export default async function AnniversaryCelebrationPage() {
 
             <div className="p-6 sm:p-8 pt-0 flex items-center justify-between border-t border-slate-100">
               <div>
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Full Estate Direct Rate</span>
-                <span className="text-2xl sm:text-3xl font-black text-[#0B1528]">₹13,000<span className="text-xs font-normal text-slate-500"> / night</span></span>
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Direct Couple Rates</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#0B1528]">₹4,500<span className="text-xs font-normal text-slate-500"> / night</span></span>
               </div>
               <Link
-                href="/villa/the-angle-house"
+                href="/villa/willow-peak"
                 className="px-6 py-3.5 rounded-full bg-[#0B1528] hover:bg-[#DAA520] hover:text-[#0B1528] text-white font-black text-xs uppercase tracking-wider transition-all shadow-md"
               >
-                View Villa & Dates →
+                View Chalet & Dates →
               </Link>
             </div>
+          </div>
+        </div>
+
+        {/* Large Family Milestone Callout (For Groups) */}
+        <div className="mt-14 bg-gradient-to-br from-[#0B1528] to-[#182B49] text-white rounded-3xl p-8 sm:p-10 border border-[#DAA520]/30 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#DAA520]/20 border border-[#DAA520]/40 text-[#F5C542] text-xs font-bold uppercase tracking-wider mb-3">
+              <Users size={13} /> Large Family Milestone Celebrations
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-heading font-black text-white">
+              Celebrating a Silver or Golden Jubilee with Extended Family?
+            </h3>
+            <p className="text-white/80 text-sm mt-2 max-w-2xl leading-relaxed font-light">
+              While Willow Peak is exclusively reserved for romantic couples, if you are celebrating a parent&apos;s 25th or 50th milestone anniversary with 12 to 25+ family members, explore our grand private group estates: <Link href="/villa/the-angle-house" className="underline font-bold text-[#F5C542] hover:text-white">The Angle House (3 BHK Glass Villa with waterfall pool for 12–16 guests)</Link> and <Link href="/villa/canopy-crest" className="underline font-bold text-[#F5C542] hover:text-white">Canopy Crest (4 BHK Estate on 4-acre grounds for 16–25+ guests)</Link>.
+            </p>
+          </div>
+          <div className="shrink-0">
+            <Link
+              href="/milestone-birthday-celebration-villa-maharashtra"
+              className="px-8 py-4 rounded-full bg-[#DAA520] hover:bg-[#C4941A] text-[#0B1528] font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-lg hover:scale-105 inline-block whitespace-nowrap"
+            >
+              Explore Group Estates →
+            </Link>
           </div>
         </div>
       </section>

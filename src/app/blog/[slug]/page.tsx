@@ -333,11 +333,11 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                 <div className="inline-flex items-center gap-2 bg-[#DAA520]/15 border border-[#DAA520]/40 rounded-full px-4 py-1.5 mb-3 shadow-sm">
                   <Sparkles size={14} className="text-[#B8860B] animate-pulse" />
                   <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#B8860B]">
-                    Signature Lonavala Villas
+                    Signature Stay Willas Collection
                   </span>
                 </div>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-[#1B3564] tracking-tight">
-                  Featured Lonavala Villa Stays
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-[#0E1B35] tracking-tight">
+                  {isKhopoli ? "Featured Khopoli & Nearby Villa Stays" : isLonavala ? "Featured Lonavala Villa Stays" : "Featured Signature Villa Stays"}
                 </h3>
                 <p className="text-slate-600 text-sm mt-2 font-normal">
                   Reserve directly with Stay Willas to unlock guaranteed best tariffs, zero platform commissions, and personalized concierge coordination.
@@ -346,64 +346,116 @@ export default async function BlogDetailsPage({ params }: PageProps) {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {featuredVillas.map((villa) => {
-                  const isAngleHouse = villa.slug === "the-angle-house";
-                  const displayName = isAngleHouse
-                    ? "The Angle House"
-                    : villa.slug.includes("willow-peak") && villa.name.includes("(")
-                    ? "Willow Peak"
-                    : villa.name;
-                  const startingPrice = isAngleHouse ? villa.price : 4999;
+                  const meta = villa.slug === "canopy-crest"
+                    ? {
+                        name: "Canopy Crest",
+                        badge: "4-Acre Estate & 22ft Private Pool",
+                        badgeBg: "bg-[#0E1B35]/95 text-[#F5C542] border-[#DAA520]/50",
+                        image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+                        location: "Chavani, Khopoli, Maharashtra",
+                        specs: "4 BHK Hillside Estate",
+                        guests: "Sleeps 16 to 25+ Guests (Groups)",
+                        startingPrice: 15000,
+                        features: [
+                          "Massive 22x12 ft private swimming pool with Sahyadri mountain views",
+                          "Sprawling 4-acre private estate grounds for large groups & offsites",
+                          "Traditional charpai garden lounge with evening bonfire pit & live BBQ grill",
+                          "Ground-floor senior-friendly suites with step-free accessibility",
+                          "Full in-house chef service cooking regional cuisines & midnight snacks"
+                        ]
+                      }
+                    : villa.slug === "the-angle-house"
+                    ? {
+                        name: "The Angle House",
+                        badge: "Architectural Glass & Waterfall Pool",
+                        badgeBg: "bg-[#0E1B35]/95 text-[#F5C542] border-[#DAA520]/50",
+                        image: "/assets/villas/the-angle-house/gallery-11.webp",
+                        location: "Kamshet, Lonavala, Maharashtra",
+                        specs: "3 BHK Glass Villa",
+                        guests: "Sleeps 12 to 16 Guests (Groups)",
+                        startingPrice: 13000,
+                        features: [
+                          "Private cascading waterfall pool with underwater mood lighting",
+                          "Master suite with in-room hydrotherapy jacuzzi overlooking mountain vistas",
+                          "100% pet-friendly sprawling turf lawn with secure boundary fencing",
+                          "Double-height glass living salon ideal for family and friend groups",
+                          "Dedicated private chef serving fresh Maharashtrian & Jain menus"
+                        ]
+                      }
+                    : villa.slug.includes("willow-peak")
+                    ? {
+                        name: "Willow Peak Resort",
+                        badge: "Alpine A-Frame Chalets & Jacuzzi",
+                        badgeBg: "bg-[#1B2A1E]/95 text-[#6EE7B7] border-[#10B981]/50",
+                        image: "/assets/villas/willow-peak/gallery-1.webp",
+                        location: "Kurwande, Lonavala, Maharashtra",
+                        specs: "Standalone A-Frame Chalets",
+                        guests: "Romantic Couples Only (2 to 12 Guests)",
+                        startingPrice: 4500,
+                        features: [
+                          "En-suite heated bubble jacuzzi in every standalone chalet with mist views",
+                          "Authentic pine wood A-frame architecture with private mountain mist deck",
+                          "Exclusively designed for romantic couples, anniversaries & honeymoons",
+                          "Candlelit balcony dining setups, floating breakfasts & room decor",
+                          "Secluded Kurwande clifftop setting near Lion's Point & Tiger's Leap"
+                        ]
+                      }
+                    : {
+                        name: villa.name,
+                        badge: "Private Pool Villa",
+                        badgeBg: "bg-[#0E1B35]/95 text-[#F5C542] border-[#DAA520]/50",
+                        image: (villa.images && villa.images[0]) || "/assets/villas/the-angle-house/gallery-11.webp",
+                        location: villa.location || "Maharashtra",
+                        specs: `${villa.bedrooms || 3} BHK Villa`,
+                        guests: `Sleeps ${villa.guests || 12} Guests`,
+                        startingPrice: villa.price || 12000,
+                        features: [
+                          "100% private swimming pool with outdoor lounging deck",
+                          "Spacious air-conditioned bedrooms with attached bathrooms",
+                          "Dedicated on-site caretaker and chef service on request",
+                          "Gated private compound with parking and generator backup"
+                        ]
+                      };
 
                   return (
                     <div 
                       key={villa.slug}
-                      className="bg-white rounded-2xl sm:rounded-3xl border border-[#DAA520]/25 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group transform hover:-translate-y-1"
+                      className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group transform hover:-translate-y-1"
                     >
                       <div>
                         {/* Image Banner */}
                         <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900">
                           <Image
-                            src={
-                              isAngleHouse
-                                ? "/assets/villas/the-angle-house/gallery-11.webp"
-                                : "/assets/villas/willow-peak/gallery-1.webp"
-                            }
-                            alt={displayName}
+                            src={meta.image}
+                            alt={meta.name}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-700"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
                           
                           {/* Badge */}
                           <div className="absolute top-4 left-4">
-                            <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-md border shadow-md flex items-center gap-1.5 ${
-                              isAngleHouse
-                                ? "bg-[#1B3564]/90 text-[#F3C065] border-[#DAA520]/50"
-                                : "bg-[#064E3B]/90 text-[#34D399] border-[#10B981]/50"
-                            }`}>
-                              {isAngleHouse ? <Waves size={12} /> : <Flame size={12} />}
-                              {isAngleHouse ? "Architectural Glass & Waterfall Pool" : "Alpine A-Frame Chalets & Jacuzzi"}
+                            <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full backdrop-blur-md border shadow-md flex items-center gap-1.5 ${meta.badgeBg}`}>
+                              {villa.slug === "willow-peak" ? <Flame size={12} /> : <Waves size={12} />}
+                              {meta.badge}
                             </span>
                           </div>
 
-                          {/* Price Tag & Villa Name in Official Brand Green */}
+                          {/* Villa Name & Location in Crisp White + Gold */}
                           <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between z-10">
                             <div className="pr-2">
-                              <h4 
-                                style={{ color: "#6B9E1D" }}
-                                className="font-heading text-2xl sm:text-3xl font-black leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] !text-[#6B9E1D] tracking-tight"
-                              >
-                                {displayName}
+                              <h4 className="font-heading text-2xl sm:text-3xl font-black leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] tracking-tight">
+                                {meta.name}
                               </h4>
-                              <p className="text-xs text-slate-100 font-medium flex items-center gap-1.5 mt-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
-                                <MapPin size={13} className="text-[#6B9E1D] shrink-0" />
-                                <span>{villa.location}</span>
+                              <p className="text-xs text-white/90 font-medium flex items-center gap-1.5 mt-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
+                                <MapPin size={13} className="text-[#F5C542] shrink-0" />
+                                <span>{meta.location}</span>
                               </p>
                             </div>
                             <div className="text-right shrink-0">
                               <span className="text-[10px] uppercase tracking-wider text-slate-200 block font-semibold drop-shadow-sm">Starting from</span>
-                              <span className="text-xl sm:text-2xl font-black text-[#F3C065] drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
-                                ₹{startingPrice?.toLocaleString("en-IN")}
+                              <span className="text-xl sm:text-2xl font-black text-[#F5C542] drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                                ₹{meta.startingPrice.toLocaleString("en-IN")}
                               </span>
                               <span className="text-[10px] text-slate-200 font-medium drop-shadow-sm"> / night</span>
                             </div>
@@ -415,54 +467,21 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                           <div className="grid grid-cols-2 gap-3 pb-4 mb-4 border-b border-slate-100 text-xs text-slate-700">
                             <div className="flex items-center gap-2 font-medium">
                               <BedDouble size={16} className="text-[#DAA520] shrink-0" />
-                              <span>{isAngleHouse ? "3 BHK Glass Villa" : "3 Standalone Chalets"}</span>
+                              <span>{meta.specs}</span>
                             </div>
                             <div className="flex items-center gap-2 font-medium">
                               <Users size={16} className="text-[#DAA520] shrink-0" />
-                              <span>{isAngleHouse ? "Sleeps up to 12 Guests" : "2 to 12 Guests"}</span>
+                              <span>{meta.guests}</span>
                             </div>
                           </div>
 
                           <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 mb-6">
-                            {isAngleHouse ? (
-                              <>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-[#DAA520] font-bold">✓</span>
-                                  <span>Private cascading waterfall pool with underwater mood lighting</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-[#DAA520] font-bold">✓</span>
-                                  <span>Master suite with in-room hydrotherapy jacuzzi overlooking mountain vistas</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-[#DAA520] font-bold">✓</span>
-                                  <span>100% pet-friendly sprawling turf lawn with secure boundary fencing</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-[#DAA520] font-bold">✓</span>
-                                  <span>Dedicated private chef serving fresh Maharashtrian & Jain menus</span>
-                                </li>
-                              </>
-                            ) : (
-                              <>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-[#10B981] font-bold">✓</span>
-                                  <span>En-suite heated bubble jacuzzi in every chalet with mountain mist views</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-[#10B981] font-bold">✓</span>
-                                  <span>Authentic pine wood A-frame architecture with modern climate control</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-[#10B981] font-bold">✓</span>
-                                  <span>Manicured central lawn with open-sky bonfire pit & live BBQ grill setup</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                  <span className="text-[#10B981] font-bold">✓</span>
-                                  <span>Secluded Kurwande clifftop setting near Lion's Point & Tiger's Leap</span>
-                                </li>
-                              </>
-                            )}
+                            {meta.features.map((feature, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <span className="text-[#DAA520] font-bold">✓</span>
+                                <span>{feature}</span>
+                              </li>
+                            ))}
                           </ul>
                         </div>
                       </div>
@@ -470,9 +489,9 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                       <div className="p-5 sm:p-6 pt-0">
                         <Link
                           href={`/villa/${villa.slug}`}
-                          className="w-full flex items-center justify-center gap-2 bg-[#1B3564] hover:bg-[#6B9E1D] text-white font-bold py-3.5 px-6 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md group-hover:shadow-lg"
+                          className="w-full flex items-center justify-center gap-2 bg-[#0E1B35] hover:bg-[#DAA520] hover:text-[#0E1B35] text-white font-bold py-3.5 px-6 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md group-hover:shadow-lg"
                         >
-                          <span>Explore {displayName}</span>
+                          <span>Explore {meta.name}</span>
                           <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
                         </Link>
                       </div>
