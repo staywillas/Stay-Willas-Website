@@ -48,8 +48,8 @@ export default function Loading() {
           >
             STAY WILLAS
           </motion.h2>
-          <p className="font-sans text-[9px] tracking-[0.4em] text-accent-secondary uppercase font-black mt-2">
-            Curating Serenity
+          <p className="font-sans text-[9px] tracking-[0.35em] text-accent-secondary uppercase font-black mt-2">
+            Stay • Relax • Repeat
           </p>
         </div>
         

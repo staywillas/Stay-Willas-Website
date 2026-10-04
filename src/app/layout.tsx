@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
 import FloatingWidgets from "@/components/layout/floating-widgets";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
+import Preloader from "@/components/layout/preloader";
 import Script from "next/script";
 import { ORGANIZATION_SCHEMA, WEBSITE_SCHEMA, HOMEPAGE_SITELINKS_SCHEMA } from "@/lib/schema";
 
@@ -173,6 +174,7 @@ export default function RootLayout({
         className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} ${playfair.variable} antialiased font-sans overflow-x-hidden max-w-full w-full relative`}
         suppressHydrationWarning
       >
+        <Preloader />
         <ClerkProvider>
           <SmoothScrollProvider>
             <div className="overflow-x-hidden w-full max-w-full relative">

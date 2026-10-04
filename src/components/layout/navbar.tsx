@@ -166,9 +166,9 @@ const Navbar = () => {
               isDarkTheme ? "text-brand-navy" : "text-white"
             )}>STAY WILLAS</span>
             <span className={cn(
-              "font-sans text-[7px] sm:text-[10px] md:text-[11px] tracking-[0.14em] uppercase font-extrabold transition-colors duration-500 whitespace-nowrap hidden sm:block",
-              isDarkTheme ? "text-brand-navy/70" : "text-white/70"
-            )}>stay ! Relax ! Repeat !</span>
+              "font-sans text-[6.5px] xs:text-[7.5px] sm:text-[10px] md:text-[11px] tracking-[0.12em] sm:tracking-[0.14em] uppercase font-bold transition-colors duration-500 whitespace-nowrap",
+              isDarkTheme ? "text-brand-navy/75" : "text-white/75"
+            )}>Stay • Relax • Repeat</span>
           </div>
         </Link>
 
@@ -397,7 +397,10 @@ const Navbar = () => {
                 <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-md flex items-center justify-center shrink-0">
                   <Image src="/images/stay-willas-emblem.webp" alt="Stay Willas" width={48} height={48} className="w-full h-full object-cover scale-[1.05]" />
                 </div>
-                <span className="font-heading text-lg tracking-widest text-[#FAF8F5]">STAY WILLAS</span>
+                <div className="flex flex-col">
+                  <span className="font-heading text-lg tracking-widest text-[#FAF8F5]">STAY WILLAS</span>
+                  <span className="font-sans text-[8px] tracking-[0.16em] uppercase font-bold text-[#DAA520]">Stay • Relax • Repeat</span>
+                </div>
               </div>
               <motion.button
                 onClick={() => setIsMobileMenuOpen(false)}
