@@ -350,7 +350,7 @@ const terraCottaSpaces = [
 const willowPeakSpaces = [
   {
     title: "Breeze (A-Frame Chalet)",
-    image: "/assets/villas/willow-peak/gallery-12.webp",
+    image: "/assets/villas/willow-peak/gallery-1.webp",
     description: "Chalet with king bed, in-room jacuzzi & garden sit-out."
   },
   {

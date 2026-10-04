@@ -69,7 +69,7 @@ const locationModules = [
     slug: "/areas/lonavala",
     featuredVilla: "Willow Peak",
     villaSlug: "/villa/willow-peak",
-    image: "/assets/villas/willow-peak/gallery-12.webp",
+    image: "/assets/villas/willow-peak/gallery-1.webp",
     objectPosition: "object-[center_72%]",
     travelTime: "2 – 2.5 Hours from Mumbai • 1.5 – 2 Hours from Pune",
     bestFor: "Couples, Anniversaries & Intimate Weekend Getaways",

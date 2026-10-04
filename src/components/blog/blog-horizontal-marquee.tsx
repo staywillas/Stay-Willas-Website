@@ -63,7 +63,7 @@ export const LONAVALA_MARQUEE_ITEMS: MarqueeItem[] = [
   },
   {
     id: "wp-3",
-    image: "/assets/villas/willow-peak/gallery-11.webp",
+    image: "/assets/villas/willow-peak/gallery-1.webp",
     villaName: "Willow Peak",
     badge: "Scenic Lawn & Sit-Out",
     location: "Kurwande, Lonavala",
@@ -99,7 +99,7 @@ export const LONAVALA_MARQUEE_ITEMS: MarqueeItem[] = [
   },
   {
     id: "wp-5",
-    image: "/assets/villas/willow-peak/gallery-13.webp",
+    image: "/assets/villas/willow-peak/gallery-8.webp",
     villaName: "Willow Peak",
     badge: "Evening Bonfire Deck",
     location: "Kurwande, Lonavala",

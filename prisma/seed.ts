@@ -118,12 +118,13 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
-      "/assets/villas/willow-peak/gallery-12.webp",
-      "/assets/villas/willow-peak/gallery-6.webp",
       "/assets/villas/willow-peak/gallery-1.webp",
+      "/assets/villas/willow-peak/gallery-3.webp",
       "/assets/villas/willow-peak/gallery-4.webp",
-      "/assets/villas/willow-peak/gallery-2.webp",
-      "/assets/villas/willow-peak/gallery-3.webp"
+      "/assets/villas/willow-peak/gallery-6.webp",
+      "/assets/villas/willow-peak/gallery-8.webp",
+      "/assets/villas/willow-peak/gallery-10.webp",
+      "/assets/villas/willow-peak/main.webp"
     ],
     amenities: [
       "1 BHK A-Frame Cottage",
@@ -159,12 +160,13 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
-      "/assets/villas/willow-peak/gallery-12.webp",
-      "/assets/villas/willow-peak/gallery-6.webp",
-      "/assets/villas/willow-peak/gallery-13.webp",
-      "/assets/villas/willow-peak/gallery-14.webp",
-      "/assets/villas/willow-peak/gallery-8.webp",
-      "/assets/villas/willow-peak/gallery-9.webp"
+      "/assets/villas/willow-peak/gallery-2.webp",
+      "/assets/villas/willow-peak/gallery-3.webp",
+      "/assets/villas/willow-peak/gallery-5.webp",
+      "/assets/villas/willow-peak/gallery-7.webp",
+      "/assets/villas/willow-peak/gallery-9.webp",
+      "/assets/villas/willow-peak/gallery-10.webp",
+      "/assets/villas/willow-peak/main.webp"
     ],
     amenities: [
       "1 BHK A-Frame Cottage",
@@ -200,11 +202,12 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 1,
     bathrooms: 1,
     images: [
-      "/assets/villas/willow-peak/gallery-12.webp",
-      "/assets/villas/willow-peak/gallery-6.webp",
-      "/assets/villas/willow-peak/gallery-15.webp",
-      "/assets/villas/willow-peak/gallery-2.webp",
+      "/assets/villas/willow-peak/gallery-7.webp",
       "/assets/villas/willow-peak/gallery-3.webp",
+      "/assets/villas/willow-peak/gallery-4.webp",
+      "/assets/villas/willow-peak/gallery-5.webp",
+      "/assets/villas/willow-peak/gallery-8.webp",
+      "/assets/villas/willow-peak/gallery-10.webp",
       "/assets/villas/willow-peak/main.webp"
     ],
     amenities: [
@@ -241,18 +244,17 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     bedrooms: 3,
     bathrooms: 3,
     images: [
-      "/assets/villas/willow-peak/gallery-12.webp",
-      "/assets/villas/willow-peak/gallery-6.webp",
       "/assets/villas/willow-peak/gallery-1.webp",
-      "/assets/villas/willow-peak/gallery-4.webp",
       "/assets/villas/willow-peak/gallery-2.webp",
       "/assets/villas/willow-peak/gallery-3.webp",
-      "/assets/villas/willow-peak/main.webp",
-      "/assets/villas/willow-peak/gallery-13.webp",
-      "/assets/villas/willow-peak/gallery-14.webp",
+      "/assets/villas/willow-peak/gallery-4.webp",
+      "/assets/villas/willow-peak/gallery-5.webp",
+      "/assets/villas/willow-peak/gallery-6.webp",
+      "/assets/villas/willow-peak/gallery-7.webp",
       "/assets/villas/willow-peak/gallery-8.webp",
       "/assets/villas/willow-peak/gallery-9.webp",
-      "/assets/villas/willow-peak/gallery-15.webp"
+      "/assets/villas/willow-peak/gallery-10.webp",
+      "/assets/villas/willow-peak/main.webp"
     ],
     amenities: [
       "3 Individual Standalone Cottages (Exclusive Estate)",

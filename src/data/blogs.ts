@@ -1818,7 +1818,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "8 min read",
     date: "September 19, 2026",
-    image: "/assets/villas/willow-peak/gallery-12.webp",
+    image: "/assets/villas/willow-peak/gallery-1.webp",
     relatedVillaSlug: "willow-peak",
     featuredVillaSlugs: ["willow-peak", "the-angle-house"],
     showMarquee: true,

@@ -69,7 +69,7 @@ const VILLAS = [
     weekendRate: "₹6,999",
     rating: "4.6",
     capacity: "Up to 12 Guests • 3 Cottages",
-    image: "/assets/villas/willow-peak/gallery-12.webp",
+    image: "/assets/villas/willow-peak/gallery-1.webp",
     slug: "willow-peak",
     badge: "A-Frame Chalet",
     highlight: "In-Room Jacuzzis & BBQ",

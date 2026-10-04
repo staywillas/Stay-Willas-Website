@@ -89,13 +89,13 @@ export default function InfiniteMarquee() {
         }
         .animate-marquee-left {
           display: flex;
-          animation: marquee-left-anim 35s linear infinite;
+          animation: marquee-left-anim 50s linear infinite;
           will-change: transform;
           backface-visibility: hidden;
         }
         .animate-marquee-right {
           display: flex;
-          animation: marquee-right-anim 35s linear infinite;
+          animation: marquee-right-anim 50s linear infinite;
           will-change: transform;
           backface-visibility: hidden;
         }

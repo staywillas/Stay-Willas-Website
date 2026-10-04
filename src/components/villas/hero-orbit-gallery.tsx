@@ -71,7 +71,7 @@ export default function HeroOrbitGallery() {
             {ORBIT_ITEMS.map((item, index) => {
               // Calculate initial offset angles for 5 cards (0, 72, 144, 216, 288 deg)
               const angleDeg = (index * 360) / ORBIT_ITEMS.length;
-              const delay = -(index * 30) / ORBIT_ITEMS.length;
+              const delay = -(index * 50) / ORBIT_ITEMS.length;
 
               return (
                 <div

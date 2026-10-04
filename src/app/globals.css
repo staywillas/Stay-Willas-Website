@@ -518,7 +518,7 @@ html {
 }
 
 .animate-orbit-card {
-  animation: orbitCard 38s linear infinite;
+  animation: orbitCard 50s linear infinite;
   will-change: transform;
 }
 
@@ -533,7 +533,7 @@ html {
 }
 
 .animate-marquee {
-  animation: marquee 28s linear infinite;
+  animation: marquee 46s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
 }
