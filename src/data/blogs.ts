@@ -966,7 +966,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "7 min read",
     date: "August 31, 2026",
-    image: "/assets/villas/willow-peak/gallery-1.webp",
+    image: "/assets/villas/willow-peak/wp-01.webp",
     intro: "Couples looking for a peaceful romantic getaway near Mumbai and Pune often find standard hotel chains repetitive and crowded. If you want charming wooden architecture, misty mountain air, and unmatched privacy, staying in <strong>romantic A-frame cottages in Lonavala</strong> is the perfect romantic experience. Set in the quiet hills of Kurwande, <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak by Stay Willas</a> offers boutique wooden chalets designed specifically for romantic retreats, anniversaries, and cozy weekend escapes.",
     sections: [
       {
@@ -1011,7 +1011,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "8 min read",
     date: "September 02, 2026",
-    image: "/assets/villas/willow-peak/gallery-3.webp",
+    image: "/assets/villas/willow-peak/wp-03.webp",
     intro: "Finding authentic, clean, and scenic <strong>villas in Lonavala under 5000</strong> has always been one of Maharashtra's highest-volume travel searches. Many travelers assume that private luxury in the hills requires spending ₹15,000 to ₹25,000 per night. In reality, with smart booking strategies and boutique A-frame chalets, you can enjoy private mountain views, alpine wooden architecture, and a private en-suite jacuzzi bath starting right from ₹4,500 per night. Explore our verified guide to booking the best budget-friendly private villas in Lonavala with pool and jacuzzi access.",
     sections: [
       {
@@ -1086,7 +1086,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "8 min read",
     date: "September 04, 2026",
-    image: "/assets/villas/willow-peak/gallery-4.webp",
+    image: "/assets/villas/willow-peak/wp-04.webp",
     intro: "For families, couples, and small friend circles, the <strong>₹5,000 to ₹10,000 price range</strong> is the sweet spot for weekend getaways in Maharashtra. Travelers in this budget expect more than standard hotel rooms—they want private wellness amenities, scenic nature, dedicated caretakers, and stylish interiors. If you are searching for <strong>villas in Lonavala under 10000 with private lake or jacuzzi</strong>, <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak in Kurwande</a> delivers an unmatched boutique hill experience tailored for 2 to 8 guests.",
     sections: [
       {
@@ -1145,7 +1145,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "7 min read",
     date: "September 5, 2026",
-    image: "/assets/villas/willow-peak/main.webp",
+    image: "/assets/villas/willow-peak/wp-01.webp",
     relatedVillaSlug: "willow-peak",
     intro: "There is nothing quite as rejuvenating as waking up to the gentle ripples of a pristine lake surrounded by the misty Sahyadri mountains. While many seek crowded hill stations, the true luxury lies in renting <strong>lake view villas in Lonavala</strong> where you can sip your morning tea overlooking serene waters. Properties like <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak</a> offer proximity to beautiful lakes and dams, providing an unmatched tranquil experience away from the bustling city.",
     sections: [
@@ -1818,7 +1818,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "8 min read",
     date: "September 19, 2026",
-    image: "/assets/villas/willow-peak/gallery-1.webp",
+    image: "/assets/villas/willow-peak/wp-01.webp",
     relatedVillaSlug: "willow-peak",
     featuredVillaSlugs: ["willow-peak", "the-angle-house"],
     showMarquee: true,
@@ -1887,7 +1887,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "8 min read",
     date: "September 19, 2026",
-    image: "/assets/villas/willow-peak/gallery-4.webp",
+    image: "/assets/villas/willow-peak/wp-04.webp",
     relatedVillaSlug: "willow-peak",
     featuredVillaSlugs: ["willow-peak", "the-angle-house"],
     showMarquee: true,

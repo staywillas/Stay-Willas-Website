@@ -350,32 +350,32 @@ const terraCottaSpaces = [
 const willowPeakSpaces = [
   {
     title: "Breeze (A-Frame Chalet)",
-    image: "/assets/villas/willow-peak/gallery-1.webp",
+    image: "/assets/villas/willow-peak/wp-01.webp",
     description: "Chalet with king bed, in-room jacuzzi & garden sit-out."
   },
   {
     title: "Crest (A-Frame Chalet)",
-    image: "/assets/villas/willow-peak/gallery-6.webp",
+    image: "/assets/villas/willow-peak/wp-07.webp",
     description: "Alpine A-frame chalet with private jacuzzi & hill views."
   },
   {
     title: "Heaven (A-Frame Chalet)",
-    image: "/assets/villas/willow-peak/gallery-7.webp",
+    image: "/assets/villas/willow-peak/wp-02.webp",
     description: "Secluded mountain cottage with private jacuzzi & BBQ deck."
   },
   {
     title: "Private In-Room Jacuzzis",
-    image: "/assets/villas/willow-peak/gallery-1.webp",
+    image: "/assets/villas/willow-peak/wp-03.webp",
     description: "Warm soothing jacuzzi inside each private cottage suite."
   },
   {
     title: "Expansive Garden & Lawns",
-    image: "/assets/villas/willow-peak/gallery-2.webp",
+    image: "/assets/villas/willow-peak/wp-02.webp",
     description: "Lush lawn with evening lighting & outdoor seating."
   },
   {
     title: "Outdoor Dining & BBQ Deck",
-    image: "/assets/villas/willow-peak/gallery-4.webp",
+    image: "/assets/villas/willow-peak/wp-08.webp",
     description: "Outdoor group dining area with live barbecue setup."
   }
 ];
