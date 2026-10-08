@@ -582,48 +582,49 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   let keywordsList = [`${villa.bedrooms} BHK private pool villa in ${city}`, `${villa.name.toLowerCase()}`, `villa in ${city.toLowerCase()}`, `private pool villa ${city.toLowerCase()}`];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "The Angle House Lonavala | 3 BHK Villa with Private Waterfall Pool & Jacuzzi | Stay Willas";
-    descText = "Book StayWillas The Angle House in Lonavala (Angel House Lonavala) — luxury 3 BHK architectural glass villa featuring a private waterfall swimming pool, master jacuzzi suite, pet-friendly fenced lawn, and private chef dining. Direct bookings from ₹13,000/night.";
+    titleText = "StayWillas The Angle House Lonavala | Villa with Jacuzzi & Waterfall Pool (4.9★ Reviews)";
+    descText = "Book StayWillas The Angle House in Lonavala with jacuzzi & private waterfall swimming pool. Luxury 3 BHK architectural glass villa, pet-friendly fenced lawn, and private chef dining. Read 4.9★ reviews & book from ₹13,000/night.";
     keywordsList = [
       "staywillas the angle house",
+      "staywillas the angle house with jacuzzi lonavala",
       "the angle house lonavala",
-      "the angle house with jacuzzi lonavala",
-      "angel house lonavala",
       "staywillas the angle house reviews",
+      "the angle house with jacuzzi lonavala reviews",
+      "the angle house 3 bhk private pool villa",
+      "angel house lonavala",
       "glass house villa lonavala",
-      "3 bhk villa in lonavala with private pool",
       "villa with waterfall pool in lonavala",
       "jacuzzi villa lonavala",
       "pet friendly villa lonavala"
     ];
   } else if (villa.slug === "canopy-crest") {
-    titleText = "StayWillas Canopy Crest Khopoli | Premium Villa with Swimming Pool Chavani";
-    descText = "Book StayWillas Canopy Crest in Chavani, Khopoli — 4 BHK premium private pool villa estate featuring a 22ft private swimming pool, scenic mountain views, bonfire lawn, and on-demand chef service. Direct bookings from ₹15,000/night.";
+    titleText = "StayWillas Canopy Crest Khopoli | Premium Villa with Swimming Pool Chavani (4.9★ Reviews)";
+    descText = "Book StayWillas Canopy Crest in Chavani, Khopoli — 4 BHK premium villa with 22ft private swimming pool, scenic mountain views, bonfire lawn & on-demand chef service. Read verified guest reviews & book from ₹15,000/night.";
     keywordsList = [
       "staywillas canopy crest khopoli",
+      "staywillas canopy crest khopoli premium villa with swimming pool chavani",
+      "staywillas canopy crest khopoli premium villa with swimming pool chavani reviews",
       "canopy crest khopoli",
       "premium villa with swimming pool chavani",
       "canopy crest chavani khopoli",
-      "villas in khopoli with private pool",
-      "khopoli villa with swimming pool",
-      "4 bhk villa in khopoli",
-      "large group villa khopoli",
+      "4 bhk private pool villa in khopoli",
+      "chavani private villa with pool",
       "staywillas canopy crest reviews"
     ];
   } else if (villa.slug === "willow-peak") {
-    titleText = "Willow Peak Resort Kurvande, Lonavala | Luxury A-Frame Chalet | Stay Willas";
-    descText = "Book Willow Peak Resort Kurvande, Lonavala — boutique Swiss-style wooden A-frame chalet cottages with private jacuzzi, mountain views, lawn BBQ & chef dining from ₹4,500/night.";
+    titleText = "Willow Peak Resort Kurvande, Lonavala | A-Frame Chalets with Jacuzzi (4.9★ Reviews)";
+    descText = "Book Willow Peak Resort Kurvande, Lonavala — boutique Swiss-style wooden A-frame chalets with private jacuzzi, mountain views, lawn BBQ & chef dining from ₹4,500/night. 4.9★ verified guest reviews & 0% booking fees.";
     keywordsList = [
       "willow peak resort kurvande",
       "willow peak lonavala",
       "willow peak resort",
+      "willow peak resort kurvande reviews",
       "willow peak resort kurvande lonavala",
       "willow peak kurwande",
       "willow peak",
       "a-frame cottage lonavala",
       "jacuzzi cottage lonavala",
       "resort in kurvande lonavala",
-      "cottage stay in kurwande lonavala",
       "couples villa with jacuzzi lonavala"
     ];
   } else if (villa.slug.startsWith("willow-peak-cottage")) {
@@ -644,11 +645,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     descText = "Book Casa De Reva in Panchgani — a premier 4 BHK private pool sanctuary featuring terracotta architecture, hillside gazebo, mountain views, and on-demand chef service. Direct bookings from ₹16,000/night.";
     keywordsList = [
       "casa de reva panchgani",
-      "panchgani villa with private pool",
-      "luxury villa in panchgani",
-      "4 BHK villa in panchgani",
-      "private pool villa panchgani",
-      "panchgani weekend getaway villa"
+      "casa de reva villa with pool",
+      "4 bhk private pool villa in panchgani",
+      "terra cotta villa panchgani",
+      "kaswand luxury villa panchgani",
+      "staywillas casa de reva"
     ];
   }
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Outfit, Montserrat, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Outfit, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
@@ -29,16 +29,6 @@ const montserrat = Montserrat({
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-  preload: true,
-  adjustFontFallback: true,
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
@@ -108,6 +98,7 @@ export default function RootLayout({
         {/* Resource Hints for Analytics and CDN */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://analytics.ahrefs.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://analytics.ahrefs.com" crossOrigin="anonymous" />
 
@@ -131,8 +122,8 @@ export default function RootLayout({
           data-key="tL823LIpA1b/wcL/aWHL1Q"
           strategy="lazyOnload"
         />
-        {/* Meta Pixel Code */}
-        <Script id="meta-pixel" strategy="afterInteractive">
+        {/* Meta Pixel Code - lazy loaded to avoid blocking main thread */}
+        <Script id="meta-pixel" strategy="lazyOnload">
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -171,7 +162,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} ${playfair.variable} antialiased font-sans overflow-x-hidden max-w-full w-full relative`}
+        className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} antialiased font-sans overflow-x-hidden max-w-full w-full relative`}
         suppressHydrationWarning
       >
         <Preloader />

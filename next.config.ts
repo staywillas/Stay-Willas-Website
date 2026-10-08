@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion', '@clerk/nextjs', 'date-fns', 'swiper', 'clsx', 'tailwind-merge', '@prisma/client'],
+    optimizePackageImports: ['lucide-react', 'framer-motion', '@clerk/nextjs', 'date-fns', 'swiper', 'clsx', 'tailwind-merge', '@prisma/client', 'lenis', 'class-variance-authority'],
   },
   redirects: async () => [
     {
@@ -271,7 +271,7 @@ const nextConfig: NextConfig = {
     {
       source: '/images/:path*',
       headers: [
-        { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+        { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
       ],
     },
     {

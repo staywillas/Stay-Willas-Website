@@ -10,6 +10,8 @@ import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle, Sparkles, A
 import { prisma } from "@/lib/db";
 import BlogHorizontalMarquee from "@/components/blog/blog-horizontal-marquee";
 
+export const revalidate = 60; // Instant TTFB via ISR cache
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -122,6 +124,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
 
   const isKhopoli = /khopoli/i.test(blog.title + " " + blog.slug);
   const isLonavala = /lonavala/i.test(blog.title + " " + blog.slug);
+  const isPanchgani = /panchgani/i.test(blog.title + " " + blog.slug);
   const blogAboutEntity = isKhopoli
     ? {
         "@type": "Place",
@@ -133,6 +136,12 @@ export default async function BlogDetailsPage({ params }: PageProps) {
         "@type": "Place",
         name: "Lonavala, Maharashtra",
         sameAs: "https://www.wikidata.org/wiki/Q1140889",
+      }
+    : isPanchgani
+    ? {
+        "@type": "Place",
+        name: "Panchgani, Maharashtra",
+        sameAs: "https://www.wikidata.org/wiki/Q463437",
       }
     : {
         "@type": "Place",

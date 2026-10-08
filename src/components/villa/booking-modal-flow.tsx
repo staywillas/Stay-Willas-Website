@@ -104,7 +104,12 @@ export default function BookingModalFlow({
   }, [isLeadGateOpen, isBookingModalOpen, isAvailabilityModalOpen, lenis]);
 
   const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
-  const displayPrice = isWillowPeak ? 5999 * cottagesCount : price;
+  // Willow Peak Entire Estate base starting rate is 15,000, single cottage is 4,999
+  const willowEntireStartingPrice = 15000;
+  const willowCottageStartingPrice = 4999;
+  const displayPrice = isWillowPeak 
+    ? (cottageSelection === "ALL" ? (basePrice && basePrice <= 15000 ? basePrice : willowEntireStartingPrice) : willowCottageStartingPrice) 
+    : price;
 
   const handleOpenLeadGate = () => {
     setIsLeadGateOpen(true);
@@ -123,16 +128,22 @@ export default function BookingModalFlow({
     }
     setPhoneError("");
 
-    // Automatically capture lead to Admin CRM in background
+    const selectedUnitTitle = isWillowPeak
+      ? (cottageSelection === "ALL"
+          ? "Willow Peak (Entire Estate - 12 Guests)"
+          : `Willow Peak - Cottage ${cottageSelection} (${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"})`)
+      : villaName;
+
+    // Automatically capture lead to Admin CRM in background with accurate unit name and note
     captureBookingLead({
       name: guestName.trim(),
       phone: guestPhone.trim(),
       email: guestEmail?.trim() || undefined,
-      villaName,
+      villaName: selectedUnitTitle,
       villaId,
       totalPrice: displayPrice,
-      guests: maxGuests,
-      message: `Guest opened reservation gate for ${villaName}.${isWillowPeak ? ` (${cottageSelection === "ALL" ? "All 3 Cottages" : `Cottage ${cottageSelection}`})` : ""} Rate: ₹${displayPrice.toLocaleString("en-IN")}/night.`,
+      guests: isWillowPeak ? (cottageSelection === "ALL" ? 12 : 4) : maxGuests,
+      message: `Guest opened reservation gate for ${selectedUnitTitle}. Starting Rate: ₹${displayPrice.toLocaleString("en-IN")}/night. Note: Pricing varies in weekdays and weekends.`,
     }).catch(err => console.error("Lead capture background error:", err));
 
     // Transition from lead gate to full booking modal
@@ -229,11 +240,12 @@ export default function BookingModalFlow({
                 ₹{displayPrice.toLocaleString("en-IN")}
               </span>
               <span className="text-slate-500 text-xs sm:text-sm font-semibold">
-                / night {isWillowPeak ? (cottageSelection === "ALL" ? "(All 3 Cottages)" : `(Cottage ${cottageSelection})`) : ""}
+                / night {isWillowPeak ? (cottageSelection === "ALL" ? "(Entire Estate - 12 Guests)" : `(Cottage ${cottageSelection})`) : ""}
               </span>
             </div>
-            <div className="text-[9px] text-amber-800/80 font-medium italic mt-0.5">
-              *Prices may vary due to demand
+            <div className="text-[10px] font-semibold text-amber-800 bg-amber-50/90 border border-amber-200 rounded-lg px-2 py-1 mt-1.5 flex items-center gap-1.5">
+              <span>ℹ️</span>
+              <span>Pricing varies between weekdays and weekends.</span>
             </div>
           </div>
           <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shrink-0">
@@ -363,6 +375,12 @@ export default function BookingModalFlow({
               >
                 <X size={18} />
               </button>
+            </div>
+
+            {/* Weekday / Weekend Note Banner */}
+            <div className="p-3 bg-amber-50/80 border border-amber-200/80 rounded-2xl text-[11px] text-amber-900 font-medium text-left flex items-start gap-2">
+              <span className="text-amber-600 shrink-0 mt-0.5">ℹ️</span>
+              <span><strong>Note:</strong> Pricing varies between weekdays and weekends. Exact rates are calculated dynamically according to your chosen check-in &amp; check-out dates.</span>
             </div>
 
             {/* Form */}

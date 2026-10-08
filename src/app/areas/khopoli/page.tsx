@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     "villas in khopoli with private pool",
     "villas in khopoli",
     "khopoli villa with swimming pool",
-    "canopy crest khopoli",
+    "private pool villa khopoli",
     "khopoli villas",
     "khopoli luxury vacation homes",
     "khopoli villa staycation",

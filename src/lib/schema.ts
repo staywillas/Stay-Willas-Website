@@ -33,6 +33,7 @@ export const ORGANIZATION_SCHEMA = {
   },
   sameAs: [
     "https://www.instagram.com/stay.willas?stkn=bngzaTBrZXMxcTJl",
+    "https://magicpin.in/Mumbai/Ghatkopar-Shantinagar/Hotel/Stay-Willas/store/2698aa1",
   ],
   areaServed: [
     {
@@ -63,7 +64,7 @@ export const ORGANIZATION_SCHEMA = {
     {
       "@type": "City",
       name: "Panchgani",
-      sameAs: "https://www.wikidata.org/wiki/Q1008272",
+      sameAs: "https://www.wikidata.org/wiki/Q463437",
     },
   ],
   contactPoint: {
@@ -253,6 +254,9 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
     description: villa.description,
     image: formattedImages,
     url: propertyUrl,
+    ...(villa.slug === "the-angle-house"
+      ? { sameAs: ["https://www.bedroomvillas.com/property/staywillas-the-angle-house/BC-16570566"] }
+      : {}),
     telephone: "+91-9619042310",
     priceRange: `₹${(numericPrice || 0).toLocaleString("en-IN")}/night`,
     checkinTime: "14:00",
@@ -359,7 +363,7 @@ export interface DestinationSchemaInput {
 const WIKIDATA_REGIONS: Record<string, string> = {
   lonavala: "https://www.wikidata.org/wiki/Q1140889",
   khopoli: "https://www.wikidata.org/wiki/Q2248559",
-  panchgani: "https://www.wikidata.org/wiki/Q1008272",
+  panchgani: "https://www.wikidata.org/wiki/Q463437",
 };
 
 export function generateDestinationCollectionSchema(input: DestinationSchemaInput) {

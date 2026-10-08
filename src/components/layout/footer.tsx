@@ -311,6 +311,43 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Verified Business Citations & Directory Listings */}
+        <div className="border-t border-[#DAA520]/15 pt-8 pb-4 mb-12">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <span className="text-[#DAA520] font-black tracking-[0.25em] uppercase text-[10px] block mb-1">
+                Verified Business Citations &amp; Directory Listings
+              </span>
+              <p className="text-white/60 text-xs font-light">
+                Stay Willas verified profiles across premier hospitality and local commerce directories:
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href="https://magicpin.in/Mumbai/Ghatkopar-Shantinagar/Hotel/Stay-Willas/store/2698aa1?srsltid=AU7gw4U8ls3D0ZDjvgZllQpvh53eoKhJ91O_4qS7-c457LRUiKIyn5DE"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-[#DAA520]/15 border border-white/10 hover:border-[#DAA520]/40 text-xs text-white/80 hover:text-[#DAA520] transition-all duration-300 group"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-400 group-hover:bg-[#DAA520] transition-colors" />
+                <span className="font-medium">Magicpin Mumbai (Stay Willas)</span>
+                <ArrowRight size={12} className="text-[#DAA520] group-hover:translate-x-0.5 transition-transform" />
+              </a>
+
+              <a
+                href="https://www.bedroomvillas.com/property/staywillas-the-angle-house/BC-16570566"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-[#DAA520]/15 border border-white/10 hover:border-[#DAA520]/40 text-xs text-white/80 hover:text-[#DAA520] transition-all duration-300 group"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-400 group-hover:bg-[#DAA520] transition-colors" />
+                <span className="font-medium">BedroomVillas (The Angle House)</span>
+                <ArrowRight size={12} className="text-[#DAA520] group-hover:translate-x-0.5 transition-transform" />
+              </a>
+            </div>
+          </div>
+        </div>
+
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-[#DAA520]/0 via-[#DAA520]/20 to-[#DAA520]/0 mb-12" />
 

@@ -71,7 +71,7 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
   };
 
   return (
-    <section className="py-20 border-t border-border-subtle/60">
+    <section id="reviews" className="py-20 border-t border-border-subtle/60 scroll-mt-20">
       <div className="flex flex-col lg:flex-row gap-16">
         
         {/* The list of guest reviews, grouped on the left side of the screen */}

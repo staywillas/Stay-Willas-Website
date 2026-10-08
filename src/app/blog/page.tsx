@@ -9,6 +9,8 @@ import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
+export const revalidate = 60; // Instant TTFB via ISR cache
+
 export const metadata: Metadata = {
   title: "Stay Willas Blog | Luxury Villa Guides & Staycation Tips",
   description: "Explore the Stay Willas blog for luxury villa guides, weekend staycation tips, and travel ideas near Mumbai and Pune. Read our latest articles.",

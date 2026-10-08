@@ -21,7 +21,10 @@ import {
   Zap, 
   Waves, 
   Users, 
-  Utensils 
+  Utensils,
+  BookOpen,
+  Clock,
+  ArrowRight
 } from "lucide-react";
 import { 
   generateDestinationCollectionSchema, 
@@ -218,7 +221,7 @@ export default async function PanchganiPage() {
                   <span className="italic font-light font-sans bg-gradient-to-r from-[#DAA520] via-[#F3C766] to-[#FFE082] bg-clip-text text-transparent font-bold pr-2 sm:pr-3 inline-block">
                     Panchgani
                   </span>
-                  {" "}with Pool
+                  {" "}with Private Pool
                 </h1>
 
                 {/* Subtitle */}
@@ -615,7 +618,10 @@ export default async function PanchganiPage() {
                 When searching for top-tier <strong>villas in panchgani with private pool</strong>, travelers consistently prioritize seclusion and exclusivity over crowded hotel corridors. In a traditional resort, swimming pools, dining halls, and gardens are shared with hundreds of strangers. In contrast, reserving a private <strong>panchgani villa with pool</strong> means the entire property belongs strictly to you and your companions.
               </p>
               <p>
-                Families traveling with elderly grandparents and young children particularly value ground-floor bedroom accessibility, secure perimeter fences, and personalized meal planning. From dawn yoga sessions overlooking the mist-filled Krishna Valley to late-night poolside conversations under starlit skies, a private estate transforms a simple vacation into an unforgettable gathering.
+                Families traveling with elderly grandparents and young children particularly value ground-floor bedroom accessibility, secure perimeter fences, and personalized meal planning. Debating destinations between neighboring hill stations? Check out our in-depth comparison on{" "}
+                <Link href="/blog/panchgani-vs-mahabaleshwar-villa-stay-for-groups" className="underline font-semibold text-[#DAA520] hover:text-[#B8860B]">
+                  Panchgani vs Mahabaleshwar villa stays for groups and families
+                </Link>.
               </p>
 
               <div className="my-10 relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-xl not-prose">
@@ -650,7 +656,10 @@ export default async function PanchganiPage() {
                 <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
                   <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Strawberry Trails</h4>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    Located in Kaswand just 4.5 km from Mapro Garden, offering easy access to fresh strawberry picking and local artisanal produce.
+                    Located in Kaswand just 4.5 km from Mapro Garden. Read our travel guide on{" "}
+                    <Link href="/blog/panchgani-valley-view-villas-near-mapro-garden-guide" className="underline font-semibold text-[#DAA520] hover:text-[#B8860B]">
+                      valley view villas near Mapro Garden
+                    </Link>.
                   </p>
                 </div>
               </div>
@@ -738,6 +747,104 @@ export default async function PanchganiPage() {
                 ))}
               </div>
             </article>
+          </div>
+        </section>
+
+        {/* Panchgani Travel Guides & Staycation Reads */}
+        <section className="py-12 px-4 sm:px-8 md:px-12 lg:px-20 max-w-7xl mx-auto w-full text-left">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+            <div>
+              <span className="inline-flex items-center gap-1.5 bg-[#DAA520]/15 text-accent-secondary font-bold tracking-[0.25em] uppercase text-[10px] px-3.5 py-1 rounded-full mb-2">
+                <BookOpen size={12} className="text-[#DAA520]" /> Panchgani Travel Guides &amp; Itineraries
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-[#1B3564]">
+                Plan Your Panchgani Hillside Staycation
+              </h2>
+              <p className="text-slate-600 text-xs sm:text-sm font-light mt-1 max-w-xl">
+                Expert local itineraries, strawberry trail recommendations, and comparative guides for choosing the best private pool villa in Panchgani.
+              </p>
+            </div>
+            <Link 
+              href="/blog" 
+              className="text-[#1B3564] hover:text-[#DAA520] font-bold text-xs uppercase tracking-wider inline-flex items-center gap-1 transition-colors self-start sm:self-end"
+            >
+              <span>Explore All Guides</span>
+              <ChevronRight size={14} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            <Link 
+              href="/blog/panchgani-valley-view-villas-near-mapro-garden-guide"
+              className="group bg-white rounded-3xl overflow-hidden border border-[#DAA520]/20 hover:border-[#DAA520]/60 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
+            >
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
+                <Image
+                  src="/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg"
+                  alt="Panchgani Valley View Villas Near Mapro Garden Guide"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-4 left-4 bg-[#1B3564]/90 backdrop-blur-md text-[#DAA520] text-[10px] font-bold tracking-wider uppercase px-3 py-1 rounded-full border border-[#DAA520]/30">
+                  Area Guide
+                </div>
+              </div>
+              <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between">
+                <div>
+                  <div className="flex items-center gap-3 text-xs text-slate-500 mb-2.5">
+                    <span className="flex items-center gap-1"><Clock size={12} /> 8 min read</span>
+                    <span>•</span>
+                    <span>July 26, 2026</span>
+                  </div>
+                  <h3 className="font-heading font-bold text-lg sm:text-xl text-[#1B3564] group-hover:text-[#DAA520] transition-colors line-clamp-2">
+                    Panchgani Valley View Villas Near Mapro Garden: Complete Booking &amp; Travel Guide
+                  </h3>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-2 line-clamp-2 leading-relaxed">
+                    Discover scenic valley view villas in Panchgani near Mapro Garden with private plunge pools, in-house chefs, and strawberry trails for family weekends.
+                  </p>
+                </div>
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-[#1B3564] group-hover:text-[#DAA520]">
+                  <span>Read Guide</span>
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
+
+            <Link 
+              href="/blog/panchgani-vs-mahabaleshwar-villa-stay-for-groups"
+              className="group bg-white rounded-3xl overflow-hidden border border-[#DAA520]/20 hover:border-[#DAA520]/60 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
+            >
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
+                <Image
+                  src="/assets/villas/terra-cotta-villa/IMG-20260901-WA0037.jpg"
+                  alt="Panchgani vs Mahabaleshwar Villa Stay Comparison for Groups"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-4 left-4 bg-[#1B3564]/90 backdrop-blur-md text-[#DAA520] text-[10px] font-bold tracking-wider uppercase px-3 py-1 rounded-full border border-[#DAA520]/30">
+                  Staycation Comparison
+                </div>
+              </div>
+              <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between">
+                <div>
+                  <div className="flex items-center gap-3 text-xs text-slate-500 mb-2.5">
+                    <span className="flex items-center gap-1"><Clock size={12} /> 9 min read</span>
+                    <span>•</span>
+                    <span>July 26, 2026</span>
+                  </div>
+                  <h3 className="font-heading font-bold text-lg sm:text-xl text-[#1B3564] group-hover:text-[#DAA520] transition-colors line-clamp-2">
+                    Panchgani vs Mahabaleshwar Villa Stay for Groups &amp; Families: Which Is Better?
+                  </h3>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-2 line-clamp-2 leading-relaxed">
+                    Compare Panchgani vs Mahabaleshwar villa stays for groups and families. Explore travel times, valley weather, privacy, and private pool luxury.
+                  </p>
+                </div>
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-[#1B3564] group-hover:text-[#DAA520]">
+                  <span>Read Guide</span>
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
           </div>
         </section>
 

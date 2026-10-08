@@ -112,7 +112,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const highPriorityBlogs = new Set([
     "lonavala-vs-khandala-villa-comparison",
     "lonavala-villa-willow-peak-staycation-guide",
-    "affordable-villa-lonavala-willow-peak-budget-luxury"
+    "affordable-villa-lonavala-willow-peak-budget-luxury",
+    "family-villas-in-lonavala-with-private-pool",
+    "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide",
+    "panchgani-valley-view-villas-near-mapro-garden-guide",
+    "panchgani-vs-mahabaleshwar-villa-stay-for-groups",
+    "lonavala-stay-villa-private-pool-guide",
+    "best-villas-for-stay-in-lonavala-family-groups"
   ]);
   const blogRoutes: MetadataRoute.Sitemap = blogsData.map((blog) => ({
     url: `${BASE_URL}/blog/${blog.slug}`,

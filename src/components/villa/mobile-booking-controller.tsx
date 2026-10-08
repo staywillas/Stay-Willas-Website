@@ -93,7 +93,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
 
   // Dynamic price based on cottage selection
   const activeDisplayPrice = isWillowPeak
-    ? (cottageSelection === "ALL" ? "17,997" : "5,999")
+    ? (cottageSelection === "ALL" ? (props.basePrice && props.basePrice <= 15000 ? String(props.basePrice) : "15,000") : "4,999")
     : props.price;
 
   const activeCottageSubtitle = isWillowPeak
@@ -126,25 +126,24 @@ export default function MobileBookingController(props: MobileBookingControllerPr
     return false;
   };
 
-  // Get price for specific date
+  // Get price for specific date respecting admin panel overrides
   const getPriceForDate = (date: Date) => {
-    if (isWillowPeak) {
-      const dayIndex = date.getDay();
-      const perCottageRate = dayIndex === 6 ? 8999 : (dayIndex === 5 || dayIndex === 0 ? 6999 : 5999);
-      return cottageSelection === "ALL" ? perCottageRate * 3 : perCottageRate;
-    }
-
     const dateStr = format(date, "yyyy-MM-dd");
     const dayIndex = date.getDay(); // 0 = Sun, 5 = Fri, 6 = Sat
 
-    // 1. Daily Custom Price
+    // 1. Daily Custom Price from Admin Scheduler
     const customDaily = props.dailyPrices?.find(d => {
       const dStr = typeof d.date === "string" ? d.date.split("T")[0] : format(new Date(d.date), "yyyy-MM-dd");
       return dStr === dateStr;
     });
-    if (customDaily) return customDaily.price;
+    if (customDaily) {
+      if (isWillowPeak) {
+        return cottageSelection === "ALL" ? customDaily.price : Math.round(customDaily.price / 3);
+      }
+      return customDaily.price;
+    }
 
-    // 2. Seasonal Price
+    // 2. Seasonal Price from Admin Scheduler
     const seasonal = props.seasonalPrices?.find(s => {
       const start = new Date(s.startDate);
       const end = new Date(s.endDate);
@@ -152,15 +151,32 @@ export default function MobileBookingController(props: MobileBookingControllerPr
       end.setHours(23, 59, 59, 999);
       return date >= start && date <= end;
     });
-    if (seasonal) return seasonal.price;
+    if (seasonal) {
+      if (isWillowPeak) {
+        return cottageSelection === "ALL" ? seasonal.price : Math.round(seasonal.price / 3);
+      }
+      return seasonal.price;
+    }
 
-    // 3. Day of week pricing
-    if (dayIndex === 5 && props.fridayPrice) return props.fridayPrice;
-    if (dayIndex === 6 && props.saturdayPrice) return props.saturdayPrice;
-    if (dayIndex === 0 && props.sundayPrice) return props.sundayPrice;
-    if ((dayIndex === 5 || dayIndex === 6) && props.weekendPrice) return props.weekendPrice;
+    // 3. Day of week pricing from Admin Settings
+    if (dayIndex === 5 && props.fridayPrice) {
+      return isWillowPeak ? (cottageSelection === "ALL" ? props.fridayPrice : Math.round(props.fridayPrice / 3)) : props.fridayPrice;
+    }
+    if (dayIndex === 6 && props.saturdayPrice) {
+      return isWillowPeak ? (cottageSelection === "ALL" ? props.saturdayPrice : Math.round(props.saturdayPrice / 3)) : props.saturdayPrice;
+    }
+    if (dayIndex === 0 && props.sundayPrice) {
+      return isWillowPeak ? (cottageSelection === "ALL" ? props.sundayPrice : Math.round(props.sundayPrice / 3)) : props.sundayPrice;
+    }
+    if ((dayIndex === 5 || dayIndex === 6) && props.weekendPrice) {
+      return isWillowPeak ? (cottageSelection === "ALL" ? props.weekendPrice : Math.round(props.weekendPrice / 3)) : props.weekendPrice;
+    }
 
     // 4. Default Base Price
+    if (isWillowPeak) {
+      const base = props.basePrice && props.basePrice <= 15000 ? props.basePrice : 15000;
+      return cottageSelection === "ALL" ? base : 4999;
+    }
     return props.basePrice;
   };
 
@@ -345,6 +361,12 @@ export default function MobileBookingController(props: MobileBookingControllerPr
               ✓ 0% Platform Fee
             </span>
           </div>
+        </div>
+
+        {/* Weekday / Weekend Tariff Note */}
+        <div className="mt-2.5 px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 text-[10.5px] text-amber-200 font-medium text-left flex items-center gap-1.5">
+          <span>ℹ️</span>
+          <span>Pricing varies between weekdays and weekends.</span>
         </div>
 
         {/* 2 Primary Action Buttons */}

@@ -461,9 +461,15 @@ const BookingCard = ({
     }
 
     // 5. Fallback to base rate
-    const numericBasePrice = typeof basePrice === "number" && basePrice > 0 
+    let numericBasePrice = typeof basePrice === "number" && basePrice > 0 
       ? basePrice 
       : (typeof price === "number" && price > 0 ? price : parseFloat(String(price).replace(/[^0-9.]/g, "")) || 0);
+
+    // Willow Peak Entire Estate base starting rate is 15,000 (if DB still has old 17997 seed, client base is 15000)
+    if (isWillowPeak && numericBasePrice > 15000) {
+      numericBasePrice = 15000;
+    }
+
     return { price: numericBasePrice, type: "BASE" as const, label: "Base Rate" };
   };
 
@@ -487,7 +493,7 @@ const BookingCard = ({
 
   const breakdown = getPricingBreakdown();
   const rawSubtotal = breakdown.reduce((sum, item) => sum + item.price, 0);
-  const subtotal = Math.round(rawSubtotal * (isWillowPeak ? (cottagesCount / 3) : 1));
+  const subtotal = Math.round(rawSubtotal * (isWillowPeak ? (cottageSelection === "ALL" ? 1 : 1 / 3) : 1));
 
   const baseGuestsCount = isWillowPeak ? (cottagesCount * 4) : (baseGuests ?? actualMaxGuests);
   const extraGuests = Math.max(0, guests - baseGuestsCount);
@@ -838,17 +844,18 @@ We are so excited about this getaway! Could you please check availability and he
                     : (typeof price === "number" ? price.toLocaleString("en-IN") : price))}
             </span>
             <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">
-              / night {isWillowPeak ? (cottageSelection === "ALL" ? "(All 3 Cottages)" : `(Cottage ${cottageSelection})`) : ""}
+              / night {isWillowPeak ? (cottageSelection === "ALL" ? "(Entire Estate - 12 Guests)" : `(Cottage ${cottageSelection})`) : ""}
             </span>
           </div>
-          <div className="text-[10px] sm:text-[11px] text-amber-800/80 font-medium italic mt-0.5">
-            *Prices may vary due to demand
+          <div className="text-[10px] font-semibold text-amber-800 bg-amber-50/90 border border-amber-200 rounded-lg px-2 py-0.5 mt-1 flex items-center gap-1.5">
+            <span>ℹ️</span>
+            <span>Pricing varies between weekdays and weekends.</span>
           </div>
           {isWillowPeak && (
             <div className="text-[10.5px] font-medium text-slate-500 mt-1">
               {cottageSelection === "ALL"
-                ? "₹17,997/n Weekday • All 3 Cottages (A, B, C) — Full Estate (up to 12 Guests)"
-                : `₹5,999/n Weekday • ₹6,999 Fri/Sun • ₹8,999 Sat for Cottage ${cottageSelection} (up to 4 Guests)`
+                ? "From ₹15,000/n Weekday • All 3 Cottages (A, B, C) — Full Estate (up to 12 Guests)"
+                : `From ₹4,999/n Weekday • Cottage ${cottageSelection} (${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"}) (up to 4 Guests)`
               }
             </div>
           )}
@@ -1331,7 +1338,7 @@ We are so excited about this getaway! Could you please check availability and he
                     </span>
                   </div>
                   <span className="font-black text-[#1B3564]">
-                    ₹{item.price.toLocaleString("en-IN")}
+                    ₹{(isWillowPeak && cottageSelection !== "ALL" ? Math.round(item.price / 3) : item.price).toLocaleString("en-IN")}
                   </span>
                 </div>
               ))}
@@ -1378,6 +1385,12 @@ We are so excited about this getaway! Could you please check availability and he
               ℹ️ <strong>Coupon Stayw26:</strong> Flat 26% discount applies exclusively to Monday–Thursday nights. Your selected dates are charged at standard weekend rates.
             </div>
           )}
+
+          {/* Pricing Note */}
+          <div className="text-[10px] text-amber-900 bg-amber-50/90 border border-amber-200/80 rounded-xl px-3 py-1.5 text-left font-medium flex items-center gap-1.5">
+            <span>ℹ️</span>
+            <span><strong>Note:</strong> Pricing varies between weekdays and weekends. Verified final rates are calculated dynamically based on your chosen dates.</span>
+          </div>
 
           {/* Total Final Bill Highlight Box */}
           <div className="p-4 bg-[#1B3564] text-white rounded-2xl flex items-center justify-between shadow-md">

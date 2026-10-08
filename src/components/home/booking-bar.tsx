@@ -94,7 +94,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
     { slug: "the-angle-house", name: "The Angle House", location: "Lonavala", rate: "₹13,000/nt" },
     { slug: "canopy-crest", name: "Canopy Crest", location: "Khopoli", rate: "₹15,000/nt" },
     { slug: "casa-de-reva", name: "Casa De Reva", location: "Panchgani", rate: "₹16,000/nt" },
-    { slug: "willow-peak", name: "Willow Peak (All 3 Cottages)", location: "Lonavala", rate: "₹17,997/nt" },
+    { slug: "willow-peak", name: "Willow Peak (All 3 Cottages)", location: "Lonavala", rate: "₹15,000/nt" },
     { slug: "willow-peak-cottage-a", name: "1. Breeze (Cottage A)", location: "Lonavala", rate: "₹4,999/nt" },
     { slug: "willow-peak-cottage-b", name: "2. Crest (Cottage B)", location: "Lonavala", rate: "₹4,999/nt" },
     { slug: "willow-peak-cottage-c", name: "3. Heaven (Cottage C)", location: "Lonavala", rate: "₹4,999/nt" },
