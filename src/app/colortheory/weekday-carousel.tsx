@@ -52,7 +52,7 @@ export default function WeekdayCarousel() {
           {stays.map((stay, position) => <div key={stay.slug} className={styles.offerSlide} role="group" aria-roledescription="slide" aria-label={`${position + 1} of ${stays.length}: ${stay.name}`} aria-hidden={position !== index}>
             <Link href={`/villa/${stay.slug}`} prefetch={false} className={styles.offerPhoto} tabIndex={position === index ? 0 : -1} aria-label={`Explore ${stay.name}`}>
               <Image src={stay.image} alt={stay.alt} fill sizes="(max-width: 760px) 90vw, 700px" className={styles.cover} />
-              <div className={styles.photoCaption}><span>{stay.name}</span><span>{stay.location} <ArrowUpRight size={14} /></span></div>
+              <div className={styles.photoCaption}><span>{stay.name}</span><span>{stay.location} <ArrowUpRight size={16} /></span></div>
               <span className={styles.photoTag}>{stay.feature}</span>
             </Link>
           </div>)}
