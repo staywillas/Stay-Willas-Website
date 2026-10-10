@@ -1254,10 +1254,22 @@ const AdminDashboard = ({
                             </td>
 
                             {/* Message / Details */}
-                            <td className="py-4 max-w-xs text-xs text-slate-600">
-                              <p className="truncate" title={lead.message || "No notes"}>
-                                {lead.message || "Direct Website Contact"}
-                              </p>
+                            <td className="py-4 max-w-md text-xs text-slate-600">
+                              {(lead.message || "").includes("\n") ? (
+                                <details className="group">
+                                  <summary className="cursor-pointer font-bold text-[#1B3564] hover:underline list-none flex items-center gap-1.5">
+                                    <span>📋 {isOwner ? "View Property Configuration" : "View Full Details"}</span>
+                                    <span className="text-[10px] text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+                                  </summary>
+                                  <pre className="mt-2 p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-700 whitespace-pre-wrap font-sans leading-relaxed max-h-60 overflow-y-auto">
+                                    {lead.message}
+                                  </pre>
+                                </details>
+                              ) : (
+                                <p className="truncate" title={lead.message || "No notes"}>
+                                  {lead.message || "Direct Website Contact"}
+                                </p>
+                              )}
                             </td>
 
                             {/* Captured Date */}

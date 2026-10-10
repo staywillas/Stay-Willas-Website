@@ -7,10 +7,22 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Copy } from "lucide-react";
 import styles from "./preview.module.css";
 
 const stays = [
-  { name: "The Angle House", slug: "the-angle-house", location: "Kamshet, Lonavala", image: "/assets/villas/the-angle-house/gallery-13.webp", alt: "The Angle House with its private pool and garden", feature: "Private pool & Jacuzzi" },
-  { name: "Canopy Crest", slug: "canopy-crest", location: "Khopoli", image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg", alt: "Canopy Crest villa and private swimming pool", feature: "Room for everyone" },
-  { name: "Casa De Reva", slug: "casa-de-reva", location: "Panchgani", image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg", alt: "Casa De Reva in the hills of Panchgani", feature: "A hillside pool escape" },
-  { name: "Heaven at Willow Peak", slug: "willow-peak-cottage-c", location: "Kurwande, Lonavala", image: "/assets/villas/willow-peak/wp-07.webp", alt: "A-frame cottages at Willow Peak in Lonavala", feature: "Your own Jacuzzi cottage" },
+  {
+    name: "Canopy Crest",
+    slug: "canopy-crest",
+    location: "Khopoli",
+    image: "/assets/villas/canopy-crest/canopy-crest-sunset-guests.jpg",
+    alt: "Guests enjoying the golden hour sunset on the lawn at Canopy Crest in Khopoli",
+    feature: "Golden hour on the lawn",
+  },
+  {
+    name: "The Angle House",
+    slug: "the-angle-house",
+    location: "Kamshet, Lonavala",
+    image: "/assets/villas/the-angle-house/angle-house-pool-balcony-guests.jpg",
+    alt: "Guests on the upper balcony and friends playing in the private pool at The Angle House",
+    feature: "Private pool & balcony views",
+  },
 ];
 
 export default function WeekdayCarousel() {
@@ -22,7 +34,10 @@ export default function WeekdayCarousel() {
   function goTo(next: number) {
     const track = trackRef.current;
     if (!track) return;
-    track.scrollTo({ left: next * track.clientWidth, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    track.scrollTo({
+      left: next * track.clientWidth,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    });
   }
 
   async function copyOffer() {
@@ -32,7 +47,7 @@ export default function WeekdayCarousel() {
 
   return <section id="slow-days" className={styles.offerSection} aria-labelledby="offer-title">
     <div className={styles.offerPanel}>
-      <div className={styles.offerCarousel} role="region" aria-roledescription="carousel" aria-label="Our four weekday getaways">
+      <div className={styles.offerCarousel} role="region" aria-roledescription="carousel" aria-label="Featured weekday getaways">
         <div ref={trackRef} className={styles.offerTrack} onScroll={event => { const track = event.currentTarget; setIndex(Math.max(0, Math.min(stays.length - 1, Math.round(track.scrollLeft / track.clientWidth)))); }}>
           {stays.map((stay, position) => <div key={stay.slug} className={styles.offerSlide} role="group" aria-roledescription="slide" aria-label={`${position + 1} of ${stays.length}: ${stay.name}`} aria-hidden={position !== index}>
             <Link href={`/villa/${stay.slug}`} prefetch={false} className={styles.offerPhoto} tabIndex={position === index ? 0 : -1} aria-label={`Explore ${stay.name}`}>

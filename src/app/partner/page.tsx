@@ -35,9 +35,9 @@ export const metadata: Metadata = {
   },
 };
 import Footer from "@/components/layout/footer";
-import { Button } from "@/components/ui/button";
 import { CheckCircle2, TrendingUp, BarChart3, Globe2, ShieldCheck, Zap } from "lucide-react";
 import PartnerForm from "@/components/partner/partner-form";
+import { getPartnerBlankWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function PartnerPage() {
   const steps = [
@@ -108,9 +108,17 @@ export default function PartnerPage() {
           Let us handle the hard work of running, managing, and promoting your villa 
           so you can sit back and watch it thrive.
         </p>
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <a href="#partner-form" className="btn-glow-gold px-12 py-6 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 shadow-2xl inline-block w-full sm:w-auto text-center">
-            INQUIRE NOW
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4">
+          <a href="#partner-form" className="btn-glow-gold px-10 py-6 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 shadow-2xl inline-block w-full sm:w-auto text-center">
+            FILL PROPERTY CHECKLIST
+          </a>
+          <a
+            href={getPartnerBlankWhatsAppUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#25D366] hover:bg-[#1ebe5b] text-white px-10 py-6 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 shadow-lg inline-block w-full sm:w-auto text-center"
+          >
+            WHATSAPP US DIRECTLY
           </a>
           <a href="#benefits" className="border border-[#1B3564]/30 hover:border-[#1B3564] bg-white/40 hover:bg-white/80 px-10 py-6 rounded-full text-[10px] font-bold tracking-widest text-[#1B3564] uppercase transition-all duration-300 inline-block w-full sm:w-auto text-center">
             EXPLORE BENEFITS

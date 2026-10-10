@@ -53,10 +53,10 @@ const PartnerSection = () => {
 
             <div className="flex flex-row items-center gap-2.5 sm:gap-4">
               <Link href="/partner" className="inline-flex items-center justify-center bg-white text-[#4A5D23] hover:bg-[#F5F2EA] rounded-full px-4 sm:px-8 py-2.5 sm:py-3.5 text-[11px] sm:text-sm font-bold tracking-wider sm:tracking-widest h-auto shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
-                LIST YOUR PROPERTY
+                PARTNER WITH US
               </Link>
-              <Link href="/contact" className="inline-flex items-center justify-center border border-white/80 sm:border-2 text-white hover:bg-white hover:text-[#4A5D23] rounded-full px-4 sm:px-8 py-2.5 sm:py-3.5 text-[11px] sm:text-sm font-bold tracking-wider sm:tracking-widest h-auto transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
-                CONTACT SALES
+              <Link href="/partner#partner-form" className="inline-flex items-center justify-center border border-white/80 sm:border-2 text-white hover:bg-white hover:text-[#4A5D23] rounded-full px-4 sm:px-8 py-2.5 sm:py-3.5 text-[11px] sm:text-sm font-bold tracking-wider sm:tracking-widest h-auto transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap">
+                LIST YOUR PROPERTY
               </Link>
             </div>
           </div>
