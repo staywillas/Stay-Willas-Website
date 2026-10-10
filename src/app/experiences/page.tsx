@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -110,7 +111,7 @@ export default function ExperiencesPage() {
 
             {/* CTA */}
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hello Stay Willas! 🌟 I read about your upcoming experiences. I am planning a holiday and would love to ask for some custom services (like private chefs or local recommendations) during my stay. Can you help me?")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hello Stay Willas! 🌟 I read about your upcoming experiences. I am planning a holiday and would love to ask for some custom services (like private chefs or local recommendations) during my stay. Can you help me?")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full px-10 py-4.5 text-xs font-black tracking-[0.25em] uppercase transition-all duration-300 shadow-lg shadow-[#1B3564]/10 hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer border-none"
@@ -179,7 +180,7 @@ export default function ExperiencesPage() {
             <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
               <div className="relative h-64 overflow-hidden">
                 <Image
-                  src="/assets/villas/canopy-crest/gallery-4.webp"
+                  src="/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg"
                   alt="Anniversary Celebration Villa with Private Pool"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -257,7 +258,7 @@ export default function ExperiencesPage() {
             <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
               <div className="relative h-64 overflow-hidden">
                 <Image
-                  src="/assets/villas/casa-de-reva/gallery-1.webp"
+                  src="/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg"
                   alt="Private Pool Party Villa Near Pune for Family"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"

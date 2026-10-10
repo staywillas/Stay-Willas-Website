@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { blogsData } from "@/data/blogs";
+import { getRelatedGuides, getGuideBookingLinks } from "@/data/guide-navigation";
+import { CANOPY_MAX_GUESTS, WILLOW_COTTAGE_BASE_PRICE } from "@/data/stay-facts";
 import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle, Sparkles, ArrowRight, BedDouble, Users, Waves, Flame, MapPin } from "lucide-react";
 import { prisma } from "@/lib/db";
 import BlogHorizontalMarquee from "@/components/blog/blog-horizontal-marquee";
@@ -30,6 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!blog) {
     return {
       title: "Requested Blog Article Was Not Found | Stay Willas",
+      robots: { index: false, follow: true },
     };
   }
 
@@ -49,6 +52,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: [{ url: ogImageUrl }],
       type: "article",
       publishedTime: new Date(blog.date).toISOString(),
+      modifiedTime: new Date(blog.updatedAt || blog.date).toISOString(),
     },
     twitter: {
       card: "summary_large_image",
@@ -68,7 +72,8 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     notFound();
   }
 
-  const otherBlogs = blogsData.filter((b) => b.slug !== slug).slice(0, 2);
+  const otherBlogs = getRelatedGuides(blog);
+  const bookingLinks = getGuideBookingLinks(blog);
 
   let relatedVilla = null;
   let featuredVillas: Array<{
@@ -96,7 +101,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     });
   }
 
-  // Extract genuine FAQ items for Google Rich Results & AI Search
+  // Keep structured question-and-answer data aligned with the visible article.
   const genuineFaqs: Array<{ "@type": string; name: string; acceptedAnswer: { "@type": string; text: string } }> = [];
   
   blog.sections.forEach((section) => {
@@ -160,9 +165,9 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     "@type": "BlogPosting",
     "headline": blog.title,
     "description": blog.description,
-    "image": `https://www.staywillas.com${blog.image}`,
+    "image": blog.image.startsWith("http") ? blog.image : `https://www.staywillas.com${blog.image}`,
     "datePublished": new Date(blog.date).toISOString(),
-    "dateModified": new Date(blog.date).toISOString(),
+    "dateModified": new Date(blog.updatedAt || blog.date).toISOString(),
     "inLanguage": "en-IN",
     "wordCount": articleWordCount,
     "about": blogAboutEntity,
@@ -248,7 +253,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
           <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/40" />
           <span className="flex items-center gap-1.5">
             <Clock size={14} className="text-[#DAA520]" />
-            {blog.readTime}
+            {Math.max(1, Math.ceil(articleWordCount / 200))} min read
           </span>
           <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/40" />
           <span className="flex items-center gap-1.5">
@@ -256,6 +261,10 @@ export default async function BlogDetailsPage({ params }: PageProps) {
             Guide
           </span>
         </div>
+        <p className="mb-6 text-sm text-slate-600">
+          By <Link href="/about" className="underline underline-offset-4">Stay Willas</Link>
+          {blog.updatedAt && <> · Updated <time dateTime={blog.updatedAt}>{new Date(blog.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}</time></>}
+        </p>
 
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-heading text-[#1B3564] mb-8 font-bold leading-tight">
           {blog.title}
@@ -267,7 +276,9 @@ export default async function BlogDetailsPage({ params }: PageProps) {
             src={blog.image}
             alt={blog.title}
             fill
-            priority
+            loading="eager"
+            fetchPriority="high"
+            sizes="(max-width: 1024px) 100vw, 960px"
             className="object-cover"
           />
         </div>
@@ -283,6 +294,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                   src={relatedVilla.images[0] || "/images/hero-villa.webp"}
                   alt={relatedVilla.name}
                   fill
+                  sizes="288px"
                   className="object-cover"
                 />
                 <div className="absolute top-3 left-3 bg-[#1B3564] text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
@@ -310,6 +322,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                   src={relatedVilla.images[0] || "/images/hero-villa.webp"}
                   alt={relatedVilla.name}
                   fill
+                  sizes="96px"
                   className="object-cover"
                 />
               </div>
@@ -363,7 +376,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                         image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
                         location: "Chavani, Khopoli, Maharashtra",
                         specs: "4 BHK Hillside Estate",
-                        guests: "Sleeps 16 to 25+ Guests (Groups)",
+                        guests: `Maximum ${CANOPY_MAX_GUESTS} Guests`,
                         startingPrice: 15000,
                         features: [
                           "Massive 22x12 ft private swimming pool with Sahyadri mountain views",
@@ -381,7 +394,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                         image: "/assets/villas/the-angle-house/gallery-11.webp",
                         location: "Kamshet, Lonavala, Maharashtra",
                         specs: "3 BHK Glass Villa",
-                        guests: "Sleeps 12 to 16 Guests (Groups)",
+                        guests: "Maximum 12 Guests",
                         startingPrice: 13000,
                         features: [
                           "Private cascading waterfall pool with underwater mood lighting",
@@ -399,8 +412,8 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                         image: "/assets/villas/willow-peak/gallery-1.webp",
                         location: "Kurwande, Lonavala, Maharashtra",
                         specs: "Standalone A-Frame Chalets",
-                        guests: "Romantic Couples Only (2 to 12 Guests)",
-                        startingPrice: 4500,
+                        guests: "Up to 4 per cottage • 12 across the estate",
+                        startingPrice: WILLOW_COTTAGE_BASE_PRICE,
                         features: [
                           "En-suite heated bubble jacuzzi in every standalone chalet with mist views",
                           "Authentic pine wood A-frame architecture with private mountain mist deck",
@@ -438,6 +451,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                             src={meta.image}
                             alt={meta.name}
                             fill
+                            sizes="(max-width: 1024px) 100vw, 480px"
                             className="object-cover group-hover:scale-105 transition-transform duration-700"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
@@ -535,6 +549,23 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                   ))}
                 </ul>
               )}
+              {section.table && (
+                <div className="my-8 overflow-x-auto rounded-2xl border border-slate-200">
+                  <table className="w-full text-left text-sm sm:text-base">
+                    <caption className="bg-slate-50 p-4 text-left font-semibold text-[#1B3564]">{section.table.caption}</caption>
+                    <thead className="bg-[#1B3564] text-white">
+                      <tr>{section.table.columns.map(column => <th key={column} scope="col" className="p-4">{column}</th>)}</tr>
+                    </thead>
+                    <tbody>{section.table.rows.map((row, rowIndex) => (
+                      <tr key={rowIndex} className="border-t border-slate-200 even:bg-slate-50">
+                        {row.map((cell, cellIndex) => cellIndex === 0
+                          ? <th key={cellIndex} scope="row" className="p-4 font-semibold">{cell}</th>
+                          : <td key={cellIndex} className="p-4">{cell}</td>)}
+                      </tr>
+                    ))}</tbody>
+                  </table>
+                </div>
+              )}
             </div>
           ))}
 
@@ -546,8 +577,15 @@ export default async function BlogDetailsPage({ params }: PageProps) {
           </div>
         </article>
 
+        <section className="my-10 rounded-2xl border border-slate-200 bg-slate-50 p-6" aria-label="Find a stay for this trip">
+          <h2 className="mb-4 text-2xl font-heading font-bold text-[#1B3564]">Find a stay for this trip</h2>
+          <ul className="space-y-3">{bookingLinks.map(link => (
+            <li key={link.href}><Link href={link.href} className="inline-block py-2 font-medium text-[#1B3564] underline underline-offset-4">{link.label}</Link></li>
+          ))}</ul>
+        </section>
+
         {/* Villa Homeowner Partner Callout Banner */}
-        <div className="my-16 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#1B3564] via-[#152A50] to-[#0A162B] text-white border border-[#DAA520]/40 shadow-2xl relative overflow-hidden">
+        {slug === "how-to-partner-with-stay-willas-monetize-luxury-villa" && <div className="my-16 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#1B3564] via-[#152A50] to-[#0A162B] text-white border border-[#DAA520]/40 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-[#DAA520]/10 rounded-full blur-[90px] pointer-events-none" />
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div>
@@ -569,18 +607,18 @@ export default async function BlogDetailsPage({ params }: PageProps) {
               PARTNER WITH US &rarr;
             </Link>
           </div>
-        </div>
+        </div>}
 
         {/* Recommendation Cards */}
         {otherBlogs.length > 0 && (
           <div className="border-t border-[#DAA520]/20 pt-16 mt-20">
             <h3 className="text-2xl md:text-3xl font-heading text-[#1B3564] font-bold mb-8 text-center italic">Recommended Reads</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
               {otherBlogs.map((item) => (
                 <div key={item.slug} className="bg-white border border-[#DAA520]/15 rounded-3xl p-6 text-left shadow-sm flex flex-col justify-between group max-w-md w-full">
                   <div>
                     <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden mb-4 bg-slate-50">
-                      <Image src={item.image} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <Image src={item.image} alt={item.title} fill sizes="(max-width: 768px) 100vw, 320px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                     <h4 className="font-heading font-bold text-base md:text-lg text-[#1B3564] mb-2 leading-snug group-hover:text-accent-primary transition-colors">
                       {item.title}

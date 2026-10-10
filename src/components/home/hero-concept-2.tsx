@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 import { 
   MapPin, 
   ArrowRight, 
@@ -20,12 +20,13 @@ import {
 } from "lucide-react";
 import BookingBar from "@/components/home/booking-bar";
 import { cn } from "@/lib/utils";
+import { ANGLE_LOCATION } from "@/data/stay-facts";
 
 // Rotating Hero Carousel Data (Simple details: Cost & Max Guests, Heaven for Willow Peak)
 const HERO_SLIDES = [
   {
     name: "The Angle House",
-    location: "Kurwande, Lonavala",
+    location: ANGLE_LOCATION,
     cost: "₹13,000/night",
     capacity: "Max 12 Guests",
     image: "/images/angle-house-hero-clean.webp",
@@ -59,7 +60,7 @@ const HERO_SLIDES = [
     cost: "₹4,999/night",
     capacity: "Max 4 Guests",
     image: "/assets/villas/willow-peak/wp-01.webp",
-    slug: "willow-peak",
+    slug: "willow-peak-cottage-c",
     badge: "A-Frame Cottage",
     objectPosition: "object-[center_72%]"
   }
@@ -69,11 +70,9 @@ const HERO_SLIDES = [
 const VILLAS = [
   {
     name: "The Angle House",
-    location: "Kurwande, Lonavala",
+    location: ANGLE_LOCATION,
     startingRate: "₹13,000",
     rateNote: "Weekday tariff • Weekend ₹20,000",
-    rating: "4.9",
-    reviewsCount: 42,
     capacity: "12 Guests",
     bedrooms: "3 Bedrooms",
     image: "/assets/villas/the-angle-house/gallery-11.webp",
@@ -88,8 +87,6 @@ const VILLAS = [
     location: "Khopoli, Maharashtra",
     startingRate: "₹15,000",
     rateNote: "Weekday tariff • Weekend ₹22,000",
-    rating: "4.8",
-    reviewsCount: 38,
     capacity: "16 Guests",
     bedrooms: "4 Bedrooms",
     image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
@@ -104,8 +101,6 @@ const VILLAS = [
     location: "Panchgani, Maharashtra",
     startingRate: "₹16,000",
     rateNote: "Weekday tariff • Weekend ₹22,000",
-    rating: "4.9",
-    reviewsCount: 51,
     capacity: "16 Guests",
     bedrooms: "4 Bedrooms",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
@@ -119,9 +114,7 @@ const VILLAS = [
     name: "Willow Peak",
     location: "Kurwande, Lonavala",
     startingRate: "₹4,999",
-    rateNote: "Heaven: ₹4,999/nt • Entire Estate (12 Guests): From ₹15,000/nt",
-    rating: "4.8",
-    reviewsCount: 46,
+    rateNote: "From ₹4,999/night per cottage • Ask for a full-estate quote",
     capacity: "Up to 12 Guests",
     bedrooms: "3 A-Frame Chalets",
     image: "/assets/villas/willow-peak/gallery-1.webp",
@@ -134,19 +127,10 @@ const VILLAS = [
 ];
 
 export default function HeroConcept2() {
-  const router = useRouter();
+
   const [copiedCode, setCopiedCode] = useState(false);
   const [currentHeroIdx, setCurrentHeroIdx] = useState(0);
-  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
-
-  // Auto-rotating Hero Carousel (every 4.5 seconds, paused on hover)
-  useEffect(() => {
-    if (isCarouselPaused) return;
-    const interval = setInterval(() => {
-      setCurrentHeroIdx((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 4500);
-    return () => clearInterval(interval);
-  }, [isCarouselPaused]);
+  // Keep the first view stable; guests can switch photos with the carousel controls.
 
   const handleCopyCode = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -255,12 +239,11 @@ export default function HeroConcept2() {
             {/* The Sculpted Fluid Image Frame with Rotating Carousel */}
             <div 
               className="relative w-full h-[230px] xs:h-[270px] sm:h-[350px] lg:h-[420px] rounded-3xl sm:rounded-[2.5rem] lg:rounded-l-[120px] lg:rounded-r-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(27,53,100,0.14)] border border-slate-200/80 group"
-              onMouseEnter={() => setIsCarouselPaused(true)}
-              onMouseLeave={() => setIsCarouselPaused(false)}
             >
               {/* Carousel Slides */}
               {HERO_SLIDES.map((slide, idx) => {
                 const isActive = idx === currentHeroIdx;
+                if (!isActive) return null;
                 return (
                   <Link
                     key={slide.slug}
@@ -274,9 +257,10 @@ export default function HeroConcept2() {
                       src={slide.image}
                       alt={slide.name}
                       fill
-                      priority={idx === 0}
+                      loading="eager"
+                      fetchPriority={idx === 0 ? "high" : "auto"}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 55vw"
-                      quality={85}
+                      quality={80}
                       className={cn(
                         "object-cover transition-transform duration-1000",
                         slide.objectPosition,
@@ -506,11 +490,6 @@ export default function HeroConcept2() {
                       {villa.badge}
                     </span>
 
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md shadow-sm text-slate-900 text-xs font-bold">
-                      <Star size={12} className="fill-amber-400 text-amber-500" />
-                      <span>{villa.rating}</span>
-                      <span className="text-[10px] text-slate-400 font-normal">({villa.reviewsCount})</span>
-                    </span>
                   </div>
 
                   {/* Bottom Highlight Pill on Photo */}

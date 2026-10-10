@@ -5,11 +5,10 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
 import FloatingWidgets from "@/components/layout/floating-widgets";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
-import Preloader from "@/components/layout/preloader";
 import Script from "next/script";
 import { ORGANIZATION_SCHEMA, WEBSITE_SCHEMA, HOMEPAGE_SITELINKS_SCHEMA } from "@/lib/schema";
 
-// Fonts: swap display and preload for fastest text paint with zero CLS
+// Preload the main text font; decorative families load when their styles are used.
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
@@ -23,7 +22,7 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   display: "swap",
-  preload: true,
+  preload: false,
   adjustFontFallback: true,
 });
 
@@ -33,7 +32,7 @@ const cormorant = Cormorant_Garamond({
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
   display: "swap",
-  preload: true,
+  preload: false,
   adjustFontFallback: true,
 });
 
@@ -137,15 +136,6 @@ export default function RootLayout({
             fbq('track', 'PageView');
           `}
         </Script>
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=1730325998176573&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
         {/* Core Organization & WebSite Structured Data */}
         <script
           type="application/ld+json"
@@ -165,7 +155,10 @@ export default function RootLayout({
         className={`${outfit.variable} ${cormorant.variable} ${montserrat.variable} antialiased font-sans overflow-x-hidden max-w-full w-full relative`}
         suppressHydrationWarning
       >
-        <Preloader />
+        <noscript>
+          <img height="1" width="1" style={{ display: "none" }} alt=""
+            src="https://www.facebook.com/tr?id=1730325998176573&ev=PageView&noscript=1" />
+        </noscript>
         <ClerkProvider>
           <SmoothScrollProvider>
             <div className="overflow-x-hidden w-full max-w-full relative">

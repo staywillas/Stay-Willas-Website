@@ -1,3 +1,6 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import GuideLinks from "@/components/blog/guide-links";
+import { destinationGuides } from "@/data/guide-navigation";
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -12,7 +15,7 @@ import { generateDestinationCollectionSchema, generateBreadcrumbSchema, generate
 export const revalidate = 60; // Instant TTFB via ISR cache
 
 export const metadata: Metadata = {
-  title: "Villas in Lonavala with Private Pool | Private Pool Villa in Lonavala - Stay Willas",
+  title: "Lonavala Private Pool Villa & Jacuzzi Cottages | Stay Willas",
   description: "Explore premier private pool villas in Lonavala with lush mountain views, private waterfall pools, and in-house chef services. Book your private villa in Lonavala with 0% platform fees.",
   keywords: [
     "villas in lonavala with private pool",
@@ -96,7 +99,7 @@ export default async function LonavalaPage() {
     },
     {
       question: "Are private villas in Lonavala pet-friendly and suitable for family reunions?",
-      answer: "Yes! Our private villas in Lonavala accommodate groups from 4 up to 16+ guests. Flagship properties like The Angle House feature spacious double-height living lounges, ground-floor bedrooms for senior citizens, and safe gated lawns where pets can play freely."
+      answer: "Yes! Our private villas in Lonavala accommodate up to 12 guests in The Angle House, or up to 4 per Willow Peak cottage. Flagship properties like The Angle House feature spacious double-height living lounges, ground-floor bedrooms for senior citizens, and safe gated lawns where pets can play freely."
     },
     {
       question: "Can we request pure vegetarian or Jain catering at our villa in Lonavala?",
@@ -218,7 +221,7 @@ export default async function LonavalaPage() {
                     <span>BOOK DIRECT (0% FEE)</span>
                   </a>
                   <a 
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and catering menus for luxury private pool villas in Lonavala.")}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and catering menus for luxury private pool villas in Lonavala.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs sm:text-sm tracking-wider uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
@@ -291,7 +294,7 @@ export default async function LonavalaPage() {
                   {/* Fast Action Buttons in Card */}
                   <div className="space-y-2.5 pt-2">
                     <a 
-                      href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check available dates and direct pricing for Lonavala villas.")}`}
+                      href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to check available dates and direct pricing for Lonavala villas.")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
@@ -303,7 +306,7 @@ export default async function LonavalaPage() {
                       href="#lonavala-villas-grid"
                       className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs uppercase tracking-wider py-3 px-4 rounded-2xl transition-all flex items-center justify-center gap-2 text-center"
                     >
-                      <span>Explore 4 Properties Below</span>
+                      <span>Explore Pool Villas & Jacuzzi Cottages Below</span>
                       <ChevronRight size={14} />
                     </a>
                   </div>
@@ -346,10 +349,6 @@ export default async function LonavalaPage() {
                   </div>
 
                   <div className="bg-black/70 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-3">
-                    <span className="flex items-center gap-1 text-sm font-bold text-[#DAA520]">
-                      <Star size={15} className="fill-[#DAA520]" /> 4.9/5
-                    </span>
-                    <span className="text-white/40">|</span>
                     <span className="text-sm font-bold text-white">From ₹13,000 / night</span>
                   </div>
                 </div>
@@ -389,7 +388,7 @@ export default async function LonavalaPage() {
                     <ChevronRight size={14} />
                   </Link>
                   <a 
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas! 🌟 I'd like to check custom dates, rates and food menus for *${signatureVilla.name}* in Lonavala.`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hello Stay Willas! 🌟 I'd like to check custom dates, rates and food menus for *${signatureVilla.name}* in Lonavala.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black tracking-widest uppercase text-center py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
@@ -483,7 +482,7 @@ export default async function LonavalaPage() {
                 </div>
                 <h4 className="font-bold text-[#1B3564] text-base mb-1.5">Family & Group Reunions</h4>
                 <p className="text-slate-600 text-xs leading-relaxed">
-                  Spacious living lounges, double-height ceilings, and large manicured lawns designed to host up to 16 guests.
+                  Spacious living lounges, double-height ceilings, and lawns and living space for up to 12 guests at The Angle House.
                 </p>
               </div>
 
@@ -585,7 +584,7 @@ export default async function LonavalaPage() {
 
                   <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
                     <a
-                      href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'm planning a special gathering in Lonavala. Could you share curated private pool villas and catering options for our dates?")}`}
+                      href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a special gathering in Lonavala. Could you share curated private pool villas and catering options for our dates?")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
@@ -716,7 +715,7 @@ export default async function LonavalaPage() {
                 Explore All Villas
               </Link>
               <a 
-                href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Lonavala with private pool.")}`}
+                href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Lonavala with private pool.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-4 px-8 rounded-full shadow-lg transition-all flex items-center justify-center gap-2"
@@ -743,7 +742,7 @@ export default async function LonavalaPage() {
 
           <div className="flex items-center gap-2">
             <a 
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I want to check direct booking rates for Lonavala private pool villas.")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I want to check direct booking rates for Lonavala private pool villas.")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#25D366] active:bg-[#20ba5a] text-white font-black text-[11px] uppercase tracking-wider py-2.5 px-3.5 rounded-xl shadow-md flex items-center gap-1.5 shrink-0"
@@ -763,6 +762,7 @@ export default async function LonavalaPage() {
         </div>
       </div>
 
+      <div className="max-w-7xl mx-auto px-4"><GuideLinks slugs={destinationGuides.lonavala} title="Lonavala stay planning guides" /></div>
       <Footer />
     </main>
   );

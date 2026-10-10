@@ -4,14 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Heart, Home, Building2, Menu } from "lucide-react";
-import { useAuth } from "@/lib/use-auth";
 import { cn } from "@/lib/utils";
 
-const WA_BOOKING_URL = `https://wa.me/919619042310?text=${encodeURIComponent("Hello Stay Willas Concierge! 🌟 I am using your mobile app and would love to book a luxury villa stay. Could you help us find the perfect villa for our next getaway?")}`;
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
-  const { user, isSignedIn } = useAuth();
   const [wishlistCount, setWishlistCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -57,7 +54,7 @@ export default function MobileBottomNav() {
     }
   }, []);
 
-  if (isVillaDetailPage || isMenuOpen || isCarePage || isCareDomain) return null;
+  if (isVillaDetailPage || isMenuOpen || isCarePage || isCareDomain || pathname === "/colortheory") return null;
 
   const handleMenuClick = () => {
     window.dispatchEvent(new CustomEvent("toggle-mobile-menu"));
@@ -111,18 +108,14 @@ export default function MobileBottomNav() {
 
           {/* Center BOOK FAB (More compact) */}
           <div className="flex flex-col items-center -mt-3.5">
-            <a
-              href={WA_BOOKING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Book via WhatsApp"
+            <Link
+              href="/villas"
+              prefetch={false}
+              aria-label="Browse villas and book direct"
               className="w-[42px] h-[42px] rounded-full bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] flex items-center justify-center shadow-[0_3px_15px_rgba(218,165,32,0.35)] hover:shadow-[0_4px_20px_rgba(218,165,32,0.45)] active:scale-90 transition-all duration-300 border-2 border-[#F5F2EA] relative"
             >
-              {/* WhatsApp icon */}
-              <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#1B3564]">
-                <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
-              </svg>
-            </a>
+              <Building2 size={20} aria-hidden="true" />
+            </Link>
             <span className="text-[7px] tracking-[0.16em] uppercase font-black text-[#DAA520] mt-0.5 leading-none">BOOK</span>
           </div>
 

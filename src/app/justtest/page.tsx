@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -252,7 +253,7 @@ export default function JustTestPage() {
 
   const whatsappUrl =
     "https://wa.me/919619042310?text=" +
-    encodeURIComponent(
+    encodeWhatsAppMessage(
       "Hi Stay Willas! I would like to check availability and book The Angle House in Lonavala."
     );
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
@@ -42,7 +43,10 @@ import {
 } from "date-fns";
 import { getDestinationAvailability, checkAvailableVillasForDates, getVillaBookingDetails } from "@/app/actions/booking";
 import { submitInquiry } from "@/app/actions/inquiry";
-import BookingCard from "@/components/villa/booking-card";
+import dynamic from "next/dynamic";
+const BookingCard = dynamic(() => import("@/components/villa/booking-card"), {
+  loading: () => <p role="status" className="p-6 text-center text-slate-600">Loading booking details…</p>,
+});
 import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
 
@@ -353,7 +357,7 @@ Could you please confirm availability, special offers, and assist with reservati
 Could you please share the available luxury villas and packages? Thank you! ✨`;
     }
 
-    const encodedMsg = encodeURIComponent(msg);
+    const encodedMsg = encodeWhatsAppMessage(msg);
     const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
     window.open(whatsappUrl, "_blank");
   };
@@ -402,10 +406,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
       id="booking-bar-section" 
       className={`relative z-40 max-w-[1220px] w-full mx-auto scroll-mt-28 ${className ? className : "px-4 sm:px-6 mt-4 md:mt-6 mb-10"}`}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
+      <div
         className="bg-white rounded-[2rem] md:rounded-full p-4 md:p-2.5 pl-4 md:pl-6 pr-4 md:pr-3 shadow-[0_25px_60px_rgba(27,53,100,0.16)] border border-[#DAA520]/40 ring-4 ring-[#DAA520]/10"
       >
         <form onSubmit={handleCheckAvailability} className="relative z-30">
@@ -811,7 +812,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
             </button>
           </div>
         </form>
-      </motion.div>
+      </div>
 
       {/* Calendar Popover (Portaled to document.body for both Desktop & Mobile to prevent any clipping) */}
       {mounted && createPortal(

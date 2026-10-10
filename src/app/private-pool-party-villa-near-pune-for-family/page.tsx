@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -145,7 +146,7 @@ export default async function PuneFamilyPoolPartyPage() {
               <ChevronRight size={16} />
             </a>
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌊 I'm looking for a private pool party villa near Pune for our family. Could you share rates, pool photos, and availability?")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌊 I'm looking for a private pool party villa near Pune for our family. Could you share rates, pool photos, and availability?")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer border border-white/20"
@@ -232,7 +233,7 @@ export default async function PuneFamilyPoolPartyPage() {
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
                       <Users size={14} />
                     </div>
-                    <span>Sleeps 12 to 16 Family</span>
+                    <span>Sleeps Up to 12 Guests</span>
                   </div>
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
@@ -280,7 +281,7 @@ export default async function PuneFamilyPoolPartyPage() {
                   Canopy Crest — 22ft Pool & 4-Acre Grounds
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                  Just down the expressway at the Khopoli foothills! Boasts a massive 22x12ft swimming pool with expansive mountain views, lush charpai lawns for family cricket and badminton, evening bonfire pit, and spacious 4 BHK suites accommodating 16 to 25+ guests.
+                  Just down the expressway at the Khopoli foothills! Boasts a massive 22x12ft swimming pool with expansive mountain views, lush charpai lawns for family cricket and badminton, evening bonfire pit, and spacious 4 BHK suites accommodating up to 16 guests.
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-slate-800 font-semibold mb-6">
@@ -413,7 +414,7 @@ export default async function PuneFamilyPoolPartyPage() {
             </p>
           </div>
           <a
-            href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌊 I'm planning a Pune family pool party weekend. Please share available villas and deals.")}`}
+            href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌊 I'm planning a Pune family pool party weekend. Please share available villas and deals.")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap shrink-0 border border-white/20 cursor-pointer"

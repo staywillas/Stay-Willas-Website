@@ -143,7 +143,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
         <Navbar />
         
         {/* Spacing below Navbar */}
-        <div className="pt-44" />
+        <div className="pt-28 md:pt-40" />
 
         {/* Highly Interactive, Real-Time Client Filter and Grid Section */}
         <VillasClient 

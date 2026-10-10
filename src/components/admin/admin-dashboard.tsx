@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { logoutAction } from "@/app/actions/login-actions";
@@ -1038,7 +1039,7 @@ const AdminDashboard = ({
                                 onClick={() => {
                                   const cleanPh = guestPhone.replace(/[^0-9]/g, "");
                                   const msg = `Hello ${guestName}! 🌟 This is Stay Willas management regarding your reservation request for *${item.villa.name}* (${cin.toLocaleDateString("en-IN", { month: "short", day: "numeric" })} - ${cout.toLocaleDateString("en-IN", { month: "short", day: "numeric" })}). We are happy to help and verify your booking! ✨`;
-                                  window.open(`https://wa.me/${cleanPh.startsWith("91") ? cleanPh : `91${cleanPh}`}?text=${encodeURIComponent(msg)}`, "_blank");
+                                  window.open(`https://wa.me/${cleanPh.startsWith("91") ? cleanPh : `91${cleanPh}`}?text=${encodeWhatsAppMessage(msg)}`, "_blank");
                                 }}
                                 className="px-4 py-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border-none"
                               >
@@ -1280,7 +1281,7 @@ const AdminDashboard = ({
                                     onClick={() => {
                                       const dialPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
                                       const msg = `Hello ${lead.name || "there"}! 🌟 This is Stay Willas management. We noticed your interest in our luxury villas on our website and would love to help you plan your perfect getaway! How can we assist you today? ✨`;
-                                      window.open(`https://wa.me/${dialPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+                                      window.open(`https://wa.me/${dialPhone}?text=${encodeWhatsAppMessage(msg)}`, "_blank");
                                     }}
                                     className="px-3.5 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border-none"
                                   >
@@ -1640,7 +1641,7 @@ const AdminDashboard = ({
                                 onClick={() => {
                                   const cleanPh = guestPhone.replace(/[^0-9]/g, "");
                                   const msg = `Hello ${guestName}! 🌟 This is Stay Willas management regarding your booking request for *${item.villa.name}* from ${cin.toLocaleDateString("en-IN", { month: "short", day: "numeric" })} to ${cout.toLocaleDateString("en-IN", { month: "short", day: "numeric" })}. We would love to assist and confirm your reservation! ✨`;
-                                  window.open(`https://wa.me/${cleanPh.startsWith("91") ? cleanPh : `91${cleanPh}`}?text=${encodeURIComponent(msg)}`, "_blank");
+                                  window.open(`https://wa.me/${cleanPh.startsWith("91") ? cleanPh : `91${cleanPh}`}?text=${encodeWhatsAppMessage(msg)}`, "_blank");
                                 }}
                                 className="px-3.5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shadow-xs border-none"
                                 title="Chat on WhatsApp"

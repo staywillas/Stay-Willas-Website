@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -53,7 +54,7 @@ const faqs = [
   },
   {
     question: "Can we host day-guests in addition to overnight stayers?",
-    answer: "Yes. For instance, Canopy Crest comfortably sleeps 16 to 20+ guests overnight, and its 4-acre open lawns can accommodate up to 35 to 40 day-guests for afternoon celebration lunches or evening dinners upon prior coordination with our concierge."
+    answer: "Canopy Crest has a maximum guest capacity of 16. Confirm any event or visitor arrangement with the concierge before booking; do not assume additional attendees are permitted."
   },
   {
     question: "How is catering and dining managed for large family gatherings?",
@@ -145,7 +146,7 @@ export default async function MilestoneBirthdayPage() {
               <ChevronRight size={16} />
             </a>
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'm planning a milestone birthday celebration in Maharashtra for our family. Could you share estate options, catering and direct rates?")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a milestone birthday celebration in Maharashtra for our family. Could you share estate options, catering and direct rates?")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer border border-white/20"
@@ -204,7 +205,7 @@ export default async function MilestoneBirthdayPage() {
                   Khopoli Foothills • 4 BHK Estate
                 </div>
                 <div className="absolute top-4 right-4 bg-[#DAA520] text-[#0B1528] px-3.5 py-1.5 rounded-full text-xs font-black shadow-sm">
-                  4-Acre Grounds • Sleeps 20+
+                  4-Acre Grounds • Sleeps up to 16
                 </div>
               </div>
               <div className="p-6 sm:p-8">
@@ -220,7 +221,7 @@ export default async function MilestoneBirthdayPage() {
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
                       <Users size={14} />
                     </div>
-                    <span>16 to 25+ Guests</span>
+                    <span>up to 16 Guests</span>
                   </div>
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
@@ -288,7 +289,7 @@ export default async function MilestoneBirthdayPage() {
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
                       <Users size={14} />
                     </div>
-                    <span>Up to 16 Guests</span>
+                    <span>Up to 12 Guests</span>
                   </div>
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
@@ -413,7 +414,7 @@ export default async function MilestoneBirthdayPage() {
             </p>
           </div>
           <a
-            href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'm planning a milestone family celebration in Maharashtra. Please assist me with estate options.")}`}
+            href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a milestone family celebration in Maharashtra. Please assist me with estate options.")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap shrink-0 border border-white/20 cursor-pointer"

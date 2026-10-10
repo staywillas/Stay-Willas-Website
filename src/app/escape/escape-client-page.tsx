@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { 
@@ -255,7 +256,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   const whatsappText = isDiscountApplied
     ? `Hello Stay Willas! 🌟 I unlocked the special *26% OFF* Promo discount (Coupon: *Stayw26*)!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (26% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Discounted Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and confirm our 26% discount?`
     : `Hello Stay Willas! 🌟 I am interested in booking an exclusive getaway at *${selectedVilla.name}* in ${selectedVilla.location} for a ${stayType === "weekday" ? "Weekday" : "Weekend"} stay.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Estimated Total: ₹${estimatedTotal.toLocaleString("en-IN")}\n\nCan you please check availability for our group?`;
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`;
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeWhatsAppMessage(whatsappText)}`;
 
   // Tab definitions
   const tabs = {

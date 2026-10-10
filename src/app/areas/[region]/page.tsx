@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import { notFound } from "next/navigation";
 import React from "react";
 import { Metadata } from "next";
@@ -194,7 +195,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
       },
       {
         question: "Is Canopy Crest in Khopoli suitable for large group staycations?",
-        answer: "Yes, Canopy Crest comfortably accommodates 20 to 25+ guests across 4 spacious master BHK suites, featuring a massive 22x12 ft private pool and sprawling lawns."
+        answer: "Yes, Canopy Crest comfortably accommodates up to 16 guests across 4 spacious master BHK suites, featuring a massive 22x12 ft private pool and sprawling lawns."
       }
     ],
     panchgani: [
@@ -348,7 +349,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
               </p>
               <div className="pt-4">
                 <a
-                  href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas team! 🌟 Please let me know when your private pool villas in *${area.name}* are live.`)}`}
+                  href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hello Stay Willas team! 🌟 Please let me know when your private pool villas in *${area.name}* are live.`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-2xl px-7 py-4 text-xs font-black tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-lg"

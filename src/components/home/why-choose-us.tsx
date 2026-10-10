@@ -1,7 +1,8 @@
-"use client";
 
+
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
-import { motion } from "framer-motion";
+
 import { BadgeCheck, UtensilsCrossed, HeartHandshake, CalendarCheck2 } from "lucide-react";
 
 const reasons = [
@@ -33,16 +34,7 @@ const WhyChooseUs = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ 
-              type: "spring",
-              stiffness: 70,
-              damping: 18,
-              duration: 0.7 
-            }}
+          <div
           >
             <span className="inline-block text-[#559C24] font-bold tracking-[0.3em] uppercase text-[9px] sm:text-xs mb-2 sm:mb-4 bg-[#559C24]/10 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
               Why Choose Us
@@ -53,23 +45,14 @@ const WhyChooseUs = () => {
             <p className="text-xs sm:text-lg text-text-primary/65 mt-2 sm:mt-6 max-w-2xl mx-auto">
               Experience uncompromising luxury with genuine hospitality and attention to every detail.
             </p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">
-          {reasons.map((reason, index) => (
-            <motion.div
+          {reasons.map((reason) => (
+            <div
               key={reason.title}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ 
-                type: "spring",
-                stiffness: 80,
-                damping: 20,
-                delay: index * 0.08 
-              }}
               className="group"
             >
               <div className="h-full flex flex-col items-center text-center p-3 sm:p-6 rounded-2xl transition-all duration-500 hover:bg-[#FAF8F5] border border-transparent hover:border-[#DAA520]/25 hover:shadow-xl">
@@ -88,16 +71,12 @@ const WhyChooseUs = () => {
                   {reason.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* High-Converting Bottom Conversion Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
           className="mt-12 sm:mt-16 bg-[#1B3564] rounded-3xl p-6 sm:p-10 text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-[#DAA520]/40 shadow-xl"
         >
           <div className="text-center md:text-left">
@@ -120,7 +99,7 @@ const WhyChooseUs = () => {
               Browse All Villas
             </a>
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd love to get a direct quote and check availability for a weekend villa stay.")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd love to get a direct quote and check availability for a weekend villa stay.")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white px-6 py-3.5 rounded-full text-xs font-black tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
@@ -131,7 +110,7 @@ const WhyChooseUs = () => {
               <span>WhatsApp Us</span>
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

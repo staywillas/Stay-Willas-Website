@@ -2,6 +2,7 @@
  * Centralized Schema.org JSON-LD Structured Data Generators for Stay Willas
  * Follows Google Search Central structured data guidelines and schema.org standards.
  */
+import { WILLOW_COTTAGE_BASE_PRICE } from "../data/stay-facts";
 
 export const BASE_URL = "https://www.staywillas.com";
 
@@ -224,9 +225,11 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
   const reviewCount = genuineReviews.length;
   const avgRating = reviewCount > 0
     ? Number((genuineReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(1))
-    : 5.0;
+    : 0;
 
-  const numericPrice = typeof villa.price === "string" ? parseInt(villa.price.replace(/[^\d]/g, ""), 10) : villa.price;
+  const numericPrice = villa.slug.startsWith("willow-peak-cottage-")
+    ? WILLOW_COTTAGE_BASE_PRICE
+    : typeof villa.price === "string" ? parseInt(villa.price.replace(/[^\d]/g, ""), 10) : villa.price;
   const isPetFriendly = villa.slug === "the-angle-house" || (villa.amenities || []).some((a: any) => {
     const text = typeof a === "string" ? a : (a?.name || "");
     return text.toLowerCase().includes("pet");
@@ -262,13 +265,6 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
     checkinTime: "14:00",
     checkoutTime: "11:00",
     petsAllowed: isPetFriendly,
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: avgRating > 0 ? avgRating : 4.9,
-      reviewCount: reviewCount > 0 ? reviewCount : 32,
-      bestRating: "5",
-      worstRating: "1",
-    },
     address: {
       "@type": "PostalAddress",
       streetAddress: coords.street,

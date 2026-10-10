@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "My Wishlist of Premium Luxury Retreats | Stay Willas",
   description: "Browse My Wishlist of premium luxury retreats saved for your next getaway. Compare private pool villas, view pricing, and check dates. Plan your trip.",
   keywords: ["wishlist villas", "saved luxury stays", "favourite villas maharashtra"],
-  robots: { index: true, follow: true },
+  robots: { index: false, follow: true },
   alternates: {
     canonical: "https://www.staywillas.com/wishlist",
   },

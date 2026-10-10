@@ -1,3 +1,7 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import GuideLinks from "@/components/blog/guide-links";
+import { destinationGuides } from "@/data/guide-navigation";
+import { CANOPY_MAX_GUESTS } from "@/data/stay-facts";
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -10,9 +14,11 @@ import { generateDestinationCollectionSchema, generateBreadcrumbSchema, generate
 
 export const revalidate = 60; // Instant TTFB via ISR cache
 
+const khopoliDescription = "Book Canopy Crest, a 4 BHK private pool villa in Khopoli for up to 16 guests. Base stays from ₹15,000/night; compare dates, meal options and group plans.";
+
 export const metadata: Metadata = {
   title: "Villas in Khopoli with Private Pool | Stay Willas",
-  description: "Discover private pool villas in Khopoli with sprawling green lawns & in-house chef dining near Imagicaa. Book verified 4 BHK group estates from ₹12,000/night.",
+  description: khopoliDescription,
   keywords: [
     "villas in khopoli with private pool",
     "villas in khopoli",
@@ -28,15 +34,15 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Villas in Khopoli with Private Pool | Stay Willas",
-    description: "Discover private pool villas in Khopoli with sprawling green lawns & in-house chef dining near Imagicaa. Book verified 4 BHK group estates from ₹12,000/night.",
+    description: khopoliDescription,
     url: "https://www.staywillas.com/areas/khopoli",
     siteName: "Stay Willas",
     locale: "en_IN",
     images: [
       {
-        url: "https://www.staywillas.com/images/hero-villa.webp",
-        width: 1200,
-        height: 630,
+        url: "https://www.staywillas.com/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
+        width: 1254,
+        height: 1254,
         alt: "Villas in Khopoli with Private Pool - Stay Willas Collection",
       }
     ],
@@ -44,9 +50,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Villas in Khopoli with Private Pool | Luxury Staycations | Stay Willas",
-    description: "Discover luxury villas in Khopoli with private pool, sprawling green lawns & in-house chef dining near Imagicaa. Book verified 4 BHK group estates from ₹12,000/night.",
-    images: ["https://www.staywillas.com/images/hero-villa.webp"],
+    title: "Villas in Khopoli with Private Pool | Stay Willas",
+    description: khopoliDescription,
+    images: ["https://www.staywillas.com/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg"],
   },
 };
 
@@ -84,27 +90,35 @@ export default async function KhopoliPage() {
   const khopoliFaqs = [
     {
       question: "How many guests can Canopy Crest accommodate?",
-      answer: "Canopy Crest comfortably accommodates up to 16 guests across 4 spacious BHK suites."
+      answer: `Canopy Crest has four bedrooms and a maximum capacity of ${CANOPY_MAX_GUESTS} guests. Confirm the bed allocation for your group; the guest limit does not imply 16 separate beds.`
     },
     {
-      question: "Is there high-speed Wi-Fi for work offsites?",
-      answer: "Yes, the estate is equipped with high-speed fiber internet suitable for video conferencing and remote work."
+      question: "How much does a private pool villa in Khopoli cost?",
+      answer: `Canopy Crest's listed base accommodation starts at ₹${signatureVilla?.price || "15,000"} per night for the villa. Your dates, guest count, meals, taxes and extras determine the final quote; this is not a fixed weekend or holiday tariff.`
     },
     {
-      question: "Can we order pure vegetarian or Jain food?",
-      answer: "Yes. Our in-house chefs cater dedicated pure-veg and Jain meals using separate cookware."
+      question: "How far is Canopy Crest from Imagicaa?",
+      answer: "Plan the journey using the actual Canopy Crest property pin and Imagicaa's location. Driving time varies with the route and traffic; a fixed 10- or 15-minute journey is not guaranteed. Check the property-to-park route before booking."
     },
     {
-      question: "Is there a market nearby for grocery shopping?",
-      answer: "Yes, Khopoli town has full-fledged markets within a 10-15 minute drive from our properties. However, we recommend informing our concierge of your grocery requirements beforehand so we can stock your chosen villa."
+      question: "Are meals and chef services included in the stay?",
+      answer: "Ask for the dining package and an itemised quote for your dates. Discuss vegetarian or Jain preferences, cookware arrangements, meal timings and any chef or grocery charges before confirming the booking."
+    },
+    {
+      question: "Is Canopy Crest suitable for a corporate offsite?",
+      answer: `It can be considered for groups within the ${CANOPY_MAX_GUESTS}-guest maximum. Confirm meeting seating, a current Wi-Fi speed check, mobile connectivity and equipment with the team; the villa is not advertised as a dedicated conference venue.`
+    },
+    {
+      question: "What should families confirm before booking a pool villa?",
+      answer: "Confirm the room and bathroom allocation, pool depth and supervision, access needs, pet rules and the complete quote. Event permissions and daytime visitor rules are separate from overnight guest capacity."
     }
   ];
 
   const destinationSchema = generateDestinationCollectionSchema({
     regionSlug: "khopoli",
     regionName: "Khopoli",
-    title: "Villas in Khopoli with Private Pool | Luxury Staycations | Stay Willas",
-    description: "Discover luxury villas in Khopoli with private pool, sprawling green lawns & in-house chef dining near Imagicaa.",
+    title: "Villas in Khopoli with Private Pool | Stay Willas",
+    description: khopoliDescription,
     villas: villas.map(v => ({
       slug: v.id,
       name: v.name,
@@ -148,8 +162,10 @@ export default async function KhopoliPage() {
               src="/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg" 
               alt="Luxury private pool villa in Khopoli by Stay Willas"
               fill
-              priority
-              quality={85}
+              loading="eager"
+              fetchPriority="high"
+              sizes="100vw"
+              quality={75}
               className="object-cover object-[center_75%]"
             />
             {/* Cinematic Luxury Dark Overlays */}
@@ -185,15 +201,16 @@ export default async function KhopoliPage() {
 
                 {/* Main Headline */}
                 <h1 className="text-3xl sm:text-5xl md:text-6xl font-heading leading-tight tracking-tight mb-2.5 sm:mb-4 text-white">
-                  Luxury Villas in{" "}
+                  Villas in{" "}
                   <span className="italic font-light font-sans bg-gradient-to-r from-[#DAA520] via-[#F3C766] to-[#FFE082] bg-clip-text text-transparent font-bold pr-2 sm:pr-3 inline-block">
                     Khopoli
                   </span>
+                  {" "}with a Private Pool
                 </h1>
 
                 {/* Subtitle */}
                 <p className="text-slate-200 text-xs sm:text-base md:text-lg leading-relaxed max-w-xl font-light mb-4 sm:mb-8">
-                  Tucked at the base of the Sahyadri mountains, just 1.5 hours from Mumbai. Discover sprawling 4 BHK private pool estates accommodating up to 16 guests with custom catering and direct rates.
+                  Explore Canopy Crest, a 4 BHK private pool villa in Khopoli for a maximum of {CANOPY_MAX_GUESTS} guests. Compare the actual layout, dated rates and meal options for your family stay, group weekend or Imagicaa trip.
                 </p>
 
                 {/* Direct Booking Hero CTA Group */}
@@ -206,7 +223,7 @@ export default async function KhopoliPage() {
                     <span>BOOK DIRECT (0% FEE)</span>
                   </a>
                   <a 
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and meal packages for Canopy Crest / Khopoli villas.")}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and meal packages for Canopy Crest / Khopoli villas.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs sm:text-sm tracking-wider uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
@@ -222,7 +239,7 @@ export default async function KhopoliPage() {
                   <span className="text-white/40">•</span>
                   <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-400" /> 22ft Private Pool</span>
                   <span className="text-white/40">•</span>
-                  <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-400" /> 1.5 Hrs from Mumbai</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-400" /> Plan from the Property Pin</span>
                 </div>
               </div>
 
@@ -279,7 +296,7 @@ export default async function KhopoliPage() {
                   {/* Fast Action Buttons in Card */}
                   <div className="space-y-2.5 pt-2">
                     <a 
-                      href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check group availability and direct pricing for Canopy Crest in Khopoli.")}`}
+                      href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to check group availability and direct pricing for Canopy Crest in Khopoli.")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
@@ -334,10 +351,6 @@ export default async function KhopoliPage() {
                   </div>
 
                   <div className="bg-black/70 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-3">
-                    <span className="flex items-center gap-1 text-sm font-bold text-[#DAA520]">
-                      <Star size={15} className="fill-[#DAA520]" /> 4.9/5
-                    </span>
-                    <span className="text-white/40">|</span>
                     <span className="text-sm font-bold text-white">From ₹15,000 / night</span>
                   </div>
                 </div>
@@ -377,7 +390,7 @@ export default async function KhopoliPage() {
                     <ChevronRight size={14} />
                   </Link>
                   <a 
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas! 🌟 I'd like to check group discounts, available dates, and meal menus for *${signatureVilla.name}* in Khopoli.`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hello Stay Willas! 🌟 I'd like to check group discounts, available dates, and meal menus for *${signatureVilla.name}* in Khopoli.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black tracking-widest uppercase text-center py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
@@ -410,7 +423,7 @@ export default async function KhopoliPage() {
                 </div>
                 <h4 className="font-bold text-[#1B3564] text-base mb-1.5">22ft Private Swimming Pool</h4>
                 <p className="text-slate-600 text-xs leading-relaxed">
-                  Enjoy private temperature-filtered swimming pools with charpai green lawns and sun decks.
+                  Compare Canopy Crest&apos;s private-pool and lawn photos, and confirm pool depth, access rules and supervision for your group.
                 </p>
               </div>
 
@@ -418,7 +431,7 @@ export default async function KhopoliPage() {
                 <div className="w-12 h-12 rounded-2xl bg-blue-500/15 flex items-center justify-center mb-4 text-[#1B3564]">
                   <Users size={24} />
                 </div>
-                <h4 className="font-bold text-[#1B3564] text-base mb-1.5">Up to 16+ Guests Capacity</h4>
+                <h4 className="font-bold text-[#1B3564] text-base mb-1.5">Maximum {CANOPY_MAX_GUESTS} Guests</h4>
                 <p className="text-slate-600 text-xs leading-relaxed">
                   Spacious 4 BHK layouts, expansive outdoor lawns, and large dining tables for large family groups.
                 </p>
@@ -459,12 +472,12 @@ export default async function KhopoliPage() {
                 Khopoli&apos;s location provides a distinct advantage: expansive plot sizes surrounded by lush forest cover. Heavy monsoon rains create seasonal streams that flow right past private estate lawns, providing dramatic mountain scenery without the tourist crowds of higher hill stations.
               </p>
 
-              <h2>The Travel Time Advantage: Skipping Ghat Traffic</h2>
+              <h2>Plan your Khopoli villa route and arrival</h2>
               <p>
-                A major reason families and corporate groups are selecting a weekend getaway villa in Khopoli is convenience. Driving up the Khandala ghats during weekend rush hours can add up to 90 minutes of stressful bumper-to-bumper traffic.
+                Compare the journey from your actual starting point in Mumbai or Pune to the villa pin. Weekend traffic, road conditions and your chosen activities can change the route; Khopoli does not guarantee a traffic-free drive.
               </p>
               <p>
-                By taking the Khalapur exit directly off the Mumbai-Pune Expressway, guests arrive at their private villa within 15 minutes of leaving the highway. You save significant travel time, allowing your group to start relaxing in the pool while others are still stuck in traffic.
+                Check the current directions and arrival details on the <Link href="/villa/canopy-crest" className="underline">Canopy Crest property page</Link>. If Imagicaa is part of the trip, use our <Link href="/blog/best-villas-near-imagica-khopoli-with-private-pool" className="underline">Imagicaa villa stay guide</Link> to plan the park visit around confirmed check-in and checkout times.
               </p>
 
               <div className="my-10 relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] w-full rounded-3xl overflow-hidden shadow-xl not-prose">
@@ -481,25 +494,25 @@ export default async function KhopoliPage() {
                 <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
                   <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Corporate Offsites</h4>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    Fiber Wi-Fi, air-conditioned meeting lounges, quiet break-out zones, and full chef catering to keep your team energized.
+                    Confirm current Wi-Fi speeds, meeting seating, equipment and dining arrangements for a group within the 16-guest limit.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
                   <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Multi-Family Reunions</h4>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    Spacious 4 BHK layouts with accessible ground-floor bedrooms, safe swimming pools, and manicured grassy lawns for kids.
+                    Compare the four-bedroom allocation and access needs. Confirm pool depth, boundaries and adult supervision for children.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
                   <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Milestone Celebrations</h4>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    Host milestone birthdays and anniversaries with pool deck seating, bonfire pits, and live barbecue catering.
+                    Discuss event permission, visitor limits, decor, music rules and any barbecue or dining charges before planning the celebration.
                   </p>
                 </div>
                 <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-slate-200">
                   <h4 className="text-[#1B3564] font-heading text-base font-bold mb-2">Wellness Escapes</h4>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    Clean mountain air, morning yoga on charpai lawns, and quiet valley views free from urban noise pollution.
+                    Review the actual outdoor-space photos and discuss your preference for a restful stay; surroundings and noise vary with the date.
                   </p>
                 </div>
               </div>
@@ -522,7 +535,7 @@ export default async function KhopoliPage() {
 
                   <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
                     <a
-                      href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'm planning a group trip/offsite in Khopoli. Could you share estate options, catering packages and direct rates?")}`}
+                      href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a group trip/offsite in Khopoli. Could you share estate options, catering packages and direct rates?")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
@@ -573,30 +586,12 @@ export default async function KhopoliPage() {
 
               <h2>Frequently Asked Questions — Khopoli Villas</h2>
               <div className="my-8 grid grid-cols-1 md:grid-cols-2 gap-6 not-prose text-left">
-                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">How far is Canopy Crest from Imagicaa Theme Park?</h4>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                    Canopy Crest is located just a quick 10-minute drive from Imagicaa, making it the perfect staycation hub for families and thrill-seekers.
-                  </p>
-                </div>
-                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">Can the property accommodate large corporate groups?</h4>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                    Yes. With 4 BHK suites, 5 bathrooms, massive lawns, high-speed Wi-Fi, and live BBQ setups, Canopy Crest comfortably accommodates groups of 16+ guests.
-                  </p>
-                </div>
-                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">Is fresh food prepared on-site?</h4>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                    Yes. Dedicated caretakers and chefs prepare homestyle Maharashtrian dishes, barbecue spreads, and 100% pure vegetarian / Jain menus.
-                  </p>
-                </div>
-                <div className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
-                  <h4 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">What are the advantages of booking directly?</h4>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                    Direct bookings via Stay Willas carry 0% platform commission, providing you with guaranteed lowest prices and customized meal coordination.
-                  </p>
-                </div>
+                {khopoliFaqs.map(faq => (
+                  <div key={faq.question} className="bg-[#FAF8F5] p-6 rounded-3xl border border-[#DAA520]/15">
+                    <h3 className="font-heading font-bold text-[#1B3564] mb-2 text-sm sm:text-base">{faq.question}</h3>
+                    <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
             </article>
           </div>
@@ -608,8 +603,8 @@ export default async function KhopoliPage() {
             <h3 className="text-lg font-heading text-[#1B3564] font-bold mb-4">Featured Khopoli Villa & Guides</h3>
             <ul className="space-y-3 text-sm text-slate-700 font-light">
               <li className="font-semibold">→ <Link href="/villa/canopy-crest" className="underline font-bold text-accent-primary hover:text-[#1B3564] transition-colors">StayWillas Canopy Crest Khopoli — 4 BHK Premium Villa with Swimming Pool Chavani</Link></li>
-              <li>→ <Link href="/blog/skip-lonavala-traffic-khopoli-weekend-villa-getaway" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Skip Lonavala Traffic: Why Smart Weekend Travelers Choose Khopoli Villas</Link></li>
-              <li>→ <Link href="/blog/large-group-villa-staycation-khopoli-private-pool" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">The Ultimate Large Group & Multi-Family Villa Staycation in Khopoli (4-5 BHK Private Pool)</Link></li>
+              <li>→ <Link href="/blog/skip-lonavala-traffic-khopoli-weekend-villa-getaway" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Mumbai to Khopoli Villa Trip: Route and Arrival Planning</Link></li>
+              <li>→ <Link href="/blog/large-group-villa-staycation-khopoli-private-pool" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Plan a Private Pool Villa Stay in Khopoli for a Group of Up to 16</Link></li>
               <li>→ <Link href="/blog/corporate-offsite-startup-team-retreat-villas-khopoli" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Corporate Offsite & Startup Retreats in Khopoli: Why Private Pool Villas Beat Hotels</Link></li>
               <li>→ <Link href="/blog/best-villas-near-imagica-khopoli-with-private-pool" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Best Villas Near Imagica Khopoli with Private Pool</Link></li>
               <li>→ <Link href="/blog/khopoli-vs-lonavala-villa-comparison" className="underline text-accent-primary hover:text-[#1B3564] transition-colors">Khopoli vs Lonavala Villa Comparison: Valley Views or Quiet Villa?</Link></li>
@@ -631,7 +626,7 @@ export default async function KhopoliPage() {
               Why Book Direct with Stay Willas in Khopoli?
             </h3>
             <p className="text-slate-300 text-xs sm:text-sm font-light mt-4 max-w-xl leading-relaxed">
-              Enjoy guaranteed best rates, zero middleman commissions, custom group meal packages, and priority check-in assistance.
+              Compare direct accommodation rates, meal packages and your complete quote. Early check-in depends on availability and advance confirmation.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8 w-full max-w-4xl text-left">
@@ -661,7 +656,7 @@ export default async function KhopoliPage() {
                 Explore All Villas
               </Link>
               <a 
-                href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Khopoli.")}`}
+                href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Khopoli.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-4 px-8 rounded-full shadow-lg transition-all flex items-center justify-center gap-2"
@@ -688,7 +683,7 @@ export default async function KhopoliPage() {
 
           <div className="flex items-center gap-2">
             <a 
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I want to check direct booking rates for Canopy Crest Khopoli.")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I want to check direct booking rates for Canopy Crest Khopoli.")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#25D366] active:bg-[#20ba5a] text-white font-black text-[11px] uppercase tracking-wider py-2.5 px-3.5 rounded-xl shadow-md flex items-center gap-1.5 shrink-0"
@@ -708,6 +703,7 @@ export default async function KhopoliPage() {
         </div>
       </div>
 
+      <div className="max-w-7xl mx-auto px-4"><GuideLinks slugs={destinationGuides.khopoli} title="Khopoli stay planning guides" /></div>
       <Footer />
     </main>
   );

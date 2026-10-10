@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -145,7 +146,7 @@ export default async function AnniversaryCelebrationPage() {
               <ChevronRight size={16} />
             </a>
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 💖 I'm looking for an anniversary celebration villa with private pool/jacuzzi near Mumbai. Could you share romantic packages and availability?")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 💖 I'm looking for an anniversary celebration villa with private pool/jacuzzi near Mumbai. Could you share romantic packages and availability?")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer border border-white/20"
@@ -173,7 +174,7 @@ export default async function AnniversaryCelebrationPage() {
             <span className="text-xs sm:text-sm text-white/80 font-medium mt-1 block">Couples-Only Retreats</span>
           </div>
           <div className="p-3">
-            <span className="text-2xl sm:text-3xl font-black text-[#F5C542] block tracking-tight">From ₹4,500</span>
+            <span className="text-2xl sm:text-3xl font-black text-[#F5C542] block tracking-tight">From ₹4,999</span>
             <span className="text-xs sm:text-sm text-white/80 font-medium mt-1 block">Direct Homeowner Tariffs</span>
           </div>
         </div>
@@ -247,7 +248,7 @@ export default async function AnniversaryCelebrationPage() {
             <div className="p-6 sm:p-8 pt-0 flex items-center justify-between border-t border-slate-100">
               <div>
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Direct Couple Rates</span>
-                <span className="text-2xl sm:text-3xl font-black text-[#0B1528]">₹4,500<span className="text-xs font-normal text-slate-500"> / night</span></span>
+                <span className="text-2xl sm:text-3xl font-black text-[#0B1528]">₹4,999<span className="text-xs font-normal text-slate-500"> / night</span></span>
               </div>
               <Link
                 href="/villa/willow-peak"
@@ -315,7 +316,7 @@ export default async function AnniversaryCelebrationPage() {
             <div className="p-6 sm:p-8 pt-0 flex items-center justify-between border-t border-slate-100">
               <div>
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Direct Couple Rates</span>
-                <span className="text-2xl sm:text-3xl font-black text-[#0B1528]">₹4,500<span className="text-xs font-normal text-slate-500"> / night</span></span>
+                <span className="text-2xl sm:text-3xl font-black text-[#0B1528]">₹4,999<span className="text-xs font-normal text-slate-500"> / night</span></span>
               </div>
               <Link
                 href="/villa/willow-peak"
@@ -337,7 +338,7 @@ export default async function AnniversaryCelebrationPage() {
               Celebrating a Silver or Golden Jubilee with Extended Family?
             </h3>
             <p className="text-white/80 text-sm mt-2 max-w-2xl leading-relaxed font-light">
-              While Willow Peak is exclusively reserved for romantic couples, if you are celebrating a parent&apos;s 25th or 50th milestone anniversary with 12 to 25+ family members, explore our grand private group estates: <Link href="/villa/the-angle-house" className="underline font-bold text-[#F5C542] hover:text-white">The Angle House (3 BHK Glass Villa with waterfall pool for 12–16 guests)</Link> and <Link href="/villa/canopy-crest" className="underline font-bold text-[#F5C542] hover:text-white">Canopy Crest (4 BHK Estate on 4-acre grounds for 16–25+ guests)</Link>.
+              Willow Peak offers cottages for couples and small groups. If you are celebrating a parent&apos;s 25th or 50th milestone anniversary with up to 16 family members, explore our grand private group estates: <Link href="/villa/the-angle-house" className="underline font-bold text-[#F5C542] hover:text-white">The Angle House (3 BHK Glass Villa with waterfall pool for up to 12 guests)</Link> and <Link href="/villa/canopy-crest" className="underline font-bold text-[#F5C542] hover:text-white">Canopy Crest (4 BHK Estate on 4-acre grounds for up to 16 guests)</Link>.
             </p>
           </div>
           <div className="shrink-0">
@@ -466,7 +467,7 @@ export default async function AnniversaryCelebrationPage() {
             </p>
           </div>
           <a
-            href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 💖 I want to check availability and romantic setups for our anniversary. Please assist me.")}`}
+            href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 💖 I want to check availability and romantic setups for our anniversary. Please assist me.")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap shrink-0 border border-white/20 cursor-pointer"

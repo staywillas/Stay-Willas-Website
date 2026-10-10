@@ -1,9 +1,6 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Sparkles, ArrowUpRight } from "lucide-react";
 
 export interface SitelinkItem {
@@ -111,19 +108,15 @@ export default function HomeSitelinks() {
 
         {/* Sitelinks 6-Card Responsive Grid with Image Backgrounds */}
         <nav aria-label="Homepage Sitelinks Grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {homeSitelinksData.map((item, idx) => {
+          {homeSitelinksData.map((item) => {
             const CardWrapper = item.isExternal ? "a" : Link;
             const linkProps = item.isExternal 
               ? { href: item.href, target: "_blank", rel: "noopener noreferrer" }
               : { href: item.href };
 
             return (
-              <motion.div
+              <div
                 key={item.id}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
                 className="h-full"
               >
                 <CardWrapper
@@ -177,7 +170,7 @@ export default function HomeSitelinks() {
                     </div>
                   </div>
                 </CardWrapper>
-              </motion.div>
+              </div>
             );
           })}
         </nav>

@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { 
@@ -1070,8 +1071,8 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
     const cleanPhone = phone ? phone.replace(/[^0-9]/g, "") : "";
     const waUrl = cleanPhone.length >= 10
-      ? `https://wa.me/${cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`
-      : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+      ? `https://wa.me/${cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone}?text=${encodeWhatsAppMessage(msg)}`
+      : `https://wa.me/?text=${encodeWhatsAppMessage(msg)}`;
 
     window.open(waUrl, "_blank");
   };

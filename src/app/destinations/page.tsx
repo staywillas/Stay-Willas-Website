@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -200,7 +201,7 @@ export default async function DestinationsPage() {
                     <span className="uppercase tracking-[0.2em] text-[10px] font-bold">View Details & Book</span>
                   </Link>
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hey Stay Willas team! 🏔️ I am exploring your getaways in *${dest.name}* and would love to check availability for an upcoming escape. Could you share some suggestions?`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hey Stay Willas team! 🏔️ I am exploring your getaways in *${dest.name}* and would love to check availability for an upcoming escape. Could you share some suggestions?`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full px-4.5 py-2.5 text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 w-fit"
@@ -215,7 +216,7 @@ export default async function DestinationsPage() {
                     LAUNCHING SOON
                   </div>
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello! 🌟 I noticed you are launching soon in *${dest.name}*! It looks absolutely beautiful. I would love to be notified as soon as these villas are open for bookings.`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hello! 🌟 I noticed you are launching soon in *${dest.name}*! It looks absolutely beautiful. I would love to be notified as soon as these villas are open for bookings.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-[#1B3564]/60 hover:text-[#1B3564] text-xs font-bold tracking-wider uppercase transition-all duration-300 w-fit"

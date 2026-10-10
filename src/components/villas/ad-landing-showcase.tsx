@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,10 +57,10 @@ export default function AdLandingShowcase({
   const totalDirectSavings2Night = ota2NightPrice - discounted2NightPrice;
 
   const whatsappMessage1Night = `Hi Stay Willas! 🌧️ I'm looking at *${villaName}* in ${location} for the *${offerTitle}* Weekday Offer (Coupon: *${couponCode}*).\n\nOriginal Rate: ₹${originalPrice.toLocaleString("en-IN")}\nDiscounted Rate: ₹${discountedPrice.toLocaleString("en-IN")}/night\n\nPlease check Monday–Thursday availability and confirm my booking! ✨`;
-  const whatsappUrl1Night = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMessage1Night)}`;
+  const whatsappUrl1Night = `https://wa.me/919619042310?text=${encodeWhatsAppMessage(whatsappMessage1Night)}`;
 
   const whatsappMessage2Night = `Hi Stay Willas! 🌧️ I want to book the *${offerTitle} — 2-NIGHT WEEKDAY SAVER DEAL* (*${highlightText}*) for *${villaName}* in ${location} with Coupon: *${couponCode}*.\n\n2-Night Special Rate: ₹${discounted2NightPrice.toLocaleString("en-IN")} total (Save ~₹${totalDirectSavings2Night.toLocaleString("en-IN")})!\n\nPlease check Monday–Thursday 2-night slots and lock this offer for me! ✨`;
-  const whatsappUrl2Night = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMessage2Night)}`;
+  const whatsappUrl2Night = `https://wa.me/919619042310?text=${encodeWhatsAppMessage(whatsappMessage2Night)}`;
 
   return (
     <div className="w-full space-y-12 sm:space-y-16">
@@ -309,7 +310,7 @@ export default function AdLandingShowcase({
                   {img.title}
                 </span>
                 <a
-                  href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌧️ I'm viewing photos of *${villaName}* (${img.title}) on the Monsoon Escape 2-night weekday offer page. Could you confirm availability?`)}`}
+                  href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hi Stay Willas! 🌧️ I'm viewing photos of *${villaName}* (${img.title}) on the Monsoon Escape 2-night weekday offer page. Could you confirm availability?`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-[#25D366] hover:bg-emerald-600 text-white p-1.5 rounded-full shrink-0 shadow-lg transition-transform active:scale-90"

@@ -1,3 +1,4 @@
+import GuideLinks from "@/components/blog/guide-links";
 import React from "react";
 import { Metadata } from "next";
 import Navbar from "@/components/layout/navbar";
@@ -183,6 +184,7 @@ export default function PartnerPage() {
         <PartnerForm />
       </section>
 
+      <div className="max-w-7xl mx-auto px-4"><GuideLinks slugs={["how-to-partner-with-stay-willas-monetize-luxury-villa"]} title="Villa owner guide" /></div>
       <Footer />
     </main>
   );

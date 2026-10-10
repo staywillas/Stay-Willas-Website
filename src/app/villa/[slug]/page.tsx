@@ -1,3 +1,6 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import GuideLinks from "@/components/blog/guide-links";
+import { getPropertyGuides } from "@/data/guide-navigation";
 import React, { cache } from "react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -228,341 +231,169 @@ const defaultRules = [
   "Keep the music low after 10:00 PM so we stay friends with the neighbors",
 ];
 
+// Captions describe the photographed space. Alternate views are not numbered as
+// separate bedrooms, and shared chalet photos are not assigned to unverified units.
 const angleHouseSpaces = [
   {
-    title: "Master Suite & Jacuzzi",
-    image: "/assets/villas/the-angle-house/gallery-1.webp",
-    description: "Glass-fronted master suite with king bed & private jacuzzi bath."
+    title: "Bedroom Interior",
+    image: "/assets/villas/the-angle-house/gallery-6.webp",
+    description: "Bedroom with a double bed, upholstered headboard and full-length curtains."
   },
   {
-    title: "Bedroom 2",
-    image: "/assets/villas/the-angle-house/gallery-2.webp",
-    description: "Air-conditioned suite with mountain views & ensuite bathroom."
+    title: "Glass-Fronted Bedroom",
+    image: "/assets/villas/the-angle-house/gallery-9.webp",
+    description: "Bedroom with a double bed, air conditioning and floor-to-ceiling glass doors."
   },
   {
-    title: "Bedroom 3",
-    image: "/assets/villas/the-angle-house/gallery-5.webp",
-    description: "Cozy bedroom suite with king bed, AC & serene garden views."
+    title: "Bedroom — Another View",
+    image: "/assets/villas/the-angle-house/gallery-19.webp",
+    description: "Another view of the glass-fronted bedroom, showing the bed and balcony doors."
   },
   {
-    title: "Double-Height Glass Lounge",
-    image: "/assets/villas/the-angle-house/gallery-7.webp",
-    description: "Architectural glass hall with plush seating, dining & smart TV."
+    title: "Living Lounge",
+    image: "/assets/villas/the-angle-house/gallery-14.webp",
+    description: "Indoor lounge with sofa seating, a coffee table and a staircase to the upper floor."
   },
   {
-    title: "Waterfall Swimming Pool",
-    image: "/assets/villas/the-angle-house/gallery-11.webp",
-    description: "Private swimming pool featuring cascading natural waterfall."
+    title: "Private Swimming Pool",
+    image: "/assets/villas/the-angle-house/gallery-13.webp",
+    description: "Private outdoor swimming pool beside the villa, with a paved poolside deck."
   },
   {
-    title: "Private Lawns & Deck",
+    title: "Courtyard & Garden",
     image: "/assets/villas/the-angle-house/gallery-12.webp",
-    description: "Expansive green fenced lawn with outdoor barbecue setup."
+    description: "Paved courtyard with garden planting beside the glass-fronted villa."
   }
 ];
 
 const canopyCrestSpaces = [
   {
-    title: "Bedroom 1",
+    title: "Pool-Facing Bedroom",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
-    description: "Ground floor suite with king bed, AC, WiFi & ensuite bath."
+    description: "Bedroom with a double bed, wardrobe and windows facing the pool."
   },
   {
-    title: "Bedroom 2",
+    title: "Bedroom Interior",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg",
-    description: "Cozy king bedroom with AC, wardrobe & attached bathroom."
+    description: "Front view of a double bed with bedside lamps and full-length curtains."
   },
   {
-    title: "Bedroom 3",
+    title: "Bedroom — Close-Up",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg",
-    description: "Air-conditioned suite with scenic hillside garden views."
+    description: "Close-up of the bed, cushions and bedside lighting in a pool-facing bedroom."
   },
   {
-    title: "Bedroom 4",
-    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
-    description: "Spacious private bedroom with king bed & attached bath."
+    title: "Dining Room",
+    image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0014.jpg",
+    description: "Indoor dining table and chairs beside the living area."
   },
   {
-    title: "Living & Dining Room",
+    title: "Living Room",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
-    description: "Air-conditioned seating for 6 with TV & dining area."
+    description: "Living room with sofa seating, a coffee table and a wall-mounted TV."
   },
   {
     title: "Bathrooms",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
-    description: "4 ensuite luxury bathrooms with hot water geysers & towels."
+    description: "Bathroom with a washbasin, mirror, toilet and glass shower enclosure."
   },
   {
     title: "Swimming Pool",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
-    description: "Private 22x12 ft pool overlooking Sahyadri hills."
+    description: "Private swimming pool beside the villa, photographed at dusk."
   },
   {
     title: "Lawn & Sit-out",
     image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg",
-    description: "Expansive green lawn with traditional charpai seating."
+    description: "Lawn with outdoor seating and a paved path overlooking the hills."
   }
 ];
 
 const terraCottaSpaces = [
   {
-    title: "Master Bedroom 1",
+    title: "Bedroom — Upholstered Headboard",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0035.jpg",
-    description: "Plush king bed suite with AC, valley view & attached bath."
+    description: "Double bed with an upholstered headboard and bedside lighting."
   },
   {
-    title: "Bedroom 2",
+    title: "Bedroom — Wooden Headboard",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0047.jpg",
-    description: "Elegantly styled double bed suite with AC & wardrobe."
+    description: "Bedroom with a wooden feature wall, double bed and wardrobe."
   },
   {
-    title: "Bedroom 3 (Circular Bed)",
+    title: "Circular-Bed Bedroom",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0055.jpg",
-    description: "Distinctive circular bed design with AC & ensuite bath."
+    description: "Bedroom featuring a circular bed, upholstered headboard and wall artwork."
   },
   {
-    title: "Bedroom 4",
+    title: "Bedroom — Another View",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0042.jpg",
-    description: "Valley view bedroom with wooden finish & attached bath."
+    description: "Front view of the double bed and wooden feature wall."
   },
   {
     title: "Private Swimming Pool",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0037.jpg",
-    description: "Exclusive pool with rustic mountain-view deck."
+    description: "Outdoor swimming pool with a paved deck beside the villa."
   },
   {
     title: "Spacious Living & Lounge",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0043.jpg",
-    description: "Spacious family lounge with TV, sofas & music system."
+    description: "Family lounge with sofa seating, a coffee table and a wall-mounted TV."
   },
   {
     title: "Terrace & Balcony Deck",
     image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0031.jpg",
-    description: "Private upper-level sit-out overlooking valley mist."
+    description: "Balcony seating and a table overlooking the surrounding valley."
   },
   {
     title: "Luxury Bathrooms",
-    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0059.jpg",
-    description: "Modern en-suite bathrooms with hot water & toiletries."
+    image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0057.jpg",
+    description: "Bathroom with a washbasin, mirror, toilet and stone-pattern wall tiles."
   }
 ];
 
 const willowPeakSpaces = [
   {
-    title: "Breeze (A-Frame Chalet)",
-    image: "/assets/villas/willow-peak/wp-01.webp",
-    description: "Chalet with king bed, in-room jacuzzi & garden sit-out."
+    title: "Chalet Bedroom",
+    image: "/assets/villas/willow-peak/wp-04.webp",
+    description: "Bedroom interior with a double bed beneath the sloping timber ceiling."
   },
   {
-    title: "Crest (A-Frame Chalet)",
-    image: "/assets/villas/willow-peak/wp-07.webp",
-    description: "Alpine A-frame chalet with private jacuzzi & hill views."
+    title: "A-Frame Bedroom",
+    image: "/assets/villas/willow-peak/wp-05.webp",
+    description: "A-frame bedroom with a double bed, seating and a timber-lined ceiling."
   },
   {
-    title: "Heaven (A-Frame Chalet)",
-    image: "/assets/villas/willow-peak/wp-02.webp",
-    description: "Secluded mountain cottage with private jacuzzi & BBQ deck."
+    title: "Bedroom — Bed View",
+    image: "/assets/villas/willow-peak/wp-06.webp",
+    description: "Close-up of the double bed and pillows beneath the timber ceiling."
   },
   {
-    title: "Private In-Room Jacuzzis",
+    title: "In-Room Jacuzzi",
     image: "/assets/villas/willow-peak/wp-03.webp",
-    description: "Warm soothing jacuzzi inside each private cottage suite."
+    description: "Indoor Jacuzzi bath beside a window, with a small side table."
   },
   {
-    title: "Expansive Garden & Lawns",
-    image: "/assets/villas/willow-peak/wp-02.webp",
-    description: "Lush lawn with evening lighting & outdoor seating."
+    title: "Chalet Sit-Out",
+    image: "/assets/villas/willow-peak/wp-01.webp",
+    description: "Outdoor seating beside the chalet's glass doors and covered entrance."
   },
   {
-    title: "Outdoor Dining & BBQ Deck",
+    title: "Covered Outdoor Dining",
     image: "/assets/villas/willow-peak/wp-08.webp",
-    description: "Outdoor group dining area with live barbecue setup."
+    description: "Tables and chairs beneath a covered outdoor dining pavilion."
+  },
+  {
+    title: "A-Frame Chalet Exteriors",
+    image: "/assets/villas/willow-peak/wp-07.webp",
+    description: "Exterior view of the A-frame chalets and their outdoor decks."
+  },
+  {
+    title: "Chalet Bathroom",
+    image: "/assets/villas/willow-peak/wp-10.webp",
+    description: "Bathroom with a toilet, handheld spray and wall-mounted water heater."
   }
 ];
-
-const defaultVillaReviews: Record<string, { id: string; villaId: string; userId: string; userName: string; rating: number; comment: string; createdAt: Date }[]> = {
-  "the-angle-house": [
-    {
-      id: "rev_ah_1",
-      villaId: "lonavala-estate",
-      userId: "guest_rohan_mehta",
-      userName: "Rohan & Priya Mehta",
-      rating: 5,
-      comment: "The Monsoon Escape at The Angle House was breathtaking! The waterfall pool in the rain and glass facade view of Sahyadri clouds made it unforgettable. Kailash's culinary team prepared steaming hot pakoras & tea!",
-      createdAt: new Date("2026-07-15"),
-    },
-    {
-      id: "rev_ah_2",
-      villaId: "lonavala-estate",
-      userId: "guest_vikram_singhania",
-      userName: "Vikram Singhania",
-      rating: 4,
-      comment: "Booked directly via WhatsApp for our weekday stay. Saved significantly compared to OTA platforms, and the caretaker had the master jacuzzi ready before check-in.",
-      createdAt: new Date("2026-06-20"),
-    },
-    {
-      id: "rev_ah_3",
-      villaId: "lonavala-estate",
-      userId: "guest_aditi_deshmukh",
-      userName: "Aditi Deshmukh",
-      rating: 5,
-      comment: "Our Golden Retriever had the best time running across the fenced lawns! Total peace of mind for pet parents.",
-      createdAt: new Date("2026-05-18"),
-    },
-    {
-      id: "rev_ah_4",
-      villaId: "lonavala-estate",
-      userId: "guest_sameer_kulkarni",
-      userName: "Sameer Kulkarni",
-      rating: 4,
-      comment: "Celebrated my 30th birthday here with 12 friends on a weekday. Cleanest pool in Lonavala and zero noise disturbances.",
-      createdAt: new Date("2026-08-04"),
-    },
-  ],
-  "canopy-crest": [
-    {
-      id: "rev_cc_1",
-      villaId: "khopoli-canopy-crest",
-      userId: "guest_anand_joshi",
-      userName: "Anand & Shweta Joshi",
-      rating: 5,
-      comment: "The Monsoon Escape at Canopy Crest was unbelievable! The massive open lawn turns emerald green in the rains and the 22ft pool is huge. We booked for 16 family members and had a fantastic experience!",
-      createdAt: new Date("2026-07-22"),
-    },
-    {
-      id: "rev_cc_2",
-      villaId: "khopoli-canopy-crest",
-      userId: "guest_rahul_verma",
-      userName: "Rahul Verma",
-      rating: 5,
-      comment: "Organized our startup leadership offsite here for 2 weekday nights. High-speed Wi-Fi, great indoor games, and direct WhatsApp concierge booking was seamless.",
-      createdAt: new Date("2026-06-28"),
-    },
-    {
-      id: "rev_cc_3",
-      villaId: "khopoli-canopy-crest",
-      userId: "guest_deepak_sharma",
-      userName: "Deepak Sharma",
-      rating: 5,
-      comment: "Hardly 1 hour drive from Mumbai via the Expressway. The mountain views and fresh barbecue by the pool during monsoon made our stay unforgettable.",
-      createdAt: new Date("2026-05-30"),
-    },
-    {
-      id: "rev_cc_4",
-      villaId: "khopoli-canopy-crest",
-      userId: "guest_pooja_hegde",
-      userName: "Pooja Hegde",
-      rating: 4,
-      comment: "Cleanest bathrooms, powerful air conditioning, and absolute seclusion without noisy neighbors. We are coming back every monsoon!",
-      createdAt: new Date("2026-08-12"),
-    },
-  ],
-  "willow-peak": [
-    {
-      id: "rev_wp_1",
-      villaId: "lonavala-willow-peak",
-      userId: "guest_kunal_patel",
-      userName: "Kunal & Neha Patel",
-      rating: 5,
-      comment: "Willow Peak in Kurwande is an absolute hidden gem! The A-frame cottages are super cozy with in-room jacuzzi baths and serene hill views.",
-      createdAt: new Date("2026-07-10"),
-    },
-    {
-      id: "rev_wp_2",
-      villaId: "lonavala-willow-peak",
-      userId: "guest_siddharth_rao",
-      userName: "Siddharth Rao",
-      rating: 4,
-      comment: "We booked 2 cottages for a weekend getaway with friends. The garden sit-out, barbecue setup, and quiet surroundings were wonderful.",
-      createdAt: new Date("2026-08-01"),
-    },
-    {
-      id: "rev_wp_3",
-      villaId: "lonavala-willow-peak",
-      userId: "guest_tanvi_joshi",
-      userName: "Tanvi Joshi",
-      rating: 5,
-      comment: "Wonderful location close to Tiger Point with peaceful mountain breeze. Beautiful wooden interior architecture and very courteous caretaking staff.",
-      createdAt: new Date("2026-08-10"),
-    },
-    {
-      id: "rev_wp_4",
-      villaId: "lonavala-willow-peak",
-      userId: "guest_manish_shah",
-      userName: "Manish Shah",
-      rating: 4,
-      comment: "Private open lawns and jacuzzi tub in the master room were highlight features. Delicious hot poha and masala chai in the morning.",
-      createdAt: new Date("2026-08-18"),
-    },
-    {
-      id: "rev_wp_5",
-      villaId: "lonavala-willow-peak",
-      userId: "guest_aarav_sharma",
-      userName: "Aarav Sharma",
-      rating: 5,
-      comment: "Super comfortable beds and spotlessly clean cottages. Perfect peaceful retreat away from city traffic.",
-      createdAt: new Date("2026-08-25"),
-    },
-  ],
-  "casa-de-reva": [
-    {
-      id: "rev_cr_1",
-      villaId: "casa-de-reva",
-      userId: "guest_tanvi_kapoor",
-      userName: "Tanvi Kapoor (Juhu, Mumbai)",
-      rating: 5,
-      comment: "Casa De Reva in Panchgani exceeded all our expectations! The rustic brick architecture and private swimming pool overlooking the hills made our family holiday magical.",
-      createdAt: new Date("2026-08-15"),
-    },
-    {
-      id: "rev_cr_2",
-      villaId: "casa-de-reva",
-      userId: "guest_harsh_patil",
-      userName: "Harshvardhan Patil (Kothrud, Pune)",
-      rating: 5,
-      comment: "Stayed with a group of 14 friends for a 3-day weekend. Very close to Mapro Garden, huge lawn for evening music, and the on-demand chef made incredible local barbecue!",
-      createdAt: new Date("2026-08-22"),
-    },
-    {
-      id: "rev_cr_3",
-      villaId: "casa-de-reva",
-      userId: "guest_neelam_shah",
-      userName: "Neelam & Rajesh Shah (Ahmedabad)",
-      rating: 5,
-      comment: "Peaceful hillside ambiance and spacious 4 BHK layout. The caretaker was exceptionally polite and helped us with strawberry picking recommendations in Panchgani.",
-      createdAt: new Date("2026-08-28"),
-    }
-  ],
-  "terra-cotta-villa": [
-    {
-      id: "rev_cr_1",
-      villaId: "casa-de-reva",
-      userId: "guest_tanvi_kapoor",
-      userName: "Tanvi Kapoor (Juhu, Mumbai)",
-      rating: 5,
-      comment: "Casa De Reva in Panchgani exceeded all our expectations! The rustic brick architecture and private swimming pool overlooking the hills made our family holiday magical.",
-      createdAt: new Date("2026-08-15"),
-    },
-    {
-      id: "rev_cr_2",
-      villaId: "casa-de-reva",
-      userId: "guest_harsh_patil",
-      userName: "Harshvardhan Patil (Kothrud, Pune)",
-      rating: 5,
-      comment: "Stayed with a group of 14 friends for a 3-day weekend. Very close to Mapro Garden, huge lawn for evening music, and the on-demand chef made incredible local barbecue!",
-      createdAt: new Date("2026-08-22"),
-    },
-    {
-      id: "rev_cr_3",
-      villaId: "casa-de-reva",
-      userId: "guest_neelam_shah",
-      userName: "Neelam & Rajesh Shah (Ahmedabad)",
-      rating: 5,
-      comment: "Peaceful hillside ambiance and spacious 4 BHK layout. The caretaker was exceptionally polite and helped us with strawberry picking recommendations in Panchgani.",
-      createdAt: new Date("2026-08-28"),
-    }
-  ],
-};
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
@@ -582,8 +413,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   let keywordsList = [`${villa.bedrooms} BHK private pool villa in ${city}`, `${villa.name.toLowerCase()}`, `villa in ${city.toLowerCase()}`, `private pool villa ${city.toLowerCase()}`];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "StayWillas The Angle House Lonavala | Villa with Jacuzzi & Waterfall Pool (4.9★ Reviews)";
-    descText = "Book StayWillas The Angle House in Lonavala with jacuzzi & private waterfall swimming pool. Luxury 3 BHK architectural glass villa, pet-friendly fenced lawn, and private chef dining. Read 4.9★ reviews & book from ₹13,000/night.";
+    titleText = "The Angle House Kamshet, Lonavala | Private Pool & Jacuzzi";
+    descText = "Book The Angle House in Kamshet, Lonavala: a 3 BHK villa for up to 12 guests with a private waterfall pool and Jacuzzi. Stays from ₹13,000/night.";
     keywordsList = [
       "staywillas the angle house",
       "staywillas the angle house with jacuzzi lonavala",
@@ -598,8 +429,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "pet friendly villa lonavala"
     ];
   } else if (villa.slug === "canopy-crest") {
-    titleText = "StayWillas Canopy Crest Khopoli | Premium Villa with Swimming Pool Chavani (4.9★ Reviews)";
-    descText = "Book StayWillas Canopy Crest in Chavani, Khopoli — 4 BHK premium villa with 22ft private swimming pool, scenic mountain views, bonfire lawn & on-demand chef service. Read verified guest reviews & book from ₹15,000/night.";
+    titleText = "Canopy Crest Khopoli | 4 BHK Private Pool Villa | Stay Willas";
+    descText = "Book Canopy Crest in Khopoli: a 4 BHK private pool villa for a maximum of 16 guests. Stays from ₹15,000/night; ask about dates and meal options.";
     keywordsList = [
       "staywillas canopy crest khopoli",
       "staywillas canopy crest khopoli premium villa with swimming pool chavani",
@@ -612,8 +443,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       "staywillas canopy crest reviews"
     ];
   } else if (villa.slug === "willow-peak") {
-    titleText = "Willow Peak Resort Kurvande, Lonavala | A-Frame Chalets with Jacuzzi (4.9★ Reviews)";
-    descText = "Book Willow Peak Resort Kurvande, Lonavala — boutique Swiss-style wooden A-frame chalets with private jacuzzi, mountain views, lawn BBQ & chef dining from ₹4,500/night. 4.9★ verified guest reviews & 0% booking fees.";
+    titleText = "Willow Peak Lonavala | A-Frame Cottages with Private Jacuzzi";
+    descText = "Willow Peak in Kurwande, Lonavala offers A-frame cottages with private Jacuzzis. Base rates start at ₹4,999/night per cottage; full-estate pricing is separate.";
     keywordsList = [
       "willow peak resort kurvande",
       "willow peak lonavala",
@@ -631,7 +462,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const letter = villa.slug.replace("willow-peak-cottage-", "").toLowerCase();
     const cottageName = letter === "a" ? "Breeze" : letter === "b" ? "Crest" : "Heaven";
     titleText = `${cottageName} (Willow Peak) | A-Frame Chalet with Jacuzzi in Lonavala | Stay Willas`;
-    descText = `Book ${cottageName} (Cottage ${letter.toUpperCase()} at Willow Peak) in Kurwande, Lonavala — a private 1 BHK wooden A-frame chalet featuring an ensuite jacuzzi bath, scenic mountain sit-out, and on-demand chef dining. Direct bookings from ₹5,999/night.`;
+    descText = `Book ${cottageName} (Cottage ${letter.toUpperCase()} at Willow Peak) in Kurwande, Lonavala — a private 1 BHK wooden A-frame chalet featuring an ensuite jacuzzi bath, scenic mountain sit-out, and on-demand chef dining. Direct bookings from ₹4,999/night.`;
     keywordsList = [
       `willow peak ${cottageName.toLowerCase()} lonavala`,
       `willow peak cottage ${letter} lonavala`,
@@ -711,11 +542,11 @@ export default async function VillaDetailPage({ params }: PageProps) {
   }
 
   const dbReviews = await getCachedReviews(villa.id);
-  const reviews = dbReviews.length > 0 ? dbReviews : (defaultVillaReviews[villa.slug] || []);
+  const reviews = dbReviews;
   const reviewCount = reviews.length;
   const avgRating = reviewCount > 0
     ? Number((reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount).toFixed(1))
-    : 5.0;
+    : 0;
 
   const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
   const isWillowCottage = villa.slug.startsWith("willow-peak-cottage");
@@ -848,7 +679,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
       },
       {
         question: "Where can I read verified reviews for StayWillas The Angle House?",
-        answer: "Verified guest reviews are featured directly on this page, rated 4.9/5 stars for our heated jacuzzi, clean waterfall pool, and chef Kailash's delicious home-style multi-cuisine meals."
+        answer: "Guest feedback, when available, appears in the reviews section on this page. We do not advertise a rating when no guest reviews are available."
       },
       {
         question: "Is Jain food available at The Angle House?",
@@ -856,7 +687,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
       },
       {
         question: "What is the guest capacity of The Angle House?",
-        answer: "The Angle House can comfortably host up to 16 guests across 3 spacious master bedrooms, making it ideal for family reunions, birthdays, and weekend getaways."
+        answer: "The Angle House accommodates up to 12 guests across 3 spacious master bedrooms, making it ideal for family reunions, birthdays, and weekend getaways."
       }
     ],
     "canopy-crest": [
@@ -884,7 +715,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
       },
       {
         question: "How does booking individual cottages work at Willow Peak Resort?",
-        answer: "Willow Peak consists of 3 individual A-frame wooden cottages: Breeze, Crest, and Heaven. Each cottage accommodates up to 4 guests with an en-suite jacuzzi bath. You can book either a single standalone cottage (from ₹5,999/night) or book all 3 cottages together (up to 12 guests) to reserve the entire private estate exclusively."
+        answer: "Willow Peak consists of 3 individual A-frame wooden cottages: Breeze, Crest, and Heaven. Each cottage accommodates up to 4 guests with an en-suite jacuzzi bath. You can book either a single standalone cottage (from ₹4,999/night) or book all 3 cottages together (up to 12 guests) to reserve the entire private estate exclusively."
       },
       {
         question: "Where is Willow Peak Resort located in Lonavala?",
@@ -1053,7 +884,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
             </div>
 
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🔥 I would like to book *${villaData.name}* with the 26% Weekday Discount. Please share available dates and final quote.`)}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hi Stay Willas! 🔥 I would like to book *${villaData.name}* with the 26% Weekday Discount. Please share available dates and final quote.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider py-2 px-3.5 sm:py-2.5 sm:px-4 rounded-lg sm:rounded-xl shadow-xs shrink-0 flex items-center justify-center gap-1.5 transition-all w-full sm:w-auto text-center"
@@ -1119,7 +950,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
                 </li>
                 <li className="flex items-start gap-2 text-slate-900 text-xs sm:text-sm font-medium">
                   <CheckCircle2 className="text-[#DAA520] shrink-0 mt-0.5" size={15} />
-                  <span>Expansive {villaData.bedrooms} bedrooms & private pool deck.</span>
+                  <span>{villaData.bedrooms} bedrooms with {isWillowEntire || isWillowCottage ? "private in-room Jacuzzis" : "a private pool deck"}.</span>
                 </li>
                 <li className="flex items-start gap-2 text-slate-900 text-xs sm:text-sm font-medium">
                   <CheckCircle2 className="text-[#DAA520] shrink-0 mt-0.5" size={15} />
@@ -1202,13 +1033,15 @@ export default async function VillaDetailPage({ params }: PageProps) {
           if (!spaces || spaces.length === 0) return null;
 
           const estateSubtitle = villaData.slug === "the-angle-house"
-            ? "Signature 3 BHK glass villa accommodating up to 14 guests with private waterfall pool & jacuzzi."
+            ? "Signature 3 BHK glass villa accommodating up to 12 guests with private waterfall pool & jacuzzi."
             : villaData.slug === "canopy-crest"
             ? "Sprawling 4 BHK mountain villa accommodating up to 16 guests with private pool & lawns."
             : villaData.slug === "casa-de-reva" || villaData.slug === "terra-cotta-villa"
             ? "Premier 4 BHK hillside estate in Panchgani accommodating up to 16 guests with private pool & lawns."
             : villaData.slug.includes("willow-peak")
-            ? "Exclusive 3-cottage mountain estate in Kurwande, Lonavala with private in-room jacuzzis for up to 12 guests."
+            ? villaData.slug === "willow-peak"
+              ? "Bedroom, Jacuzzi and outdoor photos from the 3-cottage Willow Peak estate in Kurwande, Lonavala."
+              : "Bedroom, Jacuzzi and outdoor photos from Willow Peak. Confirm the photos of your selected cottage before booking."
             : "Handpicked private estate with curated luxury rooms and spaces.";
 
           return (
@@ -1355,10 +1188,10 @@ export default async function VillaDetailPage({ params }: PageProps) {
                   {villaData.slug === "the-angle-house" 
                     ? "Conveniently accessible from Mumbai-Pune Expressway via Kamshet / Old Highway." 
                     : villaData.slug === "canopy-crest"
-                    ? "Direct smooth drive from Khopoli toll plaza, 15 mins from Imagicaa."
+                    ? "Use the Canopy Crest property pin to check your route from Khopoli or Imagicaa. Travel time varies with traffic."
                     : (villaData.slug === "casa-de-reva" || villaData.slug === "terra-cotta-villa")
                     ? "Scenic drive via Wai & Pasarni Ghat in Kaswand, Panchgani — just 4.5 km from Mapro Garden."
-                    : "Scenic hilltop drive through Kurwande, close to Tiger Point & Bushi Dam."}
+                    : "Located in Kurwande, Lonavala. Check the Willow Peak property pin and current route before travelling."}
                 </span>
               </div>
               <div className="flex items-start gap-2.5">
@@ -1372,6 +1205,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
         <ReviewSection villaId={villaData.id} initialReviews={reviews} />
         
         <VillaSEOContent slug={villaData.slug} />
+        <GuideLinks slugs={getPropertyGuides(villaData.slug)} title="Guides for this stay" />
       </section>
 
       <Footer />

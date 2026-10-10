@@ -1,3 +1,6 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import GuideLinks from "@/components/blog/guide-links";
+import { destinationGuides } from "@/data/guide-navigation";
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -239,7 +242,7 @@ export default async function PanchganiPage() {
                     <span>BOOK DIRECT (0% FEE)</span>
                   </a>
                   <a 
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and catering menus for luxury private pool villas in Panchgani.")}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to check direct booking offers, available dates and catering menus for luxury private pool villas in Panchgani.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs sm:text-sm tracking-wider uppercase px-6 sm:px-7 py-3.5 sm:py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
@@ -312,7 +315,7 @@ export default async function PanchganiPage() {
                   {/* Fast Action Buttons in Card */}
                   <div className="space-y-2.5 pt-2">
                     <a 
-                      href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to check available dates and direct pricing for Panchgani private pool villas.")}`}
+                      href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to check available dates and direct pricing for Panchgani private pool villas.")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
@@ -372,10 +375,6 @@ export default async function PanchganiPage() {
                   </div>
 
                   <div className="bg-black/70 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-3">
-                    <span className="flex items-center gap-1 text-sm font-bold text-[#DAA520]">
-                      <Star size={15} className="fill-[#DAA520]" /> 4.9/5
-                    </span>
-                    <span className="text-white/40">|</span>
                     <span className="text-sm font-bold text-white">From ₹16,000 / night</span>
                   </div>
                 </div>
@@ -415,7 +414,7 @@ export default async function PanchganiPage() {
                     <ChevronRight size={14} />
                   </Link>
                   <a 
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello Stay Willas! 🌟 I'd like to check custom dates, weekday discounts and food menus for *${signatureVilla.name}* in Panchgani.`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hello Stay Willas! 🌟 I'd like to check custom dates, weekday discounts and food menus for *${signatureVilla.name}* in Panchgani.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black tracking-widest uppercase text-center py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
@@ -682,7 +681,7 @@ export default async function PanchganiPage() {
 
                   <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
                     <a
-                      href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'm planning a getaway to Panchgani. Could you share available private pool villas, weekday discounts and catering options for our dates?")}`}
+                      href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a getaway to Panchgani. Could you share available private pool villas, weekday discounts and catering options for our dates?")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
@@ -891,7 +890,7 @@ export default async function PanchganiPage() {
                 Explore All Villas
               </Link>
               <a 
-                href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Panchgani with pool.")}`}
+                href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like to talk to a destination specialist about booking a luxury villa in Panchgani with pool.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-4 px-8 rounded-full shadow-lg transition-all flex items-center justify-center gap-2"
@@ -918,7 +917,7 @@ export default async function PanchganiPage() {
 
           <div className="flex items-center gap-2">
             <a 
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I want to check direct booking rates and weekday discounts for Panchgani private pool villas.")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I want to check direct booking rates and weekday discounts for Panchgani private pool villas.")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#25D366] active:bg-[#20ba5a] text-white font-black text-[11px] uppercase tracking-wider py-2.5 px-3.5 rounded-xl shadow-md flex items-center gap-1.5 shrink-0"
@@ -938,6 +937,7 @@ export default async function PanchganiPage() {
         </div>
       </div>
 
+      <div className="max-w-7xl mx-auto px-4"><GuideLinks slugs={destinationGuides.panchgani} title="Panchgani stay planning guides" /></div>
       <Footer />
     </main>
   );

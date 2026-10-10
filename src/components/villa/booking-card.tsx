@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -636,7 +637,7 @@ Our Contact & Verified Details:
 
 We are so excited about this getaway! Could you please check availability and help us confirm our booking? Thank you so much! 🥂🍾`;
 
-      const encodedMsg = encodeURIComponent(msg);
+      const encodedMsg = encodeWhatsAppMessage(msg);
       const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
       
       window.open(whatsappUrl, "_blank");
@@ -756,7 +757,7 @@ We are so excited about this getaway! Could you please check availability and he
       ? ` [${cottageSelection === "ALL" ? "All 3 Cottages (A, B, C)" : `Cottage ${cottageSelection}`}]`
       : "";
     const msg = `Hi Stay Willas Concierge! 🌟 I'm looking at *${villaName}*${cottageSub} for ${guests} guest(s) from ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights, ~₹${total.toLocaleString("en-IN")}). Could you please share your best direct offer and confirm availability?`;
-    window.open(`https://wa.me/919619042310?text=${encodeURIComponent(msg)}`, "_blank");
+    window.open(`https://wa.me/919619042310?text=${encodeWhatsAppMessage(msg)}`, "_blank");
   };
 
   if (verificationSubmitted) {
@@ -805,7 +806,7 @@ We are so excited about this getaway! Could you please check availability and he
             type="button"
             onClick={() => {
               const msg = `Hello Stay Willas team! 🌟 I just submitted a verification booking for *${villaName}* (Ref ID: ${submittedBookingId}) for ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Name: ${clientName}, Phone: ${clientPhone}. Looking forward to confirming! ✨`;
-              window.open(`https://wa.me/919619042310?text=${encodeURIComponent(msg)}`, "_blank");
+              window.open(`https://wa.me/919619042310?text=${encodeWhatsAppMessage(msg)}`, "_blank");
             }}
             className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
           >

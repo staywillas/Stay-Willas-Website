@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import { sendEmail } from "@/lib/mail";
 import { format } from "date-fns";
 
@@ -43,7 +44,7 @@ export async function sendAdminLeadNotification(data: LeadNotificationData) {
     waNumber = `91${waNumber.slice(1)}`;
   }
 
-  const waPreFill = encodeURIComponent(
+  const waPreFill = encodeWhatsAppMessage(
     `Hi ${name}! 🌟 This is the Stay Willas Concierge team reaching out regarding your inquiry for ${villaName || "our luxury private pool villas"}. How can we assist with your stay?`
   );
   const waUrl = digitsOnly.length >= 10 ? `https://wa.me/${waNumber}?text=${waPreFill}` : null;

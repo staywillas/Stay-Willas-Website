@@ -1,0 +1,273 @@
+.page { --navy:#1b3564; --olive:#4a5d23; --ivory:#f5f2ea; --sand:#ebe5d6; --gold-text:#977111; --ink:#1b3564; --gold:#daa520; background:var(--ivory); color:var(--ink); font-family:var(--font-outfit),sans-serif; }
+.page :is(button,a,input,select):focus-visible { outline:3px solid var(--gold); outline-offset:5px; }
+.page button,.page select { cursor:pointer; }
+.page h1,.page h2 { font-family:var(--font-cormorant),Georgia,serif; font-weight:500; letter-spacing:-.025em; }
+.hero { position:relative; min-height:615px; color:white; isolation:isolate; }
+.heroVisual { position:absolute; inset:0; z-index:-3; }
+.heroImage { object-fit:cover; object-position:center 58%; }
+.heroShade { position:absolute; inset:0; z-index:-2; background:radial-gradient(ellipse 75% 58% at 50% 46%,rgba(14,27,53,.7) 0%,rgba(14,27,53,.48) 48%,rgba(14,27,53,0) 100%),linear-gradient(180deg,rgba(14,27,53,.28),rgba(14,27,53,.18) 55%,rgba(14,27,53,.48)); }
+
+
+.offerLogo { border-radius:50%; margin-bottom:15px; }
+
+.heroContent { max-width:1040px; margin:0 auto; padding:189px 25px 98px; text-align:center; }
+.eyebrow { display:block; font-size:10px; letter-spacing:.2em; font-weight:500; }
+.heroContent>.eyebrow { color:#f5df9e; }
+.heroContent h1 { font-size:clamp(58px,6.1vw,86px); line-height:1.06; margin:20px 0 14px; text-wrap:balance; }
+.heroContent h1 em { font-weight:400; color:#f5df9e; }
+.heroContent>p { font-weight:300; font-size:15px; color:#fff; letter-spacing:.025em; }
+.searchBar { display:flex; align-items:center; background:#fff; border-radius:60px; padding:10px; color:var(--ink); max-width:855px; margin:39px auto 0; box-shadow:0 12px 45px #112a2625; text-align:left; }
+.searchBar label { min-width:0; flex:1; padding:4px 22px; border-right:1px solid #e3e7df; }
+.searchBar .locationField { flex:1.35; }
+.searchBar .guestField { flex:.8; border:0; }
+.searchBar label>span { display:block; font-size:10px; color:#657269; margin-bottom:5px; }
+.searchBar select,.searchBar input { width:100%; min-width:0; background:transparent; border:0; color:var(--ink); font-family:inherit; font-size:12px; outline-offset:2px; height:25px; }
+.searchButton { display:flex; align-items:center; justify-content:center; width:53px; height:53px; border-radius:50%; background:var(--gold); color:var(--navy); flex-shrink:0; }
+.searchButton:hover { background:#c4941a; }
+.searchButton:disabled { opacity:.65; }
+.searchButton span { display:none; }
+.heroNote { display:flex; align-items:center; justify-content:center; gap:24px; margin-top:20px; font-size:10px; font-weight:300; color:#f5f5ee; }
+.heroNote span { display:flex; align-items:center; gap:6px; }
+.heroContent .searchError { background:#fff; color:#873d30; border-radius:8px; padding:10px; font-size:12px; margin:12px auto 0; max-width:855px; }
+.heroBottom { display:flex; justify-content:space-between; padding:0 4.5% 25px; font-size:10px; letter-spacing:.07em; }
+.heroBottom a { display:flex; align-items:center; gap:9px; }
+.offerSection { padding:72px 6% 64px; scroll-margin-top:80px; }
+.offerPanel { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1.45fr 1fr; border-radius:10px; overflow:hidden; background:var(--sand); }
+.offerPhoto { position:relative; min-height:420px; }
+.offerCarousel { min-width:0; position:relative; display:flex; flex-direction:column; }
+.offerTrack { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; overscroll-behavior-x:contain; }
+.offerTrack::-webkit-scrollbar { display:none; }
+.offerSlide { flex:0 0 100%; min-width:0; scroll-snap-align:start; }
+.offerSlide .offerPhoto { display:block; height:100%; min-height:420px; }
+.carouselControls { display:flex; align-items:center; justify-content:center; gap:14px; min-height:52px; margin-top:auto; }
+.carouselControls button { display:grid; place-items:center; width:40px; height:44px; border-radius:6px; color:var(--navy); }
+.carouselPages { display:flex; justify-content:center; }
+.carouselPages button { width:28px; }
+.carouselPages button>span { width:5px; height:5px; border-radius:50%; background:#1b35644d; }
+.carouselPages button[aria-current="true"]>span { background:var(--navy); }
+.carouselStatus { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+@media(hover:hover){.carouselControls button:hover { background:#1b356409; }}
+.cover { object-fit:cover; transition:transform .6s ease; }
+.offerPhoto .cover { object-position:center 52%; }
+.offerPhoto:after { content:""; position:absolute; inset:65% 0 0; background:linear-gradient(transparent,#152d2890); }
+.photoCaption { position:absolute; z-index:1; bottom:25px; left:28px; right:28px; color:white; display:flex; justify-content:space-between; gap:10px; font-size:9px; letter-spacing:.1em; }
+.photoCaption span:last-child { display:flex; align-items:center; gap:6px; letter-spacing:0; }
+.photoTag { position:absolute; top:23px; left:25px; display:flex; gap:7px; align-items:center; font-size:10px; background:#f8f6f0eb; color:var(--navy); padding:8px 12px; border-radius:30px; }
+.offerCopy { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:35px 35px; }
+.offerCopy .eyebrow { font-size:8px; color:#657466; }
+.offerCopy h2 { font-size:43px; line-height:1.07; margin:18px 0; }
+.offerCopy h2 em { color:var(--gold-text); font-weight:400; }
+.offerCopy p { font-size:12px; font-weight:300; line-height:1.8; color:#59685d; }
+.coupon { border:1px dashed #c7b57d; background:#daa5200a; padding:9px 15px; display:flex; gap:24px; align-items:center; margin:18px 0; font-size:9px; letter-spacing:.07em; }
+.coupon strong { font-size:12px; letter-spacing:.06em; margin-left:8px; }
+.primaryButton { display:inline-flex; align-items:center; justify-content:center; gap:20px; color:white; background:var(--navy); padding:15px 22px; font-size:11px; }
+.primaryButton:hover { background:#28487d; }
+.offerCopy small { font-size:8px; color:#59685d; margin-top:12px; }
+.staysSection { max-width:1200px; margin:0 auto; padding:10px 0 76px; width:88%; scroll-margin-top:35px; }
+.sectionHeading { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:28px; }
+.sectionHeading .eyebrow { color:var(--gold-text); font-size:9px; }
+.sectionHeading h2 { font-size:39px; line-height:1.13; margin:11px 0; }
+.sectionHeading p { font-size:12px; color:#677169; font-weight:300; }
+.collectionActions { display:flex; align-items:center; gap:15px; }
+.collectionActions :is(a,button) { display:flex; gap:12px; align-items:center; font-size:11px; white-space:nowrap; border-bottom:1px solid #a4b09f; padding-bottom:7px; }
+.villaGrid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px; }
+.villaPhoto { position:relative; aspect-ratio:1.13; border-radius:7px; overflow:hidden; background:var(--sand); }
+.villaCard:hover .cover { transform:scale(1.04); }
+.villaPhoto>span { position:absolute; top:14px; left:12px; font-size:8px; letter-spacing:.02em; padding:6px 9px; border-radius:20px; background:#fffef5ed; }
+.villaPhoto>.cardArrow { inset:auto 12px 12px auto; display:grid; place-items:center; width:32px; height:32px; padding:0; border-radius:50%; }
+.villaInfo { padding-top:14px; }
+.villaLocation { font-size:9px; color:#68766b; }
+.villaInfo h3 { font-family:var(--font-cormorant),Georgia,serif; font-size:25px; font-weight:600; margin:4px 0 10px; }
+.villaSpecs { display:flex; gap:15px; font-size:10px; color:#657267; }
+.villaSpecs span { display:flex; align-items:center; gap:5px; }
+.villaInfo p { border-top:1px solid #dfe3d7; padding-top:12px; margin-top:14px; }
+.villaInfo strong { font-size:14px; font-weight:500; }
+.villaInfo p>span { font-size:9px; color:#657267; }
+.emptyState { padding:40px; text-align:center; background:var(--sand); border-radius:8px; }
+.emptyState h3 { font-size:24px; margin-bottom:10px; }.emptyState a { display:inline-flex; align-items:center; gap:10px; margin-top:20px; }
+.destinations { padding:54px 8%; display:grid; grid-template-columns:1fr 1fr; gap:70px; background:#eeeadd; }
+.destinations .eyebrow { font-size:9px; }
+.destinations h2 { font-size:49px; line-height:1.04; margin-top:15px; }
+.destinations em { color:var(--gold-text); }
+.destinationLinks a { display:flex; align-items:center; gap:20px; border-bottom:1px solid #bcc9b7; padding:17px 0; }
+.destinationLinks span { color:var(--olive); font-size:11px; }.destinationLinks strong { flex:1; font-family:var(--font-cormorant),Georgia,serif; font-size:30px; font-weight:500; }
+
+
+
+.spinner { animation:spin 1s linear infinite; } @keyframes spin { to {transform:rotate(360deg);} }
+@media(min-width:1500px){.hero { min-height:700px; }.heroContent { padding-top:130px; padding-bottom:125px; }}
+@media(max-width:1100px){.villaGrid { gap:18px; }.villaSpecs { gap:9px; }.offerCopy h2 { font-size:36px; }}
+@media(max-width:850px){.hero { min-height:650px; }.heroContent { padding-top:105px; }.searchBar label { padding:4px 12px; }.offerSection { padding:50px 6%; }.offerPanel { grid-template-columns:1.15fr 1fr; }.offerCopy { padding:30px 20px; }.offerPhoto { min-height:400px; }.offerCopy h2 { font-size:34px; }.villaGrid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:30px 20px; }.sectionHeading { align-items:start; }.sectionHeading h2 { font-size:34px; }}
+@media(max-width:600px){.hero { min-height:740px; }.heroImage { object-position:48% center; }.heroContent { padding:70px 20px 80px; }.heroContent>.eyebrow { font-size:8px; letter-spacing:.17em; }.heroContent h1 { font-size:clamp(40px,11vw,56px); margin:20px 0 18px; }.heroContent>p { font-size:12px; line-height:1.7; max-width:310px; margin:0 auto; }.searchBar { display:grid; grid-template-columns:1fr 1fr; gap:0; border-radius:13px; padding:9px 12px 12px; margin-top:28px; }.searchBar label { border-right:0; padding:12px 8px; border-bottom:1px solid #e3e7df; }.searchBar .locationField { grid-column:1 / -1; }.searchBar .guestField { grid-column:1 / -1; border-bottom:0; padding-bottom:13px; }.searchBar label>span { font-size:9px; }.searchBar select,.searchBar input { font-size:13px; height:25px; }.searchButton { grid-column:1 / -1; width:100%; height:46px; border-radius:8px; gap:10px; }.searchButton span { display:inline; font-size:12px; }.searchButton svg { width:17px; }.heroNote { gap:10px; flex-wrap:wrap; font-size:8px; margin-top:16px; }.heroNote span:last-child { display:none; }.heroBottom { font-size:8px; padding:0 5% 21px; }.offerSection { padding:35px 5% 42px; }.offerPanel { grid-template-columns:1fr; border-radius:8px; }.offerPhoto { min-height:280px; }.photoCaption { bottom:20px; left:18px; right:18px; font-size:8px; }.photoTag { top:17px; left:18px; }.offerCopy { padding:30px 22px 32px; }.offerCopy h2 { font-size:40px; }.offerCopy p { font-size:12px; }.staysSection { width:90%; padding-bottom:42px; }.sectionHeading { flex-direction:column; gap:17px; }.sectionHeading h2 { font-size:35px; max-width:330px; }.sectionHeading p { font-size:11px; }.villaGrid { display:flex; overflow-x:auto; gap:16px; scroll-snap-type:x mandatory; padding-bottom:10px; }.villaCard { flex:0 0 83%; scroll-snap-align:start; }.villaPhoto { aspect-ratio:1.18; }.villaInfo h3 { font-size:27px; }.villaLocation { font-size:10px; }.villaSpecs { font-size:11px; gap:18px; }.destinations { padding:37px 6%; grid-template-columns:1fr; gap:24px; }.destinations h2 { font-size:44px; }}
+@media(prefers-reduced-motion:reduce){.cover { transition:none; }.spinner { animation:none; }}
+@media(min-width:1500px){.heroContent { padding-top:220px; }}
+@media(max-width:850px){.heroContent { padding-top:170px; }}
+@media(max-width:600px){.heroContent { padding-top:135px; }}
+
+.page section[id] { scroll-margin-top:115px; }
+.contentWidth { width:88%; max-width:1200px; margin:0 auto; }
+.introduction { max-width:800px; width:90%; margin:0 auto; text-align:center; padding:0 0 66px; }
+.introduction>.eyebrow { color:var(--gold-text); }
+.introduction h2 { font-size:48px; line-height:1.1; margin:16px 0; }
+.introduction em,.centerHeading em,.faqIntro em { color:var(--gold-text); }
+.introduction>p { max-width:630px; margin:0 auto; color:#596575; font-size:14px; line-height:1.9; }
+.quickLinks { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:25px; }
+.quickLinks a { display:flex; align-items:center; justify-content:center; gap:9px; padding:12px 17px; background:#fff; border:1px solid #ded9ce; border-radius:30px; font-size:12px; min-height:44px; }
+.quickLinks a:hover { border-color:var(--gold); background:#fff9e9; }
+.featureSection { padding:65px 0; }
+.jacuzziSection { background:#eef1f4; border-top:1px solid #dce2e8; border-bottom:1px solid #dce2e8; padding:48px 0; }
+.featureSection .eyebrow { display:flex; align-items:center; gap:8px; }
+.featureSection .sectionHeading>a { display:flex; align-items:center; gap:9px; font-size:12px; padding:12px 0; }
+.jacuzziGrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:25px; }
+.jacuzziSection .contentWidth { max-width:960px; }
+.poolGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:22px; }
+.featureCard { display:flex; flex-direction:column; min-width:0; background:#fffdf8; border:1px solid #dcd7cc; border-radius:16px; overflow:hidden; }
+.featurePhoto { display:block; position:relative; aspect-ratio:1.7; overflow:hidden; background:var(--sand); }
+.featurePhoto:hover .cover { transform:scale(1.04); }
+.featureTag { position:absolute; top:16px; left:16px; display:flex; align-items:center; gap:7px; padding:8px 11px; border-radius:25px; background:#fffdf3f2; color:var(--navy); font-size:11px; }
+.featurePhotoArrow { position:absolute; bottom:17px; right:17px; width:38px; height:38px; display:grid; place-items:center; color:var(--navy); background:#fffdf3f2; border-radius:50%; }
+.featureBody { display:flex; flex-direction:column; flex:1; padding:24px; }
+.featureBody .villaLocation { font-size:11px; }
+.featureBody h3 { font-family:var(--font-cormorant),Georgia,serif; font-size:33px; font-weight:600; line-height:1.2; margin:5px 0 12px; }
+.featureDescription { font-size:13px; line-height:1.8; color:#596575; }
+.featurePills { display:flex; flex-wrap:wrap; gap:7px; list-style:none; padding:0; margin:17px 0; }
+.featurePills li { padding:6px 10px; background:#edf0e6; border-radius:6px; color:#435225; font-size:10px; }
+.featureBody .villaSpecs { font-size:11px; margin-bottom:16px; }
+.featureBooking { border-top:1px solid #e4dfd3; margin-top:auto; padding-top:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; }
+.featureBooking p { display:flex; flex-wrap:wrap; align-items:baseline; gap:5px; }
+.featureBooking p>span { font-size:10px; color:#596575; }
+.featureBooking strong { font-size:20px; font-weight:600; }
+.featureBooking small { width:100%; color:#596575; font-size:10px; }
+.featureBooking .primaryButton { font-size:12px; border-radius:8px; min-height:46px; padding:12px 16px; gap:12px; }
+.poolGrid .featurePhoto { aspect-ratio:1.35; }
+.poolGrid .featureBody { padding:20px; }
+.poolGrid .featureBooking .primaryButton { width:100%; }
+.rateNote { font-size:11px; color:#596575; margin-top:20px; line-height:1.7; }
+.destinationCopy { margin-top:18px; font-size:13px; color:#596575; }
+.destinationLinks a>div { flex:1; }
+.destinationLinks small { display:block; margin-top:4px; font-size:12px; color:#596575; }
+.careSection { padding:75px 0; background:#fffdf8; }
+.centerHeading { text-align:center; max-width:650px; margin:0 auto 38px; }
+.centerHeading>.eyebrow { color:var(--gold-text); }
+.centerHeading h2 { font-size:48px; line-height:1.13; margin:12px 0; }
+.centerHeading p { color:#596575; font-size:14px; line-height:1.7; }
+.reasonGrid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:28px; }
+.reasonGrid article { text-align:center; padding:14px 10px; }
+.reasonIcon { display:inline-grid; place-items:center; width:58px; height:58px; border:1px solid #dcc78f; border-radius:17px; color:var(--gold-text); background:#f5f0e4; margin-bottom:18px; }
+.reasonGrid h3 { font-size:17px; font-weight:600; margin-bottom:10px; }
+.reasonGrid p { font-size:12px; color:#596575; line-height:1.8; }
+.momentsSection { padding:65px 0; }
+.momentGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.momentGrid>a { display:flex; flex-direction:column; padding:27px; border:1px solid #ddd7c8; border-radius:12px; background:#ede8db; }
+.momentGrid>a>span { font-size:11px; color:var(--gold-text); letter-spacing:.15em; margin-bottom:24px; }
+.momentGrid h3 { font-family:var(--font-cormorant),Georgia,serif; font-size:29px; font-weight:600; margin-bottom:10px; }
+.momentGrid p { font-size:13px; color:#596575; line-height:1.8; margin-bottom:25px; }
+.momentGrid strong { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:12px; font-weight:500; margin-top:auto; min-height:30px; }
+.momentGrid>a:hover { border-color:var(--gold); background:#e8e0cc; }
+.partnerSection { padding:15px 6% 70px; }
+.partnerPanel { display:grid; grid-template-columns:1fr 1fr; max-width:1200px; margin:auto; border-radius:16px; overflow:hidden; background:#30421d; color:#fffdf3; }
+.partnerPhoto { position:relative; min-height:530px; }
+.partnerCopy { padding:45px; }
+.partnerCopy .eyebrow { color:#f0cf7c; }
+.partnerCopy h2 { font-size:49px; line-height:1.08; margin:18px 0; }
+.partnerCopy em { color:#f0cf7c; }
+.partnerCopy p { font-size:13px; line-height:1.8; color:#e3e8dc; }
+.partnerCopy ul { display:grid; gap:12px; list-style:none; margin:22px 0 26px; padding:0; }
+.partnerCopy li { display:flex; align-items:center; gap:10px; font-size:12px; }
+.partnerCopy li svg { color:#f0cf7c; }
+.partnerButton { display:inline-flex; gap:18px; align-items:center; justify-content:center; min-height:48px; padding:14px 22px; border-radius:8px; background:var(--gold); color:var(--navy); font-size:13px; font-weight:600; }
+.partnerButton:hover { background:#f0cf7c; }
+.partnerContact { display:flex; gap:10px; align-items:center; font-size:12px; margin-top:17px; min-height:36px; }
+.faqSection { display:grid; grid-template-columns:1fr 1.5fr; gap:70px; width:88%; max-width:1200px; margin:auto; padding:0 0 80px; }
+.faqIntro>.eyebrow { color:var(--gold-text); }
+.faqIntro h2 { font-size:48px; line-height:1.1; margin:16px 0; }
+.faqIntro p { color:#596575; font-size:13px; line-height:1.8; }
+.faqIntro>a { display:inline-flex; gap:10px; align-items:center; font-size:12px; line-height:1.7; margin-top:20px; min-height:44px; }
+.faqList details { border-bottom:1px solid #d9d5c9; }
+.faqList details:first-child { border-top:1px solid #d9d5c9; }
+.faqList summary { cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:15px; list-style:none; padding:20px 0; font-size:14px; font-weight:500; min-height:54px; }
+.faqList summary::-webkit-details-marker { display:none; }
+.faqList summary svg { flex-shrink:0; color:var(--gold-text); transition:transform .2s; }
+.faqList details[open] summary svg { transform:rotate(180deg); }
+.faqList details[open] summary { color:var(--gold-text); }
+.faqList details>p { font-size:13px; line-height:1.9; color:#596575; padding:0 24px 22px 0; }
+
+@media(max-width:900px){
+  .poolGrid { grid-template-columns:1fr 1fr; }.poolGrid .featureBooking .primaryButton { width:auto; }
+  .reasonGrid { grid-template-columns:1fr 1fr; gap:24px; }
+  .partnerCopy { padding:30px; }.partnerCopy h2 { font-size:40px; }
+  .faqSection { gap:35px; grid-template-columns:1fr 1.5fr; }
+  .momentGrid>a { padding:20px; }.momentGrid h3 { font-size:26px; }
+}
+@media(max-width:600px){
+  .contentWidth { width:90%; }.page section[id] { scroll-margin-top:100px; }
+  .introduction { padding:0 0 38px; }.introduction h2 { font-size:35px; }.introduction>p { font-size:13px; line-height:1.8; }
+  .quickLinks { display:grid; grid-template-columns:1fr 1fr; gap:8px; }.quickLinks a { font-size:11px; padding:11px 9px; gap:6px; }
+  .villaGrid { display:grid; grid-template-columns:1fr; overflow:visible; gap:25px; }.villaCard { flex:none; padding:12px; background:#fffdf8; border:1px solid #e2dccf; border-radius:12px; }.villaPhoto { aspect-ratio:1.5; }
+  .villaInfo { padding:13px 3px 3px; }.villaInfo h3 { font-size:29px; }.villaInfo p>span { font-size:11px; }.villaInfo strong { font-size:17px; }.villaSpecs { font-size:12px; }
+  .sectionHeading h2 { font-size:36px; max-width:none; }.sectionHeading p { font-size:13px; line-height:1.7; }.sectionHeading .eyebrow { font-size:9px; letter-spacing:.12em; }
+  .featureSection { padding:40px 0; }.jacuzziGrid,.poolGrid { grid-template-columns:1fr; gap:21px; }
+  .featurePhoto,.poolGrid .featurePhoto { aspect-ratio:1.5; }.featureBody,.poolGrid .featureBody { padding:20px; }.featureBody h3 { font-size:31px; }
+  .featureTag { font-size:10px; top:13px; left:13px; }.featureDescription { font-size:13px; }.featurePills li { font-size:11px; }.featureBooking { gap:14px; }
+  .featureBooking .primaryButton,.poolGrid .featureBooking .primaryButton { width:100%; min-height:48px; font-size:13px; }.featureBooking p { width:100%; }.featureBooking small { width:auto; font-size:11px; }
+  .featureBody .villaSpecs { font-size:12px; }.rateNote { font-size:12px; }
+  .destinationLinks small { font-size:12px; }.destinationLinks a { min-height:80px; }.destinationCopy { font-size:13px; }
+  .careSection { padding:42px 0; }.centerHeading { margin-bottom:24px; }.centerHeading h2 { font-size:36px; }.centerHeading p { font-size:13px; }
+  .reasonGrid { gap:20px 12px; }.reasonGrid article { padding:8px 0; }.reasonGrid h3 { font-size:15px; }.reasonGrid p { font-size:12px; line-height:1.7; }.reasonIcon { width:48px; height:48px; margin-bottom:12px; }
+  .momentsSection { padding:40px 0; }.momentGrid { grid-template-columns:1fr; gap:12px; }.momentGrid>a { padding:23px; }.momentGrid>a>span { margin-bottom:12px; }.momentGrid h3 { font-size:29px; }.momentGrid p { margin-bottom:18px; }.momentGrid strong { font-size:13px; }
+  .partnerSection { padding:0 5% 42px; }.partnerPanel { grid-template-columns:1fr; }.partnerPhoto { min-height:240px; }.partnerCopy { padding:28px 23px; }.partnerCopy h2 { font-size:39px; }.partnerCopy p { font-size:13px; }.partnerCopy li { font-size:12px; }.partnerButton { width:100%; }.partnerContact { justify-content:center; }
+  .faqSection { width:90%; padding-bottom:42px; grid-template-columns:1fr; gap:24px; }.faqIntro h2 { font-size:39px; }.faqIntro>a { margin-top:12px; }.faqList summary { font-size:14px; line-height:1.55; padding:18px 0; }.faqList details>p { font-size:13px; padding-right:8px; }
+}
+@media(prefers-reduced-motion:reduce){.faqList summary svg { transition:none; }}
+
+.compactCard { border-radius:12px; }
+.compactCard .featurePhoto { aspect-ratio:2.25; }
+.compactCard .featureBody { padding:18px; }
+.compactCard .featureBody h3 { font-size:29px; margin:4px 0 8px; }
+.compactCard .featureDescription { font-size:12px; line-height:1.7; }
+.compactCard .featurePills { margin:12px 0; gap:6px; }
+.compactCard .featureBody .villaSpecs { margin-bottom:12px; }
+.compactCard .featureBooking { padding-top:12px; gap:12px; }
+.compactCard .featureBooking strong { font-size:18px; }
+.compactCard .featureBooking .primaryButton { min-height:44px; padding:11px 14px; font-size:11px; gap:10px; }
+.compactCard .featureTag { top:12px; left:12px; font-size:10px; padding:7px 10px; }
+.compactCard .featurePhotoArrow { width:32px; height:32px; right:12px; bottom:12px; }
+
+@media(max-width:600px){
+  .hero { background:#0e1b35; }
+  .heroVisual { bottom:auto; height:360px; }
+  .heroImage { object-position:72% center; }
+  .heroTitleLine { display:block; white-space:nowrap; }
+  .heroContent h1 { line-height:1.05; text-wrap:initial; }
+  .heroShade { background:radial-gradient(ellipse 100% 220px at 50% 210px,rgba(14,27,53,.58) 0%,rgba(14,27,53,.32) 55%,rgba(14,27,53,0) 100%),linear-gradient(180deg,rgba(14,27,53,.18) 0,rgba(14,27,53,.1) 240px,#0e1b35 360px); }
+  .jacuzziSection { padding:34px 0; }
+  .jacuzziSection .sectionHeading { margin-bottom:20px; gap:10px; }
+  .jacuzziSection .sectionHeading h2 { font-size:33px; }
+  .jacuzziGrid { gap:16px; }
+  .compactCard .featurePhoto { aspect-ratio:auto; height:140px; }
+  .compactCard .featureBody { padding:16px; }
+  .compactCard .featureBody h3 { font-size:28px; }
+  .compactCard .featureDescription { display:none; }
+  .compactCard .featureBooking .primaryButton { min-height:46px; font-size:12px; }
+}
+
+.sectionHeading>a.collectionButton { display:inline-flex; justify-content:center; align-items:center; gap:14px; padding:14px 20px; min-height:50px; border-radius:10px; background:var(--navy); color:#fff; font-size:14px; font-weight:500; white-space:nowrap; flex-shrink:0; }
+.sectionHeading>a.collectionButton:hover { background:#28487d; }
+@media(max-width:600px){.sectionHeading>a.collectionButton { width:100%; margin-top:6px; min-height:52px; font-size:15px; }}
+
+/* Touch scrolling stays native; image hover effects only run with a mouse. */
+@media(hover:none){
+  .page .cover { transition:none; }
+  .villaCard:hover .cover,.featurePhoto:hover .cover { transform:none; }
+}
+@media(max-width:600px){
+  .heroContent { padding-inline:16px; }
+  .page section[id] { scroll-margin-top:80px; }
+  .searchBar { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .collectionActions { flex-wrap:wrap; }
+  .villaSpecs { flex-wrap:wrap; row-gap:8px; }
+}
+@media(max-width:340px){.searchBar label:has(input[type="date"]) { grid-column:1 / -1; }}
+:global(html):has(.page) { scroll-behavior:smooth; }
+@media(prefers-reduced-motion:reduce){:global(html):has(.page) { scroll-behavior:auto; }}
+@media(max-width:760px){.offerPanel { grid-template-columns:1fr; }.offerSlide .offerPhoto { min-height:280px; }.offerCopy { padding:28px 22px; }.offerCopy h2 { font-size:36px; }}

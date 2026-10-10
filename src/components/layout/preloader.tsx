@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Preloader() {
+export default function Preloader({ preview = false }: { preview?: boolean }) {
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -13,7 +13,7 @@ export default function Preloader() {
     if (typeof window === "undefined") return;
 
     const urlParams = new URLSearchParams(window.location.search);
-    const forcePreview = urlParams.get("preloader") === "preview" || urlParams.get("preview") === "preloader";
+    const forcePreview = preview || urlParams.get("preloader") === "preview" || urlParams.get("preview") === "preloader";
     const hasSeen = sessionStorage.getItem("stay_willas_preloader_seen");
 
     // Only run if first session visit or explicitly previewing
@@ -54,7 +54,7 @@ export default function Preloader() {
         document.body.style.overflow = "";
       };
     }
-  }, []);
+  }, [preview]);
 
   // Listen for manual trigger to replay preloader for testing
   useEffect(() => {

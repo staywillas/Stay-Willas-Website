@@ -1,7 +1,11 @@
 import { Metadata } from "next";
-import ReactDOM from "react-dom";
 import Navbar from "@/components/layout/navbar";
-import dynamic from "next/dynamic";
+import DestinationShowcase from "@/components/home/destination-showcase";
+import HomeSitelinks from "@/components/home/home-sitelinks";
+import WhyChooseUs from "@/components/home/why-choose-us";
+import SEOContent from "@/components/home/seo-content";
+import PartnerSection from "@/components/home/partner-section";
+import Footer from "@/components/layout/footer";
 
 export const metadata: Metadata = {
   title: "Private Pool Villas Near Mumbai | Stay Willas",
@@ -40,24 +44,11 @@ export const metadata: Metadata = {
 
 import HeroConcept2 from "@/components/home/hero-concept-2";
 
-// Below-the-fold components (lazy-loaded, only rendered when scrolled into view)
-const DestinationShowcase = dynamic(() => import("@/components/home/destination-showcase"));
-const HomeSitelinks = dynamic(() => import("@/components/home/home-sitelinks"));
-const WhyChooseUs = dynamic(() => import("@/components/home/why-choose-us"));
-const SEOContent = dynamic(() => import("@/components/home/seo-content"));
-const PartnerSection = dynamic(() => import("@/components/home/partner-section"));
-const Footer = dynamic(() => import("@/components/layout/footer"));
+// Fixed sections render on the server; their images remain lazy-loaded below the fold.
 
 export const revalidate = 60; // Instant TTFB via ISR cache
 
-export default async function Home() {
-  // Preload hero background image immediately in HTML head
-  ReactDOM.preload("/images/angle-house-hero-clean.webp", {
-    as: "image",
-    type: "image/webp",
-    fetchPriority: "high",
-  });
-
+export default function Home() {
   return (
     <main className="min-h-screen bg-bg-primary">
       <Navbar />

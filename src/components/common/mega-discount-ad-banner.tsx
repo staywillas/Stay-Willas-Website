@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect } from "react";
 import { Timer, ArrowRight, PhoneCall, Copy, Check, ShieldCheck, Flame, Tag, Sparkles, X, CloudRain } from "lucide-react";
 
@@ -71,7 +72,7 @@ export default function MegaDiscountAdBanner({
   };
 
   const whatsappMessage = `Hi Stay Willas! 🌧️ I want to claim the *${offerTitle}* offer (*${highlightText}* on Weekdays) for *${villaName}* in ${location} with Coupon: *${couponCode}* (Flat ${discountPercent}%+ Off)!\n\nPlease share available Monday–Thursday dates and the best 2-night discounted quote! ✨`;
-  const whatsappUrl = `https://wa.me/919619042310?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappUrl = `https://wa.me/919619042310?text=${encodeWhatsAppMessage(whatsappMessage)}`;
 
   if (isDismissed) return null;
 

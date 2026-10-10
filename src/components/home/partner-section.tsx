@@ -1,7 +1,7 @@
-"use client";
+
 
 import React from "react";
-import { motion } from "framer-motion";
+
 import Link from "next/link";
 import { TrendingUp, Users, Shield, Globe } from "lucide-react";
 
@@ -36,18 +36,14 @@ const PartnerSection = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* Left Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
           >
             <span className="inline-block text-[#DAA520] font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase text-[10px] sm:text-xs mb-3 sm:mb-5 bg-white/10 px-3 sm:px-4 py-1.5 rounded-full backdrop-blur-sm">
               🏠 Partnership Opportunity
             </span>
             <h2 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl font-heading text-white mb-3 sm:mb-6 leading-tight">
               Own a Villa? <br />
-              <span className="italic bg-gradient-to-r from-[#FAF7F0] via-[#DAA520] to-[#FAF7F0] bg-clip-text text-transparent pr-2 inline-block">Let's Share It</span> <br />
+              <span className="italic bg-gradient-to-r from-[#FAF7F0] via-[#DAA520] to-[#FAF7F0] bg-clip-text text-transparent pr-2 inline-block">Let&apos;s Share It</span> <br />
               With The World.
             </h2>
             <p className="text-white/85 text-xs sm:text-base md:text-lg mb-5 sm:mb-8 max-w-xl leading-relaxed font-light">
@@ -63,17 +59,13 @@ const PartnerSection = () => {
                 CONTACT SALES
               </Link>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right Benefits Grid */}
           <div className="grid grid-cols-3 gap-2 sm:gap-5">
-            {benefits.map((benefit, index) => (
-              <motion.div
+            {benefits.map((benefit) => (
+              <div
                 key={benefit.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
                 className="bg-white/95 backdrop-blur-md p-2.5 sm:p-6 rounded-xl sm:rounded-2xl border border-white/80 shadow-md sm:shadow-xl text-center flex flex-col items-center justify-center aspect-square sm:aspect-auto sm:h-52 hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-0.5"
               >
                 <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-[#559C24]/10 flex items-center justify-center mb-1.5 sm:mb-4 text-[#559C24] transition-colors shrink-0">
@@ -83,14 +75,10 @@ const PartnerSection = () => {
                 <div className="text-base sm:text-3xl font-black text-[#1B3564] tracking-tight mb-0.5">{benefit.value}</div>
                 <div className="text-[7px] sm:text-[11px] text-[#559C24] uppercase tracking-wider font-extrabold mb-1 sm:mb-2 leading-none">{benefit.suffix}</div>
                 <div className="text-[8.5px] sm:text-xs text-[#1B3564]/80 font-bold leading-tight">{benefit.title}</div>
-              </motion.div>
+              </div>
             ))}
             
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+            <div
               className="col-span-3 bg-white/95 backdrop-blur-md p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-white/80 shadow-md sm:shadow-xl flex items-center justify-between hover:bg-white hover:shadow-2xl transition-all duration-300 group hover:-translate-y-0.5"
             >
               <div className="flex items-center gap-2 sm:gap-3.5">
@@ -106,7 +94,7 @@ const PartnerSection = () => {
               <div className="text-[#DAA520] font-black text-xs sm:text-xl tracking-tight shrink-0 ml-2">
                 Top Rated ⭐
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

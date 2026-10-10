@@ -576,6 +576,19 @@ a, button, input, select, textarea, [role="button"] {
   contain-intrinsic-size: 800px;
 }
 
+/* Keep the full footer HTML available while skipping its offscreen layout. */
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto 1200px;
+}
+
+/* Decorative amenity icons stay still on phones and for reduced-motion users. */
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .amenity-icon * {
+    animation: none !important;
+  }
+}
+
 /* iOS Safe Area Inset Support for Notch / Home Indicator */
 .safe-bottom {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));

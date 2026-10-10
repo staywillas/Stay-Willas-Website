@@ -5,6 +5,7 @@ import Image from "next/image";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { blogsData } from "@/data/blogs";
+import { guideTopics } from "@/data/guide-navigation";
 import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
@@ -91,6 +92,17 @@ export default function BlogIndexPage() {
 
         {/* Blog Grid */}
         <section className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="mb-12 grid gap-6 md:grid-cols-3" aria-label="Browse guides by topic">
+            {guideTopics.map(topic => (
+              <section key={topic.id} className="rounded-2xl border border-slate-200 bg-white p-5">
+                <h2 className="mb-3 text-xl font-heading font-bold text-[#1B3564]">{topic.title}</h2>
+                <ul className="space-y-2">{topic.slugs.map(slug => {
+                  const guide = blogsData.find(blog => blog.slug === slug);
+                  return guide ? <li key={slug}><Link href={`/blog/${slug}`} className="inline-block py-1 text-sm text-[#1B3564] underline underline-offset-4">{guide.title}</Link></li> : null;
+                })}</ul>
+              </section>
+            ))}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
             {blogsData.map((blog) => (
               <div 

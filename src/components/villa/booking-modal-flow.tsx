@@ -15,7 +15,10 @@ import {
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
-import BookingCard from "@/components/villa/booking-card";
+import dynamic from "next/dynamic";
+const BookingCard = dynamic(() => import("@/components/villa/booking-card"), {
+  loading: () => <p role="status" className="p-6 text-center text-slate-600">Loading booking details…</p>,
+});
 import { format } from "date-fns";
 import { captureBookingLead } from "@/app/actions/inquiry";
 import { useLenis } from "lenis/react";

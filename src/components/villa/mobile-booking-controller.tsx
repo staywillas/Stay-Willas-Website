@@ -7,7 +7,10 @@ import {
   CheckCircle2, ShieldCheck, Clock, Users, ArrowRight, Home 
 } from "lucide-react";
 import { format, addMonths, subMonths, isSameDay, isBefore, isAfter, startOfMonth, endOfMonth, eachDayOfInterval, getDay, addDays } from "date-fns";
-import BookingCard from "./booking-card";
+import dynamic from "next/dynamic";
+const BookingCard = dynamic(() => import("./booking-card"), {
+  loading: () => <p role="status" className="p-6 text-center text-slate-600">Loading booking details…</p>,
+});
 
 interface DailyPriceProp {
   id: string;

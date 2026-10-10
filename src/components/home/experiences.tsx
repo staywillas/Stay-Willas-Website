@@ -1,5 +1,6 @@
 "use client";
 
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -230,7 +231,7 @@ const Experiences = () => {
                   </Link>
 
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hi Stay Willas! 🌟 I'm looking at your *${activeExperience.title}* on the website. Could you suggest the best villas for our stay?`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hi Stay Willas! 🌟 I'm looking at your *${activeExperience.title}* on the website. Could you suggest the best villas for our stay?`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold px-4 py-3 sm:px-5 sm:py-3.5 rounded-full text-[10px] sm:text-xs tracking-wider uppercase flex items-center gap-1.5 transition-all duration-300 whitespace-nowrap"

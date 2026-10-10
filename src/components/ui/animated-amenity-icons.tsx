@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 // 1. Infinity Pool Waves Icon
@@ -13,7 +11,7 @@ export const AnimatedPoolIcon = ({ className = "w-5 h-5" }: { className?: string
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .pool-wave-1 {
@@ -64,7 +62,7 @@ export const AnimatedBonfireIcon = ({ className = "w-5 h-5" }: { className?: str
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .fire-flame-main {
@@ -138,7 +136,7 @@ export const AnimatedChefIcon = ({ className = "w-5 h-5" }: { className?: string
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .chef-steam-1 {
@@ -190,7 +188,7 @@ export const AnimatedMountainIcon = ({ className = "w-5 h-5" }: { className?: st
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .mtn-cloud-left {
@@ -257,7 +255,7 @@ export const AnimatedWaterfallIcon = ({ className = "w-5 h-5" }: { className?: s
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .waterflow-1 { animation: flow-down 1.2s infinite linear; }
@@ -292,7 +290,7 @@ export const AnimatedGlassFrontageIcon = ({ className = "w-5 h-5" }: { className
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .glass-shine { animation: shine-sweep 3s ease-in-out infinite; }
@@ -321,7 +319,7 @@ export const AnimatedLightingIcon = ({ className = "w-5 h-5" }: { className?: st
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .warm-glow { animation: pulse-glow 2s ease-in-out infinite alternate; }
@@ -354,7 +352,7 @@ export const AnimatedLoungingIcon = ({ className = "w-5 h-5" }: { className?: st
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .breeze-sway { animation: sway 3s ease-in-out infinite alternate; transform-origin: bottom left; }
@@ -384,7 +382,7 @@ export const AnimatedBalconyIcon = ({ className = "w-5 h-5" }: { className?: str
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .balcony-door { animation: door-swing 4s ease-in-out infinite alternate; transform-origin: left center; }
@@ -415,7 +413,7 @@ export const AnimatedLivingHallIcon = ({ className = "w-5 h-5" }: { className?: 
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`${className} amenity-icon`}
     >
       <style>{`
         .lamp-light { animation: light-flicker 4s infinite alternate; }

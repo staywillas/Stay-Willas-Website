@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -193,7 +194,7 @@ export default async function AreasPage() {
                     </Link>
                   ) : (
                     <a
-                      href={`https://wa.me/919619042310?text=${encodeURIComponent(`Hello! I'm interested in your upcoming locations in *${area.name}*. Please notify me when you list properties here.`)}`}
+                      href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hello! I'm interested in your upcoming locations in *${area.name}*. Please notify me when you list properties here.`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center w-full border border-[#1B3564]/30 hover:border-[#1B3564] text-[#1B3564] rounded-2xl px-5 py-3.5 text-xs font-bold tracking-wider uppercase transition-all duration-300"
@@ -291,7 +292,7 @@ export default async function AreasPage() {
 
               <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
                 <a
-                  href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🌟 I'd like help choosing a villa destination for my upcoming trip.")}`}
+                  href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'd like help choosing a villa destination for my upcoming trip.")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-4 px-8 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"

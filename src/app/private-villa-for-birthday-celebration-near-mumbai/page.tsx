@@ -1,3 +1,4 @@
+import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -149,7 +150,7 @@ export default async function BirthdayCelebrationPage() {
               <ChevronRight size={16} />
             </a>
             <a
-              href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🎂 I'm looking for a private villa for a birthday celebration near Mumbai. Could you share available options and packages?")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🎂 I'm looking for a private villa for a birthday celebration near Mumbai. Could you share available options and packages?")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer border border-white/20"
@@ -177,8 +178,8 @@ export default async function BirthdayCelebrationPage() {
             <span className="text-xs sm:text-sm text-white/80 font-medium mt-1 block">Easy Expressway Drive</span>
           </div>
           <div className="p-3">
-            <span className="text-2xl sm:text-3xl font-black text-[#F5C542] block tracking-tight">0% Extra Fees</span>
-            <span className="text-xs sm:text-sm text-white/80 font-medium mt-1 block">Direct Homeowner Rates</span>
+            <span className="text-2xl sm:text-3xl font-black text-[#F5C542] block tracking-tight">Ask About Extras</span>
+            <span className="text-xs sm:text-sm text-white/80 font-medium mt-1 block">Base Cottage Rates</span>
           </div>
         </div>
       </section>
@@ -216,7 +217,7 @@ export default async function BirthdayCelebrationPage() {
                   The Angle House — Architectural Glass Villa
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                  Iconic double-height glass design with a private natural waterfall swimming pool, master bedroom hydrotherapy jacuzzi, pet-friendly fenced lawns, and live barbecue deck. Ideal for birthdays of 10 to 16 guests.
+                  Iconic double-height glass design with a private natural waterfall swimming pool, master bedroom hydrotherapy jacuzzi, pet-friendly fenced lawns, and live barbecue deck. Ideal for birthdays of up to 12 overnight guests.
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-slate-800 font-semibold mb-6">
@@ -224,7 +225,7 @@ export default async function BirthdayCelebrationPage() {
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
                       <Users size={14} />
                     </div>
-                    <span>Up to 16 Guests</span>
+                    <span>Up to 12 Guests</span>
                   </div>
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
@@ -284,7 +285,7 @@ export default async function BirthdayCelebrationPage() {
                   Canopy Crest — Sprawling Hillside Estate
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                  Expansive private estate at the foothills of the Western Ghats. Features a sparkling 22x12ft swimming pool, traditional charpai lawns, outdoor bonfire circle, and capacity for 16 to 25+ guests. Perfect for big birthday gatherings.
+                  Expansive private estate at the foothills of the Western Ghats. Features a sparkling 22x12ft swimming pool, traditional charpai lawns, outdoor bonfire circle, and capacity for up to 16 guests. Perfect for big birthday gatherings.
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-slate-800 font-semibold mb-6">
@@ -292,7 +293,7 @@ export default async function BirthdayCelebrationPage() {
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
                       <Users size={14} />
                     </div>
-                    <span>Up to 25+ Guests</span>
+                    <span>Up to 16 Guests</span>
                   </div>
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
@@ -447,7 +448,7 @@ export default async function BirthdayCelebrationPage() {
             </p>
           </div>
           <a
-            href={`https://wa.me/919619042310?text=${encodeURIComponent("Hi Stay Willas! 🎂 I want to check availability and rates for a birthday celebration villa near Mumbai. Please help me.")}`}
+            href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🎂 I want to check availability and rates for a birthday celebration villa near Mumbai. Please help me.")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap shrink-0 border border-white/20 cursor-pointer"
