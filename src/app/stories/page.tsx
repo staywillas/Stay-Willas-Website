@@ -1,6 +1,5 @@
 import React from "react";
 import { Metadata } from "next";
-import Navbar from "@/components/layout/navbar";
 import TopTicker from "@/components/home/top-ticker";
 import Footer from "@/components/layout/footer";
 import VideoCard from "@/components/stories/video-card";
@@ -38,7 +37,6 @@ export const metadata: Metadata = {
 export default function StoriesPage() {
   return (
     <main className="min-h-screen bg-[#F5F2EA] bg-[url('/assets/noise.png')] bg-blend-overlay">
-      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-36 pb-20 md:pt-48 md:pb-28 text-center px-6 border-b border-[#DAA520]/15">

@@ -16,6 +16,7 @@ export default function CareLayout({
     <div className="min-h-screen bg-[#070e1c] text-white flex flex-col font-sans antialiased selection:bg-[#DAA520] selection:text-black">
       {/* Explicitly eliminate consumer bottom nav and floating widgets on Care portal */}
       <style>{`
+        [data-public-navbar],
         #mobile-bottom-nav,
         .mobile-bottom-nav-root,
         [data-floating-widgets] {

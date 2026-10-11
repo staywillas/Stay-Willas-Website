@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import { Sparkles, Waves, Dog, Utensils, Users, ShieldCheck, Flame, Trees, Bath } from "lucide-react";
 
 export interface FeatureMarqueeItem {
@@ -55,7 +55,7 @@ export default function VillaFeatureMarquee({
             >
               {/* Image Banner */}
               <div className="relative h-44 w-full overflow-hidden">
-                <Image
+                <PhotoFrame
                   src={item.image}
                   alt={item.title}
                   fill

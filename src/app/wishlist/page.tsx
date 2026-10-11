@@ -1,6 +1,5 @@
 import React from "react";
 import { Metadata } from "next";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import WishlistClient from "@/components/wishlist/wishlist-client";
 import { prisma } from "@/lib/db";
@@ -81,8 +80,7 @@ export default async function WishlistPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
-      <Navbar />
-      
+
       {/* Header Section */}
       <section className="pt-48 pb-12 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto text-center">
         <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">

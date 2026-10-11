@@ -1,7 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, MessageSquare, ArrowRight } from "lucide-react";
@@ -76,8 +75,7 @@ export default function ContactPage() {
           }),
         }}
       />
-      <Navbar />
-      
+
       {/* Hero */}
       <section className="pt-48 pb-20 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
         <div className="max-w-3xl">

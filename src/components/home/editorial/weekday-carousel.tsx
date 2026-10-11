@@ -1,10 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
+import Image, { PhotoFrame } from "@/components/ui/site-image";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Copy } from "lucide-react";
-import styles from "./preview.module.css";
+import styles from "./home.module.css";
 
 const stays = [
   {
@@ -46,12 +47,12 @@ export default function WeekdayCarousel() {
   }
 
   return <section id="slow-days" className={styles.offerSection} aria-labelledby="offer-title">
-    <div className={styles.offerPanel}>
+    <HoverBorderGradient as="div" containerClassName={styles.offerBorder} className={styles.offerPanel}>
       <div className={styles.offerCarousel} role="region" aria-roledescription="carousel" aria-label="Featured weekday getaways">
         <div ref={trackRef} className={styles.offerTrack} onScroll={event => { const track = event.currentTarget; setIndex(Math.max(0, Math.min(stays.length - 1, Math.round(track.scrollLeft / track.clientWidth)))); }}>
           {stays.map((stay, position) => <div key={stay.slug} className={styles.offerSlide} role="group" aria-roledescription="slide" aria-label={`${position + 1} of ${stays.length}: ${stay.name}`} aria-hidden={position !== index}>
             <Link href={`/villa/${stay.slug}`} prefetch={false} className={styles.offerPhoto} tabIndex={position === index ? 0 : -1} aria-label={`Explore ${stay.name}`}>
-              <Image src={stay.image} alt={stay.alt} fill sizes="(max-width: 760px) 90vw, 700px" className={styles.cover} />
+              <PhotoFrame src={stay.image} alt={stay.alt} fill sizes="(max-width: 760px) 90vw, 700px" className={styles.cover} />
               <div className={styles.photoCaption}><span>{stay.name}</span><span>{stay.location} <ArrowUpRight size={16} /></span></div>
               <span className={styles.photoTag}>{stay.feature}</span>
             </Link>
@@ -69,11 +70,11 @@ export default function WeekdayCarousel() {
         <span className={styles.eyebrow}>THE WEEKDAY EDIT</span>
         <h2 id="offer-title">More time together.<br /><em>A little less rush.</em></h2>
         <p>Your kind of getaway, at your own pace.<br />Enjoy 26% off your Monday–Thursday stay.</p>
-        <button className={styles.coupon} onClick={copyOffer}><span>{copied ? "COPIED" : "USE CODE"} <strong>Stayw26</strong></span>{copied ? <Check size={16} /> : <Copy size={16} />}</button>
+        <HoverBorderGradient as="button" containerClassName={styles.couponBorder} className={styles.coupon} onClick={copyOffer} aria-label="Copy coupon code Stayw26"><span>{copied ? "COPIED" : "USE CODE"} <strong>Stayw26</strong></span>{copied ? <Check size={20} /> : <Copy size={20} />}</HoverBorderGradient>
         {copyError && <small role="status">Use code Stayw26 when booking.</small>}
         <Link href="/villas" prefetch={false} className={styles.primaryButton}>Explore weekday stays <ArrowRight size={17} /></Link>
         <small>Final rates and inclusions depend on your dates.</small>
       </div>
-    </div>
+    </HoverBorderGradient>
   </section>;
 }

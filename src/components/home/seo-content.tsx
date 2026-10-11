@@ -1,11 +1,11 @@
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import GuideLinks from "@/components/blog/guide-links";
 
 const stays = [
   { name: "The Angle House", location: "Kamshet, Lonavala", href: "/villa/the-angle-house", region: "/areas/lonavala", image: "/assets/villas/the-angle-house/gallery-11.webp", detail: "A 3 BHK private pool villa with a Jacuzzi for up to 12 guests. Stays start at ₹13,000 per night." },
   { name: "Canopy Crest", location: "Khopoli", href: "/villa/canopy-crest", region: "/areas/khopoli", image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg", detail: "A 4 BHK private pool villa for a maximum of 16 guests. Stays start at ₹15,000 per night. Check the property pin when planning an Imagicaa visit." },
-  { name: "Willow Peak", location: "Kurwande, Lonavala", href: "/villa/willow-peak", region: "/areas/lonavala", image: "/assets/villas/willow-peak/gallery-1.webp", detail: "Three A-frame cottages with private Jacuzzis, each for up to four guests. Base rates start at ₹4,999 per night per cottage; ask for a separate quote to book the full estate." },
+  { name: "Willow Peak", location: "Kurwande, Lonavala", href: "/villa/willow-peak", region: "/areas/lonavala", image: "/assets/villas/willow-peak/graded-v1/wp-01.webp", detail: "Three A-frame cottages with private Jacuzzis, each for up to four guests. Base rates start at ₹4,999 per night per cottage; ask for a separate quote to book the full estate." },
   { name: "Casa De Reva", location: "Kaswand, Panchgani", href: "/villa/casa-de-reva", region: "/areas/panchgani", image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg", detail: "A 4 BHK private pool villa for a Panchgani getaway. Stays start at ₹16,000 per night. Check dates, guest limits and the final quote on the listing." },
 ];
 
@@ -26,7 +26,7 @@ export default function SEOContent() {
           {stays.map(stay => (
             <article key={stay.href} className="rounded-2xl overflow-hidden bg-white border border-slate-200">
               <Link href={stay.href} className="relative block aspect-[4/3]">
-                <Image src={stay.image} alt={stay.name + " in " + stay.location} fill loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px" className="object-cover" />
+                <PhotoFrame src={stay.image} alt={stay.name + " in " + stay.location} fill loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px" className="object-cover" />
               </Link>
               <div className="p-5">
                 <h3 className="text-xl font-heading font-bold"><Link href={stay.href}>{stay.name}</Link></h3>

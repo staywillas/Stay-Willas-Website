@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import Image, { PhotoFrame } from "@/components/ui/site-image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import { useLenis } from "lenis/react";
@@ -212,7 +212,7 @@ const PropertyGalleryViewer = ({ images, propertyName, initialView, initialIndex
                       onClick={() => openLightbox(index)}
                       className="relative aspect-[3/2] w-full rounded-2xl overflow-hidden group cursor-pointer border border-white/5 bg-[#141414] shadow-lg hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all"
                     >
-                      <Image 
+                      <PhotoFrame
                         src={img}
                         alt={`${propertyName} luxury villa gallery image ${index + 1}`}
                         fill
@@ -361,7 +361,7 @@ const PropertyGalleryViewer = ({ images, propertyName, initialView, initialIndex
                       idx === activeIdx ? "border-[#FFCC00] scale-105 brightness-110" : "border-transparent opacity-40 hover:opacity-80"
                     }`}
                   >
-                    <Image 
+                    <PhotoFrame
                       src={img} 
                       alt={`${propertyName} thumbnail preview ${idx + 1}`} 
                       fill 

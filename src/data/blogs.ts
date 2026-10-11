@@ -25,6 +25,102 @@ export interface BlogPost {
 
 export const blogsData: BlogPost[] = [
   {
+  "slug": "partner-with-stay-willas-villa-owner-guide",
+  "title": "Own a Villa? Partner with Stay Willas and Welcome Guests With Confidence",
+  "metaTitle": "Partner With Stay Willas | A Practical Guide for Villa Owners",
+  "description": "Own a villa in Maharashtra? Explore a Stay Willas partnership, property care, guest bookings and the information to share before listing your home.",
+  "keywords": [
+    "partner with Stay Willas",
+    "list your villa with Stay Willas",
+    "villa property management Maharashtra",
+    "villa owner partnership"
+  ],
+  "readTime": "5 min read",
+  "date": "October 11, 2026",
+  "updatedAt": "2026-10-11",
+  "image": "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
+  "intro": "Your villa is more than an investment. It is a home you have chosen, furnished and cared for. Welcoming paying guests can help put unused dates to work, but a good stay also needs reliable housekeeping, clear communication, thoughtful pricing and someone to handle the details. A <a href=\"/partner\" class=\"underline font-bold text-accent-primary\">Stay Willas partnership</a> brings those conversations together. This guide explains what to share, what to ask and how to explore whether your home belongs in our collection.",
+  "sections": [
+    {
+      "heading": "A home guests will remember",
+      "paragraphs": [
+        "Guests choose a private villa for the time they can spend together: a comfortable living room, a well-kept pool, a peaceful sit-out or an easy family meal. The strongest listing starts with an honest picture of the home and the experience it can offer.",
+        "Our collection includes private pool villas and Jacuzzi cottages across Lonavala, Khopoli and Panchgani. If your property is in another location, share it with our team so we can discuss suitability rather than assume it will be accepted. A review considers the property itself, its facilities, access and the practical arrangements needed to host guests."
+      ],
+      "list": [
+        "Clear room layouts, sleeping arrangements and a realistic guest limit.",
+        "Well-maintained bathrooms, electricity, water and essential equipment.",
+        "Accurate photographs showing the home, outdoor areas and amenities.",
+        "Practical access, parking and a plan for housekeeping and guest support."
+      ]
+    },
+    {
+      "heading": "What a partnership can help you manage",
+      "paragraphs": [
+        "Running a holiday home involves work before, during and after every stay. Stay Willas can discuss support for presenting your property, handling reservation enquiries, coordinating arrivals and keeping operations organised.",
+        "The right arrangement depends on your home and your existing team. Some owners already have reliable caretakers; others want help planning day-to-day care. Agree on who handles each task, how problems are reported and what additional services guests can request."
+      ],
+      "list": [
+        "Property presentation, photos and an accurate guest-facing listing.",
+        "Booking enquiries, calendar coordination and communication with guests.",
+        "Housekeeping, caretaker coordination and property-care arrangements.",
+        "Meal, chef or celebration requests where the property and team can support them."
+      ]
+    },
+    {
+      "heading": "Talk through the numbers and responsibilities",
+      "paragraphs": [
+        "Start with a transparent conversation about pricing, charges and operating costs. Ask how nightly rates are set, what is included in a guest quote and how the partnership will account for cleaning, utilities, maintenance and any optional services.",
+        "Guest demand can vary with the season, dates, location and the home itself. Rather than relying on a promised monthly figure, discuss how performance will be reviewed and how payments and reporting will work.",
+        "Also clarify the guest limit, house rules, event permissions, damage reporting, cancellation arrangements and responsibility for repairs. Ask for the proposed terms in writing so the working relationship is clear from the beginning."
+      ]
+    },
+    {
+      "heading": "Keep your own time at the villa",
+      "paragraphs": [
+        "A partnership should make room for the way you use your home. Tell the team about family holidays, maintenance periods and any dates you want to keep unavailable for guests.",
+        "Agree on how those dates will be reserved in the calendar, how much notice is needed and who coordinates changes. A shared calendar and clear communication help avoid conflicting plans for both owners and guests."
+      ]
+    },
+    {
+      "heading": "Prepare a simple property introduction",
+      "paragraphs": [
+        "You do not need a polished sales presentation to begin. A useful introduction contains accurate property details and current photos. Start with the <a href=\"/partner#partner-form\" class=\"underline font-bold text-accent-primary\">Stay Willas property checklist</a>, then let our team guide the next conversation."
+      ],
+      "list": [
+        "Location and a map pin, plus practical arrival and parking details.",
+        "Bedroom and bathroom counts, beds and the maximum guest capacity.",
+        "Current photos of the exterior, rooms, pool or Jacuzzi and outdoor spaces.",
+        "Available amenities and any facilities that need attention.",
+        "Existing caretaker, housekeeping and meal-service arrangements.",
+        "Your preferred contact details and the dates you want to keep for personal use."
+      ]
+    },
+    {
+      "heading": "From introduction to a considered launch",
+      "paragraphs": [
+        "The next step is a conversation, not an automatic listing. Once you share your home, the team can review the information, discuss the guest experience and explain the property-care and booking arrangements that may suit it.",
+        "A useful launch plan follows four stages: share the property details; review the home and hosting readiness; agree on responsibilities and terms; then prepare the listing and calendar. Any maintenance or photography work should be addressed before the home is presented to guests.",
+        "When the listing is ready, accurate expectations matter as much as attractive pictures. Describe which spaces are private, what the rate includes and what guests should arrange separately. That clarity helps the home deliver the stay it promises."
+      ]
+    },
+    {
+      "heading": "Questions villa owners often ask",
+      "paragraphs": [
+        "These are useful starting points for your conversation with our team."
+      ],
+      "list": [
+        "Can I keep my existing caretaker? Share your current staffing arrangement so the team can discuss responsibilities, coordination and any additional support needed.",
+        "Do I need a swimming pool to enquire? No assumption is needed. Tell us what your home offers, including any Jacuzzi or other amenities, and ask the team to assess its suitability.",
+        "Will my villa be listed immediately? A property introduction is followed by a review and agreement on the arrangements. Acceptance and launch timing depend on the home and its readiness.",
+        "Can I use the home for family holidays? Discuss your preferred dates and the owner-use calendar before accepting guest reservations.",
+        "How do I start? Visit the partner page, complete the property checklist and share current photographs so the team can follow up with a useful discussion."
+      ]
+    }
+  ],
+  "conclusion": "If you want to welcome guests while keeping your home well cared for, begin with a clear introduction and a practical conversation. <a href=\"/partner#partner-form\" class=\"underline font-bold text-accent-primary\">Tell Stay Willas about your villa</a>, or <a href=\"/partner\" class=\"underline font-bold text-accent-primary\">explore our partnership page</a> to learn about property care and hosting support. We will help you consider the next steps for your home."
+},
+  {
     slug: "villas-near-pawna-lake-lonavala",
     title: "Villas Near Pawna Lake, Lonavala: Your Ultimate Lakeside Retreat",
     metaTitle: "Villas Near Pawna Lake Lonavala | Stay Willas",
@@ -1111,7 +1207,7 @@ export const blogsData: BlogPost[] = [
   "readTime": "7 min read",
   "date": "August 31, 2026",
   "updatedAt": "2026-10-09",
-  "image": "/assets/villas/willow-peak/wp-01.webp",
+  "image": "/assets/villas/willow-peak/graded-v1/wp-01.webp",
   "intro": "For a couples’ trip, a small unit can make more sense than hiring an entire group villa. <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak in Kurwande, Lonavala</a> offers three A-frame cottages—Breeze, Crest and Heaven—with private in-room Jacuzzis. Base accommodation rates start at ₹4,999 per night per cottage. Choose the actual unit, dates and inclusions before planning your romantic weekend.",
   "sections": [
     {
@@ -1162,7 +1258,7 @@ export const blogsData: BlogPost[] = [
   "readTime": "8 min read",
   "date": "September 02, 2026",
   "updatedAt": "2026-10-09",
-  "image": "/assets/villas/willow-peak/wp-03.webp",
+  "image": "/assets/villas/willow-peak/graded-v1/wp-03.webp",
   "intro": "Looking for a <strong>Lonavala stay under ₹5,000</strong>? <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak in Kurwande</a> has A-frame cottages with private in-room Jacuzzis, with base rates starting at ₹4,999 per night per cottage. The starting accommodation amount is below ₹5,000; your total trip spend can be higher when taxes, meals or optional services apply. Confirm the quote for your dates before booking.",
   "sections": [
     {
@@ -1242,7 +1338,7 @@ export const blogsData: BlogPost[] = [
   ],
   "readTime": "8 min read",
   "date": "September 04, 2026",
-  "image": "/assets/villas/willow-peak/wp-04.webp",
+  "image": "/assets/villas/willow-peak/graded-v1/wp-04.webp",
   "intro": "With a <strong>₹10,000 accommodation budget</strong>, compare a single Willow Peak cottage with the possibility of booking two units for a small group. The base rate starts at ₹4,999/night per cottage. Two cottages at that starting rate total ₹9,998 for one night before added charges; availability and the quoted rate for each unit must be confirmed. This is a Jacuzzi-cottage comparison, not an offer for an entire private-pool villa.",
   "sections": [
     {
@@ -1319,7 +1415,7 @@ export const blogsData: BlogPost[] = [
     ],
     readTime: "7 min read",
     date: "September 5, 2026",
-    image: "/assets/villas/willow-peak/wp-01.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     relatedVillaSlug: "willow-peak",
     intro: "There is nothing quite as rejuvenating as waking up to the gentle ripples of a pristine lake surrounded by the misty Sahyadri mountains. While many seek crowded hill stations, the true luxury lies in renting <strong>lake view villas in Lonavala</strong> where you can sip your morning tea overlooking serene waters. Properties like <a href=\"/villa/willow-peak\" class=\"underline font-bold text-accent-primary\">Willow Peak</a> offer proximity to beautiful lakes and dams, providing an unmatched tranquil experience away from the bustling city.",
     sections: [
@@ -2036,7 +2132,7 @@ export const blogsData: BlogPost[] = [
     readTime: "8 min read",
     date: "September 19, 2026",
     updatedAt: "2026-10-09",
-    image: "/assets/villas/willow-peak/wp-01.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     relatedVillaSlug: "willow-peak",
     featuredVillaSlugs: ["willow-peak", "the-angle-house"],
     showMarquee: true,
@@ -2106,7 +2202,7 @@ export const blogsData: BlogPost[] = [
     readTime: "8 min read",
     date: "September 19, 2026",
     updatedAt: "2026-10-09",
-    image: "/assets/villas/willow-peak/wp-04.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-04.webp",
     relatedVillaSlug: "willow-peak",
     featuredVillaSlugs: ["willow-peak", "the-angle-house"],
     showMarquee: true,
@@ -2927,7 +3023,7 @@ export const blogsData: BlogPost[] = [
     "readTime": "9 min read",
     "date": "July 28, 2026",
     updatedAt: "2026-10-09",
-    "image": "/assets/villas/willow-peak/wp-01.webp",
+    "image": "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     "intro": "Finding the absolute best <strong>villas for stay in lonavala</strong> can be overwhelming. With hundreds of homestays, row houses, and standalone bungalows scattered across the Western Ghats, discerning travelers need verified properties that combine architectural elegance, hygienic private pools, and attentive hospitality. Whether you are coordinating a 15-member multi-generational family reunion, an executive corporate offsite, or an intimate romantic escape, choosing verified <a href=\"/blog/best-villas-for-stay-in-lonavala-family-groups\" class=\"underline font-bold text-accent-primary\">villas for stay in lonavala</a> guarantees peace of mind. For travelers seeking an in-depth look at signature private pool and jacuzzi estates, also check our companion guide on <a href=\"/blog/lonavala-stay-villa-private-pool-guide\" class=\"underline font-bold text-accent-primary\">lonavala stay villa</a> options. Here is your definitive 2026 guide to Western India's most celebrated hillside holiday estates.",
     "sections": [
       {

@@ -1,7 +1,6 @@
 import GuideLinks from "@/components/blog/guide-links";
 import React from "react";
 import { Metadata } from "next";
-import Navbar from "@/components/layout/navbar";
 
 export const metadata: Metadata = {
   title: "Partner With Us | Luxury Villa Property Management & Hosting | Stay Willas",
@@ -93,8 +92,7 @@ export default function PartnerPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(partnerPageSchema) }}
       />
       <h1 className="sr-only">Partner With Stay Willas - Luxury Villa Property Management</h1>
-      <Navbar />
-      
+
       {/* Hero Section */}
       <section className="pt-48 pb-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto text-center">
         <span className="text-accent-secondary font-medium tracking-[0.3em] uppercase text-xs mb-4 block">

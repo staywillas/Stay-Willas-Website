@@ -39,7 +39,7 @@ export const guideTopics = [
   { id: "panchgani", title: "Panchgani and Kaswand stays", slugs: [
     "panchgani-valley-view-villas-near-mapro-garden-guide", "panchgani-vs-mahabaleshwar-villa-stay-for-groups",
   ] },
-  { id: "owners", title: "For villa owners", slugs: ["how-to-partner-with-stay-willas-monetize-luxury-villa"] },
+  { id: "owners", title: "For villa owners", slugs: ["partner-with-stay-willas-villa-owner-guide", "how-to-partner-with-stay-willas-monetize-luxury-villa"] },
 ] as const;
 
 export function getGuideTopic(slug: string) {

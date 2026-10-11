@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 
 import { 
@@ -25,16 +25,6 @@ import { ANGLE_LOCATION } from "@/data/stay-facts";
 // Rotating Hero Carousel Data (Simple details: Cost & Max Guests, Heaven for Willow Peak)
 const HERO_SLIDES = [
   {
-    name: "The Angle House",
-    location: ANGLE_LOCATION,
-    cost: "₹13,000/night",
-    capacity: "Max 12 Guests",
-    image: "/images/angle-house-hero-clean.webp",
-    slug: "the-angle-house",
-    badge: "Architectural Icon",
-    objectPosition: "object-center"
-  },
-  {
     name: "Canopy Crest",
     location: "Khopoli, Maharashtra",
     cost: "₹15,000/night",
@@ -43,6 +33,16 @@ const HERO_SLIDES = [
     slug: "canopy-crest",
     badge: "Hilltop Estate",
     objectPosition: "object-[center_82%]"
+  },
+  {
+    name: "The Angle House",
+    location: ANGLE_LOCATION,
+    cost: "₹13,000/night",
+    capacity: "Max 12 Guests",
+    image: "/images/angle-house-hero-clean.webp",
+    slug: "the-angle-house",
+    badge: "Architectural Icon",
+    objectPosition: "object-center"
   },
   {
     name: "Casa De Reva",
@@ -59,7 +59,7 @@ const HERO_SLIDES = [
     location: "Kurwande, Lonavala",
     cost: "₹4,999/night",
     capacity: "Max 4 Guests",
-    image: "/assets/villas/willow-peak/wp-01.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     slug: "willow-peak-cottage-c",
     badge: "A-Frame Cottage",
     objectPosition: "object-[center_72%]"
@@ -117,7 +117,7 @@ const VILLAS = [
     rateNote: "From ₹4,999/night per cottage • Ask for a full-estate quote",
     capacity: "Up to 12 Guests",
     bedrooms: "3 A-Frame Chalets",
-    image: "/assets/villas/willow-peak/gallery-1.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     slug: "willow-peak",
     badge: "A-Frame Chalet",
     highlight: "In-Room Jacuzzis & BBQ Deck",
@@ -253,7 +253,7 @@ export default function HeroConcept2() {
                       isActive ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
                     )}
                   >
-                    <Image
+                    <PhotoFrame
                       src={slide.image}
                       alt={slide.name}
                       fill
@@ -468,8 +468,8 @@ export default function HeroConcept2() {
                 className="group relative bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 flex flex-col text-left"
               >
                 {/* Bigger Villa Photography */}
-                <Link href={`/villa/${villa.slug}`} className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900 block">
-                  <Image
+                <Link href={`/villa/${villa.slug}`} className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900 block">
+                  <PhotoFrame
                     src={villa.image}
                     alt={villa.name}
                     fill

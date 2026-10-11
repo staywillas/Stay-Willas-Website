@@ -120,12 +120,13 @@ const Navbar = ({ alwaysVisible = false }: { alwaysVisible?: boolean }) => {
     { name: "Areas", href: "/areas" },
     { name: "Experiences", href: "/experiences" },
     { name: "Stories", href: "/stories" },
-    { name: "Blog", href: "/blog" },
+    { name: "Guides", href: "/blog" },
+    { name: "FAQs", href: "/faq" },
   ];
 
   return (
     <>
-      <nav 
+      <nav aria-label="Main navigation" data-public-navbar
         className={cn(
         "fixed transition-all duration-500 ease-in-out",
         isScrolled 

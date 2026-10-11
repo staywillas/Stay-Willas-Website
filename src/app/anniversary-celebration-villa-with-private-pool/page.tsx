@@ -1,9 +1,8 @@
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
-import Image from "next/image";
+import Image, { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import { 
@@ -33,7 +32,7 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com/anniversary-celebration-villa-with-private-pool",
     images: [
       {
-        url: "https://www.staywillas.com/assets/villas/willow-peak/gallery-1.webp",
+        url: "https://www.staywillas.com/assets/villas/willow-peak/graded-v1/wp-01.webp",
         width: 1200,
         height: 630,
         alt: "Anniversary Celebration Villa with Private Pool - Stay Willas",
@@ -101,14 +100,13 @@ export default async function AnniversaryCelebrationPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-36 pb-20 md:pt-44 md:pb-28 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#180D24] via-[#1F1735] to-[#0E1528] text-white overflow-hidden">
         {/* Subtle Backdrop Image with Deep Vignette */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/assets/villas/willow-peak/gallery-1.webp"
+            src="/assets/villas/willow-peak/graded-v1/wp-01.webp"
             alt="Anniversary Celebration Villa with Private Pool"
             fill
             className="object-cover opacity-25 filter brightness-90 contrast-125"
@@ -195,8 +193,8 @@ export default async function AnniversaryCelebrationPage() {
           <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
             <div>
               <div className="relative aspect-[16/10] w-full">
-                <Image
-                  src="/assets/villas/willow-peak/gallery-3.webp"
+                <PhotoFrame
+                  src="/assets/villas/willow-peak/graded-v1/wp-03.webp"
                   alt="Willow Peak Resort Kurvande Lonavala - Romantic Breeze A-Frame Chalet with Private Jacuzzi"
                   fill
                   className="object-cover"
@@ -263,8 +261,8 @@ export default async function AnniversaryCelebrationPage() {
           <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
             <div>
               <div className="relative aspect-[16/10] w-full">
-                <Image
-                  src="/assets/villas/willow-peak/gallery-1.webp"
+                <PhotoFrame
+                  src="/assets/villas/willow-peak/graded-v1/wp-01.webp"
                   alt="Willow Peak Resort Kurvande Lonavala - Crest Romantic Chalet with Sunset Mist & Private Jacuzzi"
                   fill
                   className="object-cover"

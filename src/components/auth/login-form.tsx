@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, startTransition, useActionState, useEffect } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/site-image";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Users, Loader2, AlertCircle, Eye, EyeOff, Sparkles } from "lucide-react";
 import { loginAction } from "@/app/actions/login-actions";

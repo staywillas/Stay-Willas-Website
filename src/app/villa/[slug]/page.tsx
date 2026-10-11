@@ -3,7 +3,8 @@ import GuideLinks from "@/components/blog/guide-links";
 import { getPropertyGuides } from "@/data/guide-navigation";
 import React, { cache } from "react";
 import { Metadata } from "next";
-import Image from "next/image";
+import Image from "@/components/ui/site-image";
+import { resolvePropertyImage } from "@/lib/property-images";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -17,7 +18,6 @@ import {
   HeartHandshake, DoorClosed, Layers, UserCheck, ChefHat
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import BookingCard from "@/components/villa/booking-card";
 import MobileBookingController from "@/components/villa/mobile-booking-controller";
@@ -355,42 +355,42 @@ const terraCottaSpaces = [
 const willowPeakSpaces = [
   {
     title: "Chalet Bedroom",
-    image: "/assets/villas/willow-peak/wp-04.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-04.webp",
     description: "Bedroom interior with a double bed beneath the sloping timber ceiling."
   },
   {
     title: "A-Frame Bedroom",
-    image: "/assets/villas/willow-peak/wp-05.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-05.webp",
     description: "A-frame bedroom with a double bed, seating and a timber-lined ceiling."
   },
   {
     title: "Bedroom — Bed View",
-    image: "/assets/villas/willow-peak/wp-06.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-06.webp",
     description: "Close-up of the double bed and pillows beneath the timber ceiling."
   },
   {
     title: "In-Room Jacuzzi",
-    image: "/assets/villas/willow-peak/wp-03.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-03.webp",
     description: "Indoor Jacuzzi bath beside a window, with a small side table."
   },
   {
     title: "Chalet Sit-Out",
-    image: "/assets/villas/willow-peak/wp-01.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     description: "Outdoor seating beside the chalet's glass doors and covered entrance."
   },
   {
     title: "Covered Outdoor Dining",
-    image: "/assets/villas/willow-peak/wp-08.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-08.webp",
     description: "Tables and chairs beneath a covered outdoor dining pavilion."
   },
   {
     title: "A-Frame Chalet Exteriors",
-    image: "/assets/villas/willow-peak/wp-07.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-07.webp",
     description: "Exterior view of the A-frame chalets and their outdoor decks."
   },
   {
     title: "Chalet Bathroom",
-    image: "/assets/villas/willow-peak/wp-10.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-10.webp",
     description: "Bathroom with a toilet, handheld spray and wall-mounted water heater."
   }
 ];
@@ -484,8 +484,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ];
   }
 
-  const ogImageUrl = villa.images[0] 
-    ? (villa.images[0].startsWith("http") ? villa.images[0] : `https://www.staywillas.com${villa.images[0]}`) 
+  const coverImage = villa.images[0] ? resolvePropertyImage(villa.images[0]) : "";
+  const ogImageUrl = coverImage
+    ? (coverImage.startsWith("http") ? coverImage : `https://www.staywillas.com${coverImage}`)
     : "https://www.staywillas.com/images/hero-villa.webp";
 
   return {
@@ -612,7 +613,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
     rating: avgRating,
     reviews: reviewCount,
     price: villa.price.toLocaleString("en-IN"),
-    images: villa.images,
+    images: villa.images.map(resolvePropertyImage),
     description: villa.description,
     guests: villa.guests,
     bedrooms: villa.bedrooms,
@@ -827,7 +828,6 @@ export default async function VillaDetailPage({ params }: PageProps) {
           ]),
         }}
       />
-      <Navbar />
 
       <section className="pt-28 sm:pt-32 md:pt-36 lg:pt-40 pb-8 sm:pb-12 px-3.5 sm:px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-2.5 sm:mb-6">

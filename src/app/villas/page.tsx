@@ -1,6 +1,5 @@
 import React from "react";
 import { Metadata } from "next";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import VillasClient from "@/components/villas/villas-client";
@@ -79,7 +78,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
       villa.slug === "the-angle-house" ? "/assets/villas/the-angle-house/gallery-11.webp" :
       villa.slug === "canopy-crest" ? "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" :
       villa.slug === "casa-de-reva" || villa.slug === "terra-cotta-villa" ? "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg" :
-      villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/gallery-1.webp" :
+      villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/graded-v1/wp-01.webp" :
       "/assets/villas/the-angle-house/gallery-11.webp"
     ),
     bedrooms: villa.bedrooms,
@@ -140,8 +139,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
           }}
         />
 
-        <Navbar />
-        
+
         {/* Spacing below Navbar */}
         <div className="pt-28 md:pt-40" />
 

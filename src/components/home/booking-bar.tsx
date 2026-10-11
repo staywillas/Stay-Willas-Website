@@ -4,7 +4,7 @@ import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import { 
   ChevronRight, 
   ChevronLeft, 
@@ -1069,7 +1069,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                           >
                             {/* Property Single High-Res Image */}
                             <div className="relative w-full md:w-60 h-44 md:h-36 rounded-2xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 shadow-inner">
-                              <Image
+                              <PhotoFrame
                                 src={villa.image || "/images/hero-villa.webp"}
                                 alt={villa.name}
                                 fill

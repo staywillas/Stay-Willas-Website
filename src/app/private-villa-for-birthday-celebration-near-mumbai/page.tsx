@@ -1,9 +1,8 @@
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
-import Image from "next/image";
+import Image, { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import { 
@@ -105,7 +104,6 @@ export default async function BirthdayCelebrationPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-36 pb-20 md:pt-44 md:pb-28 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#0B1528] via-[#10203E] to-[#0A1424] text-white overflow-hidden">
@@ -199,7 +197,7 @@ export default async function BirthdayCelebrationPage() {
           <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
             <div>
               <div className="relative aspect-[16/10] w-full">
-                <Image
+                <PhotoFrame
                   src="/assets/villas/the-angle-house/gallery-11.webp"
                   alt="The Angle House Lonavala - Private Waterfall Pool Villa for Birthday"
                   fill
@@ -267,7 +265,7 @@ export default async function BirthdayCelebrationPage() {
           <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between">
             <div>
               <div className="relative aspect-[16/10] w-full">
-                <Image
+                <PhotoFrame
                   src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg"
                   alt="Canopy Crest Khopoli - Large Group Private Pool Estate for Birthday Celebration"
                   fill

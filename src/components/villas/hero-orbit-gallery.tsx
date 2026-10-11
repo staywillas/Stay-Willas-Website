@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import { Sparkles, X, Maximize2 } from "lucide-react";
 
 interface OrbitItem {
@@ -88,7 +88,7 @@ export default function HeroOrbitGallery() {
                   >
                     {/* Thumbnail Image */}
                     <div className="relative w-full h-28 rounded-xl overflow-hidden">
-                      <Image
+                      <PhotoFrame
                         src={item.image}
                         alt={item.title}
                         fill
@@ -143,7 +143,7 @@ export default function HeroOrbitGallery() {
             </button>
 
             <div className="relative h-[450px] w-full rounded-2xl overflow-hidden border border-[#DAA520]/20 shadow-inner">
-              <Image
+              <PhotoFrame
                 src={activeImage.image}
                 alt={activeImage.title}
                 fill

@@ -1,8 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
-import Image from "next/image";
+import Image from "@/components/ui/site-image";
 import Link from "next/link";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
@@ -59,8 +58,7 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
       <h1 className="sr-only">About Stay Willas - Private Villa Rentals in Maharashtra</h1>
-      <Navbar />
-      {/* Structured Data: AboutPage & BreadcrumbList */}
+            {/* Structured Data: AboutPage & BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

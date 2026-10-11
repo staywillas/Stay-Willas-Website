@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { ArrowUpRight, MapPin, Compass, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -219,7 +219,7 @@ const DestinationShowcase = () => {
                 >
                   {/* Clean HQ Background Image */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <Image
+                    <PhotoFrame
                       src={loc.image}
                       alt={`${loc.name}, Maharashtra - Stay Willas`}
                       fill

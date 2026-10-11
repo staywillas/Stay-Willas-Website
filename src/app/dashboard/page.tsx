@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { verifySessionToken } from "@/lib/session";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import DashboardClient from "@/components/dashboard/dashboard-client";
 
@@ -94,8 +93,7 @@ export default async function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
-      <Navbar />
-      
+
       {/* Dynamic Client Dashboard View */}
       <DashboardClient initialStays={serializedStays} />
 

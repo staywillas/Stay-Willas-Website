@@ -2,7 +2,7 @@
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useRef } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/site-image";
 import Link from "next/link";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { ArrowRight, ChevronRight, RotateCcw, Sparkles } from "lucide-react";

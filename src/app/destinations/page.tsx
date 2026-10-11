@@ -1,8 +1,7 @@
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
-import Image from "next/image";
-import Navbar from "@/components/layout/navbar";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Footer from "@/components/layout/footer";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -122,8 +121,7 @@ export default async function DestinationsPage() {
         }}
       />
 
-      <Navbar />
-      
+
       {/* Header */}
       <section className="relative pt-32 pb-10 sm:pt-36 sm:pb-12 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto text-center flex flex-col items-center overflow-hidden">
         {/* Background Soft Glow for Premium Aesthetic */}
@@ -159,7 +157,7 @@ export default async function DestinationsPage() {
               className="w-full md:w-[48%] aspect-[3/2] rounded-3xl"
             >
               <div className="relative w-full h-full overflow-hidden rounded-3xl">
-                <Image 
+                <PhotoFrame
                   src={dest.image} 
                   alt={dest.name} 
                   fill 

@@ -172,6 +172,7 @@ const Footer = () => {
             <ul className="flex flex-col gap-4">
               {[
                 { name: "About Us", href: "/about" },
+                { name: "FAQs & Help Center", href: "/faq" },
                 { name: "Partner / List Property", href: "/partner", highlight: true },
                 { name: "Contact Us", href: "/contact" },
                 { name: "My Wishlist", href: "/wishlist" }
@@ -354,6 +355,9 @@ const Footer = () => {
           </p>
           
           <div className="flex flex-wrap gap-x-8 gap-y-3 justify-center">
+            <Link href="/faq" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
+              FAQs & Help
+            </Link>
             <Link href="/privacy" className="text-white/40 hover:text-[#DAA520] transition-colors text-xs uppercase tracking-[0.2em] font-medium">
               Privacy Policy
             </Link>

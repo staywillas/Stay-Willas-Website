@@ -593,3 +593,7 @@ a, button, input, select, textarea, [role="button"] {
 .safe-bottom {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
+
+/* Property photos fill their frames; subject positions are set per image. */
+.photo-frame { position:absolute; inset:0; display:block; overflow:hidden; isolation:isolate; }
+.photo-frame .photo-frame__image { object-fit:cover !important; transform:none !important; filter:none !important; }

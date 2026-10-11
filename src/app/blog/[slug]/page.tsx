@@ -1,12 +1,12 @@
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
+import { getArticlePhotoRatio } from "@/lib/photo-framing";
 import { notFound } from "next/navigation";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { blogsData } from "@/data/blogs";
-import { getRelatedGuides, getGuideBookingLinks } from "@/data/guide-navigation";
+import { getRelatedGuides, getGuideBookingLinks, getGuideTopic } from "@/data/guide-navigation";
 import { CANOPY_MAX_GUESTS, WILLOW_COTTAGE_BASE_PRICE } from "@/data/stay-facts";
 import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle, Sparkles, ArrowRight, BedDouble, Users, Waves, Flame, MapPin } from "lucide-react";
 import { prisma } from "@/lib/db";
@@ -72,6 +72,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     notFound();
   }
 
+  const isOwnerGuide = getGuideTopic(blog.slug)?.id === "owners";
   const otherBlogs = getRelatedGuides(blog);
   const bookingLinks = getGuideBookingLinks(blog);
 
@@ -233,9 +234,8 @@ export default async function BlogDetailsPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaToInject) }}
       />
 
-      <Navbar />
 
-      <section className="pt-32 pb-24 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+      <section className="pt-28 sm:pt-32 pb-24 px-4 sm:px-6 md:px-10 max-w-5xl mx-auto">
         {/* Back Link */}
         <div className="mb-8">
           <Link href="/blog" className="flex items-center gap-2 text-text-primary/60 hover:text-accent-primary transition-colors text-xs sm:text-sm uppercase tracking-widest font-bold">
@@ -271,14 +271,14 @@ export default async function BlogDetailsPage({ params }: PageProps) {
         </h1>
 
         {/* Feature Image */}
-        <div className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-xl mb-12 border border-[#DAA520]/15">
-          <Image
+        <div style={{ aspectRatio: getArticlePhotoRatio(blog.image) }} className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl mb-12 border border-[#DAA520]/15">
+          <PhotoFrame
             src={blog.image}
             alt={blog.title}
             fill
             loading="eager"
             fetchPriority="high"
-            sizes="(max-width: 1024px) 100vw, 960px"
+            sizes="(max-width: 1024px) calc(100vw - 32px), 944px"
             className="object-cover"
           />
         </div>
@@ -286,11 +286,16 @@ export default async function BlogDetailsPage({ params }: PageProps) {
         {/* Article Content */}
         <article className="max-w-none text-left mb-20 font-sans clearfix">
           
+          {isOwnerGuide && <aside className="mb-10 rounded-2xl border border-[#DAA520]/30 bg-[#EBE5D6] p-6 sm:p-8">
+            <h2 className="text-2xl font-semibold text-[#1B3564] mb-2">Let’s talk about your home.</h2>
+            <p className="text-sm text-slate-600 leading-relaxed mb-5">Share your villa’s details, photos and hosting plans with the Stay Willas team.</p>
+            <Link href="/partner#partner-form" className="inline-flex items-center gap-2 min-h-11 px-6 py-3 rounded-full bg-[#1B3564] text-white text-sm font-semibold">Tell us about your villa <ArrowRight size={16} /></Link>
+          </aside>}
           {/* Related Villa Widget - Floats Right */}
           {relatedVilla && (
             <div className="hidden md:block float-right ml-8 mb-8 w-72 bg-white rounded-2xl shadow-xl border border-[#DAA520]/20 overflow-hidden relative z-10 sticky top-32">
-              <div className="h-40 relative w-full">
-                <Image
+              <div className="aspect-[4/3] relative w-full">
+                <PhotoFrame
                   src={relatedVilla.images[0] || "/images/hero-villa.webp"}
                   alt={relatedVilla.name}
                   fill
@@ -318,7 +323,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
           {relatedVilla && (
             <div className="md:hidden w-full bg-white rounded-2xl shadow-md border border-[#DAA520]/20 overflow-hidden mb-8 flex items-center p-3 gap-4">
               <div className="h-20 w-24 relative rounded-xl overflow-hidden shrink-0">
-                <Image
+                <PhotoFrame
                   src={relatedVilla.images[0] || "/images/hero-villa.webp"}
                   alt={relatedVilla.name}
                   fill
@@ -409,7 +414,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                         name: "Willow Peak Resort",
                         badge: "Alpine A-Frame Chalets & Jacuzzi",
                         badgeBg: "bg-[#1B2A1E]/95 text-[#6EE7B7] border-[#10B981]/50",
-                        image: "/assets/villas/willow-peak/gallery-1.webp",
+                        image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
                         location: "Kurwande, Lonavala, Maharashtra",
                         specs: "Standalone A-Frame Chalets",
                         guests: "Up to 4 per cottage • 12 across the estate",
@@ -446,15 +451,15 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                     >
                       <div>
                         {/* Image Banner */}
-                        <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900">
-                          <Image
+                        <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900">
+                          <PhotoFrame
                             src={meta.image}
                             alt={meta.name}
                             fill
                             sizes="(max-width: 1024px) 100vw, 480px"
                             className="object-cover group-hover:scale-105 transition-transform duration-700"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+                          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 to-transparent pointer-events-none" />
                           
                           {/* Badge */}
                           <div className="absolute top-4 left-4">
@@ -571,14 +576,12 @@ export default async function BlogDetailsPage({ params }: PageProps) {
 
           <div className="border-t border-[#DAA520]/25 pt-10 mt-16 bg-[#FAF8F5]/50 p-6 sm:p-8 rounded-3xl border border-[#DAA520]/15">
             <h3 className="text-2xl md:text-3xl font-heading text-[#1B3564] font-bold mb-4">Conclusion</h3>
-            <p className="text-slate-800 text-lg md:text-xl lg:text-[1.2rem] leading-[1.85] font-normal">
-              {blog.conclusion}
-            </p>
+            <p className="text-slate-800 text-lg md:text-xl lg:text-[1.2rem] leading-[1.85] font-normal" dangerouslySetInnerHTML={{ __html: blog.conclusion }} />
           </div>
         </article>
 
         <section className="my-10 rounded-2xl border border-slate-200 bg-slate-50 p-6" aria-label="Find a stay for this trip">
-          <h2 className="mb-4 text-2xl font-heading font-bold text-[#1B3564]">Find a stay for this trip</h2>
+          <h2 className="mb-4 text-2xl font-heading font-bold text-[#1B3564]">{isOwnerGuide ? "Explore a partnership for your villa" : "Find a stay for this trip"}</h2>
           <ul className="space-y-3">{bookingLinks.map(link => (
             <li key={link.href}><Link href={link.href} className="inline-block py-2 font-medium text-[#1B3564] underline underline-offset-4">{link.label}</Link></li>
           ))}</ul>
@@ -617,8 +620,8 @@ export default async function BlogDetailsPage({ params }: PageProps) {
               {otherBlogs.map((item) => (
                 <div key={item.slug} className="bg-white border border-[#DAA520]/15 rounded-3xl p-6 text-left shadow-sm flex flex-col justify-between group max-w-md w-full">
                   <div>
-                    <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden mb-4 bg-slate-50">
-                      <Image src={item.image} alt={item.title} fill sizes="(max-width: 768px) 100vw, 320px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden mb-4 bg-slate-50">
+                      <PhotoFrame src={item.image} alt={item.title} fill sizes="(max-width: 768px) 100vw, 320px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                     <h4 className="font-heading font-bold text-base md:text-lg text-[#1B3564] mb-2 leading-snug group-hover:text-accent-primary transition-colors">
                       {item.title}

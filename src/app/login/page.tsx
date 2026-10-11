@@ -2,7 +2,6 @@
 
 import React, { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import Navbar from "@/components/layout/navbar";
 import LoginForm from "@/components/auth/login-form";
 import { UserCheck, KeyRound, Building2 } from "lucide-react";
 
@@ -80,7 +79,6 @@ function LoginContent() {
 export default function LoginPage() {
   return (
     <main className="min-h-screen bg-[#FAF8F3] flex flex-col">
-      <Navbar />
 
       <div className="flex-1 flex items-center justify-center px-4 py-28 sm:py-36">
         <Suspense

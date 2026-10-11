@@ -2,7 +2,7 @@
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState } from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { 
   Star, ShieldCheck, Check, PhoneCall, Sparkles, 
@@ -290,7 +290,7 @@ export default function AdLandingShowcase({
               key={idx} 
               className="relative h-48 sm:h-64 rounded-2xl sm:rounded-3xl overflow-hidden group shadow-md border border-slate-200/80 bg-slate-100"
             >
-              <Image
+              <PhotoFrame
                 src={img.url}
                 alt={img.title}
                 fill

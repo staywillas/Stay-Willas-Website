@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { Users, Bed, Bath, MapPin, ArrowUpRight, Sparkles } from "lucide-react";
@@ -47,21 +47,14 @@ const VillaCard = ({
           title={id === "willow-peak" ? "Willow Peak Resort Kurvande, Lonavala" : id === "canopy-crest" ? "StayWillas Canopy Crest Khopoli - 4 BHK Villa with Swimming Pool Chavani" : id === "the-angle-house" ? "The Angle House Lonavala - Glass Villa with Waterfall Pool & Jacuzzi" : name}
         >
           {/* Image Container */}
-          <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl md:rounded-2xl bg-slate-200 shrink-0">
-            <Image
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl md:rounded-2xl bg-slate-200 shrink-0">
+            <PhotoFrame
               src={image}
               alt={id === "willow-peak" ? "Willow Peak Resort Kurvande Lonavala - Luxury A-Frame Chalet" : id === "canopy-crest" ? "StayWillas Canopy Crest Khopoli - Premium Villa with Swimming Pool Chavani" : id === "the-angle-house" ? "The Angle House Lonavala - Luxury Glass Villa with Waterfall Pool & Jacuzzi" : `${name} in ${location} - Luxury Villa`}
               fill
-              sizes="(max-width: 768px) 50vw, 33vw"
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 400px"
               loading="lazy"
-              className={cn(
-                "object-cover transition-transform duration-700 group-hover:scale-105",
-                id.includes("canopy") 
-                  ? "object-[center_80%]" 
-                  : id.includes("willow") 
-                  ? "object-[center_70%]" 
-                  : "object-center"
-              )}
+              className="object-cover"
             />
             
             {/* Arrow indicator - Top Right */}

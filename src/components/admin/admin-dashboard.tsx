@@ -40,7 +40,7 @@ import {
   Save,
   Calculator
 } from "lucide-react";
-import Image from "next/image";
+import Image, { PhotoFrame } from "@/components/ui/site-image";
 import AvailabilityCalendar from "@/components/admin/availability-calendar";
 import DailyPricingCalendar from "@/components/admin/daily-pricing-calendar";
 import BillCalculator from "@/components/admin/bill-calculator";
@@ -1431,7 +1431,7 @@ const AdminDashboard = ({
                     >
                       <div className="flex items-center gap-4">
                         <div className="relative w-16 h-12 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0">
-                          <Image 
+                          <PhotoFrame
                             src={booking.villa.images[0] || "/images/hero-villa.webp"} 
                             alt={booking.villa.name} 
                             fill
@@ -1477,7 +1477,7 @@ const AdminDashboard = ({
           {villas.map((villa) => (
             <div key={villa.id} className="glass border border-slate-200 rounded-[32px] overflow-hidden hover:border-blue-500/30 transition-all duration-300 group flex flex-col h-full">
               <div className="relative h-48 bg-slate-50 border border-slate-100">
-                <Image 
+                <PhotoFrame
                   src={villa.images[0] || "/images/hero-villa.webp"} 
                   alt={villa.name} 
                   fill
@@ -2880,7 +2880,7 @@ const AdminDashboard = ({
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200 items-center">
                   <div className="sm:col-span-5 flex items-center gap-3">
                     <div className="relative w-14 h-12 rounded-lg overflow-hidden bg-slate-200 border border-slate-200 flex-shrink-0">
-                      <Image 
+                      <PhotoFrame
                         src={b.villa?.images?.[0] || "/images/hero-villa.webp"} 
                         alt={b.villa?.name || "Villa"} 
                         fill

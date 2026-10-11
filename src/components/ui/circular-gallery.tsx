@@ -502,7 +502,7 @@ class App {
       { image: '/assets/villas/the-angle-house/gallery-11.webp', text: 'The Angle House (Lonavala)', link: '/villa/the-angle-house' },
       { image: '/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg', text: 'Canopy Crest (Khopoli)', link: '/villa/canopy-crest' },
       { image: '/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg', text: 'Casa De Reva (Panchgani)', link: '/villa/casa-de-reva' },
-      { image: '/assets/villas/willow-peak/gallery-1.webp', text: 'Willow Peak (Lonavala)', link: '/villa/willow-peak' }
+      { image: '/assets/villas/willow-peak/graded-v1/wp-01.webp', text: 'Willow Peak (Lonavala)', link: '/villa/willow-peak' }
     ];
     const galleryItems = items && items.length ? items : defaultItems;
     // Repeat for continuous seamless infinite rotation

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import { Sparkles, ArrowUpRight } from "lucide-react";
 
 export interface SitelinkItem {
@@ -40,7 +40,7 @@ export const homeSitelinksData: SitelinkItem[] = [
     line2: "Curated private estates across Lonavala & Khopoli with private pools...",
     href: "/villas",
     badge: "All Villas",
-    image: "/images/sitelinks/willow-peak-chalets.webp",
+    image: "/assets/villas/willow-peak/graded-v1/chalets-night.webp",
   },
   {
     id: "about-stay-willas",
@@ -125,7 +125,7 @@ export default function HomeSitelinks() {
                 >
                   {/* Category Background Image */}
                   <div className="absolute inset-0 z-0 overflow-hidden">
-                    <Image
+                    <PhotoFrame
                       src={item.image}
                       alt={item.title}
                       fill

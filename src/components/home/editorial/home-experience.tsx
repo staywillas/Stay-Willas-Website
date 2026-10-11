@@ -1,13 +1,12 @@
 "use client";
 
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight, BedDouble, Check, Leaf, LoaderCircle, Search, Users } from "lucide-react";
 import { checkAvailableVillasForDates } from "@/app/actions/booking";
-import ColorTheoryNavigation from "./navigation";
 import WeekdayCarousel from "./weekday-carousel";
-import styles from "./preview.module.css";
+import styles from "./home.module.css";
 
 type Villa = { id: string; slug: string; name: string; location: string; price: number; guests: number; bedrooms: number; image?: string };
 const photos: Record<string, string> = {
@@ -17,7 +16,7 @@ const photos: Record<string, string> = {
 };
 const whatsapp = "https://wa.me/919619042310";
 
-export default function ColorTheoryPreview({ villas, children }: { villas: Villa[]; children: ReactNode }) {
+export default function HomeExperience({ villas, children }: { villas: Villa[]; children: ReactNode }) {
   const [location, setLocation] = useState("all");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -51,11 +50,11 @@ export default function ColorTheoryPreview({ villas, children }: { villas: Villa
   }
 
   return <main className={styles.page} data-lenis-prevent>
-    <ColorTheoryNavigation />
+
 
     <section className={styles.hero} aria-label="Find your next villa escape">
       <div className={styles.heroVisual}>
-        <Image src="/assets/villas/terra-cotta-villa/IMG-20260901-WA0037.jpg" alt="Casa De Reva's private pool and hillside villa in Panchgani" fill sizes="100vw" preload className={styles.heroImage} />
+        <PhotoFrame src="/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg" alt="Canopy Crest villa and its private pool at twilight in Khopoli" fill sizes="100vw" preload className={styles.heroImage} />
       </div>
       <div className={styles.heroShade} />
       <div className={styles.heroContent}>
@@ -72,7 +71,7 @@ export default function ColorTheoryPreview({ villas, children }: { villas: Villa
         {error && <p role="alert" className={styles.searchError}>{error}</p>}
         <div className={styles.heroNote}><span><Check size={13} /> Book direct, with no platform fee</span><span><Leaf size={13} /> Handpicked homes in Maharashtra</span></div>
       </div>
-      <div className={styles.heroBottom}><a href="#slow-days">A little inspiration <ArrowDown size={15} /></a><Link href="/villa/casa-de-reva">Casa De Reva · Panchgani <ArrowUpRight size={14} /></Link></div>
+      <div className={styles.heroBottom}><a href="#slow-days">A little inspiration <ArrowDown size={15} /></a><Link href="/villa/canopy-crest">Canopy Crest · Khopoli <ArrowUpRight size={14} /></Link></div>
     </section>
 
     <WeekdayCarousel />
@@ -92,7 +91,7 @@ export default function ColorTheoryPreview({ villas, children }: { villas: Villa
     <section ref={resultsRef} id="stays" className={styles.staysSection} aria-labelledby="stays-title">
       <div className={styles.sectionHeading}><div><span className={styles.eyebrow}>{results ? "YOUR NEXT GETAWAY" : "THE STAY WILLAS COLLECTION"}</span><h2 id="stays-title">{results ? "Stays for your people" : "Some places just feel different."}</h2><p>{results ? `${results.length} ${results.length === 1 ? "stay matches" : "stays match"} your search${searchedWithDates ? " and dates" : ""}.` : "Private pools, hillside mornings and homes with a little soul."}</p></div><div className={styles.collectionActions}>{results && <button onClick={()=>setResults(null)}>Reset search</button>}<Link href="/villas">Explore all stays <ArrowUpRight size={18} /></Link></div></div>
       <div className={styles.villaGrid}>{(results ?? villas).map(villa => <Link href={`/villa/${villa.slug}`} className={styles.villaCard} key={villa.id}>
-        <div className={styles.villaPhoto}><Image src={photos[villa.slug] || (villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/wp-07.webp" : villa.image || "/images/angle-house-hero-clean.webp")} alt={`${villa.name} exterior`} fill sizes="(max-width: 600px) 85vw, (max-width: 1000px) 45vw, 25vw" className={styles.cover} /><span>{villa.slug.includes("willow") ? "Jacuzzi cottage" : "Private pool villa"}</span><span className={styles.cardArrow}><ArrowUpRight size={18} /></span></div>
+        <div className={styles.villaPhoto}><PhotoFrame src={photos[villa.slug] || (villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/graded-v1/wp-07.webp" : villa.image || "/images/angle-house-hero-clean.webp")} alt={`${villa.name} exterior`} fill sizes="(max-width: 600px) 85vw, (max-width: 1000px) 45vw, 25vw" className={styles.cover} /><span className={styles.photoType}>{villa.slug.includes("willow") ? "Jacuzzi cottage" : "Private pool villa"}</span><span className={styles.cardArrow}><ArrowUpRight size={18} /></span></div>
         <div className={styles.villaInfo}><span className={styles.villaLocation}>{villa.location}</span><h3>{villa.slug === "willow-peak-cottage-c" ? "Heaven at Willow Peak" : villa.name}</h3><div className={styles.villaSpecs}><span><Users size={14} /> {villa.guests} guests</span><span><BedDouble size={14} /> {villa.bedrooms} {villa.bedrooms === 1 ? "bedroom" : "bedrooms"}</span></div><p><strong>₹{villa.price.toLocaleString("en-IN")}</strong><span> / night{villa.slug.includes("cottage") ? " · per cottage" : ""}</span></p></div>
       </Link>)}</div>
       {results?.length === 0 && <div className={styles.emptyState}><h3>Let’s find another little escape.</h3><p>Try different dates, a smaller group or another destination.</p><a href={whatsapp} target="_blank" rel="noopener noreferrer">Ask our concierge <ArrowUpRight size={15} /></a></div>}

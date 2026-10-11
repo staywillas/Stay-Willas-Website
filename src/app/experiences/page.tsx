@@ -1,9 +1,8 @@
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
-import Image from "next/image";
+import Image, { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { Sparkles, Calendar, Heart, Shield, ArrowRight, Cake, PartyPopper, Users2 } from "lucide-react";
 
@@ -40,8 +39,7 @@ export default function ExperiencesPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between">
       <div>
-        <Navbar />
-        
+
         {/* Backdrop Hero */}
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-6 pt-32 pb-20">
           {/* Frosted Background */}
@@ -140,7 +138,7 @@ export default function ExperiencesPage() {
             {/* Card 1: Birthday Celebrations */}
             <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
               <div className="relative h-64 overflow-hidden">
-                <Image
+                <PhotoFrame
                   src="/assets/villas/the-angle-house/gallery-11.webp"
                   alt="Birthday Celebration Villa Near Mumbai"
                   fill
@@ -179,7 +177,7 @@ export default function ExperiencesPage() {
             {/* Card 2: Romantic Anniversaries */}
             <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
               <div className="relative h-64 overflow-hidden">
-                <Image
+                <PhotoFrame
                   src="/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg"
                   alt="Anniversary Celebration Villa with Private Pool"
                   fill
@@ -218,8 +216,8 @@ export default function ExperiencesPage() {
             {/* Card 3: Milestone Birthdays */}
             <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
               <div className="relative h-64 overflow-hidden">
-                <Image
-                  src="/assets/villas/willow-peak/gallery-3.webp"
+                <PhotoFrame
+                  src="/assets/villas/willow-peak/graded-v1/wp-03.webp"
                   alt="Milestone Birthday Celebration Villa Maharashtra"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -257,7 +255,7 @@ export default function ExperiencesPage() {
             {/* Card 4: Pune Family Pool Parties */}
             <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
               <div className="relative h-64 overflow-hidden">
-                <Image
+                <PhotoFrame
                   src="/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg"
                   alt="Private Pool Party Villa Near Pune for Family"
                   fill

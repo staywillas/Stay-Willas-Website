@@ -5,9 +5,8 @@ import { CANOPY_MAX_GUESTS } from "@/data/stay-facts";
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { PhotoFrame } from "@/components/ui/site-image";
 import { prisma } from "@/lib/db";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { ChevronRight, ArrowLeft, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar, MessageCircle, Sparkles, Star, Tag, Zap, Waves, Users, Utensils } from "lucide-react";
 import { generateDestinationCollectionSchema, generateBreadcrumbSchema, generateFAQSchema } from "@/lib/schema";
@@ -152,8 +151,7 @@ export default async function KhopoliPage() {
             ]),
           }}
         />
-        <Navbar />
-        
+
         {/* Modern 2-Column Split Luxury Hero Banner */}
         <section className="relative pt-24 pb-10 sm:pt-32 sm:pb-16 md:pt-40 md:pb-24 px-4 sm:px-8 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/20 min-h-[480px] sm:min-h-[580px] md:min-h-[660px] flex items-center">
           {/* High-Resolution Stunning Villa Background Image */}
@@ -325,7 +323,7 @@ export default async function KhopoliPage() {
             <div className="bg-[#FAF8F5]/90 backdrop-blur-md rounded-3xl border border-[#DAA520]/30 overflow-hidden flex flex-col shadow-2xl transform hover:scale-[1.005] transition-all duration-500">
               {/* Full Width Image Container */}
               <div className="w-full relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[2/1] overflow-hidden group">
-                <Image 
+                <PhotoFrame
                   src={signatureVilla.image}
                   alt="Canopy Crest Khopoli Signature Pool Villa"
                   fill

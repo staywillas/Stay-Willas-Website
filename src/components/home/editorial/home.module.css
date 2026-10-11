@@ -59,7 +59,7 @@
 .offerCopy h2 em { color:var(--gold-text); font-weight:400; }
 .offerCopy p { font-size:12px; font-weight:300; line-height:1.8; color:#59685d; }
 .coupon { border:1px dashed #c7b57d; background:#daa5200a; padding:9px 15px; display:flex; gap:24px; align-items:center; margin:18px 0; font-size:9px; letter-spacing:.07em; }
-.coupon strong { font-size:12px; letter-spacing:.06em; margin-left:8px; }
+.coupon strong { font-size:clamp(22px,2vw,28px); letter-spacing:.06em; margin-left:8px; }
 .primaryButton { display:inline-flex; align-items:center; justify-content:center; gap:20px; color:white; background:var(--navy); padding:15px 22px; font-size:11px; }
 .primaryButton:hover { background:#28487d; }
 .offerCopy small { font-size:8px; color:#59685d; margin-top:12px; }
@@ -73,8 +73,8 @@
 .villaGrid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px; }
 .villaPhoto { position:relative; aspect-ratio:1.13; border-radius:7px; overflow:hidden; background:var(--sand); }
 .villaCard:hover .cover { transform:scale(1.04); }
-.villaPhoto>span { position:absolute; top:14px; left:12px; font-size:8px; letter-spacing:.02em; padding:6px 9px; border-radius:20px; background:#fffef5ed; }
-.villaPhoto>.cardArrow { inset:auto 12px 12px auto; display:grid; place-items:center; width:32px; height:32px; padding:0; border-radius:50%; }
+.villaPhoto>.photoType { position:absolute; top:14px; left:12px; font-size:8px; letter-spacing:.02em; padding:6px 9px; border-radius:20px; background:#fffef5ed; }
+.villaPhoto>.cardArrow { position:absolute; background:#fffef5ed; inset:auto 12px 12px auto; display:grid; place-items:center; width:32px; height:32px; padding:0; border-radius:50%; }
 .villaInfo { padding-top:14px; }
 .villaLocation { font-size:9px; color:#68766b; }
 .villaInfo h3 { font-family:var(--font-cormorant),Georgia,serif; font-size:25px; font-weight:600; margin:4px 0 10px; }
@@ -271,3 +271,35 @@
 :global(html):has(.page) { scroll-behavior:smooth; }
 @media(prefers-reduced-motion:reduce){:global(html):has(.page) { scroll-behavior:auto; }}
 @media(max-width:760px){.offerPanel { grid-template-columns:1fr; }.offerPhoto { min-height:280px; }.offerCopy { padding:28px 22px; }.offerCopy h2 { font-size:36px; }}
+
+/* Full landscape photos stay proportional instead of being forced into a tall crop. */
+.offerBorder { max-width:1200px; margin:0 auto; }
+.offerPanel { width:100%; max-width:none; margin:0; border-radius:22px; }
+.offerTrack { width:100%; min-width:0; }
+.offerSlide { flex:0 0 100%; width:100%; }
+.offerSlide .offerPhoto { height:auto; min-height:0; aspect-ratio:4 / 3; }
+.offerPhoto:after { inset:auto 0 0; height:60px; }
+.photoCaption { bottom:14px; left:18px; right:18px; }
+.coupon { border-radius:999px; padding:14px 22px; min-height:58px; }
+@media(max-width:760px) {
+  .offerPanel { grid-template-columns:minmax(0,1fr); }
+  .offerSlide .offerPhoto { min-height:0; aspect-ratio:4 / 3; }
+  .photoCaption { font-size:12px; }
+  .photoTag { top:12px; left:12px; }
+}
+
+.couponBorder { margin:18px 0; border-radius:999px !important; }
+.couponBorder .coupon { margin:0; border:0; background:#fffaf0; justify-content:center; }
+
+.coupon { font-size:11px; gap:16px; }
+.coupon>span { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center; }
+.coupon strong { margin-left:0; line-height:1.2; }
+.couponBorder { max-width:100%; }
+
+
+/* Balanced frames crop gently around the villa and its amenities. */
+.villaPhoto,.featurePhoto,.poolGrid .featurePhoto,.compactCard .featurePhoto { aspect-ratio:4 / 3; height:auto; }
+.hero { min-height:clamp(620px,50vw,900px); }
+.heroBottom { position:absolute; bottom:0; left:0; right:0; }
+@media(max-width:850px){ .hero { min-height:650px; } }
+@media(max-width:600px){ .hero { min-height:740px; } .heroVisual { height:360px; } }

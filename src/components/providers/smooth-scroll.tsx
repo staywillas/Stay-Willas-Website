@@ -9,7 +9,8 @@ function ScrollRestorer() {
   const lenis = useLenis();
 
   useEffect(() => {
-    if (lenis) {
+    if (lenis && !window.location.hash) {
+      // Let the router honour links to an offer, gallery or property checklist.
       lenis.scrollTo(0, { immediate: true });
     }
   }, [pathname, lenis]);

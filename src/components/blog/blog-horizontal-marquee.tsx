@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { Sparkles, ArrowUpRight, Waves, Flame, MapPin } from "lucide-react";
 
@@ -27,7 +27,7 @@ export const LONAVALA_MARQUEE_ITEMS: MarqueeItem[] = [
   },
   {
     id: "wp-1",
-    image: "/assets/villas/willow-peak/gallery-1.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     villaName: "Willow Peak",
     badge: "Alpine A-Frame Chalet",
     location: "Kurwande, Lonavala",
@@ -45,7 +45,7 @@ export const LONAVALA_MARQUEE_ITEMS: MarqueeItem[] = [
   },
   {
     id: "wp-2",
-    image: "/assets/villas/willow-peak/gallery-4.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-04.webp",
     villaName: "Willow Peak",
     badge: "Master Jacuzzi Suite",
     location: "Kurwande, Lonavala",
@@ -63,7 +63,7 @@ export const LONAVALA_MARQUEE_ITEMS: MarqueeItem[] = [
   },
   {
     id: "wp-3",
-    image: "/assets/villas/willow-peak/gallery-1.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     villaName: "Willow Peak",
     badge: "Scenic Lawn & Sit-Out",
     location: "Kurwande, Lonavala",
@@ -81,7 +81,7 @@ export const LONAVALA_MARQUEE_ITEMS: MarqueeItem[] = [
   },
   {
     id: "wp-4",
-    image: "/assets/villas/willow-peak/gallery-6.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-06.webp",
     villaName: "Willow Peak",
     badge: "Timber Bedroom Suite",
     location: "Kurwande, Lonavala",
@@ -99,7 +99,7 @@ export const LONAVALA_MARQUEE_ITEMS: MarqueeItem[] = [
   },
   {
     id: "wp-5",
-    image: "/assets/villas/willow-peak/gallery-8.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-08.webp",
     villaName: "Willow Peak",
     badge: "Evening Bonfire Deck",
     location: "Kurwande, Lonavala",
@@ -150,7 +150,7 @@ export default function BlogHorizontalMarquee({
         <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-20 md:w-32 bg-gradient-to-r from-[#0E1B35] to-transparent z-20 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-20 md:w-32 bg-gradient-to-l from-[#0E1B35] to-transparent z-20 pointer-events-none" />
 
-        <div className="flex gap-5 sm:gap-6 w-max animate-marquee group-hover:[animation-play-state:paused] py-3 transform-gpu">
+        <div className="flex gap-5 sm:gap-6 w-max animate-marquee motion-reduce:animate-none group-hover:[animation-play-state:paused] py-3 transform-gpu">
           {marqueeList.map((item, idx) => {
             const isAngleHouse = item.slug === "the-angle-house";
             return (
@@ -160,7 +160,7 @@ export default function BlogHorizontalMarquee({
                 className="group/card relative w-[300px] sm:w-[360px] h-[260px] sm:h-[290px] rounded-2xl sm:rounded-3xl overflow-hidden border border-[#DAA520]/30 hover:border-[#F3C065] shadow-lg hover:shadow-[0_12px_36px_rgba(218,165,32,0.35)] transition-all duration-500 flex-shrink-0 flex flex-col justify-between p-4 sm:p-5 transform hover:-translate-y-1.5"
               >
                 {/* Background Image */}
-                <Image
+                <PhotoFrame
                   src={item.image}
                   alt={`${item.villaName} - ${item.badge}`}
                   fill
@@ -169,7 +169,7 @@ export default function BlogHorizontalMarquee({
                 />
 
                 {/* Dark Gradient Overlay for Contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/40 group-hover/card:via-black/25 transition-colors duration-300" />
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/90 to-transparent pointer-events-none" />
 
                 {/* Top Row: Villa Brand Pill + Arrow Link */}
                 <div className="relative z-10 flex items-center justify-between w-full">

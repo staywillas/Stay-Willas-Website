@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen } from "lucide-react";
+import { X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
 
@@ -336,7 +336,22 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
                       onClick={() => onClose()}
                     >
                       <BookOpen size={15} className="text-[#DAA520] shrink-0" />
-                      <span className="text-[13px]">Blog</span>
+                      <span className="text-[13px]">Travel guides</span>
+                    </Link>
+
+                    {/* FAQs & Help Center */}
+                    <Link
+                      href="/faq"
+                      className={cn(
+                        "flex items-center gap-2.5 py-2 px-2.5 rounded-xl transition-all duration-200",
+                        pathname === "/faq"
+                          ? "bg-[#DAA520]/15 text-[#DAA520] font-bold border border-[#DAA520]/25"
+                          : "text-[#FAF8F5]/85 hover:text-[#DAA520] hover:bg-[#FAF8F5]/5 font-semibold text-[13px]"
+                      )}
+                      onClick={() => onClose()}
+                    >
+                      <HelpCircle size={15} className="text-[#DAA520] shrink-0" />
+                      <span className="text-[13px]">FAQs &amp; Help</span>
                     </Link>
                   </div>
                 </div>

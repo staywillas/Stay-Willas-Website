@@ -12,11 +12,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
 const GhostCursor = dynamic(() => import('@/components/ui/GhostCursor'), { ssr: false });
 import WarpLines from "@/components/ui/WarpLines";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import QuickMobileLeadForm from "@/components/common/quick-mobile-lead-form";
 import MegaDiscountAdBanner from "@/components/common/mega-discount-ad-banner";
-import Image from "next/image";
+import Image from "@/components/ui/site-image";
 
 interface VillaData {
   id: string;
@@ -325,7 +324,6 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.012)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)]" />
       </div>
 
-      <Navbar />
 
       {/* 2. HERO / PSYCHOLOGICAL COPY HOOK */}
       <section className="relative min-h-[105vh] lg:min-h-screen flex flex-col items-center justify-center pt-40 sm:pt-52 pb-16 px-6 text-center overflow-hidden z-10">

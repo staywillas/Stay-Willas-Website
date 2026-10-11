@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/site-image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -73,7 +73,7 @@ const ESTATES: EstateSlide[] = [
     weekendRate: "₹6,999 (Cottage) / ₹23,997 (Full)",
     capacityText: "Up to 12 Guests",
     bedroomsText: "3 A-Frame Chalets",
-    image: "/assets/villas/willow-peak/gallery-1.webp",
+    image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
     rating: "4.95",
     features: ["Jacuzzi in Each Cottage", "Outdoor BBQ & Dining", "Sahyadri Panorama"],
   },

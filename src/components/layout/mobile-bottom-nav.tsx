@@ -54,7 +54,7 @@ export default function MobileBottomNav() {
     }
   }, []);
 
-  if (isVillaDetailPage || isMenuOpen || isCarePage || isCareDomain || pathname === "/colortheory") return null;
+  if (isVillaDetailPage || isMenuOpen || isCarePage || isCareDomain || pathname === "/") return null;
 
   const handleMenuClick = () => {
     window.dispatchEvent(new CustomEvent("toggle-mobile-menu"));

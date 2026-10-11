@@ -1,0 +1,21 @@
+@property --offer-border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.border {
+  position: relative;
+  padding: 2px;
+  border-radius: 24px;
+  background: conic-gradient(from var(--offer-border-angle), #d1c7b3 0%, #d1c7b3 55%, #1b3564 70%, #f4ce70 82%, #daa520 90%, #d1c7b3 100%);
+  animation: travel 7s linear infinite;
+  transition: box-shadow 250ms ease;
+  min-width: 0;
+}
+.border:hover, .border:focus-within {
+  animation-duration: 3s;
+  box-shadow: 0 0 0 1px #daa52022, 0 12px 36px #1b356412;
+}
+.content { position: relative; border-radius: inherit; width: 100%; }
+@keyframes travel { to { --offer-border-angle: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .border { animation: none; } }

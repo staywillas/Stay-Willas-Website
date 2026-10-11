@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import dynamic from "next/dynamic";
 import { Grid } from "lucide-react";
 import ShareButton from "@/components/villa/share-button";
@@ -18,13 +18,13 @@ export default function PropertyGallery({ images, propertyName, villaId }: Prope
   const openGridOverlay = () => setViewer({ view: "grid", index: 0 });
   return (<>
       {/* One responsive gallery avoids fetching separate mobile and desktop heroes. */}
-      <div className="relative w-full mb-4 md:mb-16 overflow-hidden rounded-2xl md:rounded-3xl aspect-[16/11] md:aspect-[21/9] border border-white/10 shadow-xl">
+      <div className="relative w-full mb-4 md:mb-16 overflow-hidden rounded-2xl md:rounded-3xl aspect-[4/3] md:aspect-[16/9] border border-white/10 shadow-xl">
         <div className="flex md:grid md:grid-cols-4 md:grid-rows-2 md:gap-3 h-full w-full overflow-x-auto snap-x snap-mandatory no-scrollbar">
           {visibleImages.slice(0, 5).map((img, idx) => (
             <button key={idx} type="button" aria-label={`Open photo ${idx + 1} of ${propertyName}`}
               onClick={() => openLightbox(Math.min(idx, Math.max(images.length - 1, 0)))}
               className={`relative h-full w-full md:w-auto flex-shrink-0 snap-start overflow-hidden bg-charcoal group ${idx === 0 ? "md:col-span-2 md:row-span-2" : ""}`}>
-              <Image src={img} alt={`${propertyName} photo ${idx + 1}`} fill
+              <PhotoFrame src={img} alt={`${propertyName} photo ${idx + 1}`} fill
                 loading={idx === 0 ? "eager" : "lazy"} fetchPriority={idx === 0 ? "high" : "auto"} quality={75}
                 sizes={idx === 0 ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px" : "(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 320px"}
                 className="object-cover transition-transform duration-500 group-hover:scale-105" />

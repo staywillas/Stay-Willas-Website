@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import { PhotoFrame } from "@/components/ui/site-image";
 import { 
   Calendar, MapPin, Key, Wifi, Phone, ShieldCheck, 
   Trash2, FileText, CheckCircle2, ChevronRight, Info, Plus, X, Loader2 
@@ -216,7 +216,7 @@ export default function DashboardClient({ initialStays }: DashboardClientProps) 
                   <div className="flex gap-4">
                     {/* Villa Thumbnail */}
                     <div className="relative w-20 h-24 rounded-2xl overflow-hidden shrink-0">
-                      <Image 
+                      <PhotoFrame
                         src={stay.villaImage} 
                         alt={stay.villaName} 
                         fill 

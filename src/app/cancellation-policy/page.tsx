@@ -1,6 +1,5 @@
 import React from "react";
 import { Metadata } from "next";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { XCircle } from "lucide-react";
 
@@ -30,7 +29,6 @@ export default function CancellationPolicyPage() {
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between selection:bg-accent-primary selection:text-white">
       <div>
-        <Navbar />
 
         <section className="pt-36 pb-24 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto">
           {/* Header */}

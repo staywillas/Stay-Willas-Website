@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { CheckCircle2, Calendar, MapPin, ArrowRight, ShieldCheck, Download, Sparkles } from "lucide-react";
 import { format } from "date-fns";
@@ -107,7 +106,6 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
-      <Navbar />
 
       <section className="pt-48 pb-32 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto text-center flex flex-col items-center">
         {/* Animated Check Mark Badge */}

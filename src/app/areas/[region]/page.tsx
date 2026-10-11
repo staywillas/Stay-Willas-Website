@@ -3,9 +3,8 @@ import { notFound } from "next/navigation";
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/site-image";
 import { prisma } from "@/lib/db";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import VillaCard from "@/components/home/villa-card";
 import { MapPin, ChevronRight, ArrowLeft, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
@@ -259,8 +258,7 @@ export default async function AreaRegionPage({ params }: PageProps) {
         }}
       />
       <div>
-        <Navbar />
-        
+
         {/* Banner Section */}
         <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 md:px-12 lg:px-24 overflow-hidden border-b border-[#DAA520]/10">
           <div className="absolute inset-0 -z-10">

@@ -1,8 +1,7 @@
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React from "react";
 import { Metadata } from "next";
-import Image from "next/image";
-import Navbar from "@/components/layout/navbar";
+import { PhotoFrame } from "@/components/ui/site-image";
 import Footer from "@/components/layout/footer";
 import { ArrowUpRight, MapPin, ShieldCheck, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
 import Link from "next/link";
@@ -113,8 +112,7 @@ export default async function AreasPage() {
         }}
       />
       <div>
-        <Navbar />
-        
+
         {/* Header Section */}
         <section className="relative pt-36 pb-12 sm:pt-40 sm:pb-16 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto text-center flex flex-col items-center overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-gradient-to-tr from-[#1B3564]/10 to-[#2563EB]/10 rounded-full blur-2xl md:blur-[80px] pointer-events-none -z-10" />
@@ -148,7 +146,7 @@ export default async function AreasPage() {
                 <div>
                   {/* Image wrapper */}
                   <div className="relative aspect-[16/10] w-full overflow-hidden">
-                    <Image 
+                    <PhotoFrame
                       src={area.image} 
                       alt={`${area.name} Luxury Villas`}
                       fill

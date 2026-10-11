@@ -1,7 +1,7 @@
-import Image from "next/image";
+import Image, { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Bath, BadgeCheck, BedDouble, CalendarCheck2, ChevronDown, HeartHandshake, UtensilsCrossed, Users, Waves } from "lucide-react";
-import styles from "./preview.module.css";
+import styles from "./home.module.css";
 
 type Villa = { slug: string; name: string; location: string; price: number; guests: number; bedrooms: number };
 type Stay = {
@@ -19,7 +19,7 @@ const angle: Stay = {
 };
 const willow: Stay = {
   slug: "willow-peak", sourceSlug: "willow-peak-cottage-c", name: "Willow Peak", location: "Kurwande · Lonavala",
-  image: "/assets/villas/willow-peak/wp-07.webp", imageAlt: "The A-frame cottages at Willow Peak in Lonavala",
+  image: "/assets/villas/willow-peak/graded-v1/wp-07.webp", imageAlt: "The A-frame cottages at Willow Peak in Lonavala",
   description: "Three A-frame cottages, each with a private in-room Jacuzzi. Choose one for a cosy escape or ask about all three for your group.",
   compactDescription: "A private Jacuzzi in every A-frame cottage. Choose one or book all three.",
   features: ["Jacuzzi in every cottage", "Up to 4 guests per cottage", "3 cottages available"], cottage: true,
@@ -59,7 +59,7 @@ const faqs = [
 function StayCard({ stay, villa, compact = false }: { stay: Stay; villa?: Villa; compact?: boolean }) {
   return <article className={`${styles.featureCard} ${compact ? styles.compactCard : ""}`}>
     <Link href={`/villa/${stay.slug}`} className={styles.featurePhoto} aria-label={`Explore ${stay.name}`}>
-      <Image src={stay.image} alt={stay.imageAlt} fill sizes={compact ? "(max-width: 600px) 90vw, (max-width: 1100px) 44vw, 460px" : "(max-width: 600px) 90vw, (max-width: 900px) 45vw, 580px"} className={styles.cover} />
+      <PhotoFrame src={stay.image} alt={stay.imageAlt} fill sizes={compact ? "(max-width: 600px) 90vw, (max-width: 1100px) 44vw, 460px" : "(max-width: 600px) 90vw, (max-width: 900px) 45vw, 580px"} className={styles.cover} />
       <span className={styles.featureTag}>{stay.cottage ? <Bath size={14} /> : <Waves size={14} />}{stay.cottage ? "Private Jacuzzi cottages" : "Your own private villa"}</span>
       <span className={styles.featurePhotoArrow}><ArrowUpRight size={20} /></span>
     </Link>
@@ -109,7 +109,7 @@ export default function HomeContent({ villas }: { villas: Villa[] }) {
 
     <section id="partner" className={styles.partnerSection} aria-labelledby="partner-title"><div className={styles.partnerPanel}><div className={styles.partnerPhoto}><Image src="/assets/villas/the-angle-house/gallery-11.webp" alt="The Angle House, a Stay Willas property with a private pool" fill sizes="(max-width: 850px) 90vw, 45vw" className={styles.cover} /></div><div className={styles.partnerCopy}><span className={styles.eyebrow}>FOR HOMEOWNERS</span><h2 id="partner-title">Your home.<br /><em>Our care.</em><br />A better partnership.</h2><p>Own a villa in Maharashtra? We treat your home like our own. From guest bookings to maintenance and daily operations, let our team help you share it with the world.</p><ul><li><BadgeCheck size={17} /> Thoughtful property care</li><li><Users size={17} /> Guest bookings & hospitality</li><li><HeartHandshake size={17} /> Support with daily operations</li></ul><Link href="/partner" className={styles.partnerButton}>Partner With Us <ArrowRight size={18} /></Link><Link href="/partner#partner-form" className={styles.partnerContact}>Fill property configuration <ArrowUpRight size={15} /></Link></div></div></section>
 
-    <section id="faqs" className={styles.faqSection} aria-labelledby="faq-title"><div className={styles.faqIntro}><span className={styles.eyebrow}>A FEW THINGS TO KNOW</span><h2 id="faq-title">Good questions.<br /><em>Easy answers.</em></h2><p>Everything you need to start planning your stay.</p><a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer">Still wondering? Ask our concierge <ArrowUpRight size={16} /></a></div><div className={styles.faqList}>{faqs.map(faq => <details key={faq.question} name="stay-faq"><summary>{faq.question}<ChevronDown size={18} /></summary><p>{faq.answer}</p></details>)}</div></section>
+    <section id="faqs" className={styles.faqSection} aria-labelledby="faq-title"><div className={styles.faqIntro}><span className={styles.eyebrow}>A FEW THINGS TO KNOW</span><h2 id="faq-title">Good questions.<br /><em>Easy answers.</em></h2><p>Everything you need to start planning your stay.</p><a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer">Still wondering? Ask our concierge <ArrowUpRight size={16} /></a><Link href="/faq" className="mt-3 text-xs font-semibold text-[#1B3564] hover:text-[#DAA520] inline-flex items-center gap-1 transition-colors">Browse all questions &amp; help guide <ArrowRight size={14} /></Link></div><div className={styles.faqList}>{faqs.map(faq => <details key={faq.question} name="stay-faq"><summary>{faq.question}<ChevronDown size={18} /></summary><p>{faq.answer}</p></details>)}</div></section>
   </>;
 }
 
