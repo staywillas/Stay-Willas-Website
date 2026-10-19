@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useId } from "react";
+import Link from "next/link";
 import { createPortal } from "react-dom";
 import { 
   Calendar as CalendarIcon, 
@@ -22,6 +23,9 @@ const BookingCard = dynamic(() => import("@/components/villa/booking-card"), {
 import { format } from "date-fns";
 import { captureBookingLead } from "@/app/actions/inquiry";
 import { useLenis } from "lenis/react";
+import editorialStyles from "./property-editorial.module.css";
+import { willowUnits } from "@/data/property-editorial";
+import BorderGlow from "@/components/ui/border-glow";
 
 interface BookingModalFlowProps {
   villaId: string;
@@ -40,6 +44,9 @@ interface BookingModalFlowProps {
   bookings?: any[];
   location?: string;
   isAngleHouse?: boolean;
+  presentation?: "default" | "editorial";
+  initialCottageSelection?: "A" | "B" | "C" | "ALL";
+  propertySlug?: string;
 }
 
 export default function BookingModalFlow({
@@ -59,8 +66,12 @@ export default function BookingModalFlow({
   bookings = [],
   location = "Lonavala, Maharashtra",
   isAngleHouse = false,
+  presentation = "default",
+  initialCottageSelection = "A",
+  propertySlug,
 }: BookingModalFlowProps) {
   const [mounted, setMounted] = useState(false);
+  const formId = useId();
   const lenis = useLenis();
   
   // Modals state
@@ -76,7 +87,7 @@ export default function BookingModalFlow({
 
   // Cottage selection for Willow Peak
   const isWillowPeak = villaId.includes("willow") || villaName.toLowerCase().includes("willow");
-  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">("A");
+  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">(initialCottageSelection);
 
   // Availability Calendar State
   const [calMonth, setCalMonth] = useState<Date>(new Date());
@@ -84,6 +95,33 @@ export default function BookingModalFlow({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Keep keyboard interaction inside the editorial booking overlays and return
+  // focus to the trigger after closing.
+  useEffect(() => {
+    if (presentation !== "editorial" || !mounted || !(isLeadGateOpen || isBookingModalOpen || isAvailabilityModalOpen)) return;
+    const dialog = document.querySelector<HTMLElement>('[data-editorial-booking="true"]');
+    if (!dialog) return;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]')).filter(element => element.getClientRects().length > 0);
+    focusable()[0]?.focus({ preventScroll: true });
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsLeadGateOpen(false);
+        setIsBookingModalOpen(false);
+        setIsAvailabilityModalOpen(false);
+      }
+      if (event.key === "Tab") {
+        const elements = focusable();
+        const first = elements[0];
+        const last = elements[elements.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
+    };
+    dialog.addEventListener("keydown", handleKey);
+    return () => { dialog.removeEventListener("keydown", handleKey); previousFocus?.focus({ preventScroll: true }); };
+  }, [presentation, mounted, isLeadGateOpen, isBookingModalOpen, isAvailabilityModalOpen]);
 
   // Lock body scroll and pause Lenis smooth scroll when any modal is open
   useEffect(() => {
@@ -107,6 +145,7 @@ export default function BookingModalFlow({
   }, [isLeadGateOpen, isBookingModalOpen, isAvailabilityModalOpen, lenis]);
 
   const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
+  const isSingleWillowCottage = (propertySlug?.startsWith("willow-peak-cottage-") ?? false) || (isWillowPeak && cottageSelection !== "ALL");
   // Willow Peak Entire Estate base starting rate is 15,000, single cottage is 4,999
   const willowEntireStartingPrice = 15000;
   const willowCottageStartingPrice = 4999;
@@ -225,6 +264,27 @@ export default function BookingModalFlow({
       {/* ========================================================================= */}
       {/* 1. LUXURY BOOKING TRIGGER CARD (Replaces static right bar on PC & Mobile)   */}
       {/* ========================================================================= */}
+      {presentation === "editorial" ? (
+        <>
+          <div className={editorialStyles.bookingSummary}>
+            <span className={editorialStyles.bookingLabel}>YOUR STAY, DIRECT WITH US</span>
+            <h2>Make it your weekend.</h2>
+            <div className={editorialStyles.bookingPrice}><span>From</span><div><strong>₹{displayPrice.toLocaleString("en-IN")}</strong><span> / night</span></div></div>
+            <p className={editorialStyles.bookingRateNote}>Final rates depend on your dates and group size.</p>
+            {isWillowPeak && <div className={editorialStyles.unitPicker}><p>{cottageSelection === "ALL" ? "Entire estate · up to 12 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p><nav className={editorialStyles.unitLinks} aria-label="Choose your Willow Peak stay">{willowUnits.map(unit => <Link key={unit.slug} href={`/villa/${unit.slug}`} aria-current={unit.slug === propertySlug ? "page" : undefined}><strong>{unit.name}</strong><small>{unit.capacity} guests</small></Link>)}</nav></div>}
+            {!isSingleWillowCottage && (
+              <div className={editorialStyles.bookingOffer}><span>Direct savings</span><div><strong>26% Weekdays · 5% Weekends &amp; Holidays</strong><small>Use code <b>Stayw26</b></small></div></div>
+            )}
+            <BorderGlow className={editorialStyles.availabilityGlow} backgroundColor="#1b3564" borderRadius={28} animated={false}><button type="button" className={editorialStyles.primaryButton} onClick={() => setIsAvailabilityModalOpen(true)}><CalendarIcon size={17} /> Check availability</button></BorderGlow>
+            <button type="button" className={editorialStyles.secondaryButton} onClick={handleOpenLeadGate}>Reserve your stay <ArrowRight size={17} /></button>
+            <p className={editorialStyles.bookingFee}><CheckCircle2 size={15} /> No platform booking fee</p>
+          </div>
+          <div className={editorialStyles.mobileBooking} role="group" aria-label="Quick booking">
+            <div><small>From</small><strong>₹{displayPrice.toLocaleString("en-IN")}<span> / night</span></strong></div>
+            <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={() => setIsAvailabilityModalOpen(true)}>Check dates <ArrowRight size={17} /></button></BorderGlow>
+          </div>
+        </>
+      ) : (
       <div className="bg-white border-2 border-[#DAA520]/25 rounded-3xl p-6 sm:p-7 shadow-[0_16px_50px_rgba(27,53,100,0.1)] space-y-5 text-left w-full sticky top-28 backdrop-blur-md">
         {/* Header with Live Starting Price */}
         <div className="flex items-start justify-between pb-4 border-b border-[#DAA520]/20">
@@ -304,7 +364,7 @@ export default function BookingModalFlow({
           </div>
           <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
             <CheckCircle2 size={14} className="text-[#DAA520] shrink-0" />
-            <span className="text-slate-700 font-bold text-[11px]">26% Promo Active</span>
+            <span className="text-slate-700 font-bold text-[11px]">{isSingleWillowCottage ? "Direct Net Tariff" : "Direct Savings Active"}</span>
           </div>
           <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
             <CheckCircle2 size={14} className="text-[#1B3564] shrink-0" />
@@ -341,12 +401,17 @@ export default function BookingModalFlow({
           🔒 Secure Direct Booking • Free Cancellation Assist
         </p>
       </div>
+      )}
 
       {/* ========================================================================= */}
       {/* 2. STEP 1: LEAD CAPTURE GATE MODAL (Name & Phone Number First)            */}
       {/* ========================================================================= */}
       {mounted && isLeadGateOpen && typeof document !== "undefined" && createPortal(
         <div 
+          role={presentation === "editorial" ? "dialog" : undefined}
+          aria-modal={presentation === "editorial" ? true : undefined}
+          aria-label={presentation === "editorial" ? `Reserve ${villaName}` : undefined}
+          data-editorial-booking={presentation === "editorial" ? "true" : undefined}
           data-lenis-prevent="true"
           className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
         >
@@ -390,7 +455,7 @@ export default function BookingModalFlow({
             <form onSubmit={handleLeadSubmit} className="space-y-4">
               {/* Full Name */}
               <div className="space-y-1.5 text-left">
-                <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                <label htmlFor={`${formId}-name`} className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <div className="relative flex items-center">
@@ -399,6 +464,8 @@ export default function BookingModalFlow({
                   </div>
                   <input
                     type="text"
+                    id={`${formId}-name`}
+                    autoComplete="name"
                     required
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
@@ -410,7 +477,7 @@ export default function BookingModalFlow({
 
               {/* Phone Number */}
               <div className="space-y-1.5 text-left">
-                <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                <label htmlFor={`${formId}-phone`} className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
                   Phone / WhatsApp Number <span className="text-red-500">*</span>
                 </label>
                 <div className="relative flex items-center">
@@ -419,6 +486,8 @@ export default function BookingModalFlow({
                   </div>
                   <input
                     type="tel"
+                    id={`${formId}-phone`}
+                    autoComplete="tel"
                     required
                     value={guestPhone}
                     onChange={(e) => {
@@ -436,7 +505,7 @@ export default function BookingModalFlow({
 
               {/* Email Address (Optional) */}
               <div className="space-y-1.5 text-left">
-                <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                <label htmlFor={`${formId}-email`} className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
                   Email Address <span className="text-slate-400 text-[10px] font-normal">(Optional for confirmation)</span>
                 </label>
                 <div className="relative flex items-center">
@@ -445,6 +514,8 @@ export default function BookingModalFlow({
                   </div>
                   <input
                     type="email"
+                    id={`${formId}-email`}
+                    autoComplete="email"
                     value={guestEmail}
                     onChange={(e) => setGuestEmail(e.target.value)}
                     placeholder="e.g. rohit@example.com"
@@ -480,6 +551,10 @@ export default function BookingModalFlow({
       {/* ========================================================================= */}
       {mounted && isBookingModalOpen && typeof document !== "undefined" && createPortal(
         <div 
+          role={presentation === "editorial" ? "dialog" : undefined}
+          aria-modal={presentation === "editorial" ? true : undefined}
+          aria-label={presentation === "editorial" ? `${villaName} booking details` : undefined}
+          data-editorial-booking={presentation === "editorial" ? "true" : undefined}
           data-lenis-prevent="true"
           className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
         >
@@ -552,6 +627,10 @@ export default function BookingModalFlow({
       {/* ========================================================================= */}
       {mounted && isAvailabilityModalOpen && typeof document !== "undefined" && createPortal(
         <div 
+          role={presentation === "editorial" ? "dialog" : undefined}
+          aria-modal={presentation === "editorial" ? true : undefined}
+          aria-label={presentation === "editorial" ? `${villaName} availability calendar` : undefined}
+          data-editorial-booking={presentation === "editorial" ? "true" : undefined}
           data-lenis-prevent="true"
           className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
         >
@@ -577,6 +656,7 @@ export default function BookingModalFlow({
               <button
                 type="button"
                 onClick={() => setIsAvailabilityModalOpen(false)}
+                aria-label="Close availability calendar"
                 className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 hover:text-black transition-all cursor-pointer shrink-0"
               >
                 <X size={18} />
@@ -584,7 +664,7 @@ export default function BookingModalFlow({
             </div>
 
             {/* Willow Peak Cottage Switch inside Availability Modal */}
-            {isWillowPeak && (
+            {isWillowPeak && presentation !== "editorial" && (
               <div className="grid grid-cols-4 gap-1.5 p-1.5 bg-slate-100 rounded-2xl">
                 {(["A", "B", "C", "ALL"] as const).map((opt) => (
                   <button
@@ -608,6 +688,7 @@ export default function BookingModalFlow({
               <button
                 type="button"
                 onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1))}
+                aria-label="Previous month"
                 className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer"
               >
                 <ChevronLeft size={16} />
@@ -618,6 +699,7 @@ export default function BookingModalFlow({
               <button
                 type="button"
                 onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1))}
+                aria-label="Next month"
                 className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer"
               >
                 <ChevronRight size={16} />

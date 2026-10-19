@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 // Lazy-load non-critical floating UI widgets (not needed at first paint)
 const WhatsAppSticky = dynamic(() => import("@/components/layout/whatsapp-sticky"), { ssr: false });
+const CallButton = dynamic(() => import("@/components/layout/call-button"), { ssr: false });
 const Preloader = dynamic(() => import("@/components/layout/preloader"), { ssr: false });
 
 export default function FloatingWidgets() {
@@ -28,6 +29,7 @@ export default function FloatingWidgets() {
   return (
     <>
       <WhatsAppSticky />
+      <CallButton />
       {previewPreloader && <Preloader preview />}
     </>
   );

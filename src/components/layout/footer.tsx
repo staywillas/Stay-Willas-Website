@@ -129,9 +129,9 @@ const Footer = () => {
             <ul className="flex flex-col gap-4">
               {[
                 { name: "All Stays", href: "/villas" },
-                { name: "Destinations Hub", href: "/destinations" },
+                { name: "Destinations Hub", href: "/areas" },
                 { name: "Villas in Lonavala with Private Pool", href: "/areas/lonavala" },
-                { name: "Khopoli Villas with Private Pool", href: "/areas/khopoli" },
+                { name: "Villas in Khopoli", href: "/areas/khopoli" },
                 { name: "Villas in Panchgani with Private Pool", href: "/areas/panchgani" },
                 { name: "Experiences", href: "/experiences" },
                 { name: "Guest Stories", href: "/stories" }
@@ -323,7 +323,7 @@ const Footer = () => {
               <a
                 href="https://magicpin.in/Mumbai/Ghatkopar-Shantinagar/Hotel/Stay-Willas/store/2698aa1?srsltid=AU7gw4U8ls3D0ZDjvgZllQpvh53eoKhJ91O_4qS7-c457LRUiKIyn5DE"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="nofollow noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-[#DAA520]/15 border border-white/10 hover:border-[#DAA520]/40 text-xs text-white/80 hover:text-[#DAA520] transition-all duration-300 group"
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 group-hover:bg-[#DAA520] transition-colors" />
@@ -334,7 +334,7 @@ const Footer = () => {
               <a
                 href="https://www.bedroomvillas.com/property/staywillas-the-angle-house/BC-16570566"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="nofollow noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-[#DAA520]/15 border border-white/10 hover:border-[#DAA520]/40 text-xs text-white/80 hover:text-[#DAA520] transition-all duration-300 group"
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 group-hover:bg-[#DAA520] transition-colors" />

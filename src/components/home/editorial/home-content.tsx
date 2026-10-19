@@ -1,6 +1,7 @@
 import Image, { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Bath, BadgeCheck, BedDouble, CalendarCheck2, ChevronDown, HeartHandshake, UtensilsCrossed, Users, Waves } from "lucide-react";
+import SlatewoodAnnouncement from "./slatewood-announcement";
 import styles from "./home.module.css";
 
 type Villa = { slug: string; name: string; location: string; price: number; guests: number; bedrooms: number };
@@ -57,6 +58,9 @@ const faqs = [
 ];
 
 function StayCard({ stay, villa, compact = false }: { stay: Stay; villa?: Villa; compact?: boolean }) {
+  const destinationHref = stay.slug === "canopy-crest" ? "/areas/khopoli" : stay.slug === "casa-de-reva" ? "/areas/panchgani" : "/areas/lonavala";
+  const destinationKeyword = stay.slug === "canopy-crest" ? "Villas in Khopoli" : stay.slug === "casa-de-reva" ? "Villas in Panchgani" : "Villas in Lonavala";
+
   return <article className={`${styles.featureCard} ${compact ? styles.compactCard : ""}`}>
     <Link href={`/villa/${stay.slug}`} className={styles.featurePhoto} aria-label={`Explore ${stay.name}`}>
       <PhotoFrame src={stay.image} alt={stay.imageAlt} fill sizes={compact ? "(max-width: 600px) 90vw, (max-width: 1100px) 44vw, 460px" : "(max-width: 600px) 90vw, (max-width: 900px) 45vw, 580px"} className={styles.cover} />
@@ -64,7 +68,12 @@ function StayCard({ stay, villa, compact = false }: { stay: Stay; villa?: Villa;
       <span className={styles.featurePhotoArrow}><ArrowUpRight size={20} /></span>
     </Link>
     <div className={styles.featureBody}>
-      <span className={styles.villaLocation}>{stay.location}</span>
+      <div className="flex items-center justify-between text-xs mb-1">
+        <Link href={destinationHref} className="text-[#DAA520] hover:text-[#1B3564] font-black uppercase tracking-wider text-[10.5px] inline-flex items-center gap-1 hover:underline transition-colors">
+          <span>{destinationKeyword}</span>
+        </Link>
+        <span className={styles.villaLocation}>{stay.location}</span>
+      </div>
       <h3><Link href={`/villa/${stay.slug}`}>{stay.name}</Link></h3>
       <p className={styles.featureDescription}>{compact ? stay.compactDescription || stay.description : stay.description}</p>
       <ul className={styles.featurePills}>{(compact ? stay.compactFeatures || stay.features : stay.features).map(feature => <li key={feature}>{feature}</li>)}</ul>
@@ -80,6 +89,7 @@ function StayCard({ stay, villa, compact = false }: { stay: Stay; villa?: Villa;
 export default function HomeContent({ villas }: { villas: Villa[] }) {
   const lookup = new Map(villas.map(villa => [villa.slug, villa]));
   return <>
+    <SlatewoodAnnouncement />
     <section id="jacuzzi-villas" className={`${styles.featureSection} ${styles.jacuzziSection}`} aria-labelledby="jacuzzi-title">
       <div className={styles.contentWidth}>
         <div className={styles.sectionHeading}><div><span className={styles.eyebrow}><Bath size={15} /> SOAK. SWITCH OFF. STAY A LITTLE LONGER.</span><h2 id="jacuzzi-title">Our Jacuzzi Villas</h2><p>A private soak, a slower evening and a stay made for unwinding.</p></div><a href="#pool-villas" className={styles.collectionButton}>More of a pool person? <ChevronDown size={20} /></a></div>
@@ -95,7 +105,7 @@ export default function HomeContent({ villas }: { villas: Villa[] }) {
       </div>
     </section>
 
-    <section id="destinations" className={styles.destinations} aria-labelledby="destinations-title"><div><span className={styles.eyebrow}>CLOSER THAN YOU THINK</span><h2 id="destinations-title">Leave the city.<br /><em>Find your quiet.</em></h2><p className={styles.destinationCopy}>Three destinations. A different pace in each one.</p></div><div className={styles.destinationLinks}>{[{ name: "Lonavala", text: "Glass villas & Jacuzzi cottages" }, { name: "Khopoli", text: "Pool days with your whole group" }, { name: "Panchgani", text: "Hillside mornings & garden evenings" }].map((place, i) => <Link href={`/areas/${place.name.toLowerCase()}`} key={place.name}><span>0{i + 1}</span><div><strong>{place.name}</strong><small>{place.text}</small></div><ArrowUpRight size={22} /></Link>)}</div></section>
+    <section id="destinations" className={styles.destinations} aria-labelledby="destinations-title"><div><span className={styles.eyebrow}>CLOSER THAN YOU THINK</span><h2 id="destinations-title">Leave the city.<br /><em>Find your quiet.</em></h2><p className={styles.destinationCopy}>Three premier destinations. A unique pace in each one.</p></div><div className={styles.destinationLinks}>{[{ name: "Villas in Lonavala", href: "/areas/lonavala", text: "Glass villas & private Jacuzzi chalets" }, { name: "Villas in Khopoli", href: "/areas/khopoli", text: "Private pool villas for large groups & families" }, { name: "Villas in Panchgani", href: "/areas/panchgani", text: "Hillside valley mornings & garden pool estates" }].map((place, i) => <Link href={place.href} key={place.name} title={`Explore ${place.name}`}><span>0{i + 1}</span><div><strong>{place.name}</strong><small>{place.text}</small></div><ArrowUpRight size={22} /></Link>)}</div></section>
 
     <section className={styles.careSection} aria-labelledby="care-title">
       <div className={styles.contentWidth}><div className={styles.centerHeading}><span className={styles.eyebrow}>THE STAY WILLAS WAY</span><h2 id="care-title">We care about <em>your stay.</em></h2><p>The beautiful home is just the beginning. We help make the rest feel easy.</p></div><div className={styles.reasonGrid}>{reasons.map(({ icon: Icon, title, text }) => <article key={title}><span className={styles.reasonIcon}><Icon size={24} /></span><h3>{title}</h3><p>{text}</p></article>)}</div></div>
@@ -108,6 +118,61 @@ export default function HomeContent({ villas }: { villas: Villa[] }) {
     ].map((moment, i) => <Link href={moment.href} key={moment.title}><span>0{i + 1}</span><h3>{moment.title}</h3><p>{moment.text}</p><strong>{moment.label} <ArrowUpRight size={16} /></strong></Link>)}</div></div></section>
 
     <section id="partner" className={styles.partnerSection} aria-labelledby="partner-title"><div className={styles.partnerPanel}><div className={styles.partnerPhoto}><Image src="/assets/villas/the-angle-house/gallery-11.webp" alt="The Angle House, a Stay Willas property with a private pool" fill sizes="(max-width: 850px) 90vw, 45vw" className={styles.cover} /></div><div className={styles.partnerCopy}><span className={styles.eyebrow}>FOR HOMEOWNERS</span><h2 id="partner-title">Your home.<br /><em>Our care.</em><br />A better partnership.</h2><p>Own a villa in Maharashtra? We treat your home like our own. From guest bookings to maintenance and daily operations, let our team help you share it with the world.</p><ul><li><BadgeCheck size={17} /> Thoughtful property care</li><li><Users size={17} /> Guest bookings & hospitality</li><li><HeartHandshake size={17} /> Support with daily operations</li></ul><Link href="/partner" className={styles.partnerButton}>Partner With Us <ArrowRight size={18} /></Link><Link href="/partner#partner-form" className={styles.partnerContact}>Fill property configuration <ArrowUpRight size={15} /></Link></div></div></section>
+
+    {/* Dedicated SEO Cross-Linking Hub for Core Destination Keywords */}
+    <section className="py-14 border-t border-slate-200/80 bg-white text-left px-4 sm:px-6">
+      <div className={styles.contentWidth}>
+        <div className="mb-8">
+          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#DAA520] block mb-1">
+            Top Staycation Search Destinations
+          </span>
+          <h3 className="font-heading font-bold text-xl sm:text-2xl text-[#1B3564]">
+            Browse Private Villas by Region
+          </h3>
+          <p className="text-slate-500 text-xs mt-1">Direct homeowner rates with 0% platform booking fee across Maharashtra.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-amber-200/60 shadow-xs space-y-2.5">
+            <div className="flex items-center justify-between pb-1 border-b border-amber-200/40">
+              <h4 className="font-bold text-sm text-[#1B3564]">Khopoli Region</h4>
+              <span className="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">90 Min Drive</span>
+            </div>
+            <ul className="text-xs space-y-2 text-slate-700">
+              <li><Link href="/areas/khopoli" className="font-bold text-[#1B3564] hover:text-[#DAA520] flex items-center justify-between group"><span>Villas in Khopoli</span> <ArrowUpRight size={13} className="text-[#DAA520] group-hover:translate-x-0.5 transition-transform" /></Link></li>
+              <li><Link href="/areas/khopoli" className="hover:text-[#DAA520] text-slate-600 block">Villas in Khopoli with Private Pool</Link></li>
+              <li><Link href="/villa/canopy-crest" className="hover:text-[#DAA520] text-slate-600 block">Canopy Crest (16 Guests)</Link></li>
+              <li><Link href="/blog/large-group-villa-staycation-khopoli-private-pool" className="hover:text-[#DAA520] text-slate-500 text-[11px] block">Khopoli Group Stay Guide &rarr;</Link></li>
+            </ul>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-amber-200/60 shadow-xs space-y-2.5">
+            <div className="flex items-center justify-between pb-1 border-b border-amber-200/40">
+              <h4 className="font-bold text-sm text-[#1B3564]">Lonavala &amp; Kamshet</h4>
+              <span className="text-[10px] bg-blue-100 text-blue-900 px-2 py-0.5 rounded-full font-bold">Hillside</span>
+            </div>
+            <ul className="text-xs space-y-2 text-slate-700">
+              <li><Link href="/areas/lonavala" className="font-bold text-[#1B3564] hover:text-[#DAA520] flex items-center justify-between group"><span>Villas in Lonavala</span> <ArrowUpRight size={13} className="text-[#DAA520] group-hover:translate-x-0.5 transition-transform" /></Link></li>
+              <li><Link href="/areas/lonavala" className="hover:text-[#DAA520] text-slate-600 block">Villas in Lonavala with Private Pool</Link></li>
+              <li><Link href="/villa/the-angle-house" className="hover:text-[#DAA520] text-slate-600 block">The Angle House Waterfall Pool</Link></li>
+              <li><Link href="/villa/willow-peak" className="hover:text-[#DAA520] text-slate-600 block">Willow Peak Jacuzzi Chalets</Link></li>
+            </ul>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-amber-200/60 shadow-xs space-y-2.5">
+            <div className="flex items-center justify-between pb-1 border-b border-amber-200/40">
+              <h4 className="font-bold text-sm text-[#1B3564]">Panchgani Highlands</h4>
+              <span className="text-[10px] bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full font-bold">Valley Views</span>
+            </div>
+            <ul className="text-xs space-y-2 text-slate-700">
+              <li><Link href="/areas/panchgani" className="font-bold text-[#1B3564] hover:text-[#DAA520] flex items-center justify-between group"><span>Villas in Panchgani</span> <ArrowUpRight size={13} className="text-[#DAA520] group-hover:translate-x-0.5 transition-transform" /></Link></li>
+              <li><Link href="/areas/panchgani" className="hover:text-[#DAA520] text-slate-600 block">Villas in Panchgani with Private Pool</Link></li>
+              <li><Link href="/villa/casa-de-reva" className="hover:text-[#DAA520] text-slate-600 block">Casa De Reva Kaswand Estate</Link></li>
+              <li><Link href="/blog/panchgani-family-reunion-villa-staycation" className="hover:text-[#DAA520] text-slate-500 text-[11px] block">Panchgani Reunion Guide &rarr;</Link></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section id="faqs" className={styles.faqSection} aria-labelledby="faq-title"><div className={styles.faqIntro}><span className={styles.eyebrow}>A FEW THINGS TO KNOW</span><h2 id="faq-title">Good questions.<br /><em>Easy answers.</em></h2><p>Everything you need to start planning your stay.</p><a href="https://wa.me/919619042310" target="_blank" rel="noopener noreferrer">Still wondering? Ask our concierge <ArrowUpRight size={16} /></a><Link href="/faq" className="mt-3 text-xs font-semibold text-[#1B3564] hover:text-[#DAA520] inline-flex items-center gap-1 transition-colors">Browse all questions &amp; help guide <ArrowRight size={14} /></Link></div><div className={styles.faqList}>{faqs.map(faq => <details key={faq.question} name="stay-faq"><summary>{faq.question}<ChevronDown size={18} /></summary><p>{faq.answer}</p></details>)}</div></section>
   </>;

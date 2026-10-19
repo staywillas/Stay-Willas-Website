@@ -200,15 +200,15 @@ const Navbar = ({ alwaysVisible = false }: { alwaysVisible?: boolean }) => {
                     <div className="glass-premium border border-yellow-200/50 rounded-2xl p-5 min-w-[210px] shadow-xl shadow-yellow-900/5 bg-[#FAF8F5]/95 backdrop-blur-md">
                       <div className="flex flex-col gap-3 text-left">
                         <Link href="/areas/lonavala" className="text-[13px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors flex items-center justify-between group/item">
-                          <span>Lonavala Villas</span>
+                          <span>Villas in Lonavala</span>
                           <ChevronRight size={13} className="text-brand-gold/60 group-hover/item:translate-x-1 transition-transform" />
                         </Link>
                         <Link href="/areas/khopoli" className="text-[13px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors flex items-center justify-between group/item">
-                          <span>Khopoli Villas</span>
+                          <span>Villas in Khopoli</span>
                           <ChevronRight size={13} className="text-brand-gold/60 group-hover/item:translate-x-1 transition-transform" />
                         </Link>
                         <Link href="/areas/panchgani" className="text-[13px] font-bold text-brand-navy hover:text-brand-gold tracking-wide transition-colors flex items-center justify-between group/item">
-                          <span>Panchgani Villas</span>
+                          <span>Villas in Panchgani</span>
                           <ChevronRight size={13} className="text-brand-gold/60 group-hover/item:translate-x-1 transition-transform" />
                         </Link>
                         <div className="pt-2 mt-1 border-t border-[#DAA520]/20">

@@ -4,7 +4,7 @@
 const WhatsAppSticky = () => {
 
   return (
-    <div className="group fixed bottom-20 right-4 sm:bottom-8 sm:left-8 z-[8000] flex items-center gap-3">
+    <div className="group fixed bottom-20 left-4 sm:bottom-8 sm:left-8 z-[8000] flex items-center gap-3">
       <a
         href="https://wa.me/919619042310?text=Hi%20Stay%20Willas!%20I'm%20browsing%20your%20beautiful%20collection%20of%20private%20estates%20and%20would%20love%20to%20chat%20about%20planning%20our%20perfect%20staycation."
         target="_blank"

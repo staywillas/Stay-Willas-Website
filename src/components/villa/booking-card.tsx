@@ -13,6 +13,7 @@ import { format, addDays, differenceInDays } from "date-fns";
 import { createCheckoutSession, createAwaitingVerificationBooking } from "@/app/actions/booking";
 import { captureBookingLead } from "@/app/actions/inquiry";
 import { useUser, SignInButton } from "@clerk/nextjs";
+import { categorizeNight, checkLongWeekend } from "@/lib/calendar-holidays";
 
 interface DailyPriceProp {
   id: string;
@@ -203,6 +204,7 @@ const BookingCard = ({
 
   // Cottages required for Willow Peak (1 for Cottage A/B/C, 3 for ALL)
   const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
+  const isSingleWillowCottage = isWillowPeak && cottageSelection !== "ALL";
   const currentMaxGuests = isWillowPeak ? (cottageSelection === "ALL" ? 12 : 4) : actualMaxGuests;
 
   // Premium custom calendar states
@@ -525,43 +527,50 @@ const BookingCard = ({
 
   const serviceFee = 0;
 
-  // Check if a night is a weekday (Monday = 1, Tuesday = 2, Wednesday = 3, Thursday = 4)
-  const isWeekdayNight = (item: { date: Date; type: string }) => {
-    // If explicit weekend override type (FRIDAY, SATURDAY, SUNDAY, WEEKEND)
-    if (item.type === "FRIDAY" || item.type === "SATURDAY" || item.type === "SUNDAY" || item.type === "WEEKEND") {
-      return false;
-    }
-    const day = item.date.getDay(); // 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
-    return day >= 1 && day <= 4;
-  };
+  // Split breakdown into Normal Weekdays (26% off) vs. Weekends & Long Weekends (5% off)
+  const normalWeekdayBreakdown = breakdown.filter(item => {
+    const { category } = categorizeNight(item.date, item.type);
+    return category === "NORMAL_WEEKDAY";
+  });
+  const rawNormalWeekdaySubtotal = normalWeekdayBreakdown.reduce((sum, item) => sum + item.price, 0);
+  const normalWeekdaySubtotal = Math.round(rawNormalWeekdaySubtotal * (isWillowPeak ? (cottagesCount / 3) : 1));
+  const normalWeekdayNightsCount = normalWeekdayBreakdown.length;
+  const normalWeekdayExtraCost = extraGuestsCostPerNight * normalWeekdayNightsCount;
+  const normalWeekdayEligibleBase = normalWeekdaySubtotal + normalWeekdayExtraCost;
 
-  const weekdayBreakdown = breakdown.filter(item => isWeekdayNight(item));
-  const rawWeekdaySubtotal = weekdayBreakdown.reduce((sum, item) => sum + item.price, 0);
-  const weekdaySubtotal = Math.round(rawWeekdaySubtotal * (isWillowPeak ? (cottagesCount / 3) : 1));
-  const weekdayNightsCount = weekdayBreakdown.length;
-
-  // Extra guests cost associated with weekday nights
-  const weekdayExtraGuestsCost = extraGuestsCostPerNight * weekdayNightsCount;
-  const weekdayEligibleBase = weekdaySubtotal + weekdayExtraGuestsCost;
+  const weekendAndHolidayBreakdown = breakdown.filter(item => {
+    const { category } = categorizeNight(item.date, item.type);
+    return category === "WEEKEND" || category === "LONG_WEEKEND";
+  });
+  const rawWeekendAndHolidaySubtotal = weekendAndHolidayBreakdown.reduce((sum, item) => sum + item.price, 0);
+  const weekendAndHolidaySubtotal = Math.round(rawWeekendAndHolidaySubtotal * (isWillowPeak ? (cottagesCount / 3) : 1));
+  const weekendAndHolidayNightsCount = weekendAndHolidayBreakdown.length;
+  const weekendAndHolidayExtraCost = extraGuestsCostPerNight * weekendAndHolidayNightsCount;
+  const weekendAndHolidayEligibleBase = weekendAndHolidaySubtotal + weekendAndHolidayExtraCost;
 
   const calculateDiscount = () => {
+    if (isSingleWillowCottage) return 0;
     if (!isCouponApplied || nights <= 0) return 0;
     const clean = (couponCode || "STAYW26").trim().toUpperCase();
 
     if (clean.includes("26") || clean === "STAYW26" || clean === "WEEKDAY26" || clean.includes("28") || clean === "STAYW28") {
-      // Flat 26% discount strictly on Mon-Thu (Weekday) nights only!
-      return Math.round(weekdayEligibleBase * 0.26);
+      // 26% discount strictly on Normal Mon-Thu Weekdays + 5% discount on Weekends & Long Weekends
+      const weekdayDisc = Math.round(normalWeekdayEligibleBase * 0.26);
+      const weekendDisc = Math.round(weekendAndHolidayEligibleBase * 0.05);
+      return weekdayDisc + weekendDisc;
     }
 
-    if (clean === "STAY5") {
-      return Math.round(weekdayEligibleBase * 0.05);
+    if (clean === "STAY5" || clean === "WEEKEND5") {
+      return Math.round((normalWeekdayEligibleBase + weekendAndHolidayEligibleBase) * 0.05);
     }
 
     if (clean === "STAY10" || clean.includes("10")) {
-      return Math.round(weekdayEligibleBase * 0.10);
+      return Math.round((normalWeekdayEligibleBase + weekendAndHolidayEligibleBase) * 0.10);
     }
 
-    return Math.round(weekdayEligibleBase * 0.26);
+    const weekdayDisc = Math.round(normalWeekdayEligibleBase * 0.26);
+    const weekendDisc = Math.round(weekendAndHolidayEligibleBase * 0.05);
+    return weekdayDisc + weekendDisc;
   };
 
   const discount = calculateDiscount();
@@ -1164,81 +1173,83 @@ We are so excited about this getaway! Could you please check availability and he
         )}
 
         {/* Coupon Code Section */}
-        <div className="w-full bg-gradient-to-r from-amber-50 to-emerald-50/50 border border-[#DAA520]/40 rounded-2xl p-4 text-left shadow-sm space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-start sm:items-center gap-2">
-              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#DAA520]/20 text-[#1B3564] text-xs font-black shrink-0">🎁</span>
-              <div>
-                <span className="text-[10px] text-[#DAA520] uppercase tracking-wider font-black block">Weekday Special Direct Offer</span>
-                <p className="text-xs text-slate-800 font-bold mt-0.5 leading-tight">
-                  Flat <span className="text-emerald-600 font-black">26% OFF</span> on Weekdays (Mon–Thu) with coupon <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all font-mono">Stayw26</strong>
-                </p>
+        {!isSingleWillowCottage && (
+          <div className="w-full bg-gradient-to-r from-amber-50 to-emerald-50/50 border border-[#DAA520]/40 rounded-2xl p-4 text-left shadow-sm space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-start sm:items-center gap-2">
+                <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#DAA520]/20 text-[#1B3564] text-xs font-black shrink-0">🎁</span>
+                <div>
+                  <span className="text-[10px] text-[#DAA520] uppercase tracking-wider font-black block">Exclusive Direct Booking Offer</span>
+                  <p className="text-xs text-slate-800 font-bold mt-0.5 leading-tight">
+                    <span className="text-emerald-600 font-black">26% OFF</span> on Weekdays &amp; <span className="text-emerald-600 font-black">5% OFF</span> on Weekends &amp; Holidays with code <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all font-mono">Stayw26</strong>
+                  </p>
+                </div>
               </div>
-            </div>
-            {!isCouponApplied ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setIsCouponApplied(true);
-                  setCouponCode("STAYW26");
-                }}
-                className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 shadow-xs active:scale-95"
-              >
-                Apply 26% Off
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setIsCouponApplied(false);
-                  setCouponCode("");
-                }}
-                className="text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 px-3 py-1.5 rounded-xl uppercase flex items-center gap-1.5 w-full sm:w-auto shrink-0 justify-center cursor-pointer transition-all active:scale-95"
-              >
-                <Check size={12} className="stroke-[3] text-emerald-700" />
-                <span>26% Applied (-₹{discount.toLocaleString("en-IN")}) ✕</span>
-              </button>
-            )}
-          </div>
-          
-          <div className="flex gap-2 w-full">
-            <input
-              type="text"
-              placeholder="Enter coupon code (e.g. Stayw26)"
-              className="flex-1 min-w-0 bg-white border border-border-subtle rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wider placeholder:text-text-primary/30 placeholder:normal-case outline-none focus:border-[#DAA520] focus:ring-1 focus:ring-[#DAA520]/20"
-              value={couponCode}
-              onChange={(e) => {
-                setCouponCode(e.target.value.toUpperCase());
-                if (isCouponApplied) {
-                  setIsCouponApplied(false);
-                }
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => {
-                if (isCouponApplied) {
-                  setIsCouponApplied(false);
-                  setCouponCode("");
-                } else {
-                  if (couponCode.trim().length > 0) {
-                    setIsCouponApplied(true);
-                  } else {
+              {!isCouponApplied ? (
+                <button
+                  type="button"
+                  onClick={() => {
                     setIsCouponApplied(true);
                     setCouponCode("STAYW26");
+                  }}
+                  className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 shadow-xs active:scale-95"
+                >
+                  Apply Direct Savings
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCouponApplied(false);
+                    setCouponCode("");
+                  }}
+                  className="text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 px-3 py-1.5 rounded-xl uppercase flex items-center gap-1.5 w-full sm:w-auto shrink-0 justify-center cursor-pointer transition-all active:scale-95"
+                >
+                  <Check size={12} className="stroke-[3] text-emerald-700" />
+                  <span>Savings Applied (-₹{discount.toLocaleString("en-IN")}) ✕</span>
+                </button>
+              )}
+            </div>
+            
+            <div className="flex gap-2 w-full">
+              <input
+                type="text"
+                placeholder="Enter coupon code (e.g. Stayw26)"
+                className="flex-1 min-w-0 bg-white border border-border-subtle rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wider placeholder:text-text-primary/30 placeholder:normal-case outline-none focus:border-[#DAA520] focus:ring-1 focus:ring-[#DAA520]/20"
+                value={couponCode}
+                onChange={(e) => {
+                  setCouponCode(e.target.value.toUpperCase());
+                  if (isCouponApplied) {
+                    setIsCouponApplied(false);
                   }
-                }
-              }}
-              className={`px-4 py-2 border text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
-                isCouponApplied 
-                  ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-100" 
-                  : "border-[#1B3564] bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] font-black"
-              }`}
-            >
-              {isCouponApplied ? "Remove" : "Apply"}
-            </button>
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (isCouponApplied) {
+                    setIsCouponApplied(false);
+                    setCouponCode("");
+                  } else {
+                    if (couponCode.trim().length > 0) {
+                      setIsCouponApplied(true);
+                    } else {
+                      setIsCouponApplied(true);
+                      setCouponCode("STAYW26");
+                    }
+                  }
+                }}
+                className={`px-4 py-2 border text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
+                  isCouponApplied 
+                    ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-100" 
+                    : "border-[#1B3564] bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] font-black"
+                }`}
+              >
+                {isCouponApplied ? "Remove" : "Apply"}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Contact Information Section */}
         <div className="pt-4 border-t border-border-subtle/60 space-y-3">
@@ -1371,9 +1382,12 @@ We are so excited about this getaway! Could you please check availability and he
               <div className="flex items-center gap-1.5 text-left">
                 <Sparkles size={14} className="text-emerald-700 shrink-0" />
                 <div>
-                  <span>26% Weekday Discount ({couponCode || "STAYW26"})</span>
+                  <span>Direct Savings Applied ({couponCode || "STAYW26"})</span>
                   <span className="text-[10px] text-emerald-700 font-normal block">
-                    Applied on {weekdayNightsCount} weekday night{weekdayNightsCount > 1 ? "s" : ""} (Mon–Thu)
+                    {[
+                      normalWeekdayNightsCount > 0 ? `${normalWeekdayNightsCount} Weekday (26% off)` : null,
+                      weekendAndHolidayNightsCount > 0 ? `${weekendAndHolidayNightsCount} Weekend/Holiday (5% off)` : null,
+                    ].filter(Boolean).join(" + ")}
                   </span>
                 </div>
               </div>
@@ -1383,7 +1397,7 @@ We are so excited about this getaway! Could you please check availability and he
 
           {isCouponApplied && discount === 0 && nights > 0 && (
             <div className="text-[11px] text-amber-800 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200 text-left">
-              ℹ️ <strong>Coupon Stayw26:</strong> Flat 26% discount applies exclusively to Monday–Thursday nights. Your selected dates are charged at standard weekend rates.
+              ℹ️ <strong>Direct Offer Active:</strong> Direct savings applies to eligible nights (26% on normal weekdays, 5% on weekends &amp; holidays).
             </div>
           )}
 

@@ -239,6 +239,11 @@ const nextConfig: NextConfig = {
       destination: '/partner',
       permanent: true,
     },
+    {
+      source: '/destinations',
+      destination: '/areas',
+      permanent: true,
+    },
   ],
   headers: async () => [
     {

@@ -172,7 +172,9 @@ export default async function AreasPage() {
                       {area.tagline}
                     </span>
                     <h2 className="text-2xl font-heading font-semibold text-text-primary mb-3">
-                      {area.name}
+                      <Link href={area.link} className="hover:text-[#DAA520] transition-colors">
+                        Villas in {area.name}
+                      </Link>
                     </h2>
                     <p className="text-text-primary/60 text-sm sm:text-base leading-relaxed font-light">
                       {area.desc}
@@ -187,7 +189,7 @@ export default async function AreasPage() {
                       href={area.link}
                       className="inline-flex items-center justify-between w-full bg-[#1B3564] hover:bg-[#152A50] text-white rounded-2xl px-5 py-3.5 text-xs font-bold tracking-wider uppercase shadow-md transition-all duration-300 group-hover:scale-[1.02]"
                     >
-                      <span>Explore {area.name} Collection</span>
+                      <span>Explore Villas in {area.name}</span>
                       <ArrowUpRight size={16} className="text-accent-primary" />
                     </Link>
                   ) : (

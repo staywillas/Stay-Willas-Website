@@ -9,17 +9,17 @@ export const guideTopics = [
   { id: "khopoli", title: "Khopoli groups, Imagica and team trips", slugs: [
     "best-villas-near-imagica-khopoli-with-private-pool", "things-to-do-near-adlabs-imagica-khopoli",
     "48-hour-weekend-itinerary-private-pool-villa-khopoli", "best-khopoli-villa-for-large-groups",
-    "large-group-villa-staycation-khopoli-private-pool", "corporate-offsite-checklist-for-a-khopoli-villa",
+    "large-group-villa-staycation-khopoli-private-pool", "farmhouse-in-khopoli-with-swimming-pool", "corporate-offsite-checklist-for-a-khopoli-villa",
     "corporate-offsite-startup-team-retreat-villas-khopoli", "skip-lonavala-traffic-khopoli-weekend-villa-getaway",
     "why-khopoli-is-mumbais-top-luxury-villa-escape",
   ] },
   { id: "couples", title: "Willow Peak cottages and couples' stays", slugs: [
-    "romantic-a-frame-cottages-lonavala-couples-guide", "lonavala-villa-willow-peak-staycation-guide",
+    "romantic-a-frame-cottages-lonavala-couples-guide", "private-pool-villa-near-pune-for-couples", "lonavala-villa-willow-peak-staycation-guide",
     "affordable-villa-lonavala-willow-peak-budget-luxury", "villas-in-lonavala-under-5000-with-pool-willow-peak",
     "villas-in-lonavala-under-10000-with-private-pool-willow-peak",
   ] },
   { id: "family", title: "Families, pets and celebrations", slugs: [
-    "family-villas-in-lonavala-with-private-pool", "best-villa-in-lonavala-for-birthday-parties-family-reunions",
+    "family-villas-in-lonavala-with-private-pool", "private-villa-with-big-lawn-sports-turf-near-mumbai-pune", "best-villa-in-lonavala-for-birthday-parties-family-reunions",
     "pet-friendly-villas-near-mumbai-why-the-angle-house", "pet-friendly-villa-rules-near-mumbai-what-to-know",
   ] },
   { id: "local", title: "Lonavala attractions and itineraries", slugs: [
@@ -33,7 +33,7 @@ export const guideTopics = [
     "work-from-villa-staycation-guide-near-mumbai-pune", "stargazing-and-astrophotography-staycations-near-mumbai-pune",
   ] },
   { id: "seasonal", title: "Weekend routes and seasonal planning", slugs: [
-    "best-weekend-getaways-near-mumbai-for-family-and-friends", "best-weekend-getaways-near-pune-for-family-and-friends",
+    "best-weekend-getaways-near-mumbai-for-family-and-friends", "best-weekend-getaways-near-pune-for-family-and-friends", "villas-near-pune-with-swimming-pool",
     "lonavala-villa-monsoon-weekend-guide", "khopoli-waterfall-monsoon-villa-guide",
   ] },
   { id: "panchgani", title: "Panchgani and Kaswand stays", slugs: [
@@ -61,11 +61,11 @@ export function getGuideBookingLinks(blog: BlogPost) {
   const topic = getGuideTopic(blog.slug)?.id;
   if (topic === "owners") return [{ href: "/partner", label: "Explore Stay Willas property management" }];
   if (topic === "panchgani") return [
-    { href: "/areas/panchgani", label: "Explore Panchgani private pool stays" },
+    { href: "/areas/panchgani", label: "Explore Villas in Panchgani with private pool" },
     { href: "/villa/casa-de-reva", label: "See Casa De Reva in Kaswand" },
   ];
   if (topic === "khopoli" || blog.slug.includes("khopoli-waterfall")) return [
-    { href: "/areas/khopoli", label: "Explore private pool villas in Khopoli" },
+    { href: "/areas/khopoli", label: "Explore Villas in Khopoli with private pool" },
     { href: "/villa/canopy-crest", label: "See Canopy Crest: up to 16 guests" },
   ];
   if (topic === "couples") return [
@@ -73,11 +73,11 @@ export function getGuideBookingLinks(blog: BlogPost) {
     { href: "/anniversary-celebration-villa-with-private-pool", label: "Plan an anniversary stay" },
   ];
   if (topic === "seasonal" || topic === "experiences") return [
-    { href: "/destinations", label: "Compare our three villa destinations" },
+    { href: "/areas", label: "Compare our three villa destinations" },
     { href: "/villas", label: "Browse pool villas and Jacuzzi cottages" },
   ];
   return [
-    { href: "/areas/lonavala", label: "Compare Lonavala pool villas and Jacuzzi cottages" },
+    { href: "/areas/lonavala", label: "Explore Villas in Lonavala with private pool" },
     { href: "/villa/the-angle-house", label: "See The Angle House in Kamshet" },
   ];
 }

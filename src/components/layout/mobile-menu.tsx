@@ -264,7 +264,7 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
                             onClick={() => onClose()}
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
-                            <span>Lonavala Villas</span>
+                            <span>Villas in Lonavala</span>
                           </Link>
                           <Link
                             href="/areas/khopoli"
@@ -272,7 +272,7 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
                             onClick={() => onClose()}
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
-                            <span>Khopoli Villas</span>
+                            <span>Villas in Khopoli</span>
                           </Link>
                           <Link
                             href="/areas/panchgani"
@@ -280,7 +280,7 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
                             onClick={() => onClose()}
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
-                            <span>Panchgani Villas</span>
+                            <span>Villas in Panchgani</span>
                           </Link>
                           <Link
                             href="/areas"
@@ -384,7 +384,7 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
                         className="py-1 px-2 text-[11px] font-bold text-white hover:text-[#DAA520] flex items-center justify-between rounded transition-colors"
                         onClick={() => onClose()}
                       >
-                        <span>Lonavala Villas</span>
+                        <span>Villas in Lonavala</span>
                         <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">26% OFF</span>
                       </Link>
                       <Link
@@ -392,7 +392,7 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
                         className="py-1 px-2 text-[11px] font-bold text-white hover:text-[#DAA520] flex items-center justify-between rounded transition-colors"
                         onClick={() => onClose()}
                       >
-                        <span>Khopoli Villas</span>
+                        <span>Villas in Khopoli</span>
                         <span className="bg-[#DAA520] text-[#1B3564] text-[9px] font-black px-1 rounded">26% OFF</span>
                       </Link>
                       <Link

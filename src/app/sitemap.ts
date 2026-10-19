@@ -30,11 +30,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.95,
     },
     {
-      url: `${BASE_URL}/destinations`,
-      changeFrequency: "weekly",
-      priority: 0.85,
-    },
-    {
       url: `${BASE_URL}/experiences`,
       changeFrequency: "weekly",
       priority: 0.8,
@@ -78,6 +73,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}/cancellation-policy`,
       changeFrequency: "monthly",
       priority: 0.3,
+    },
+    {
+      url: `${BASE_URL}/slatewood`,
+      changeFrequency: "weekly",
+      priority: 0.85,
     },
   ];
 

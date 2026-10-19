@@ -163,7 +163,7 @@ export default function RootLayout({
         <ClerkProvider>
           <SmoothScrollProvider>
             <PublicNavbar />
-            <div className="overflow-x-hidden w-full max-w-full relative">
+            <div className="overflow-x-clip w-full max-w-full relative">
               {children}
             </div>
             <FloatingWidgets />

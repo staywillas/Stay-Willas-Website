@@ -18,9 +18,10 @@ interface Review {
 interface ReviewSectionProps {
   villaId: string;
   initialReviews: Review[];
+  embedded?: boolean;
 }
 
-const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
+const ReviewSection = ({ villaId, initialReviews, embedded = false }: ReviewSectionProps) => {
   const { user, isSignedIn } = useAuth();
   const [reviews, setReviews] = useState(initialReviews);
   const [rating, setRating] = useState(5);
@@ -71,7 +72,7 @@ const ReviewSection = ({ villaId, initialReviews }: ReviewSectionProps) => {
   };
 
   return (
-    <section id="reviews" className="py-20 border-t border-border-subtle/60 scroll-mt-20">
+    <section id={embedded ? undefined : "reviews"} className="py-20 border-t border-border-subtle/60 scroll-mt-20">
       <div className="flex flex-col lg:flex-row gap-16">
         
         {/* The list of guest reviews, grouped on the left side of the screen */}

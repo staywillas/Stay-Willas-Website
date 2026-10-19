@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { parseICal } from "@/lib/ical-sync";
 import { startOfDay, parseISO } from "date-fns";
 import { sendAdminLeadNotification } from "@/lib/lead-notifications";
+import { categorizeNight } from "@/lib/calendar-holidays";
 
 function getStripe() {
   const apiKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder_build_key_0000000000000000";
@@ -30,8 +31,10 @@ export async function calculateStayPrice(
   if (!villa) throw new Error("Villa not found");
 
   let totalStayPrice = 0;
-  let weekdayStayPrice = 0;
-  let weekdayNights = 0;
+  let normalWeekdayStayPrice = 0;
+  let normalWeekdayNights = 0;
+  let weekendAndHolidayStayPrice = 0;
+  let weekendAndHolidayNights = 0;
   let currentDate = new Date(checkIn);
   currentDate.setHours(0, 0, 0, 0);
   const end = new Date(checkOut);
@@ -90,10 +93,13 @@ export async function calculateStayPrice(
     }
 
     totalStayPrice += nightPrice;
-    const day = currentDate.getDay();
-    if (day >= 1 && day <= 4) {
-      weekdayStayPrice += nightPrice;
-      weekdayNights++;
+    const { category } = categorizeNight(currentDate);
+    if (category === "NORMAL_WEEKDAY") {
+      normalWeekdayStayPrice += nightPrice;
+      normalWeekdayNights++;
+    } else {
+      weekendAndHolidayStayPrice += nightPrice;
+      weekendAndHolidayNights++;
     }
 
     currentDate.setDate(currentDate.getDate() + 1);
@@ -105,7 +111,8 @@ export async function calculateStayPrice(
   if (isWillowPeak) {
     // Proportional pricing based on number of cottages booked (1 cottage = 1/3, 2 = 2/3, 3 = 3/3)
     totalStayPrice = Math.round(totalStayPrice * (cottagesCount / 3));
-    weekdayStayPrice = Math.round(weekdayStayPrice * (cottagesCount / 3));
+    normalWeekdayStayPrice = Math.round(normalWeekdayStayPrice * (cottagesCount / 3));
+    weekendAndHolidayStayPrice = Math.round(weekendAndHolidayStayPrice * (cottagesCount / 3));
   }
 
   const nights = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
@@ -113,14 +120,19 @@ export async function calculateStayPrice(
   const extraGuests = Math.max(0, guests - baseGuestsCount);
   const extraGuestsCostPerNight = villa.extraGuestFee ? extraGuests * villa.extraGuestFee : 0;
   const totalExtraGuestsCost = extraGuestsCostPerNight * (nights > 0 ? nights : 0);
-  const weekdayExtraGuestsCost = extraGuestsCostPerNight * weekdayNights;
-  const weekdayEligibleTotal = weekdayStayPrice + weekdayExtraGuestsCost;
+  const normalWeekdayExtraGuestsCost = extraGuestsCostPerNight * normalWeekdayNights;
+  const normalWeekdayEligibleTotal = normalWeekdayStayPrice + normalWeekdayExtraGuestsCost;
+  const weekendAndHolidayExtraGuestsCost = extraGuestsCostPerNight * weekendAndHolidayNights;
+  const weekendAndHolidayEligibleTotal = weekendAndHolidayStayPrice + weekendAndHolidayExtraGuestsCost;
 
   return { 
     totalRoomPrice: totalStayPrice, 
     totalExtraGuestsCost,
-    weekdayEligibleTotal,
-    weekdayNights,
+    normalWeekdayEligibleTotal,
+    normalWeekdayNights,
+    weekendAndHolidayEligibleTotal,
+    weekendAndHolidayNights,
+    weekdayEligibleTotal: normalWeekdayEligibleTotal,
     baseRate: villa.price,
     extraGuestsCostPerNight,
     cottagesCount
@@ -211,7 +223,8 @@ export async function createCheckoutSession(formData: {
     const { 
       totalRoomPrice, 
       totalExtraGuestsCost, 
-      weekdayEligibleTotal 
+      normalWeekdayEligibleTotal,
+      weekendAndHolidayEligibleTotal
     } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate, formData.guests);
 
     // 3. STAGE C: Add-Ons Aggregate Costs
@@ -232,15 +245,19 @@ export async function createCheckoutSession(formData: {
 
     const serviceFee = 0; // Removed luxury service fee
     let discount = 0;
-    if (formData.couponCode) {
+    const isSingleWillowCottage = isWillowCottage || (isWillowPeak && requiredCottages < 3);
+    if (formData.couponCode && !isSingleWillowCottage) {
       const code = formData.couponCode.trim().toUpperCase();
 
       if (code === "STAYW26" || code.includes("26") || code === "ESCAPE26" || code === "LONAVALA26" || code === "KHOPOLI26" || code === "STAYW28" || code.includes("28")) {
-        discount = Math.round(weekdayEligibleTotal * 0.26);
-      } else if (code === "STAY5") {
-        discount = Math.round(weekdayEligibleTotal * 0.05);
+        // 26% on normal weekdays + 5% on weekends and long weekends
+        discount = Math.round(normalWeekdayEligibleTotal * 0.26) + Math.round(weekendAndHolidayEligibleTotal * 0.05);
+      } else if (code === "STAY5" || code === "WEEKEND5") {
+        discount = Math.round((normalWeekdayEligibleTotal + weekendAndHolidayEligibleTotal) * 0.05);
       } else if (code === "STAY10" || code.includes("10")) {
-        discount = Math.round(weekdayEligibleTotal * 0.10);
+        discount = Math.round((normalWeekdayEligibleTotal + weekendAndHolidayEligibleTotal) * 0.10);
+      } else {
+        discount = Math.round(normalWeekdayEligibleTotal * 0.26) + Math.round(weekendAndHolidayEligibleTotal * 0.05);
       }
     }
     const finalTotal = totalRoomPrice + totalExtraGuestsCost + addOnsPrice + serviceFee - discount;
