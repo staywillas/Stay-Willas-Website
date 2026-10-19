@@ -6,7 +6,7 @@ import { getReviews } from "@/app/actions/review";
 import { resolvePropertyImage } from "@/lib/property-images";
 import PropertyEditorialDetails from "@/components/villa/property-editorial-details";
 
-export const revalidate = 60; // Instant TTFB via ISR cache
+export const revalidate = 3600; // 1 hour edge cache (on-demand revalidated on admin updates)
 
 export async function generateStaticParams() {
   const villas = await prisma.villa.findMany({

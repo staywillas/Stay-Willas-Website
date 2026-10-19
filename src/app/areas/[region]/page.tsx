@@ -7,7 +7,7 @@ import {
   type AreaSlug,
 } from "@/data/area-editorial";
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours edge cache
 type Props = { params: Promise<{ region: string }> };
 
 async function getAreaSlug(params: Props["params"]): Promise<AreaSlug> {

@@ -1,7 +1,7 @@
 import AreaEditorialPage from "@/components/areas/area-editorial-page";
 import { getAreaMetadata } from "@/data/area-editorial";
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours edge cache
 export const metadata = getAreaMetadata("lonavala");
 
 export default function LonavalaPage() {

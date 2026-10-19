@@ -11,7 +11,7 @@ import {
   Star, Car, Sun, Gamepad2, Compass
 } from "lucide-react";
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours edge cache
 
 export const metadata: Metadata = {
   title: "Private Pool Party Villa Near Pune for Family | Stay Willas",

@@ -11,7 +11,7 @@ import {
   Star, Wine, Bath, Eye, ShieldCheck
 } from "lucide-react";
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours edge cache
 
 export const metadata: Metadata = {
   title: "Anniversary Celebration Villa with Private Pool | Stay Willas",

@@ -6,7 +6,7 @@ import { FAQS_DATA, FAQ_CATEGORIES } from "@/data/faqs";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 import { ArrowUpRight, HelpCircle } from "lucide-react";
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours edge cache
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions (FAQ) | Stay Willas Luxury Villas",

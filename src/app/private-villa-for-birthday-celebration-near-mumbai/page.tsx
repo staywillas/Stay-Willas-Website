@@ -11,7 +11,7 @@ import {
   MessageCircle, Star, Phone, Clock, Heart, Award
 } from "lucide-react";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Private Villa for Birthday Celebration Near Mumbai | Stay Willas",

@@ -12,7 +12,7 @@ import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle, ArrowRight,
 import { prisma } from "@/lib/db";
 import BlogHorizontalMarquee from "@/components/blog/blog-horizontal-marquee";
 
-export const revalidate = 60; // Instant TTFB via ISR cache
+export const revalidate = 86400; // 24 hours edge cache
 
 interface PageProps {
   params: Promise<{ slug: string }>;

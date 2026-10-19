@@ -7,7 +7,7 @@ import { getGuideTopic } from "@/data/guide-navigation";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 import { ArrowUpRight, House } from "lucide-react";
 
-export const revalidate = 60; // Instant TTFB via ISR cache
+export const revalidate = 86400; // 24 hours edge cache
 
 export const metadata: Metadata = {
   title: "Stay Willas Blog | Luxury Villa Guides & Staycation Tips",

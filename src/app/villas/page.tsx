@@ -5,7 +5,7 @@ import { prisma } from "@/lib/db";
 import VillasClient from "@/components/villas/villas-client";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 
-export const revalidate = 60; // Instant TTFB via ISR cache
+export const revalidate = 3600; // 1 hour edge cache
 
 export const metadata: Metadata = {
   title: "Luxury Villas for Rent Near Mumbai | Stay Willas",

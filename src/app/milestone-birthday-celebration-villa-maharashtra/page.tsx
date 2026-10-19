@@ -11,7 +11,7 @@ import {
   MessageCircle, Star, Calendar, Music, Clock
 } from "lucide-react";
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours edge cache
 
 export const metadata: Metadata = {
   title: "Milestone Birthday Celebration Villa Maharashtra | Stay Willas",
