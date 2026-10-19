@@ -2,6 +2,7 @@ import { blogsData, type BlogPost } from "./blogs";
 
 export const guideTopics = [
   { id: "choosing", title: "Choose and budget for your stay", slugs: [
+    "best-villas-in-lonavala-with-private-pool",
     "private-villa-in-lonavala-guide",
     "lonavala-vs-khandala-villa-comparison", "khopoli-vs-lonavala-villa-comparison",
     "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "top-villas-in-lonavala-with-private-pool-guide",
@@ -59,7 +60,7 @@ export function getRelatedGuides(blog: BlogPost, limit = 3): BlogPost[] {
 }
 
 export function getGuideBookingLinks(blog: BlogPost) {
-  if (blog.slug === "private-villa-in-lonavala-guide") return [
+  if (blog.slug === "private-villa-in-lonavala-guide" || blog.slug === "best-villas-in-lonavala-with-private-pool") return [
     { href: "/villa/the-angle-house", label: "Explore The Angle House (3 BHK Pool & Jacuzzi)" },
     { href: "/villa/willow-peak", label: "Explore Willow Peak (A-Frame Jacuzzi Chalets)" },
   ];
@@ -88,7 +89,7 @@ export function getGuideBookingLinks(blog: BlogPost) {
 }
 
 export const destinationGuides: Record<string, string[]> = {
-  lonavala: ["private-villa-in-lonavala-guide", "lonavala-vs-khandala-villa-comparison", "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "family-villas-in-lonavala-with-private-pool", "top-7-hidden-gems-secret-viewpoints-in-lonavala"],
+  lonavala: ["best-villas-in-lonavala-with-private-pool", "private-villa-in-lonavala-guide", "lonavala-vs-khandala-villa-comparison", "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "family-villas-in-lonavala-with-private-pool", "top-7-hidden-gems-secret-viewpoints-in-lonavala"],
   khopoli: ["khopoli-vs-lonavala-villa-comparison", "best-villas-near-imagica-khopoli-with-private-pool", "best-khopoli-villa-for-large-groups", "corporate-offsite-checklist-for-a-khopoli-villa"],
   panchgani: ["panchgani-valley-view-villas-near-mapro-garden-guide", "panchgani-vs-mahabaleshwar-villa-stay-for-groups"],
 };
@@ -96,7 +97,7 @@ export const destinationGuides: Record<string, string[]> = {
 export function getPropertyGuides(slug: string): string[] {
   if (slug === "canopy-crest") return destinationGuides.khopoli;
   if (slug === "casa-de-reva") return destinationGuides.panchgani;
-  if (slug.startsWith("willow-peak")) return ["private-villa-in-lonavala-guide", "romantic-a-frame-cottages-lonavala-couples-guide", "villas-in-lonavala-under-5000-with-pool-willow-peak", "villas-in-lonavala-under-10000-with-private-pool-willow-peak"];
-  if (slug === "the-angle-house") return ["private-villa-in-lonavala-guide", "family-villas-in-lonavala-with-private-pool", "pet-friendly-villas-near-mumbai-why-the-angle-house", "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "best-villa-in-lonavala-for-birthday-parties-family-reunions"];
+  if (slug.startsWith("willow-peak")) return ["best-villas-in-lonavala-with-private-pool", "private-villa-in-lonavala-guide", "romantic-a-frame-cottages-lonavala-couples-guide", "villas-in-lonavala-under-5000-with-pool-willow-peak", "villas-in-lonavala-under-10000-with-private-pool-willow-peak"];
+  if (slug === "the-angle-house") return ["best-villas-in-lonavala-with-private-pool", "private-villa-in-lonavala-guide", "family-villas-in-lonavala-with-private-pool", "pet-friendly-villas-near-mumbai-why-the-angle-house", "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "best-villa-in-lonavala-for-birthday-parties-family-reunions"];
   return [];
 }
