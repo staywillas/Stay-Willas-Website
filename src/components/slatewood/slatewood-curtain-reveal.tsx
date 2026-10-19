@@ -12,7 +12,6 @@ import {
   MapPin,
   MessageCircle,
   Phone,
-  Sparkles,
   Trophy,
   Users,
   UtensilsCrossed,
@@ -93,7 +92,7 @@ export default function SlatewoodCurtainReveal() {
             <div className={styles.medallionBadge}>
               <div className={styles.medallionInner}>
                 <div className={styles.crestHeader}>
-                  <Sparkles size={16} className={styles.crestSparkle} />
+                  <span className="w-2 h-2 rounded-full bg-[#daa520] animate-pulse" />
                   <span>UNVEILING SOON</span>
                 </div>
                 <h1 className={styles.crestTitle}>SLATEWOOD</h1>
@@ -118,7 +117,7 @@ export default function SlatewoodCurtainReveal() {
                   }}
                   aria-label="Open curtains to unveil Slatewood"
                 >
-                  <Sparkles size={16} />
+                  <Eye size={16} />
                   <span>Pull Curtains to Unveil</span>
                   <ArrowRight size={16} />
                 </button>
@@ -207,7 +206,7 @@ export default function SlatewoodCurtainReveal() {
                 <h2>Crafted for Togetherness. Finished in Slate &amp; Teak.</h2>
               </div>
               <span className={styles.exclusiveBadge}>
-                <Sparkles size={13} /> Handcrafted Design
+                <Compass size={13} /> Handcrafted Design
               </span>
             </div>
 
@@ -358,7 +357,7 @@ export default function SlatewoodCurtainReveal() {
             <div className={styles.rsvpGlow} />
             <div className={styles.rsvpHeader}>
               <span className={styles.rsvpBadge}>
-                <Sparkles size={14} /> VIP Priority Access
+                <ShieldCheck size={14} /> VIP Priority Access
               </span>
               <h2>Be First to Step Inside Slatewood</h2>
               <p>
@@ -424,7 +423,7 @@ export default function SlatewoodCurtainReveal() {
                 </div>
 
                 <button type="submit" className={styles.rsvpSubmitBtn}>
-                  <Sparkles size={17} />
+                  <CheckCircle2 size={17} />
                   <span>Register for Inaugural Launch Privileges</span>
                   <ArrowRight size={17} />
                 </button>

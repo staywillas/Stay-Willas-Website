@@ -19,7 +19,8 @@ import {
   CheckCircle2,
   AlertCircle,
   X,
-  Sparkles,
+  Zap,
+  ShieldCheck,
   Bed,
   Bath,
   Waves,
@@ -609,7 +610,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 ) : (
                   <>
                     {selectedVillaSlug !== "all" ? (
-                      <Sparkles size={14} className="stroke-[2.5]" />
+                      <Zap size={14} className="stroke-[2.5]" />
                     ) : (
                       <Search size={14} className="stroke-[2.5]" />
                     )}
@@ -800,7 +801,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
               ) : (
                 <>
                   {selectedVillaSlug !== "all" ? (
-                    <Sparkles size={15} className="stroke-[2.5]" />
+                    <Zap size={15} className="stroke-[2.5]" />
                   ) : (
                     <Search size={15} className="stroke-[2.5]" />
                   )}
@@ -931,7 +932,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 <div className="bg-[#1B3564] text-white px-6 py-5 sm:px-8 sm:py-6 flex items-center justify-between border-b border-white/10 shrink-0">
                   <div className="flex items-center gap-3.5">
                     <div className="w-11 h-11 rounded-2xl bg-[#DAA520]/20 border border-[#DAA520]/40 flex items-center justify-center text-[#DAA520] shrink-0">
-                      <Sparkles size={22} />
+                      <Building2 size={22} />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
@@ -1153,7 +1154,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                     className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-[0_4px_15px_rgba(224,83,76,0.3)] hover:shadow-[0_6px_20px_rgba(224,83,76,0.45)] flex items-center gap-1.5 cursor-pointer border-none"
                                     title="Instant Quick Book"
                                   >
-                                    <Sparkles size={13} className="stroke-[2.5]" />
+                                    <Zap size={13} className="stroke-[2.5]" />
                                     <span>Quick Book</span>
                                   </button>
 
@@ -1353,7 +1354,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                   <div className="text-left">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-widest flex items-center gap-1">
-                        <Sparkles size={12} className="text-[#DAA520]" />
+                        <ShieldCheck size={12} className="text-[#DAA520]" />
                         Instant Direct Booking • 0% Platform Fee
                       </span>
                     </div>

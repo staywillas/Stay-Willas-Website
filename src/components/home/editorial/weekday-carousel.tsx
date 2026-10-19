@@ -24,6 +24,14 @@ const stays = [
     alt: "Guests on the upper balcony and friends playing in the private pool at The Angle House",
     feature: "Private pool & balcony views",
   },
+  {
+    name: "Casa De Reva",
+    slug: "casa-de-reva",
+    location: "Kaswand, Panchgani",
+    image: "/assets/villas/terra-cotta-villa/casa-de-reva-balcony-beer.jpg",
+    alt: "Friends enjoying chilled beer on the valley-view balcony at Casa De Reva in Panchgani",
+    feature: "Valley-view balcony & private pool",
+  },
 ];
 
 export default function WeekdayCarousel() {

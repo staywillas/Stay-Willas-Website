@@ -8,7 +8,7 @@ import {
   BellRing, 
   ChefHat, 
   Waves, 
-  Sparkles, 
+  Building2, 
   Compass, 
   Sun, 
   Palmtree,
@@ -22,7 +22,7 @@ const iconMap: Record<string, LucideIcon> = {
   BellRing,
   ChefHat,
   Waves,
-  Sparkles,
+  Building2,
   Compass,
   Sun,
   Palmtree
@@ -60,7 +60,7 @@ const highlightsData = [
       desc: "Relax in your private temperature-controlled pool",
     },
     {
-      icon: "Sparkles",
+      icon: "Building2",
       title: "Modern Design",
       desc: "Striking architecture meets bespoke interiors",
     },

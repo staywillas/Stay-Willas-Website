@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, Phone, ChevronDown, Heart, MapPin, Sparkles, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen, HelpCircle } from "lucide-react";
+import { X, User, Phone, ChevronDown, Heart, MapPin, Compass, Info, Handshake, Mail, Home, Building2, MessageSquare, BookOpen, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
 
@@ -305,7 +305,7 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
                       )}
                       onClick={() => onClose()}
                     >
-                      <Sparkles size={15} className="text-[#DAA520] shrink-0" />
+                      <Compass size={15} className="text-[#DAA520] shrink-0" />
                       <span className="text-[13px]">Experiences</span>
                     </Link>
 

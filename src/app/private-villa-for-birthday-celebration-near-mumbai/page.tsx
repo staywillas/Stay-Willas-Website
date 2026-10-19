@@ -6,7 +6,7 @@ import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import { 
-  Sparkles, PartyPopper, Cake, Flame, UtensilsCrossed, Music, 
+  PartyPopper, Cake, Flame, UtensilsCrossed, Music, 
   Waves, ShieldCheck, MapPin, Users, ChevronRight, CheckCircle2, 
   MessageCircle, Star, Phone, Clock, Heart, Award
 } from "lucide-react";

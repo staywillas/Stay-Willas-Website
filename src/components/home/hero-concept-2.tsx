@@ -13,7 +13,8 @@ import {
   ChevronRight, 
   Copy, 
   Check,
-  Sparkles,
+  BadgePercent,
+  Building2,
   Users,
   BedDouble,
   Waves
@@ -362,7 +363,7 @@ export default function HeroConcept2() {
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-5 sm:gap-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-left w-full lg:w-auto">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center shrink-0 shadow-lg shadow-[#DAA520]/20">
-                <Sparkles className="w-6 h-6 text-[#0A1628]" strokeWidth={2.5} />
+                <BadgePercent className="w-6 h-6 text-[#0A1628]" strokeWidth={2.5} />
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
@@ -440,7 +441,7 @@ export default function HeroConcept2() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 text-left">
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1B3564]/10 text-[#1B3564] text-xs font-bold tracking-wider uppercase mb-2">
-                <Sparkles size={12} className="text-[#DAA520]" />
+                <Building2 size={12} className="text-[#DAA520]" />
                 <span>Featured Private Estates</span>
               </div>
               <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">

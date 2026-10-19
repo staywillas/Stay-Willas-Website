@@ -6,7 +6,7 @@ import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import { 
-  Heart, Sparkles, Waves, Flame, UtensilsCrossed, Moon, 
+  Heart, Gift, Waves, Flame, UtensilsCrossed, Moon, 
   MapPin, Users, ChevronRight, CheckCircle2, MessageCircle, 
   Star, Wine, Bath, Eye, ShieldCheck
 } from "lucide-react";
@@ -381,7 +381,7 @@ export default async function AnniversaryCelebrationPage() {
 
             <div className="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
               <div className="w-12 h-12 rounded-2xl bg-[#0B1528] flex items-center justify-center text-[#F5C542] mb-5 shadow-sm">
-                <Sparkles size={22} />
+                <Gift size={22} />
               </div>
               <h4 className="font-heading font-black text-[#0B1528] text-lg mb-2">Floral & Room Decor</h4>
               <p className="text-slate-600 text-sm leading-relaxed">

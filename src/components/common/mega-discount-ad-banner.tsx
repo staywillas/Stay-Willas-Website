@@ -2,7 +2,7 @@
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect } from "react";
-import { Timer, ArrowRight, PhoneCall, Copy, Check, ShieldCheck, Flame, Tag, Sparkles, X, CloudRain } from "lucide-react";
+import { Timer, ArrowRight, PhoneCall, Copy, Check, ShieldCheck, Flame, Tag, X, CloudRain } from "lucide-react";
 
 interface MegaDiscountAdBannerProps {
   pageName?: string;

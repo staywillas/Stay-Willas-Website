@@ -10,7 +10,6 @@ import {
   Home,
   Loader2,
   MessageCircle,
-  Sparkles,
 } from "lucide-react";
 import { submitInquiry } from "@/app/actions/inquiry";
 import {
@@ -220,7 +219,7 @@ const PartnerForm = () => {
       <div className="bg-bg-secondary/80 border border-border-subtle rounded-2xl p-4 sm:p-5 mb-10 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3 text-left">
           <div className="w-10 h-10 rounded-full bg-[#25D366]/15 text-[#1f9d4c] flex items-center justify-center shrink-0">
-            <Sparkles size={18} />
+            <MessageCircle size={18} />
           </div>
           <div>
             <p className="text-xs sm:text-sm font-bold text-text-primary">

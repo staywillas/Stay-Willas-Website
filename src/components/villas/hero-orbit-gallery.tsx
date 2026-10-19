@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { PhotoFrame } from "@/components/ui/site-image";
-import { Sparkles, X, Maximize2 } from "lucide-react";
+import { X, Maximize2 } from "lucide-react";
 
 interface OrbitItem {
   id: number;

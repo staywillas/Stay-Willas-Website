@@ -10,7 +10,7 @@ import {
   MessageCircle,
   Phone,
   ArrowLeft,
-  Sparkles,
+  Eye,
   ArrowRight,
   RotateCcw,
   SlidersHorizontal,
@@ -148,7 +148,7 @@ export default function SlatewoodSimpleView() {
                   }}
                   className="w-full flex items-center justify-center gap-2.5 py-3 px-6 rounded-2xl bg-white/[0.12] hover:bg-white/[0.2] text-white text-xs sm:text-sm font-medium border border-white/[0.25] shadow-[0_10px_25px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all group-hover:border-white/40"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+                  <Eye className="w-3.5 h-3.5 text-cyan-300" />
                   <span>Slide Glass to Unveil</span>
                   <ArrowRight className="w-3.5 h-3.5 text-white/60 group-hover:translate-x-0.5 transition-transform" />
                 </button>

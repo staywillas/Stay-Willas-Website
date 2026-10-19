@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Phone, PhoneCall, X, Clock, ShieldCheck, Sparkles } from "lucide-react";
+import { Phone, PhoneCall, X, Clock, ShieldCheck } from "lucide-react";
 
 export default function CallButton() {
   const [isOpen, setIsOpen] = useState(false);

@@ -3,7 +3,7 @@
 import React, { useState, startTransition, useActionState, useEffect } from "react";
 import Image from "@/components/ui/site-image";
 import { useRouter } from "next/navigation";
-import { Lock, Mail, Users, Loader2, AlertCircle, Eye, EyeOff, Sparkles } from "lucide-react";
+import { Lock, Mail, Users, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { loginAction } from "@/app/actions/login-actions";
 
 interface LoginFormProps {
@@ -90,7 +90,7 @@ export default function LoginForm({ role, redirectUrl, showHeader = true }: Logi
 
         {role === "guest" && (
           <div className="mb-6 p-3.5 bg-[#FAF8F3] border border-[#DAA520]/20 rounded-2xl flex items-center gap-2.5 text-[11px] text-[#1B3564]/70">
-            <Sparkles size={14} className="text-[#C9A84C] shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-[#C9A84C] shrink-0" />
             <span>New guest? Enter your email & create a password to sign in instantly.</span>
           </div>
         )}

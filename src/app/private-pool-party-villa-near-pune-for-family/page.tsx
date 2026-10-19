@@ -6,7 +6,7 @@ import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import { 
-  Waves, Sparkles, Heart, Users, Flame, UtensilsCrossed, 
+  Waves, Heart, Users, Flame, UtensilsCrossed, 
   MapPin, ShieldCheck, ChevronRight, CheckCircle2, MessageCircle, 
   Star, Car, Sun, Gamepad2, Compass
 } from "lucide-react";

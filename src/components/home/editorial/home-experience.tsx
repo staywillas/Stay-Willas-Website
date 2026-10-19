@@ -3,7 +3,7 @@
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, BedDouble, Check, Leaf, LoaderCircle, Search, Sparkles, Users } from "lucide-react";
+import { ArrowDown, ArrowUpRight, BedDouble, Check, Leaf, LoaderCircle, Search, Users } from "lucide-react";
 import { checkAvailableVillasForDates } from "@/app/actions/booking";
 import WeekdayCarousel from "./weekday-carousel";
 import styles from "./home.module.css";
@@ -74,7 +74,7 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
           href="/slatewood"
           className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-[#f5df9e] border border-amber-300/30 text-xs font-medium backdrop-blur-md transition-all shadow-lg hover:scale-105"
         >
-          <Sparkles size={14} className="text-[#daa520] shrink-0 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#daa520] shrink-0 animate-pulse" />
           <span>New Property Announcement: <strong>Slatewood</strong> with Pool &amp; Turf — Coming Soon &rarr;</span>
         </Link>
       </div>
@@ -92,7 +92,7 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
           href="/slatewood"
           style={{ borderColor: "#daa520", background: "#fffdf5", fontWeight: 600, color: "#1b3564" }}
         >
-          <Sparkles size={13} className="text-[#daa520]" /> Slatewood (Coming Soon)
+          <span className="w-1.5 h-1.5 rounded-full bg-[#daa520] inline-block mr-1.5" /> Slatewood (Coming Soon)
         </Link>
         <a href="#jacuzzi-villas">Jacuzzi stays <ArrowDown size={14} /></a>
         <a href="#pool-villas">Private pool villas <ArrowDown size={14} /></a>

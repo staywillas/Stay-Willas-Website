@@ -5,7 +5,7 @@ import React, { useState, useRef } from "react";
 import Image from "@/components/ui/site-image";
 import Link from "next/link";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { ArrowRight, ChevronRight, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronRight, RotateCcw } from "lucide-react";
 
 const categories = [
   {
@@ -173,7 +173,7 @@ const Experiences = () => {
         {/* Section Header */}
         <div className="mb-6 md:mb-24 text-center">
           <span className="inline-flex items-center gap-1.5 text-[#DAA520] font-black tracking-[0.3em] uppercase text-[9px] md:text-xs mb-1 md:mb-4 bg-[#DAA520]/15 px-4 py-2 rounded-full border border-[#DAA520]/20">
-            <Sparkles size={10} className="text-[#DAA520] animate-pulse" /> Curated Experiences
+            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]" /> Curated Experiences
           </span>
           <h2 className="text-2xl sm:text-6xl md:text-7xl font-heading text-[#1B3564] mt-1 md:mt-4 leading-tight font-normal">
             Elevate Your <span className="italic text-[#DAA520]">Every Mood</span>

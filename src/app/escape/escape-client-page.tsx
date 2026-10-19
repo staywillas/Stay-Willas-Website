@@ -6,7 +6,7 @@ import Link from "next/link";
 import { 
   Check, Plus, Minus, ArrowRight, ShieldCheck, Star, Users, Home, 
   MapPin, Flame, Utensils, Music, Heart, Calendar, ArrowDown, AlertCircle,
-  Sparkles, Menu, X, Briefcase
+  Menu, X, Briefcase, BadgePercent, PartyPopper, Waves, Tag
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
@@ -176,7 +176,7 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
     <div className="relative w-full h-[160px] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#120a24]/80 to-[#1d0e38]/80 border border-[#DAA520]/20 flex flex-col items-center justify-center p-4">
       {/* Revealed discount offer details */}
       <div className="text-center z-0 select-none space-y-1.5 animate-fade-in">
-        <Sparkles className="text-[#DAA520] mx-auto animate-pulse" size={22} />
+        <BadgePercent className="text-[#DAA520] mx-auto animate-pulse" size={22} />
         <span className="text-[10px] uppercase tracking-widest text-[#DAA520] font-bold block">
           {title}
         </span>
@@ -551,7 +551,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             },
             {
               title: "Birthday Celebration",
-              icon: Sparkles,
+              icon: PartyPopper,
               desc: "Host milestone birthday gatherings with private pool deck setups, custom lighting, and dedicated in-house caretakers."
             },
             {
@@ -859,7 +859,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             </p>
           </div>
           <div className="bg-[#0D0A14]/75 border border-white/10 p-8 rounded-3xl space-y-3">
-            <Sparkles className="text-[#DAA520] w-8 h-8" />
+            <Waves className="text-[#DAA520] w-8 h-8" />
             <h3 className="text-lg font-heading font-bold text-white">Exclusive Swimming Pools</h3>
             <p className="text-xs text-slate-300 font-light leading-relaxed">
               Enjoy private swimming pools with waterfall cascades and lounge decks reserved exclusively for your group&apos;s stay.
@@ -1208,7 +1208,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                     {isDiscountApplied && (
                       <div className="flex justify-between text-emerald-400 font-semibold bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/30">
                         <span className="flex items-center gap-1.5">
-                          <Sparkles size={13} className="text-[#DAA520]" />
+                          <Tag size={13} className="text-[#DAA520]" />
                           Special 26% Promo Discount:
                         </span>
                         <span className="font-black text-emerald-300">-₹{discountAmount.toLocaleString("en-IN")}</span>

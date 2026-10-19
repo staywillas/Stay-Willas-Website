@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { 
-  Calendar as CalendarIcon, Sparkles, X, ChevronLeft, ChevronRight, 
+  Calendar as CalendarIcon, Zap, X, ChevronLeft, ChevronRight, 
   CheckCircle2, ShieldCheck, Clock, Users, ArrowRight, Home 
 } from "lucide-react";
 import { format, addMonths, subMonths, isSameDay, isBefore, isAfter, startOfMonth, endOfMonth, eachDayOfInterval, getDay, addDays } from "date-fns";
@@ -388,7 +388,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
             onClick={() => setIsBookingOpen(true)}
             className="w-full bg-gradient-to-r from-[#DAA520] to-[#E5B842] hover:from-[#c9951b] hover:to-[#DAA520] text-[#1B3564] py-3.5 px-3 rounded-2xl text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-lg cursor-pointer"
           >
-            <Sparkles size={15} className="shrink-0" />
+            <Zap size={15} className="shrink-0" />
             <span className="truncate">Book {isWillowPeak ? (cottageSelection === "ALL" ? "Estate" : `Cottage ${cottageSelection}`) : "Villa"}</span>
           </button>
         </div>
@@ -423,7 +423,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
               onClick={() => setIsBookingOpen(true)}
               className="bg-gradient-to-r from-[#1B3564] to-[#254680] hover:from-[#152A50] hover:to-[#1B3564] text-[#DAA520] border border-[#DAA520]/30 font-black px-4 py-2.5 rounded-xl text-[10px] tracking-wider uppercase transition-all duration-200 shadow-md flex items-center justify-center gap-1.5 active:scale-95 whitespace-nowrap cursor-pointer"
             >
-              <Sparkles size={12} />
+              <Zap size={12} />
               <span>Book {isWillowPeak ? (cottageSelection === "ALL" ? "Estate" : `Cottage ${cottageSelection}`) : "Villa"}</span>
             </button>
           </div>

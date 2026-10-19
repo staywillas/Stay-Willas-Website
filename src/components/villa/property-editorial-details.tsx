@@ -23,7 +23,7 @@ import {
   Trees,
   Accessibility,
   Gamepad2,
-  Sparkles,
+  CheckCircle2,
   type LucideIcon,
 } from "lucide-react";
 import Image from "@/components/ui/site-image";
@@ -645,7 +645,7 @@ function getAmenityIcon(name: string): LucideIcon {
   if (/wheelchair|senior/i.test(name)) return Accessibility;
   if (/games|carrom/i.test(name)) return Gamepad2;
   if (/meal|chef|dining/i.test(name)) return UtensilsCrossed;
-  return Sparkles;
+  return CheckCircle2;
 }
 function getAmenityLabel(name: string) {
   if (/pool/i.test(name)) return "Private swimming pool";

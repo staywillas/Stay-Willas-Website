@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import Image, { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import Footer from "@/components/layout/footer";
-import { Sparkles, Calendar, Heart, Shield, ArrowRight, Cake, PartyPopper, Users2 } from "lucide-react";
+import { Sun, Calendar, Heart, Shield, ArrowRight, Cake, PartyPopper, Users2 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Experiences | Stay Willas",
@@ -92,7 +92,7 @@ export default function ExperiencesPage() {
             {/* Pillars Preview */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl w-full mb-16">
               {[
-                { icon: Sparkles, title: "Wellness & Spa", desc: "Massages & relaxing yoga" },
+                { icon: Sun, title: "Wellness & Spa", desc: "Massages & relaxing yoga" },
                 { icon: Calendar, title: "Fun Activities", desc: "Tours & outdoor adventures" },
                 { icon: Heart, title: "Great Food", desc: "Chef-cooked tasty meals" },
                 { icon: Shield, title: "Friendly Help", desc: "24/7 personal support" }

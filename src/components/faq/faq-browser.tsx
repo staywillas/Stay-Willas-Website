@@ -6,7 +6,6 @@ import {
   Search, 
   X, 
   ChevronDown, 
-  Sparkles, 
   MessageCircle, 
   Phone, 
   HelpCircle,
@@ -193,7 +192,7 @@ export default function FaqBrowser({
         <aside className={styles.spotlightCard} aria-label="Willow Peak Estate Configuration Guide">
           <div className={styles.spotlightHeader}>
             <span className={styles.spotlightBadge}>
-              <Sparkles size={12} /> Clarification Spotlight
+              <HelpCircle size={12} /> Clarification Spotlight
             </span>
             <h2 className={styles.spotlightTitle}>
               Understanding Willow Peak: 3 Private Cottages &amp; 1 Entire Estate

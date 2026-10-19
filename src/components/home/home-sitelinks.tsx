@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { PhotoFrame } from "@/components/ui/site-image";
-import { Sparkles, ArrowUpRight } from "lucide-react";
+import { Compass, ArrowUpRight } from "lucide-react";
 
 export interface SitelinkItem {
   id: string;
@@ -87,7 +87,7 @@ export default function HomeSitelinks() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 md:mb-10 gap-4">
           <div>
             <span className="text-[#DAA520] font-black tracking-[0.25em] uppercase text-[10px] sm:text-xs mb-2 inline-flex items-center gap-1.5 bg-[#DAA520]/15 px-3.5 py-1 rounded-full border border-[#DAA520]/25">
-              <Sparkles size={12} className="text-[#DAA520]" /> Quick Navigation
+              <Compass size={12} className="text-[#DAA520]" /> Quick Navigation
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading text-[#1B3564] font-bold tracking-tight mt-1">
               Explore <span className="italic text-[#DAA520]">Popular Stays</span> & Deals

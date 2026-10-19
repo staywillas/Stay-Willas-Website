@@ -4,7 +4,7 @@ import React from "react";
 import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
-import { Users, Bed, Bath, MapPin, ArrowUpRight, Sparkles } from "lucide-react";
+import { Users, Bed, Bath, MapPin, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import WishlistButton from "@/components/villa/wishlist-button";
 

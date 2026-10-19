@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Image from "@/components/ui/site-image";
 import Link from "next/link";
 import { 
-  Sparkles, 
   ArrowUpRight, 
   MapPin 
 } from "lucide-react";

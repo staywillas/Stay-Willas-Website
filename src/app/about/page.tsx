@@ -4,7 +4,7 @@ import Image from "@/components/ui/site-image";
 import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
-import { Award, ShieldCheck, Heart, Sparkles } from "lucide-react";
+import { Award, ShieldCheck, Heart } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Stay Willas | Private Villa Rentals in Maharashtra",

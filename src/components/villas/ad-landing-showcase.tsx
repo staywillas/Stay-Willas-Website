@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { 
-  Star, ShieldCheck, Check, PhoneCall, Sparkles, 
+  Star, ShieldCheck, Check, PhoneCall, 
   ArrowRight, Users, BedDouble, Bath, Waves, Utensils, 
   Heart, Flame, AlertCircle, Quote, CloudRain, Calendar,
   Gift, BadgePercent
@@ -136,7 +136,7 @@ export default function AdLandingShowcase({
       <section className="max-w-5xl mx-auto px-4">
         <div className="text-center mb-6">
           <span className="inline-flex items-center gap-1.5 bg-[#DAA520]/20 text-[#DAA520] border border-[#DAA520]/40 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-2">
-            <Sparkles size={12} className="text-[#DAA520]" />
+            <ShieldCheck size={12} className="text-[#DAA520]" />
             SMART BOOKING COMPARISON
           </span>
           <h3 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-[#1B3564]">

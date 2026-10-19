@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 import Footer from "@/components/layout/footer";
-import { CheckCircle2, Calendar, MapPin, ArrowRight, ShieldCheck, Download, Sparkles } from "lucide-react";
+import { CheckCircle2, Calendar, MapPin, ArrowRight, ShieldCheck, Download, Info } from "lucide-react";
 import { format } from "date-fns";
 import { sendAdminLeadNotification } from "@/lib/lead-notifications";
 
@@ -196,7 +196,7 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
           </div>
 
           <div className="p-4 bg-[#F5F2EA]/60 border border-border-subtle rounded-2xl flex items-start gap-3">
-            <Sparkles className="text-[#DAA520] shrink-0 mt-0.5" size={16} />
+            <Info className="text-[#DAA520] shrink-0 mt-0.5" size={16} />
             <div>
               <span className="text-[10px] font-bold text-[#1B3564] block uppercase tracking-wide mb-0.5">Government Compliance Notice</span>
               <p className="text-[11px] text-text-primary/60 leading-relaxed">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, Sparkles, Trophy, UtensilsCrossed, Waves } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Building2, Check, Trophy, UtensilsCrossed, Waves } from "lucide-react";
 import styles from "./home.module.css";
 
 export default function SlatewoodAnnouncement() {
@@ -27,7 +27,7 @@ export default function SlatewoodAnnouncement() {
         {/* Editorial Top Headline Banner */}
         <div className="max-w-3xl mb-12 text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/25 text-[#f5df9e] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
-            <Sparkles size={13} className="text-[#daa520]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#daa520] shrink-0" />
             <span>New Property Announcement • Coming Soon</span>
           </div>
 
@@ -138,7 +138,7 @@ export default function SlatewoodAnnouncement() {
                 className="w-10 h-10 rounded-xl flex items-center justify-center text-blue-300"
                 style={{ background: "rgba(147, 197, 253, 0.12)", border: "1px solid rgba(147, 197, 253, 0.25)" }}
               >
-                <Sparkles size={20} />
+                <Building2 size={20} />
               </div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300 bg-white/5 px-2.5 py-1 rounded-full border border-white/10">
                 Architecture

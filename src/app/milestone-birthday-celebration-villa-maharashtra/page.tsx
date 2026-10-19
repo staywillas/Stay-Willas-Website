@@ -6,7 +6,7 @@ import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import { 
-  Sparkles, Award, Heart, Cake, Users, Waves, Flame, 
+  Camera, Award, Heart, Cake, Users, Waves, Flame, 
   UtensilsCrossed, ShieldCheck, MapPin, ChevronRight, CheckCircle2, 
   MessageCircle, Star, Calendar, Music, Clock
 } from "lucide-react";
@@ -297,7 +297,7 @@ export default async function MilestoneBirthdayPage() {
                   </div>
                   <div className="flex items-center gap-2.5 bg-[#FAF8F5] p-3 rounded-xl border border-slate-200">
                     <div className="w-7 h-7 rounded-lg bg-[#DAA520]/20 text-[#B8860B] flex items-center justify-center shrink-0">
-                      <Sparkles size={14} />
+                      <Camera size={14} />
                     </div>
                     <span>Glass Fronted Photo Hall</span>
                   </div>
@@ -358,7 +358,7 @@ export default async function MilestoneBirthdayPage() {
 
             <div className="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
               <div className="w-12 h-12 rounded-2xl bg-[#0B1528] flex items-center justify-center text-[#F5C542] mb-5 shadow-sm">
-                <Sparkles size={22} />
+                <Camera size={22} />
               </div>
               <h4 className="font-heading font-black text-[#0B1528] text-lg mb-2">Photography Backdrops</h4>
               <p className="text-slate-600 text-sm leading-relaxed">

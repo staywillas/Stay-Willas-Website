@@ -324,10 +324,10 @@ const casa: PropertyCopy = {
       text: "A private swimming pool beside the villa.",
     },
     {
-      title: "Valley-view mornings",
-      src: `${casaBase}IMG-20260901-WA0031.jpg`,
-      alt: "Balcony table and seating with valley views at Casa De Reva",
-      text: "Balcony seating with a view of the surrounding valley.",
+      title: "Valley-view moments",
+      src: `${casaBase}casa-de-reva-balcony-beer.jpg`,
+      alt: "Friends enjoying chilled beer with valley views on Casa De Reva balcony",
+      text: "Balcony seating with an open panoramic view of the surrounding hills.",
     },
     {
       title: "Dine together",

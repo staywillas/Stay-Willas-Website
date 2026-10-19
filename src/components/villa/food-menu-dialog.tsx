@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { X, ChefHat, Download, ExternalLink, Leaf, Drumstick, Sparkles } from "lucide-react";
+import { X, ChefHat, Download, ExternalLink, Leaf, Drumstick, UtensilsCrossed } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface MenuCategory {
@@ -32,7 +32,7 @@ const propertyMenus: MenuCategory[] = [
     badgeColor: "bg-amber-100 text-amber-800 border-amber-300",
     description: "Curated combination of vegetarian dishes and non-veg curries.",
     pdfUrl: "/assets/menus/stay-willas-mix-menu.pdf",
-    icon: Sparkles,
+    icon: UtensilsCrossed,
   },
   {
     id: "non-veg",

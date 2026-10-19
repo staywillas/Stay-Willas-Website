@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { 
   Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2,
-  ChefHat, Wine, Sparkles, Car, Check, ChevronDown, ChevronUp,
+  ChefHat, Wine, Gift, Receipt, Tag, Car, Check, ChevronDown, ChevronUp,
   ChevronLeft, ChevronRight, ShieldCheck
 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
@@ -89,7 +89,7 @@ const availableAddOns = [
     price: 7500,
     perNight: false,
     perGuest: false,
-    icon: Sparkles,
+    icon: Gift,
   },
   {
     id: "Premium SUV Airport Transfer",
@@ -1312,7 +1312,7 @@ We are so excited about this getaway! Could you please check availability and he
         <div className="space-y-4 pt-5 pb-5 mb-5 border-t border-b border-[#DAA520]/25 text-left">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#1B3564] uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles size={13} className="text-[#DAA520]" />
+              <Receipt size={13} className="text-[#DAA520]" />
               <span>Final Bill Breakdown ({nights} Night{nights > 1 ? "s" : ""})</span>
             </span>
             <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-black">
@@ -1380,7 +1380,7 @@ We are so excited about this getaway! Could you please check availability and he
           {discount > 0 && (
             <div className="flex items-center justify-between text-xs font-black text-emerald-800 bg-emerald-100/90 px-3.5 py-2.5 rounded-xl border border-emerald-300 shadow-xs">
               <div className="flex items-center gap-1.5 text-left">
-                <Sparkles size={14} className="text-emerald-700 shrink-0" />
+                <Tag size={14} className="text-emerald-700 shrink-0" />
                 <div>
                   <span>Direct Savings Applied ({couponCode || "STAYW26"})</span>
                   <span className="text-[10px] text-emerald-700 font-normal block">

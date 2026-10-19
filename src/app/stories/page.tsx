@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import TopTicker from "@/components/home/top-ticker";
 import Footer from "@/components/layout/footer";
 import VideoCard from "@/components/stories/video-card";
-import { Sparkles } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
@@ -44,7 +44,7 @@ export default function StoriesPage() {
         
         <div className="max-w-3xl mx-auto relative z-10">
           <span className="inline-flex items-center gap-1.5 bg-white border border-slate-200/60 text-[#DAA520] font-bold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-6 px-4 md:px-5 py-2 md:py-2.5 rounded-full shadow-sm">
-            <Sparkles size={12} className="text-[#DAA520]" /> Guest Experiences
+            <Heart size={12} className="text-[#DAA520]" /> Guest Experiences
           </span>
           <h1 className="text-4xl md:text-6xl font-heading text-[#1B3564] leading-tight mb-6">
             Luxury Villa Guest Stories & <span className="italic font-light tracking-wide bg-gradient-to-r from-[#DAA520] via-[#E2A63B] to-[#B8860B] bg-clip-text text-transparent drop-shadow-sm font-sans pr-2 inline-block">Testimonials</span>

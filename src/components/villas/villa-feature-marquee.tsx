@@ -2,7 +2,7 @@
 
 import React from "react";
 import { PhotoFrame } from "@/components/ui/site-image";
-import { Sparkles, Waves, Dog, Utensils, Users, ShieldCheck, Flame, Trees, Bath } from "lucide-react";
+import { Waves, Dog, Utensils, Users, ShieldCheck, Flame, Trees, Bath } from "lucide-react";
 
 export interface FeatureMarqueeItem {
   id: string | number;

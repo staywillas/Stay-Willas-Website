@@ -8,7 +8,7 @@ import Footer from "@/components/layout/footer";
 import { blogsData } from "@/data/blogs";
 import { getRelatedGuides, getGuideBookingLinks, getGuideTopic } from "@/data/guide-navigation";
 import { CANOPY_MAX_GUESTS, WILLOW_COTTAGE_BASE_PRICE } from "@/data/stay-facts";
-import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle, Sparkles, ArrowRight, BedDouble, Users, Waves, Flame, MapPin } from "lucide-react";
+import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle, ArrowRight, BedDouble, Users, Waves, Flame, MapPin } from "lucide-react";
 import { prisma } from "@/lib/db";
 import BlogHorizontalMarquee from "@/components/blog/blog-horizontal-marquee";
 
@@ -358,7 +358,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
             <div className="my-14 bg-gradient-to-br from-[#FAF8F5] via-white to-[#FAF8F5] rounded-3xl p-6 sm:p-8 md:p-10 border border-[#DAA520]/30 shadow-xl">
               <div className="text-center max-w-2xl mx-auto mb-10">
                 <div className="inline-flex items-center gap-2 bg-[#DAA520]/15 border border-[#DAA520]/40 rounded-full px-4 py-1.5 mb-3 shadow-sm">
-                  <Sparkles size={14} className="text-[#B8860B] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8860B] animate-pulse" />
                   <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#B8860B]">
                     Signature Stay Willas Collection
                   </span>

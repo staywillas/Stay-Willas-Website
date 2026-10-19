@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { submitReview } from "@/app/actions/review";
-import { Star, MessageSquare, Send, CheckCircle, AlertCircle, Sparkles } from "lucide-react";
+import { Star, MessageSquare, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ReviewFormProps {
@@ -70,7 +70,7 @@ export default function ReviewForm({ villas }: ReviewFormProps) {
     return (
       <div className="glass-premium rounded-[2rem] border border-[#DAA520]/20 p-8 md:p-12 text-center max-w-2xl mx-auto shadow-xl">
         <div className="w-16 h-16 rounded-full bg-[#DAA520]/10 flex items-center justify-center mx-auto mb-6">
-          <Sparkles size={28} className="text-[#DAA520]" />
+          <MessageSquare size={28} className="text-[#DAA520]" />
         </div>
         <h3 className="text-2xl font-heading text-[#1B3564] mb-3">Share Your Stay Willas Story</h3>
         <p className="text-slate-600 mb-8 max-w-md mx-auto text-sm leading-relaxed">

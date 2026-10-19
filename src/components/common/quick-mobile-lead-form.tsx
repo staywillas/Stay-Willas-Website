@@ -2,7 +2,7 @@
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState } from "react";
-import { Phone, ArrowRight, CheckCircle2, Sparkles, ShieldCheck, Loader2, CloudRain } from "lucide-react";
+import { Phone, ArrowRight, CheckCircle2, ShieldCheck, Loader2, CloudRain } from "lucide-react";
 import { captureBookingLead } from "@/app/actions/inquiry";
 
 interface QuickMobileLeadFormProps {

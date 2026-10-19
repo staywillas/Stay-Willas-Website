@@ -5,7 +5,7 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { 
   Calendar as CalendarIcon, 
-  Sparkles, 
+  Zap, 
   CheckCircle2, 
   X, 
   User, 
@@ -290,7 +290,7 @@ export default function BookingModalFlow({
         <div className="flex items-start justify-between pb-4 border-b border-[#DAA520]/20">
           <div>
             <div className="flex items-center gap-1.5 mb-1">
-              <Sparkles size={13} className="text-[#DAA520]" />
+              <ShieldCheck size={13} className="text-[#DAA520]" />
               <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-[0.2em]">
                 Direct Villa Booking
               </span>
@@ -383,7 +383,7 @@ export default function BookingModalFlow({
             onClick={handleOpenLeadGate}
             className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-4 px-6 rounded-2xl text-xs sm:text-sm font-black tracking-[0.15em] uppercase transition-all duration-300 shadow-[0_8px_30px_rgba(224,83,76,0.38)] hover:shadow-[0_12px_40px_rgba(224,83,76,0.5)] hover:scale-[1.01] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer border border-white/25"
           >
-            <Sparkles size={16} className="text-amber-200" />
+            <Zap size={16} className="text-amber-200" />
             <span>Book {villaName}</span>
           </button>
 
@@ -739,7 +739,7 @@ export default function BookingModalFlow({
               }}
               className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_8px_25px_rgba(224,83,76,0.35)] hover:shadow-[0_12px_35px_rgba(224,83,76,0.45)] flex items-center justify-center gap-2 cursor-pointer border border-white/20 active:scale-[0.99]"
             >
-              <Sparkles size={14} className="text-amber-200" />
+              <ArrowRight size={14} className="text-amber-200" />
               <span>Proceed to Reserve Dates</span>
             </button>
           </div>

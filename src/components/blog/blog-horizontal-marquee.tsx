@@ -3,7 +3,7 @@
 import React from "react";
 import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
-import { Sparkles, ArrowUpRight, Waves, Flame, MapPin } from "lucide-react";
+import { ArrowUpRight, Waves, Flame, MapPin } from "lucide-react";
 
 export interface MarqueeItem {
   id: string;
@@ -131,7 +131,7 @@ export default function BlogHorizontalMarquee({
       {/* Header section */}
       <div className="max-w-4xl mx-auto text-center mb-8 px-4 relative z-10">
         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-[#DAA520]/50 rounded-full px-4 py-1.5 mb-3 shadow-[0_4px_20px_rgba(218,165,32,0.25)]">
-          <Sparkles size={13} className="text-[#F3C065] animate-pulse shrink-0" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#F3C065] animate-pulse shrink-0" />
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#F3C065]">
             Featured Lonavala Villas
           </span>
