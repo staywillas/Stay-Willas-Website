@@ -26,9 +26,9 @@ const canopyBase = "/assets/villas/canopy-crest/";
 const casaBase = "/assets/villas/terra-cotta-villa/";
 
 const angle: PropertyCopy = {
-  eyebrow: "A PRIVATE HOME IN THE HILLS",
+  eyebrow: "A PRIVATE VILLA ESCAPE FOR YOUR FAVOURITE PEOPLE",
   summary:
-    "Glass-fronted architecture, a waterfall pool and room for your favourite people.",
+    "Three bedrooms, room for up to 12 guests, a waterfall pool and Jacuzzi—made for a memorable stay together.",
   intro:
     "A glass-fronted home in Kamshet, made for poolside afternoons, long conversations and a slower weekend with your people.",
   detail:

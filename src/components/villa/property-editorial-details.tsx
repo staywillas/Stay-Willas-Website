@@ -170,7 +170,9 @@ export default function PropertyEditorialDetails({
           <div className={styles.headerNote}>
             <p>{property.summary}</p>
             <a href="#booking-card-section">
-              Plan your stay <ArrowDownIcon />
+              {villa.slug === "the-angle-house"
+                ? "Check dates & pricing"
+                : "Plan your stay"} <ArrowDownIcon />
             </a>
           </div>
         </header>
