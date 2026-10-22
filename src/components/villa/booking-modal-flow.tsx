@@ -26,6 +26,7 @@ import { useLenis } from "lenis/react";
 import editorialStyles from "./property-editorial.module.css";
 import { willowUnits } from "@/data/property-editorial";
 import BorderGlow from "@/components/ui/border-glow";
+import { getAngleHouseAttribution, trackAngleHouseEngagement } from "@/lib/angle-house-measurement";
 
 interface BookingModalFlowProps {
   villaId: string;
@@ -186,6 +187,9 @@ export default function BookingModalFlow({
       totalPrice: displayPrice,
       guests: isWillowPeak ? (cottageSelection === "ALL" ? 12 : 4) : maxGuests,
       message: `Guest opened reservation gate for ${selectedUnitTitle}. Starting Rate: ₹${displayPrice.toLocaleString("en-IN")}/night. Note: Pricing varies in weekdays and weekends.`,
+      attribution: isAngleHouse ? getAngleHouseAttribution() : undefined,
+    }).then(result => {
+      if (isAngleHouse && result.success) trackAngleHouseEngagement("contact_details_submitted");
     }).catch(err => console.error("Lead capture background error:", err));
 
     // Transition from lead gate to full booking modal
@@ -596,6 +600,7 @@ export default function BookingModalFlow({
               <BookingCard
                 villaId={villaId}
                 villaName={villaName}
+                isAngleHouse={isAngleHouse}
                 price={price}
                 basePrice={basePrice}
                 weekendPrice={weekendPrice}

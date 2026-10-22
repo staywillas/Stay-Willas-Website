@@ -6,6 +6,7 @@ import { parseICal } from "@/lib/ical-sync";
 import { startOfDay, parseISO } from "date-fns";
 import { sendAdminLeadNotification } from "@/lib/lead-notifications";
 import { categorizeNight } from "@/lib/calendar-holidays";
+import type { LeadAttribution } from "@/lib/angle-house-measurement";
 
 function getStripe() {
   const apiKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder_build_key_0000000000000000";
@@ -684,6 +685,7 @@ export async function createAwaitingVerificationBooking(data: {
   couponCode?: string;
   totalPrice: number;
   cottageSelection?: string;
+  attribution?: LeadAttribution;
 }) {
   try {
     if (!data.villaId || !data.guestName || !data.guestPhone || !data.checkIn || !data.checkOut) {
@@ -724,6 +726,13 @@ export async function createAwaitingVerificationBooking(data: {
       guests: data.guests,
       cottageSelection: data.cottageSelection || "ALL",
       coupon: data.couponCode || null,
+      attribution: data.attribution
+        ? Object.fromEntries(
+            Object.entries(data.attribution)
+              .filter(([, value]) => typeof value === "string")
+              .map(([key, value]) => [key, String(value).slice(0, 200)]),
+          )
+        : undefined,
       submittedAt: new Date().toISOString(),
     });
 

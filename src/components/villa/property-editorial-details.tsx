@@ -29,6 +29,7 @@ import {
 import Image from "@/components/ui/site-image";
 import Footer from "@/components/layout/footer";
 import BookingModalFlow from "./booking-modal-flow";
+import AngleHouseClickTracker from "./angle-house-click-tracker";
 import ShareButton from "./share-button";
 import SaveButton from "./save-button";
 import PropertyEditorialGallery from "./property-editorial-gallery";
@@ -128,6 +129,7 @@ export default function PropertyEditorialDetails({
       data-property-editorial-page
       data-property-slug={villa.slug}
     >
+      {villa.slug === "the-angle-house" && <AngleHouseClickTracker />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

@@ -14,6 +14,7 @@ import { createCheckoutSession, createAwaitingVerificationBooking } from "@/app/
 import { captureBookingLead } from "@/app/actions/inquiry";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { categorizeNight, checkLongWeekend } from "@/lib/calendar-holidays";
+import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement } from "@/lib/angle-house-measurement";
 
 interface DailyPriceProp {
   id: string;
@@ -41,6 +42,7 @@ interface BookingProp {
 interface BookingCardProps {
   villaId: string;
   villaName: string;
+  isAngleHouse?: boolean;
   price: string | number;
   basePrice?: number;
   weekendPrice?: number | null;
@@ -105,6 +107,7 @@ const availableAddOns = [
 const BookingCard = ({ 
   villaId, 
   villaName, 
+  isAngleHouse = false,
   price, 
   basePrice, 
   weekendPrice, 
@@ -631,6 +634,11 @@ const BookingCard = ({
         couponCode: isCouponApplied ? (couponCode || "STAYW26") : undefined,
         addOns: selectedAddOns,
         message: `Guest clicked Reserve on WhatsApp for ${villaName}.${isWillowPeak ? ` Unit: ${cottageSelection}.` : ""} Dates: ${formattedCheckIn} to ${formattedCheckOut}. Total: ₹${total.toLocaleString("en-IN")}.`,
+        attribution: isAngleHouse ? getAngleHouseAttribution() : undefined,
+      }).then(result => {
+        if (isAngleHouse && result.success && result.leadId) {
+          trackAngleHouseBookingEnquiry(result.leadId, checkIn, checkOut);
+        }
       }).catch(err => console.error("❌ Failed to capture WhatsApp booking lead:", err));
 
       const msg = `Hello Stay Willas team! 🌟 I'm planning our next luxury staycation and would love to reserve *${villaName}* for our group of *${guests}* guest(s). 🏰✨
@@ -649,6 +657,7 @@ We are so excited about this getaway! Could you please check availability and he
       const encodedMsg = encodeWhatsAppMessage(msg);
       const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
       
+      if (isAngleHouse) trackAngleHouseEngagement("whatsapp_click");
       window.open(whatsappUrl, "_blank");
       setIsLoading(false);
     } catch (error: any) {
@@ -682,10 +691,12 @@ We are so excited about this getaway! Could you please check availability and he
         couponCode: isCouponApplied ? (couponCode || "STAYW26") : undefined,
         totalPrice: total,
         cottageSelection: isWillowPeak ? cottageSelection : undefined,
+        attribution: isAngleHouse ? getAngleHouseAttribution() : undefined,
       });
 
       setIsSubmittingVerification(false);
       if (res.success && res.bookingId) {
+        if (isAngleHouse) trackAngleHouseBookingEnquiry(res.bookingId, checkIn, checkOut);
         setVerificationSubmitted(true);
         setSubmittedBookingId(res.bookingId);
         if (onBookingComplete) onBookingComplete();
@@ -766,6 +777,7 @@ We are so excited about this getaway! Could you please check availability and he
       ? ` [${cottageSelection === "ALL" ? "All 3 Cottages (A, B, C)" : `Cottage ${cottageSelection}`}]`
       : "";
     const msg = `Hi Stay Willas Concierge! 🌟 I'm looking at *${villaName}*${cottageSub} for ${guests} guest(s) from ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights, ~₹${total.toLocaleString("en-IN")}). Could you please share your best direct offer and confirm availability?`;
+    if (isAngleHouse) trackAngleHouseEngagement("whatsapp_click");
     window.open(`https://wa.me/919619042310?text=${encodeWhatsAppMessage(msg)}`, "_blank");
   };
 

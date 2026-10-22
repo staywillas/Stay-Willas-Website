@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/session";
 import { sendAdminLeadNotification } from "@/lib/lead-notifications";
 import { format } from "date-fns";
+import type { LeadAttribution } from "@/lib/angle-house-measurement";
 
 export async function submitInquiry(formData: {
   name: string;
@@ -96,6 +97,7 @@ export async function captureBookingLead(data: {
   couponCode?: string;
   addOns?: string[];
   message?: string;
+  attribution?: LeadAttribution;
 }) {
   try {
     const name = (data.name || "").trim().slice(0, 100);
@@ -112,13 +114,31 @@ export async function captureBookingLead(data: {
     const datesDetail = checkInStr && checkOutStr ? ` | Dates: ${checkInStr} to ${checkOutStr}` : "";
     const guestsDetail = data.guests ? ` | Guests: ${data.guests}` : "";
     const priceDetail = data.totalPrice ? ` | Price: ₹${typeof data.totalPrice === "number" ? data.totalPrice.toLocaleString("en-IN") : data.totalPrice}` : "";
+    const attribution = data.attribution;
+    const sourceDetail = attribution
+      ? Object.entries({
+          source: attribution.utmSource,
+          medium: attribution.utmMedium,
+          campaign: attribution.utmCampaign,
+          term: attribution.utmTerm,
+          gclid: attribution.gclid,
+          gbraid: attribution.gbraid,
+          wbraid: attribution.wbraid,
+          landing: attribution.landingPath,
+        })
+          .filter(([, value]) => typeof value === "string" && value.length > 0)
+          .map(([key, value]) => `${key}=${String(value).replace(/[\r\n|]/g, " ").slice(0, 200)}`)
+          .join(" | ")
+      : "";
+    const baseMessage = data.message || `Direct Booking Lead for ${villaName}.${datesDetail}${guestsDetail}${priceDetail}`;
+    const storedMessage = `${baseMessage}${sourceDetail ? ` | Attribution: ${sourceDetail}` : ""}`.slice(0, 2000);
 
     const inquiry = await prisma.inquiry.create({
       data: {
         name,
         phone,
         email,
-        message: data.message || `Direct Booking Lead for ${villaName}.${datesDetail}${guestsDetail}${priceDetail}`,
+        message: storedMessage,
         villaId: data.villaId || null,
         type: "BOOKING_LEAD",
       },
@@ -137,7 +157,7 @@ export async function captureBookingLead(data: {
       totalPrice: data.totalPrice,
       couponCode: data.couponCode,
       addOns: data.addOns,
-      message: data.message || `Guest started booking for ${villaName}.${datesDetail}${guestsDetail}${priceDetail}`,
+      message: storedMessage,
     }).catch(err => console.error("❌ Failed to dispatch booking gate lead email:", err));
 
     try {
