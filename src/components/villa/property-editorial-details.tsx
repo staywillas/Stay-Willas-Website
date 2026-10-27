@@ -291,13 +291,20 @@ export default function PropertyEditorialDetails({
 
         <nav
           className={styles.sectionNav}
-          aria-label={`Explore ${property.name}`}
+          aria-label={`Explore ${property.name} sections`}
         >
-          <a href="#about">The stay</a>
-          <a href="#spaces">Rooms & spaces</a>
-          <a href="#amenities">Amenities</a>
-          <a href="#location">Location</a>
-          <a href="#reviews">Guest reviews</a>
+          <div className={styles.sectionNavLinks}>
+            <a href="#about">Overview</a>
+            <a href="#spaces">Rooms &amp; spaces</a>
+            <a href="#amenities">Amenities</a>
+            <a href="#dining">Dining</a>
+            <a href="#location">Location</a>
+            <a href="#reviews">Guest reviews</a>
+            <a href="#know">Good to know</a>
+          </div>
+          <a href="#booking-card-section" className={styles.sectionNavCta}>
+            Check dates <ArrowDownIcon />
+          </a>
         </nav>
 
         <div className={styles.contentLayout}>
@@ -483,7 +490,7 @@ export default function PropertyEditorialDetails({
               />
             </section>
 
-            <section className={styles.section} aria-labelledby="know-title">
+            <section id="know" className={styles.section} aria-labelledby="know-title">
               <div className={styles.sectionHeading}>
                 <h2 id="know-title">Good to know before you go.</h2>
               </div>

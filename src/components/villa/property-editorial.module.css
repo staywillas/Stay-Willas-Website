@@ -40,7 +40,7 @@
 .page section[id],
 .reservation,
 .gallery {
-  scroll-margin-top: 110px;
+  scroll-margin-top: 148px;
 }
 .container {
   width: min(1200px, 88%);
@@ -345,26 +345,71 @@
   margin-top: 3px;
 }
 .sectionNav {
+  position: sticky;
+  top: 73px;
+  z-index: 40;
   display: flex;
   align-items: center;
-  gap: 30px;
-  padding: 13px 0 23px;
+  gap: 8px;
+  margin: 8px 0 24px;
+  padding: 6px;
+  border: 1px solid #dedacf;
+  border-radius: 999px;
+  background: rgb(255 253 248 / 94%);
+  box-shadow: 0 8px 24px rgb(17 33 57 / 7%);
+}
+.sectionNavLinks {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 3px;
   overflow-x: auto;
   scrollbar-width: none;
 }
-.sectionNav::-webkit-scrollbar {
+.sectionNavLinks::-webkit-scrollbar {
   display: none;
 }
-.sectionNav a {
+.sectionNavLinks a {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
   flex-shrink: 0;
-  font-size: 12px;
+  padding: 0 13px;
+  border-radius: 999px;
+  font-size: 11.5px;
   color: var(--muted);
+  text-decoration: none;
+  transition: color 160ms ease, background-color 160ms ease;
 }
-.sectionNav a:hover {
+.sectionNavLinks a:hover,
+.sectionNavLinks a:focus-visible {
   color: var(--ink);
+  background: var(--soft);
+}
+.sectionNavCta {
+  display: inline-flex;
+  min-height: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--button);
+  color: var(--button-text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+.sectionNavCta:hover {
+  background: #152a50;
+  transform: translateY(-1px);
+}
+.sectionNavCta svg {
+  color: #e6bc55;
 }
 .contentLayout {
   display: grid;
@@ -1154,6 +1199,41 @@
     font-size: 12px;
     cursor: pointer;
   }
+  .angleHouseMobileActions {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .angleHouseMobileActions > .mobileAvailabilityGlow {
+    flex: 1;
+    min-width: 0;
+  }
+  .angleHouseMobileActions .mobileAvailabilityGlow button {
+    gap: 6px;
+    padding-inline: 10px;
+    white-space: nowrap;
+  }
+  .mobileCallButton {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 68px;
+    min-height: 46px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ink);
+    font-size: 12px;
+    text-decoration: none;
+  }
+  .mobileCallButton:focus-visible {
+    outline: 3px solid #b88c22;
+    outline-offset: 3px;
+  }
   .page {
     padding-bottom: 78px;
   }
@@ -1246,11 +1326,24 @@
     height: 20px;
   }
   .sectionNav {
-    gap: 25px;
-    padding-bottom: 16px;
+    top: 70px;
+    gap: 5px;
+    margin: 5px 0 19px;
+    padding: 5px;
+    border-radius: 15px;
   }
-  .sectionNav a {
-    font-size: 11px;
+  .sectionNavLinks {
+    gap: 1px;
+  }
+  .sectionNavLinks a {
+    padding-inline: 9px;
+    font-size: 10px;
+  }
+  .sectionNavCta {
+    gap: 5px;
+    min-height: 42px;
+    padding-inline: 11px;
+    font-size: 10px;
   }
   .bookingSummary {
     padding: 25px 23px 22px;
@@ -1480,17 +1573,29 @@
   .closing h2 {
     font-size: 42px;
   }
-  .mobileBooking {
+  .page[data-property-slug="the-angle-house"] .mobileBooking {
     gap: 10px;
   }
-  .mobileBooking button {
+  .page[data-property-slug="the-angle-house"] .mobileBooking strong {
+    font-size: clamp(16px, 4.6vw, 20px);
+  }
+  .page[data-property-slug="the-angle-house"] .mobileBooking strong > span {
+    font-size: 10px;
+  }
+  .page[data-property-slug="the-angle-house"] .mobileBooking button {
     padding-inline: 16px;
     gap: 12px;
+  }
+  .page[data-property-slug="the-angle-house"] .angleHouseMobileActions .mobileAvailabilityGlow button {
+    padding-inline: 10px;
+    gap: 6px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .cover,
-  .photoAction {
+  .photoAction,
+  .sectionNavLinks a,
+  .sectionNavCta {
     transition: none;
   }
   .galleryGrid button:hover .cover {

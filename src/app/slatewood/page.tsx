@@ -3,7 +3,7 @@ import SlatewoodSimpleView from "@/components/slatewood/slatewood-simple-view";
 
 export const metadata: Metadata = {
   title: "Slatewood Villa | Coming Soon with Private Pool & Sports Turf | Stay Willas",
-  description: "Experience Slatewood, our upcoming luxury modern villa near Mumbai & Pune featuring an Olympic-proportioned private pool, private sports turf, and signature chef hospitality. Coming soon.",
+  description: "Meet Slatewood, a Stay Willas retreat coming soon in Maharashtra with a private pool, floodlit sports turf and thoughtful in-villa hospitality.",
   keywords: [
     "Slatewood villa",
     "private pool villa with turf",
@@ -17,23 +17,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Slatewood Villa | Coming Soon with Private Pool & Sports Turf | Stay Willas",
-    description: "Experience Slatewood, our upcoming luxury modern villa near Mumbai & Pune featuring an Olympic-proportioned private pool, private sports turf, and signature chef hospitality.",
+    description: "A new Stay Willas retreat with a private pool, sports turf and thoughtful in-villa hospitality. Coming soon to Maharashtra.",
     url: "https://www.staywillas.com/slatewood",
-    images: [
-      {
-        url: "https://www.staywillas.com/images/stay-willas-emblem.png",
-        width: 1200,
-        height: 630,
-        alt: "Stay Willas - Slatewood Villa Coming Soon",
-      },
-    ],
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Slatewood Villa | Coming Soon with Private Pool & Sports Turf | Stay Willas",
-    description: "Experience Slatewood, our upcoming luxury modern villa near Mumbai & Pune featuring an Olympic-proportioned private pool and private sports turf.",
-    images: ["https://www.staywillas.com/images/stay-willas-emblem.png"],
+    description: "A new Stay Willas retreat with a private pool and sports turf. Coming soon to Maharashtra.",
   },
 };
 

@@ -2,17 +2,15 @@
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { 
   Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2,
-  ChefHat, Wine, Gift, Receipt, Tag, Car, Check, ChevronDown, ChevronUp,
+  ChefHat, Wine, Gift, Receipt, Tag, Car,
   ChevronLeft, ChevronRight, ShieldCheck
 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
-import { createCheckoutSession, createAwaitingVerificationBooking } from "@/app/actions/booking";
+import { createAwaitingVerificationBooking } from "@/app/actions/booking";
 import { captureBookingLead } from "@/app/actions/inquiry";
-import { useUser, SignInButton } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { categorizeNight, checkLongWeekend } from "@/lib/calendar-holidays";
 import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement } from "@/lib/angle-house-measurement";
 
@@ -56,8 +54,7 @@ interface BookingCardProps {
   extraGuestFee?: number;
   bookings?: BookingProp[];
   initialCottageSelection?: "A" | "B" | "C" | "ALL";
-  initialGuestName?: string;
-  initialGuestPhone?: string;
+  lockCottageSelection?: boolean;
   initialCheckIn?: Date | null;
   initialCheckOut?: Date | null;
   initialGuests?: number;
@@ -121,15 +118,14 @@ const BookingCard = ({
   extraGuestFee = 1500,
   bookings = [],
   initialCottageSelection,
-  initialGuestName = "",
-  initialGuestPhone = "",
+  lockCottageSelection = false,
   initialCheckIn,
   initialCheckOut,
   initialGuests,
   onBookingComplete,
   isModal = false,
 }: BookingCardProps) => {
-  const { user, isSignedIn } = useUser();
+  const { user } = useUser();
 
   const isWillowPeak = villaId.includes("willow") || villaName.toLowerCase().includes("willow");
   const actualMaxGuests = isWillowPeak ? 12 : (villaName.toLowerCase().includes("canopy") ? 16 : maxGuests);
@@ -155,26 +151,19 @@ const BookingCard = ({
     return d;
   });
   const [guests, setGuests] = useState(initialGuests || 2);
-  const [clientName, setClientName] = useState(initialGuestName || "");
+  const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
-  const [clientPhone, setClientPhone] = useState(initialGuestPhone || "");
+  const [clientPhone, setClientPhone] = useState("");
+  const [specialRequest, setSpecialRequest] = useState("");
+  const [bookingError, setBookingError] = useState("");
+  const [calendarError, setCalendarError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmittingVerification, setIsSubmittingVerification] = useState(false);
   const [verificationSubmitted, setVerificationSubmitted] = useState(false);
   const [submittedBookingId, setSubmittedBookingId] = useState<string | null>(null);
+  const [submittedTotal, setSubmittedTotal] = useState<number | null>(null);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [showAddOns, setShowAddOns] = useState(false);
-  const [couponCode, setCouponCode] = useState("");
-  const [isCouponApplied, setIsCouponApplied] = useState(false);
-
-  // Sync initial props when passed
-  useEffect(() => {
-    if (initialGuestName) setClientName(initialGuestName);
-  }, [initialGuestName]);
-
-  useEffect(() => {
-    if (initialGuestPhone) setClientPhone(initialGuestPhone);
-  }, [initialGuestPhone]);
 
   useEffect(() => {
     if (initialCheckIn) {
@@ -208,6 +197,8 @@ const BookingCard = ({
   // Cottages required for Willow Peak (1 for Cottage A/B/C, 3 for ALL)
   const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
   const isSingleWillowCottage = isWillowPeak && cottageSelection !== "ALL";
+  const couponCode = isSingleWillowCottage ? "" : "STAYW26";
+  const isCouponApplied = !isSingleWillowCottage;
   const currentMaxGuests = isWillowPeak ? (cottageSelection === "ALL" ? 12 : 4) : actualMaxGuests;
 
   // Premium custom calendar states
@@ -366,6 +357,7 @@ const BookingCard = ({
     targetDay.setHours(0, 0, 0, 0);
 
     if (calendarTarget === "checkIn") {
+      setCalendarError("");
       setCheckIn(targetDay);
       if (targetDay.getTime() >= normalizedCheckOut.getTime() || isRangeInvalid(targetDay, normalizedCheckOut)) {
         // Automatically find next available checkout date
@@ -380,13 +372,14 @@ const BookingCard = ({
       setCalendarTarget("checkOut");
     } else {
       if (targetDay.getTime() <= normalizedCheckIn.getTime()) {
-        alert("Check-out date must be after check-in date.");
+        setCalendarError("Check-out must be after check-in.");
         return;
       }
       if (isRangeInvalid(normalizedCheckIn, targetDay)) {
-        alert("This range overlaps with an existing reservation. Please select another check-out date.");
+        setCalendarError("Those dates are unavailable. Please choose another date range.");
         return;
       }
+      setCalendarError("");
       setCheckOut(targetDay);
       setShowCalendar(false);
     }
@@ -589,93 +582,91 @@ const BookingCard = ({
     setShowCalendar(prev => !prev || calendarTarget !== "checkOut");
   };
 
-  const handleBooking = async () => {
+  const validateBookingDetails = () => {
     if (!clientName.trim()) {
-      alert("Please enter your Full Name.");
-      return;
+      setBookingError("Enter the primary guest's name.");
+      return false;
     }
-    if (!clientEmail.trim() || !/^\S+@\S+\.\S+$/.test(clientEmail)) {
-      alert("Please enter a valid Email Address.");
-      return;
+    const phoneDigits = clientPhone.replace(/\D/g, "");
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+      setBookingError("Enter a valid WhatsApp number with country code if needed.");
+      return false;
     }
-    if (!clientPhone.trim()) {
-      alert("Please enter your Phone Number.");
-      return;
+    if (clientEmail.trim() && !/^\S+@\S+\.\S+$/.test(clientEmail.trim())) {
+      setBookingError("Check the email address or leave it blank.");
+      return false;
     }
+    setBookingError("");
+    return true;
+  };
+
+  const handleBooking = async () => {
+    if (!validateBookingDetails()) return;
 
     setIsLoading(true);
     try {
       const formattedCheckIn = format(checkIn, "dd MMM yyyy");
       const formattedCheckOut = format(checkOut, "dd MMM yyyy");
-      
       const cottageInfoSection = isWillowPeak
-        ? `\n🏡 *Cottage Selection:* ${cottageSelection === "ALL" ? "All 3 Cottages (A + B + C — Entire Estate, Max 12 Guests)" : `Cottage ${cottageSelection} (Max 4 Guests, Private Jacuzzi)`}`
+        ? `\n🏡 *Stay:* ${cottageSelection === "ALL" ? "All 3 cottages (entire estate)" : `Cottage ${cottageSelection}`}`
         : "";
-
       const addOnsSection = selectedAddOns.length > 0
-        ? `\n• Add-On Experiences: *${selectedAddOns.join(", ")}*`
+        ? `\n• *Add-ons:* ${selectedAddOns.join(", ")}`
         : "";
-
       const discountSection = discount > 0
-        ? `\n🏷️ *Discount Applied:* -₹${discount.toLocaleString("en-IN")} (Coupon: ${couponCode.toUpperCase()})`
+        ? `\n• *Direct savings:* ₹${discount.toLocaleString("en-IN")}`
+        : "";
+      const requestSection = specialRequest.trim()
+        ? `\n• *Request:* ${specialRequest.trim()}`
+        : "";
+      const emailSection = clientEmail.trim()
+        ? `\n• *Email:* ${clientEmail.trim()}`
         : "";
 
-      // Immediately capture lead & dispatch email notification to staywillas@gmail.com
+      const message = `Hi Stay Willas, I’d like to check and request a stay at *${villaName}*.${cottageInfoSection}
+
+*Dates:* ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights)
+*Guests:* ${guests}${addOnsSection}${discountSection}${requestSection}
+*Estimated total:* ₹${total.toLocaleString("en-IN")}
+
+*Primary guest:* ${clientName.trim()}
+*WhatsApp:* ${clientPhone.trim()}${emailSection}
+
+Please confirm availability and the final amount before confirming my booking.`;
+      const whatsappUrl = `https://wa.me/919619042310?text=${encodeWhatsAppMessage(message)}`;
+
       captureBookingLead({
         name: clientName.trim(),
         phone: clientPhone.trim(),
-        email: clientEmail.trim(),
+        email: clientEmail.trim() || undefined,
         villaName,
         villaId,
         checkIn,
         checkOut,
         guests,
         totalPrice: total,
-        couponCode: isCouponApplied ? (couponCode || "STAYW26") : undefined,
+        couponCode: isCouponApplied ? couponCode : undefined,
         addOns: selectedAddOns,
-        message: `Guest clicked Reserve on WhatsApp for ${villaName}.${isWillowPeak ? ` Unit: ${cottageSelection}.` : ""} Dates: ${formattedCheckIn} to ${formattedCheckOut}. Total: ₹${total.toLocaleString("en-IN")}.`,
+        message: `WhatsApp booking request for ${villaName}. ${formattedCheckIn} to ${formattedCheckOut}. ${guests} guests. Estimated total ₹${total.toLocaleString("en-IN")}.${specialRequest.trim() ? ` Guest request: ${specialRequest.trim()}` : ""}`,
         attribution: isAngleHouse ? getAngleHouseAttribution() : undefined,
       }).then(result => {
         if (isAngleHouse && result.success && result.leadId) {
           trackAngleHouseBookingEnquiry(result.leadId, checkIn, checkOut);
         }
-      }).catch(err => console.error("❌ Failed to capture WhatsApp booking lead:", err));
+      }).catch(err => console.error("Failed to capture WhatsApp booking request:", err));
 
-      const msg = `Hello Stay Willas team! 🌟 I'm planning our next luxury staycation and would love to reserve *${villaName}* for our group of *${guests}* guest(s). 🏰✨
-${cottageInfoSection}
-Here are our stay details:
-📅 *Dates:* ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights)${addOnsSection}${discountSection}
-💵 *Total Stay Bill:* ₹${total.toLocaleString("en-IN")}
-
-Our Contact & Verified Details:
-👤 *Name:* ${clientName.trim()}
-✉️ *Email:* ${clientEmail.trim()}
-📱 *Phone:* ${clientPhone.trim()}
-
-We are so excited about this getaway! Could you please check availability and help us confirm our booking? Thank you so much! 🥂🍾`;
-
-      const encodedMsg = encodeWhatsAppMessage(msg);
-      const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
-      
       if (isAngleHouse) trackAngleHouseEngagement("whatsapp_click");
-      window.open(whatsappUrl, "_blank");
-      setIsLoading(false);
-    } catch (error: any) {
-      console.error("Booking Error:", error);
-      alert("Failed to initiate WhatsApp redirection. Please try again.");
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("WhatsApp booking request failed:", error);
+      setBookingError("Could not open WhatsApp. Please try again or use the request option.");
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handleAwaitVerificationBooking = async () => {
-    if (!clientName.trim()) {
-      alert("Please enter your Full Name.");
-      return;
-    }
-    if (!clientPhone.trim()) {
-      alert("Please enter your Phone Number.");
-      return;
-    }
+    if (!validateBookingDetails()) return;
 
     setIsSubmittingVerification(true);
     try {
@@ -683,104 +674,33 @@ We are so excited about this getaway! Could you please check availability and he
         villaId,
         guestName: clientName.trim(),
         guestPhone: clientPhone.trim(),
-        guestEmail: clientEmail.trim(),
-        checkIn,
-        checkOut,
+        guestEmail: clientEmail.trim() || undefined,
+        checkIn: format(checkIn, "yyyy-MM-dd"),
+        checkOut: format(checkOut, "yyyy-MM-dd"),
         guests,
         addOns: selectedAddOns,
-        couponCode: isCouponApplied ? (couponCode || "STAYW26") : undefined,
-        totalPrice: total,
+        couponCode: isCouponApplied ? couponCode : undefined,
         cottageSelection: isWillowPeak ? cottageSelection : undefined,
+        specialRequest: specialRequest.trim() || undefined,
         attribution: isAngleHouse ? getAngleHouseAttribution() : undefined,
       });
 
-      setIsSubmittingVerification(false);
       if (res.success && res.bookingId) {
         if (isAngleHouse) trackAngleHouseBookingEnquiry(res.bookingId, checkIn, checkOut);
         setVerificationSubmitted(true);
         setSubmittedBookingId(res.bookingId);
-        if (onBookingComplete) onBookingComplete();
+        setSubmittedTotal(res.totalPrice ?? total);
+        onBookingComplete?.();
       } else {
-        alert(res.error || "Failed to submit booking for verification. Please try again.");
+        setBookingError(res.error || "Could not submit the request. Please try again.");
       }
-    } catch (err: any) {
-      setIsSubmittingVerification(false);
-      alert(err.message || "Failed to submit booking for verification.");
-    }
-  };
-
-  const [isOnlinePaying, setIsOnlinePaying] = useState(false);
-
-  const handleOnlinePayment = async () => {
-    if (!clientName.trim()) {
-      alert("Please enter your Full Name.");
-      return;
-    }
-    if (!clientEmail.trim()) {
-      alert("Please enter your Email Address for the payment receipt.");
-      return;
-    }
-    if (!clientPhone.trim()) {
-      alert("Please enter your Phone Number.");
-      return;
-    }
-
-    setIsOnlinePaying(true);
-    try {
-      // Capture lead in background before gateway redirect
-      captureBookingLead({
-        name: clientName.trim(),
-        phone: clientPhone.trim(),
-        email: clientEmail.trim(),
-        villaName,
-        villaId,
-        checkIn,
-        checkOut,
-        guests,
-        totalPrice: total,
-        couponCode: isCouponApplied ? (couponCode || "STAYW26") : undefined,
-        addOns: selectedAddOns,
-        message: `Guest initiated online payment for ${villaName}.${isWillowPeak ? ` Unit: ${cottageSelection}.` : ""} Dates: ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Total: ₹${total.toLocaleString("en-IN")}.`,
-      }).catch(err => console.error("❌ Failed to capture online checkout lead:", err));
-
-      const res = await createCheckoutSession({
-        villaId,
-        villaName,
-        checkIn,
-        checkOut,
-        guests,
-        selectedAddOns,
-        userId: user?.id || "GUEST_USER",
-        couponCode: isCouponApplied ? couponCode : undefined,
-      });
-
-      if (res?.url) {
-        window.location.href = res.url;
-      } else {
-        // Fallback to verification booking if Stripe is not in live production mode
-        alert("Online gateway initializing. Submitting your dates for instant concierge verification hold.");
-        await handleAwaitVerificationBooking();
-      }
-    } catch (err: any) {
-      console.error("Online checkout error:", err);
-      // Fallback
-      await handleAwaitVerificationBooking();
+    } catch (error) {
+      console.error("Booking request failed:", error);
+      setBookingError("Could not submit the request. Please try again.");
     } finally {
-      setIsOnlinePaying(false);
+      setIsSubmittingVerification(false);
     }
   };
-
-  const handleQuickWhatsAppQuote = () => {
-    const formattedCheckIn = format(checkIn, "dd MMM yyyy");
-    const formattedCheckOut = format(checkOut, "dd MMM yyyy");
-    const cottageSub = isWillowPeak 
-      ? ` [${cottageSelection === "ALL" ? "All 3 Cottages (A, B, C)" : `Cottage ${cottageSelection}`}]`
-      : "";
-    const msg = `Hi Stay Willas Concierge! 🌟 I'm looking at *${villaName}*${cottageSub} for ${guests} guest(s) from ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights, ~₹${total.toLocaleString("en-IN")}). Could you please share your best direct offer and confirm availability?`;
-    if (isAngleHouse) trackAngleHouseEngagement("whatsapp_click");
-    window.open(`https://wa.me/919619042310?text=${encodeWhatsAppMessage(msg)}`, "_blank");
-  };
-
   if (verificationSubmitted) {
     return (
       <div className="bg-white border-2 border-emerald-500/30 rounded-3xl p-6 sm:p-8 text-center space-y-5 shadow-xl w-full font-sans animate-fade-in">
@@ -789,13 +709,13 @@ We are so excited about this getaway! Could you please check availability and he
         </div>
         <div>
           <span className="text-[10px] text-emerald-700 font-black uppercase tracking-[0.2em] block mb-1">
-            Verification Request Submitted
+            Request submitted · awaiting confirmation
           </span>
           <h3 className="text-2xl font-heading font-bold text-[#1B3564]">
             Thank You, {clientName}!
           </h3>
           <p className="text-xs text-slate-500 mt-1.5 leading-relaxed max-w-md mx-auto">
-            Your stay reservation at <strong>{villaName}</strong> is placed on temporary hold. Our Stay Willas manager will verify and confirm your reservation within 24 hours.
+            Your request for <strong>{villaName}</strong> has been received. The team will check availability and the final price, then contact you on WhatsApp. Your dates are not confirmed or held yet.
           </p>
         </div>
 
@@ -814,7 +734,7 @@ We are so excited about this getaway! Could you please check availability and he
           </div>
           <div className="flex justify-between text-slate-500">
             <span>Total Estimated Bill:</span>
-            <span className="font-bold text-slate-900 text-sm">₹{total.toLocaleString("en-IN")}</span>
+            <span className="font-bold text-slate-900 text-sm">₹{(submittedTotal ?? total).toLocaleString("en-IN")}</span>
           </div>
           <div className="flex justify-between text-slate-500">
             <span>Phone:</span>
@@ -826,12 +746,12 @@ We are so excited about this getaway! Could you please check availability and he
           <button
             type="button"
             onClick={() => {
-              const msg = `Hello Stay Willas team! 🌟 I just submitted a verification booking for *${villaName}* (Ref ID: ${submittedBookingId}) for ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Name: ${clientName}, Phone: ${clientPhone}. Looking forward to confirming! ✨`;
+              const msg = `Hi Stay Willas, I submitted a booking request for *${villaName}* (Reference: ${submittedBookingId}) from ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Guests: ${guests}. Estimated total: ₹${(submittedTotal ?? total).toLocaleString("en-IN")}. Name: ${clientName}. WhatsApp: ${clientPhone}. Please confirm availability and final pricing.`;
               window.open(`https://wa.me/919619042310?text=${encodeWhatsAppMessage(msg)}`, "_blank");
             }}
             className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
           >
-            <span>💬 Track with Concierge on WhatsApp</span>
+            <span>💬 Continue with the concierge on WhatsApp</span>
           </button>
           
           <button
@@ -886,13 +806,13 @@ We are so excited about this getaway! Could you please check availability and he
           isOverlapping ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
         }`}>
           <span className={`w-2 h-2 rounded-full ${isOverlapping ? 'bg-red-500' : 'bg-emerald-500 animate-pulse'}`} />
-          {isOverlapping ? 'Reserved' : 'Slots Open'}
+          {isOverlapping ? 'Unavailable' : 'No conflict shown'}
         </div>
       </div>
 
       <div className="space-y-4 mb-6">
         {/* Willow Peak Cottage Selector - A, B, C or ALL */}
-        {isWillowPeak && (
+        {isWillowPeak && !lockCottageSelection && (
           <div className="w-full bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 text-left shadow-xs space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="text-[10.5px] font-black uppercase tracking-wider text-[#1B3564] flex items-center gap-1.5 font-sans">
@@ -944,11 +864,11 @@ We are so excited about this getaway! Could you please check availability and he
         )}
         {/* Live Admin Panel Sync Status Badge */}
         <div className="flex items-center justify-between bg-slate-100/90 px-4 py-2.5 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-slate-200/80">
-          <span className="flex items-center gap-2 text-[#1B3564]">
+            <span className="flex items-center gap-2 text-[#1B3564]">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            Admin Calendar Sync
+            Calendar check
           </span>
-          <span className="text-[#DAA520] font-black">100% Real-Time</span>
+          <span className="text-[#DAA520] font-black">Concierge confirms</span>
         </div>
 
         {/* Date picker pair */}
@@ -986,7 +906,10 @@ We are so excited about this getaway! Could you please check availability and he
           type="button"
           onClick={() => {
             setShowCalendar(!showCalendar);
-            if (!showCalendar) setCalendarTarget("checkIn");
+            if (!showCalendar) {
+              setCalendarTarget("checkIn");
+              setCalendarError("");
+            }
           }}
           className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white font-black text-xs sm:text-sm py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer tracking-wider uppercase border border-[#DAA520]/40"
         >
@@ -1028,6 +951,12 @@ We are so excited about this getaway! Could you please check availability and he
               </button>
             </div>
 
+            {calendarError && (
+              <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-800">
+                {calendarError}
+              </p>
+            )}
+
             <div className="grid grid-cols-7 gap-1 text-center font-sans">
               {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => (
                 <div key={d} className="text-[10px] font-bold text-slate-400 uppercase py-1">{d}</div>
@@ -1043,21 +972,21 @@ We are so excited about this getaway! Could you please check availability and he
                 const isSelCheckOut = normalizedCheckOut && day.toDateString() === normalizedCheckOut.toDateString();
                 const isInSelectedRange = normalizedCheckIn && normalizedCheckOut && day > normalizedCheckIn && day < normalizedCheckOut;
                 
-                let dayClass = "text-xs py-2 rounded-xl transition-all relative font-bold ";
+                let dayClass = "text-xs py-2 rounded-xl transition-colors relative font-bold ";
                 let buttonDisabled = false;
                 
                 if (isPast) {
                   dayClass += "text-slate-350 cursor-not-allowed opacity-30";
                   buttonDisabled = true;
                 } else if (isBooked) {
-                  dayClass += "bg-red-50 text-red-400 line-through cursor-not-allowed border border-red-100/50 opacity-60";
+                  dayClass += "bg-red-100 text-red-900 cursor-not-allowed border border-red-300";
                   buttonDisabled = true;
                 } else if (isSelCheckIn || isSelCheckOut) {
                   dayClass += "bg-[#1B3564] text-white shadow-md scale-105 z-10 cursor-pointer";
                 } else if (isInSelectedRange) {
-                  dayClass += "bg-blue-50 text-[#1B3564] cursor-pointer";
+                  dayClass += "bg-[#E7EDF6] text-[#1B3564] border border-[#C6D2E4] cursor-pointer";
                 } else {
-                  dayClass += "text-slate-800 hover:bg-slate-200 cursor-pointer hover:scale-105";
+                  dayClass += "bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100 cursor-pointer";
                 }
                 
                 return (
@@ -1067,29 +996,34 @@ We are so excited about this getaway! Could you please check availability and he
                     disabled={buttonDisabled}
                     onClick={() => handleDayClick(day)}
                     className={`${dayClass} h-9 w-9 flex items-center justify-center mx-auto`}
-                    title={isBooked ? "Unavailable due to Reservation" : undefined}
+                    aria-label={`${format(day, "MMMM d")}, ${isPast ? "past date" : isBooked ? "unavailable" : isSelCheckIn ? "selected check-in" : isSelCheckOut ? "selected check-out" : isInSelectedRange ? "in your selected stay" : "available"}`}
+                    title={isBooked ? "Unavailable" : undefined}
                   >
                     {day.getDate()}
                     {isBooked && (
-                      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-red-500" />
+                      <span aria-hidden="true" className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-red-700" />
                     )}
                   </button>
                 );
               })}
             </div>
             
-            <div className="flex justify-center gap-4 text-[9px] font-sans text-slate-400 pt-3 border-t border-slate-200/60 uppercase tracking-widest font-black">
+            <div aria-label="Calendar key" className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-[10px] font-sans text-slate-600 pt-3 border-t border-slate-200/60 font-bold">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded bg-red-50 border border-red-150 line-through block" />
-                <span>Reserved</span>
+                <span aria-hidden="true" className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 block" />
+                <span>Available</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded bg-[#1B3564] block" />
+                <span aria-hidden="true" className="w-3 h-3 rounded bg-red-100 border border-red-300 block" />
+                <span>Unavailable</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span aria-hidden="true" className="w-3 h-3 rounded bg-[#1B3564] block" />
                 <span>Selected</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded bg-blue-50 block" />
-                <span>In Range</span>
+                <span aria-hidden="true" className="w-3 h-3 rounded bg-[#E7EDF6] border border-[#C6D2E4] block" />
+                <span>Your stay</span>
               </div>
             </div>
           </div>
@@ -1100,9 +1034,9 @@ We are so excited about this getaway! Could you please check availability and he
           <div className="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500 animate-fade-in">
             <Info className="text-red-500 shrink-0 mt-0.5" size={18} />
             <div>
-              <h5 className="font-extrabold text-xs uppercase tracking-wider text-red-900">Dates Unavailable (Already Reserved)</h5>
+              <h5 className="font-extrabold text-xs uppercase tracking-wider text-red-900">These dates aren’t available</h5>
               <p className="text-[11px] text-red-800 leading-relaxed mt-0.5 font-medium">
-                The range <strong className="font-bold">{format(checkIn, "dd MMM")} – {format(checkOut, "dd MMM yyyy")}</strong> overlaps with an active reservation. Please choose open dates on the calendar above.
+                Choose a different date range to continue.
               </p>
             </div>
           </div>
@@ -1110,9 +1044,9 @@ We are so excited about this getaway! Could you please check availability and he
           <div className="bg-emerald-50 border border-emerald-200 text-emerald-950 rounded-2xl p-4 flex items-start gap-3 text-left select-none shadow-sm border-l-4 border-l-emerald-500 animate-fade-in">
             <CheckCircle2 className="text-emerald-600 shrink-0 mt-0.5" size={20} />
             <div>
-              <h5 className="font-extrabold text-xs uppercase tracking-wider text-emerald-950">100% Available for Your Dates!</h5>
+              <h5 className="font-extrabold text-xs uppercase tracking-wider text-emerald-950">No conflict shown for these dates</h5>
               <p className="text-[11px] text-emerald-800 font-medium leading-relaxed mt-0.5">
-                Verified live against our reservation calendar for <strong className="font-bold">{format(checkIn, "dd MMM")} – {format(checkOut, "dd MMM")} ({nights} nights)</strong>. Proceed below to reserve!
+                Our calendar shows <strong className="font-bold">{format(checkIn, "dd MMM")} – {format(checkOut, "dd MMM")} ({nights} nights)</strong> as open. The concierge will recheck availability before confirming.
               </p>
             </div>
           </div>
@@ -1176,146 +1110,100 @@ We are so excited about this getaway! Could you please check availability and he
               <span>✓</span>
               <span>
                 {cottageSelection === "ALL"
-                  ? "Full Estate Reserved — exclusive private access to the entire grounds."
-                  : `Other 2 cottages remain open for independent guests on these dates.`
+                  ? "Entire estate selected — all three cottages are included in this request."
+                  : "This request is for one cottage; the other two may be booked separately."
                 }
               </span>
             </div>
           </div>
         )}
 
-        {/* Coupon Code Section */}
         {!isSingleWillowCottage && (
-          <div className="w-full bg-gradient-to-r from-amber-50 to-emerald-50/50 border border-[#DAA520]/40 rounded-2xl p-4 text-left shadow-sm space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-start sm:items-center gap-2">
-                <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#DAA520]/20 text-[#1B3564] text-xs font-black shrink-0">🎁</span>
-                <div>
-                  <span className="text-[10px] text-[#DAA520] uppercase tracking-wider font-black block">Exclusive Direct Booking Offer</span>
-                  <p className="text-xs text-slate-800 font-bold mt-0.5 leading-tight">
-                    <span className="text-emerald-600 font-black">26% OFF</span> on Weekdays &amp; <span className="text-emerald-600 font-black">5% OFF</span> on Weekends &amp; Holidays with code <strong className="text-[#1B3564] bg-white px-1.5 py-0.5 rounded border border-[#DAA520]/40 select-all font-mono">Stayw26</strong>
-                  </p>
-                </div>
-              </div>
-              {!isCouponApplied ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsCouponApplied(true);
-                    setCouponCode("STAYW26");
-                  }}
-                  className="px-4 py-2 sm:px-3 sm:py-1.5 w-full sm:w-auto bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 shadow-xs active:scale-95"
-                >
-                  Apply Direct Savings
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsCouponApplied(false);
-                    setCouponCode("");
-                  }}
-                  className="text-[10px] font-black text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 px-3 py-1.5 rounded-xl uppercase flex items-center gap-1.5 w-full sm:w-auto shrink-0 justify-center cursor-pointer transition-all active:scale-95"
-                >
-                  <Check size={12} className="stroke-[3] text-emerald-700" />
-                  <span>Savings Applied (-₹{discount.toLocaleString("en-IN")}) ✕</span>
-                </button>
-              )}
-            </div>
-            
-            <div className="flex gap-2 w-full">
-              <input
-                type="text"
-                placeholder="Enter coupon code (e.g. Stayw26)"
-                className="flex-1 min-w-0 bg-white border border-border-subtle rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wider placeholder:text-text-primary/30 placeholder:normal-case outline-none focus:border-[#DAA520] focus:ring-1 focus:ring-[#DAA520]/20"
-                value={couponCode}
-                onChange={(e) => {
-                  setCouponCode(e.target.value.toUpperCase());
-                  if (isCouponApplied) {
-                    setIsCouponApplied(false);
-                  }
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  if (isCouponApplied) {
-                    setIsCouponApplied(false);
-                    setCouponCode("");
-                  } else {
-                    if (couponCode.trim().length > 0) {
-                      setIsCouponApplied(true);
-                    } else {
-                      setIsCouponApplied(true);
-                      setCouponCode("STAYW26");
-                    }
-                  }
-                }}
-                className={`px-4 py-2 border text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
-                  isCouponApplied 
-                    ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-100" 
-                    : "border-[#1B3564] bg-[#1B3564] hover:bg-[#152a50] text-[#DAA520] font-black"
-                }`}
-              >
-                {isCouponApplied ? "Remove" : "Apply"}
-              </button>
-            </div>
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-left text-xs text-emerald-900">
+            Direct savings are included automatically: 26% on eligible weekdays and 5% on weekends and holidays.
           </div>
         )}
 
         {/* Contact Information Section */}
         <div className="pt-4 border-t border-border-subtle/60 space-y-3">
           <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block text-left">
-            Contact Information (Secure Checkout)
+            Guest details for confirmation
           </span>
 
           {/* Full Name */}
           <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
             <div className="flex-1 text-left">
-              <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Full Name</span>
+              <label htmlFor="booking-guest-name" className="text-[9px] text-text-primary/60 uppercase tracking-widest block mb-0.5">Primary guest name <span className="text-red-600">*</span></label>
               <input
                 type="text"
+                id="booking-guest-name"
                 required
+                autoComplete="name"
                 placeholder="e.g. John Doe"
                 className="w-full text-text-primary text-sm font-semibold bg-transparent border-none outline-none p-0 focus:ring-0 placeholder:text-text-primary/20"
                 value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
+                onChange={(e) => {
+                  setClientName(e.target.value);
+                  if (bookingError) setBookingError("");
+                }}
               />
             </div>
             <Users size={16} className="text-text-primary/30 shrink-0" />
           </div>
 
+          {/* Phone Number */}
+          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
+            <div className="flex-1 text-left">
+              <label htmlFor="booking-guest-phone" className="text-[9px] text-text-primary/60 uppercase tracking-widest block mb-0.5">WhatsApp number <span className="text-red-600">*</span></label>
+              <input
+                type="tel"
+                id="booking-guest-phone"
+                required
+                autoComplete="tel"
+                placeholder="e.g. +91 98765 43210"
+                className="w-full text-text-primary text-sm font-semibold bg-transparent border-none outline-none p-0 focus:ring-0 placeholder:text-text-primary/20"
+                value={clientPhone}
+                onChange={(e) => {
+                  setClientPhone(e.target.value);
+                  if (bookingError) setBookingError("");
+                }}
+              />
+            </div>
+            <Phone size={16} className="text-text-primary/30 shrink-0" />
+          </div>
+
           {/* Email Address */}
           <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
             <div className="flex-1 text-left">
-              <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Email Address</span>
+              <label htmlFor="booking-guest-email" className="text-[9px] text-text-primary/60 uppercase tracking-widest block mb-0.5">Email address <span className="normal-case tracking-normal">(optional)</span></label>
               <input
                 type="email"
-                required
+                id="booking-guest-email"
+                autoComplete="email"
                 placeholder="e.g. john@example.com"
                 className="w-full text-text-primary text-sm font-semibold bg-transparent border-none outline-none p-0 focus:ring-0 placeholder:text-text-primary/20"
                 value={clientEmail}
-                onChange={(e) => setClientEmail(e.target.value)}
+                onChange={(e) => {
+                  setClientEmail(e.target.value);
+                  if (bookingError) setBookingError("");
+                }}
               />
             </div>
             <Mail size={16} className="text-text-primary/30 shrink-0" />
           </div>
 
-          {/* Phone Number */}
-          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
-            <div className="flex-1 text-left">
-              <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-0.5">Phone Number</span>
-              <input
-                type="tel"
-                required
-                placeholder="e.g. +91 98765 43210"
-                className="w-full text-text-primary text-sm font-semibold bg-transparent border-none outline-none p-0 focus:ring-0 placeholder:text-text-primary/20"
-                value={clientPhone}
-                onChange={(e) => setClientPhone(e.target.value)}
-              />
-            </div>
-            <Phone size={16} className="text-text-primary/30 shrink-0" />
-          </div>
+          <label className="block text-left">
+            <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-1">Special request <span className="normal-case tracking-normal">(optional)</span></span>
+            <textarea
+              value={specialRequest}
+              onChange={(e) => setSpecialRequest(e.target.value.slice(0, 500))}
+              maxLength={500}
+              rows={2}
+              placeholder="Meals, celebration plans or anything the team should know"
+              className="w-full resize-y rounded-2xl border border-border-subtle bg-white p-3 text-sm font-medium text-text-primary outline-none transition-all focus:border-[#1B3564] focus:ring-1 focus:ring-[#1B3564]/25 placeholder:text-text-primary/35"
+            />
+          </label>
+          {bookingError && <p role="alert" className="text-left text-sm font-medium text-red-700">{bookingError}</p>}
         </div>
       </div>
 
@@ -1325,12 +1213,15 @@ We are so excited about this getaway! Could you please check availability and he
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#1B3564] uppercase tracking-wider flex items-center gap-1.5">
               <Receipt size={13} className="text-[#DAA520]" />
-              <span>Final Bill Breakdown ({nights} Night{nights > 1 ? "s" : ""})</span>
+              <span>Your stay estimate · {nights} Night{nights > 1 ? "s" : ""}</span>
             </span>
             <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-black">
               Dynamic Rates Applied
             </span>
           </div>
+
+          <details className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-left">
+            <summary className="cursor-pointer text-xs font-bold text-[#1B3564]">View daily rates and savings</summary>
 
           {/* Detailed stay breakdown card */}
           <div className="bg-[#FAF8F5] border border-[#DAA520]/20 rounded-2xl p-4 space-y-2.5 text-left select-none shadow-xs">
@@ -1419,18 +1310,20 @@ We are so excited about this getaway! Could you please check availability and he
             <span><strong>Note:</strong> Pricing varies between weekdays and weekends. Verified final rates are calculated dynamically based on your chosen dates.</span>
           </div>
 
+          </details>
+
           {/* Total Final Bill Highlight Box */}
           <div className="p-4 bg-[#1B3564] text-white rounded-2xl flex items-center justify-between shadow-md">
             <div className="flex flex-col text-left">
               <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-wider block">
-                Total Final Stay Bill
+                Estimated stay total
               </span>
               <span className="text-2xl font-black font-heading text-white">
                 ₹{total.toLocaleString("en-IN")}
               </span>
               {discount > 0 && (
                 <span className="text-[10.5px] text-emerald-300 font-sans font-medium mt-0.5">
-                  ✓ You save ₹{discount.toLocaleString("en-IN")} with coupon!
+                  ✓ Direct savings of ₹{discount.toLocaleString("en-IN")} applied
                 </span>
               )}
             </div>
@@ -1447,7 +1340,7 @@ We are so excited about this getaway! Could you please check availability and he
 
       <div className="space-y-3 mb-4 text-left">
         <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
-          Choose Your Preferred Booking Mode:
+          Choose how you’d like to continue
         </span>
 
         {/* Option 1: Book & Await Verification */}
@@ -1464,11 +1357,11 @@ We are so excited about this getaway! Could you please check availability and he
               <ShieldCheck size={20} className="text-white shrink-0" />
             )}
             <div className="text-left">
-              <span className="block font-black text-xs sm:text-sm text-white">Option 1: Book & Await Verification</span>
-              <span className="text-[10px] text-rose-100 font-normal block">Hold dates • Verified by concierge within 24 hours</span>
+              <span className="block font-black text-xs sm:text-sm text-white">Request booking</span>
+              <span className="text-[10px] text-rose-100 font-normal block">Request only; dates are not held until the team confirms</span>
             </div>
           </div>
-          <span className="text-[11px] font-black bg-white text-[#C9332C] px-2.5 py-1 rounded-lg shadow-sm">Hold for ₹{total > 0 ? total.toLocaleString("en-IN") : "Total"} ➔</span>
+          <span className="text-[11px] font-black bg-white text-[#C9332C] px-2.5 py-1 rounded-lg shadow-sm">Send request ➔</span>
         </button>
 
         {/* Option 2: Book via WhatsApp */}
@@ -1483,11 +1376,11 @@ We are so excited about this getaway! Could you please check availability and he
               <path d="M12.031 2c-5.524 0-10 4.48-10 10 0 1.956.563 3.784 1.536 5.33l-1.567 5.733 5.86-1.537c1.47.886 3.193 1.404 5.171 1.404 5.524 0 10-4.48 10-10s-4.476-10-10-10zm5.823 14.18c-.227.64-1.303 1.235-1.8 1.297-.453.057-.9-.153-2.9-.947-2.55-1.01-4.18-3.61-4.307-3.78-.127-.17-1.026-1.365-1.026-2.6 0-1.238.647-1.848.878-2.102.23-.254.5-.32.667-.32.167 0 .334.003.48.01.147.007.347-.057.543.418.2.485.687 1.67.747 1.797.06.126.1.273.017.44-.083.167-.123.273-.247.417-.123.143-.26.32-.37.43-.12.12-.247.25-.107.493.14.24.623 1.028 1.337 1.663.918.816 1.69 1.07 1.93 1.19.24.12.38.1.523-.067.143-.167.62-.72.787-.963.167-.243.333-.2.563-.117.23.083 1.46.688 1.71.813.25.127.417.19.477.3.06.11.06.64-.167 1.28z" />
             </svg>
             <div className="text-left">
-              <span className="block font-black text-xs sm:text-sm">Option 2: Book via WhatsApp</span>
-              <span className="text-[10px] text-white/80 font-normal block">Instant chat with concierge • ₹{total > 0 ? total.toLocaleString("en-IN") : "Quote"}</span>
+              <span className="block font-black text-xs sm:text-sm">Continue on WhatsApp</span>
+              <span className="text-[10px] text-white/80 font-normal block">Send your stay details to the concierge</span>
             </div>
           </div>
-          <span className="text-[11px] font-black bg-white/20 px-2.5 py-1 rounded-lg">Instant ➔</span>
+          <span className="text-[11px] font-black bg-white/20 px-2.5 py-1 rounded-lg">Open WhatsApp ➔</span>
         </button>
       </div>
 

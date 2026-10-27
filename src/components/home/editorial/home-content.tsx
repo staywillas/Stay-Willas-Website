@@ -1,7 +1,6 @@
 import Image, { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Bath, BadgeCheck, BedDouble, CalendarCheck2, ChevronDown, HeartHandshake, UtensilsCrossed, Users, Waves } from "lucide-react";
-import SlatewoodAnnouncement from "./slatewood-announcement";
 import styles from "./home.module.css";
 
 type Villa = { slug: string; name: string; location: string; price: number; guests: number; bedrooms: number };
@@ -89,7 +88,6 @@ function StayCard({ stay, villa, compact = false }: { stay: Stay; villa?: Villa;
 export default function HomeContent({ villas }: { villas: Villa[] }) {
   const lookup = new Map(villas.map(villa => [villa.slug, villa]));
   return <>
-    <SlatewoodAnnouncement />
     <section id="jacuzzi-villas" className={`${styles.featureSection} ${styles.jacuzziSection}`} aria-labelledby="jacuzzi-title">
       <div className={styles.contentWidth}>
         <div className={styles.sectionHeading}><div><span className={styles.eyebrow}><Bath size={15} /> SOAK. SWITCH OFF. STAY A LITTLE LONGER.</span><h2 id="jacuzzi-title">Our Jacuzzi Villas</h2><p>A private soak, a slower evening and a stay made for unwinding.</p></div><a href="#pool-villas" className={styles.collectionButton}>More of a pool person? <ChevronDown size={20} /></a></div>

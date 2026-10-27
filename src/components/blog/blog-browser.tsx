@@ -11,6 +11,7 @@ export interface GuideSummary {
   title: string;
   description: string;
   image: string;
+  imageAlt?: string;
   readTime: string;
   topic: string;
 }
@@ -49,7 +50,7 @@ export default function BlogBrowser({ guides, topics, initialTopic = "all" }: {
     <div className={styles.grid}>
       {matches.map(guide => <article key={guide.slug} className={styles.card}>
         <Link href={`/blog/${guide.slug}`} className={styles.cardLink}>
-          <div className={styles.photo}><PhotoFrame src={guide.image} alt={guide.title} fill
+          <div className={styles.photo}><PhotoFrame src={guide.image} alt={guide.imageAlt || guide.title} fill
             sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 1000px) 45vw, 380px" /></div>
           <div className={styles.copy}>
             <div className={styles.meta}><span>{topics.find(item => item.id === guide.topic)?.label || "Travel guide"}</span><span><Clock size={13} aria-hidden="true" />{guide.readTime}</span></div>

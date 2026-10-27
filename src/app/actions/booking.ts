@@ -7,6 +7,7 @@ import { startOfDay, parseISO } from "date-fns";
 import { sendAdminLeadNotification } from "@/lib/lead-notifications";
 import { categorizeNight } from "@/lib/calendar-holidays";
 import type { LeadAttribution } from "@/lib/angle-house-measurement";
+import { getTemporaryAvailabilityBlocks, hasTemporaryAvailabilityConflict } from "@/lib/temporary-availability-blocks";
 
 function getStripe() {
   const apiKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder_build_key_0000000000000000";
@@ -343,6 +344,7 @@ export async function getDestinationAvailability(region?: string) {
       } : {},
       select: {
         id: true,
+        slug: true,
         bookings: {
           where: {
             OR: [
@@ -366,14 +368,24 @@ export async function getDestinationAvailability(region?: string) {
 
     // Flatten all bookings from all villas
     const allBookings = villas.flatMap(v => v.bookings);
+    const angleHouse = villas.find((villa) => villa.slug === "the-angle-house");
+    const temporaryBlocks = angleHouse
+      ? getTemporaryAvailabilityBlocks("the-angle-house").map((booking) => ({
+          ...booking,
+          villaId: angleHouse.id,
+        }))
+      : [];
 
     return { 
       success: true, 
-      bookings: allBookings.map(b => ({
-        checkIn: b.checkIn.toISOString(),
-        checkOut: b.checkOut.toISOString(),
-        villaId: b.villaId
-      })), 
+      bookings: [
+        ...allBookings.map(b => ({
+          checkIn: b.checkIn.toISOString(),
+          checkOut: b.checkOut.toISOString(),
+          villaId: b.villaId
+        })),
+        ...temporaryBlocks,
+      ],
       totalVillas 
     };
   } catch (error: any) {
@@ -582,7 +594,8 @@ export async function checkAvailableVillasForDates(data: {
         const overlaps = userCinDay < bCoutDay && userCoutDay > bCinDay;
         return overlaps;
       });
-      return !hasOverlap;
+      const hasTemporaryBlock = hasTemporaryAvailabilityConflict(v.slug, userCheckIn, userCheckOut);
+      return !hasOverlap && !hasTemporaryBlock;
     });
 
     console.log("[Availability] Available villas after date filter:", availableVillas.length, "/", villas.length);
@@ -681,105 +694,206 @@ export async function createAwaitingVerificationBooking(data: {
   checkIn: string | Date;
   checkOut: string | Date;
   guests: number;
-  addOns?: any[];
+  addOns?: string[];
   couponCode?: string;
-  totalPrice: number;
   cottageSelection?: string;
+  specialRequest?: string;
   attribution?: LeadAttribution;
 }) {
   try {
-    if (!data.villaId || !data.guestName || !data.guestPhone || !data.checkIn || !data.checkOut) {
-      return { success: false, error: "Missing required booking details." };
+    const guestName = data.guestName?.trim().slice(0, 100) || "";
+    const guestPhone = data.guestPhone?.trim().slice(0, 30) || "";
+    const guestEmail = data.guestEmail?.trim().slice(0, 150) || "";
+    const specialRequest = data.specialRequest?.trim().slice(0, 500) || "";
+    const phoneDigits = guestPhone.replace(/\D/g, "");
+
+    if (!data.villaId || !guestName || !guestPhone || !data.checkIn || !data.checkOut) {
+      return { success: false, error: "Add your name, WhatsApp number and stay dates." };
+    }
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+      return { success: false, error: "Enter a valid WhatsApp number." };
+    }
+    if (guestEmail && !/^\S+@\S+\.\S+$/.test(guestEmail)) {
+      return { success: false, error: "Enter a valid email address or leave it blank." };
+    }
+    if (!Number.isInteger(data.guests) || data.guests < 1) {
+      return { success: false, error: "Select a valid guest count." };
     }
 
-    const checkInDate = new Date(data.checkIn);
-    const checkOutDate = new Date(data.checkOut);
-
+    // Send and parse date-only values so a guest's local midnight cannot shift
+    // to the previous calendar day when the server runs in another timezone.
+    const checkInDate = startOfDay(typeof data.checkIn === "string" ? parseISO(data.checkIn) : new Date(data.checkIn));
+    const checkOutDate = startOfDay(typeof data.checkOut === "string" ? parseISO(data.checkOut) : new Date(data.checkOut));
+    if (!Number.isFinite(checkInDate.getTime()) || !Number.isFinite(checkOutDate.getTime())) {
+      return { success: false, error: "Choose valid check-in and check-out dates." };
+    }
+    if (checkInDate < startOfDay(new Date())) {
+      return { success: false, error: "Check-in must be today or a future date." };
+    }
     if (checkOutDate <= checkInDate) {
       return { success: false, error: "Check-out date must be after check-in date." };
     }
+    const requestedNights = Math.round((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+    if (requestedNights > 365) {
+      return { success: false, error: "Choose a stay of 365 nights or fewer." };
+    }
 
-    // Verify no conflicting confirmed or blocked booking exists
+    const villa = await prisma.villa.findUnique({
+      where: { id: data.villaId },
+      select: { id: true, slug: true, name: true, guests: true },
+    });
+    if (!villa) return { success: false, error: "This villa is no longer available. Please refresh and try again." };
+    if (hasTemporaryAvailabilityConflict(villa.slug, checkInDate, checkOutDate)) {
+      return { success: false, error: "Those dates are unavailable. Please choose another date range." };
+    }
+    if (data.guests > villa.guests) {
+      return { success: false, error: `This stay allows up to ${villa.guests} guests.` };
+    }
+    if (data.cottageSelection && !["A", "B", "C", "ALL"].includes(data.cottageSelection)) {
+      return { success: false, error: "Choose a valid cottage option." };
+    }
+    if (villa.slug === "willow-peak") {
+      if (!data.cottageSelection) {
+        return { success: false, error: "Choose a Willow Peak cottage option." };
+      }
+      const maxGuestsForSelection = data.cottageSelection === "ALL" ? 12 : 4;
+      if (data.guests > maxGuestsForSelection) {
+        return { success: false, error: `This cottage selection allows up to ${maxGuestsForSelection} guests.` };
+      }
+    }
+
+    // Awaiting-verification requests do not hold dates. Recheck active inventory before saving.
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+    let relevantVillaIds = [villa.id];
+    if (villa.slug.startsWith("willow-peak-cottage")) {
+      const estate = await prisma.villa.findFirst({ where: { slug: "willow-peak" }, select: { id: true } });
+      if (estate) relevantVillaIds.push(estate.id);
+    } else if (villa.slug === "willow-peak") {
+      const willowVillas = await prisma.villa.findMany({
+        where: { OR: [{ slug: "willow-peak" }, { slug: { startsWith: "willow-peak-cottage" } }] },
+        select: { id: true },
+      });
+      relevantVillaIds = willowVillas.map((item) => item.id);
+    }
+
     const conflict = await prisma.booking.findFirst({
       where: {
-        villaId: data.villaId,
-        status: { in: ["CONFIRMED", "BLOCKED"] },
+        villaId: { in: relevantVillaIds },
+        status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] },
+        OR: [
+          { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+          { status: "HELD", createdAt: { gte: tenMinutesAgo } },
+        ],
         AND: [
           { checkIn: { lt: checkOutDate } },
           { checkOut: { gt: checkInDate } },
         ],
       },
+      select: { id: true },
     });
-
     if (conflict) {
-      return {
-        success: false,
-        error: "These dates have already been reserved. Please choose alternate dates.",
-      };
+      return { success: false, error: "Those dates have just become unavailable. Please choose another date range." };
     }
 
+    const nights = Math.round((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+    const selectedAddOns = Array.isArray(data.addOns) ? [...new Set(data.addOns)] : [];
+    const addOnRates: Record<string, number> = {
+      "Gourmet Chef Experience": 6000,
+      "Curated Vineyard Tour": 4500,
+      "Celebration Decoration": 7500,
+      "Premium SUV Airport Transfer": 9500,
+    };
+    if (selectedAddOns.some((item) => !Object.prototype.hasOwnProperty.call(addOnRates, item))) {
+      return { success: false, error: "One of the selected extras is no longer available. Refresh and try again." };
+    }
+
+    const pricingGuests = villa.slug === "willow-peak" && data.cottageSelection === "ALL"
+      ? Math.max(data.guests, 12)
+      : data.guests;
+    const pricing = await calculateStayPrice(villa.id, checkInDate, checkOutDate, pricingGuests);
+    const addOnsTotal = selectedAddOns.reduce((sum, item) => {
+      if (item === "Gourmet Chef Experience") return sum + addOnRates[item] * nights;
+      if (item === "Curated Vineyard Tour") return sum + addOnRates[item] * data.guests;
+      return sum + addOnRates[item];
+    }, 0);
+    const isWillowCottage = villa.slug.startsWith("willow-peak-cottage");
+    const isSingleWillowCottage = isWillowCottage || (villa.slug === "willow-peak" && pricing.cottagesCount < 3);
+    const couponCode = data.couponCode?.trim().toUpperCase();
+    const discount = couponCode === "STAYW26" && !isSingleWillowCottage
+      ? Math.round(pricing.normalWeekdayEligibleTotal * 0.26) + Math.round(pricing.weekendAndHolidayEligibleTotal * 0.05)
+      : 0;
+    const totalPrice = Math.max(0, pricing.totalRoomPrice + pricing.totalExtraGuestsCost + addOnsTotal - discount);
+
+    const attribution = data.attribution
+      ? Object.fromEntries(
+          Object.entries(data.attribution)
+            .filter(([, value]) => typeof value === "string")
+            .map(([key, value]) => [key, String(value).slice(0, 200)]),
+        )
+      : undefined;
     const userPayload = JSON.stringify({
       type: "ONLINE_VERIFICATION",
-      name: data.guestName.trim(),
-      phone: data.guestPhone.trim(),
-      email: data.guestEmail?.trim() || "",
+      name: guestName,
+      phone: guestPhone,
+      email: guestEmail,
       guests: data.guests,
-      cottageSelection: data.cottageSelection || "ALL",
-      coupon: data.couponCode || null,
-      attribution: data.attribution
-        ? Object.fromEntries(
-            Object.entries(data.attribution)
-              .filter(([, value]) => typeof value === "string")
-              .map(([key, value]) => [key, String(value).slice(0, 200)]),
-          )
-        : undefined,
+      cottageSelection: villa.slug.includes("willow") ? data.cottageSelection : undefined,
+      coupon: couponCode || null,
+      specialRequest,
+      attribution,
       submittedAt: new Date().toISOString(),
     });
 
     const booking = await prisma.booking.create({
       data: {
-        villaId: data.villaId,
+        villaId: villa.id,
         userId: userPayload,
         checkIn: checkInDate,
         checkOut: checkOutDate,
-        totalPrice: data.totalPrice,
+        totalPrice,
         status: "AWAITING_VERIFICATION",
-        addOns: data.addOns ? (data.addOns as any) : undefined,
-        kycName: data.guestName.trim(),
+        addOns: selectedAddOns,
+        kycName: guestName,
       },
-      include: {
-        villa: true,
-      },
+      select: { id: true },
     });
 
-    // Trigger instant email notification to staywillas@gmail.com
+    const unitDetail = villa.slug === "willow-peak"
+      ? (data.cottageSelection === "ALL" ? "Entire estate" : `Cottage ${data.cottageSelection}`)
+      : undefined;
+    const requestMessage = [
+      "Direct booking request awaiting concierge verification.",
+      "Availability and final price must be confirmed with the guest; dates are not held and no website payment was collected.",
+      unitDetail ? `Unit: ${unitDetail}.` : "",
+      specialRequest ? `Guest request: ${specialRequest}` : "",
+    ].filter(Boolean).join(" ");
+
     sendAdminLeadNotification({
       type: "BOOKING_REQUEST",
-      name: data.guestName.trim(),
-      phone: data.guestPhone.trim(),
-      email: data.guestEmail?.trim() || undefined,
-      villaName: booking.villa?.name,
+      name: guestName,
+      phone: guestPhone,
+      email: guestEmail || undefined,
+      villaName: villa.name,
       checkIn: checkInDate,
       checkOut: checkOutDate,
       guests: data.guests,
-      totalPrice: data.totalPrice,
-      couponCode: data.couponCode || undefined,
-      addOns: data.addOns || undefined,
-      message: `Direct Booking submitted for verification. Payment Option: Pay at Villa / Bank Transfer. Unit: ${data.cottageSelection || "ALL"}.`,
-    }).catch(err => console.error("❌ Failed to dispatch booking request email:", err));
+      totalPrice,
+      couponCode: couponCode || undefined,
+      addOns: selectedAddOns.length ? selectedAddOns : undefined,
+      message: requestMessage,
+    }).catch((err) => console.error("Failed to dispatch booking request email:", err));
 
     return {
       success: true,
       bookingId: booking.id,
-      booking,
+      totalPrice,
       message: "Your booking request has been submitted for concierge verification.",
     };
   } catch (error: any) {
     console.error("createAwaitingVerificationBooking error:", error);
-    return { success: false, error: error.message || "Failed to submit booking for verification." };
+    return { success: false, error: error.message || "Failed to submit booking request." };
   }
 }
-
 /**
  * Retrieves full villa pricing, bookings, and configuration for Homepage Quick Booking Modal
  */
@@ -893,7 +1007,7 @@ export async function getVillaBookingDetails(slugOrId: string) {
         extraGuestFee: villa.extraGuestFee ?? undefined,
         location: villa.location,
         isAngleHouse: villa.slug === "the-angle-house",
-        bookings: serializedBookings,
+        bookings: [...serializedBookings, ...getTemporaryAvailabilityBlocks(villa.slug)],
       }
     };
   } catch (error: any) {

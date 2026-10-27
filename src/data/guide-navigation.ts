@@ -24,7 +24,8 @@ export const guideTopics = [
     "family-villas-in-lonavala-with-private-pool", "private-villa-with-big-lawn-sports-turf-near-mumbai-pune", "best-villa-in-lonavala-for-birthday-parties-family-reunions",
     "pet-friendly-villas-near-mumbai-why-the-angle-house", "pet-friendly-villa-rules-near-mumbai-what-to-know",
   ] },
-  { id: "local", title: "Lonavala attractions and itineraries", slugs: [
+  { id: "local", title: "Lonavala, Kamshet outings and itineraries", slugs: [
+    "villa-in-kamshet-weekend-guide",
     "ultimate-2-day-lonavala-weekend-itinerary", "top-7-hidden-gems-secret-viewpoints-in-lonavala",
     "villas-near-pawna-lake-lonavala", "villa-near-lohagad-fort-trek-lonavala",
     "villas-near-ekvira-devi-temple-lonavala", "best-lake-view-villas-in-lonavala-for-peaceful-retreats",
@@ -89,7 +90,7 @@ export function getGuideBookingLinks(blog: BlogPost) {
 }
 
 export const destinationGuides: Record<string, string[]> = {
-  lonavala: ["best-villas-in-lonavala-with-private-pool", "private-villa-in-lonavala-guide", "lonavala-vs-khandala-villa-comparison", "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "family-villas-in-lonavala-with-private-pool", "top-7-hidden-gems-secret-viewpoints-in-lonavala"],
+  lonavala: ["best-villas-in-lonavala-with-private-pool", "private-villa-in-lonavala-guide", "villa-in-kamshet-weekend-guide", "lonavala-vs-khandala-villa-comparison", "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "family-villas-in-lonavala-with-private-pool", "top-7-hidden-gems-secret-viewpoints-in-lonavala"],
   khopoli: ["khopoli-vs-lonavala-villa-comparison", "best-villas-near-imagica-khopoli-with-private-pool", "best-khopoli-villa-for-large-groups", "corporate-offsite-checklist-for-a-khopoli-villa"],
   panchgani: ["panchgani-valley-view-villas-near-mapro-garden-guide", "panchgani-vs-mahabaleshwar-villa-stay-for-groups"],
 };
@@ -98,6 +99,6 @@ export function getPropertyGuides(slug: string): string[] {
   if (slug === "canopy-crest") return destinationGuides.khopoli;
   if (slug === "casa-de-reva") return destinationGuides.panchgani;
   if (slug.startsWith("willow-peak")) return ["best-villas-in-lonavala-with-private-pool", "private-villa-in-lonavala-guide", "romantic-a-frame-cottages-lonavala-couples-guide", "villas-in-lonavala-under-5000-with-pool-willow-peak", "villas-in-lonavala-under-10000-with-private-pool-willow-peak"];
-  if (slug === "the-angle-house") return ["best-villas-in-lonavala-with-private-pool", "private-villa-in-lonavala-guide", "family-villas-in-lonavala-with-private-pool", "pet-friendly-villas-near-mumbai-why-the-angle-house", "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "best-villa-in-lonavala-for-birthday-parties-family-reunions"];
+  if (slug === "the-angle-house") return ["villa-in-kamshet-weekend-guide", "best-villas-in-lonavala-with-private-pool", "private-villa-in-lonavala-guide", "family-villas-in-lonavala-with-private-pool", "pet-friendly-villas-near-mumbai-why-the-angle-house", "3-bhk-4-bhk-villa-in-lonavala-with-private-pool-price-guide", "best-villa-in-lonavala-for-birthday-parties-family-reunions"];
   return [];
 }

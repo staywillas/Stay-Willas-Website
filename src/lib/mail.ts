@@ -16,6 +16,13 @@ interface EmailPayload {
 export async function sendEmail({ to, subject, html }: EmailPayload): Promise<{ success: boolean; messageId?: string; devLogged?: boolean }> {
   const from = process.env.EMAIL_FROM || "Stay Willas <onboarding@resend.dev>";
 
+  // Local form testing must not send real customer or admin emails just because
+  // production credentials happen to be present in the developer's .env file.
+  if (process.env.NODE_ENV !== "production" && process.env.ENABLE_DEV_EMAILS !== "true") {
+    console.info("[DEV EMAIL SUPPRESSED] Set ENABLE_DEV_EMAILS=true to send email from a development server.");
+    return { success: true, devLogged: true };
+  }
+
   // ── 1. Resend (Primary for Vercel) ──────────────────────────────────────
   const resendKey = process.env.RESEND_API_KEY;
   if (resendKey) {

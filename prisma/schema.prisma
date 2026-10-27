@@ -58,7 +58,7 @@ model Booking {
   checkIn    DateTime
   checkOut   DateTime
   totalPrice Float
-  status     String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED, HELD, BLOCKED
+  status     String   @default("PENDING") // PENDING, AWAITING_VERIFICATION, CONFIRMED, CANCELLED, HELD, BLOCKED
   addOns     Json?    // Array of chosen packages
   kycName    String?
   kycGuests  Json?

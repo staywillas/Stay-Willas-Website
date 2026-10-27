@@ -47,6 +47,7 @@ next-env.d.ts
 
 # scratch directory
 /scratch/
+/output/
 logo transparent.png
 
 # raw camera files

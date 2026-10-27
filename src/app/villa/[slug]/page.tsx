@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { getReviews } from "@/app/actions/review";
 import { resolvePropertyImage } from "@/lib/property-images";
 import PropertyEditorialDetails from "@/components/villa/property-editorial-details";
+import { getTemporaryAvailabilityBlocks } from "@/lib/temporary-availability-blocks";
 
 export const revalidate = 3600; // 1 hour edge cache (on-demand revalidated on admin updates)
 
@@ -15,48 +16,33 @@ export async function generateStaticParams() {
   return villas.map((v) => ({ slug: v.slug }));
 }
 
-// Cache query to avoid duplicate roundtrips between generateMetadata and VillaDetailPage
+// Fetch only pricing rules that can affect a guest's upcoming stay. This also
+// keeps stale historical overrides out of the client-side booking payload.
+async function fetchVillaWithUpcomingPricing(slug: string) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const include = {
+    dailyPrices: {
+      where: { date: { gte: today } },
+      orderBy: { date: "asc" as const },
+    },
+    seasonalPrices: {
+      where: { endDate: { gte: today } },
+      orderBy: { startDate: "asc" as const },
+    },
+  };
+
+  return (
+    (await prisma.villa.findUnique({ where: { slug }, include })) ??
+    (await prisma.villa.findUnique({ where: { id: slug }, include }))
+  );
+}
+
+// Avoid duplicate database roundtrips between generateMetadata and the page.
 const getCachedVilla = React.cache
-  ? React.cache(async (slug: string) => {
-      let villa = await prisma.villa.findUnique({
-        where: { slug },
-        include: {
-          dailyPrices: true,
-          seasonalPrices: true,
-        },
-      });
-
-      if (!villa) {
-        villa = await prisma.villa.findUnique({
-          where: { id: slug },
-          include: {
-            dailyPrices: true,
-            seasonalPrices: true,
-          },
-        });
-      }
-      return villa;
-    })
-  : async (slug: string) => {
-      let villa = await prisma.villa.findUnique({
-        where: { slug },
-        include: {
-          dailyPrices: true,
-          seasonalPrices: true,
-        },
-      });
-
-      if (!villa) {
-        villa = await prisma.villa.findUnique({
-          where: { id: slug },
-          include: {
-            dailyPrices: true,
-            seasonalPrices: true,
-          },
-        });
-      }
-      return villa;
-    };
+  ? React.cache(fetchVillaWithUpcomingPricing)
+  : fetchVillaWithUpcomingPricing;
 
 const getCachedReviews = React.cache
   ? React.cache(async (villaId: string) => {
@@ -284,6 +270,7 @@ export default async function VillaDetailPage({ params }: PageProps) {
       cottagesCount,
     };
   });
+  serializedBookings.push(...getTemporaryAvailabilityBlocks(villa.slug));
 
   return (
     <PropertyEditorialDetails
@@ -296,9 +283,13 @@ export default async function VillaDetailPage({ params }: PageProps) {
 
 async function getLiveActiveBookings(relatedVillaIds: string[]) {
   const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   return prisma.booking.findMany({
     where: {
       villaId: { in: relatedVillaIds },
+      checkOut: { gt: today },
       status: { in: ["CONFIRMED", "PENDING", "BLOCKED", "HELD"] },
       OR: [
         { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
@@ -311,5 +302,6 @@ async function getLiveActiveBookings(relatedVillaIds: string[]) {
       status: true,
       userId: true,
     },
+    orderBy: { checkIn: "asc" },
   });
 }

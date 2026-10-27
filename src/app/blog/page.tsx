@@ -49,7 +49,7 @@ export default async function BlogIndexPage({ searchParams }: {searchParams:Prom
   ];
   const initialTopic = topics.some(topic => topic.id === query.topic) ? query.topic : "all";
   const guides = [...blogsData].sort((a,b) => new Date(b.updatedAt || b.date).getTime() - new Date(a.updatedAt || a.date).getTime()).map(blog => ({
-    slug:blog.slug,title:blog.title,description:blog.description,image:blog.image,readTime:`${Math.max(1,Math.ceil((blog.intro+" "+blog.sections.map(section=>section.paragraphs.join(" ")+" "+(section.list?.join(" ")||"")).join(" ")+" "+blog.conclusion).replace(/<[^>]+>/g," ").split(/\s+/).filter(Boolean).length/200))} min read`,topic:getGuideTopic(blog.slug)?.id || "other",
+    slug:blog.slug,title:blog.title,description:blog.description,image:blog.image,imageAlt:blog.imageAlt,readTime:`${Math.max(1,Math.ceil((blog.intro+" "+blog.sections.map(section=>section.paragraphs.join(" ")+" "+(section.list?.join(" ")||"")).join(" ")+" "+blog.conclusion).replace(/<[^>]+>/g," ").split(/\s+/).filter(Boolean).length/200))} min read`,topic:getGuideTopic(blog.slug)?.id || "other",
   }));
   const schema = {"@context":"https://schema.org","@graph":[
     {"@type":"CollectionPage","@id":BASE_URL+"/blog#webpage",url:BASE_URL+"/blog",name:"Stay Willas travel guides"},

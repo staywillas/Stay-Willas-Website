@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useId } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import { 
@@ -8,25 +8,18 @@ import {
   Zap, 
   CheckCircle2, 
   X, 
-  User, 
   Phone, 
-  Mail, 
   ArrowRight,
   ShieldCheck,
-  ChevronLeft,
-  ChevronRight
 } from "lucide-react";
 import dynamic from "next/dynamic";
 const BookingCard = dynamic(() => import("@/components/villa/booking-card"), {
   loading: () => <p role="status" className="p-6 text-center text-slate-600">Loading booking details…</p>,
 });
-import { format } from "date-fns";
-import { captureBookingLead } from "@/app/actions/inquiry";
 import { useLenis } from "lenis/react";
 import editorialStyles from "./property-editorial.module.css";
 import { willowUnits } from "@/data/property-editorial";
 import BorderGlow from "@/components/ui/border-glow";
-import { getAngleHouseAttribution, trackAngleHouseEngagement } from "@/lib/angle-house-measurement";
 
 interface BookingModalFlowProps {
   villaId: string;
@@ -72,26 +65,14 @@ export default function BookingModalFlow({
   propertySlug,
 }: BookingModalFlowProps) {
   const [mounted, setMounted] = useState(false);
-  const formId = useId();
   const lenis = useLenis();
   
   // Modals state
-  const [isLeadGateOpen, setIsLeadGateOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
-
-  // Guest Details Gate Form
-  const [guestName, setGuestName] = useState("");
-  const [guestPhone, setGuestPhone] = useState("");
-  const [guestEmail, setGuestEmail] = useState("");
-  const [phoneError, setPhoneError] = useState("");
 
   // Cottage selection for Willow Peak
   const isWillowPeak = villaId.includes("willow") || villaName.toLowerCase().includes("willow");
   const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">(initialCottageSelection);
-
-  // Availability Calendar State
-  const [calMonth, setCalMonth] = useState<Date>(new Date());
 
   useEffect(() => {
     setMounted(true);
@@ -100,7 +81,7 @@ export default function BookingModalFlow({
   // Keep keyboard interaction inside the editorial booking overlays and return
   // focus to the trigger after closing.
   useEffect(() => {
-    if (presentation !== "editorial" || !mounted || !(isLeadGateOpen || isBookingModalOpen || isAvailabilityModalOpen)) return;
+    if (presentation !== "editorial" || !mounted || !isBookingModalOpen) return;
     const dialog = document.querySelector<HTMLElement>('[data-editorial-booking="true"]');
     if (!dialog) return;
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -108,9 +89,7 @@ export default function BookingModalFlow({
     focusable()[0]?.focus({ preventScroll: true });
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsLeadGateOpen(false);
         setIsBookingModalOpen(false);
-        setIsAvailabilityModalOpen(false);
       }
       if (event.key === "Tab") {
         const elements = focusable();
@@ -122,11 +101,11 @@ export default function BookingModalFlow({
     };
     dialog.addEventListener("keydown", handleKey);
     return () => { dialog.removeEventListener("keydown", handleKey); previousFocus?.focus({ preventScroll: true }); };
-  }, [presentation, mounted, isLeadGateOpen, isBookingModalOpen, isAvailabilityModalOpen]);
+  }, [presentation, mounted, isBookingModalOpen]);
 
   // Lock body scroll and pause Lenis smooth scroll when any modal is open
   useEffect(() => {
-    if (isLeadGateOpen || isBookingModalOpen || isAvailabilityModalOpen) {
+    if (isBookingModalOpen) {
       document.body.style.overflow = "hidden";
       if (lenis) {
         try { lenis.stop(); } catch {}
@@ -143,9 +122,8 @@ export default function BookingModalFlow({
         try { lenis.start(); } catch {}
       }
     };
-  }, [isLeadGateOpen, isBookingModalOpen, isAvailabilityModalOpen, lenis]);
+  }, [isBookingModalOpen, lenis]);
 
-  const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
   const isSingleWillowCottage = (propertySlug?.startsWith("willow-peak-cottage-") ?? false) || (isWillowPeak && cottageSelection !== "ALL");
   // Willow Peak Entire Estate base starting rate is 15,000, single cottage is 4,999
   const willowEntireStartingPrice = 15000;
@@ -154,113 +132,8 @@ export default function BookingModalFlow({
     ? (cottageSelection === "ALL" ? (basePrice && basePrice <= 15000 ? basePrice : willowEntireStartingPrice) : willowCottageStartingPrice) 
     : price;
 
-  const handleOpenLeadGate = () => {
-    setIsLeadGateOpen(true);
-  };
-
-  const handleLeadSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!guestName.trim()) {
-      alert("Please enter your name.");
-      return;
-    }
-    const cleanPhone = guestPhone.replace(/[^0-9+]/g, "");
-    if (cleanPhone.length < 8) {
-      setPhoneError("Please enter a valid phone number.");
-      return;
-    }
-    setPhoneError("");
-
-    const selectedUnitTitle = isWillowPeak
-      ? (cottageSelection === "ALL"
-          ? "Willow Peak (Entire Estate - 12 Guests)"
-          : `Willow Peak - Cottage ${cottageSelection} (${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"})`)
-      : villaName;
-
-    // Automatically capture lead to Admin CRM in background with accurate unit name and note
-    captureBookingLead({
-      name: guestName.trim(),
-      phone: guestPhone.trim(),
-      email: guestEmail?.trim() || undefined,
-      villaName: selectedUnitTitle,
-      villaId,
-      totalPrice: displayPrice,
-      guests: isWillowPeak ? (cottageSelection === "ALL" ? 12 : 4) : maxGuests,
-      message: `Guest opened reservation gate for ${selectedUnitTitle}. Starting Rate: ₹${displayPrice.toLocaleString("en-IN")}/night. Note: Pricing varies in weekdays and weekends.`,
-      attribution: isAngleHouse ? getAngleHouseAttribution() : undefined,
-    }).then(result => {
-      if (isAngleHouse && result.success) trackAngleHouseEngagement("contact_details_submitted");
-    }).catch(err => console.error("Lead capture background error:", err));
-
-    // Transition from lead gate to full booking modal
-    setIsLeadGateOpen(false);
+  const handleOpenBooking = () => {
     setIsBookingModalOpen(true);
-  };
-
-  // Calendar Helpers for Availability Modal
-  const isDateReserved = (date: Date) => {
-    const check = new Date(date);
-    check.setHours(0, 0, 0, 0);
-
-    if (isWillowPeak) {
-      let booked = 0;
-      for (const b of bookings) {
-        if (b.status === "CANCELLED") continue;
-        const s = new Date(b.checkIn);
-        const e = new Date(b.checkOut);
-        s.setHours(0, 0, 0, 0);
-        e.setHours(0, 0, 0, 0);
-        if (check >= s && check < e) {
-          booked += b.cottagesCount || 1;
-        }
-      }
-      return booked + cottagesCount > 3;
-    }
-
-    return bookings.some((b) => {
-      if (b.status === "CANCELLED") return false;
-      const s = new Date(b.checkIn);
-      const e = new Date(b.checkOut);
-      s.setHours(0, 0, 0, 0);
-      e.setHours(0, 0, 0, 0);
-      return check >= s && check < e;
-    });
-  };
-
-  const renderMonthDays = (baseMonth: Date) => {
-    const y = baseMonth.getFullYear();
-    const m = baseMonth.getMonth();
-    const firstDay = new Date(y, m, 1).getDay();
-    const daysInMonth = new Date(y, m + 1, 0).getDate();
-
-    const cells = [];
-    for (let i = 0; i < firstDay; i++) {
-      cells.push(<div key={`empty-${i}`} className="h-10" />);
-    }
-    for (let d = 1; d <= daysInMonth; d++) {
-      const current = new Date(y, m, d);
-      const reserved = isDateReserved(current);
-      const past = current < new Date(new Date().setHours(0, 0, 0, 0));
-
-      cells.push(
-        <div
-          key={`day-${d}`}
-          className={`h-10 sm:h-12 flex flex-col items-center justify-center rounded-xl text-xs font-bold transition-all relative ${
-            reserved
-              ? "bg-red-50 text-red-700 border border-red-200"
-              : past
-              ? "bg-slate-50 text-slate-400"
-              : "bg-emerald-50/80 text-emerald-800 border border-emerald-200/80 hover:bg-emerald-100"
-          }`}
-        >
-          <span>{d}</span>
-          <span className="text-[8px] font-black uppercase tracking-tighter mt-0.5">
-            {reserved ? "Booked" : past ? "Past" : "Open"}
-          </span>
-        </div>
-      );
-    }
-    return cells;
   };
 
   return (
@@ -277,15 +150,25 @@ export default function BookingModalFlow({
             <p className={editorialStyles.bookingRateNote}>Final rates depend on your dates and group size.</p>
             {isWillowPeak && <div className={editorialStyles.unitPicker}><p>{cottageSelection === "ALL" ? "Entire estate · up to 12 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p><nav className={editorialStyles.unitLinks} aria-label="Choose your Willow Peak stay">{willowUnits.map(unit => <Link key={unit.slug} href={`/villa/${unit.slug}`} aria-current={unit.slug === propertySlug ? "page" : undefined}><strong>{unit.name}</strong><small>{unit.capacity} guests</small></Link>)}</nav></div>}
             {!isSingleWillowCottage && (
-              <div className={editorialStyles.bookingOffer}><span>Direct savings</span><div><strong>26% Weekdays · 5% Weekends &amp; Holidays</strong><small>Use code <b>Stayw26</b></small></div></div>
+              <div className={editorialStyles.bookingOffer}><span>Direct savings</span><div><strong>26% Weekdays · 5% Weekends &amp; Holidays</strong><small>Eligible savings apply automatically</small></div></div>
             )}
-            <BorderGlow className={editorialStyles.availabilityGlow} backgroundColor="#1b3564" borderRadius={28} animated={false}><button type="button" className={editorialStyles.primaryButton} onClick={() => setIsAvailabilityModalOpen(true)}><CalendarIcon size={17} /> Check availability</button></BorderGlow>
-            <button type="button" className={editorialStyles.secondaryButton} onClick={handleOpenLeadGate}>Reserve your stay <ArrowRight size={17} /></button>
+            <BorderGlow className={editorialStyles.availabilityGlow} backgroundColor="#1b3564" borderRadius={28} animated={false}><button type="button" className={editorialStyles.primaryButton} onClick={handleOpenBooking}><CalendarIcon size={17} /> Check availability</button></BorderGlow>
+            <button type="button" className={editorialStyles.secondaryButton} onClick={handleOpenBooking}>Reserve your stay <ArrowRight size={17} /></button>
             <p className={editorialStyles.bookingFee}><CheckCircle2 size={15} /> No platform booking fee</p>
           </div>
           <div className={editorialStyles.mobileBooking} role="group" aria-label="Quick booking">
             <div><small>From</small><strong>₹{displayPrice.toLocaleString("en-IN")}<span> / night</span></strong></div>
-            <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={() => setIsAvailabilityModalOpen(true)}>Check dates <ArrowRight size={17} /></button></BorderGlow>
+            {isAngleHouse ? (
+              <div className={editorialStyles.angleHouseMobileActions}>
+                <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={handleOpenBooking}>Check dates <ArrowRight size={17} /></button></BorderGlow>
+                <a className={editorialStyles.mobileCallButton} href="tel:+919619042310" aria-label="Call The Angle House booking team at 96190 42310">
+                  <Phone size={16} aria-hidden="true" />
+                  <span>Call</span>
+                </a>
+              </div>
+            ) : (
+              <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={handleOpenBooking}>Check dates <ArrowRight size={17} /></button></BorderGlow>
+            )}
           </div>
         </>
       ) : (
@@ -384,7 +267,7 @@ export default function BookingModalFlow({
         <div className="space-y-3 pt-1">
           <button
             type="button"
-            onClick={handleOpenLeadGate}
+            onClick={handleOpenBooking}
             className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-4 px-6 rounded-2xl text-xs sm:text-sm font-black tracking-[0.15em] uppercase transition-all duration-300 shadow-[0_8px_30px_rgba(224,83,76,0.38)] hover:shadow-[0_12px_40px_rgba(224,83,76,0.5)] hover:scale-[1.01] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer border border-white/25"
           >
             <Zap size={16} className="text-amber-200" />
@@ -393,7 +276,7 @@ export default function BookingModalFlow({
 
           <button
             type="button"
-            onClick={() => setIsAvailabilityModalOpen(true)}
+            onClick={handleOpenBooking}
             className="w-full bg-white hover:bg-rose-50/50 text-[#C9332C] py-3.5 px-4 rounded-2xl text-xs font-bold tracking-wider uppercase transition-all border border-rose-200/80 hover:border-[#E0534C]/60 flex items-center justify-center gap-2 cursor-pointer"
           >
             <CalendarIcon size={14} className="text-[#E0534C]" />
@@ -408,150 +291,7 @@ export default function BookingModalFlow({
       )}
 
       {/* ========================================================================= */}
-      {/* 2. STEP 1: LEAD CAPTURE GATE MODAL (Name & Phone Number First)            */}
-      {/* ========================================================================= */}
-      {mounted && isLeadGateOpen && typeof document !== "undefined" && createPortal(
-        <div 
-          role={presentation === "editorial" ? "dialog" : undefined}
-          aria-modal={presentation === "editorial" ? true : undefined}
-          aria-label={presentation === "editorial" ? `Reserve ${villaName}` : undefined}
-          data-editorial-booking={presentation === "editorial" ? "true" : undefined}
-          data-lenis-prevent="true"
-          className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
-        >
-          {/* Backdrop dismiss */}
-          <div className="fixed inset-0" onClick={() => setIsLeadGateOpen(false)} />
-
-          <div 
-            data-lenis-prevent="true"
-            className="relative bg-white border-2 border-[#DAA520]/30 rounded-[32px] p-6 sm:p-9 max-w-lg w-full my-auto shadow-[0_24px_70px_rgba(0,0,0,0.4)] z-10 text-slate-900 space-y-6"
-          >
-            {/* Header */}
-            <div className="flex items-start justify-between pb-4 border-b border-slate-100">
-              <div className="text-left">
-                <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-[0.2em] block mb-1">
-                  Step 1 of 2 • Guest Details
-                </span>
-                <h3 className="text-2xl font-heading font-bold text-[#1B3564]">
-                  Reserve {villaName}
-                </h3>
-                <p className="text-slate-500 text-xs mt-1 leading-relaxed">
-                  Please provide your name and phone number to access the reservation panel and personalized rates.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsLeadGateOpen(false)}
-                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 hover:text-black transition-all cursor-pointer shrink-0"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Weekday / Weekend Note Banner */}
-            <div className="p-3 bg-amber-50/80 border border-amber-200/80 rounded-2xl text-[11px] text-amber-900 font-medium text-left flex items-start gap-2">
-              <span className="text-amber-600 shrink-0 mt-0.5">ℹ️</span>
-              <span><strong>Note:</strong> Pricing varies between weekdays and weekends. Exact rates are calculated dynamically according to your chosen check-in &amp; check-out dates.</span>
-            </div>
-
-            {/* Form */}
-            <form onSubmit={handleLeadSubmit} className="space-y-4">
-              {/* Full Name */}
-              <div className="space-y-1.5 text-left">
-                <label htmlFor={`${formId}-name`} className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400">
-                    <User size={16} />
-                  </div>
-                  <input
-                    type="text"
-                    id={`${formId}-name`}
-                    autoComplete="name"
-                    required
-                    value={guestName}
-                    onChange={(e) => setGuestName(e.target.value)}
-                    placeholder="e.g. Rohit Sharma"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#1B3564] focus:ring-2 focus:ring-[#1B3564]/20 outline-none transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Phone Number */}
-              <div className="space-y-1.5 text-left">
-                <label htmlFor={`${formId}-phone`} className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
-                  Phone / WhatsApp Number <span className="text-red-500">*</span>
-                </label>
-                <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400">
-                    <Phone size={16} />
-                  </div>
-                  <input
-                    type="tel"
-                    id={`${formId}-phone`}
-                    autoComplete="tel"
-                    required
-                    value={guestPhone}
-                    onChange={(e) => {
-                      setGuestPhone(e.target.value);
-                      if (phoneError) setPhoneError("");
-                    }}
-                    placeholder="e.g. +91 98765 43210"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#1B3564] focus:ring-2 focus:ring-[#1B3564]/20 outline-none transition-all"
-                  />
-                </div>
-                {phoneError && (
-                  <p className="text-xs text-red-600 font-medium mt-1">{phoneError}</p>
-                )}
-              </div>
-
-              {/* Email Address (Optional) */}
-              <div className="space-y-1.5 text-left">
-                <label htmlFor={`${formId}-email`} className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
-                  Email Address <span className="text-slate-400 text-[10px] font-normal">(Optional for confirmation)</span>
-                </label>
-                <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400">
-                    <Mail size={16} />
-                  </div>
-                  <input
-                    type="email"
-                    id={`${formId}-email`}
-                    autoComplete="email"
-                    value={guestEmail}
-                    onChange={(e) => setGuestEmail(e.target.value)}
-                    placeholder="e.g. rohit@example.com"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#1B3564] focus:ring-2 focus:ring-[#1B3564]/20 outline-none transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Privacy Guarantee */}
-              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-2.5 text-left text-xs text-slate-600">
-                <ShieldCheck size={18} className="text-emerald-600 shrink-0" />
-                <span className="text-[11px]">
-                  Your details are 100% private and used exclusively for your Stay Willas concierge reservation.
-                </span>
-              </div>
-
-              {/* Submit CTA */}
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-4 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-[0.16em] transition-all shadow-[0_8px_25px_rgba(224,83,76,0.35)] hover:shadow-[0_12px_35px_rgba(224,83,76,0.45)] flex items-center justify-center gap-2 cursor-pointer border border-white/20 mt-2 active:scale-[0.99]"
-              >
-                <span>Continue to Booking Panel</span>
-                <ArrowRight size={16} className="text-white" />
-              </button>
-            </form>
-          </div>
-        </div>,
-        document.body
-      )}
-
-      {/* ========================================================================= */}
-      {/* 3. STEP 2: FULL BOOKING PANEL MODAL (Dates, Add-ons & 3 Booking Modes)     */}
+      {/* 2. SINGLE BOOKING PANEL (Dates, Guest Details, Pricing & Booking Choices) */}
       {/* ========================================================================= */}
       {mounted && isBookingModalOpen && typeof document !== "undefined" && createPortal(
         <div 
@@ -574,7 +314,7 @@ export default function BookingModalFlow({
               <div className="text-left">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-widest">
-                    Step 2 of 2 • Customized Stay Builder
+                    YOUR STAY • DIRECT WITH STAY WILLAS
                   </span>
                 </div>
                 <h3 className="font-heading font-bold text-lg sm:text-xl tracking-wide text-white">
@@ -614,12 +354,8 @@ export default function BookingModalFlow({
                 extraGuestFee={extraGuestFee}
                 bookings={bookings}
                 initialCottageSelection={cottageSelection}
-                initialGuestName={guestName}
-                initialGuestPhone={guestPhone}
+                lockCottageSelection={propertySlug?.startsWith("willow-peak-cottage-") ?? false}
                 isModal={true}
-                onBookingComplete={() => {
-                  // Keep modal open so success confirmation can be viewed
-                }}
               />
             </div>
           </div>
@@ -628,129 +364,7 @@ export default function BookingModalFlow({
       )}
 
       {/* ========================================================================= */}
-      {/* 4. AVAILABILITY CALENDAR MODAL (Green = Open, Red = Reserved)              */}
-      {/* ========================================================================= */}
-      {mounted && isAvailabilityModalOpen && typeof document !== "undefined" && createPortal(
-        <div 
-          role={presentation === "editorial" ? "dialog" : undefined}
-          aria-modal={presentation === "editorial" ? true : undefined}
-          aria-label={presentation === "editorial" ? `${villaName} availability calendar` : undefined}
-          data-editorial-booking={presentation === "editorial" ? "true" : undefined}
-          data-lenis-prevent="true"
-          className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fade-in font-sans"
-        >
-          <div className="fixed inset-0" onClick={() => setIsAvailabilityModalOpen(false)} />
 
-          <div 
-            data-lenis-prevent="true"
-            className="relative bg-white border-2 border-[#DAA520]/30 rounded-[32px] p-5 sm:p-8 max-w-lg w-full my-auto shadow-2xl z-10 text-slate-900 space-y-5"
-          >
-            {/* Header */}
-            <div className="flex items-start justify-between pb-3.5 border-b border-slate-100">
-              <div className="text-left">
-                <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-[0.2em] block mb-0.5">
-                  Live Calendar Availability
-                </span>
-                <h3 className="text-xl sm:text-2xl font-heading font-bold text-[#1B3564]">
-                  {villaName}
-                </h3>
-                <p className="text-slate-500 text-xs mt-0.5">
-                  Real-time synchronization with Airbnb, MakeMyTrip & Direct reservations.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsAvailabilityModalOpen(false)}
-                aria-label="Close availability calendar"
-                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 hover:text-black transition-all cursor-pointer shrink-0"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Willow Peak Cottage Switch inside Availability Modal */}
-            {isWillowPeak && presentation !== "editorial" && (
-              <div className="grid grid-cols-4 gap-1.5 p-1.5 bg-slate-100 rounded-2xl">
-                {(["A", "B", "C", "ALL"] as const).map((opt) => (
-                  <button
-                    key={opt}
-                    type="button"
-                    onClick={() => setCottageSelection(opt)}
-                    className={`py-2 text-[10px] font-black uppercase rounded-xl transition-all ${
-                      cottageSelection === opt
-                        ? "bg-[#1B3564] text-white shadow-sm"
-                        : "text-slate-600 hover:text-black"
-                    }`}
-                  >
-                    {opt === "ALL" ? "All 3" : `Cottage ${opt}`}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Month Navigator */}
-            <div className="flex items-center justify-between px-1">
-              <button
-                type="button"
-                onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1))}
-                aria-label="Previous month"
-                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <h4 className="font-heading font-bold text-base sm:text-lg text-[#1B3564]">
-                {format(calMonth, "MMMM yyyy")}
-              </h4>
-              <button
-                type="button"
-                onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1))}
-                aria-label="Next month"
-                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-
-            {/* Days of Week Header */}
-            <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-black uppercase text-slate-400">
-              {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
-                <span key={day}>{day}</span>
-              ))}
-            </div>
-
-            {/* Month Grid */}
-            <div className="grid grid-cols-7 gap-1.5">
-              {renderMonthDays(calMonth)}
-            </div>
-
-            {/* Legend */}
-            <div className="flex items-center justify-center gap-4 pt-3 border-t border-slate-100 text-xs font-bold">
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-emerald-500" />
-                <span className="text-slate-600 text-[11px]">Available</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-red-500" />
-                <span className="text-slate-600 text-[11px]">Reserved / Hold</span>
-              </div>
-            </div>
-
-            {/* Proceed CTA */}
-            <button
-              type="button"
-              onClick={() => {
-                setIsAvailabilityModalOpen(false);
-                handleOpenLeadGate();
-              }}
-              className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_8px_25px_rgba(224,83,76,0.35)] hover:shadow-[0_12px_35px_rgba(224,83,76,0.45)] flex items-center justify-center gap-2 cursor-pointer border border-white/20 active:scale-[0.99]"
-            >
-              <ArrowRight size={14} className="text-amber-200" />
-              <span>Proceed to Reserve Dates</span>
-            </button>
-          </div>
-        </div>,
-        document.body
-      )}
     </>
   );
 }

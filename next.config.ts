@@ -27,6 +27,10 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', '@clerk/nextjs', 'date-fns', 'swiper', 'clsx', 'tailwind-merge', '@prisma/client', 'lenis', 'class-variance-authority'],
+    // Keep DB-backed static generation under the hosted Postgres connection cap.
+    // Next otherwise starts one worker per CPU core and can time out on villa/blog queries.
+    cpus: 2,
+    staticGenerationMinPagesPerWorker: 25,
   },
   redirects: async () => [
     {

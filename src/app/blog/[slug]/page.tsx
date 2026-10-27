@@ -8,9 +8,10 @@ import Footer from "@/components/layout/footer";
 import { blogsData } from "@/data/blogs";
 import { getRelatedGuides, getGuideBookingLinks, getGuideTopic } from "@/data/guide-navigation";
 import { CANOPY_MAX_GUESTS, WILLOW_COTTAGE_BASE_PRICE } from "@/data/stay-facts";
-import { ChevronLeft, Calendar, Clock, BookOpen, Share2, HelpCircle, ArrowRight, BedDouble, Users, Waves, Flame, MapPin } from "lucide-react";
+import { ChevronLeft, Calendar, Clock, BookOpen, ArrowRight, BedDouble, Users, Waves, Flame, MapPin } from "lucide-react";
 import { prisma } from "@/lib/db";
 import BlogHorizontalMarquee from "@/components/blog/blog-horizontal-marquee";
+import KamshetGuidePage from "@/components/blog/kamshet-guide-page";
 
 export const revalidate = 86400; // 24 hours edge cache
 
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: blog.metaTitle,
       description: blog.description,
       url: `https://www.staywillas.com/blog/${blog.slug}`,
-      images: [{ url: ogImageUrl }],
+      images: [{ url: ogImageUrl, alt: blog.imageAlt || blog.title }],
       type: "article",
       publishedTime: new Date(blog.date).toISOString(),
       modifiedTime: new Date(blog.updatedAt || blog.date).toISOString(),
@@ -87,19 +88,23 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     guests: number;
   }> = [];
 
-  if (blog.featuredVillaSlugs && blog.featuredVillaSlugs.length > 0) {
-    const fetched = await prisma.villa.findMany({
-      where: { slug: { in: blog.featuredVillaSlugs } },
-      select: { name: true, slug: true, images: true, location: true, price: true, bedrooms: true, guests: true }
-    });
-    featuredVillas = blog.featuredVillaSlugs
-      .map(s => fetched.find(v => v.slug === s))
-      .filter((v): v is NonNullable<typeof v> => Boolean(v));
-  } else if ((blog as any).relatedVillaSlug) {
-    relatedVilla = await prisma.villa.findUnique({
-      where: { slug: (blog as any).relatedVillaSlug },
-      select: { name: true, slug: true, images: true, location: true }
-    });
+  try {
+    if (blog.featuredVillaSlugs && blog.featuredVillaSlugs.length > 0) {
+      const fetched = await prisma.villa.findMany({
+        where: { slug: { in: blog.featuredVillaSlugs } },
+        select: { name: true, slug: true, images: true, location: true, price: true, bedrooms: true, guests: true }
+      });
+      featuredVillas = blog.featuredVillaSlugs
+        .map(s => fetched.find(v => v.slug === s))
+        .filter((v): v is NonNullable<typeof v> => Boolean(v));
+    } else if (blog.relatedVillaSlug) {
+      relatedVilla = await prisma.villa.findUnique({
+        where: { slug: blog.relatedVillaSlug },
+        select: { name: true, slug: true, images: true, location: true }
+      });
+    }
+  } catch (error) {
+    console.error(`[BlogDetailsPage] Failed to fetch villas for ${blog.slug}:`, error);
   }
 
   // Keep structured question-and-answer data aligned with the visible article.
@@ -129,9 +134,15 @@ export default async function BlogDetailsPage({ params }: PageProps) {
   });
 
   const isKhopoli = /khopoli/i.test(blog.title + " " + blog.slug);
+  const isKamshetGuide = blog.slug === "villa-in-kamshet-weekend-guide";
   const isLonavala = /lonavala/i.test(blog.title + " " + blog.slug);
   const isPanchgani = /panchgani/i.test(blog.title + " " + blog.slug);
-  const blogAboutEntity = isKhopoli
+  const blogAboutEntity = isKamshetGuide
+    ? {
+        "@type": "Place",
+        name: "Kamshet, Maharashtra",
+      }
+    : isKhopoli
     ? {
         "@type": "Place",
         name: "Khopoli, Maharashtra",
@@ -171,7 +182,21 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     "dateModified": new Date(blog.updatedAt || blog.date).toISOString(),
     "inLanguage": "en-IN",
     "wordCount": articleWordCount,
+    "keywords": blog.keywords.join(", "),
     "about": blogAboutEntity,
+    ...(isKamshetGuide ? {
+      "mentions": {
+        "@type": "LodgingBusiness",
+        "name": "The Angle House",
+        "url": "https://www.staywillas.com/villa/the-angle-house",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Kamshet",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
+        }
+      }
+    } : {}),
     "author": {
       "@type": "Organization",
       "name": "Stay Willas",
@@ -226,6 +251,17 @@ export default async function BlogDetailsPage({ params }: PageProps) {
     }] : [])
   ];
 
+  if (isKamshetGuide) {
+    return (
+      <KamshetGuidePage
+        blog={blog}
+        articleWordCount={articleWordCount}
+        relatedGuides={otherBlogs}
+        schemaJson={JSON.stringify(schemaToInject)}
+      />
+    );
+  }
+
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary selection:bg-accent-primary selection:text-white">
       {/* Schema Injection */}
@@ -274,7 +310,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
         <div style={{ aspectRatio: getArticlePhotoRatio(blog.image) }} className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl mb-12 border border-[#DAA520]/15">
           <PhotoFrame
             src={blog.image}
-            alt={blog.title}
+            alt={blog.imageAlt || blog.title}
             fill
             loading="eager"
             fetchPriority="high"

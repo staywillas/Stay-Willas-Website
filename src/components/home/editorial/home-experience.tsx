@@ -61,7 +61,7 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
         <span className={styles.eyebrow}>PRIVATE HOMES. PERSONAL MOMENTS.</span>
         <h1><span className={styles.heroTitleLine}>A slower kind</span>{" "}<span className={styles.heroTitleLine}>of <em>escape.</em></span></h1>
         <p>Beautiful villas. Your favourite people. Nothing else on the agenda.</p>
-        <form className={styles.searchBar} onSubmit={search}>
+        <form className={styles.searchBar} data-home-search-form onSubmit={search}>
           <label className={styles.locationField}><span>Where to?</span><select name="destination" aria-label="Destination" value={location} onChange={e => setLocation(e.target.value)}><option value="all">All destinations</option><option>Lonavala</option><option>Khopoli</option><option>Panchgani</option></select></label>
           <label><span>Check in</span><input name="checkIn" aria-label="Check in" type="date" min={today} value={checkIn} onChange={e => {setCheckIn(e.target.value); if(checkOut && checkOut <= e.target.value) setCheckOut("");}} /></label>
           <label><span>Check out</span><input name="checkOut" aria-label="Check out" type="date" min={checkIn || today} value={checkOut} onChange={e => setCheckOut(e.target.value)} /></label>
