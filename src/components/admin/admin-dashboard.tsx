@@ -58,6 +58,7 @@ import {
   rejectVerificationBooking
 } from "@/app/actions/admin";
 import { deleteInquiry } from "@/app/actions/inquiry";
+import { getGuestPricing } from "@/lib/guest-pricing";
 
 interface SeasonalPrice {
   id: string;
@@ -256,6 +257,12 @@ const AdminDashboard = ({
 
     const parsedGuestsCount = (booking.userId && booking.userId.startsWith("{") ? (JSON.parse(booking.userId).guests || 1) : 1);
     const parsedFoodGuestsCount = (booking.userId && booking.userId.startsWith("{") ? (JSON.parse(booking.userId).food?.guestsCount || parsedGuestsCount) : parsedGuestsCount);
+    const guestPricing = getGuestPricing(
+      booking.villa?.slug || "",
+      booking.villa?.baseGuests,
+      booking.villa?.extraGuestFee,
+      booking.villa?.guests ?? 12,
+    );
 
     setCalculatorPrefill({
       villaSlug: booking.villa?.slug || "",
@@ -265,8 +272,8 @@ const AdminDashboard = ({
       guestEmail,
       guestPhone,
       guestsCount: parsedGuestsCount,
-      baseGuests: booking.villa?.baseGuests ?? 12,
-      extraGuestFee: booking.villa?.extraGuestFee ?? 1500,
+      baseGuests: guestPricing.includedGuests,
+      extraGuestFee: guestPricing.extraGuestFee,
       ratePerNight,
       weekendRatePerNight: booking.villa?.weekendPrice || Math.round((booking.villa?.price || ratePerNight) * 1.2),
       foodPlan,
@@ -344,8 +351,11 @@ const AdminDashboard = ({
       const nights = Math.max(0, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
       
       const selectedVilla = villas.find(v => v.id === newBookingVillaId);
-      const baseGuestsLimit = selectedVilla?.baseGuests ?? 12;
-      const extraFeePerGuest = selectedVilla?.extraGuestFee ?? 1500;
+      const guestPricing = selectedVilla
+        ? getGuestPricing(selectedVilla.slug, selectedVilla.baseGuests, selectedVilla.extraGuestFee, selectedVilla.guests)
+        : { includedGuests: 12, extraGuestFee: 1500 };
+      const baseGuestsLimit = guestPricing.includedGuests;
+      const extraFeePerGuest = guestPricing.extraGuestFee;
       const extraGuestsCount = Math.max(0, newBookingGuests - baseGuestsLimit);
       const extraGuestsCost = extraGuestsCount * extraFeePerGuest * nights;
 
@@ -396,8 +406,11 @@ const AdminDashboard = ({
       const nights = Math.max(1, Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24)));
       
       const selectedVilla = villas.find(v => v.id === newBookingVillaId);
-      const baseGuestsLimit = selectedVilla?.baseGuests ?? 12;
-      const extraFeePerGuest = selectedVilla?.extraGuestFee ?? 1500;
+      const guestPricing = selectedVilla
+        ? getGuestPricing(selectedVilla.slug, selectedVilla.baseGuests, selectedVilla.extraGuestFee, selectedVilla.guests)
+        : { includedGuests: 12, extraGuestFee: 1500 };
+      const baseGuestsLimit = guestPricing.includedGuests;
+      const extraFeePerGuest = guestPricing.extraGuestFee;
       const extraGuestsCount = Math.max(0, newBookingGuests - baseGuestsLimit);
       const extraGuestsCost = extraGuestsCount * extraFeePerGuest * nights;
 
@@ -559,13 +572,14 @@ const AdminDashboard = ({
 
   // Launch PMS Editor Form
   const handleEditClick = (villa: Villa) => {
+    const guestPricing = getGuestPricing(villa.slug, villa.baseGuests, villa.extraGuestFee, villa.guests);
     setEditingVilla(villa);
     setEditName(villa.name);
     setEditLocation(villa.location);
     setEditPrice(villa.price);
     setEditGuests(villa.guests);
-    setEditBaseGuests(villa.baseGuests);
-    setEditExtraGuestFee(villa.extraGuestFee);
+    setEditBaseGuests(guestPricing.includedGuests);
+    setEditExtraGuestFee(guestPricing.extraGuestFee);
     setEditFridayPrice(villa.fridayPrice ?? null);
     setEditSaturdayPrice(villa.saturdayPrice ?? null);
     setEditSundayPrice(villa.sundayPrice ?? null);
@@ -2818,8 +2832,14 @@ const AdminDashboard = ({
                         disabled={isSavingFullBill}
                         onClick={async () => {
                           setIsSavingFullBill(true);
-                          const baseGuestsLimit = b.villa?.baseGuests ?? 12;
-                          const extraFeePerGuest = b.villa?.extraGuestFee ?? 1500;
+                          const guestPricing = getGuestPricing(
+                            b.villa?.slug ?? "",
+                            b.villa?.baseGuests,
+                            b.villa?.extraGuestFee,
+                            b.villa?.guests ?? 12,
+                          );
+                          const baseGuestsLimit = guestPricing.includedGuests;
+                          const extraFeePerGuest = guestPricing.extraGuestFee;
                           const extraGuestsCount = Math.max(0, parsedGuests - baseGuestsLimit);
                           const extraGuestsCost = extraGuestsCount * extraFeePerGuest * nights;
                           const stayTotal = (nights * editBillNightlyRate) + extraGuestsCost;

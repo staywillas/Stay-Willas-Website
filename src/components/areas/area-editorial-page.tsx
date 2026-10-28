@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "@/components/ui/site-image";
+import AreaHeroCarousel from "@/components/areas/area-hero-carousel";
 import Footer from "@/components/layout/footer";
 import {
   ArrowRight,
@@ -173,6 +174,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
         </nav>
         <section className={styles.hero} aria-labelledby="area-title">
           <div className={styles.heroCopy}>
+            <div className={styles.heroEyebrow}>A STAY WILLAS COLLECTION · {area.name.toUpperCase()}</div>
             <div className={styles.heroOffer}>
               <strong>26% off</strong>
               <span>Monday–Thursday stays</span>
@@ -194,19 +196,15 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
             </p>
           </div>
           <figure className={styles.heroFigure}>
-            <div className={styles.heroPhoto}>
-              <Image
-                src={area.hero.src}
-                alt={area.hero.alt}
-                fill
-                preload
-                sizes="(max-width: 700px) 92vw, (max-width: 1200px) 52vw, 660px"
-                className={styles.cover}
+            <div className={styles.carouselStage}>
+              <AreaHeroCarousel
+                items={area.hero.items}
+                className={styles.carousel}
               />
             </div>
             <figcaption>
-              <MapPin size={13} aria-hidden="true" />
-              {area.hero.caption}
+              <span><MapPin size={14} aria-hidden="true" />{area.hero.caption}</span>
+              <span className={styles.carouselHint}>Drag or swipe to explore</span>
             </figcaption>
           </figure>
         </section>

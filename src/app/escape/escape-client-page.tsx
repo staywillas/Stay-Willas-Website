@@ -1,19 +1,17 @@
 "use client";
 
-import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { 
   Check, Plus, Minus, ArrowRight, ShieldCheck, Star, Users, Home, 
   MapPin, Flame, Utensils, Music, Heart, Calendar, ArrowDown, AlertCircle,
-  Menu, X, Briefcase, BadgePercent, PartyPopper, Waves, Tag
+  Menu, X, Briefcase, BadgePercent, PartyPopper, Waves
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
 const GhostCursor = dynamic(() => import('@/components/ui/GhostCursor'), { ssr: false });
 import WarpLines from "@/components/ui/WarpLines";
 import Footer from "@/components/layout/footer";
-import QuickMobileLeadForm from "@/components/common/quick-mobile-lead-form";
 import MegaDiscountAdBanner from "@/components/common/mega-discount-ad-banner";
 import Image from "@/components/ui/site-image";
 
@@ -181,10 +179,10 @@ function ScratchCard({ id, title, subtitle, isUnlocked, onScratchComplete }: Scr
           {title}
         </span>
         <div className="text-2xl font-black text-white tracking-wide font-heading">
-          26% DISCOUNT
+          UP TO 26% WEEKDAY SAVINGS
         </div>
         <p className="text-[9px] text-white/90 uppercase tracking-widest font-semibold border border-dashed border-[#DAA520]/50 px-3 py-1 rounded bg-[#DAA520]/15 inline-block font-mono">
-          PROMO: Stayw26
+          CHECK ELIGIBLE SAVINGS AFTER CHOOSING DATES
         </p>
       </div>
 
@@ -216,8 +214,6 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
   
   // Calculator states
   const [selectedVillaSlug, setSelectedVillaSlug] = useState<string>("the-angle-house");
-  const [stayType, setStayType] = useState<"weekday" | "weekend">("weekday");
-  const [nights, setNights] = useState<number>(2);
   const [guestsCount, setGuestsCount] = useState<number>(12);
 
   // Scratch card states
@@ -234,28 +230,6 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
       setGuestsCount(selectedVilla.guests);
     }
   }, [selectedVillaSlug, selectedVilla.guests, guestsCount]);
-
-  // Pricing calculations
-  const basePricePerNight = stayType === "weekday" ? selectedVilla.price : (selectedVilla.weekendPrice || selectedVilla.price);
-  const extraGuestFee = selectedVilla.extraGuestFee || 1200;
-  const baseGuestsLimit = selectedVilla.baseGuests || 12;
-
-  const extraGuestsCount = Math.max(0, guestsCount - baseGuestsLimit);
-  const baseStayTotal = basePricePerNight * nights;
-  const extraGuestsTotal = extraGuestsCount * extraGuestFee * nights;
-  const estimatedTotal = baseStayTotal + extraGuestsTotal;
-
-  // 26% discount with promo coupon
-  const discountPercent = isDiscountApplied ? 0.26 : 0;
-  const discountAmount = Math.round(estimatedTotal * discountPercent);
-  const finalTotal = Math.max(0, estimatedTotal - discountAmount);
-
-  // WhatsApp prefilled message link builder
-  const whatsappNumber = "919619042310";
-  const whatsappText = isDiscountApplied
-    ? `Hello Stay Willas! 🌟 I unlocked the special *26% OFF* Promo discount (Coupon: *Stayw26*)!\n\nI am interested in booking *${selectedVilla.name}* in ${selectedVilla.location}.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Original Tariff: ₹${estimatedTotal.toLocaleString("en-IN")}\n- Promo Discount (26% Off): -₹${discountAmount.toLocaleString("en-IN")}\n- Final Discounted Total: ₹${finalTotal.toLocaleString("en-IN")}\n\nCan you please check availability and confirm our 26% discount?`
-    : `Hello Stay Willas! 🌟 I am interested in booking an exclusive getaway at *${selectedVilla.name}* in ${selectedVilla.location} for a ${stayType === "weekday" ? "Weekday" : "Weekend"} stay.\n\n📅 *Stay Details:*\n- Duration: ${nights} Nights (${stayType} stay)\n- Guests: ${guestsCount} Guests\n- Estimated Total: ₹${estimatedTotal.toLocaleString("en-IN")}\n\nCan you please check availability for our group?`;
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeWhatsAppMessage(whatsappText)}`;
 
   // Tab definitions
   const tabs = {
@@ -353,7 +327,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           {/* Header text container */}
           <div className="space-y-6 max-w-3xl mx-auto">
             <span className="text-[#DAA520] font-semibold tracking-[0.4em] uppercase text-xs sm:text-sm block animate-pulse">
-              🍻 GROUP ESCAPE SPECIAL • 26% OFF CODE: Stayw26
+              🍻 GROUP ESCAPE SPECIAL • DATE-ELIGIBLE SAVINGS
             </span>
             
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-tight leading-[1.08] text-balance bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
@@ -387,19 +361,16 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 onClick={() => scrollToSection("calculator-section")}
                 className="border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 text-white font-bold px-7 py-3.5 rounded-full text-xs tracking-widest uppercase transition-all duration-300 backdrop-blur-md cursor-pointer"
               >
-                Check Rates & 26% Off
+                Check Live Rates & Offers
               </button>
             </div>
           </div>
 
-          {/* Quick 1-Field Mobile Contact Form */}
-          <div className="w-full max-w-3xl px-4">
-            <QuickMobileLeadForm 
-              villaName="Group Luxury Villas" 
-              location="Lonavala & Khopoli" 
-              defaultCoupon="Stayw26" 
-              discountPercent={26} 
-            />
+          <div className="w-full max-w-3xl px-5 py-4 text-center rounded-2xl border border-[#DAA520]/30 bg-[#130f24]/70">
+            <p className="text-sm text-slate-200">Choose exact dates to see current availability, nightly rates and eligible savings.</p>
+            <Link href={`/villa/${angleHouse.slug}#booking-card-section`} className="inline-flex items-center gap-2 mt-3 text-xs font-bold uppercase tracking-wider text-[#DAA520] hover:text-white">
+              Check live dates & rates <ArrowRight size={14} />
+            </Link>
           </div>
 
           {/* SCRATCHCARDS GRID */}
@@ -417,7 +388,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               <ScratchCard 
                 id="card-angle-house"
                 title="The Angle House Secret"
-                subtitle="Scratch to reveal 26% Lonavala discount"
+                subtitle="Scratch to reveal eligible weekday savings"
                 isUnlocked={isCard1Scratched}
                 onScratchComplete={() => {
                   setIsCard1Scratched(true);
@@ -438,7 +409,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               <ScratchCard 
                 id="card-canopy-crest"
                 title="Canopy Crest Secret"
-                subtitle="Scratch to reveal 26% Khopoli discount"
+                subtitle="Scratch to reveal eligible weekday savings"
                 isUnlocked={isCard2Scratched}
                 onScratchComplete={() => {
                   setIsCard2Scratched(true);
@@ -457,13 +428,13 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
             >
               <div className="space-y-2">
                 <span className="text-xs uppercase font-bold tracking-[0.25em] text-[#DAA520] bg-[#DAA520]/10 px-4 py-1.5 rounded-full inline-block border border-[#DAA520]/20 font-mono">
-                  🎉 26% DISCOUNT ACTIVATED (Stayw26)
+                  🎉 OFFER UNLOCKED · CHECK ELIGIBILITY WITH YOUR DATES
                 </span>
                 <h3 className="text-2xl font-heading font-extrabold text-white">
                   Your Luxury Escape Awaits!
                 </h3>
                 <p className="text-xs text-slate-300 max-w-md mx-auto font-light">
-                  Select your private villa below to automatically apply the 26% discount and start chatting on WhatsApp instantly.
+                  Choose a property and dates to see the exact live rate. Eligible weekday and weekend savings are shown in the booking panel.
                 </p>
               </div>
 
@@ -491,17 +462,15 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               </div>
 
               <div className="pt-2">
-                <a
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-4 px-8 rounded-full text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_20px_rgba(37,211,102,0.25)] inline-flex items-center gap-3 hover:-translate-y-0.5"
+                <Link
+                  href={`/villa/${selectedVilla.slug}?guests=${guestsCount}#booking-card-section`}
+                  className="bg-[#DAA520] hover:bg-[#c4941a] text-[#1B3564] font-bold py-4 px-8 rounded-full text-xs tracking-widest uppercase transition-all duration-300 shadow-[0_0_20px_rgba(218,165,32,0.25)] inline-flex items-center gap-3 hover:-translate-y-0.5"
                 >
-                  <span>Avail Discount & Chat on WhatsApp</span>
+                  <span>Check Live Dates & Rates</span>
                   <ArrowRight size={14} />
-                </a>
+                </Link>
                 <span className="text-[10px] text-slate-400 block mt-3 italic">
-                  Estimated price will automatically deduct the 10% promo code details in chat
+                  Offers depend on the dates selected and are applied in the live booking quote.
                 </span>
               </div>
             </motion.div>
@@ -707,18 +676,8 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               </div>
 
               <div className="space-y-4 pt-4 border-t border-[#DAA520]/15">
-                <div className="flex items-baseline justify-between">
-                  <div>
-                    <span className="text-xs text-slate-400 block font-light">Starting from</span>
-                    <span className="text-2xl font-bold text-white">₹{angleHouse.price.toLocaleString("en-IN")}</span>
-                    <span className="text-xs text-slate-400 font-light"> / night (Weekday)</span>
-                    <span className="text-[10px] text-amber-400/90 block italic mt-0.5">*Prices may vary due to demand</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs text-slate-400 block font-light">Weekend Tariff</span>
-                    <span className="text-sm font-semibold text-[#DAA520]">₹{angleHouse.weekendPrice?.toLocaleString("en-IN") || "20,000"}</span>
-                    <span className="text-[10px] text-slate-400 block">Fri - Sun</span>
-                  </div>
+                <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
+                  Rates are scheduled by date. Choose your stay dates to see the exact nightly prices and eligible savings.
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -793,18 +752,8 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
               </div>
 
               <div className="space-y-4 pt-4 border-t border-[#DAA520]/15">
-                <div className="flex items-baseline justify-between">
-                  <div>
-                    <span className="text-xs text-slate-400 block font-light">Starting from</span>
-                    <span className="text-2xl font-bold text-white">₹{canopyCrest.price.toLocaleString("en-IN")}</span>
-                    <span className="text-xs text-slate-400 font-light"> / night (Weekday)</span>
-                    <span className="text-[10px] text-amber-400/90 block italic mt-0.5">*Prices may vary due to demand</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs text-slate-400 block font-light">Weekend Tariff</span>
-                    <span className="text-sm font-semibold text-[#DAA520]">₹{canopyCrest.weekendPrice?.toLocaleString("en-IN") || "22,000"}</span>
-                    <span className="text-[10px] text-slate-400 block">Fri - Sun</span>
-                  </div>
+                <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
+                  Rates are scheduled by date. Choose your stay dates to see the exact nightly prices and eligible savings.
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -1085,15 +1034,15 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                 
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-[#DAA520]/15 pb-4">
-                    <h3 className="font-heading text-lg font-bold text-white">Estimated Getaway Plan</h3>
+                    <h3 className="font-heading text-lg font-bold text-white">Plan Your Group Stay</h3>
                     <span className="text-[10px] uppercase font-bold px-2.5 py-1 rounded bg-[#DAA520]/15 text-[#DAA520] border border-[#DAA520]/20">
-                      Best price guaranteed
+                      Live rates by date
                     </span>
                   </div>
 
                   {/* Villa Selector */}
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400">1. Select Private Villa</label>
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400">1. Select a villa</label>
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => setSelectedVillaSlug("the-angle-house")}
@@ -1118,60 +1067,13 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                     </div>
                   </div>
 
-                  {/* Stay Type Selector */}
+                  {/* Guest count */}
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400">2. Select Stay Period</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        onClick={() => setStayType("weekday")}
-                        className={`p-3 rounded-xl border text-xs font-semibold text-center transition-all duration-300 cursor-pointer ${
-                          stayType === "weekday"
-                            ? "bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold border-transparent shadow-[0_0_15px_rgba(218,165,32,0.35)] scale-[1.02]"
-                            : "border-white/10 text-slate-200 hover:bg-white/5"
-                        }`}
-                      >
-                        Weekday (Mon - Thu)
-                      </button>
-                      <button
-                        onClick={() => setStayType("weekend")}
-                        className={`p-3 rounded-xl border text-xs font-semibold text-center transition-all duration-300 cursor-pointer ${
-                          stayType === "weekend"
-                            ? "bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black font-extrabold border-transparent shadow-[0_0_15px_rgba(218,165,32,0.35)] scale-[1.02]"
-                            : "border-white/10 text-slate-200 hover:bg-white/5"
-                        }`}
-                      >
-                        Weekend (Fri - Sun)
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Steppers */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    
-                    {/* Nights Stepper */}
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">3. Nights</label>
-                      <div className="flex items-center justify-between bg-black/50 rounded-xl p-2 border border-white/10">
-                        <button
-                          onClick={() => setNights(Math.max(1, nights - 1))}
-                          className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-[#DAA520] hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 transition-all duration-200 focus:outline-none cursor-pointer"
-                        >
-                          <Minus size={14} />
-                        </button>
-                        <span className="font-heading font-bold text-lg text-white">{nights}</span>
-                        <button
-                          onClick={() => setNights(Math.min(14, nights + 1))}
-                          className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:text-[#DAA520] hover:border-[#DAA520]/50 hover:bg-[#DAA520]/5 transition-all duration-200 focus:outline-none cursor-pointer"
-                        >
-                          <Plus size={14} />
-                        </button>
-                      </div>
-                    </div>
 
                     {/* Guests Stepper */}
                     <div className="space-y-2">
                       <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">
-                        4. Guests (Max {selectedVilla.guests})
+                        2. Guests (Max {selectedVilla.guests})
                       </label>
                       <div className="flex items-center justify-between bg-black/50 rounded-xl p-2 border border-white/10">
                         <button
@@ -1192,75 +1094,19 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
                   </div>
                 </div>
 
-                {/* Calculation Output */}
                 <div className="space-y-4 pt-6 border-t border-white/5">
-                  <div className="space-y-2 text-sm text-slate-300">
-                    <div className="flex justify-between">
-                      <span>Base Stay ({nights} nights):</span>
-                      <span className="font-semibold text-white">₹{baseStayTotal.toLocaleString("en-IN")}</span>
-                    </div>
-                    {guestsCount > baseGuestsLimit && (
-                      <div className="flex justify-between text-slate-300">
-                        <span>Extra Guests ({extraGuestsCount} guests x ₹{extraGuestFee}):</span>
-                        <span className="font-semibold text-white">₹{extraGuestsTotal.toLocaleString("en-IN")}</span>
-                      </div>
-                    )}
-                    {isDiscountApplied && (
-                      <div className="flex justify-between text-emerald-400 font-semibold bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/30">
-                        <span className="flex items-center gap-1.5">
-                          <Tag size={13} className="text-[#DAA520]" />
-                          Special 26% Promo Discount:
-                        </span>
-                        <span className="font-black text-emerald-300">-₹{discountAmount.toLocaleString("en-IN")}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between text-[11px] opacity-60">
-                      <span>Base Villa Tariff includes up to {baseGuestsLimit} guests.</span>
-                    </div>
-
-                    {/* Coupon Apply Box */}
-                    <div className="bg-[#120d1c] p-3 rounded-xl border border-[#DAA520]/25 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 flex-1">
-                        <span className="text-xs">🏷️</span>
-                        <span className="text-xs text-slate-300 font-bold uppercase">Code: <strong className="text-[#DAA520]">Stayw26</strong></span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsCard1Scratched(true);
-                          setIsCard2Scratched(true);
-                        }}
-                        className="bg-[#DAA520] hover:bg-[#c4941a] text-black px-3.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap"
-                      >
-                        {isDiscountApplied ? "✓ 26% Applied" : "Apply 26% Off"}
-                      </button>
-                    </div>
+                  <div className="rounded-2xl border border-[#DAA520]/20 bg-[#120d1c] p-4">
+                    <h4 className="text-sm font-bold text-white">Your live quote comes next</h4>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                      {selectedVilla.baseGuests} guests are included. Each additional guest is ₹{selectedVilla.extraGuestFee.toLocaleString("en-IN")} per night. The booking panel checks each selected date against the admin rate schedule and shows eligible offers before you request a booking.
+                    </p>
                   </div>
-
-                  <div className="bg-[#120d1c] p-4 rounded-2xl flex items-center justify-between border border-[#DAA520]/25 shadow-lg">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                        {isDiscountApplied ? "Est. 26% Discounted Total" : "Est. Base Total"}
-                      </span>
-                      <div className="text-2xl md:text-3xl font-black text-white font-heading">
-                        ₹{finalTotal.toLocaleString("en-IN")}
-                      </div>
-                      {isDiscountApplied && (
-                        <span className="text-[9px] text-[#DAA520] font-bold uppercase tracking-wider block mt-0.5 animate-pulse">
-                          Code Stayw26 applied (26% OFF)
-                        </span>
-                      )}
-                    </div>
-                    
-                    <a
-                      href={whatsappLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black px-6 py-3.5 rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md text-center inline-flex items-center gap-2 hover:scale-105 hover:shadow-[0_0_15px_rgba(218,165,32,0.3)] active:scale-100 cursor-pointer"
-                    >
-                      Book Getaway <ArrowRight size={14} />
-                    </a>
-                  </div>
+                  <Link
+                    href={`/villa/${selectedVilla.slug}?guests=${guestsCount}#booking-card-section`}
+                    className="w-full bg-gradient-to-r from-[#DAA520] to-[#E2A63B] text-black px-6 py-3.5 rounded-xl text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md text-center inline-flex items-center justify-center gap-2 hover:brightness-105 active:scale-100"
+                  >
+                    Check dates & live rates <ArrowRight size={14} />
+                  </Link>
                 </div>
 
               </div>

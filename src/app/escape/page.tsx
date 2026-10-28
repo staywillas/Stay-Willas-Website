@@ -1,6 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 import { prisma } from "@/lib/db";
+import { getGuestPricing } from "@/lib/guest-pricing";
 import dynamic from 'next/dynamic';
 const EscapeClientPage = dynamic(() => import('./escape-client-page'));
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
@@ -64,7 +65,7 @@ export default async function EscapePage() {
     fridayPrice: 15000,
     saturdayPrice: 20000,
     sundayPrice: 13000,
-    baseGuests: 12,
+    baseGuests: 6,
     extraGuestFee: 1200,
     guests: 16,
     bedrooms: 3,
@@ -92,7 +93,7 @@ export default async function EscapePage() {
     fridayPrice: 18000,
     saturdayPrice: 22000,
     sundayPrice: 22000,
-    baseGuests: 12,
+    baseGuests: 8,
     extraGuestFee: 1200,
     guests: 16,
     bedrooms: 4,
@@ -111,6 +112,13 @@ export default async function EscapePage() {
     ]
   };
 
+  const angleGuestPricing = angleHouse
+    ? getGuestPricing(angleHouse.slug, angleHouse.baseGuests, angleHouse.extraGuestFee, angleHouse.guests)
+    : { includedGuests: defaultAngleHouse.baseGuests, extraGuestFee: defaultAngleHouse.extraGuestFee };
+  const canopyGuestPricing = canopyCrest
+    ? getGuestPricing(canopyCrest.slug, canopyCrest.baseGuests, canopyCrest.extraGuestFee, canopyCrest.guests)
+    : { includedGuests: defaultCanopyCrest.baseGuests, extraGuestFee: defaultCanopyCrest.extraGuestFee };
+
   const serializedAngleHouse = angleHouse ? {
     id: angleHouse.id,
     slug: angleHouse.slug,
@@ -121,8 +129,8 @@ export default async function EscapePage() {
     fridayPrice: angleHouse.fridayPrice,
     saturdayPrice: angleHouse.saturdayPrice,
     sundayPrice: angleHouse.sundayPrice,
-    baseGuests: angleHouse.baseGuests,
-    extraGuestFee: angleHouse.extraGuestFee,
+    baseGuests: angleGuestPricing.includedGuests,
+    extraGuestFee: angleGuestPricing.extraGuestFee,
     guests: angleHouse.guests,
     bedrooms: angleHouse.bedrooms,
     bathrooms: angleHouse.bathrooms,
@@ -140,8 +148,8 @@ export default async function EscapePage() {
     fridayPrice: canopyCrest.fridayPrice,
     saturdayPrice: canopyCrest.saturdayPrice,
     sundayPrice: canopyCrest.sundayPrice,
-    baseGuests: canopyCrest.baseGuests,
-    extraGuestFee: canopyCrest.extraGuestFee,
+    baseGuests: canopyGuestPricing.includedGuests,
+    extraGuestFee: canopyGuestPricing.extraGuestFee,
     guests: canopyCrest.guests,
     bedrooms: canopyCrest.bedrooms,
     bathrooms: canopyCrest.bathrooms,

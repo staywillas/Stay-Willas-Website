@@ -63,6 +63,16 @@ interface VillaResult {
   category?: string;
   amenities?: string[];
   image: string;
+  isAvailable?: boolean;
+  totalPrice?: number;
+  roomSubtotal?: number;
+  directSavings?: number;
+  extraGuests?: number;
+  extraGuestFee?: number;
+  extraGuestTotal?: number;
+  baseGuests?: number;
+  cottagesCount?: number;
+  nightlyRates?: Array<{ date: string; label: string; price: number }>;
 }
 
 interface BookingBarProps {
@@ -95,21 +105,21 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
   const modalBodyRef = useRef<HTMLDivElement>(null);
 
   const DIRECT_PROPERTIES = [
-    { slug: "all", name: "All Properties", location: "Maharashtra", rate: "From ₹4,999" },
-    { slug: "the-angle-house", name: "The Angle House", location: "Lonavala", rate: "₹13,000/nt" },
-    { slug: "canopy-crest", name: "Canopy Crest", location: "Khopoli", rate: "₹15,000/nt" },
-    { slug: "casa-de-reva", name: "Casa De Reva", location: "Panchgani", rate: "₹16,000/nt" },
-    { slug: "willow-peak", name: "Willow Peak (All 3 Cottages)", location: "Lonavala", rate: "₹15,000/nt" },
-    { slug: "willow-peak-cottage-a", name: "1. Breeze (Cottage A)", location: "Lonavala", rate: "₹4,999/nt" },
-    { slug: "willow-peak-cottage-b", name: "2. Crest (Cottage B)", location: "Lonavala", rate: "₹4,999/nt" },
-    { slug: "willow-peak-cottage-c", name: "3. Heaven (Cottage C)", location: "Lonavala", rate: "₹4,999/nt" },
+    { slug: "all", name: "All Properties", location: "Maharashtra" },
+    { slug: "the-angle-house", name: "The Angle House", location: "Lonavala" },
+    { slug: "canopy-crest", name: "Canopy Crest", location: "Khopoli" },
+    { slug: "casa-de-reva", name: "Casa De Reva", location: "Panchgani" },
+    { slug: "willow-peak", name: "Willow Peak (All 3 Cottages)", location: "Lonavala" },
+    { slug: "willow-peak-cottage-a", name: "1. Breeze (Cottage A)", location: "Lonavala" },
+    { slug: "willow-peak-cottage-b", name: "2. Crest (Cottage B)", location: "Lonavala" },
+    { slug: "willow-peak-cottage-c", name: "3. Heaven (Cottage C)", location: "Lonavala" },
   ];
 
   // Instant Direct Booking Modal State (Opens right on homepage!)
   const [instantBookingModalOpen, setInstantBookingModalOpen] = useState(false);
   const [instantBookingVilla, setInstantBookingVilla] = useState<any>(null);
   const [isLoadingInstantVilla, setIsLoadingInstantVilla] = useState(false);
-  const [instantCottageSelection, setInstantCottageSelection] = useState<"A" | "B" | "C" | "ALL">("A");
+  const [instantCottageSelection, setInstantCottageSelection] = useState<"A" | "B" | "C" | "TWO" | "ALL">("A");
 
   // Quick Callback Lead State
   const [isCallbackOpen, setIsCallbackOpen] = useState(false);
@@ -222,6 +232,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
         checkIn: selectedCheckIn ? formatDateOnly(selectedCheckIn) : undefined,
         checkOut: selectedCheckOut ? formatDateOnly(selectedCheckOut) : undefined,
         guests: Number(guestCount) || 1,
+        cottageSelection: slug === "willow-peak" ? "ALL" : undefined,
       });
 
       if (res.success && res.villas) {
@@ -250,32 +261,21 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
       } else if (isSameDay(day, checkIn)) {
         setCheckIn(null);
       } else {
-        let hasBookedDayInRange = false;
-        let temp = new Date(checkIn);
-        while (isBefore(temp, day)) {
-          if (isDateFullyBooked(temp)) {
-            hasBookedDayInRange = true;
-            break;
-          }
-          temp = new Date(temp.setDate(temp.getDate() + 1));
-        }
-
-        if (hasBookedDayInRange) {
-          setCheckIn(day);
-          setCheckOut(null);
-        } else {
-          const newCheckOut = day;
-          setCheckOut(newCheckOut);
-          setIsCalendarOpen(false);
-          // Automatically trigger popup when dates are completed!
-          fetchVillasAndOpenModal(checkIn, newCheckOut, guests, selectedDestination);
-        }
+        const newCheckOut = day;
+        setCheckOut(newCheckOut);
+        setIsCalendarOpen(false);
+        // The live availability action is authoritative; cached calendar marks
+        // should never prevent a customer from checking an updated date range.
+        fetchVillasAndOpenModal(checkIn, newCheckOut, guests, selectedDestination);
       }
     }
   };
 
   // Instant Quick Book Handler - opens checkout modal directly on homepage
-  const handleInstantQuickBook = async (slugToBook: string = selectedVillaSlug) => {
+  const handleInstantQuickBook = async (
+    slugToBook: string = selectedVillaSlug,
+    requestedCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL",
+  ) => {
     if (!slugToBook || slugToBook === "all") {
       // If user selected "All Properties", open the property selection modal
       await fetchVillasAndOpenModal(checkIn, checkOut, guests, selectedDestination, "all");
@@ -286,7 +286,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
     try {
       // If specific cottage selected, determine cottage letter
       let targetSlug = slugToBook;
-      let cottageLetter: "A" | "B" | "C" | "ALL" = "A";
+      let cottageLetter: "A" | "B" | "C" | "TWO" | "ALL" = "A";
       if (slugToBook === "willow-peak-cottage-a") {
         targetSlug = "willow-peak";
         cottageLetter = "A";
@@ -298,7 +298,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
         cottageLetter = "C";
       } else if (slugToBook === "willow-peak") {
         targetSlug = "willow-peak";
-        cottageLetter = "ALL";
+        cottageLetter = requestedCottageSelection ?? "ALL";
       }
 
       setInstantCottageSelection(cottageLetter);
@@ -393,14 +393,21 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
 
   // Filter villas by location in the modal
   const filteredModalVillas = availableVillasList.filter((villa) => {
-    if (modalLocationFilter === "ALL") return true;
-    return villa.location.toLowerCase().includes(modalLocationFilter.toLowerCase());
+    const matchesLocation = modalLocationFilter === "ALL"
+      || villa.location.toLowerCase().includes(modalLocationFilter.toLowerCase());
+    const guestCount = Number(guests) || 1;
+    const matchesCapacity = villa.guests >= guestCount;
+    const avoidsDuplicateEstate = villa.slug !== "willow-peak" || guestCount > 4;
+    return matchesLocation && matchesCapacity && avoidsDuplicateEstate;
   });
 
   // Calculate nights if dates selected
   const computedNights = checkIn && checkOut 
     ? Math.max(1, Math.round((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)))
     : 1;
+  const instantBookingTitle = instantBookingVilla?.slug === "willow-peak"
+    ? `${String(instantBookingVilla.name).replace(/\s*\(Entire Estate.*\)$/i, "")} · ${instantCottageSelection === "ALL" ? "Entire estate" : instantCottageSelection === "TWO" ? "2 cottages" : `Cottage ${instantCottageSelection}`}`
+    : instantBookingVilla?.name ?? "";
 
   return (
     <div 
@@ -463,7 +470,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                       <div className="min-w-0 pr-2">
                         <div className="truncate font-bold">{prop.name}</div>
                         <div className={`text-[10px] ${selectedVillaSlug === prop.slug ? "text-slate-300" : "text-slate-400"}`}>
-                          {prop.location} • <span className="font-semibold text-emerald-600">{prop.rate}</span>
+                          {prop.location} • <span className="font-semibold text-emerald-600">Live rate after date selection</span>
                         </div>
                       </div>
                       {selectedVillaSlug === prop.slug && <CheckCircle2 size={13} className="text-[#DAA520] shrink-0" />}
@@ -686,7 +693,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                       <div className="min-w-0 pr-2">
                         <div className="truncate font-bold">{prop.name}</div>
                         <div className={`text-[10px] ${selectedVillaSlug === prop.slug ? "text-slate-300" : "text-slate-400"}`}>
-                          {prop.location} • <span className="font-semibold text-emerald-600">{prop.rate}</span>
+                          {prop.location} • <span className="font-semibold text-emerald-600">Live rates by date</span>
                         </div>
                       </div>
                       {selectedVillaSlug === prop.slug && <CheckCircle2 size={13} className="text-[#DAA520] shrink-0" />}
@@ -855,18 +862,20 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                     const isSelectedCheckIn = checkIn && isSameDay(day, checkIn);
                     const isSelectedCheckOut = checkOut && isSameDay(day, checkOut);
                     const isInRange = checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
-                    const isDisabled = isPast || isBooked;
+                    const isDisabled = isPast;
 
                     return (
                       <button
                         key={day.toString()} type="button" disabled={isDisabled} onClick={() => handleDateSelect(day)}
                         className={`w-9 h-9 rounded-full text-xs font-bold flex flex-col items-center justify-center transition-all
                           ${isDisabled ? 'text-slate-300 cursor-not-allowed' : ''}
-                          ${isBooked ? 'bg-[#FFB800]/10 text-slate-400' : ''}
+                          ${isBooked ? 'bg-amber-50 text-amber-900 hover:bg-amber-100' : ''}
                           ${isSelectedCheckIn || isSelectedCheckOut ? 'bg-[#1B3564] text-[#DAA520] shadow-md scale-105 z-10 font-black' : ''}
                           ${isInRange ? 'bg-[#DAA520]/20 text-[#1B3564]' : ''}
                           ${!isDisabled && !isSelectedCheckIn && !isSelectedCheckOut && !isInRange ? 'text-[#1B3564] hover:bg-slate-100 cursor-pointer' : ''}
                         `}
+                        aria-label={`${format(day, "MMMM d, yyyy")}, ${isPast ? "past date" : isBooked ? "selectable; live availability will be checked" : "selectable date"}`}
+                        title={isBooked ? "Availability is rechecked live for your selected dates" : undefined}
                       >
                         <span>{format(day, "d")}</span>
                       </button>
@@ -1062,6 +1071,12 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                     <div className="space-y-4">
                       {filteredModalVillas.map((villa) => {
                         const cityName = villa.location.split(",")[0].trim();
+                        const stayName = villa.slug === "willow-peak" && villa.cottagesCount === 2
+                          ? `${villa.name} · 2 cottages`
+                          : villa.slug === "willow-peak" ? `${villa.name} · Entire estate` : villa.name;
+                        const stayCapacity = villa.slug === "willow-peak" && villa.cottagesCount
+                          ? villa.cottagesCount * 4
+                          : villa.guests;
 
                         return (
                           <div 
@@ -1086,7 +1101,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                               <div>
                                 <div className="flex items-center justify-between gap-2 flex-wrap mb-1.5">
                                   <h4 className="font-cormorant font-bold text-xl text-[#1B3564] group-hover:text-blue-600 transition-colors">
-                                    {villa.name}
+                                    {stayName}
                                   </h4>
                                   
                                   {/* Small Location Button / Pill Badge */}
@@ -1105,7 +1120,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                   
                                   <span className="inline-flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200/80 font-semibold text-slate-800">
                                     <Users size={13} className="text-[#DAA520]" />
-                                    <span>Up to {villa.guests} Guests</span>
+                                    <span>Up to {stayCapacity} Guests</span>
                                   </span>
 
                                   <span className="inline-flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200/80 font-semibold text-slate-800">
@@ -1123,13 +1138,37 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                               {/* Price and Action Buttons */}
                               <div className="flex items-center justify-between pt-3 border-t border-slate-100 gap-3 flex-wrap">
                                 <div>
-                                  <span className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block">Base Rate</span>
-                                  <span className="text-base font-black text-slate-900">
-                                    ₹{villa.price?.toLocaleString("en-IN")} <span className="text-xs font-normal text-slate-500">/ night</span>
-                                  </span>
-                                  <span className="text-[8px] text-amber-800/80 font-medium italic block mt-0.5">
-                                    *Prices may vary due to demand
-                                  </span>
+                                  {villa.nightlyRates?.length && villa.totalPrice !== undefined ? (
+                                    <div className="min-w-56 max-w-full space-y-1.5">
+                                      <div className="flex items-baseline justify-between gap-4">
+                                        <span className="text-[9px] text-emerald-800 uppercase tracking-widest font-bold block">Live stay total · {villa.nightlyRates.length} {villa.nightlyRates.length === 1 ? "night" : "nights"}</span>
+                                        <strong className="text-lg font-black text-[#1B3564]">₹{villa.totalPrice.toLocaleString("en-IN")}</strong>
+                                      </div>
+                                      <div className="space-y-1 border-y border-slate-100 py-1.5">
+                                        {villa.nightlyRates.map((night) => (
+                                          <div key={night.date} className="flex items-center gap-2 text-[10px]">
+                                            <span className="font-semibold text-slate-700">{format(parseISO(night.date), "EEE, dd MMM")}</span>
+                                            <span className="mr-auto text-slate-500">{night.label}</span>
+                                            <strong className="text-slate-800">₹{night.price.toLocaleString("en-IN")}</strong>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      {villa.extraGuests && villa.extraGuestTotal ? (
+                                        <span className="block text-[10px] text-slate-600">{villa.extraGuests} extra {villa.extraGuests === 1 ? "guest" : "guests"} · ₹{villa.extraGuestTotal.toLocaleString("en-IN")}</span>
+                                      ) : null}
+                                      <span className="block text-[9px] text-slate-500">{villa.baseGuests ?? villa.guests} guests included · live admin rates</span>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <span className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block">Starting rate</span>
+                                      <span className="text-base font-black text-slate-900">
+                                        ₹{villa.price?.toLocaleString("en-IN")} <span className="text-xs font-normal text-slate-500">/ night</span>
+                                      </span>
+                                      <span className="text-[8px] text-amber-800/80 font-medium italic block mt-0.5">
+                                        Choose dates for the live scheduled rate
+                                      </span>
+                                    </>
+                                  )}
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -1149,7 +1188,11 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                     type="button"
                                     onClick={async () => {
                                       setAvailabilityModalOpen(false);
-                                      await handleInstantQuickBook(villa.slug);
+                                      const guestCount = Number(guests) || 1;
+                                      const willowSelection: "A" | "TWO" | "ALL" | undefined = villa.slug === "willow-peak"
+                                        ? guestCount > 8 ? "ALL" : guestCount > 4 ? "TWO" : "A"
+                                        : undefined;
+                                      await handleInstantQuickBook(villa.slug, willowSelection);
                                     }}
                                     className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-[0_4px_15px_rgba(224,83,76,0.3)] hover:shadow-[0_6px_20px_rgba(224,83,76,0.45)] flex items-center gap-1.5 cursor-pointer border-none"
                                     title="Instant Quick Book"
@@ -1163,7 +1206,15 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                     type="button"
                                     onClick={() => {
                                       setAvailabilityModalOpen(false);
-                                      router.push(`/villa/${villa.slug}`);
+                                      const query = new URLSearchParams();
+                                      if (checkIn) query.set("checkIn", formatDateOnly(checkIn));
+                                      if (checkOut) query.set("checkOut", formatDateOnly(checkOut));
+                                      query.set("guests", String(Number(guests) || 1));
+                                      if (villa.slug === "willow-peak") {
+                                        const guestCount = Number(guests) || 1;
+                                        query.set("cottageSelection", guestCount > 8 ? "ALL" : guestCount > 4 ? "TWO" : "A");
+                                      }
+                                      router.push(`/villa/${villa.slug}?${query.toString()}#booking-card-section`);
                                     }}
                                     className="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer border-none"
                                     title="View Full Villa Details"
@@ -1359,7 +1410,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                       </span>
                     </div>
                     <h3 className="font-heading font-bold text-lg sm:text-2xl tracking-wide text-white mt-0.5">
-                      {instantBookingVilla.name}
+                      {instantBookingTitle}
                     </h3>
                     <p className="text-slate-300 text-xs mt-0.5">
                       {instantBookingVilla.location}
@@ -1383,7 +1434,8 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                 >
                   <BookingCard
                     villaId={instantBookingVilla.id}
-                    villaName={instantBookingVilla.name}
+                    villaName={instantBookingTitle}
+                    propertySlug={instantBookingVilla.slug}
                     price={instantBookingVilla.price}
                     basePrice={instantBookingVilla.price}
                     weekendPrice={instantBookingVilla.weekendPrice}

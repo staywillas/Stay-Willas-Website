@@ -8,7 +8,25 @@ import { checkAvailableVillasForDates } from "@/app/actions/booking";
 import WeekdayCarousel from "./weekday-carousel";
 import styles from "./home.module.css";
 
-type Villa = { id: string; slug: string; name: string; location: string; price: number; guests: number; bedrooms: number; image?: string };
+type Villa = {
+  id: string;
+  slug: string;
+  name: string;
+  location: string;
+  price: number;
+  guests: number;
+  baseGuests?: number;
+  extraGuestFee?: number;
+  bedrooms: number;
+  image?: string;
+  totalPrice?: number;
+  roomSubtotal?: number;
+  directSavings?: number;
+  extraGuests?: number;
+  extraGuestTotal?: number;
+  cottagesCount?: number;
+  nightlyRates?: Array<{ date: string; label: string; price: number }>;
+};
 const photos: Record<string, string> = {
   "the-angle-house": "/images/angle-house-hero-clean.webp",
   "canopy-crest": "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
@@ -42,7 +60,9 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
     try {
       const result = await checkAvailableVillasForDates({ destination, checkIn: arrival || undefined, checkOut: departure || undefined, guests: guestCount });
       if (!result.success || !result.villas) { setError("We couldn’t check those dates. Please try again."); return; }
-      setResults(result.villas.filter(villa => villa.guests >= guestCount));
+      setResults(result.villas.filter(villa =>
+        villa.guests >= guestCount && (villa.slug !== "willow-peak" || guestCount > 4),
+      ));
       setSearchedWithDates(Boolean(arrival));
       resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch { setError("We couldn’t connect. Please try again."); }
@@ -102,11 +122,40 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
     </section>
 
     <section ref={resultsRef} id="stays" className={styles.staysSection} aria-labelledby="stays-title">
-      <div className={styles.sectionHeading}><div><span className={styles.eyebrow}>{results ? "YOUR NEXT GETAWAY" : "THE STAY WILLAS COLLECTION"}</span><h2 id="stays-title">{results ? "Stays for your people" : "Some places just feel different."}</h2><p>{results ? `${results.length} ${results.length === 1 ? "stay matches" : "stays match"} your search${searchedWithDates ? " and dates" : ""}.` : "Private pools, hillside mornings and homes with a little soul."}</p></div><div className={styles.collectionActions}>{results && <button onClick={()=>setResults(null)}>Reset search</button>}<Link href="/villas">Explore all stays <ArrowUpRight size={18} /></Link></div></div>
-      <div className={styles.villaGrid}>{(results ?? villas).map(villa => <Link href={`/villa/${villa.slug}`} className={styles.villaCard} key={villa.id}>
-        <div className={styles.villaPhoto}><PhotoFrame src={photos[villa.slug] || (villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/graded-v1/wp-07.webp" : villa.image || "/images/angle-house-hero-clean.webp")} alt={`${villa.name} exterior`} fill sizes="(max-width: 600px) 85vw, (max-width: 1000px) 45vw, 25vw" className={styles.cover} /><span className={styles.photoType}>{villa.slug.includes("willow") ? "Jacuzzi cottage" : "Private pool villa"}</span><span className={styles.cardArrow}><ArrowUpRight size={18} /></span></div>
-        <div className={styles.villaInfo}><span className={styles.villaLocation}>{villa.location}</span><h3>{villa.slug === "willow-peak-cottage-c" ? "Heaven at Willow Peak" : villa.name}</h3><div className={styles.villaSpecs}><span><Users size={14} /> {villa.guests} guests</span><span><BedDouble size={14} /> {villa.bedrooms} {villa.bedrooms === 1 ? "bedroom" : "bedrooms"}</span></div><p><strong>₹{villa.price.toLocaleString("en-IN")}</strong><span> / night{villa.slug.includes("cottage") ? " · per cottage" : ""}</span></p></div>
-      </Link>)}</div>
+      <div className={styles.sectionHeading}><div><span className={styles.eyebrow}>{results ? "YOUR NEXT GETAWAY" : "THE STAY WILLAS COLLECTION"}</span><h2 id="stays-title">{results ? "Stays for your people" : "Some places just feel different."}</h2><p>{results ? `${results.length} ${results.length === 1 ? "stay matches" : "stays match"} your search${searchedWithDates ? " and dates" : ""}.` : "Private pools, hillside mornings and homes with a little soul."}</p>{results && searchedWithDates && <p className={styles.searchSummary}>{checkIn} – {checkOut} · {guests} {Number(guests) === 1 ? "guest" : "guests"} · Live date-specific rates</p>}</div><div className={styles.collectionActions}>{results && <button onClick={()=>setResults(null)}>Reset search</button>}<Link href="/villas">Explore all stays <ArrowUpRight size={18} /></Link></div></div>
+      <div className={styles.villaGrid}>{(results ?? villas).map(villa => {
+        const query = new URLSearchParams();
+        if (searchedWithDates) {
+          query.set("checkIn", checkIn);
+          query.set("checkOut", checkOut);
+          query.set("guests", guests);
+          if (villa.slug === "willow-peak") query.set("cottageSelection", villa.cottagesCount === 2 ? "TWO" : "ALL");
+        }
+        const searchQuery = searchedWithDates ? `?${query.toString()}` : "";
+        const bookingAnchor = searchedWithDates ? "#booking-card-section" : "";
+        const stayName = villa.slug === "willow-peak" && villa.cottagesCount === 2
+          ? "Willow Peak · 2 cottages"
+          : villa.slug === "willow-peak" ? "Willow Peak · Entire estate" : villa.name;
+        const stayCapacity = villa.slug === "willow-peak" && villa.cottagesCount
+          ? villa.cottagesCount * 4
+          : villa.guests;
+        return <Link href={`/villa/${villa.slug}${searchQuery}${bookingAnchor}`} className={styles.villaCard} key={villa.id}>
+          <div className={styles.villaPhoto}><PhotoFrame src={photos[villa.slug] || (villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/graded-v1/wp-07.webp" : villa.image || "/images/angle-house-hero-clean.webp")} alt={`${villa.name} exterior`} fill sizes="(max-width: 600px) 85vw, (max-width: 1000px) 45vw, 25vw" className={styles.cover} /><span className={styles.photoType}>{villa.slug.includes("willow") ? "Jacuzzi cottage" : "Private pool villa"}</span><span className={styles.cardArrow}><ArrowUpRight size={18} /></span></div>
+          <div className={styles.villaInfo}><span className={styles.villaLocation}>{villa.location}</span><h3>{villa.slug === "willow-peak-cottage-c" ? "Heaven at Willow Peak" : stayName}</h3><div className={styles.villaSpecs}><span><Users size={14} /> up to {stayCapacity} guests</span><span><BedDouble size={14} /> {villa.bedrooms} {villa.bedrooms === 1 ? "bedroom" : "bedrooms"}</span></div>
+            {villa.nightlyRates?.length ? <>
+              <div className={styles.stayRateTotal}><strong>₹{villa.totalPrice?.toLocaleString("en-IN")}</strong><span>live stay total · {villa.nightlyRates.length} {villa.nightlyRates.length === 1 ? "night" : "nights"}</span></div>
+              <p className={styles.stayRateAverage}>₹{villa.price.toLocaleString("en-IN")} average per night{villa.slug.includes("cottage") ? " · per cottage" : ""}</p>
+              <div className={styles.stayRateBreakdown}>
+                {villa.nightlyRates.map(night => <div key={night.date}><span>{new Date(`${night.date}T00:00:00`).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</span><span>{night.label}</span><strong>₹{night.price.toLocaleString("en-IN")}</strong></div>)}
+              </div>
+              {villa.extraGuests && villa.extraGuestTotal ? <p className={styles.guestFeeNote}>{villa.extraGuests} extra {villa.extraGuests === 1 ? "guest" : "guests"} × ₹{villa.extraGuestFee?.toLocaleString("en-IN")}/night · ₹{villa.extraGuestTotal.toLocaleString("en-IN")}</p> : null}
+              <p className={styles.ratePolicyNote}>{villa.baseGuests ?? villa.guests} guests included · {villa.extraGuestFee ? `₹${villa.extraGuestFee.toLocaleString("en-IN")} per extra guest/night` : "no extra guest fee"}</p>
+              {!!villa.directSavings && <p className={styles.savingsNote}>Direct savings included · −₹{villa.directSavings.toLocaleString("en-IN")}</p>}
+              <p className={styles.ratePolicyNote}>Live date-specific rates · select an eligible offer in the booking panel</p>
+            </> : <p><strong>₹{villa.price.toLocaleString("en-IN")}</strong><span> / night{villa.slug.includes("cottage") ? " · per cottage" : ""}</span></p>}
+          </div>
+        </Link>;
+      })}</div>
       {results?.length === 0 && <div className={styles.emptyState}><h3>Let’s find another little escape.</h3><p>Try different dates, a smaller group or another destination.</p><a href={whatsapp} target="_blank" rel="noopener noreferrer">Ask our concierge <ArrowUpRight size={15} /></a></div>}
     </section>
 

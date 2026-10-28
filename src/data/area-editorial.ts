@@ -6,7 +6,12 @@ type AreaCopy = {
   title: string;
   description: string;
   summary: string;
-  hero: { src: string; alt: string; caption: string };
+  hero: {
+    src: string;
+    alt: string;
+    caption: string;
+    items: { src: string; alt: string; title: string; subtitle: string }[];
+  };
   featuredSlug: string;
   collectionTitle: string;
   collectionIntro: string;
@@ -28,6 +33,38 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
       src: "/assets/villas/the-angle-house/gallery-11.webp",
       alt: "Glass-fronted exterior of The Angle House in Kamshet, Lonavala",
       caption: "The Angle House · Kamshet, Lonavala",
+      items: [
+        {
+          src: "/assets/villas/the-angle-house/gallery-1.webp",
+          alt: "The Angle House private pool beside the glass-fronted villa",
+          title: "Poolside at The Angle House",
+          subtitle: "Private pool · Kamshet",
+        },
+        {
+          src: "/assets/villas/the-angle-house/gallery-13.webp",
+          alt: "Private waterfall pool at The Angle House",
+          title: "Poolside days",
+          subtitle: "Private pool villa",
+        },
+        {
+          src: "/assets/villas/the-angle-house/gallery-7.webp",
+          alt: "The Angle House bedroom opening onto its private balcony",
+          title: "A private balcony",
+          subtitle: "Bedroom and sit-out",
+        },
+        {
+          src: "/assets/villas/the-angle-house/gallery-6.webp",
+          alt: "One of the bedrooms at The Angle House",
+          title: "Room to recharge",
+          subtitle: "A calm bedroom",
+        },
+        {
+          src: "/assets/villas/the-angle-house/gallery-11.webp",
+          alt: "The Angle House exterior glowing at dusk in Kamshet",
+          title: "Golden-hour views",
+          subtitle: "The Angle House · Kamshet",
+        },
+      ],
     },
     featuredSlug: "the-angle-house",
     collectionTitle: "Poolside weekends. Cottage escapes.",
@@ -86,6 +123,38 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
       src: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
       alt: "Casa De Reva villa and its hillside setting in Kaswand, Panchgani",
       caption: "Casa De Reva · Kaswand, Panchgani",
+      items: [
+        {
+          src: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
+          alt: "Casa De Reva with its private pool in Kaswand",
+          title: "Casa De Reva",
+          subtitle: "Kaswand · Panchgani",
+        },
+        {
+          src: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0045.jpg",
+          alt: "Casa De Reva's pool and fire-pit area after sunset",
+          title: "Slow evenings",
+          subtitle: "Private pool villa",
+        },
+        {
+          src: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0059.jpg",
+          alt: "Outdoor terrace at Casa De Reva",
+          title: "Room to unwind",
+          subtitle: "A hillside hideaway",
+        },
+        {
+          src: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0017.jpg",
+          alt: "Casa De Reva's private pool illuminated after dark",
+          title: "Evenings by the pool",
+          subtitle: "Casa De Reva · Kaswand",
+        },
+        {
+          src: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0051.jpg",
+          alt: "Carrom and outdoor seating beside Casa De Reva's pool",
+          title: "Time together",
+          subtitle: "Poolside games",
+        },
+      ],
     },
     featuredSlug: "casa-de-reva",
     collectionTitle: "A hillside home, all to yourselves.",
@@ -144,6 +213,38 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
       src: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
       alt: "Canopy Crest luxury private pool villa in Khopoli with illuminated swimming pool",
       caption: "Canopy Crest · Luxury Villa in Khopoli",
+      items: [
+        {
+          src: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
+          alt: "Canopy Crest and its illuminated private pool at dusk",
+          title: "Canopy Crest",
+          subtitle: "Khopoli · Private estate",
+        },
+        {
+          src: "/assets/villas/canopy-crest/IMG-20260607-WA0015.jpg",
+          alt: "Canopy Crest's sunlit villa and landscaped lawn",
+          title: "Space to gather",
+          subtitle: "Private pool and lawn",
+        },
+        {
+          src: "/assets/villas/canopy-crest/canopy-crest-sunset-guests.jpg",
+          alt: "Guests enjoying the garden at Canopy Crest at sunset",
+          title: "Made for togetherness",
+          subtitle: "A private group stay",
+        },
+        {
+          src: "/assets/villas/canopy-crest/IMG-20260607-WA0012.jpg",
+          alt: "Open lawn and outdoor games area at Canopy Crest",
+          title: "Room to play",
+          subtitle: "Open lawn",
+        },
+        {
+          src: "/assets/villas/canopy-crest/IMG-20260607-WA0013.jpg",
+          alt: "Canopy Crest's spacious living room with poolside views",
+          title: "Gather indoors",
+          subtitle: "Living and dining space",
+        },
+      ],
     },
     featuredSlug: "canopy-crest",
     collectionTitle: "Private Pool Villas in Khopoli for Groups & Families",

@@ -54,6 +54,7 @@ const getCachedReviews = React.cache
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({
@@ -213,9 +214,20 @@ export async function generateMetadata({
   };
 }
 
-export default async function VillaDetailPage({ params }: PageProps) {
+export default async function VillaDetailPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
+  const query = await searchParams;
   const slug = resolvedParams.slug;
+  const validDate = (value: string | string[] | undefined) =>
+    typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : undefined;
+  const initialCheckIn = validDate(query.checkIn);
+  const initialCheckOut = validDate(query.checkOut);
+  const parsedGuests = typeof query.guests === "string" ? Number.parseInt(query.guests, 10) : NaN;
+  const initialGuests = Number.isInteger(parsedGuests) && parsedGuests > 0 && parsedGuests <= 16 ? parsedGuests : undefined;
+  const initialCottageSelection = typeof query.cottageSelection === "string"
+    && ["A", "B", "C", "TWO", "ALL"].includes(query.cottageSelection)
+    ? query.cottageSelection as "A" | "B" | "C" | "TWO" | "ALL"
+    : undefined;
 
   const villa = await getCachedVilla(slug);
 
@@ -274,9 +286,14 @@ export default async function VillaDetailPage({ params }: PageProps) {
 
   return (
     <PropertyEditorialDetails
+      key={`${villa.id}:${initialCheckIn ?? ""}:${initialCheckOut ?? ""}:${initialGuests ?? ""}:${initialCottageSelection ?? ""}`}
       villa={villa}
       reviews={reviews}
       bookings={serializedBookings}
+      initialCheckIn={initialCheckIn}
+      initialCheckOut={initialCheckOut}
+      initialGuests={initialGuests}
+      initialCottageSelection={initialCottageSelection}
     />
   );
 }

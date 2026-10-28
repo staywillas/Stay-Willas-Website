@@ -39,8 +39,11 @@ interface BookingModalFlowProps {
   location?: string;
   isAngleHouse?: boolean;
   presentation?: "default" | "editorial";
-  initialCottageSelection?: "A" | "B" | "C" | "ALL";
+  initialCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
   propertySlug?: string;
+  initialCheckIn?: string;
+  initialCheckOut?: string;
+  initialGuests?: number;
 }
 
 export default function BookingModalFlow({
@@ -63,16 +66,19 @@ export default function BookingModalFlow({
   presentation = "default",
   initialCottageSelection = "A",
   propertySlug,
+  initialCheckIn,
+  initialCheckOut,
+  initialGuests,
 }: BookingModalFlowProps) {
   const [mounted, setMounted] = useState(false);
   const lenis = useLenis();
   
   // Modals state
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(Boolean(initialCheckIn && initialCheckOut));
 
   // Cottage selection for Willow Peak
   const isWillowPeak = villaId.includes("willow") || villaName.toLowerCase().includes("willow");
-  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">(initialCottageSelection);
+  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "TWO" | "ALL">(initialCottageSelection);
 
   useEffect(() => {
     setMounted(true);
@@ -129,8 +135,11 @@ export default function BookingModalFlow({
   const willowEntireStartingPrice = 15000;
   const willowCottageStartingPrice = 4999;
   const displayPrice = isWillowPeak 
-    ? (cottageSelection === "ALL" ? (basePrice && basePrice <= 15000 ? basePrice : willowEntireStartingPrice) : willowCottageStartingPrice) 
+    ? (cottageSelection === "ALL" ? (basePrice && basePrice <= 15000 ? basePrice : willowEntireStartingPrice) : cottageSelection === "TWO" ? willowCottageStartingPrice * 2 : willowCottageStartingPrice)
     : price;
+  const bookingTitle = propertySlug === "willow-peak"
+    ? `${villaName.replace(/\s*\(Entire Estate.*\)$/i, "")} · ${cottageSelection === "ALL" ? "Entire estate" : cottageSelection === "TWO" ? "2 cottages" : `Cottage ${cottageSelection}`}`
+    : villaName;
 
   const handleOpenBooking = () => {
     setIsBookingModalOpen(true);
@@ -146,18 +155,18 @@ export default function BookingModalFlow({
           <div className={editorialStyles.bookingSummary}>
             <span className={editorialStyles.bookingLabel}>YOUR STAY, DIRECT WITH US</span>
             <h2>Make it your weekend.</h2>
-            <div className={editorialStyles.bookingPrice}><span>From</span><div><strong>₹{displayPrice.toLocaleString("en-IN")}</strong><span> / night</span></div></div>
-            <p className={editorialStyles.bookingRateNote}>Final rates depend on your dates and group size.</p>
-            {isWillowPeak && <div className={editorialStyles.unitPicker}><p>{cottageSelection === "ALL" ? "Entire estate · up to 12 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p><nav className={editorialStyles.unitLinks} aria-label="Choose your Willow Peak stay">{willowUnits.map(unit => <Link key={unit.slug} href={`/villa/${unit.slug}`} aria-current={unit.slug === propertySlug ? "page" : undefined}><strong>{unit.name}</strong><small>{unit.capacity} guests</small></Link>)}</nav></div>}
+            <div className={editorialStyles.bookingPrice}><span>{initialCheckIn && initialCheckOut ? "Date-specific rate" : "Starting rate"}</span><div>{initialCheckIn && initialCheckOut ? <strong>See live quote</strong> : <><strong>₹{displayPrice.toLocaleString("en-IN")}</strong><span> / night</span></>}</div></div>
+            <p className={editorialStyles.bookingRateNote}>{initialCheckIn && initialCheckOut ? "Your dates are prefilled. The booking panel is checking live availability and rates." : "Choose dates in the booking panel to see the live scheduled rate."}</p>
+            {isWillowPeak && <div className={editorialStyles.unitPicker}><p>{cottageSelection === "ALL" ? "Entire estate · up to 12 guests" : cottageSelection === "TWO" ? "2 cottages · up to 8 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p><nav className={editorialStyles.unitLinks} aria-label="Choose your Willow Peak stay">{willowUnits.map(unit => <Link key={unit.slug} href={`/villa/${unit.slug}`} aria-current={unit.slug === propertySlug ? "page" : undefined}><strong>{unit.name}</strong><small>{unit.capacity} guests</small></Link>)}</nav></div>}
             {!isSingleWillowCottage && (
-              <div className={editorialStyles.bookingOffer}><span>Direct savings</span><div><strong>26% Weekdays · 5% Weekends &amp; Holidays</strong><small>Eligible savings apply automatically</small></div></div>
+              <div className={editorialStyles.bookingOffer}><span>Date offers</span><div><strong>26% Weekdays · 5% Weekends &amp; Holidays</strong><small>Choose eligible offers below the live quote</small></div></div>
             )}
             <BorderGlow className={editorialStyles.availabilityGlow} backgroundColor="#1b3564" borderRadius={28} animated={false}><button type="button" className={editorialStyles.primaryButton} onClick={handleOpenBooking}><CalendarIcon size={17} /> Check availability</button></BorderGlow>
             <button type="button" className={editorialStyles.secondaryButton} onClick={handleOpenBooking}>Reserve your stay <ArrowRight size={17} /></button>
             <p className={editorialStyles.bookingFee}><CheckCircle2 size={15} /> No platform booking fee</p>
           </div>
           <div className={editorialStyles.mobileBooking} role="group" aria-label="Quick booking">
-            <div><small>From</small><strong>₹{displayPrice.toLocaleString("en-IN")}<span> / night</span></strong></div>
+            <div><small>{initialCheckIn && initialCheckOut ? "Live quote" : "From"}</small><strong>{initialCheckIn && initialCheckOut ? "See booking panel" : <>₹{displayPrice.toLocaleString("en-IN")}<span> / night</span></>}</strong></div>
             {isAngleHouse ? (
               <div className={editorialStyles.angleHouseMobileActions}>
                 <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={handleOpenBooking}>Check dates <ArrowRight size={17} /></button></BorderGlow>
@@ -183,12 +192,10 @@ export default function BookingModalFlow({
               </span>
             </div>
             <span className="text-[9.5px] sm:text-[10.5px] text-slate-500 font-bold uppercase tracking-widest block mb-0.5">
-              Starting at
+              {initialCheckIn && initialCheckOut ? "Live quote below" : "Starting at"}
             </span>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">
-                ₹{displayPrice.toLocaleString("en-IN")}
-              </span>
+              {!initialCheckIn || !initialCheckOut ? <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">₹{displayPrice.toLocaleString("en-IN")}</span> : <span className="text-lg font-bold text-[#1B3564]">See live quote below</span>}
               <span className="text-slate-500 text-xs sm:text-sm font-semibold">
                 / night {isWillowPeak ? (cottageSelection === "ALL" ? "(Entire Estate - 12 Guests)" : `(Cottage ${cottageSelection})`) : ""}
               </span>
@@ -210,26 +217,21 @@ export default function BookingModalFlow({
             <div className="flex items-center justify-between text-[11px] font-bold text-[#1B3564]">
               <span>Select Villa Unit:</span>
               <span className="text-[#DAA520] font-black">
-                {cottageSelection === "ALL" 
-                  ? "Full Estate: Breeze + Crest + Heaven (12 Guests)" 
-                  : cottageSelection === "A" 
-                  ? "Breeze (Cottage A - 4 Guests)" 
-                  : cottageSelection === "B" 
-                  ? "Crest (Cottage B - 4 Guests)" 
-                  : "Heaven (Cottage C - 4 Guests)"}
+                {cottageSelection === "ALL" ? "Full Estate · up to 12 guests" : cottageSelection === "TWO" ? "2 Cottages · up to 8 guests" : `${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} · up to 4 guests`}
               </span>
             </div>
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
               {[
                 { key: "A", label: "Breeze" },
                 { key: "B", label: "Crest" },
                 { key: "C", label: "Heaven" },
+                { key: "TWO", label: "2 Cottages" },
                 { key: "ALL", label: "All 3" }
               ].map((item) => (
                 <button
                   key={item.key}
                   type="button"
-                  onClick={() => setCottageSelection(item.key as any)}
+                  onClick={() => setCottageSelection(item.key as "A" | "B" | "C" | "TWO" | "ALL")}
                   className={`py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
                     cottageSelection === item.key
                       ? "bg-[#1B3564] text-white shadow-md scale-[1.02]"
@@ -318,7 +320,7 @@ export default function BookingModalFlow({
                   </span>
                 </div>
                 <h3 className="font-heading font-bold text-lg sm:text-xl tracking-wide text-white">
-                  {villaName}
+                  {bookingTitle}
                 </h3>
               </div>
               <button
@@ -339,7 +341,7 @@ export default function BookingModalFlow({
             >
               <BookingCard
                 villaId={villaId}
-                villaName={villaName}
+                villaName={bookingTitle}
                 isAngleHouse={isAngleHouse}
                 price={price}
                 basePrice={basePrice}
@@ -349,12 +351,16 @@ export default function BookingModalFlow({
                 sundayPrice={sundayPrice}
                 dailyPrices={dailyPrices}
                 seasonalPrices={seasonalPrices}
+                propertySlug={propertySlug}
                 maxGuests={maxGuests}
                 baseGuests={baseGuests}
                 extraGuestFee={extraGuestFee}
                 bookings={bookings}
                 initialCottageSelection={cottageSelection}
                 lockCottageSelection={propertySlug?.startsWith("willow-peak-cottage-") ?? false}
+                initialCheckIn={initialCheckIn ? new Date(`${initialCheckIn}T00:00:00`) : null}
+                initialCheckOut={initialCheckOut ? new Date(`${initialCheckOut}T00:00:00`) : null}
+                initialGuests={initialGuests}
                 isModal={true}
               />
             </div>

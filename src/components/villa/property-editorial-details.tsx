@@ -69,12 +69,23 @@ export default function PropertyEditorialDetails({
   villa,
   reviews,
   bookings,
+  initialCheckIn,
+  initialCheckOut,
+  initialGuests,
+  initialCottageSelection,
 }: {
   villa: EditorialVilla;
   reviews: GuestReview[];
   bookings: Availability[];
+  initialCheckIn?: string;
+  initialCheckOut?: string;
+  initialGuests?: number;
+  initialCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
 }) {
   const property = getPropertyEditorial(villa);
+  const selectedCottageSelection = property.isWillow && !property.cottage
+    ? initialCottageSelection ?? (initialGuests ? initialGuests > 8 ? "ALL" : initialGuests > 4 ? "TWO" : "A" : property.initialCottageSelection)
+    : property.initialCottageSelection;
   const { faqs, spaces } = property;
   const images = villa.images
     .map(resolvePropertyImage)
@@ -549,8 +560,9 @@ export default function PropertyEditorialDetails({
                 Check dates & plan your stay <ArrowRight size={17} />
               </a>
               <p>
-                From ₹{formattedPrice} per night. Final rates depend on your
-                dates and group.
+                {initialCheckIn && initialCheckOut
+                  ? "Your dates are loaded. Open the booking panel to review live nightly rates and your stay total."
+                  : `From ₹${formattedPrice} per night. Final rates depend on your dates and group.`}
               </p>
             </div>
           </div>
@@ -570,8 +582,11 @@ export default function PropertyEditorialDetails({
               }
               price={villa.price}
               basePrice={villa.price * rateFactor}
-              initialCottageSelection={property.initialCottageSelection}
+              initialCottageSelection={selectedCottageSelection}
               propertySlug={villa.slug}
+              initialCheckIn={initialCheckIn}
+              initialCheckOut={initialCheckOut}
+              initialGuests={initialGuests}
               weekendPrice={rate(villa.weekendPrice)}
               fridayPrice={rate(villa.fridayPrice)}
               saturdayPrice={rate(villa.saturdayPrice)}

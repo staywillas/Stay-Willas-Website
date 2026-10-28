@@ -1,7 +1,7 @@
 "use client";
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2,
   ChefHat, Wine, Gift, Receipt, Tag, Car,
@@ -13,6 +13,7 @@ import { captureBookingLead } from "@/app/actions/inquiry";
 import { useUser } from "@clerk/nextjs";
 import { categorizeNight, checkLongWeekend } from "@/lib/calendar-holidays";
 import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement } from "@/lib/angle-house-measurement";
+import { checkAvailableVillasForDates } from "@/app/actions/booking";
 
 interface DailyPriceProp {
   id: string;
@@ -37,6 +38,64 @@ interface BookingProp {
   cottagesCount?: number;
 }
 
+interface LiveQuote {
+  isAvailable: boolean;
+  totalPrice: number;
+  roomSubtotal: number;
+  directSavings: number;
+  baseGuests: number;
+  extraGuests: number;
+  extraGuestFee: number;
+  extraGuestTotal: number;
+  nightlyRates: Array<{ date: string; label: string; price: number }>;
+}
+
+type FoodPackage = "STANDARD_VEG" | "STANDARD_NON_VEG" | "DELUXE_VEG" | "DELUXE_NON_VEG";
+
+const foodPackages: Array<{ id: FoodPackage; label: string; cuisine: string; price: number }> = [
+  { id: "STANDARD_VEG", label: "Standard", cuisine: "Vegetarian", price: 1250 },
+  { id: "STANDARD_NON_VEG", label: "Standard", cuisine: "Non-vegetarian", price: 1250 },
+  { id: "DELUXE_VEG", label: "Deluxe", cuisine: "Vegetarian", price: 1550 },
+  { id: "DELUXE_NON_VEG", label: "Deluxe", cuisine: "Non-vegetarian", price: 1550 },
+];
+
+function parseLiveQuote(value: unknown): LiveQuote | null {
+  if (!value || typeof value !== "object") return null;
+  const quote = value as Partial<LiveQuote>;
+  if (
+    typeof quote.isAvailable !== "boolean" ||
+    typeof quote.totalPrice !== "number" ||
+    typeof quote.roomSubtotal !== "number" ||
+    typeof quote.directSavings !== "number" ||
+    typeof quote.baseGuests !== "number" ||
+    typeof quote.extraGuests !== "number" ||
+    typeof quote.extraGuestFee !== "number" ||
+    typeof quote.extraGuestTotal !== "number" ||
+    !Array.isArray(quote.nightlyRates) ||
+    !quote.nightlyRates.every((night) =>
+      typeof night.date === "string" &&
+      typeof night.label === "string" &&
+      typeof night.price === "number",
+    )
+  ) return null;
+  return quote as LiveQuote;
+}
+
+function sameLiveQuote(a: LiveQuote, b: LiveQuote) {
+  return a.totalPrice === b.totalPrice
+    && a.roomSubtotal === b.roomSubtotal
+    && a.directSavings === b.directSavings
+    && a.baseGuests === b.baseGuests
+    && a.extraGuests === b.extraGuests
+    && a.extraGuestFee === b.extraGuestFee
+    && a.extraGuestTotal === b.extraGuestTotal
+    && a.nightlyRates.length === b.nightlyRates.length
+    && a.nightlyRates.every((night, index) => {
+      const next = b.nightlyRates[index];
+      return night.date === next?.date && night.price === next?.price && night.label === next?.label;
+    });
+}
+
 interface BookingCardProps {
   villaId: string;
   villaName: string;
@@ -52,8 +111,9 @@ interface BookingCardProps {
   maxGuests?: number;
   baseGuests?: number;
   extraGuestFee?: number;
+  propertySlug?: string;
   bookings?: BookingProp[];
-  initialCottageSelection?: "A" | "B" | "C" | "ALL";
+  initialCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
   lockCottageSelection?: boolean;
   initialCheckIn?: Date | null;
   initialCheckOut?: Date | null;
@@ -106,17 +166,8 @@ const BookingCard = ({
   villaName, 
   isAngleHouse = false,
   price, 
-  basePrice, 
-  weekendPrice, 
-  fridayPrice,
-  saturdayPrice,
-  sundayPrice,
-  dailyPrices = [], 
-  seasonalPrices = [], 
   maxGuests = 16,
-  baseGuests = 10,
-  extraGuestFee = 1500,
-  bookings = [],
+  propertySlug,
   initialCottageSelection,
   lockCottageSelection = false,
   initialCheckIn,
@@ -151,6 +202,7 @@ const BookingCard = ({
     return d;
   });
   const [guests, setGuests] = useState(initialGuests || 2);
+  const [guestInput, setGuestInput] = useState(String(initialGuests || 2));
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
@@ -163,7 +215,15 @@ const BookingCard = ({
   const [submittedBookingId, setSubmittedBookingId] = useState<string | null>(null);
   const [submittedTotal, setSubmittedTotal] = useState<number | null>(null);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [selectedFoodPackage, setSelectedFoodPackage] = useState<FoodPackage | null>(null);
+  const [foodGuests, setFoodGuests] = useState(initialGuests || 2);
+  const [weekdayOfferSelected, setWeekdayOfferSelected] = useState(false);
+  const [weekendOfferSelected, setWeekendOfferSelected] = useState(false);
   const [showAddOns, setShowAddOns] = useState(false);
+  const [liveQuote, setLiveQuote] = useState<LiveQuote | null>(null);
+  const [liveQuoteStatus, setLiveQuoteStatus] = useState<"idle" | "checking" | "available" | "unavailable" | "error">("idle");
+  const [quoteRefreshToken, setQuoteRefreshToken] = useState(0);
+  const calendarPanelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (initialCheckIn) {
@@ -181,12 +241,8 @@ const BookingCard = ({
     }
   }, [initialCheckOut]);
 
-  useEffect(() => {
-    if (initialGuests) setGuests(initialGuests);
-  }, [initialGuests]);
-
   // Specific Cottage Selection for Willow Peak: "A" | "B" | "C" | "ALL"
-  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">(initialCottageSelection || "A");
+  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "TWO" | "ALL">(initialCottageSelection || "A");
 
   useEffect(() => {
     if (initialCottageSelection) {
@@ -195,46 +251,40 @@ const BookingCard = ({
   }, [initialCottageSelection]);
 
   // Cottages required for Willow Peak (1 for Cottage A/B/C, 3 for ALL)
-  const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : 1) : 1;
+  const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : cottageSelection === "TWO" ? 2 : 1) : 1;
   const isSingleWillowCottage = isWillowPeak && cottageSelection !== "ALL";
-  const couponCode = isSingleWillowCottage ? "" : "STAYW26";
-  const isCouponApplied = !isSingleWillowCottage;
-  const currentMaxGuests = isWillowPeak ? (cottageSelection === "ALL" ? 12 : 4) : actualMaxGuests;
+  const currentMaxGuests = isWillowPeak ? cottagesCount * 4 : actualMaxGuests;
+  const currentMinGuests = isWillowPeak && cottageSelection === "TWO" ? 5 : 1;
+
+  useEffect(() => {
+    setFoodGuests(count => Math.max(1, Math.min(guests, count)));
+  }, [guests]);
+
+  useEffect(() => {
+    if (!initialGuests) return;
+    const count = Math.max(currentMinGuests, Math.min(currentMaxGuests, initialGuests));
+    setGuests(count);
+    setGuestInput(String(count));
+  }, [initialGuests, currentMinGuests, currentMaxGuests]);
+
+  const updateGuestCount = (value: number) => {
+    const count = Math.max(currentMinGuests, Math.min(currentMaxGuests, value));
+    setGuests(count);
+    setGuestInput(String(count));
+  };
 
   // Premium custom calendar states
   const [showCalendar, setShowCalendar] = useState(false);
   const [calendarTarget, setCalendarTarget] = useState<"checkIn" | "checkOut">("checkIn");
   const [currentCalendarMonth, setCurrentCalendarMonth] = useState<Date>(new Date());
 
-  // Date booked checking logic (exclusive checkout day)
-  const isDateBooked = React.useCallback((date: Date) => {
-    const check = new Date(date);
-    check.setHours(0, 0, 0, 0);
-
-    if (isWillowPeak) {
-      let bookedCottages = 0;
-      for (const b of bookings) {
-        if (b.status === "CANCELLED") continue;
-        const start = new Date(b.checkIn);
-        const end = new Date(b.checkOut);
-        start.setHours(0, 0, 0, 0);
-        end.setHours(0, 0, 0, 0);
-        if (check >= start && check < end) {
-          bookedCottages += (b.cottagesCount || 1);
-        }
-      }
-      return (bookedCottages + cottagesCount) > 3;
-    }
-
-    return bookings.some(b => {
-      if (b.status === "CANCELLED") return false;
-      const start = new Date(b.checkIn);
-      const end = new Date(b.checkOut);
-      start.setHours(0, 0, 0, 0);
-      end.setHours(0, 0, 0, 0);
-      return check >= start && check < end;
+  useEffect(() => {
+    if (!showCalendar) return;
+    const frame = window.requestAnimationFrame(() => {
+      calendarPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
-  }, [bookings, isWillowPeak, cottagesCount]);
+    return () => window.cancelAnimationFrame(frame);
+  }, [showCalendar]);
 
   // Date range overlap check
   const isRangeInvalid = React.useCallback((start: Date, end: Date) => {
@@ -242,74 +292,8 @@ const BookingCard = ({
     startNorm.setHours(0, 0, 0, 0);
     const endNorm = new Date(end);
     endNorm.setHours(0, 0, 0, 0);
-
-    if (startNorm.getTime() >= endNorm.getTime()) return true;
-
-    if (isWillowPeak) {
-      let cur = new Date(startNorm);
-
-      while (cur.getTime() < endNorm.getTime()) {
-        let bookedCottages = 0;
-        for (const b of bookings) {
-          if (b.status === "CANCELLED") continue;
-          const bStart = new Date(b.checkIn);
-          const bEnd = new Date(b.checkOut);
-          bStart.setHours(0, 0, 0, 0);
-          bEnd.setHours(0, 0, 0, 0);
-          if (cur.getTime() >= bStart.getTime() && cur.getTime() < bEnd.getTime()) {
-            bookedCottages += (b.cottagesCount || 1);
-          }
-        }
-        if (bookedCottages + cottagesCount > 3) return true;
-        cur = addDays(cur, 1);
-        cur.setHours(0, 0, 0, 0);
-      }
-      return false;
-    }
-
-    return bookings.some(b => {
-      if (b.status === "CANCELLED") return false;
-      const bStart = new Date(b.checkIn);
-      const bEnd = new Date(b.checkOut);
-      bStart.setHours(0, 0, 0, 0);
-      bEnd.setHours(0, 0, 0, 0);
-      return bStart.getTime() < endNorm.getTime() && bEnd.getTime() > startNorm.getTime();
-    });
-  }, [bookings, isWillowPeak, cottagesCount]);
-
-  const isOverlapping = isRangeInvalid(checkIn, checkOut);
-
-  // Auto-shift default dates if current selection is booked/blocked
-  React.useEffect(() => {
-    let tempDate = new Date();
-    tempDate.setHours(0, 0, 0, 0);
-    let shiftCount = 0;
-    
-    // Shift checkIn until an available day is found
-    while (isDateBooked(tempDate) && shiftCount < 365) {
-      tempDate = addDays(tempDate, 1);
-      shiftCount++;
-    }
-    
-    if (isDateBooked(checkIn)) {
-      setCheckIn(tempDate);
-      let checkOutTemp = addDays(tempDate, 2);
-      checkOutTemp.setHours(0, 0, 0, 0);
-      
-      // Shift checkOut if the range overlaps
-      let rangeShift = 0;
-      if (isRangeInvalid(tempDate, checkOutTemp)) {
-        checkOutTemp = addDays(tempDate, 1);
-        checkOutTemp.setHours(0, 0, 0, 0);
-        while (isRangeInvalid(tempDate, checkOutTemp) && rangeShift < 365) {
-          checkOutTemp = addDays(checkOutTemp, 1);
-          checkOutTemp.setHours(0, 0, 0, 0);
-          rangeShift++;
-        }
-      }
-      setCheckOut(checkOutTemp);
-    }
-  }, [bookings, isDateBooked, isRangeInvalid]);
+    return startNorm.getTime() >= endNorm.getTime();
+  }, []);
 
   // Helper to generate calendar days grid
   const generateCalendarDays = (monthDate: Date) => {
@@ -395,109 +379,10 @@ const BookingCard = ({
     }
   }, [user]);
 
-  // Timezone-safe daily rate calculation from dynamic pricing scheduler
-  const getDayPriceDetails = (date: Date) => {
-    const check = new Date(date);
-    check.setHours(0, 0, 0, 0);
-
-    const checkY = check.getFullYear();
-    const checkM = check.getMonth();
-    const checkD = check.getDate();
-    const checkIso = `${checkY}-${String(checkM + 1).padStart(2, "0")}-${String(checkD).padStart(2, "0")}`;
-
-    // 1. Check Daily Overrides (highest priority from dynamic pricing scheduler)
-    const dailyOverride = dailyPrices?.find(dp => {
-      if (!dp?.date) return false;
-      const dDate = new Date(dp.date);
-      const matchLocal = dDate.getFullYear() === checkY && dDate.getMonth() === checkM && dDate.getDate() === checkD;
-      const matchUTC = dDate.getUTCFullYear() === checkY && dDate.getUTCMonth() === checkM && dDate.getUTCDate() === checkD;
-      const matchStr = typeof dp.date === "string" && dp.date.startsWith(checkIso);
-      return matchLocal || matchUTC || matchStr;
-    });
-
-    if (dailyOverride) {
-      return { 
-        price: Number(dailyOverride.price), 
-        type: "DAILY" as const, 
-        label: (dailyOverride as any).label || "Scheduled Rate" 
-      };
-    }
-
-    // 2. Check Seasonal Price Overrides
-    const seasonalOverride = seasonalPrices?.find(sp => {
-      if (!sp?.startDate || !sp?.endDate) return false;
-      const start = new Date(sp.startDate);
-      const end = new Date(sp.endDate);
-      start.setHours(0, 0, 0, 0);
-      end.setHours(23, 59, 59, 999);
-      return check.getTime() >= start.getTime() && check.getTime() <= end.getTime();
-    });
-
-    if (seasonalOverride) {
-      return { 
-        price: Number(seasonalOverride.price), 
-        type: "SEASONAL" as const, 
-        label: seasonalOverride.label || "Seasonal Rate" 
-      };
-    }
-
-    // 3. Check specific day-of-week pricing overrides
-    const dayOfWeek = check.getDay();
-    if (dayOfWeek === 5 && fridayPrice != null && Number(fridayPrice) > 0) {
-      return { price: Number(fridayPrice), type: "FRIDAY" as const, label: "Friday Rate" };
-    }
-    if (dayOfWeek === 6 && saturdayPrice != null && Number(saturdayPrice) > 0) {
-      return { price: Number(saturdayPrice), type: "SATURDAY" as const, label: "Saturday Rate" };
-    }
-    if (dayOfWeek === 0 && sundayPrice != null && Number(sundayPrice) > 0) {
-      return { price: Number(sundayPrice), type: "SUNDAY" as const, label: "Sunday Rate" };
-    }
-
-    // 4. Check Legacy Weekend Pricing
-    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
-    if (isWeekend && weekendPrice != null && Number(weekendPrice) > 0) {
-      return { price: Number(weekendPrice), type: "WEEKEND" as const, label: "Weekend Rate" };
-    }
-
-    // 5. Fallback to base rate
-    let numericBasePrice = typeof basePrice === "number" && basePrice > 0 
-      ? basePrice 
-      : (typeof price === "number" && price > 0 ? price : parseFloat(String(price).replace(/[^0-9.]/g, "")) || 0);
-
-    // Willow Peak Entire Estate base starting rate is 15,000 (if DB still has old 17997 seed, client base is 15000)
-    if (isWillowPeak && numericBasePrice > 15000) {
-      numericBasePrice = 15000;
-    }
-
-    return { price: numericBasePrice, type: "BASE" as const, label: "Base Rate" };
-  };
-
-  const getPricingBreakdown = () => {
-    const breakdownList: Array<{ date: Date; price: number; type: string; label: string }> = [];
-    if (nights <= 0) return breakdownList;
-
-    for (let i = 0; i < nights; i++) {
-      const dayDate = addDays(normalizedCheckIn, i);
-      dayDate.setHours(0, 0, 0, 0);
-      const details = getDayPriceDetails(dayDate);
-      breakdownList.push({
-        date: dayDate,
-        price: details.price,
-        type: details.type,
-        label: details.label
-      });
-    }
-    return breakdownList;
-  };
-
-  const breakdown = getPricingBreakdown();
-  const rawSubtotal = breakdown.reduce((sum, item) => sum + item.price, 0);
-  const subtotal = Math.round(rawSubtotal * (isWillowPeak ? (cottageSelection === "ALL" ? 1 : 1 / 3) : 1));
-
-  const baseGuestsCount = isWillowPeak ? (cottagesCount * 4) : (baseGuests ?? actualMaxGuests);
-  const extraGuests = Math.max(0, guests - baseGuestsCount);
-  const extraGuestsCostPerNight = extraGuestFee ? extraGuests * extraGuestFee : 0;
-  const totalExtraGuestsCost = extraGuestsCostPerNight * (nights > 0 ? nights : 0);
+  const selectedNightDates = React.useMemo(
+    () => Array.from({ length: nights }, (_, index) => addDays(normalizedCheckIn, index)),
+    [normalizedCheckIn, nights],
+  );
 
   // Dynamic add-ons cost calculation
   let addOnsCost = 0;
@@ -513,6 +398,13 @@ const BookingCard = ({
     }
   });
 
+  const selectedFood = foodPackages.find(option => option.id === selectedFoodPackage);
+  const foodGuestCount = selectedFood ? Math.max(1, Math.min(guests, foodGuests)) : foodGuests;
+  const foodAddOnCost = selectedFood ? selectedFood.price * foodGuestCount * Math.max(0, nights) : 0;
+  const bookingAddOns = selectedFood
+    ? [...selectedAddOns, `${selectedFood.label} ${selectedFood.cuisine} food package (${foodGuestCount} guests × ${nights} nights)`]
+    : selectedAddOns;
+
   const handleToggleAddOn = (addon: string) => {
     setSelectedAddOns(prev => 
       prev.includes(addon) 
@@ -521,56 +413,85 @@ const BookingCard = ({
     );
   };
 
-  const serviceFee = 0;
+  const normalWeekdayNightsCount = selectedNightDates.filter(date => categorizeNight(date).category === "NORMAL_WEEKDAY").length;
+  const weekendAndHolidayNightsCount = nights - normalWeekdayNightsCount;
 
-  // Split breakdown into Normal Weekdays (26% off) vs. Weekends & Long Weekends (5% off)
-  const normalWeekdayBreakdown = breakdown.filter(item => {
-    const { category } = categorizeNight(item.date, item.type);
-    return category === "NORMAL_WEEKDAY";
-  });
-  const rawNormalWeekdaySubtotal = normalWeekdayBreakdown.reduce((sum, item) => sum + item.price, 0);
-  const normalWeekdaySubtotal = Math.round(rawNormalWeekdaySubtotal * (isWillowPeak ? (cottagesCount / 3) : 1));
-  const normalWeekdayNightsCount = normalWeekdayBreakdown.length;
-  const normalWeekdayExtraCost = extraGuestsCostPerNight * normalWeekdayNightsCount;
-  const normalWeekdayEligibleBase = normalWeekdaySubtotal + normalWeekdayExtraCost;
+  const hasWeekdayOffer = !isSingleWillowCottage && normalWeekdayNightsCount > 0;
+  const hasWeekendOffer = !isSingleWillowCottage && weekendAndHolidayNightsCount > 0;
+  const isWeekdayOfferApplied = hasWeekdayOffer && weekdayOfferSelected;
+  const isWeekendOfferApplied = hasWeekendOffer && weekendOfferSelected;
+  const couponCode = isWeekdayOfferApplied && isWeekendOfferApplied
+    ? "STAYW26"
+    : isWeekdayOfferApplied
+      ? "WEEKDAY26"
+      : isWeekendOfferApplied
+        ? "WEEKEND5"
+        : "";
+  const isCouponApplied = Boolean(couponCode);
 
-  const weekendAndHolidayBreakdown = breakdown.filter(item => {
-    const { category } = categorizeNight(item.date, item.type);
-    return category === "WEEKEND" || category === "LONG_WEEKEND";
-  });
-  const rawWeekendAndHolidaySubtotal = weekendAndHolidayBreakdown.reduce((sum, item) => sum + item.price, 0);
-  const weekendAndHolidaySubtotal = Math.round(rawWeekendAndHolidaySubtotal * (isWillowPeak ? (cottagesCount / 3) : 1));
-  const weekendAndHolidayNightsCount = weekendAndHolidayBreakdown.length;
-  const weekendAndHolidayExtraCost = extraGuestsCostPerNight * weekendAndHolidayNightsCount;
-  const weekendAndHolidayEligibleBase = weekendAndHolidaySubtotal + weekendAndHolidayExtraCost;
+  useEffect(() => {
+    setWeekdayOfferSelected(false);
+    setWeekendOfferSelected(false);
+  }, [normalizedCheckIn, normalizedCheckOut]);
 
-  const calculateDiscount = () => {
-    if (isSingleWillowCottage) return 0;
-    if (!isCouponApplied || nights <= 0) return 0;
-    const clean = (couponCode || "STAYW26").trim().toUpperCase();
-
-    if (clean.includes("26") || clean === "STAYW26" || clean === "WEEKDAY26" || clean.includes("28") || clean === "STAYW28") {
-      // 26% discount strictly on Normal Mon-Thu Weekdays + 5% discount on Weekends & Long Weekends
-      const weekdayDisc = Math.round(normalWeekdayEligibleBase * 0.26);
-      const weekendDisc = Math.round(weekendAndHolidayEligibleBase * 0.05);
-      return weekdayDisc + weekendDisc;
+  // Refresh the selected dates, guest count and chosen coupon against the
+  // database so the displayed nightly rates and total stay in sync.
+  useEffect(() => {
+    if (!propertySlug || nights <= 0 || isRangeInvalid(normalizedCheckIn, normalizedCheckOut)) {
+      setLiveQuote(null);
+      setLiveQuoteStatus("idle");
+      return;
     }
 
-    if (clean === "STAY5" || clean === "WEEKEND5") {
-      return Math.round((normalWeekdayEligibleBase + weekendAndHolidayEligibleBase) * 0.05);
-    }
+    let active = true;
+    setLiveQuote(null);
+    setLiveQuoteStatus("checking");
+    const timeout = window.setTimeout(async () => {
+      try {
+        const result = await checkAvailableVillasForDates({
+          villaSlug: propertySlug,
+          checkIn: format(normalizedCheckIn, "yyyy-MM-dd"),
+          checkOut: format(normalizedCheckOut, "yyyy-MM-dd"),
+          guests,
+          couponCode: couponCode || undefined,
+          cottageSelection: isWillowPeak ? cottageSelection : undefined,
+        });
+        if (!active) return;
+        if (!result.success) {
+          setLiveQuoteStatus("error");
+          return;
+        }
 
-    if (clean === "STAY10" || clean.includes("10")) {
-      return Math.round((normalWeekdayEligibleBase + weekendAndHolidayEligibleBase) * 0.10);
-    }
+        const match = result.villas?.find(villa => villa.slug === propertySlug);
+        if (!match) {
+          setLiveQuoteStatus("unavailable");
+          return;
+        }
+        const quote = parseLiveQuote(match);
+        if (!quote) {
+          setLiveQuoteStatus("error");
+          return;
+        }
+        setLiveQuote(quote);
+        setLiveQuoteStatus(quote.isAvailable && guests <= match.guests ? "available" : "unavailable");
+      } catch {
+        if (active) setLiveQuoteStatus("error");
+      }
+    }, 250);
 
-    const weekdayDisc = Math.round(normalWeekdayEligibleBase * 0.26);
-    const weekendDisc = Math.round(weekendAndHolidayEligibleBase * 0.05);
-    return weekdayDisc + weekendDisc;
-  };
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+    };
+  }, [propertySlug, normalizedCheckIn, normalizedCheckOut, guests, nights, isRangeInvalid, quoteRefreshToken, couponCode, isWillowPeak, cottageSelection]);
 
-  const discount = calculateDiscount();
-  const total = Math.max(0, subtotal + totalExtraGuestsCost + serviceFee + addOnsCost - discount);
+  const isLiveQuoteReady = liveQuoteStatus === "available" && liveQuote !== null;
+  const hasLivePrice = liveQuote !== null && (liveQuoteStatus === "available" || liveQuoteStatus === "unavailable");
+  const discount = hasLivePrice ? liveQuote.directSavings : 0;
+  const liveEstimatedTotal = hasLivePrice ? liveQuote.totalPrice + addOnsCost + foodAddOnCost : null;
+  const total = liveEstimatedTotal ?? 0;
+  const isDatesUnavailable = liveQuoteStatus === "unavailable";
+  const canRequestBooking = Boolean(isLiveQuoteReady && !isDatesUnavailable && nights > 0);
 
   const handleCheckInClick = () => {
     setCalendarTarget("checkIn");
@@ -602,19 +523,54 @@ const BookingCard = ({
 
   const handleBooking = async () => {
     if (!validateBookingDetails()) return;
+    if (!canRequestBooking || !liveQuote) {
+      setBookingError("Wait for the live rates and availability check before continuing.");
+      return;
+    }
 
     setIsLoading(true);
     try {
+      const latestResult = await checkAvailableVillasForDates({
+        villaSlug: propertySlug,
+        checkIn: format(normalizedCheckIn, "yyyy-MM-dd"),
+        checkOut: format(normalizedCheckOut, "yyyy-MM-dd"),
+        guests,
+        couponCode: couponCode || undefined,
+        cottageSelection: isWillowPeak ? cottageSelection : undefined,
+      });
+      const latestMatch = latestResult.success
+        ? latestResult.villas?.find(villa => villa.slug === propertySlug)
+        : undefined;
+      const latestQuote = parseLiveQuote(latestMatch);
+      if (!latestMatch || !latestQuote) {
+        setLiveQuoteStatus("unavailable");
+        setLiveQuote(null);
+        setBookingError("Those dates are no longer available. Choose new dates and refresh the live quote.");
+        return;
+      }
+      setLiveQuote(latestQuote);
+      if (!latestQuote.isAvailable || guests > latestMatch.guests) {
+        setLiveQuoteStatus("unavailable");
+        setBookingError("Those dates are no longer available. Choose another date range.");
+        return;
+      }
+      setLiveQuoteStatus("available");
+      if (!sameLiveQuote(liveQuote, latestQuote)) {
+        setBookingError("The live rates changed. Review the refreshed nightly prices and total, then continue again.");
+        return;
+      }
+
+      const liveTotal = latestQuote.totalPrice + addOnsCost + foodAddOnCost;
       const formattedCheckIn = format(checkIn, "dd MMM yyyy");
       const formattedCheckOut = format(checkOut, "dd MMM yyyy");
       const cottageInfoSection = isWillowPeak
-        ? `\n🏡 *Stay:* ${cottageSelection === "ALL" ? "All 3 cottages (entire estate)" : `Cottage ${cottageSelection}`}`
+        ? `\n🏡 *Stay:* ${cottageSelection === "ALL" ? "All 3 cottages (entire estate)" : cottageSelection === "TWO" ? "2 cottages (pair confirmed by concierge)" : `Cottage ${cottageSelection}`}`
         : "";
-      const addOnsSection = selectedAddOns.length > 0
-        ? `\n• *Add-ons:* ${selectedAddOns.join(", ")}`
+      const addOnsSection = bookingAddOns.length > 0
+        ? `\n• *Add-ons:* ${bookingAddOns.join(", ")}`
         : "";
-      const discountSection = discount > 0
-        ? `\n• *Direct savings:* ₹${discount.toLocaleString("en-IN")}`
+      const discountSection = latestQuote.directSavings > 0
+        ? `\n• *Direct savings:* ₹${latestQuote.directSavings.toLocaleString("en-IN")}`
         : "";
       const requestSection = specialRequest.trim()
         ? `\n• *Request:* ${specialRequest.trim()}`
@@ -627,7 +583,7 @@ const BookingCard = ({
 
 *Dates:* ${formattedCheckIn} to ${formattedCheckOut} (${nights} nights)
 *Guests:* ${guests}${addOnsSection}${discountSection}${requestSection}
-*Estimated total:* ₹${total.toLocaleString("en-IN")}
+*Live total:* ₹${liveTotal.toLocaleString("en-IN")}
 
 *Primary guest:* ${clientName.trim()}
 *WhatsApp:* ${clientPhone.trim()}${emailSection}
@@ -644,10 +600,10 @@ Please confirm availability and the final amount before confirming my booking.`;
         checkIn,
         checkOut,
         guests,
-        totalPrice: total,
+        totalPrice: liveTotal,
         couponCode: isCouponApplied ? couponCode : undefined,
-        addOns: selectedAddOns,
-        message: `WhatsApp booking request for ${villaName}. ${formattedCheckIn} to ${formattedCheckOut}. ${guests} guests. Estimated total ₹${total.toLocaleString("en-IN")}.${specialRequest.trim() ? ` Guest request: ${specialRequest.trim()}` : ""}`,
+        addOns: bookingAddOns,
+        message: `WhatsApp booking request for ${villaName}. ${formattedCheckIn} to ${formattedCheckOut}. ${guests} guests. Live total ₹${liveTotal.toLocaleString("en-IN")}.${specialRequest.trim() ? ` Guest request: ${specialRequest.trim()}` : ""}`,
         attribution: isAngleHouse ? getAngleHouseAttribution() : undefined,
       }).then(result => {
         if (isAngleHouse && result.success && result.leadId) {
@@ -667,6 +623,10 @@ Please confirm availability and the final amount before confirming my booking.`;
 
   const handleAwaitVerificationBooking = async () => {
     if (!validateBookingDetails()) return;
+    if (!canRequestBooking || !liveQuote || liveEstimatedTotal === null) {
+      setBookingError("Wait for the live rates and availability check before submitting your request.");
+      return;
+    }
 
     setIsSubmittingVerification(true);
     try {
@@ -679,8 +639,12 @@ Please confirm availability and the final amount before confirming my booking.`;
         checkOut: format(checkOut, "yyyy-MM-dd"),
         guests,
         addOns: selectedAddOns,
+        foodPackage: selectedFoodPackage || undefined,
+        foodGuests: selectedFoodPackage ? foodGuestCount : undefined,
         couponCode: isCouponApplied ? couponCode : undefined,
         cottageSelection: isWillowPeak ? cottageSelection : undefined,
+        expectedTotal: liveEstimatedTotal,
+        expectedNightlyRates: liveQuote.nightlyRates,
         specialRequest: specialRequest.trim() || undefined,
         attribution: isAngleHouse ? getAngleHouseAttribution() : undefined,
       });
@@ -693,6 +657,9 @@ Please confirm availability and the final amount before confirming my booking.`;
         onBookingComplete?.();
       } else {
         setBookingError(res.error || "Could not submit the request. Please try again.");
+        if (res.priceChanged) {
+          setQuoteRefreshToken(token => token + 1);
+        }
       }
     } catch (error) {
       console.error("Booking request failed:", error);
@@ -733,7 +700,7 @@ Please confirm availability and the final amount before confirming my booking.`;
             <span className="font-bold text-slate-800">{guests} Guest(s)</span>
           </div>
           <div className="flex justify-between text-slate-500">
-            <span>Total Estimated Bill:</span>
+            <span>Live total at request time:</span>
             <span className="font-bold text-slate-900 text-sm">₹{(submittedTotal ?? total).toLocaleString("en-IN")}</span>
           </div>
           <div className="flex justify-between text-slate-500">
@@ -746,7 +713,7 @@ Please confirm availability and the final amount before confirming my booking.`;
           <button
             type="button"
             onClick={() => {
-              const msg = `Hi Stay Willas, I submitted a booking request for *${villaName}* (Reference: ${submittedBookingId}) from ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Guests: ${guests}. Estimated total: ₹${(submittedTotal ?? total).toLocaleString("en-IN")}. Name: ${clientName}. WhatsApp: ${clientPhone}. Please confirm availability and final pricing.`;
+              const msg = `Hi Stay Willas, I submitted a booking request for *${villaName}* (Reference: ${submittedBookingId}) from ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Guests: ${guests}. Live total at request time: ₹${(submittedTotal ?? total).toLocaleString("en-IN")}. Name: ${clientName}. WhatsApp: ${clientPhone}. Please confirm availability and final pricing.`;
               window.open(`https://wa.me/919619042310?text=${encodeWhatsAppMessage(msg)}`, "_blank");
             }}
             className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
@@ -772,64 +739,60 @@ Please confirm availability and the final amount before confirming my booking.`;
         ? "p-2 sm:p-4 rounded-2xl relative shadow-none border-none" 
         : "border border-border-subtle/80 rounded-3xl p-5 sm:p-7 lg:p-8 sticky top-28 shadow-[0_12px_48px_rgba(27,53,100,0.08)]"
     }`}>
-      <div className="flex items-end justify-between mb-6 pb-4 border-b border-border-subtle/50">
+      <div className={`flex items-end justify-between gap-3 ${isModal ? "mb-3 pb-2 sm:mb-4 sm:pb-3" : "mb-6 pb-4"} border-b border-border-subtle/50`}>
         <div>
           <span className="text-[10px] sm:text-[11px] text-slate-500 font-bold uppercase tracking-widest block mb-0.5">
-            Starting at
+            {nights > 0 ? "Live average for your dates" : "Live pricing"}
           </span>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">
-              ₹{isWillowPeak 
-                ? (Math.round(5999 * cottagesCount)).toLocaleString("en-IN") 
-                : (nights > 0 && subtotal > 0
-                    ? Math.round(subtotal / nights).toLocaleString("en-IN")
-                    : (typeof price === "number" ? price.toLocaleString("en-IN") : price))}
+            <span className={`${isModal ? "text-2xl sm:text-3xl" : "text-3xl sm:text-4xl"} font-heading text-[#1B3564] font-black`}>
+              {hasLivePrice && liveQuote
+                ? `₹${Math.round(liveQuote.roomSubtotal / Math.max(1, nights)).toLocaleString("en-IN")}`
+                : nights > 0
+                  ? liveQuoteStatus === "unavailable" ? "Unavailable" : liveQuoteStatus === "error" ? "—" : "Checking…"
+                  : "Choose dates"}
             </span>
-            <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">
-              / night {isWillowPeak ? (cottageSelection === "ALL" ? "(Entire Estate - 12 Guests)" : `(Cottage ${cottageSelection})`) : ""}
-            </span>
+            {nights > 0 && hasLivePrice && <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">/ night</span>}
           </div>
           <div className="text-[10px] font-semibold text-amber-800 bg-amber-50/90 border border-amber-200 rounded-lg px-2 py-0.5 mt-1 flex items-center gap-1.5">
             <span>ℹ️</span>
-            <span>Pricing varies between weekdays and weekends.</span>
+            <span>{nights > 0 ? "Rates vary by date and demand. Your quote reflects these dates." : "Choose dates to see the current nightly rates."}</span>
           </div>
-          {isWillowPeak && (
-            <div className="text-[10.5px] font-medium text-slate-500 mt-1">
-              {cottageSelection === "ALL"
-                ? "From ₹15,000/n Weekday • All 3 Cottages (A, B, C) — Full Estate (up to 12 Guests)"
-                : `From ₹4,999/n Weekday • Cottage ${cottageSelection} (${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"}) (up to 4 Guests)`
-              }
-            </div>
-          )}
         </div>
-        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${
-          isOverlapping ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-        }`}>
-          <span className={`w-2 h-2 rounded-full ${isOverlapping ? 'bg-red-500' : 'bg-emerald-500 animate-pulse'}`} />
-          {isOverlapping ? 'Unavailable' : 'No conflict shown'}
+        <div className={`flex shrink-0 flex-col items-start gap-0.5 ${isModal ? "px-2.5 py-1.5" : "px-3 py-2"} rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${
+          isDatesUnavailable ? "bg-red-600 text-white border border-red-700" : liveQuoteStatus === "available" ? "bg-[#064E3B] text-white border border-[#064E3B]" : "bg-amber-50 text-amber-900 border border-amber-200"
+        }`} aria-live="polite">
+          <span className="opacity-80">Live availability</span>
+          <span className="flex items-center gap-1.5 text-[10px] sm:text-xs">
+            <span className={`w-2 h-2 rounded-full ${isDatesUnavailable ? "bg-white" : liveQuoteStatus === "available" ? "bg-emerald-300" : "bg-amber-500 animate-pulse"}`} />
+            {isDatesUnavailable ? "Unavailable" : liveQuoteStatus === "available" ? "Available" : liveQuoteStatus === "error" ? "Check failed" : "Checking…"}
+          </span>
         </div>
       </div>
 
-      <div className="space-y-4 mb-6">
+      <div className={isModal ? "space-y-3 mb-4 sm:space-y-4 sm:mb-6" : "space-y-4 mb-6"}>
         {/* Willow Peak Cottage Selector - A, B, C or ALL */}
         {isWillowPeak && !lockCottageSelection && (
-          <div className="w-full bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 text-left shadow-xs space-y-2.5">
+          <div className="w-full bg-slate-50 border border-slate-200/90 rounded-2xl p-3 sm:p-4 text-left shadow-xs space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="text-[10.5px] font-black uppercase tracking-wider text-[#1B3564] flex items-center gap-1.5 font-sans">
                 <span>🏡</span> Select Cottage Allocation:
               </span>
               <span className="text-[10px] font-bold text-[#DAA520] bg-[#1B3564] px-2 py-0.5 rounded-md">
-                {cottageSelection === "ALL" 
-                  ? "Full Estate (Breeze, Crest & Heaven)" 
-                  : `${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (1 Cottage)`}
+                {cottageSelection === "ALL"
+                  ? "Full Estate (Breeze, Crest & Heaven)"
+                  : cottageSelection === "TWO"
+                    ? "2 Cottages · up to 8 guests"
+                    : `${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (1 Cottage)`}
               </span>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 sm:gap-2">
               {[
                 { id: "A", label: "Breeze", sub: "Max 4 Guests" },
                 { id: "B", label: "Crest", sub: "Max 4 Guests" },
                 { id: "C", label: "Heaven", sub: "Max 4 Guests" },
+                { id: "TWO", label: "2 Cottages", sub: "5–8 Guests" },
                 { id: "ALL", label: "All 3 Cottages", sub: "Breeze, Crest, Heaven" },
               ].map((item) => {
                 const isSelected = cottageSelection === item.id;
@@ -838,13 +801,13 @@ Please confirm availability and the final amount before confirming my booking.`;
                     key={item.id}
                     type="button"
                     onClick={() => {
-                      const newSel = item.id as "A" | "B" | "C" | "ALL";
+                      const newSel = item.id as "A" | "B" | "C" | "TWO" | "ALL";
                       setCottageSelection(newSel);
-                      if (newSel !== "ALL" && guests > 4) {
-                        setGuests(4);
-                      } else if (newSel === "ALL" && guests < 5) {
-                        setGuests(6);
-                      }
+                      const selectionMax = newSel === "ALL" ? 12 : newSel === "TWO" ? 8 : 4;
+                      const selectionMin = newSel === "TWO" ? 5 : 1;
+                      const nextGuests = Math.max(selectionMin, Math.min(selectionMax, guests));
+                      setGuests(nextGuests);
+                      setGuestInput(String(nextGuests));
                     }}
                     className={`py-2 px-1.5 sm:px-2 rounded-xl text-center transition-all cursor-pointer border ${
                       isSelected
@@ -862,22 +825,13 @@ Please confirm availability and the final amount before confirming my booking.`;
             </div>
           </div>
         )}
-        {/* Live Admin Panel Sync Status Badge */}
-        <div className="flex items-center justify-between bg-slate-100/90 px-4 py-2.5 rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-slate-200/80">
-            <span className="flex items-center gap-2 text-[#1B3564]">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            Calendar check
-          </span>
-          <span className="text-[#DAA520] font-black">Concierge confirms</span>
-        </div>
-
         {/* Date picker pair */}
         <div className={`grid grid-cols-2 gap-px bg-[#E2E8F0] border rounded-2xl overflow-hidden relative transition-all duration-300 ${
           showCalendar ? 'border-[#1B3564] shadow-md ring-2 ring-[#1B3564]/10' : 'border-border-subtle hover:border-[#1B3564]/40'
         }`}>
           <div 
             onClick={handleCheckInClick}
-            className={`relative p-3.5 sm:p-4 text-left cursor-pointer transition-colors ${
+            className={`relative ${isModal ? "p-3" : "p-3.5 sm:p-4"} text-left cursor-pointer transition-colors ${
               showCalendar && calendarTarget === 'checkIn' ? 'bg-[#1B3564]/5' : 'bg-white hover:bg-slate-50'
             }`}
           >
@@ -889,7 +843,7 @@ Please confirm availability and the final amount before confirming my booking.`;
           </div>
           <div 
             onClick={handleCheckOutClick}
-            className={`relative p-3.5 sm:p-4 text-left border-l border-border-subtle cursor-pointer transition-colors ${
+            className={`relative ${isModal ? "p-3" : "p-3.5 sm:p-4"} text-left border-l border-border-subtle cursor-pointer transition-colors ${
               showCalendar && calendarTarget === 'checkOut' ? 'bg-[#1B3564]/5' : 'bg-white hover:bg-slate-50'
             }`}
           >
@@ -901,6 +855,181 @@ Please confirm availability and the final amount before confirming my booking.`;
           </div>
         </div>
 
+        {propertySlug && nights > 0 && (
+          <section className={`rounded-2xl border border-[#DAA520]/35 bg-[#FAF8F5] ${showCalendar || isModal ? "p-3" : "p-4"} text-left shadow-xs`} aria-label="Live price for your selected dates" aria-live="polite">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h4 className="text-sm font-extrabold text-[#1B3564]">Your dates, your price</h4>
+                <p className="mt-1 text-[11px] font-medium text-slate-600">
+                  {nights} {nights === 1 ? "night" : "nights"} · {guests} {guests === 1 ? "guest" : "guests"}
+                </p>
+              </div>
+              <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold ${liveQuoteStatus === "available" ? "bg-emerald-100 text-emerald-800" : isDatesUnavailable ? "bg-red-100 text-red-800" : "bg-amber-100 text-amber-900"}`}>
+                {liveQuoteStatus === "available" ? "Live quote" : isDatesUnavailable ? "Unavailable" : liveQuoteStatus === "error" ? "Live quote unavailable" : "Checking live rates…"}
+              </span>
+            </div>
+
+            {hasLivePrice && liveQuote ? showCalendar ? (
+              <div className="mt-2 flex items-center justify-between gap-3 border-t border-slate-200 pt-2">
+                <span className="text-[10px] text-slate-600">
+                  {nights} {nights === 1 ? "night" : "nights"} · ₹{Math.round(liveQuote.roomSubtotal / Math.max(1, nights)).toLocaleString("en-IN")}/night average
+                  {liveQuote.extraGuests > 0 ? ` · ${liveQuote.extraGuests} extra ${liveQuote.extraGuests === 1 ? "guest" : "guests"}` : ""}
+                </span>
+                <strong className="shrink-0 text-lg text-[#1B3564]">₹{(liveQuote.totalPrice + addOnsCost + foodAddOnCost).toLocaleString("en-IN")}</strong>
+              </div>
+            ) : (
+              <>
+                <div className="mt-3 max-h-36 space-y-2 overflow-y-auto border-y border-slate-200 py-2">
+                  {liveQuote.nightlyRates.map(night => (
+                    <div key={night.date} className="flex items-center justify-between gap-3 text-xs">
+                      <span className="font-medium text-slate-700">{format(new Date(`${night.date}T00:00:00`), "EEE, dd MMM")}</span>
+                      <span className="mr-auto text-[10px] text-slate-500">{night.label}</span>
+                      <strong className="text-[#1B3564]">₹{night.price.toLocaleString("en-IN")}</strong>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-2 space-y-1.5 text-xs">
+                  <div className="flex justify-between gap-2 text-slate-700">
+                    <span>Stay ({nights} {nights === 1 ? "night" : "nights"})</span>
+                    <span>₹{liveQuote.roomSubtotal.toLocaleString("en-IN")}</span>
+                  </div>
+                  {liveQuote.extraGuests > 0 && (
+                    <div className="flex justify-between gap-2 text-slate-700">
+                      <span>{liveQuote.extraGuests} extra {liveQuote.extraGuests === 1 ? "guest" : "guests"} × ₹{liveQuote.extraGuestFee.toLocaleString("en-IN")}/night</span>
+                      <span>₹{liveQuote.extraGuestTotal.toLocaleString("en-IN")}</span>
+                    </div>
+                  )}
+                  {liveQuote.directSavings > 0 && (
+                    <div className="flex justify-between gap-2 font-semibold text-emerald-800">
+                      <span>Direct savings</span>
+                      <span>−₹{liveQuote.directSavings.toLocaleString("en-IN")}</span>
+                    </div>
+                  )}
+                  {addOnsCost > 0 && (
+                    <div className="flex justify-between gap-2 text-slate-700">
+                      <span>Experiences ({selectedAddOns.length} selected)</span>
+                      <span>₹{addOnsCost.toLocaleString("en-IN")}</span>
+                    </div>
+                  )}
+                  {selectedFood && (
+                    <div className="flex justify-between gap-2 text-slate-700">
+                      <span>{selectedFood.label} {selectedFood.cuisine} food · {foodGuestCount} guests × {nights} nights</span>
+                      <span>₹{foodAddOnCost.toLocaleString("en-IN")}</span>
+                    </div>
+                  )}
+                  <div className="flex items-baseline justify-between gap-2 border-t border-slate-200 pt-2 text-[#1B3564]">
+                    <strong className="text-xs">Live total</strong>
+                    <strong className="text-xl">₹{(liveQuote.totalPrice + addOnsCost + foodAddOnCost).toLocaleString("en-IN")}</strong>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div role="status" className={`mt-3 rounded-xl border px-3 py-3 text-xs ${isDatesUnavailable ? "border-red-200 bg-red-50 text-red-800" : liveQuoteStatus === "error" ? "border-amber-200 bg-amber-50 text-amber-900" : "border-slate-200 bg-white text-slate-600"}`}>
+                {isDatesUnavailable
+                  ? "These dates are unavailable. The live nightly rates are shown above; choose another range to request a stay."
+                  : liveQuoteStatus === "error"
+                    ? <span className="flex items-center justify-between gap-3">We couldn’t load current rates. No estimate is shown. <button type="button" className="shrink-0 font-bold underline" onClick={() => setQuoteRefreshToken(token => token + 1)}>Try again</button></span>
+                    : "Fetching the current nightly rates for your dates…"}
+              </div>
+            )}
+
+            {hasLivePrice && liveQuote && (
+              <p className={`${showCalendar ? "mt-1.5" : "mt-2"} text-[10px] leading-relaxed text-slate-600`}>
+                Up to {liveQuote.baseGuests} {liveQuote.baseGuests === 1 ? "guest is" : "guests are"} included. {liveQuote.extraGuestFee > 0 ? `Each additional guest is ₹${liveQuote.extraGuestFee.toLocaleString("en-IN")} per night.` : "There is no additional guest charge."}
+                {addOnsCost > 0 ? ` Selected experiences add ₹${addOnsCost.toLocaleString("en-IN")}.` : " Optional experiences are available below."}
+                {selectedFood ? ` Food adds ₹${foodAddOnCost.toLocaleString("en-IN")} for ${foodGuestCount} guests across ${nights} ${nights === 1 ? "night" : "nights"}.` : " Food packages are optional and priced per guest, per night."}
+              </p>
+            )}
+          </section>
+        )}
+
+        {propertySlug && nights > 0 && (
+          <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2">
+          <section className="rounded-xl border border-emerald-200 bg-white p-3 text-left shadow-xs" aria-label="Offers for your selected dates">
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <div>
+                <h4 className="text-xs font-extrabold text-[#1B3564]">Offers for these dates</h4>
+                <p className="mt-0.5 text-[10px] text-slate-500">Only offers matching your dates can be applied.</p>
+              </div>
+              {isCouponApplied && <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-1 text-[9px] font-bold text-emerald-800">Applied</span>}
+            </div>
+            {(hasWeekdayOffer || hasWeekendOffer) ? <div className="grid gap-2">
+              {hasWeekdayOffer && (
+                <button
+                  type="button"
+                  aria-pressed={isWeekdayOfferApplied}
+                  onClick={() => setWeekdayOfferSelected(value => !value)}
+                  className={`rounded-lg border px-3 py-2 text-left transition-colors ${isWeekdayOfferApplied ? "border-emerald-500 bg-emerald-50" : "border-slate-200 bg-slate-50 hover:border-emerald-300"}`}
+                >
+                  <span className="flex items-center justify-between gap-2">
+                    <strong className="text-[11px] text-[#1B3564]">Weekday offer · 26% off</strong>
+                    <span className={`text-[9px] font-bold ${isWeekdayOfferApplied ? "text-emerald-800" : "text-[#9a6a00]"}`}>{isWeekdayOfferApplied ? "Applied" : "Apply"}</span>
+                  </span>
+                  <span className="mt-0.5 block text-[10px] text-slate-600">{normalWeekdayNightsCount} eligible {normalWeekdayNightsCount === 1 ? "night" : "nights"} · {isWeekdayOfferApplied ? "WEEKDAY26" : "Tap to apply"}</span>
+                </button>
+              )}
+              {hasWeekendOffer && (
+                <button
+                  type="button"
+                  aria-pressed={isWeekendOfferApplied}
+                  onClick={() => setWeekendOfferSelected(value => !value)}
+                  className={`rounded-lg border px-3 py-2 text-left transition-colors ${isWeekendOfferApplied ? "border-emerald-500 bg-emerald-50" : "border-slate-200 bg-slate-50 hover:border-emerald-300"}`}
+                >
+                  <span className="flex items-center justify-between gap-2">
+                    <strong className="text-[11px] text-[#1B3564]">Weekend offer · 5% off</strong>
+                    <span className={`text-[9px] font-bold ${isWeekendOfferApplied ? "text-emerald-800" : "text-[#9a6a00]"}`}>{isWeekendOfferApplied ? "Applied" : "Apply"}</span>
+                  </span>
+                  <span className="mt-0.5 block text-[10px] text-slate-600">{weekendAndHolidayNightsCount} eligible {weekendAndHolidayNightsCount === 1 ? "night" : "nights"} · {isWeekendOfferApplied ? "WEEKEND5" : "Tap to apply"}</span>
+                </button>
+              )}
+            </div> : <p className="rounded-lg bg-slate-50 px-3 py-3 text-[11px] leading-relaxed text-slate-600">No weekday or weekend offer applies to these dates.</p>}
+            {isWeekdayOfferApplied && isWeekendOfferApplied && (
+              <p className="mt-2 text-[10px] font-semibold text-emerald-800">Both date offers are combined in your quote.</p>
+            )}
+          </section>
+          <section className="rounded-xl border border-[#DAA520]/40 bg-[#FAF8F5] p-3 text-left shadow-xs" aria-label="Optional food add-on">
+            <div className="mb-2">
+              <h4 className="text-xs font-extrabold text-[#1B3564]">Food add-on</h4>
+              <p className="mt-0.5 text-[10px] text-slate-600">Choose a menu · price per guest, per night</p>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {foodPackages.map(option => {
+                const isSelected = selectedFoodPackage === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => setSelectedFoodPackage(isSelected ? null : option.id)}
+                    className={`min-h-[58px] rounded-lg border px-2 py-1.5 text-left transition-colors ${isSelected ? "border-[#1B3564] bg-[#1B3564] text-white ring-1 ring-[#1B3564]" : "border-slate-200 bg-white text-[#1B3564] hover:border-[#DAA520]"}`}
+                  >
+                    <span className="block text-[10px] font-extrabold">{option.label} · {option.cuisine === "Vegetarian" ? "Veg" : "Non-veg"}</span>
+                    <span className={`mt-0.5 block text-[10px] font-semibold ${isSelected ? "text-amber-200" : "text-slate-600"}`}>₹{option.price.toLocaleString("en-IN")} / guest / night</span>
+                  </button>
+                );
+              })}
+            </div>
+            {selectedFood ? (
+              <div className="mt-2 flex items-center justify-between gap-2 border-t border-[#DAA520]/25 pt-2">
+                <label htmlFor="food-guests" className="text-[10px] font-semibold text-slate-700">For how many guests?</label>
+                <select
+                  id="food-guests"
+                  value={foodGuestCount}
+                  onChange={event => setFoodGuests(Number(event.target.value))}
+                  className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-xs font-bold text-[#1B3564] outline-none focus:border-[#1B3564] focus:ring-2 focus:ring-[#1B3564]/15"
+                >
+                  {Array.from({ length: guests }, (_, index) => index + 1).map(count => (
+                    <option key={count} value={count}>{count} {count === 1 ? "guest" : "guests"}</option>
+                  ))}
+                </select>
+              </div>
+            ) : <p className="mt-2 text-[10px] text-slate-500">Pick a package to add it to your live quote.</p>}
+            {selectedFood && <p className="mt-1 text-right text-[10px] font-bold text-emerald-800">Food total for {foodGuestCount} guests: ₹{foodAddOnCost.toLocaleString("en-IN")}</p>}
+          </section>
+          </div>
+        )}
+
         {/* Dedicated Check Availability Trigger Button */}
         <button
           type="button"
@@ -911,7 +1040,7 @@ Please confirm availability and the final amount before confirming my booking.`;
               setCalendarError("");
             }
           }}
-          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white font-black text-xs sm:text-sm py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer tracking-wider uppercase border border-[#DAA520]/40"
+          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white font-black text-xs sm:text-sm py-2.5 px-5 rounded-xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer tracking-wider uppercase border border-[#DAA520]/40"
         >
           <CalendarIcon size={17} className="text-[#DAA520]" />
           <span>{showCalendar ? "Close Calendar" : "Check Date Availability"}</span>
@@ -919,7 +1048,7 @@ Please confirm availability and the final amount before confirming my booking.`;
 
         {/* Breathtakingly Premium Inline Calendar Picker */}
         {showCalendar && (
-          <div className="bg-slate-50 border border-slate-200 rounded-3xl p-4 sm:p-5 shadow-inner animate-fade-in space-y-4">
+          <div ref={calendarPanelRef} className="bg-slate-50 border border-slate-200 rounded-3xl p-3.5 sm:p-4 shadow-inner animate-fade-in space-y-3">
             <div className="flex items-center justify-between">
               <button 
                 type="button"
@@ -966,8 +1095,6 @@ Please confirm availability and the final amount before confirming my booking.`;
                 if (!day) return <div key={`empty-${idx}`} />;
                 
                 const isPast = day < new Date(new Date().setHours(0,0,0,0));
-                const isBooked = isDateBooked(day);
-                
                 const isSelCheckIn = normalizedCheckIn && day.toDateString() === normalizedCheckIn.toDateString();
                 const isSelCheckOut = normalizedCheckOut && day.toDateString() === normalizedCheckOut.toDateString();
                 const isInSelectedRange = normalizedCheckIn && normalizedCheckOut && day > normalizedCheckIn && day < normalizedCheckOut;
@@ -978,15 +1105,12 @@ Please confirm availability and the final amount before confirming my booking.`;
                 if (isPast) {
                   dayClass += "text-slate-350 cursor-not-allowed opacity-30";
                   buttonDisabled = true;
-                } else if (isBooked) {
-                  dayClass += "bg-red-100 text-red-900 cursor-not-allowed border border-red-300";
-                  buttonDisabled = true;
                 } else if (isSelCheckIn || isSelCheckOut) {
                   dayClass += "bg-[#1B3564] text-white shadow-md scale-105 z-10 cursor-pointer";
                 } else if (isInSelectedRange) {
                   dayClass += "bg-[#E7EDF6] text-[#1B3564] border border-[#C6D2E4] cursor-pointer";
                 } else {
-                  dayClass += "bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100 cursor-pointer";
+                  dayClass += "bg-white text-slate-800 border border-slate-200 hover:bg-emerald-50 hover:border-emerald-300 cursor-pointer";
                 }
                 
                 return (
@@ -996,27 +1120,15 @@ Please confirm availability and the final amount before confirming my booking.`;
                     disabled={buttonDisabled}
                     onClick={() => handleDayClick(day)}
                     className={`${dayClass} h-9 w-9 flex items-center justify-center mx-auto`}
-                    aria-label={`${format(day, "MMMM d")}, ${isPast ? "past date" : isBooked ? "unavailable" : isSelCheckIn ? "selected check-in" : isSelCheckOut ? "selected check-out" : isInSelectedRange ? "in your selected stay" : "available"}`}
-                    title={isBooked ? "Unavailable" : undefined}
+                    aria-label={`${format(day, "MMMM d")}, ${isPast ? "past date" : isSelCheckIn ? "selected check-in" : isSelCheckOut ? "selected check-out" : isInSelectedRange ? "in your selected stay" : "selectable date; availability checked after choosing your stay"}`}
                   >
                     {day.getDate()}
-                    {isBooked && (
-                      <span aria-hidden="true" className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-red-700" />
-                    )}
                   </button>
                 );
               })}
             </div>
             
             <div aria-label="Calendar key" className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-[10px] font-sans text-slate-600 pt-3 border-t border-slate-200/60 font-bold">
-              <div className="flex items-center gap-1.5">
-                <span aria-hidden="true" className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 block" />
-                <span>Available</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span aria-hidden="true" className="w-3 h-3 rounded bg-red-100 border border-red-300 block" />
-                <span>Unavailable</span>
-              </div>
               <div className="flex items-center gap-1.5">
                 <span aria-hidden="true" className="w-3 h-3 rounded bg-[#1B3564] block" />
                 <span>Selected</span>
@@ -1025,13 +1137,14 @@ Please confirm availability and the final amount before confirming my booking.`;
                 <span aria-hidden="true" className="w-3 h-3 rounded bg-[#E7EDF6] border border-[#C6D2E4] block" />
                 <span>Your stay</span>
               </div>
+              <span className="basis-full text-center font-medium normal-case tracking-normal text-slate-500">Availability is checked live after you choose both dates.</span>
             </div>
           </div>
         )}
 
         {/* Real-time Status Response Banner */}
-        {isOverlapping ? (
-          <div className="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500 animate-fade-in">
+        {isDatesUnavailable ? (
+          <div className="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-3 sm:p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500 animate-fade-in">
             <Info className="text-red-500 shrink-0 mt-0.5" size={18} />
             <div>
               <h5 className="font-extrabold text-xs uppercase tracking-wider text-red-900">These dates aren’t available</h5>
@@ -1041,44 +1154,57 @@ Please confirm availability and the final amount before confirming my booking.`;
             </div>
           </div>
         ) : (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-950 rounded-2xl p-4 flex items-start gap-3 text-left select-none shadow-sm border-l-4 border-l-emerald-500 animate-fade-in">
-            <CheckCircle2 className="text-emerald-600 shrink-0 mt-0.5" size={20} />
+          <div className={`${liveQuoteStatus === "available" ? "bg-emerald-50 border-emerald-200 text-emerald-950 border-l-emerald-500" : liveQuoteStatus === "error" ? "bg-amber-50 border-amber-200 text-amber-950 border-l-amber-500" : "bg-slate-50 border-slate-200 text-slate-800 border-l-slate-400"} border rounded-2xl p-3 sm:p-4 flex items-start gap-3 text-left select-none shadow-sm border-l-4 animate-fade-in`}>
+            {liveQuoteStatus === "available" ? (
+              <CheckCircle2 className="text-emerald-600 shrink-0 mt-0.5" size={20} />
+            ) : liveQuoteStatus === "error" ? (
+              <Info className="text-amber-700 shrink-0 mt-0.5" size={20} />
+            ) : (
+              <Loader2 className="text-amber-700 shrink-0 mt-0.5 animate-spin" size={20} />
+            )}
             <div>
-              <h5 className="font-extrabold text-xs uppercase tracking-wider text-emerald-950">No conflict shown for these dates</h5>
-              <p className="text-[11px] text-emerald-800 font-medium leading-relaxed mt-0.5">
-                Our calendar shows <strong className="font-bold">{format(checkIn, "dd MMM")} – {format(checkOut, "dd MMM")} ({nights} nights)</strong> as open. The concierge will recheck availability before confirming.
+              <h5 className="font-extrabold text-xs uppercase tracking-wider">{liveQuoteStatus === "available" ? "Available for your selected dates" : liveQuoteStatus === "error" ? "Rates are temporarily unavailable" : "Checking live availability"}</h5>
+              <p className="text-[11px] font-medium leading-relaxed mt-0.5">
+                {liveQuoteStatus === "available"
+                  ? <>Our live calendar shows <strong className="font-bold">{format(normalizedCheckIn, "dd MMM")} – {format(normalizedCheckOut, "dd MMM")} ({nights} {nights === 1 ? "night" : "nights"})</strong> as open. The concierge confirms your request before it is final.</>
+                  : liveQuoteStatus === "error"
+                    ? "We couldn’t reach the live calendar, so no rate is shown. Please try again shortly."
+                    : "We’re checking the latest bookings and rates for your dates."}
               </p>
             </div>
           </div>
         )}
 
         {/* Guests picker - Dual Type or Select Input */}
-        <div className="w-full bg-white p-4 text-left border border-border-subtle rounded-2xl flex items-center justify-between gap-4">
+        <div className={`w-full bg-white ${isModal ? "p-3 sm:p-4" : "p-4"} text-left border border-border-subtle rounded-2xl flex items-center justify-between gap-4`}>
           <div className="flex-1 min-w-0">
             <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">
-              Guests (Max {currentMaxGuests} {isWillowPeak ? (cottageSelection === "ALL" ? "for 3 Cottages" : "per Cottage") : ""})
+              Guests (Max {currentMaxGuests}{isWillowPeak ? cottageSelection === "ALL" ? " · 3 cottages" : cottageSelection === "TWO" ? " · 2 cottages" : " · 1 cottage" : ""})
             </span>
             <div className="flex items-center gap-2 mt-1">
               <input
-                type="number"
-                min={1}
-                max={currentMaxGuests}
-                className="w-12 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0"
-                value={guests}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={String(currentMaxGuests).length}
+                aria-label={`Number of guests, up to ${currentMaxGuests}`}
+                className="w-14 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0"
+                value={guestInput}
                 onChange={(e) => {
-                  const val = parseInt(e.target.value);
-                  if (!isNaN(val)) {
-                    setGuests(Math.min(currentMaxGuests, Math.max(1, val)));
-                  }
+                  const value = e.target.value.replace(/\D/g, "").slice(0, String(currentMaxGuests).length);
+                  setGuestInput(value);
+                  const count = Number.parseInt(value, 10);
+                  if (Number.isInteger(count) && count >= currentMinGuests && count <= currentMaxGuests) setGuests(count);
                 }}
+                onBlur={() => updateGuestCount(Number.parseInt(guestInput, 10) || guests)}
               />
               <span className="text-text-primary/30 text-xs font-bold select-none border-l border-border-subtle/60 pl-2">or select:</span>
               <select
                 value={guests}
-                onChange={(e) => setGuests(parseInt(e.target.value))}
+                onChange={(e) => updateGuestCount(Number.parseInt(e.target.value, 10))}
                 className="flex-1 bg-transparent text-text-primary text-sm font-bold border-none outline-none p-0 focus:ring-0 cursor-pointer appearance-none"
               >
-                {Array.from({ length: currentMaxGuests }, (_, i) => i + 1).map(num => (
+                {Array.from({ length: currentMaxGuests - currentMinGuests + 1 }, (_, i) => i + currentMinGuests).map(num => (
                   <option key={num} value={num} className="text-text-primary">
                     {num} Guest{num > 1 ? "s" : ""}
                   </option>
@@ -1091,19 +1217,21 @@ Please confirm availability and the final amount before confirming my booking.`;
 
         {/* Willow Peak Multi-Cottage Allocation Breakdown */}
         {isWillowPeak && (
-          <div className="w-full bg-gradient-to-br from-amber-50/90 to-orange-50/50 border border-amber-200/90 rounded-2xl p-4 text-left shadow-xs space-y-1.5 animate-fade-in">
+          <div className={`w-full bg-gradient-to-br from-amber-50/90 to-orange-50/50 border border-amber-200/90 rounded-2xl ${isModal ? "p-3 sm:p-4" : "p-4"} text-left shadow-xs space-y-1.5 animate-fade-in`}>
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
-                <span>🏡</span> Selected: {cottageSelection === "ALL" ? "All 3 Cottages (A, B, C)" : `Cottage ${cottageSelection}`}
+                <span>🏡</span> Selected: {cottageSelection === "ALL" ? "All 3 Cottages (A, B, C)" : cottageSelection === "TWO" ? "2 Cottages (pair confirmed by concierge)" : `Cottage ${cottageSelection}`}
               </span>
               <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-[#1B3564] text-[#DAA520]">
-                {cottageSelection === "ALL" ? "3 of 3 Cottages" : "1 of 3 Cottages"}
+                {cottageSelection === "ALL" ? "3 of 3 Cottages" : cottageSelection === "TWO" ? "2 of 3 Cottages" : "1 of 3 Cottages"}
               </span>
             </div>
             <p className="text-xs text-slate-700 leading-relaxed font-medium">
               {cottageSelection === "ALL"
                 ? `Full Estate: All 3 A-frame chalets (Breeze, Crest, and Heaven) reserved for your group of ${guests} guests (Max 12).`
-                : `Private Chalet: ${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (Cottage ${cottageSelection}) allocated for ${guests} guest(s) (Max 4). Features private en-suite jacuzzi and balcony.`
+                : cottageSelection === "TWO"
+                  ? `Two private A-frame cottages are requested for your group of ${guests} guests (Max 8). The concierge will confirm the available pair.`
+                  : `Private Chalet: ${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (Cottage ${cottageSelection}) allocated for ${guests} guest(s) (Max 4). Features private en-suite jacuzzi and balcony.`
               }
             </p>
             <div className="text-[11px] text-emerald-800 font-semibold pt-1 border-t border-amber-200/60 flex items-center gap-1.5">
@@ -1111,27 +1239,23 @@ Please confirm availability and the final amount before confirming my booking.`;
               <span>
                 {cottageSelection === "ALL"
                   ? "Entire estate selected — all three cottages are included in this request."
-                  : "This request is for one cottage; the other two may be booked separately."
+                  : cottageSelection === "TWO"
+                    ? "Two cottages are included; the booking team will confirm which pair is available."
+                    : "This request is for one cottage; the other two may be booked separately."
                 }
               </span>
             </div>
           </div>
         )}
 
-        {!isSingleWillowCottage && (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-left text-xs text-emerald-900">
-            Direct savings are included automatically: 26% on eligible weekdays and 5% on weekends and holidays.
-          </div>
-        )}
-
         {/* Contact Information Section */}
-        <div className="pt-4 border-t border-border-subtle/60 space-y-3">
+        <div className={`border-t border-border-subtle/60 ${isModal ? "pt-3 space-y-2.5 sm:pt-4 sm:space-y-3" : "pt-4 space-y-3"}`}>
           <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block text-left">
             Guest details for confirmation
           </span>
 
           {/* Full Name */}
-          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
+          <div className={`w-full bg-white ${isModal ? "p-3 sm:p-4" : "p-4"} border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300`}>
             <div className="flex-1 text-left">
               <label htmlFor="booking-guest-name" className="text-[9px] text-text-primary/60 uppercase tracking-widest block mb-0.5">Primary guest name <span className="text-red-600">*</span></label>
               <input
@@ -1152,7 +1276,7 @@ Please confirm availability and the final amount before confirming my booking.`;
           </div>
 
           {/* Phone Number */}
-          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
+          <div className={`w-full bg-white ${isModal ? "p-3 sm:p-4" : "p-4"} border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300`}>
             <div className="flex-1 text-left">
               <label htmlFor="booking-guest-phone" className="text-[9px] text-text-primary/60 uppercase tracking-widest block mb-0.5">WhatsApp number <span className="text-red-600">*</span></label>
               <input
@@ -1173,7 +1297,7 @@ Please confirm availability and the final amount before confirming my booking.`;
           </div>
 
           {/* Email Address */}
-          <div className="w-full bg-white p-4 border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300">
+          <div className={`w-full bg-white ${isModal ? "p-3 sm:p-4" : "p-4"} border border-border-subtle rounded-2xl flex items-center justify-between shadow-sm focus-within:border-[#1B3564] focus-within:ring-1 focus-within:ring-[#1B3564]/25 transition-all duration-300`}>
             <div className="flex-1 text-left">
               <label htmlFor="booking-guest-email" className="text-[9px] text-text-primary/60 uppercase tracking-widest block mb-0.5">Email address <span className="normal-case tracking-normal">(optional)</span></label>
               <input
@@ -1208,15 +1332,15 @@ Please confirm availability and the final amount before confirming my booking.`;
       </div>
 
       {/* FINAL STAY BILL & DYNAMIC RATE BREAKDOWN (Displayed in Step 2 above booking buttons) */}
-      {nights > 0 && (
-        <div className="space-y-4 pt-5 pb-5 mb-5 border-t border-b border-[#DAA520]/25 text-left">
+      {nights > 0 && isLiveQuoteReady && liveQuote && (
+        <div className={`${isModal ? "space-y-3 pt-3 pb-3 mb-4 sm:space-y-4 sm:pt-5 sm:pb-5 sm:mb-5" : "space-y-4 pt-5 pb-5 mb-5"} border-t border-b border-[#DAA520]/25 text-left`}>
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#1B3564] uppercase tracking-wider flex items-center gap-1.5">
               <Receipt size={13} className="text-[#DAA520]" />
-              <span>Your stay estimate · {nights} Night{nights > 1 ? "s" : ""}</span>
+              <span>Live quote · {nights} Night{nights > 1 ? "s" : ""}</span>
             </span>
             <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-black">
-              Dynamic Rates Applied
+              Live date-specific rates
             </span>
           </div>
 
@@ -1224,36 +1348,28 @@ Please confirm availability and the final amount before confirming my booking.`;
             <summary className="cursor-pointer text-xs font-bold text-[#1B3564]">View daily rates and savings</summary>
 
           {/* Detailed stay breakdown card */}
-          <div className="bg-[#FAF8F5] border border-[#DAA520]/20 rounded-2xl p-4 space-y-2.5 text-left select-none shadow-xs">
+          <div className={`bg-[#FAF8F5] border border-[#DAA520]/20 rounded-2xl ${isModal ? "p-3 sm:p-4" : "p-4"} space-y-2.5 text-left select-none shadow-xs`}>
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-[#1B3564]/70 uppercase tracking-[0.15em] block">
-                Scheduled Daily Rates
+                Live Daily Rates
               </span>
               <span className="text-[9px] text-slate-500 italic">
-                *Prices may vary due to demand
+                Rates vary by date, day of week and demand
               </span>
             </div>
             <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1 divide-y divide-slate-100">
-              {breakdown.map((item, idx) => (
-                <div key={idx} className="flex justify-between items-center text-xs text-slate-700 pt-1.5">
+              {liveQuote.nightlyRates.map((item) => (
+                <div key={item.date} className="flex justify-between items-center text-xs text-slate-700 pt-1.5">
                   <div className="flex items-center gap-1.5">
                     <span className="font-semibold text-slate-800">
-                      {format(item.date, "EEE, dd MMM yyyy")}
+                      {format(new Date(`${item.date}T00:00:00`), "EEE, dd MMM yyyy")}
                     </span>
-                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase tracking-tight ${
-                      item.type === "DAILY" 
-                        ? "bg-amber-100 text-amber-900 border border-amber-300"
-                        : item.type === "SEASONAL"
-                        ? "bg-purple-100 text-purple-900 border border-purple-300"
-                        : item.type === "SATURDAY" || item.type === "FRIDAY" || item.type === "SUNDAY" || item.type === "WEEKEND"
-                        ? "bg-blue-50 text-blue-800 border border-blue-200"
-                        : "bg-slate-100 text-slate-600"
-                    }`}>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded font-bold uppercase tracking-tight bg-slate-100 text-slate-600">
                       {item.label}
                     </span>
                   </div>
                   <span className="font-black text-[#1B3564]">
-                    ₹{(isWillowPeak && cottageSelection !== "ALL" ? Math.round(item.price / 3) : item.price).toLocaleString("en-IN")}
+                    ₹{item.price.toLocaleString("en-IN")}
                   </span>
                 </div>
               ))}
@@ -1261,21 +1377,27 @@ Please confirm availability and the final amount before confirming my booking.`;
 
             <div className="flex justify-between text-xs pt-2.5 border-t border-slate-200 font-bold text-slate-800">
               <span>Accommodation Subtotal ({nights}N)</span>
-              <span>₹{subtotal.toLocaleString("en-IN")}</span>
+              <span>₹{liveQuote.roomSubtotal.toLocaleString("en-IN")}</span>
             </div>
 
-            {totalExtraGuestsCost > 0 && (
+            {liveQuote.extraGuestTotal > 0 && (
               <div className="flex justify-between text-xs pt-1 font-bold text-slate-700">
-                <span>Extra Guests ({extraGuests} Pax × ₹{extraGuestFee.toLocaleString("en-IN")}/n × {nights}N)</span>
-                <span>₹{totalExtraGuestsCost.toLocaleString("en-IN")}</span>
+                <span>Extra Guests ({liveQuote.extraGuests} Pax × ₹{liveQuote.extraGuestFee.toLocaleString("en-IN")}/n × {nights}N)</span>
+                <span>₹{liveQuote.extraGuestTotal.toLocaleString("en-IN")}</span>
               </div>
             )}
           </div>
 
           {addOnsCost > 0 && (
             <div className="flex justify-between text-xs font-semibold text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
-              <span>Signature Experiences ({selectedAddOns.length} selected)</span>
+              <span>Experiences ({selectedAddOns.length} selected)</span>
               <span className="font-black text-[#1B3564]">₹{addOnsCost.toLocaleString("en-IN")}</span>
+            </div>
+          )}
+          {selectedFood && (
+            <div className="flex justify-between gap-3 text-xs font-semibold text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
+              <span>{selectedFood.label} {selectedFood.cuisine} food ({foodGuestCount} guests × {nights} nights)</span>
+              <span className="shrink-0 font-black text-[#1B3564]">₹{foodAddOnCost.toLocaleString("en-IN")}</span>
             </div>
           )}
 
@@ -1285,11 +1407,11 @@ Please confirm availability and the final amount before confirming my booking.`;
               <div className="flex items-center gap-1.5 text-left">
                 <Tag size={14} className="text-emerald-700 shrink-0" />
                 <div>
-                  <span>Direct Savings Applied ({couponCode || "STAYW26"})</span>
+                  <span>Offer savings applied ({couponCode})</span>
                   <span className="text-[10px] text-emerald-700 font-normal block">
                     {[
-                      normalWeekdayNightsCount > 0 ? `${normalWeekdayNightsCount} Weekday (26% off)` : null,
-                      weekendAndHolidayNightsCount > 0 ? `${weekendAndHolidayNightsCount} Weekend/Holiday (5% off)` : null,
+                      isWeekdayOfferApplied ? `${normalWeekdayNightsCount} weekday ${normalWeekdayNightsCount === 1 ? "night" : "nights"} (26% off)` : null,
+                      isWeekendOfferApplied ? `${weekendAndHolidayNightsCount} weekend/holiday ${weekendAndHolidayNightsCount === 1 ? "night" : "nights"} (5% off)` : null,
                     ].filter(Boolean).join(" + ")}
                   </span>
                 </div>
@@ -1298,28 +1420,22 @@ Please confirm availability and the final amount before confirming my booking.`;
             </div>
           )}
 
-          {isCouponApplied && discount === 0 && nights > 0 && (
-            <div className="text-[11px] text-amber-800 bg-amber-50 px-3 py-2 rounded-xl border border-amber-200 text-left">
-              ℹ️ <strong>Direct Offer Active:</strong> Direct savings applies to eligible nights (26% on normal weekdays, 5% on weekends &amp; holidays).
-            </div>
-          )}
-
           {/* Pricing Note */}
           <div className="text-[10px] text-amber-900 bg-amber-50/90 border border-amber-200/80 rounded-xl px-3 py-1.5 text-left font-medium flex items-center gap-1.5">
             <span>ℹ️</span>
-            <span><strong>Note:</strong> Pricing varies between weekdays and weekends. Verified final rates are calculated dynamically based on your chosen dates.</span>
+              <span><strong>Note:</strong> Rates vary by date and demand. Your quote updates for the dates you choose.</span>
           </div>
 
           </details>
 
           {/* Total Final Bill Highlight Box */}
-          <div className="p-4 bg-[#1B3564] text-white rounded-2xl flex items-center justify-between shadow-md">
+          <div className={`${isModal ? "p-3 sm:p-4" : "p-4"} bg-[#1B3564] text-white rounded-2xl flex items-center justify-between shadow-md`}>
             <div className="flex flex-col text-left">
               <span className="text-[10px] text-[#DAA520] font-bold uppercase tracking-wider block">
-                Estimated stay total
+                Live stay total
               </span>
               <span className="text-2xl font-black font-heading text-white">
-                ₹{total.toLocaleString("en-IN")}
+                ₹{(liveQuote.totalPrice + addOnsCost + foodAddOnCost).toLocaleString("en-IN")}
               </span>
               {discount > 0 && (
                 <span className="text-[10.5px] text-emerald-300 font-sans font-medium mt-0.5">
@@ -1347,7 +1463,7 @@ Please confirm availability and the final amount before confirming my booking.`;
         <button
           type="button"
           onClick={handleAwaitVerificationBooking}
-          disabled={isSubmittingVerification || nights <= 0 || isOverlapping}
+          disabled={isSubmittingVerification || !canRequestBooking}
           className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-4 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(224,83,76,0.35)] hover:shadow-[0_12px_35px_rgba(224,83,76,0.45)] flex items-center justify-between cursor-pointer border border-white/20 active:scale-[0.98] ring-2 ring-rose-300/30"
         >
           <div className="flex items-center gap-2.5">
@@ -1368,7 +1484,7 @@ Please confirm availability and the final amount before confirming my booking.`;
         <button
           type="button"
           onClick={handleBooking}
-          disabled={isLoading || nights <= 0 || isOverlapping}
+          disabled={isLoading || !canRequestBooking}
           className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-4 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider uppercase transition-all duration-300 shadow-md flex items-center justify-between cursor-pointer border-none active:scale-[0.98]"
         >
           <div className="flex items-center gap-2.5">

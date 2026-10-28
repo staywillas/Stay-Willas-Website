@@ -7,6 +7,13 @@ import path from "path";
 import { sendEmail } from "@/lib/mail";
 import { requireAdminSession } from "@/lib/session";
 
+async function revalidateVillaPricingPages(villaId: string) {
+  const villa = await prisma.villa.findUnique({ where: { id: villaId }, select: { slug: true } });
+  revalidatePath("/admin");
+  revalidatePath("/");
+  if (villa?.slug) revalidatePath(`/villa/${villa.slug}`);
+}
+
 // -------------------------------------------------------------------------
 // 1. Manual Bookings / Stays Operations
 // -------------------------------------------------------------------------
@@ -553,7 +560,7 @@ export async function setDailyPrice(villaId: string, dateStr: string, price: num
       },
     });
 
-    revalidatePath("/admin");
+    await revalidateVillaPricingPages(villaId);
     return { success: true, override };
   } catch (error: any) {
     console.error("Failed to set daily price:", error);
@@ -577,7 +584,7 @@ export async function deleteDailyPrice(villaId: string, dateStr: string) {
       },
     });
 
-    revalidatePath("/admin");
+    await revalidateVillaPricingPages(villaId);
     return { success: true };
   } catch (error: any) {
     console.error("Failed to delete daily price:", error);
@@ -679,7 +686,7 @@ export async function setDailyPriceRange(
 
     const results = await prisma.$transaction(upserts);
 
-    revalidatePath("/admin");
+    await revalidateVillaPricingPages(villaId);
     return { success: true, count: results.length, overrides: results };
   } catch (error: any) {
     console.error("Failed to set daily price range:", error);
@@ -737,7 +744,7 @@ export async function deleteDailyPriceRange(
       }
     }
 
-    revalidatePath("/admin");
+    await revalidateVillaPricingPages(villaId);
     return { success: true };
   } catch (error: any) {
     console.error("Failed to delete daily price range:", error);

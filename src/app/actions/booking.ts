@@ -8,6 +8,27 @@ import { sendAdminLeadNotification } from "@/lib/lead-notifications";
 import { categorizeNight } from "@/lib/calendar-holidays";
 import type { LeadAttribution } from "@/lib/angle-house-measurement";
 import { getTemporaryAvailabilityBlocks, hasTemporaryAvailabilityConflict } from "@/lib/temporary-availability-blocks";
+import { getGuestPricing } from "@/lib/guest-pricing";
+
+function calculateCouponDiscount(couponCode: string | undefined, weekdayTotal: number, weekendTotal: number) {
+  const code = couponCode?.trim().toUpperCase();
+  if (!code) return 0;
+
+  if (code === "WEEKDAY26") return Math.round(weekdayTotal * 0.26);
+  if (code === "WEEKEND5") return Math.round(weekendTotal * 0.05);
+  if (code === "STAY5") return Math.round((weekdayTotal + weekendTotal) * 0.05);
+  if (code === "STAY10") return Math.round((weekdayTotal + weekendTotal) * 0.10);
+
+  if (["STAYW26", "ESCAPE26", "LONAVALA26", "KHOPOLI26", "STAYW28"].includes(code) || code.includes("26") || code.includes("28")) {
+    return Math.round(weekdayTotal * 0.26) + Math.round(weekendTotal * 0.05);
+  }
+
+  return 0;
+}
+
+function dateKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
 
 function getStripe() {
   const apiKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder_build_key_0000000000000000";
@@ -23,7 +44,8 @@ export async function calculateStayPrice(
   villaId: string,
   checkIn: Date,
   checkOut: Date,
-  guests: number
+  guests: number,
+  cottageCountOverride?: number,
 ) {
   const villa = await prisma.villa.findUnique({
     where: { id: villaId },
@@ -32,11 +54,7 @@ export async function calculateStayPrice(
   
   if (!villa) throw new Error("Villa not found");
 
-  let totalStayPrice = 0;
-  let normalWeekdayStayPrice = 0;
-  let normalWeekdayNights = 0;
-  let weekendAndHolidayStayPrice = 0;
-  let weekendAndHolidayNights = 0;
+  const rawNightlyRates: Array<{ date: string; label: string; price: number; category: string }> = [];
   let currentDate = new Date(checkIn);
   currentDate.setHours(0, 0, 0, 0);
   const end = new Date(checkOut);
@@ -45,6 +63,7 @@ export async function calculateStayPrice(
 
   while (currentDate.getTime() < end.getTime()) {
     let nightPrice = 0;
+    let rateLabel = "Weekday rate";
     const checkY = currentDate.getFullYear();
     const checkM = currentDate.getMonth();
     const checkD = currentDate.getDate();
@@ -61,31 +80,37 @@ export async function calculateStayPrice(
 
     if (dailyOverride) {
       nightPrice = dailyOverride.price;
+      rateLabel = "Date-specific rate";
     } else {
       // 1. Check seasonal pricing table overrides
       const seasonalOverride = villa.seasonalPrices.find(sp => {
         const start = new Date(sp.startDate);
         const endSp = new Date(sp.endDate);
-        return currentDate.getTime() >= start.getTime() && currentDate.getTime() <= endSp.getTime();
+        return dateKey(currentDate) >= dateKey(start) && dateKey(currentDate) <= dateKey(endSp);
       });
 
       if (seasonalOverride) {
         nightPrice = seasonalOverride.price;
+        rateLabel = seasonalOverride.label || "Seasonal rate";
       } else {
         // 2. Check specific day-of-week pricing overrides
         const dayOfWeek = currentDate.getDay();
         
         if (dayOfWeek === 5 && villa.fridayPrice != null) {
           nightPrice = villa.fridayPrice;
+          rateLabel = "Friday rate";
         } else if (dayOfWeek === 6 && villa.saturdayPrice != null) {
           nightPrice = villa.saturdayPrice;
+          rateLabel = "Saturday rate";
         } else if (dayOfWeek === 0 && villa.sundayPrice != null) {
           nightPrice = villa.sundayPrice;
+          rateLabel = "Sunday rate";
         } else {
           // 3. Check legacy weekend pricing
           const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
           if (isWeekend && villa.weekendPrice) {
             nightPrice = villa.weekendPrice;
+            rateLabel = "Weekend rate";
           } else {
             // 4. Fallback to base pricing
             nightPrice = villa.price;
@@ -94,33 +119,36 @@ export async function calculateStayPrice(
       }
     }
 
-    totalStayPrice += nightPrice;
     const { category } = categorizeNight(currentDate);
-    if (category === "NORMAL_WEEKDAY") {
-      normalWeekdayStayPrice += nightPrice;
-      normalWeekdayNights++;
-    } else {
-      weekendAndHolidayStayPrice += nightPrice;
-      weekendAndHolidayNights++;
-    }
+    rawNightlyRates.push({ date: dateKey(currentDate), label: rateLabel, price: nightPrice, category });
 
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
   const isWillowPeak = villa.slug === "willow-peak";
-  const cottagesCount = isWillowPeak ? Math.max(1, Math.min(3, Math.ceil(guests / 4))) : 1;
-
-  if (isWillowPeak) {
-    // Proportional pricing based on number of cottages booked (1 cottage = 1/3, 2 = 2/3, 3 = 3/3)
-    totalStayPrice = Math.round(totalStayPrice * (cottagesCount / 3));
-    normalWeekdayStayPrice = Math.round(normalWeekdayStayPrice * (cottagesCount / 3));
-    weekendAndHolidayStayPrice = Math.round(weekendAndHolidayStayPrice * (cottagesCount / 3));
-  }
+  const cottagesCount = isWillowPeak
+    ? Math.max(1, Math.min(3, cottageCountOverride ?? Math.ceil(guests / 4)))
+    : 1;
+  const cottageRateFactor = isWillowPeak ? cottagesCount / 3 : 1;
+  const nightlyRates = rawNightlyRates.map((night) => ({
+    date: night.date,
+    label: night.label,
+    price: Math.round(night.price * cottageRateFactor),
+    category: night.category,
+  }));
+  const totalStayPrice = nightlyRates.reduce((sum, night) => sum + night.price, 0);
+  const normalWeekdayRates = nightlyRates.filter((night) => night.category === "NORMAL_WEEKDAY");
+  const weekendAndHolidayRates = nightlyRates.filter((night) => night.category !== "NORMAL_WEEKDAY");
+  const normalWeekdayStayPrice = normalWeekdayRates.reduce((sum, night) => sum + night.price, 0);
+  const normalWeekdayNights = normalWeekdayRates.length;
+  const weekendAndHolidayStayPrice = weekendAndHolidayRates.reduce((sum, night) => sum + night.price, 0);
+  const weekendAndHolidayNights = weekendAndHolidayRates.length;
 
   const nights = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
-  const baseGuestsCount = isWillowPeak ? (cottagesCount * 4) : (villa.baseGuests ?? villa.guests);
+  const guestPricing = getGuestPricing(villa.slug, villa.baseGuests, villa.extraGuestFee, villa.guests);
+  const baseGuestsCount = isWillowPeak ? (cottagesCount * 4) : guestPricing.includedGuests;
   const extraGuests = Math.max(0, guests - baseGuestsCount);
-  const extraGuestsCostPerNight = villa.extraGuestFee ? extraGuests * villa.extraGuestFee : 0;
+  const extraGuestsCostPerNight = guestPricing.extraGuestFee ? extraGuests * guestPricing.extraGuestFee : 0;
   const totalExtraGuestsCost = extraGuestsCostPerNight * (nights > 0 ? nights : 0);
   const normalWeekdayExtraGuestsCost = extraGuestsCostPerNight * normalWeekdayNights;
   const normalWeekdayEligibleTotal = normalWeekdayStayPrice + normalWeekdayExtraGuestsCost;
@@ -134,6 +162,7 @@ export async function calculateStayPrice(
     normalWeekdayNights,
     weekendAndHolidayEligibleTotal,
     weekendAndHolidayNights,
+    nightlyRates: nightlyRates.map(({ date, label, price }) => ({ date, label, price })),
     weekdayEligibleTotal: normalWeekdayEligibleTotal,
     baseRate: villa.price,
     extraGuestsCostPerNight,
@@ -153,6 +182,7 @@ export async function createCheckoutSession(formData: {
   selectedAddOns?: string[];
   userId?: string;
   couponCode?: string;
+  cottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
 }) {
   const checkInDate = new Date(formData.checkIn);
   const checkOutDate = new Date(formData.checkOut);
@@ -163,7 +193,18 @@ export async function createCheckoutSession(formData: {
       where: { id: formData.villaId }
     });
     const isWillowPeak = targetVilla?.slug === "willow-peak" || formData.villaName.toLowerCase().includes("willow");
-    const requiredCottages = isWillowPeak ? Math.max(1, Math.min(3, Math.ceil(formData.guests / 4))) : 1;
+    const requiredCottages = isWillowPeak
+      ? formData.cottageSelection === "ALL" ? 3
+        : formData.cottageSelection === "TWO" ? 2
+          : formData.cottageSelection ? 1
+            : Math.max(1, Math.min(3, Math.ceil(formData.guests / 4)))
+      : 1;
+    if (isWillowPeak && formData.cottageSelection) {
+      const maxGuests = requiredCottages * 4;
+      if (formData.guests > maxGuests) {
+        throw new Error(`This Willow Peak selection allows up to ${maxGuests} guests.`);
+      }
+    }
 
     // 1. STAGE A: Strict Double Booking & Lock Prevention using Transaction Checks
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
@@ -227,7 +268,7 @@ export async function createCheckoutSession(formData: {
       totalExtraGuestsCost, 
       normalWeekdayEligibleTotal,
       weekendAndHolidayEligibleTotal
-    } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate, formData.guests);
+    } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate, formData.guests, requiredCottages);
 
     // 3. STAGE C: Add-Ons Aggregate Costs
     let addOnsPrice = 0;
@@ -251,16 +292,7 @@ export async function createCheckoutSession(formData: {
     if (formData.couponCode && !isSingleWillowCottage) {
       const code = formData.couponCode.trim().toUpperCase();
 
-      if (code === "STAYW26" || code.includes("26") || code === "ESCAPE26" || code === "LONAVALA26" || code === "KHOPOLI26" || code === "STAYW28" || code.includes("28")) {
-        // 26% on normal weekdays + 5% on weekends and long weekends
-        discount = Math.round(normalWeekdayEligibleTotal * 0.26) + Math.round(weekendAndHolidayEligibleTotal * 0.05);
-      } else if (code === "STAY5" || code === "WEEKEND5") {
-        discount = Math.round((normalWeekdayEligibleTotal + weekendAndHolidayEligibleTotal) * 0.05);
-      } else if (code === "STAY10" || code.includes("10")) {
-        discount = Math.round((normalWeekdayEligibleTotal + weekendAndHolidayEligibleTotal) * 0.10);
-      } else {
-        discount = Math.round(normalWeekdayEligibleTotal * 0.26) + Math.round(weekendAndHolidayEligibleTotal * 0.05);
-      }
+      discount = calculateCouponDiscount(code, normalWeekdayEligibleTotal, weekendAndHolidayEligibleTotal);
     }
     const finalTotal = totalRoomPrice + totalExtraGuestsCost + addOnsPrice + serviceFee - discount;
 
@@ -268,6 +300,7 @@ export async function createCheckoutSession(formData: {
       userId: formData.userId || "GUEST_USER",
       guests: formData.guests,
       cottagesCount: requiredCottages,
+      cottageSelection: formData.cottageSelection,
       cottageLabel: isWillowPeak ? `${requiredCottages} of 3 Cottages` : undefined,
     });
 
@@ -491,6 +524,8 @@ export async function checkAvailableVillasForDates(data: {
   checkIn?: string;
   checkOut?: string;
   guests?: number;
+  couponCode?: string;
+  cottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
 }) {
   try {
     const region = data.destination && data.destination !== "all" && data.destination !== "All Locations" ? data.destination.trim() : "";
@@ -524,18 +559,38 @@ export async function checkAvailableVillasForDates(data: {
         bedrooms: true,
         bathrooms: true,
         guests: true,
+        baseGuests: true,
+        extraGuestFee: true,
         location: true,
         category: true,
         amenities: true,
         images: true,
-        dailyPrices: true,
-        seasonalPrices: true,
+        dailyPrices: data.checkIn && data.checkOut ? {
+          where: {
+            date: {
+              gte: new Date(data.checkIn),
+              lt: new Date(data.checkOut),
+            },
+          },
+        } : true,
+        seasonalPrices: data.checkIn && data.checkOut ? {
+          where: {
+            startDate: { lt: new Date(data.checkOut) },
+            endDate: { gte: new Date(data.checkIn) },
+          },
+        } : true,
         bookings: {
           where: {
-            OR: [
-              { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
-              { status: "HELD", createdAt: { gte: tenMinutesAgo } }
-            ]
+            AND: [
+              { OR: [
+                { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+                { status: "HELD", createdAt: { gte: tenMinutesAgo } },
+              ] },
+              ...(data.checkIn && data.checkOut ? [
+                { checkIn: { lt: new Date(data.checkOut) } },
+                { checkOut: { gt: new Date(data.checkIn) } },
+              ] : []),
+            ],
           },
           select: {
             checkIn: true,
@@ -568,6 +623,7 @@ export async function checkAvailableVillasForDates(data: {
           id: v.id,
           name: v.name,
           slug: v.slug,
+          isAvailable: true,
           price: v.price,
           bedrooms: v.bedrooms,
           bathrooms: v.bathrooms,
@@ -606,6 +662,7 @@ export async function checkAvailableVillasForDates(data: {
       const end = new Date(userCheckOut);
       let total = 0;
       let nightsCount = 0;
+      const nightlyRates: Array<{ date: string; label: string; price: number }> = [];
 
       while (cur.getTime() < end.getTime()) {
         let nightRate = v.price;
@@ -615,6 +672,7 @@ export async function checkAvailableVillasForDates(data: {
         const checkIso = `${checkY}-${String(checkM + 1).padStart(2, "0")}-${String(checkD).padStart(2, "0")}`;
 
         // Priority 1: Exact daily override
+        let rateLabel = "Weekday rate";
         const dailyOverride = v.dailyPrices?.find(dp => {
           if (!dp?.date) return false;
           const dDate = new Date(dp.date);
@@ -626,27 +684,33 @@ export async function checkAvailableVillasForDates(data: {
 
         if (dailyOverride) {
           nightRate = dailyOverride.price;
+          rateLabel = "Date-specific rate";
         } else {
           // Priority 2: Seasonal override
           const seasonal = v.seasonalPrices?.find(sp => {
             const start = new Date(sp.startDate);
             const endSp = new Date(sp.endDate);
-            return cur.getTime() >= start.getTime() && cur.getTime() <= endSp.getTime();
+            return checkIso >= dateKey(start) && checkIso <= dateKey(endSp);
           });
 
           if (seasonal) {
             nightRate = seasonal.price;
+            rateLabel = seasonal.label || "Seasonal rate";
           } else {
             // Priority 3: Day-of-week rates
             const dayOfWeek = cur.getDay();
             if (dayOfWeek === 5 && v.fridayPrice != null) {
               nightRate = v.fridayPrice;
+              rateLabel = "Friday rate";
             } else if (dayOfWeek === 6 && v.saturdayPrice != null) {
               nightRate = v.saturdayPrice;
+              rateLabel = "Saturday rate";
             } else if (dayOfWeek === 0 && v.sundayPrice != null) {
               nightRate = v.sundayPrice;
+              rateLabel = "Sunday rate";
             } else if ((dayOfWeek === 5 || dayOfWeek === 6) && v.weekendPrice) {
               nightRate = v.weekendPrice;
+              rateLabel = "Weekend rate";
             } else {
               nightRate = v.price;
             }
@@ -655,27 +719,84 @@ export async function checkAvailableVillasForDates(data: {
 
         total += nightRate;
         nightsCount++;
+        nightlyRates.push({ date: cur.toISOString().slice(0, 10), label: rateLabel, price: nightRate });
         cur.setDate(cur.getDate() + 1);
       }
 
-      return nightsCount > 0 ? Math.round(total / nightsCount) : v.price;
+      return { nightlyRates, averageNightlyRate: nightsCount > 0 ? Math.round(total / nightsCount) : v.price };
     };
+
+    const guestCount = Math.max(1, Math.min(data.guests ?? 2, 16));
+
+    const availableVillaIds = new Set(availableVillas.map(villa => villa.id));
+    const pricedVillas = specificSlug ? villas : availableVillas;
 
     return {
       success: true,
-      villas: availableVillas.map(v => ({
-        id: v.id,
-        name: v.name,
-        slug: v.slug,
-        price: calculateDynamicRate(v),
-        bedrooms: v.bedrooms,
-        bathrooms: v.bathrooms,
-        guests: v.guests,
-        location: v.location,
-        category: v.category,
-        amenities: v.amenities,
-        image: v.images[0] || "/images/hero-villa.webp"
-      }))
+      villas: pricedVillas.map(v => {
+        const rawRates = calculateDynamicRate(v);
+        const isWillowEstate = v.slug === "willow-peak";
+        const selectedCottages = isWillowEstate
+          ? data.cottageSelection
+            ? data.cottageSelection === "ALL" ? 3 : data.cottageSelection === "TWO" ? 2 : 1
+            : Math.max(1, Math.min(3, Math.ceil(guestCount / 4)))
+          : 1;
+        const rateFactor = isWillowEstate ? selectedCottages / 3 : 1;
+        const nightlyRates = rawRates.nightlyRates.map(night => ({
+          ...night,
+          price: Math.round(night.price * rateFactor),
+        }));
+        const averageNightlyRate = nightlyRates.length > 0
+          ? Math.round(nightlyRates.reduce((sum, night) => sum + night.price, 0) / nightlyRates.length)
+          : v.price;
+        const configuredGuestPricing = getGuestPricing(v.slug, v.baseGuests, v.extraGuestFee, v.guests);
+        const guestPricing = isWillowEstate
+          ? { ...configuredGuestPricing, includedGuests: selectedCottages * 4 }
+          : configuredGuestPricing;
+        const extraGuests = Math.max(0, guestCount - guestPricing.includedGuests);
+        const stayNights = nightlyRates.length;
+        const extraGuestTotal = extraGuests * guestPricing.extraGuestFee * stayNights;
+        const roomSubtotal = nightlyRates.reduce((sum, night) => sum + night.price, 0);
+        const weekdayRoomSubtotal = nightlyRates.reduce((sum, night) => {
+          const nightDate = new Date(`${night.date}T00:00:00.000Z`);
+          return categorizeNight(nightDate, "BASE").category === "NORMAL_WEEKDAY" ? sum + night.price : sum;
+        }, 0);
+        const weekdayNights = nightlyRates.filter(night =>
+          categorizeNight(new Date(`${night.date}T00:00:00.000Z`), "BASE").category === "NORMAL_WEEKDAY",
+        ).length;
+        const weekendAndHolidayNights = stayNights - weekdayNights;
+        const weekdayEligibleTotal = weekdayRoomSubtotal + extraGuests * guestPricing.extraGuestFee * weekdayNights;
+        const weekendAndHolidayEligibleTotal = roomSubtotal - weekdayRoomSubtotal + extraGuests * guestPricing.extraGuestFee * weekendAndHolidayNights;
+        const isSingleWillowCottage = v.slug.startsWith("willow-peak-cottage") || (isWillowEstate && selectedCottages < 3);
+        const directSavings = isSingleWillowCottage
+          ? 0
+          : calculateCouponDiscount(data.couponCode, weekdayEligibleTotal, weekendAndHolidayEligibleTotal);
+        const totalPrice = Math.max(0, roomSubtotal + extraGuestTotal - directSavings);
+
+        return {
+          id: v.id,
+          name: v.name,
+          slug: v.slug,
+          isAvailable: availableVillaIds.has(v.id),
+          price: averageNightlyRate,
+          bedrooms: v.bedrooms,
+          bathrooms: v.bathrooms,
+          guests: v.guests,
+          baseGuests: guestPricing.includedGuests,
+          cottagesCount: selectedCottages,
+          extraGuestFee: guestPricing.extraGuestFee,
+          extraGuests,
+          extraGuestTotal,
+          roomSubtotal,
+          directSavings,
+          totalPrice,
+          nightlyRates,
+          location: v.location,
+          category: v.category,
+          amenities: v.amenities,
+          image: v.images[0] || "/images/hero-villa.webp",
+        };
+      }),
     };
   } catch (error: any) {
     console.error("[Availability] Error:", error);
@@ -695,8 +816,12 @@ export async function createAwaitingVerificationBooking(data: {
   checkOut: string | Date;
   guests: number;
   addOns?: string[];
+  foodPackage?: "STANDARD_VEG" | "STANDARD_NON_VEG" | "DELUXE_VEG" | "DELUXE_NON_VEG";
+  foodGuests?: number;
   couponCode?: string;
-  cottageSelection?: string;
+  cottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
+  expectedTotal: number;
+  expectedNightlyRates: Array<{ date: string; label: string; price: number }>;
   specialRequest?: string;
   attribution?: LeadAttribution;
 }) {
@@ -749,16 +874,16 @@ export async function createAwaitingVerificationBooking(data: {
     if (data.guests > villa.guests) {
       return { success: false, error: `This stay allows up to ${villa.guests} guests.` };
     }
-    if (data.cottageSelection && !["A", "B", "C", "ALL"].includes(data.cottageSelection)) {
-      return { success: false, error: "Choose a valid cottage option." };
-    }
     if (villa.slug === "willow-peak") {
       if (!data.cottageSelection) {
         return { success: false, error: "Choose a Willow Peak cottage option." };
       }
-      const maxGuestsForSelection = data.cottageSelection === "ALL" ? 12 : 4;
+      const maxGuestsForSelection = data.cottageSelection === "ALL" ? 12 : data.cottageSelection === "TWO" ? 8 : 4;
       if (data.guests > maxGuestsForSelection) {
         return { success: false, error: `This cottage selection allows up to ${maxGuestsForSelection} guests.` };
+      }
+      if (data.cottageSelection === "TWO" && data.guests < 5) {
+        return { success: false, error: "Choose at least 5 guests for a two-cottage stay." };
       }
     }
 
@@ -807,22 +932,62 @@ export async function createAwaitingVerificationBooking(data: {
       return { success: false, error: "One of the selected extras is no longer available. Refresh and try again." };
     }
 
-    const pricingGuests = villa.slug === "willow-peak" && data.cottageSelection === "ALL"
-      ? Math.max(data.guests, 12)
-      : data.guests;
-    const pricing = await calculateStayPrice(villa.id, checkInDate, checkOutDate, pricingGuests);
+    const foodPackageRates = {
+      STANDARD_VEG: 1250,
+      STANDARD_NON_VEG: 1250,
+      DELUXE_VEG: 1550,
+      DELUXE_NON_VEG: 1550,
+    } as const;
+    if (data.foodPackage && !Object.prototype.hasOwnProperty.call(foodPackageRates, data.foodPackage)) {
+      return { success: false, error: "That food package is no longer available. Refresh and try again." };
+    }
+    if (data.foodPackage && (!Number.isInteger(data.foodGuests) || (data.foodGuests ?? 0) < 1 || (data.foodGuests ?? 0) > data.guests)) {
+      return { success: false, error: "Choose a valid number of guests for the food package." };
+    }
+
+    const selectedCottages = villa.slug === "willow-peak"
+      ? data.cottageSelection === "ALL" ? 3 : data.cottageSelection === "TWO" ? 2 : 1
+      : undefined;
+    const pricing = await calculateStayPrice(villa.id, checkInDate, checkOutDate, data.guests, selectedCottages);
     const addOnsTotal = selectedAddOns.reduce((sum, item) => {
       if (item === "Gourmet Chef Experience") return sum + addOnRates[item] * nights;
       if (item === "Curated Vineyard Tour") return sum + addOnRates[item] * data.guests;
       return sum + addOnRates[item];
     }, 0);
+    const foodAddOnTotal = data.foodPackage
+      ? foodPackageRates[data.foodPackage] * (data.foodGuests ?? 0) * nights
+      : 0;
+    const foodPackageLabels = {
+      STANDARD_VEG: "Standard vegetarian",
+      STANDARD_NON_VEG: "Standard non-vegetarian",
+      DELUXE_VEG: "Deluxe vegetarian",
+      DELUXE_NON_VEG: "Deluxe non-vegetarian",
+    } as const;
+    const foodAddOnDescription = data.foodPackage
+      ? `${foodPackageLabels[data.foodPackage]} food package (${data.foodGuests} guests × ${nights} nights)`
+      : undefined;
+    const bookingAddOns = foodAddOnDescription ? [...selectedAddOns, foodAddOnDescription] : selectedAddOns;
     const isWillowCottage = villa.slug.startsWith("willow-peak-cottage");
     const isSingleWillowCottage = isWillowCottage || (villa.slug === "willow-peak" && pricing.cottagesCount < 3);
     const couponCode = data.couponCode?.trim().toUpperCase();
-    const discount = couponCode === "STAYW26" && !isSingleWillowCottage
-      ? Math.round(pricing.normalWeekdayEligibleTotal * 0.26) + Math.round(pricing.weekendAndHolidayEligibleTotal * 0.05)
-      : 0;
-    const totalPrice = Math.max(0, pricing.totalRoomPrice + pricing.totalExtraGuestsCost + addOnsTotal - discount);
+    const discount = isSingleWillowCottage
+      ? 0
+      : calculateCouponDiscount(couponCode, pricing.normalWeekdayEligibleTotal, pricing.weekendAndHolidayEligibleTotal);
+    const totalPrice = Math.max(0, pricing.totalRoomPrice + pricing.totalExtraGuestsCost + addOnsTotal + foodAddOnTotal - discount);
+    const expectedRatesMatch = Array.isArray(data.expectedNightlyRates)
+      && data.expectedNightlyRates.length === pricing.nightlyRates.length
+      && pricing.nightlyRates.every((night, index) => {
+        const expected = data.expectedNightlyRates[index];
+        return expected?.date === night.date && expected?.price === night.price && expected?.label === night.label;
+      });
+    if (!Number.isFinite(data.expectedTotal) || Math.round(data.expectedTotal) !== totalPrice || !expectedRatesMatch) {
+      return {
+        success: false,
+        priceChanged: true,
+        totalPrice,
+        error: "The scheduled rates have changed. Your live quote is refreshing—please review it before sending your request.",
+      };
+    }
 
     const attribution = data.attribution
       ? Object.fromEntries(
@@ -839,6 +1004,9 @@ export async function createAwaitingVerificationBooking(data: {
       guests: data.guests,
       cottageSelection: villa.slug.includes("willow") ? data.cottageSelection : undefined,
       coupon: couponCode || null,
+      foodPackage: data.foodPackage || null,
+      foodGuests: data.foodPackage ? data.foodGuests : null,
+      foodAddOnTotal,
       specialRequest,
       attribution,
       submittedAt: new Date().toISOString(),
@@ -852,7 +1020,7 @@ export async function createAwaitingVerificationBooking(data: {
         checkOut: checkOutDate,
         totalPrice,
         status: "AWAITING_VERIFICATION",
-        addOns: selectedAddOns,
+        addOns: bookingAddOns,
         kycName: guestName,
       },
       select: { id: true },
@@ -865,6 +1033,7 @@ export async function createAwaitingVerificationBooking(data: {
       "Direct booking request awaiting concierge verification.",
       "Availability and final price must be confirmed with the guest; dates are not held and no website payment was collected.",
       unitDetail ? `Unit: ${unitDetail}.` : "",
+      foodAddOnDescription ? `Food add-on: ${foodAddOnDescription}; ₹${foodAddOnTotal.toLocaleString("en-IN")} total.` : "",
       specialRequest ? `Guest request: ${specialRequest}` : "",
     ].filter(Boolean).join(" ");
 
@@ -879,7 +1048,7 @@ export async function createAwaitingVerificationBooking(data: {
       guests: data.guests,
       totalPrice,
       couponCode: couponCode || undefined,
-      addOns: selectedAddOns.length ? selectedAddOns : undefined,
+      addOns: bookingAddOns.length ? bookingAddOns : undefined,
       message: requestMessage,
     }).catch((err) => console.error("Failed to dispatch booking request email:", err));
 

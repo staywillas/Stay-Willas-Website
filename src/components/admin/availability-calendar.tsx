@@ -1,6 +1,7 @@
 "use client";
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import { getGuestPricing } from "@/lib/guest-pricing";
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { 
@@ -2181,8 +2182,11 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                 const bVilla = villas.find(v => v.id === selectedBooking.villaId);
                 const bNights = Math.max(1, Math.round((new Date(selectedBooking.checkOut).getTime() - new Date(selectedBooking.checkIn).getTime()) / (1000 * 60 * 60 * 24)));
                 const bRate = activeDetails.nightlyRate || (bVilla?.price) || Math.round(selectedBooking.totalPrice / bNights);
-                const bBaseGuests = bVilla?.baseGuests ?? 12;
-                const bExtraFee = bVilla?.extraGuestFee ?? 1500;
+                const guestPricing = bVilla
+                  ? getGuestPricing(bVilla.slug, bVilla.baseGuests, bVilla.extraGuestFee, bVilla.guests)
+                  : { includedGuests: 12, extraGuestFee: 1500 };
+                const bBaseGuests = guestPricing.includedGuests;
+                const bExtraFee = guestPricing.extraGuestFee;
                 const bGuests = activeDetails.guests || 2;
                 const bExtraGuestsCount = Math.max(0, bGuests - bBaseGuests);
                 const bExtraGuestsCost = bExtraGuestsCount * bExtraFee * bNights;
