@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { 
   Calendar as CalendarIcon, Users, Info, Loader2, Mail, Phone, CheckCircle2,
   ChefHat, Wine, Gift, Receipt, Tag, Car,
-  ChevronLeft, ChevronRight, ShieldCheck
+  ChevronLeft, ChevronRight, ShieldCheck, ArrowRight
 } from "lucide-react";
 import { format, addDays, differenceInDays } from "date-fns";
 import { createAwaitingVerificationBooking } from "@/app/actions/booking";
@@ -208,6 +208,7 @@ const BookingCard = ({
   const [clientPhone, setClientPhone] = useState("");
   const [specialRequest, setSpecialRequest] = useState("");
   const [bookingError, setBookingError] = useState("");
+  const [bookingStep, setBookingStep] = useState<"quote" | "details">("quote");
   const [calendarError, setCalendarError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmittingVerification, setIsSubmittingVerification] = useState(false);
@@ -739,6 +740,12 @@ Please confirm availability and the final amount before confirming my booking.`;
         ? "p-2 sm:p-4 rounded-2xl relative shadow-none border-none" 
         : "border border-border-subtle/80 rounded-3xl p-5 sm:p-7 lg:p-8 sticky top-28 shadow-[0_12px_48px_rgba(27,53,100,0.08)]"
     }`}>
+      {isModal && (
+        <div className="mb-3 grid grid-cols-2 gap-2" aria-label="Booking steps">
+          <div aria-current={bookingStep === "quote" ? "step" : undefined} className={`rounded-lg px-2.5 py-2 text-[10px] font-bold ${bookingStep === "quote" ? "bg-[#1B3564] text-white" : "bg-slate-100 text-slate-500"}`}>1 · Dates, rates &amp; extras</div>
+          <div aria-current={bookingStep === "details" ? "step" : undefined} className={`rounded-lg px-2.5 py-2 text-[10px] font-bold ${bookingStep === "details" ? "bg-[#1B3564] text-white" : "bg-slate-100 text-slate-500"}`}>2 · Guest details</div>
+        </div>
+      )}
       <div className={`flex items-end justify-between gap-3 ${isModal ? "mb-3 pb-2 sm:mb-4 sm:pb-3" : "mb-6 pb-4"} border-b border-border-subtle/50`}>
         <div>
           <span className="text-[10px] sm:text-[11px] text-slate-500 font-bold uppercase tracking-widest block mb-0.5">
@@ -771,6 +778,8 @@ Please confirm availability and the final amount before confirming my booking.`;
       </div>
 
       <div className={isModal ? "space-y-3 mb-4 sm:space-y-4 sm:mb-6" : "space-y-4 mb-6"}>
+        {bookingStep === "quote" && (
+          <>
         {/* Willow Peak Cottage Selector - A, B, C or ALL */}
         {isWillowPeak && !lockCottageSelection && (
           <div className="w-full bg-slate-50 border border-slate-200/90 rounded-2xl p-3 sm:p-4 text-left shadow-xs space-y-2.5">
@@ -1248,6 +1257,17 @@ Please confirm availability and the final amount before confirming my booking.`;
           </div>
         )}
 
+        </>)}
+        {bookingStep === "details" && (
+          <>
+            <section className="flex items-center justify-between gap-3 rounded-xl border border-[#DAA520]/30 bg-[#FAF8F5] p-3 text-left">
+              <div className="min-w-0">
+                <h4 className="text-xs font-extrabold text-[#1B3564]">Your stay</h4>
+                <p className="mt-1 text-[10px] leading-relaxed text-slate-600">{format(normalizedCheckIn, "dd MMM yyyy")} – {format(normalizedCheckOut, "dd MMM yyyy")} · {nights} {nights === 1 ? "night" : "nights"} · {guests} {guests === 1 ? "guest" : "guests"}</p>
+                {selectedFood && <p className="mt-0.5 text-[10px] text-slate-600">{selectedFood.label} {selectedFood.cuisine} food · {foodGuestCount} guests</p>}
+              </div>
+              {liveQuote && <strong className="shrink-0 text-base font-black text-[#1B3564]">₹{(liveQuote.totalPrice + addOnsCost + foodAddOnCost).toLocaleString("en-IN")}</strong>}
+            </section>
         {/* Contact Information Section */}
         <div className={`border-t border-border-subtle/60 ${isModal ? "pt-3 space-y-2.5 sm:pt-4 sm:space-y-3" : "pt-4 space-y-3"}`}>
           <span className="text-[10px] font-bold text-accent-secondary uppercase tracking-[0.15em] block text-left">
@@ -1329,6 +1349,8 @@ Please confirm availability and the final amount before confirming my booking.`;
           </label>
           {bookingError && <p role="alert" className="text-left text-sm font-medium text-red-700">{bookingError}</p>}
         </div>
+          </>
+        )}
       </div>
 
       {/* FINAL STAY BILL & DYNAMIC RATE BREAKDOWN (Displayed in Step 2 above booking buttons) */}
@@ -1454,7 +1476,17 @@ Please confirm availability and the final amount before confirming my booking.`;
         </div>
       )}
 
-      <div className="space-y-3 mb-4 text-left">
+      {bookingStep === "quote" ? (
+        <div className="mb-4 space-y-2 text-left">
+          <button type="button" onClick={() => setBookingStep("details")} disabled={!canRequestBooking} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1B3564] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#294b7d] disabled:cursor-not-allowed disabled:bg-slate-300">
+            Continue to booking details <ArrowRight size={17} />
+          </button>
+          <p className="text-center text-[10px] leading-relaxed text-slate-500" aria-live="polite">{canRequestBooking ? "Your live quote is ready. Add your contact details to send the request." : isDatesUnavailable ? "Choose another date range to continue." : liveQuoteStatus === "error" ? "Rates could not be loaded. Try again before continuing." : "We’ll enable this after live availability is confirmed."}</p>
+        </div>
+      ) : (
+        <>
+          <button type="button" onClick={() => { setBookingStep("quote"); setBookingError(""); }} className="mb-3 inline-flex min-h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-[#1B3564] hover:bg-slate-50">← Back to dates &amp; extras</button>
+                <div className="space-y-3 mb-4 text-left">
         <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
           Choose how you’d like to continue
         </span>
@@ -1499,17 +1531,19 @@ Please confirm availability and the final amount before confirming my booking.`;
           <span className="text-[11px] font-black bg-white/20 px-2.5 py-1 rounded-lg">Open WhatsApp ➔</span>
         </button>
       </div>
+        </>
+      )}
 
-      <p className="text-center text-slate-500 text-[10px] uppercase tracking-widest mb-4 font-semibold select-none flex items-center justify-center gap-1.5">
+      {bookingStep === "details" && <p className="text-center text-slate-500 text-[10px] uppercase tracking-widest mb-4 font-semibold select-none flex items-center justify-center gap-1.5">
         <span>🔒 Best Direct Price Guarantee • 0% Platform Fee</span>
-      </p>
+      </p>}
 
-      <div className="mt-8 p-4 rounded-2xl bg-accent-secondary/8 border border-accent-secondary/20 flex gap-3 items-start text-left select-none">
+      {bookingStep === "details" && <div className="mt-8 p-4 rounded-2xl bg-accent-secondary/8 border border-accent-secondary/20 flex gap-3 items-start text-left select-none">
         <Info className="text-accent-secondary shrink-0 mt-0.5" size={16} />
         <p className="text-[11px] text-accent-secondary/80 leading-relaxed">
           Best Price Guarantee: If you find a lower price on another OTA, we will match it and offer a complimentary experience.
         </p>
-      </div>
+      </div>}
     </div>
   );
 };

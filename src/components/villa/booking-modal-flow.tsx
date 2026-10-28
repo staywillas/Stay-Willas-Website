@@ -5,12 +5,10 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { 
   Calendar as CalendarIcon, 
-  Zap, 
-  CheckCircle2, 
   X, 
   Phone, 
   ArrowRight,
-  ShieldCheck,
+  Users,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 const BookingCard = dynamic(() => import("@/components/villa/booking-card"), {
@@ -75,6 +73,10 @@ export default function BookingModalFlow({
   
   // Modals state
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(Boolean(initialCheckIn && initialCheckOut));
+  const [quickCheckIn, setQuickCheckIn] = useState(initialCheckIn ?? "");
+  const [quickCheckOut, setQuickCheckOut] = useState(initialCheckOut ?? "");
+  const [quickGuests, setQuickGuests] = useState(initialGuests ?? 2);
+  const [quickBookingError, setQuickBookingError] = useState("");
 
   // Cottage selection for Willow Peak
   const isWillowPeak = villaId.includes("willow") || villaName.toLowerCase().includes("willow");
@@ -130,19 +132,44 @@ export default function BookingModalFlow({
     };
   }, [isBookingModalOpen, lenis]);
 
-  const isSingleWillowCottage = (propertySlug?.startsWith("willow-peak-cottage-") ?? false) || (isWillowPeak && cottageSelection !== "ALL");
-  // Willow Peak Entire Estate base starting rate is 15,000, single cottage is 4,999
-  const willowEntireStartingPrice = 15000;
-  const willowCottageStartingPrice = 4999;
-  const displayPrice = isWillowPeak 
-    ? (cottageSelection === "ALL" ? (basePrice && basePrice <= 15000 ? basePrice : willowEntireStartingPrice) : cottageSelection === "TWO" ? willowCottageStartingPrice * 2 : willowCottageStartingPrice)
-    : price;
+  const quickGuestLimit = isWillowPeak
+    ? cottageSelection === "ALL" ? 12 : cottageSelection === "TWO" ? 8 : 4
+    : maxGuests;
+  const quickGuestMinimum = isWillowPeak && cottageSelection === "TWO" ? 5 : 1;
   const bookingTitle = propertySlug === "willow-peak"
     ? `${villaName.replace(/\s*\(Entire Estate.*\)$/i, "")} · ${cottageSelection === "ALL" ? "Entire estate" : cottageSelection === "TWO" ? "2 cottages" : `Cottage ${cottageSelection}`}`
     : villaName;
 
   const handleOpenBooking = () => {
+    if (!quickCheckIn || !quickCheckOut) {
+      setQuickBookingError("Choose your check-in and check-out dates to see the live rate.");
+      document.querySelector<HTMLInputElement>('[aria-label="Check-in date"]')?.focus();
+      return;
+    }
+    if (quickCheckIn < todayInput) {
+      setQuickBookingError("Choose a check-in date from today onward.");
+      return;
+    }
+    if (quickCheckOut <= quickCheckIn) {
+      setQuickBookingError("Check-out must be at least one night after check-in.");
+      return;
+    }
+    setQuickBookingError("");
     setIsBookingModalOpen(true);
+  };
+
+  const today = new Date();
+  const todayInput = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const dayAfter = (value: string) => {
+    if (!value) return todayInput;
+    const date = new Date(`${value}T00:00:00`);
+    date.setDate(date.getDate() + 1);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  };
+  const updateQuickCheckIn = (value: string) => {
+    setQuickCheckIn(value);
+    if (quickCheckOut && value && quickCheckOut <= value) setQuickCheckOut(dayAfter(value));
+    setQuickBookingError("");
   };
 
   return (
@@ -150,147 +177,55 @@ export default function BookingModalFlow({
       {/* ========================================================================= */}
       {/* 1. LUXURY BOOKING TRIGGER CARD (Replaces static right bar on PC & Mobile)   */}
       {/* ========================================================================= */}
-      {presentation === "editorial" ? (
-        <>
-          <div className={editorialStyles.bookingSummary}>
-            <span className={editorialStyles.bookingLabel}>YOUR STAY, DIRECT WITH US</span>
-            <h2>Make it your weekend.</h2>
-            <div className={editorialStyles.bookingPrice}><span>{initialCheckIn && initialCheckOut ? "Date-specific rate" : "Starting rate"}</span><div>{initialCheckIn && initialCheckOut ? <strong>See live quote</strong> : <><strong>₹{displayPrice.toLocaleString("en-IN")}</strong><span> / night</span></>}</div></div>
-            <p className={editorialStyles.bookingRateNote}>{initialCheckIn && initialCheckOut ? "Your dates are prefilled. The booking panel is checking live availability and rates." : "Choose dates in the booking panel to see the live scheduled rate."}</p>
-            {isWillowPeak && <div className={editorialStyles.unitPicker}><p>{cottageSelection === "ALL" ? "Entire estate · up to 12 guests" : cottageSelection === "TWO" ? "2 cottages · up to 8 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p><nav className={editorialStyles.unitLinks} aria-label="Choose your Willow Peak stay">{willowUnits.map(unit => <Link key={unit.slug} href={`/villa/${unit.slug}`} aria-current={unit.slug === propertySlug ? "page" : undefined}><strong>{unit.name}</strong><small>{unit.capacity} guests</small></Link>)}</nav></div>}
-            {!isSingleWillowCottage && (
-              <div className={editorialStyles.bookingOffer}><span>Date offers</span><div><strong>26% Weekdays · 5% Weekends &amp; Holidays</strong><small>Choose eligible offers below the live quote</small></div></div>
-            )}
-            <BorderGlow className={editorialStyles.availabilityGlow} backgroundColor="#1b3564" borderRadius={28} animated={false}><button type="button" className={editorialStyles.primaryButton} onClick={handleOpenBooking}><CalendarIcon size={17} /> Check availability</button></BorderGlow>
-            <button type="button" className={editorialStyles.secondaryButton} onClick={handleOpenBooking}>Reserve your stay <ArrowRight size={17} /></button>
-            <p className={editorialStyles.bookingFee}><CheckCircle2 size={15} /> No platform booking fee</p>
-          </div>
-          <div className={editorialStyles.mobileBooking} role="group" aria-label="Quick booking">
-            <div><small>{initialCheckIn && initialCheckOut ? "Live quote" : "From"}</small><strong>{initialCheckIn && initialCheckOut ? "See booking panel" : <>₹{displayPrice.toLocaleString("en-IN")}<span> / night</span></>}</strong></div>
-            {isAngleHouse ? (
-              <div className={editorialStyles.angleHouseMobileActions}>
-                <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={handleOpenBooking}>Check dates <ArrowRight size={17} /></button></BorderGlow>
-                <a className={editorialStyles.mobileCallButton} href="tel:+919619042310" aria-label="Call The Angle House booking team at 96190 42310">
-                  <Phone size={16} aria-hidden="true" />
-                  <span>Call</span>
-                </a>
-              </div>
-            ) : (
-              <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={handleOpenBooking}>Check dates <ArrowRight size={17} /></button></BorderGlow>
-            )}
-          </div>
-        </>
-      ) : (
-      <div className="bg-white border-2 border-[#DAA520]/25 rounded-3xl p-6 sm:p-7 shadow-[0_16px_50px_rgba(27,53,100,0.1)] space-y-5 text-left w-full sticky top-28 backdrop-blur-md">
-        {/* Header with Live Starting Price */}
-        <div className="flex items-start justify-between pb-4 border-b border-[#DAA520]/20">
-          <div>
-            <div className="flex items-center gap-1.5 mb-1">
-              <ShieldCheck size={13} className="text-[#DAA520]" />
-              <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-[0.2em]">
-                Direct Villa Booking
-              </span>
-            </div>
-            <span className="text-[9.5px] sm:text-[10.5px] text-slate-500 font-bold uppercase tracking-widest block mb-0.5">
-              {initialCheckIn && initialCheckOut ? "Live quote below" : "Starting at"}
-            </span>
-            <div className="flex items-baseline gap-1.5">
-              {!initialCheckIn || !initialCheckOut ? <span className="text-3xl sm:text-4xl font-heading text-[#1B3564] font-black">₹{displayPrice.toLocaleString("en-IN")}</span> : <span className="text-lg font-bold text-[#1B3564]">See live quote below</span>}
-              <span className="text-slate-500 text-xs sm:text-sm font-semibold">
-                / night {isWillowPeak ? (cottageSelection === "ALL" ? "(Entire Estate - 12 Guests)" : `(Cottage ${cottageSelection})`) : ""}
-              </span>
-            </div>
-            <div className="text-[10px] font-semibold text-amber-800 bg-amber-50/90 border border-amber-200 rounded-lg px-2 py-1 mt-1.5 flex items-center gap-1.5">
-              <span>ℹ️</span>
-              <span>Pricing varies between weekdays and weekends.</span>
-            </div>
-          </div>
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shrink-0">
-            <ShieldCheck size={12} className="text-emerald-600" />
-            <span>Best Rate</span>
-          </div>
-        </div>
-
-        {/* Willow Peak Cottage Selector (if applicable) */}
+      <div className={editorialStyles.bookingSummary}>
+        <span className={editorialStyles.bookingLabel}>YOUR STAY, DIRECT WITH US</span>
+        <h2>Make it your weekend.</h2>
+        <p className={editorialStyles.quickBookingIntro}>Choose your dates and group size to see the live rate.</p>
         {isWillowPeak && (
-          <div className="p-3 bg-[#FAF8F5] border border-[#DAA520]/25 rounded-2xl space-y-2">
-            <div className="flex items-center justify-between text-[11px] font-bold text-[#1B3564]">
-              <span>Select Villa Unit:</span>
-              <span className="text-[#DAA520] font-black">
-                {cottageSelection === "ALL" ? "Full Estate · up to 12 guests" : cottageSelection === "TWO" ? "2 Cottages · up to 8 guests" : `${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} · up to 4 guests`}
-              </span>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
-              {[
-                { key: "A", label: "Breeze" },
-                { key: "B", label: "Crest" },
-                { key: "C", label: "Heaven" },
-                { key: "TWO", label: "2 Cottages" },
-                { key: "ALL", label: "All 3" }
-              ].map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => setCottageSelection(item.key as "A" | "B" | "C" | "TWO" | "ALL")}
-                  className={`py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
-                    cottageSelection === item.key
-                      ? "bg-[#1B3564] text-white shadow-md scale-[1.02]"
-                      : "bg-white text-slate-700 border border-slate-200 hover:border-[#1B3564]/40"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+          <div className={editorialStyles.unitPicker}>
+            <p>{cottageSelection === "ALL" ? "Entire estate · up to 12 guests" : cottageSelection === "TWO" ? "2 cottages · up to 8 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p>
+            <nav className={editorialStyles.unitLinks} aria-label="Choose your Willow Peak stay">
+              {willowUnits.map(unit => <Link key={unit.slug} href={`/villa/${unit.slug}`} aria-current={unit.slug === propertySlug ? "page" : undefined}><strong>{unit.name}</strong><small>{unit.capacity} guests</small></Link>)}
+            </nav>
           </div>
         )}
-
-        {/* Value Highlights */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-            <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
-            <span className="text-slate-700 font-bold text-[11px]">0% Platform Fee</span>
-          </div>
-          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-            <CheckCircle2 size={14} className="text-[#DAA520] shrink-0" />
-            <span className="text-slate-700 font-bold text-[11px]">{isSingleWillowCottage ? "Direct Net Tariff" : "Direct Savings Active"}</span>
-          </div>
-          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-            <CheckCircle2 size={14} className="text-[#1B3564] shrink-0" />
-            <span className="text-slate-700 font-bold text-[11px]">Personal Concierge</span>
-          </div>
-          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-            <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
-            <span className="text-slate-700 font-bold text-[11px]">Verified Hygiene</span>
-          </div>
+        <div className={editorialStyles.quickBookingFields}>
+          <label className={editorialStyles.quickBookingField}>
+            <span>Check-in</span>
+            <input type="date" value={quickCheckIn} min={todayInput} onChange={event => updateQuickCheckIn(event.target.value)} aria-label="Check-in date" />
+          </label>
+          <label className={editorialStyles.quickBookingField}>
+            <span>Check-out</span>
+            <input type="date" value={quickCheckOut} min={dayAfter(quickCheckIn)} onChange={event => { setQuickCheckOut(event.target.value); setQuickBookingError(""); }} aria-label="Check-out date" />
+          </label>
+          <label className={`${editorialStyles.quickBookingField} ${editorialStyles.quickBookingGuests}`}>
+            <span>Guests</span>
+            <span className={editorialStyles.quickGuestSelect}>
+              <Users size={16} aria-hidden="true" />
+              <select value={Math.max(quickGuestMinimum, Math.min(quickGuestLimit, quickGuests))} onChange={event => { setQuickGuests(Number(event.target.value)); setQuickBookingError(""); }} aria-label="Number of guests">
+                {Array.from({ length: quickGuestLimit - quickGuestMinimum + 1 }, (_, index) => index + quickGuestMinimum).map(count => <option key={count} value={count}>{count} {count === 1 ? "guest" : "guests"}</option>)}
+              </select>
+            </span>
+          </label>
         </div>
-
-        {/* Action Buttons */}
-        <div className="space-y-3 pt-1">
-          <button
-            type="button"
-            onClick={handleOpenBooking}
-            className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-4 px-6 rounded-2xl text-xs sm:text-sm font-black tracking-[0.15em] uppercase transition-all duration-300 shadow-[0_8px_30px_rgba(224,83,76,0.38)] hover:shadow-[0_12px_40px_rgba(224,83,76,0.5)] hover:scale-[1.01] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer border border-white/25"
-          >
-            <Zap size={16} className="text-amber-200" />
-            <span>Book {villaName}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleOpenBooking}
-            className="w-full bg-white hover:bg-rose-50/50 text-[#C9332C] py-3.5 px-4 rounded-2xl text-xs font-bold tracking-wider uppercase transition-all border border-rose-200/80 hover:border-[#E0534C]/60 flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <CalendarIcon size={14} className="text-[#E0534C]" />
-            <span>View Availability Calendar</span>
-          </button>
-        </div>
-
-        <p className="text-center text-[10px] text-slate-400 font-semibold tracking-wider uppercase pt-2">
-          🔒 Secure Direct Booking • Free Cancellation Assist
-        </p>
+        {quickBookingError && <p className={editorialStyles.quickBookingError} role="alert">{quickBookingError}</p>}
+        <button type="button" className={editorialStyles.primaryButton} onClick={handleOpenBooking}>
+          <CalendarIcon size={17} /> Book now <ArrowRight size={16} />
+        </button>
+        <p className={editorialStyles.bookingRateNote}>Your date-specific rates and availability appear before you send a booking request.</p>
+        <p className={editorialStyles.bookingFee}><span aria-hidden="true">✓</span> No platform booking fee</p>
       </div>
-      )}
+      <div className={editorialStyles.mobileBooking} role="group" aria-label="Quick booking">
+        <div><small>Ready to check your stay?</small><strong>Live rate after dates</strong></div>
+        {isAngleHouse ? (
+          <div className={editorialStyles.angleHouseMobileActions}>
+            <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={handleOpenBooking}>Book now <ArrowRight size={17} /></button></BorderGlow>
+            <a className={editorialStyles.mobileCallButton} href="tel:+919619042310" aria-label="Call The Angle House booking team at 96190 42310"><Phone size={16} aria-hidden="true" /><span>Call</span></a>
+          </div>
+        ) : (
+          <BorderGlow className={`${editorialStyles.availabilityGlow} ${editorialStyles.mobileAvailabilityGlow}`} backgroundColor="#1b3564" borderRadius={28} glowRadius={18} animated={false}><button type="button" onClick={handleOpenBooking}>Book now <ArrowRight size={17} /></button></BorderGlow>
+        )}
+      </div>
 
       {/* ========================================================================= */}
       {/* 2. SINGLE BOOKING PANEL (Dates, Guest Details, Pricing & Booking Choices) */}
@@ -358,9 +293,9 @@ export default function BookingModalFlow({
                 bookings={bookings}
                 initialCottageSelection={cottageSelection}
                 lockCottageSelection={propertySlug?.startsWith("willow-peak-cottage-") ?? false}
-                initialCheckIn={initialCheckIn ? new Date(`${initialCheckIn}T00:00:00`) : null}
-                initialCheckOut={initialCheckOut ? new Date(`${initialCheckOut}T00:00:00`) : null}
-                initialGuests={initialGuests}
+                initialCheckIn={quickCheckIn ? new Date(`${quickCheckIn}T00:00:00`) : null}
+                initialCheckOut={quickCheckOut ? new Date(`${quickCheckOut}T00:00:00`) : null}
+                initialGuests={Math.max(quickGuestMinimum, Math.min(quickGuestLimit, quickGuests))}
                 isModal={true}
               />
             </div>
