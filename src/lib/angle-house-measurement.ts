@@ -12,6 +12,7 @@ export type LeadAttribution = {
 const attributionKey = "staywillas_angle_house_attribution";
 const measuredLeadKey = "staywillas_angle_house_measured_lead";
 const adsSendTo = "AW-18249597691/27FDCI2psKUdEPuFi_5D";
+const canopyCrestAdsSendTo = "AW-18249597691/j5euCKeW3a0dEPuFi_5D";
 
 type Gtag = (...args: unknown[]) => void;
 type AnalyticsWindow = Window & { dataLayer?: IArguments[]; gtag?: Gtag };
@@ -74,4 +75,15 @@ export function trackAngleHouseBookingEnquiry(leadId: string, checkIn: Date, che
   });
 
   googleTag("event", "conversion", { send_to: adsSendTo, transaction_id: leadId });
+}
+
+export function trackCanopyCrestBookingEnquiry() {
+  if (typeof window === "undefined") return;
+
+  googleTag("event", "generate_lead", {
+    property: "canopy-crest",
+    lead_type: "dated_booking_enquiry",
+  });
+
+  googleTag("event", "conversion", { send_to: canopyCrestAdsSendTo });
 }

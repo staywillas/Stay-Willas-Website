@@ -12,7 +12,7 @@ import { createAwaitingVerificationBooking } from "@/app/actions/booking";
 import { captureBookingLead } from "@/app/actions/inquiry";
 import { useUser } from "@clerk/nextjs";
 import { categorizeNight, checkLongWeekend } from "@/lib/calendar-holidays";
-import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement } from "@/lib/angle-house-measurement";
+import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement, trackCanopyCrestBookingEnquiry } from "@/lib/angle-house-measurement";
 import { checkAvailableVillasForDates } from "@/app/actions/booking";
 
 interface DailyPriceProp {
@@ -607,6 +607,8 @@ Please confirm availability and the final amount before confirming my booking.`;
       }).then(result => {
         if (isAngleHouse && result.success && result.leadId) {
           trackAngleHouseBookingEnquiry(result.leadId, checkIn, checkOut);
+        } else if (propertySlug === "canopy-crest" && result.success && result.leadId) {
+          trackCanopyCrestBookingEnquiry();
         }
       }).catch(err => console.error("Failed to capture WhatsApp booking request:", err));
 
@@ -650,6 +652,7 @@ Please confirm availability and the final amount before confirming my booking.`;
 
       if (res.success && res.bookingId) {
         if (isAngleHouse) trackAngleHouseBookingEnquiry(res.bookingId, checkIn, checkOut);
+        else if (propertySlug === "canopy-crest") trackCanopyCrestBookingEnquiry();
         setVerificationSubmitted(true);
         setSubmittedBookingId(res.bookingId);
         setSubmittedTotal(res.totalPrice ?? total);
