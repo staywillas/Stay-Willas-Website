@@ -209,12 +209,12 @@ const canopy: PropertyCopy = {
       alt: "Canopy Crest villa and private swimming pool at dusk",
     },
     {
-      src: `${canopyBase}IMG-20260607-WA0009.jpg`,
-      alt: "Canopy Crest bedroom with windows facing the pool",
+      src: `${canopyBase}IMG-20260607-WA0012.jpg`,
+      alt: "Open lawn and outdoor games area at Canopy Crest",
     },
     {
-      src: `${canopyBase}IMG-20260607-WA0015.jpg`,
-      alt: "Canopy Crest lawn and outdoor seating",
+      src: `${canopyBase}IMG-20260607-WA0013.jpg`,
+      alt: "Canopy Crest living room with sofas and a wall-mounted TV",
     },
   ],
   spaces: [

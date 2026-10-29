@@ -33,6 +33,7 @@ import AngleHouseClickTracker from "./angle-house-click-tracker";
 import ShareButton from "./share-button";
 import SaveButton from "./save-button";
 import PropertyEditorialGallery from "./property-editorial-gallery";
+import PropertySectionNav from "./property-section-nav";
 import PropertyEditorialExtras from "./property-editorial-extras";
 import { resolvePropertyImage } from "@/lib/property-images";
 import {
@@ -83,6 +84,7 @@ export default function PropertyEditorialDetails({
   initialCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
 }) {
   const property = getPropertyEditorial(villa);
+  const isCanopyCrest = villa.slug === "canopy-crest";
   const selectedCottageSelection = property.isWillow && !property.cottage
     ? initialCottageSelection ?? (initialGuests ? initialGuests > 8 ? "ALL" : initialGuests > 4 ? "TWO" : "A" : property.initialCottageSelection)
     : property.initialCottageSelection;
@@ -158,35 +160,122 @@ export default function PropertyEditorialDetails({
           </div>
         </div>
 
-        <header className={styles.header}>
-          <div>
-            <p className={styles.eyebrow}>{property.eyebrow}</p>
-            <h1>{property.name}</h1>
-            <div className={styles.locationLine}>
+        {isCanopyCrest ? (
+          <section
+            className={styles.weekdayHero}
+            aria-labelledby="weekday-offer-title"
+          >
+            <div className={styles.weekdayHeroMedia}>
+              <Image
+                src="/assets/villas/canopy-crest/IMG-20260607-WA0015.jpg"
+                alt="Canopy Crest villa, private swimming pool and landscaped lawn in the Khopoli hills"
+                fill
+                quality={85}
+                loading="eager"
+                fetchPriority="high"
+                sizes="(max-width: 700px) 90vw, (max-width: 1200px) 52vw, 660px"
+                className={styles.weekdayHeroPhoto}
+              />
+            </div>
+            <div className={styles.weekdayHeroCopy}>
+              <p className={styles.weekdayHeroEyebrow}>
+                CANOPY CREST · KHOPOLI
+              </p>
+              <h1 className={styles.weekdayHeroTitle}>{property.name}</h1>
+              <p className={styles.weekdayHeroLocation}>
+                <MapPin size={15} /> Near Imagica
+                {averageRating !== null && (
+                  <a href="#reviews">
+                    <Star size={14} /> {averageRating.toFixed(1)} · {reviews.length} guest{" "}
+                    {reviews.length === 1 ? "review" : "reviews"}
+                  </a>
+                )}
+              </p>
+              <h2 id="weekday-offer-title" className={styles.weekdayOfferTitle}>
+                Weekday escape near Imagica — <em>save up to 26%</em> on eligible
+                dates.
+              </h2>
+              <p className={styles.weekdayHeroDescription}>
+                Choose Monday–Thursday dates to see Canopy Crest’s live nightly
+                rates and any eligible savings for your stay.
+              </p>
+              <a href="#booking-card-section" className={styles.weekdayHeroCta}>
+                Check dates &amp; live rates <ArrowRight size={17} />
+              </a>
+              <p className={styles.weekdayHeroTerms}>
+                Offer eligibility depends on your selected dates. Your quote shows
+                the rates and savings before you book.
+              </p>
+            </div>
+          </section>
+        ) : (
+          <header className={styles.header}>
+            <div>
+              <p className={styles.eyebrow}>{property.eyebrow}</p>
+              <h1>{property.name}</h1>
+              <div className={styles.locationLine}>
+                <span>
+                  <MapPin size={15} />{" "}
+                  {villa.location.replace(/, Maharashtra$/, "")}
+                </span>
+                {averageRating !== null && (
+                  <a href="#reviews">
+                    <Star size={14} /> {averageRating.toFixed(1)}{" "}
+                    <span>
+                      ({reviews.length} guest{" "}
+                      {reviews.length === 1 ? "review" : "reviews"})
+                    </span>
+                  </a>
+                )}
+              </div>
+            </div>
+            <div className={styles.headerNote}>
+              <p>{property.summary}</p>
+              <a href="#booking-card-section">
+                {villa.slug === "the-angle-house"
+                  ? "Check dates & pricing"
+                  : "Plan your stay"} <ArrowDownIcon />
+              </a>
+            </div>
+          </header>
+        )}
+
+        {isCanopyCrest && (
+          <div
+            className={styles.weekdayFacts}
+            role="group"
+            aria-label="Canopy Crest at a glance"
+          >
+            <div className={styles.weekdayFact}>
+              <BedDouble size={22} />
               <span>
-                <MapPin size={15} />{" "}
-                {villa.location.replace(/, Maharashtra$/, "")}
+                <strong>4 BHK</strong>
+                <small>four bedrooms</small>
               </span>
-              {averageRating !== null && (
-                <a href="#reviews">
-                  <Star size={14} /> {averageRating.toFixed(1)}{" "}
-                  <span>
-                    ({reviews.length} guest{" "}
-                    {reviews.length === 1 ? "review" : "reviews"})
-                  </span>
-                </a>
-              )}
+            </div>
+            <div className={styles.weekdayFact}>
+              <Waves size={22} />
+              <span>
+                <strong>Private pool</strong>
+                <small>for your group</small>
+              </span>
+            </div>
+            <div className={styles.weekdayFact}>
+              <Trees size={22} />
+              <span>
+                <strong>Landscaped lawn</strong>
+                <small>room to gather</small>
+              </span>
+            </div>
+            <div className={styles.weekdayFact}>
+              <Users size={22} />
+              <span>
+                <strong>Up to 16 guests</strong>
+                <small>the whole villa</small>
+              </span>
             </div>
           </div>
-          <div className={styles.headerNote}>
-            <p>{property.summary}</p>
-            <a href="#booking-card-section">
-              {villa.slug === "the-angle-house"
-                ? "Check dates & pricing"
-                : "Plan your stay"} <ArrowDownIcon />
-            </a>
-          </div>
-        </header>
+        )}
 
         <PropertyEditorialGallery
           key={villa.slug}
@@ -198,71 +287,73 @@ export default function PropertyEditorialDetails({
           <p className={styles.galleryNote}>{property.photoNote}</p>
         )}
 
-        <div
-          className={styles.facts}
-          role="group"
-          aria-label="Villa at a glance"
-        >
-          <div>
-            <Users size={23} />
-            <span>
-              <strong>Up to {villa.guests}</strong>
-              <small>guests</small>
-            </span>
-          </div>
-          <div>
-            <BedDouble size={23} />
-            <span>
-              <strong>
-                {villa.bedrooms} {villa.bedrooms === 1 ? "bedroom" : "bedrooms"}
-              </strong>
-              <small>space to switch off</small>
-            </span>
-          </div>
-          <div>
-            <Bath size={23} />
-            <span>
-              <strong>
-                {villa.bathrooms}{" "}
-                {villa.bathrooms === 1 ? "bathroom" : "bathrooms"}
-              </strong>
-              <small>
-                {villa.slug === "the-angle-house"
-                  ? "plus a master-suite Jacuzzi"
-                  : "the daily comforts"}
-              </small>
-            </span>
-          </div>
-          <div>
-            {property.hasPool ? (
-              <Waves size={23} />
-            ) : property.hasJacuzzi ? (
+        {!isCanopyCrest && (
+          <div
+            className={styles.facts}
+            role="group"
+            aria-label="Villa at a glance"
+          >
+            <div>
+              <Users size={23} />
+              <span>
+                <strong>Up to {villa.guests}</strong>
+                <small>guests</small>
+              </span>
+            </div>
+            <div>
+              <BedDouble size={23} />
+              <span>
+                <strong>
+                  {villa.bedrooms} {villa.bedrooms === 1 ? "bedroom" : "bedrooms"}
+                </strong>
+                <small>space to switch off</small>
+              </span>
+            </div>
+            <div>
               <Bath size={23} />
-            ) : (
-              <Mountain size={23} />
-            )}
-            <span>
-              <strong>
-                {property.hasPool
-                  ? "Private pool"
-                  : property.hasJacuzzi
-                    ? "Private Jacuzzi"
-                    : "A change of scenery"}
-              </strong>
-              <small>
-                {villa.slug === "the-angle-house"
-                  ? "with a waterfall feature"
-                  : property.hasPool
-                    ? "exclusive to your group"
+              <span>
+                <strong>
+                  {villa.bathrooms}{" "}
+                  {villa.bathrooms === 1 ? "bathroom" : "bathrooms"}
+                </strong>
+                <small>
+                  {villa.slug === "the-angle-house"
+                    ? "plus a master-suite Jacuzzi"
+                    : "the daily comforts"}
+                </small>
+              </span>
+            </div>
+            <div>
+              {property.hasPool ? (
+                <Waves size={23} />
+              ) : property.hasJacuzzi ? (
+                <Bath size={23} />
+              ) : (
+                <Mountain size={23} />
+              )}
+              <span>
+                <strong>
+                  {property.hasPool
+                    ? "Private pool"
                     : property.hasJacuzzi
-                      ? property.cottage
-                        ? "in your cottage"
-                        : "one in every cottage"
-                      : villa.location.split(",")[0]}
-              </small>
-            </span>
+                      ? "Private Jacuzzi"
+                      : "A change of scenery"}
+                </strong>
+                <small>
+                  {villa.slug === "the-angle-house"
+                    ? "with a waterfall feature"
+                    : property.hasPool
+                      ? "exclusive to your group"
+                      : property.hasJacuzzi
+                        ? property.cottage
+                          ? "in your cottage"
+                          : "one in every cottage"
+                        : villa.location.split(",")[0]}
+                </small>
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
         <section
           id="amenities"
@@ -300,23 +391,7 @@ export default function PropertyEditorialDetails({
           </details>
         </section>
 
-        <nav
-          className={styles.sectionNav}
-          aria-label={`Explore ${property.name} sections`}
-        >
-          <div className={styles.sectionNavLinks}>
-            <a href="#about">Overview</a>
-            <a href="#spaces">Rooms &amp; spaces</a>
-            <a href="#amenities">Amenities</a>
-            <a href="#dining">Dining</a>
-            <a href="#location">Location</a>
-            <a href="#reviews">Guest reviews</a>
-            <a href="#know">Good to know</a>
-          </div>
-          <a href="#booking-card-section" className={styles.sectionNavCta}>
-            Check dates <ArrowDownIcon />
-          </a>
-        </nav>
+        <PropertySectionNav propertyName={property.name} />
 
         <div className={styles.contentLayout}>
           <div className={styles.content}>

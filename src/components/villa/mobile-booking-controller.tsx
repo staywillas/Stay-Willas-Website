@@ -554,7 +554,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
           {/* Sheet Container */}
           <div className="relative w-full sm:max-w-xl bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-[#DAA520]/30 max-h-[92vh] flex flex-col z-10 animate-in slide-in-from-bottom duration-300">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 px-5 border-b border-slate-100 bg-[#FAF8F5] rounded-t-3xl shrink-0">
+            <div className="flex items-center justify-between p-3 px-4 sm:p-4 sm:px-5 border-b border-slate-100 bg-[#FAF8F5] rounded-t-3xl shrink-0">
               <div className="text-left">
                 <span className="text-[9px] text-[#DAA520] font-black uppercase tracking-widest block">Direct Villa Booking</span>
                 <h3 className="text-base font-heading text-[#1B3564] font-bold">{props.villaName}</h3>
@@ -569,7 +569,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
             </div>
 
             {/* Scrollable Booking Form */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 select-none">
+              <div className="flex-1 overflow-y-auto p-3 sm:p-6 select-none">
               <BookingCard 
                 {...props} 
                 initialCottageSelection={cottageSelection}

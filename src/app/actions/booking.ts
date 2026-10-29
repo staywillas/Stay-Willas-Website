@@ -816,7 +816,7 @@ export async function createAwaitingVerificationBooking(data: {
   checkOut: string | Date;
   guests: number;
   addOns?: string[];
-  foodPackage?: "STANDARD_VEG" | "STANDARD_NON_VEG" | "DELUXE_VEG" | "DELUXE_NON_VEG";
+  foodPackage?: "STANDARD" | "DELUXE" | "STANDARD_VEG" | "STANDARD_NON_VEG" | "DELUXE_VEG" | "DELUXE_NON_VEG";
   foodGuests?: number;
   couponCode?: string;
   cottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
@@ -933,6 +933,8 @@ export async function createAwaitingVerificationBooking(data: {
     }
 
     const foodPackageRates = {
+      STANDARD: 1250,
+      DELUXE: 1550,
       STANDARD_VEG: 1250,
       STANDARD_NON_VEG: 1250,
       DELUXE_VEG: 1550,
@@ -958,6 +960,8 @@ export async function createAwaitingVerificationBooking(data: {
       ? foodPackageRates[data.foodPackage] * (data.foodGuests ?? 0) * nights
       : 0;
     const foodPackageLabels = {
+      STANDARD: "Standard (veg and non-veg menus available)",
+      DELUXE: "Deluxe (veg and non-veg menus available)",
       STANDARD_VEG: "Standard vegetarian",
       STANDARD_NON_VEG: "Standard non-vegetarian",
       DELUXE_VEG: "Deluxe vegetarian",

@@ -247,14 +247,14 @@ export default function BookingModalFlow({
             className="relative w-full max-w-2xl max-h-[92vh] flex flex-col bg-white rounded-[28px] sm:rounded-[36px] shadow-[0_24px_80px_rgba(0,0,0,0.5)] border-2 border-[#DAA520]/30 overflow-hidden z-10 my-auto"
           >
             {/* Modal Sticky Header */}
-            <div className="bg-[#1B3564] text-white px-5 py-4 flex items-center justify-between flex-shrink-0 border-b border-white/10 z-20">
+            <div className="bg-[#1B3564] text-white px-4 py-3 sm:px-5 sm:py-4 flex items-center justify-between flex-shrink-0 border-b border-white/10 z-20">
               <div className="text-left">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-[#DAA520] font-black uppercase tracking-widest">
-                    YOUR STAY • DIRECT WITH STAY WILLAS
+                    Direct booking
                   </span>
                 </div>
-                <h3 className="font-heading font-bold text-lg sm:text-xl tracking-wide text-white">
+                <h3 className="font-heading font-bold text-lg sm:text-xl leading-tight text-white">
                   {bookingTitle}
                 </h3>
               </div>
@@ -271,7 +271,7 @@ export default function BookingModalFlow({
             {/* Scrollable Booking Card Content */}
             <div 
               data-lenis-prevent="true"
-              className="flex-1 overflow-y-auto overscroll-contain p-3 sm:p-5 bg-slate-50 relative z-10 touch-pan-y"
+              className="flex-1 overflow-y-auto overscroll-contain p-2 sm:p-5 bg-slate-50 relative z-10 touch-pan-y"
               style={{ maxHeight: "calc(92vh - 75px)", WebkitOverflowScrolling: "touch" }}
             >
               <BookingCard

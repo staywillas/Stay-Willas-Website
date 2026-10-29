@@ -50,13 +50,11 @@ interface LiveQuote {
   nightlyRates: Array<{ date: string; label: string; price: number }>;
 }
 
-type FoodPackage = "STANDARD_VEG" | "STANDARD_NON_VEG" | "DELUXE_VEG" | "DELUXE_NON_VEG";
+type FoodPackage = "STANDARD" | "DELUXE";
 
-const foodPackages: Array<{ id: FoodPackage; label: string; cuisine: string; price: number }> = [
-  { id: "STANDARD_VEG", label: "Standard", cuisine: "Vegetarian", price: 1250 },
-  { id: "STANDARD_NON_VEG", label: "Standard", cuisine: "Non-vegetarian", price: 1250 },
-  { id: "DELUXE_VEG", label: "Deluxe", cuisine: "Vegetarian", price: 1550 },
-  { id: "DELUXE_NON_VEG", label: "Deluxe", cuisine: "Non-vegetarian", price: 1550 },
+const foodPackages: Array<{ id: FoodPackage; label: string; price: number }> = [
+  { id: "STANDARD", label: "Standard", price: 1250 },
+  { id: "DELUXE", label: "Deluxe", price: 1550 },
 ];
 
 function parseLiveQuote(value: unknown): LiveQuote | null {
@@ -403,7 +401,7 @@ const BookingCard = ({
   const foodGuestCount = selectedFood ? Math.max(1, Math.min(guests, foodGuests)) : foodGuests;
   const foodAddOnCost = selectedFood ? selectedFood.price * foodGuestCount * Math.max(0, nights) : 0;
   const bookingAddOns = selectedFood
-    ? [...selectedAddOns, `${selectedFood.label} ${selectedFood.cuisine} food package (${foodGuestCount} guests × ${nights} nights)`]
+    ? [...selectedAddOns, `${selectedFood.label} food package; veg and non-veg menus available (${foodGuestCount} guests × ${nights} nights)`]
     : selectedAddOns;
 
   const handleToggleAddOn = (addon: string) => {
@@ -761,17 +759,16 @@ Please confirm availability and the final amount before confirming my booking.`;
             </span>
             {nights > 0 && hasLivePrice && <span className="text-text-primary/50 text-xs sm:text-sm font-semibold ml-1.5">/ night</span>}
           </div>
-          <div className="text-[10px] font-semibold text-amber-800 bg-amber-50/90 border border-amber-200 rounded-lg px-2 py-0.5 mt-1 flex items-center gap-1.5">
-            <span>ℹ️</span>
-            <span>{nights > 0 ? "Rates vary by date and demand. Your quote reflects these dates." : "Choose dates to see the current nightly rates."}</span>
+          <div className={`mt-1 flex items-center gap-1 text-[10px] font-medium text-slate-600 ${isModal ? "max-w-[270px]" : "max-w-sm"}`}>
+            <Info size={12} className="shrink-0 text-[#8b6815]" aria-hidden="true" />
+            <span>{nights > 0 ? "Rates vary by date and demand." : "Choose dates to see current nightly rates."}</span>
           </div>
         </div>
-        <div className={`flex shrink-0 flex-col items-start gap-0.5 ${isModal ? "px-2.5 py-1.5" : "px-3 py-2"} rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${
-          isDatesUnavailable ? "bg-red-600 text-white border border-red-700" : liveQuoteStatus === "available" ? "bg-[#064E3B] text-white border border-[#064E3B]" : "bg-amber-50 text-amber-900 border border-amber-200"
+        <div className={`flex shrink-0 items-center gap-1.5 ${isModal ? "px-2 py-1.5" : "px-3 py-2"} rounded-lg text-[9px] sm:text-[10px] font-bold ${
+          isDatesUnavailable ? "bg-red-50 text-red-800 border border-red-200" : liveQuoteStatus === "available" ? "bg-[#EEF2F7] text-[#1B3564] border border-[#D7DFEA]" : "bg-amber-50 text-amber-900 border border-amber-200"
         }`} aria-live="polite">
-          <span className="opacity-80">Live availability</span>
-          <span className="flex items-center gap-1.5 text-[10px] sm:text-xs">
-            <span className={`w-2 h-2 rounded-full ${isDatesUnavailable ? "bg-white" : liveQuoteStatus === "available" ? "bg-emerald-300" : "bg-amber-500 animate-pulse"}`} />
+          <span className={`w-1.5 h-1.5 rounded-full ${isDatesUnavailable ? "bg-red-600" : liveQuoteStatus === "available" ? "bg-[#1B3564]" : "bg-amber-500 animate-pulse"}`} />
+          <span className="text-[10px] sm:text-xs">
             {isDatesUnavailable ? "Unavailable" : liveQuoteStatus === "available" ? "Available" : liveQuoteStatus === "error" ? "Check failed" : "Checking…"}
           </span>
         </div>
@@ -873,7 +870,7 @@ Please confirm availability and the final amount before confirming my booking.`;
                   {nights} {nights === 1 ? "night" : "nights"} · {guests} {guests === 1 ? "guest" : "guests"}
                 </p>
               </div>
-              <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold ${liveQuoteStatus === "available" ? "bg-emerald-100 text-emerald-800" : isDatesUnavailable ? "bg-red-100 text-red-800" : "bg-amber-100 text-amber-900"}`}>
+              <span className={`shrink-0 rounded-md border px-2 py-1 text-[10px] font-semibold ${liveQuoteStatus === "available" ? "border-[#D7DFEA] bg-[#EEF2F7] text-[#1B3564]" : isDatesUnavailable ? "border-red-200 bg-red-50 text-red-800" : "border-amber-200 bg-amber-50 text-amber-900"}`}>
                 {liveQuoteStatus === "available" ? "Live quote" : isDatesUnavailable ? "Unavailable" : liveQuoteStatus === "error" ? "Live quote unavailable" : "Checking live rates…"}
               </span>
             </div>
@@ -910,7 +907,7 @@ Please confirm availability and the final amount before confirming my booking.`;
                     </div>
                   )}
                   {liveQuote.directSavings > 0 && (
-                    <div className="flex justify-between gap-2 font-semibold text-emerald-800">
+                    <div className="flex justify-between gap-2 font-semibold text-[#1B3564]">
                       <span>Direct savings</span>
                       <span>−₹{liveQuote.directSavings.toLocaleString("en-IN")}</span>
                     </div>
@@ -923,7 +920,7 @@ Please confirm availability and the final amount before confirming my booking.`;
                   )}
                   {selectedFood && (
                     <div className="flex justify-between gap-2 text-slate-700">
-                      <span>{selectedFood.label} {selectedFood.cuisine} food · {foodGuestCount} guests × {nights} nights</span>
+                      <span>{selectedFood.label} food · veg &amp; non-veg menus available · {foodGuestCount} guests × {nights} nights</span>
                       <span>₹{foodAddOnCost.toLocaleString("en-IN")}</span>
                     </div>
                   )}
@@ -954,14 +951,14 @@ Please confirm availability and the final amount before confirming my booking.`;
         )}
 
         {propertySlug && nights > 0 && (
-          <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2">
-          <section className="rounded-xl border border-emerald-200 bg-white p-3 text-left shadow-xs" aria-label="Offers for your selected dates">
-            <div className="mb-2 flex items-center justify-between gap-3">
+          <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2 sm:gap-3">
+          <section className="rounded-xl border border-slate-200 bg-white p-2.5 sm:p-3 text-left" aria-label="Offers for your selected dates">
+            <div className="mb-1.5 flex items-center justify-between gap-2">
               <div>
                 <h4 className="text-xs font-extrabold text-[#1B3564]">Offers for these dates</h4>
-                <p className="mt-0.5 text-[10px] text-slate-500">Only offers matching your dates can be applied.</p>
+                <p className="mt-0.5 text-[10px] text-slate-500">Offers are matched to your stay.</p>
               </div>
-              {isCouponApplied && <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-1 text-[9px] font-bold text-emerald-800">Applied</span>}
+              {isCouponApplied && <span className="shrink-0 rounded-md bg-[#EEF2F7] px-2 py-1 text-[9px] font-bold text-[#1B3564]">Applied</span>}
             </div>
             {(hasWeekdayOffer || hasWeekendOffer) ? <div className="grid gap-2">
               {hasWeekdayOffer && (
@@ -969,11 +966,11 @@ Please confirm availability and the final amount before confirming my booking.`;
                   type="button"
                   aria-pressed={isWeekdayOfferApplied}
                   onClick={() => setWeekdayOfferSelected(value => !value)}
-                  className={`rounded-lg border px-3 py-2 text-left transition-colors ${isWeekdayOfferApplied ? "border-emerald-500 bg-emerald-50" : "border-slate-200 bg-slate-50 hover:border-emerald-300"}`}
+                  className={`rounded-lg border px-3 py-2 text-left transition-colors ${isWeekdayOfferApplied ? "border-[#1B3564] bg-[#F2F5F9]" : "border-slate-200 bg-slate-50 hover:border-[#9AAAC0]"}`}
                 >
                   <span className="flex items-center justify-between gap-2">
                     <strong className="text-[11px] text-[#1B3564]">Weekday offer · 26% off</strong>
-                    <span className={`text-[9px] font-bold ${isWeekdayOfferApplied ? "text-emerald-800" : "text-[#9a6a00]"}`}>{isWeekdayOfferApplied ? "Applied" : "Apply"}</span>
+                    <span className={`text-[9px] font-bold ${isWeekdayOfferApplied ? "text-[#1B3564]" : "text-[#8b6815]"}`}>{isWeekdayOfferApplied ? "Applied" : "Apply"}</span>
                   </span>
                   <span className="mt-0.5 block text-[10px] text-slate-600">{normalWeekdayNightsCount} eligible {normalWeekdayNightsCount === 1 ? "night" : "nights"} · {isWeekdayOfferApplied ? "WEEKDAY26" : "Tap to apply"}</span>
                 </button>
@@ -983,58 +980,64 @@ Please confirm availability and the final amount before confirming my booking.`;
                   type="button"
                   aria-pressed={isWeekendOfferApplied}
                   onClick={() => setWeekendOfferSelected(value => !value)}
-                  className={`rounded-lg border px-3 py-2 text-left transition-colors ${isWeekendOfferApplied ? "border-emerald-500 bg-emerald-50" : "border-slate-200 bg-slate-50 hover:border-emerald-300"}`}
+                  className={`rounded-lg border px-3 py-2 text-left transition-colors ${isWeekendOfferApplied ? "border-[#1B3564] bg-[#F2F5F9]" : "border-slate-200 bg-slate-50 hover:border-[#9AAAC0]"}`}
                 >
                   <span className="flex items-center justify-between gap-2">
                     <strong className="text-[11px] text-[#1B3564]">Weekend offer · 5% off</strong>
-                    <span className={`text-[9px] font-bold ${isWeekendOfferApplied ? "text-emerald-800" : "text-[#9a6a00]"}`}>{isWeekendOfferApplied ? "Applied" : "Apply"}</span>
+                    <span className={`text-[9px] font-bold ${isWeekendOfferApplied ? "text-[#1B3564]" : "text-[#8b6815]"}`}>{isWeekendOfferApplied ? "Applied" : "Apply"}</span>
                   </span>
                   <span className="mt-0.5 block text-[10px] text-slate-600">{weekendAndHolidayNightsCount} eligible {weekendAndHolidayNightsCount === 1 ? "night" : "nights"} · {isWeekendOfferApplied ? "WEEKEND5" : "Tap to apply"}</span>
                 </button>
               )}
             </div> : <p className="rounded-lg bg-slate-50 px-3 py-3 text-[11px] leading-relaxed text-slate-600">No weekday or weekend offer applies to these dates.</p>}
             {isWeekdayOfferApplied && isWeekendOfferApplied && (
-              <p className="mt-2 text-[10px] font-semibold text-emerald-800">Both date offers are combined in your quote.</p>
+              <p className="mt-2 text-[10px] font-semibold text-[#1B3564]">Both date offers are included in your quote.</p>
             )}
           </section>
-          <section className="rounded-xl border border-[#DAA520]/40 bg-[#FAF8F5] p-3 text-left shadow-xs" aria-label="Optional food add-on">
-            <div className="mb-2">
+          <section className="rounded-xl border border-slate-200 bg-[#FAF8F5] p-2 sm:p-2.5 text-left" aria-label="Optional food add-on">
+            <div className="mb-1">
               <h4 className="text-xs font-extrabold text-[#1B3564]">Food add-on</h4>
-              <p className="mt-0.5 text-[10px] text-slate-600">Choose a menu · price per guest, per night</p>
+              <p className="mt-0.5 text-[10px] text-slate-600">Veg &amp; non-veg options available</p>
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-2 gap-1">
               {foodPackages.map(option => {
                 const isSelected = selectedFoodPackage === option.id;
                 return (
                   <button
                     key={option.id}
                     type="button"
+                    aria-label={`${option.label} food package, ₹${option.price.toLocaleString("en-IN")} per guest per night, veg and non-veg menus available`}
                     aria-pressed={isSelected}
                     onClick={() => setSelectedFoodPackage(isSelected ? null : option.id)}
-                    className={`min-h-[58px] rounded-lg border px-2 py-1.5 text-left transition-colors ${isSelected ? "border-[#1B3564] bg-[#1B3564] text-white ring-1 ring-[#1B3564]" : "border-slate-200 bg-white text-[#1B3564] hover:border-[#DAA520]"}`}
+                    className={`rounded-lg border p-1.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#1B3564] ${isSelected ? "border-[#1B3564] bg-[#F2F5F9]" : "border-slate-200 bg-white hover:border-[#9AAAC0]"}`}
                   >
-                    <span className="block text-[10px] font-extrabold">{option.label} · {option.cuisine === "Vegetarian" ? "Veg" : "Non-veg"}</span>
-                    <span className={`mt-0.5 block text-[10px] font-semibold ${isSelected ? "text-amber-200" : "text-slate-600"}`}>₹{option.price.toLocaleString("en-IN")} / guest / night</span>
+                    <div className="flex items-baseline justify-between gap-1 text-[#1B3564]">
+                      <strong className="text-[11px] font-extrabold">{option.label}</strong>
+                      <strong className="text-[11px] font-extrabold">₹{option.price.toLocaleString("en-IN")}</strong>
+                    </div>
+                    <span className="mt-0.5 block text-[9px] text-slate-500">per guest / night</span>
                   </button>
                 );
               })}
             </div>
             {selectedFood ? (
-              <div className="mt-2 flex items-center justify-between gap-2 border-t border-[#DAA520]/25 pt-2">
-                <label htmlFor="food-guests" className="text-[10px] font-semibold text-slate-700">For how many guests?</label>
-                <select
-                  id="food-guests"
-                  value={foodGuestCount}
-                  onChange={event => setFoodGuests(Number(event.target.value))}
-                  className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-xs font-bold text-[#1B3564] outline-none focus:border-[#1B3564] focus:ring-2 focus:ring-[#1B3564]/15"
-                >
-                  {Array.from({ length: guests }, (_, index) => index + 1).map(count => (
-                    <option key={count} value={count}>{count} {count === 1 ? "guest" : "guests"}</option>
-                  ))}
-                </select>
+              <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-[#DAA520]/25 pt-1.5">
+                <div className="flex min-w-0 items-center gap-2">
+                  <label htmlFor="food-guests" className="text-[10px] font-semibold text-slate-700">Guests</label>
+                  <select
+                    id="food-guests"
+                    value={foodGuestCount}
+                    onChange={event => setFoodGuests(Number(event.target.value))}
+                    className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-xs font-bold text-[#1B3564] outline-none focus:border-[#1B3564] focus:ring-2 focus:ring-[#1B3564]/15"
+                  >
+                    {Array.from({ length: guests }, (_, index) => index + 1).map(count => (
+                      <option key={count} value={count}>{count} {count === 1 ? "guest" : "guests"}</option>
+                    ))}
+                  </select>
+                </div>
+                <strong className="shrink-0 text-[10px] font-semibold text-[#1B3564]">Food total ₹{foodAddOnCost.toLocaleString("en-IN")}</strong>
               </div>
             ) : <p className="mt-2 text-[10px] text-slate-500">Pick a package to add it to your live quote.</p>}
-            {selectedFood && <p className="mt-1 text-right text-[10px] font-bold text-emerald-800">Food total for {foodGuestCount} guests: ₹{foodAddOnCost.toLocaleString("en-IN")}</p>}
           </section>
           </div>
         )}
@@ -1049,10 +1052,10 @@ Please confirm availability and the final amount before confirming my booking.`;
               setCalendarError("");
             }
           }}
-          className="w-full bg-[#1B3564] hover:bg-[#152A50] text-white font-black text-xs sm:text-sm py-2.5 px-5 rounded-xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer tracking-wider uppercase border border-[#DAA520]/40"
+          className="w-full min-h-11 bg-[#1B3564] hover:bg-[#152A50] text-white font-bold text-xs sm:text-sm py-2 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors active:scale-[0.99] cursor-pointer border border-[#DAA520]/40"
         >
           <CalendarIcon size={17} className="text-[#DAA520]" />
-          <span>{showCalendar ? "Close Calendar" : "Check Date Availability"}</span>
+          <span>{showCalendar ? "Close calendar" : "Check availability"}</span>
         </button>
 
         {/* Breathtakingly Premium Inline Calendar Picker */}
@@ -1153,32 +1156,32 @@ Please confirm availability and the final amount before confirming my booking.`;
 
         {/* Real-time Status Response Banner */}
         {isDatesUnavailable ? (
-          <div className="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-3 sm:p-4 flex gap-3 items-start text-left select-none shadow-sm border-l-4 border-l-red-500 animate-fade-in">
-            <Info className="text-red-500 shrink-0 mt-0.5" size={18} />
+          <div className="bg-red-50 border border-red-200 text-red-800 rounded-xl p-2.5 sm:p-3 flex gap-2.5 items-start text-left animate-fade-in">
+            <Info className="text-red-600 shrink-0 mt-0.5" size={17} />
             <div>
-              <h5 className="font-extrabold text-xs uppercase tracking-wider text-red-900">These dates aren’t available</h5>
-              <p className="text-[11px] text-red-800 leading-relaxed mt-0.5 font-medium">
+              <h5 className="font-bold text-[11px] text-red-900">These dates aren’t available</h5>
+              <p className="text-[10px] text-red-800 leading-snug mt-0.5">
                 Choose a different date range to continue.
               </p>
             </div>
           </div>
         ) : (
-          <div className={`${liveQuoteStatus === "available" ? "bg-emerald-50 border-emerald-200 text-emerald-950 border-l-emerald-500" : liveQuoteStatus === "error" ? "bg-amber-50 border-amber-200 text-amber-950 border-l-amber-500" : "bg-slate-50 border-slate-200 text-slate-800 border-l-slate-400"} border rounded-2xl p-3 sm:p-4 flex items-start gap-3 text-left select-none shadow-sm border-l-4 animate-fade-in`}>
+          <div className={`${liveQuoteStatus === "available" ? "bg-[#F2F5F9] border-[#D7DFEA] text-[#1B3564]" : liveQuoteStatus === "error" ? "bg-amber-50 border-amber-200 text-amber-950" : "bg-slate-50 border-slate-200 text-slate-800"} border rounded-xl p-2.5 sm:p-3 flex items-start gap-2.5 text-left animate-fade-in`}>
             {liveQuoteStatus === "available" ? (
-              <CheckCircle2 className="text-emerald-600 shrink-0 mt-0.5" size={20} />
+              <CheckCircle2 className="text-[#1B3564] shrink-0 mt-0.5" size={17} />
             ) : liveQuoteStatus === "error" ? (
-              <Info className="text-amber-700 shrink-0 mt-0.5" size={20} />
+              <Info className="text-amber-700 shrink-0 mt-0.5" size={17} />
             ) : (
-              <Loader2 className="text-amber-700 shrink-0 mt-0.5 animate-spin" size={20} />
+              <Loader2 className="text-amber-700 shrink-0 mt-0.5 animate-spin" size={17} />
             )}
             <div>
-              <h5 className="font-extrabold text-xs uppercase tracking-wider">{liveQuoteStatus === "available" ? "Available for your selected dates" : liveQuoteStatus === "error" ? "Rates are temporarily unavailable" : "Checking live availability"}</h5>
-              <p className="text-[11px] font-medium leading-relaxed mt-0.5">
+              <h5 className="font-bold text-[11px]">{liveQuoteStatus === "available" ? "Dates available" : liveQuoteStatus === "error" ? "Rates are temporarily unavailable" : "Checking live availability"}</h5>
+              <p className="text-[10px] font-medium leading-snug mt-0.5">
                 {liveQuoteStatus === "available"
-                  ? <>Our live calendar shows <strong className="font-bold">{format(normalizedCheckIn, "dd MMM")} – {format(normalizedCheckOut, "dd MMM")} ({nights} {nights === 1 ? "night" : "nights"})</strong> as open. The concierge confirms your request before it is final.</>
+                  ? <><strong className="font-semibold">{format(normalizedCheckIn, "dd MMM")} – {format(normalizedCheckOut, "dd MMM")} · {nights} {nights === 1 ? "night" : "nights"}</strong>. Final confirmation by our concierge.</>
                   : liveQuoteStatus === "error"
                     ? "We couldn’t reach the live calendar, so no rate is shown. Please try again shortly."
-                    : "We’re checking the latest bookings and rates for your dates."}
+                    : "Checking current availability and rates for your dates."}
               </p>
             </div>
           </div>
@@ -1264,7 +1267,7 @@ Please confirm availability and the final amount before confirming my booking.`;
               <div className="min-w-0">
                 <h4 className="text-xs font-extrabold text-[#1B3564]">Your stay</h4>
                 <p className="mt-1 text-[10px] leading-relaxed text-slate-600">{format(normalizedCheckIn, "dd MMM yyyy")} – {format(normalizedCheckOut, "dd MMM yyyy")} · {nights} {nights === 1 ? "night" : "nights"} · {guests} {guests === 1 ? "guest" : "guests"}</p>
-                {selectedFood && <p className="mt-0.5 text-[10px] text-slate-600">{selectedFood.label} {selectedFood.cuisine} food · {foodGuestCount} guests</p>}
+                {selectedFood && <p className="mt-0.5 text-[10px] text-slate-600">{selectedFood.label} food · veg &amp; non-veg menus available · {foodGuestCount} guests</p>}
               </div>
               {liveQuote && <strong className="shrink-0 text-base font-black text-[#1B3564]">₹{(liveQuote.totalPrice + addOnsCost + foodAddOnCost).toLocaleString("en-IN")}</strong>}
             </section>
@@ -1361,8 +1364,8 @@ Please confirm availability and the final amount before confirming my booking.`;
               <Receipt size={13} className="text-[#DAA520]" />
               <span>Live quote · {nights} Night{nights > 1 ? "s" : ""}</span>
             </span>
-            <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-black">
-              Live date-specific rates
+            <span className="text-[10px] font-semibold text-slate-500">
+              Updated for your dates
             </span>
           </div>
 
@@ -1418,19 +1421,19 @@ Please confirm availability and the final amount before confirming my booking.`;
           )}
           {selectedFood && (
             <div className="flex justify-between gap-3 text-xs font-semibold text-slate-700 bg-white p-3 rounded-xl border border-slate-200">
-              <span>{selectedFood.label} {selectedFood.cuisine} food ({foodGuestCount} guests × {nights} nights)</span>
+              <span>{selectedFood.label} food · veg &amp; non-veg menus available ({foodGuestCount} guests × {nights} nights)</span>
               <span className="shrink-0 font-black text-[#1B3564]">₹{foodAddOnCost.toLocaleString("en-IN")}</span>
             </div>
           )}
 
           {/* Coupon Discount Banner */}
           {discount > 0 && (
-            <div className="flex items-center justify-between text-xs font-black text-emerald-800 bg-emerald-100/90 px-3.5 py-2.5 rounded-xl border border-emerald-300 shadow-xs">
+            <div className="flex items-center justify-between text-xs font-bold text-[#1B3564] bg-[#F2F5F9] px-3 py-2 rounded-lg border border-[#D7DFEA]">
               <div className="flex items-center gap-1.5 text-left">
-                <Tag size={14} className="text-emerald-700 shrink-0" />
+                <Tag size={14} className="text-[#8b6815] shrink-0" />
                 <div>
                   <span>Offer savings applied ({couponCode})</span>
-                  <span className="text-[10px] text-emerald-700 font-normal block">
+                  <span className="text-[10px] text-slate-600 font-normal block">
                     {[
                       isWeekdayOfferApplied ? `${normalWeekdayNightsCount} weekday ${normalWeekdayNightsCount === 1 ? "night" : "nights"} (26% off)` : null,
                       isWeekendOfferApplied ? `${weekendAndHolidayNightsCount} weekend/holiday ${weekendAndHolidayNightsCount === 1 ? "night" : "nights"} (5% off)` : null,
