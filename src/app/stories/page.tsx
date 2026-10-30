@@ -7,14 +7,14 @@ import { Heart } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
-  description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool estates near Mumbai & Pune.",
+  description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool villas near Mumbai & Pune.",
   keywords: ["luxury villa guest stories"],
   alternates: {
     canonical: "https://www.staywillas.com/stories",
   },
   openGraph: {
     title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
-    description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool estates near Mumbai & Pune.",
+    description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool villas near Mumbai & Pune.",
     url: "https://www.staywillas.com/stories",
     images: [
       {
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Luxury Villa Guest Stories & Testimonials | Stay Willas",
-    description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool estates near Mumbai & Pune.",
+    description: "Read luxury villa guest stories & real testimonials from families who enjoyed staycations at our verified private pool villas near Mumbai & Pune.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -118,7 +118,7 @@ export default function StoriesPage() {
           <div>
             <h2 className="text-2xl font-heading text-[#1B3564] mb-3 font-bold">Book Your Own Luxury Stay Story</h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Ready to write your own chapter of slow luxury? Connect with our dedicated concierge today to customize your itinerary, request private chef bookings, or organize special events at one of our premium Maharashtra estates.
+              Ready to write your own chapter of slow luxury? Connect with our dedicated concierge today to customize your itinerary, request private chef bookings, or organize special events at one of our premium Maharashtra villas.
             </p>
           </div>
         </div>

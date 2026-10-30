@@ -5,6 +5,7 @@ import { getGuestPricing } from "@/lib/guest-pricing";
 import dynamic from 'next/dynamic';
 const EscapeClientPage = dynamic(() => import('./escape-client-page'));
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 export const metadata: Metadata = {
   title: "Group Staycation Villas in Lonavala | Stay Willas",
@@ -99,9 +100,9 @@ export default async function EscapePage() {
     bedrooms: 4,
     bathrooms: 5,
     images: [
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg"
+      canopyCrestPhotos.hero.src,
+      canopyCrestPhotos.poolDay.src,
+      canopyCrestPhotos.livingDining.src,
     ],
     amenities: [
       "Private Swimming Pool",
@@ -153,7 +154,7 @@ export default async function EscapePage() {
     guests: canopyCrest.guests,
     bedrooms: canopyCrest.bedrooms,
     bathrooms: canopyCrest.bathrooms,
-    images: canopyCrest.images,
+    images: [canopyCrestPhotos.hero.src, canopyCrestPhotos.poolDay.src, canopyCrestPhotos.livingDining.src],
     amenities: canopyCrest.amenities
   } : defaultCanopyCrest;
 

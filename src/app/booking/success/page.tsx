@@ -8,6 +8,7 @@ import Footer from "@/components/layout/footer";
 import { CheckCircle2, Calendar, MapPin, ArrowRight, ShieldCheck, Download, Info } from "lucide-react";
 import { format } from "date-fns";
 import { sendAdminLeadNotification } from "@/lib/lead-notifications";
+import { publicVillaName } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "Book Your Luxury Staycation Successfully | Stay Willas",
@@ -137,8 +138,8 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div className="space-y-4">
               <div>
-                <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-1">LUXURY ESTATE</span>
-                <span className="text-base font-bold text-[#1B3564]">{booking.villa.name}</span>
+                <span className="text-[9px] text-text-primary/40 uppercase tracking-widest block mb-1">LUXURY VILLA</span>
+                <span className="text-base font-bold text-[#1B3564]">{publicVillaName(booking.villa.slug, booking.villa.name)}</span>
                 <div className="flex items-center gap-1 text-xs text-text-primary/65 mt-1">
                   <MapPin size={12} className="text-[#DAA520]" />
                   <span>{booking.villa.location}</span>

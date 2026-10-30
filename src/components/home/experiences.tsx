@@ -360,7 +360,7 @@ const Experiences = () => {
                         fill
                         sizes="320px"
                         priority={isTop}
-                        quality={85}
+                        quality={75}
                         className="object-cover transition-transform duration-500 ease-out"
                         style={{
                           transform: isTop && isHovered ? "scale(1.06)" : "scale(1)"

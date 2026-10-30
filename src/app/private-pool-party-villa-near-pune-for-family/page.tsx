@@ -1,4 +1,5 @@
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 import React from "react";
 import { Metadata } from "next";
 import Image, { PhotoFrame } from "@/components/ui/site-image";
@@ -118,7 +119,7 @@ export default async function PuneFamilyPoolPartyPage() {
         <div className="max-w-5xl mx-auto relative z-10 text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#38BDF8]/20 border border-[#38BDF8]/60 text-[#7DD3FC] text-xs sm:text-sm font-bold uppercase tracking-wider mb-8 shadow-sm">
-            <Waves size={16} className="text-[#7DD3FC]" /> Pune Family Escapes • 60–90 Mins Drive
+            <Waves size={16} className="text-[#7DD3FC]" /> Pune Family Getaways • 60–90 Mins Drive
           </div>
 
           {/* Heading - Explicit text-white to avoid any inheritance bug */}
@@ -181,7 +182,7 @@ export default async function PuneFamilyPoolPartyPage() {
       {/* Featured Family Pool Villas */}
       <section id="villas" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-[#B8860B] font-black tracking-widest text-xs uppercase block mb-2">Quick Expressway Escape</span>
+          <span className="text-[#B8860B] font-black tracking-widest text-xs uppercase block mb-2">Quick Expressway Getaway</span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0B1528]">Top Private Pool Villas for Pune Families</h2>
           <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto mt-3">
             Independent private swimming pools, barbecue stations, open dining gazebos, and safe grassy lawns for kids.
@@ -262,8 +263,8 @@ export default async function PuneFamilyPoolPartyPage() {
             <div>
               <div className="relative aspect-[16/10] w-full">
                 <PhotoFrame
-                  src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg"
-                  alt="Canopy Crest Khopoli - 22ft Swimming Pool Estate for Pune Family Reunions"
+                  src={canopyCrestPhotos.poolDay.src}
+                  alt="Canopy Crest Khopoli - 22ft Swimming Pool Villa for Pune Family Reunions"
                   fill
                   className="object-cover"
                 />

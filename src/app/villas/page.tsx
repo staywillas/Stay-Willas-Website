@@ -4,8 +4,16 @@ import Footer from "@/components/layout/footer";
 import { prisma } from "@/lib/db";
 import VillasClient from "@/components/villas/villas-client";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
+import {
+  publicVillaAmenities,
+  publicVillaCategory,
+  publicVillaName,
+} from "@/lib/public-copy";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPhotos } from "@/data/nieevant-images";
+import { NIEEVANT_SLUG, withNieevantFallback } from "@/data/nieevant-villa";
 
-export const revalidate = 3600; // 1 hour edge cache
+export const revalidate = 86400; // Refresh daily; admin updates trigger on-demand revalidation.
 
 export const metadata: Metadata = {
   title: "Luxury Villas for Rent Near Mumbai | Stay Willas",
@@ -41,25 +49,18 @@ export const metadata: Metadata = {
   },
 };
 
-interface PageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function VillasPage({ searchParams }: PageProps) {
-  const resolvedParams = await searchParams;
-  const regionParam = resolvedParams.region;
-  const categoryParam = resolvedParams.category;
-
+export default async function VillasPage() {
   // Fetch all villas in a single query
-  const allVillas = await prisma.villa.findMany({
+  const savedVillas = await prisma.villa.findMany({
     orderBy: { createdAt: "desc" },
   });
+  const allVillas = withNieevantFallback(savedVillas);
 
   // All properties are live
   const hiddenSlugs: string[] = [];
 
   // Prioritize signature properties
-  const prioritySlugs = ["the-angle-house", "canopy-crest", "casa-de-reva", "willow-peak"];
+  const prioritySlugs = ["the-angle-house", "canopy-crest", NIEEVANT_SLUG, "casa-de-reva", "willow-peak"];
   const prioritized = allVillas
     .filter((v) => prioritySlugs.includes(v.slug))
     .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
@@ -70,13 +71,12 @@ export default async function VillasPage({ searchParams }: PageProps) {
   const villas = dbVillas.map((villa) => ({
     id: villa.id,
     slug: villa.slug,
-    name: villa.slug === "willow-peak" ? "Willow Peak" : villa.name,
+    name: publicVillaName(villa.slug, villa.name),
     location: villa.location,
     priceRaw: villa.price,
     priceFormatted: villa.price.toLocaleString("en-IN"),
-    image: villa.images[0] || (
+    image: villa.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : villa.slug === NIEEVANT_SLUG ? nieevantPhotos.hero.src : villa.images[0] || (
       villa.slug === "the-angle-house" ? "/assets/villas/the-angle-house/gallery-11.webp" :
-      villa.slug === "canopy-crest" ? "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" :
       villa.slug === "casa-de-reva" || villa.slug === "terra-cotta-villa" ? "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg" :
       villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/graded-v1/wp-01.webp" :
       "/assets/villas/the-angle-house/gallery-11.webp"
@@ -84,12 +84,9 @@ export default async function VillasPage({ searchParams }: PageProps) {
     bedrooms: villa.bedrooms,
     bathrooms: villa.bathrooms,
     guests: villa.guests,
-    category: villa.category,
-    amenities: villa.amenities,
+    category: publicVillaCategory(villa.category),
+    amenities: publicVillaAmenities(villa.amenities, villa.slug),
   }));
-
-  const initialRegion = typeof regionParam === "string" ? regionParam.trim() : "";
-  const initialCategory = typeof categoryParam === "string" ? categoryParam.trim() : "";
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: "/" },
@@ -144,11 +141,7 @@ export default async function VillasPage({ searchParams }: PageProps) {
         <div className="pt-28 md:pt-40" />
 
         {/* Highly Interactive, Real-Time Client Filter and Grid Section */}
-        <VillasClient 
-          initialVillas={villas} 
-          initialRegion={initialRegion}
-          initialCategory={initialCategory}
-        />
+        <VillasClient initialVillas={villas} />
       </div>
 
       <Footer />

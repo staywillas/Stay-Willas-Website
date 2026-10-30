@@ -20,7 +20,7 @@ interface VillaFeatureMarqueeProps {
 }
 
 export default function VillaFeatureMarquee({
-  heading = "Signature Estate Features",
+  heading = "Signature Villa Features",
   subheading = "Handcrafted luxury amenities designed for uncompromised relaxation",
   items,
 }: VillaFeatureMarqueeProps) {

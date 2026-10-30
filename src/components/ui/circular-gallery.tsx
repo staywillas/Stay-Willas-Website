@@ -500,7 +500,7 @@ class App {
   createMedias(items: any[], bend = 1, textColor: string, borderRadius: number, font: string) {
     const defaultItems = [
       { image: '/assets/villas/the-angle-house/gallery-11.webp', text: 'The Angle House (Lonavala)', link: '/villa/the-angle-house' },
-      { image: '/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg', text: 'Canopy Crest (Khopoli)', link: '/villa/canopy-crest' },
+      { image: '/assets/villas/canopy-crest/refresh/drone-villa-pool.webp', text: 'Canopy Crest (Khopoli)', link: '/villa/canopy-crest' },
       { image: '/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg', text: 'Casa De Reva (Panchgani)', link: '/villa/casa-de-reva' },
       { image: '/assets/villas/willow-peak/graded-v1/wp-01.webp', text: 'Willow Peak (Lonavala)', link: '/villa/willow-peak' }
     ];

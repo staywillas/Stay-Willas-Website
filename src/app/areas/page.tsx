@@ -8,10 +8,12 @@ import Link from "next/link";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
 
 export const metadata: Metadata = {
   title: "Villa Holiday Regions Near Mumbai | Stay Willas",
-  description: "Explore luxury villa holiday regions near Mumbai and Pune across Lonavala, Khopoli and Western Ghats. Book verified private estates with chef service.",
+  description: "Explore luxury villa holiday regions near Mumbai and Pune across Lonavala, Khopoli and Western Ghats. Book verified private villas with chef service.",
   keywords: [
     "villa holiday regions near mumbai",
     "luxury villa locations maharashtra",
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Weekend Getaway Villas Near Mumbai & Pune | Stay Willas",
-    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala and Khopoli. Book verified private estates with in-house chef service.",
+    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala and Khopoli. Book verified private villas with in-house chef service.",
     url: "https://www.staywillas.com/areas",
     images: [{ url: "https://www.staywillas.com/images/hero-villa.webp" }],
     type: "website",
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Weekend Getaway Villas Near Mumbai & Pune | Stay Willas",
-    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala and Khopoli. Book verified private estates with in-house chef service.",
+    description: "Explore weekend getaway villas near Mumbai with private pool destinations across Lonavala and Khopoli. Book verified private villas with in-house chef service.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -45,6 +47,11 @@ export default async function AreasPage() {
   const khopoliCount = await prisma.villa.count({
     where: { location: { contains: "Khopoli", mode: "insensitive" } }
   });
+  const nieevantRecord = await prisma.villa.findUnique({
+    where: { slug: NIEEVANT_SLUG },
+    select: { id: true },
+  });
+  const visibleKhopoliCount = khopoliCount + (nieevantRecord ? 0 : 1);
 
   const panchganiCount = await prisma.villa.count({
     where: {
@@ -66,11 +73,11 @@ export default async function AreasPage() {
     {
       slug: "khopoli",
       name: "Khopoli",
-      tagline: "The Nature Escape",
+      tagline: "The Nature Getaway",
       desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet large-group private pool villas.",
-      image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
-      count: khopoliCount,
-      isLaunchingSoon: khopoliCount === 0,
+      image: canopyCrestPhotos.hero.src,
+      count: visibleKhopoliCount,
+      isLaunchingSoon: visibleKhopoliCount === 0,
       link: "/areas/khopoli"
     },
     {
@@ -131,7 +138,7 @@ export default async function AreasPage() {
           </div>
           
           <p className="text-text-primary/75 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl font-normal mt-4">
-            Targeting the most scenic locations across Maharashtra. Choose your escape from our carefully curated destinations.
+            Targeting the most scenic locations across Maharashtra. Choose your getaway from our carefully curated destinations.
           </p>
         </section>
 
@@ -245,7 +252,7 @@ export default async function AreasPage() {
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/15 flex items-center justify-center mb-4 text-[#1B3564]">
                   <PhoneCall size={24} />
                 </div>
-                <h4 className="font-bold text-[#1B3564] text-base mb-1.5">24/7 Estate Concierge</h4>
+                <h4 className="font-bold text-[#1B3564] text-base mb-1.5">24/7 Villa Concierge</h4>
                 <p className="text-slate-600 text-xs leading-relaxed">
                   Dedicated on-site caretakers and personal trip coordination from check-in to check-out.
                 </p>
@@ -270,10 +277,10 @@ export default async function AreasPage() {
             <article className="prose prose-lg md:prose-xl max-w-none text-left select-text prose-p:text-slate-800 prose-p:text-base md:prose-p:text-lg prose-p:leading-relaxed prose-h2:text-[#1B3564] prose-h2:font-heading prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-10 prose-h3:text-[#DAA520] prose-h3:font-heading prose-h3:text-xl prose-a:text-[#DAA520]">
               <h2>Weekend Getaway Villas Near Mumbai & Pune</h2>
               <p>
-                Are you tired of the repetitive city routine and seeking a relaxing break close to home? Finding private <strong>weekend getaway villas</strong> has become the preferred choice for discerning travelers who want to escape traffic, noise, and pollution. Whether it is a quick family gathering or a private pool party with friends, booking independent <strong>private pool rentals</strong> near Mumbai and Pune provides the perfect solution. You get the space, privacy, and specialized concierge services that traditional hotels simply cannot deliver.
+                Are you tired of the repetitive city routine and seeking a relaxing break close to home? Finding private <strong>weekend getaway villas</strong> has become the preferred choice for discerning travelers who want to avoid traffic, noise, and pollution. Whether it is a quick family gathering or a private pool party with friends, booking independent <strong>private pool rentals</strong> near Mumbai and Pune provides the perfect solution. You get the space, privacy, and specialized concierge services that traditional hotels simply cannot deliver.
               </p>
               <p>
-                Our carefully curated portfolio highlights premium properties in the most scenic locations of Maharashtra. From the misty heights of Lonavala to the serene base of the Sahyadri mountains in Khopoli and scenic valleys of the Western Ghats, we offer a diverse selection of private estates to match every group&apos;s requirement.
+                Our carefully curated portfolio highlights premium properties in the most scenic locations of Maharashtra. From the misty heights of Lonavala to the serene base of the Sahyadri mountains in Khopoli and scenic valleys of the Western Ghats, we offer a diverse selection of private villas for every group.
               </p>
               <p>
                 What makes renting private villas near Mumbai so popular is the travel time. You don&apos;t need to book plane tickets or plan weeks in advance. You can simply load your bags into the car on a Friday afternoon and arrive at your private villa within 1.5 to 2 hours via the Mumbai-Pune Expressway.

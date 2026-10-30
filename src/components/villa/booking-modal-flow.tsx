@@ -18,6 +18,7 @@ import { useLenis } from "lenis/react";
 import editorialStyles from "./property-editorial.module.css";
 import { willowUnits } from "@/data/property-editorial";
 import BorderGlow from "@/components/ui/border-glow";
+import { trackCanopyCrestInteraction } from "@/lib/angle-house-measurement";
 
 interface BookingModalFlowProps {
   villaId: string;
@@ -84,7 +85,55 @@ export default function BookingModalFlow({
 
   useEffect(() => {
     setMounted(true);
+
+    const params = new URLSearchParams(window.location.search);
+    const checkIn = params.get("checkIn") ?? "";
+    const checkOut = params.get("checkOut") ?? "";
+    const isValidDate = (value: string) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+      const [year, month, day] = value.split("-").map(Number);
+      const parsed = new Date(Date.UTC(year, month - 1, day));
+      return parsed.getUTCFullYear() === year && parsed.getUTCMonth() === month - 1 && parsed.getUTCDate() === day;
+    };
+
+    if (!initialCheckIn && !initialCheckOut && isValidDate(checkIn) && isValidDate(checkOut) && checkOut > checkIn) {
+      setQuickCheckIn(checkIn);
+      setQuickCheckOut(checkOut);
+      setIsBookingModalOpen(true);
+    }
+
+    if (!initialGuests) {
+      const guests = Number(params.get("guests"));
+      if (Number.isInteger(guests) && guests > 0 && guests <= 16) setQuickGuests(guests);
+    }
+
+    const selection = params.get("cottageSelection");
+    if (selection && ["A", "B", "C", "TWO", "ALL"].includes(selection)) {
+      setCottageSelection(selection as "A" | "B" | "C" | "TWO" | "ALL");
+    }
   }, []);
+
+  useEffect(() => {
+    const handleHeroBooking = (event: Event) => {
+      const request = (event as CustomEvent<{
+        checkIn: string;
+        checkOut: string;
+        guests?: number;
+      }>).detail;
+      if (!request?.checkIn || !request.checkOut || request.checkOut <= request.checkIn) return;
+
+      setQuickCheckIn(request.checkIn);
+      setQuickCheckOut(request.checkOut);
+      if (Number.isInteger(request.guests) && request.guests! > 0 && request.guests! <= maxGuests) {
+        setQuickGuests(request.guests!);
+      }
+      setQuickBookingError("");
+      setIsBookingModalOpen(true);
+    };
+
+    window.addEventListener("staywillas:open-booking", handleHeroBooking);
+    return () => window.removeEventListener("staywillas:open-booking", handleHeroBooking);
+  }, [maxGuests]);
 
   // Keep keyboard interaction inside the editorial booking overlays and return
   // focus to the trigger after closing.
@@ -137,10 +186,13 @@ export default function BookingModalFlow({
     : maxGuests;
   const quickGuestMinimum = isWillowPeak && cottageSelection === "TWO" ? 5 : 1;
   const bookingTitle = propertySlug === "willow-peak"
-    ? `${villaName.replace(/\s*\(Entire Estate.*\)$/i, "")} · ${cottageSelection === "ALL" ? "Entire estate" : cottageSelection === "TWO" ? "2 cottages" : `Cottage ${cottageSelection}`}`
+    ? `${villaName} · ${cottageSelection === "ALL" ? "All 3 cottages" : cottageSelection === "TWO" ? "2 cottages" : `Cottage ${cottageSelection}`}`
     : villaName;
 
   const handleOpenBooking = () => {
+    if (propertySlug === "canopy-crest") {
+      trackCanopyCrestInteraction("canopy_crest_book_now_click", "villa_booking_summary");
+    }
     if (!quickCheckIn || !quickCheckOut) {
       setQuickBookingError("Choose your check-in and check-out dates to see the live rate.");
       document.querySelector<HTMLInputElement>('[aria-label="Check-in date"]')?.focus();
@@ -183,7 +235,7 @@ export default function BookingModalFlow({
         <p className={editorialStyles.quickBookingIntro}>Choose your dates and group size to see the live rate.</p>
         {isWillowPeak && (
           <div className={editorialStyles.unitPicker}>
-            <p>{cottageSelection === "ALL" ? "Entire estate · up to 12 guests" : cottageSelection === "TWO" ? "2 cottages · up to 8 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p>
+            <p>{cottageSelection === "ALL" ? "All 3 cottages · up to 12 guests" : cottageSelection === "TWO" ? "2 cottages · up to 8 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p>
             <nav className={editorialStyles.unitLinks} aria-label="Choose your Willow Peak stay">
               {willowUnits.map(unit => <Link key={unit.slug} href={`/villa/${unit.slug}`} aria-current={unit.slug === propertySlug ? "page" : undefined}><strong>{unit.name}</strong><small>{unit.capacity} guests</small></Link>)}
             </nav>

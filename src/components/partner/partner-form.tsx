@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { trackWebsiteWhatsAppClick } from "@/lib/angle-house-measurement";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -138,6 +139,7 @@ const PartnerForm = () => {
       setLastWhatsappUrl(waUrl);
       setLastFormattedText(formattedMessage);
       setSuccess(true);
+      trackWebsiteWhatsAppClick("partner_form");
       window.open(waUrl, "_blank", "noopener,noreferrer");
     } finally {
       setLoading(false);

@@ -1,5 +1,7 @@
 import "dotenv/config";
 import { prisma } from "../src/lib/db";
+import { canopyCrestGallery } from "../src/data/canopy-crest-images";
+import { nieevantVillaData } from "../src/data/nieevant-villa";
 
 const villasData = [
   {
@@ -8,13 +10,13 @@ const villasData = [
     name: "The Angle House",
     location: "Kamshet, Lonavala, Maharashtra",
     category: "Infinity Pools",
-    description: `Imagine waking up to the gentle breeze of the hills, surrounded by sleek glass walls and towering trees. Welcome to The Angle House, a stunning designer villa where dramatic modern architecture meets forest serenity. Characterized by its striking angular glass-facade design, this estate is a genuinely unique retreat that stands out in Lonavala's landscape. Located a short, convenient drive from Mumbai and Pune, it is the perfect villa to unwind with your loved ones.
+    description: `Imagine waking up to the gentle breeze of the hills, surrounded by sleek glass walls and towering trees. Welcome to The Angle House, a stunning designer villa where dramatic modern architecture meets forest serenity. Characterized by its striking angular glass-facade design, this villa is a genuinely unique retreat that stands out in Lonavala's landscape. Located a short, convenient drive from Mumbai and Pune, it is the perfect villa to unwind with your loved ones.
 
-Step outside onto the main deck, and you will find your own private swimming pool, complete with a soothing waterfall feature, outdoor lounge chairs, and cozy corners to sit. It is a perfect setting for family getaways, milestone birthdays, or quiet weekend escapes.
+Step outside onto the main deck, and you will find your own private swimming pool, complete with a soothing waterfall feature, outdoor lounge chairs, and cozy corners to sit. It is a perfect setting for family getaways, milestone birthdays, or quiet weekend getaways.
 
 Inside, the slow luxury continues. The villa features three spacious, beautifully appointed bedrooms that can comfortably sleep up to 12 guests. The master suite offers a private in-room jacuzzi, providing the ultimate space to rejuvenate.
 
-To elevate your stay, the villa is fully pet-friendly, welcoming your furry companions to run on the lush lawns. We also offer a dedicated private chef who specializes in preparing fresh, custom veg-only and Jain food spreads in separate setups. Book your escape today and experience the absolute peak of modern architectural luxury.`,
+To elevate your stay, the villa is fully pet-friendly, welcoming your furry companions to run on the lush lawns. We also offer a dedicated private chef who specializes in preparing fresh, custom veg-only and Jain food spreads in separate setups. Plan your next stay and experience the absolute peak of modern architectural luxury.`,
     price: 13000,
     weekendPrice: 20000,
     fridayPrice: 15000,
@@ -61,7 +63,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     slug: "canopy-crest",
     name: "Canopy Crest",
     location: "Khopoli, Maharashtra",
-    category: "Private Estates",
+    category: "Private Villas",
     description: `Spread across an expansive field, this sprawling holiday getaway home is tucked away from bustling city life to provide you with a perfect window of relaxation. Located near Khopoli, it is the perfect villa to rejuvenate, detox, and unwind. The villa features eclectic interiors, along with lavish amenities. Rejuvenate, detox, and unwind at this serene home, that is enveloped in lush verdant cover of greenery and towering hills. Savour the misty breeze in the mornings, relax on the lounge-worthy sit-outs, and make the most of the relaxing swimming pool, one of the key features of this beautiful villa. Guests can take a peaceful walk in the lawn and embrace the beauty of the overlooking mountainscapes and the horizon of the manicured fields around the villa. Imagine yourself, relishing a delicious barbeque by the pool living your best getaway, at the Canopy Crest.`,
     price: 15000,
     weekendPrice: 22000,
@@ -73,17 +75,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     guests: 16,
     bedrooms: 4,
     bathrooms: 5,
-    images: [
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0014.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0010.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0018.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0009.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0008.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0013.jpg",
-      "/assets/villas/Canopy crest photos/IMG-20260607-WA0012.jpg"
-    ],
+    images: canopyCrestGallery.map((photo) => photo.src),
     amenities: [
       "Private Swimming Pool",
       "Indoor/Outdoor Games",
@@ -106,7 +98,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     name: "Breeze",
     location: "Kurwande, Lonavala, Maharashtra",
     category: "Mountain Cottages",
-    description: `Escape to Breeze (Cottage A at Willow Peak) in Kurwande, Lonavala — a charming private 1 BHK A-frame cottage accommodating up to 4 guests. Nestled in the serene hills of Kurwande near Lonavala, this cottage features an air-conditioned bedroom with a comfortable double bed, an attached modern bathroom with shower, a soothing in-room jacuzzi bath, and a private outdoor sit-out with lush garden views. Complete with Wi-Fi, television, BBQ facility, and peaceful mountain ambiance, it is the ideal romantic or small-family villa.`,
+    description: `Enjoy a stay at Breeze (Cottage A at Willow Peak) in Kurwande, Lonavala — a charming private 1 BHK A-frame cottage accommodating up to 4 guests. Nestled in the serene hills of Kurwande near Lonavala, this cottage features an air-conditioned bedroom with a comfortable double bed, an attached modern bathroom with shower, a soothing in-room jacuzzi bath, and a private outdoor sit-out with lush garden views. Complete with Wi-Fi, television, BBQ facility, and peaceful mountain ambiance, it is the ideal romantic or small-family villa.`,
     price: 4999,
     weekendPrice: 6999,
     fridayPrice: 5999,
@@ -238,10 +230,10 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
   {
     id: "lonavala-willow-peak",
     slug: "willow-peak",
-    name: "Willow Peak (Entire Estate - Breeze, Crest & Heaven)",
+    name: "Willow Peak (All 3 Cottages - Breeze, Crest & Heaven)",
     location: "Kurwande, Lonavala, Maharashtra",
     category: "Mountain View",
-    description: `Reserve the entire Willow Peak estate in Kurwande, Lonavala — comprising all 3 private standalone A-frame cottages (Breeze, Crest, and Heaven) for exclusive group use up to 12 guests. Perched in the serene hills of Kurwande near Lonavala, the estate features 3 air-conditioned bedrooms, 3 attached modern bathrooms, soothing private jacuzzi baths in each cottage, expansive manicured gardens, outdoor dining deck, and BBQ facilities. Complete with carrom board entertainment, well-lit outdoor evening spaces, secure parking, televisions, and high-speed Wi-Fi across the property. Ideal for multi-family gatherings, milestone celebrations, and group staycations.`,
+    description: `Reserve all three Willow Peak cottages in Kurwande, Lonavala — three private standalone A-frame cottages (Breeze, Crest, and Heaven) for groups of up to 12 guests. Perched in the serene hills of Kurwande near Lonavala, the property has 3 air-conditioned bedrooms, 3 attached modern bathrooms, private jacuzzi baths in each cottage, expansive manicured gardens, an outdoor dining deck, and BBQ facilities. Complete with carrom board entertainment, well-lit outdoor evening spaces, secure parking, televisions, and high-speed Wi-Fi. Ideal for multi-family gatherings, milestone celebrations, and group stays.`,
     price: 17997,
     weekendPrice: 23997,
     fridayPrice: 20997,
@@ -265,7 +257,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
       "/assets/villas/willow-peak/wp-10.webp"
     ],
     amenities: [
-      "3 Individual Standalone Cottages (Exclusive Estate)",
+      "3 Standalone Cottages (All Booked Together)",
       "A-Frame Alpine Architecture",
       "Private Jacuzzi Baths in Each Cottage",
       "Air-Conditioned Bedrooms",
@@ -289,8 +281,8 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     slug: "casa-de-reva",
     name: "Casa De Reva",
     location: "Panchgani, Maharashtra",
-    category: "Private Estates",
-    description: `Immerse yourself in rustic mountain serenity at Casa De Reva, a premier 4-BHK private pool sanctuary perched on the picturesque hills of Panchgani. Built with warm, earthy terracotta brick-style architecture, this private estate seamlessly blends timeless countryside charm with modern luxury amenities.
+    category: "Private Villas",
+    description: `Immerse yourself in rustic mountain serenity at Casa De Reva, a premier 4-BHK private pool sanctuary perched on the picturesque hills of Panchgani. Built with warm, earthy terracotta brick-style architecture, this private villa seamlessly blends timeless countryside charm with modern luxury amenities.
 
 Step outside onto your private poolside deck surrounded by manicured lawns and towering hillscapes. Take a refreshing swim in the crystal-clear pool, relax under the private gazebo with misty valley breezes, or host memorable evening barbecues under the stars.
 
@@ -349,6 +341,10 @@ Located near Kaswand in Panchgani, Casa De Reva is just minutes away from Mapro 
       "Secure On-Site Parking",
       "Mountain & Valley Views"
     ]
+  },
+  {
+    id: "nieevant-by-stay-willas",
+    ...nieevantVillaData,
   }
 ];
 
@@ -375,7 +371,7 @@ async function main() {
       userId: "guest_rohan_mehta",
       userName: "Rohan & Priya Mehta (Bandra, Mumbai)",
       rating: 5,
-      comment: "The Monsoon Escape at The Angle House was breathtaking! The waterfall pool in the rain and glass facade view of Sahyadri clouds made it unforgettable. Kailash's culinary team prepared steaming hot pakoras & tea!",
+      comment: "The Monsoon Getaway at The Angle House was breathtaking! The waterfall pool in the rain and glass facade view of Sahyadri clouds made it unforgettable. Kailash's culinary team prepared steaming hot pakoras & tea!",
     },
     {
       villaId: "lonavala-estate",
@@ -404,7 +400,7 @@ async function main() {
       userId: "guest_anand_joshi",
       userName: "Anand & Shweta Joshi (Dadar, Mumbai)",
       rating: 5,
-      comment: "The Monsoon Escape at Canopy Crest was unbelievable! The massive open lawn turns emerald green in the rains and the 22ft pool is huge. We booked for 16 family members and had a fantastic experience!",
+      comment: "The Monsoon Getaway at Canopy Crest was unbelievable! The massive open lawn turns emerald green in the rains and the 22ft pool is huge. We booked for 16 family members and had a fantastic experience!",
     },
     {
       villaId: "khopoli-canopy-crest",

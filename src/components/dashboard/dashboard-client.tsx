@@ -163,7 +163,7 @@ export default function DashboardClient({ initialStays }: DashboardClientProps) 
       {/* Booking Category Navigation Tabs */}
       <div className="flex border-b border-border-subtle/80 mb-12 gap-8">
         {[
-          { id: "upcoming", label: "Upcoming Escapes", count: upcomingStays.length },
+          { id: "upcoming", label: "Upcoming Getaways", count: upcomingStays.length },
           { id: "past", label: "Past Stays", count: pastStays.length },
           { id: "cancelled", label: "Cancellations / Holds", count: cancelledStays.length }
         ].map(tab => (
@@ -307,7 +307,7 @@ export default function DashboardClient({ initialStays }: DashboardClientProps) 
                         <div className="p-4 border border-border-subtle rounded-2xl bg-bg-primary/40 flex items-start gap-3">
                           <Phone className="text-[#1B3564] mt-0.5 shrink-0" size={16} />
                           <div>
-                            <span className="text-[9px] text-text-primary/45 uppercase tracking-widest block mb-0.5">ESTATE MANAGER</span>
+                            <span className="text-[9px] text-text-primary/45 uppercase tracking-widest block mb-0.5">VILLA MANAGER</span>
                             <span className="text-xs font-bold text-[#1B3564]">Sagar Kadam</span>
                             <a href="tel:+919120044883" className="text-[10px] text-text-primary/75 mt-0.5 block hover:underline">+91 91200 44883</a>
                           </div>
@@ -317,7 +317,7 @@ export default function DashboardClient({ initialStays }: DashboardClientProps) 
                         <div className="p-4 border border-border-subtle rounded-2xl bg-bg-primary/40 flex items-start gap-3">
                           <Wifi className="text-[#1B3564] mt-0.5 shrink-0" size={16} />
                           <div>
-                            <span className="text-[9px] text-text-primary/45 uppercase tracking-widest block mb-0.5">ESTATE WI-FI</span>
+                            <span className="text-[9px] text-text-primary/45 uppercase tracking-widest block mb-0.5">VILLA WI-FI</span>
                             <span className="text-xs font-bold text-[#1B3564]">StayWillas_VIP</span>
                             <span className="text-[10px] text-text-primary/75 mt-0.5 block select-all font-mono">slow_luxury_stays</span>
                           </div>
@@ -415,7 +415,7 @@ export default function DashboardClient({ initialStays }: DashboardClientProps) 
                             </div>
                           )}
                           <p className="text-[10px] text-[#559C24] font-semibold mt-2">
-                            ✔ Government check completed. Physical keys will be released at the check-in time. Enjoy your escape!
+                            ✔ Government check completed. Physical keys will be released at the check-in time. Enjoy your getaway!
                           </p>
                         </div>
                       ) : (

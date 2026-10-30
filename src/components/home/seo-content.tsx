@@ -1,11 +1,14 @@
 import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import GuideLinks from "@/components/blog/guide-links";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPhotos } from "@/data/nieevant-images";
 
 const stays = [
   { name: "The Angle House", location: "Kamshet, Lonavala", href: "/villa/the-angle-house", region: "/areas/lonavala", image: "/assets/villas/the-angle-house/gallery-11.webp", detail: "A 3 BHK private pool villa with a Jacuzzi for up to 12 guests. Stays start at ₹13,000 per night." },
-  { name: "Canopy Crest", location: "Khopoli", href: "/villa/canopy-crest", region: "/areas/khopoli", image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg", detail: "A 4 BHK private pool villa for a maximum of 16 guests. Stays start at ₹15,000 per night. Check the property pin when planning an Imagicaa visit." },
-  { name: "Willow Peak", location: "Kurwande, Lonavala", href: "/villa/willow-peak", region: "/areas/lonavala", image: "/assets/villas/willow-peak/graded-v1/wp-01.webp", detail: "Three A-frame cottages with private Jacuzzis, each for up to four guests. Base rates start at ₹4,999 per night per cottage; ask for a separate quote to book the full estate." },
+  { name: "Canopy Crest", location: "Khopoli", href: "/villa/canopy-crest", region: "/areas/khopoli", image: canopyCrestPhotos.hero.src, detail: "A 4 BHK private pool villa for a maximum of 16 guests. Stays start at ₹15,000 per night. Check the property pin when planning an Imagicaa visit." },
+  { name: "Nieevant by Stay Willas", location: "Hatond Village, Khopoli", href: "/villa/nieevant-by-stay-willas", region: "/areas/khopoli", image: nieevantPhotos.hero.src, detail: "A 3-bedroom hilltop villa for up to 15 guests, with a private pool and valley views. Listed from ₹19,999 per night plus taxes." },
+  { name: "Willow Peak", location: "Kurwande, Lonavala", href: "/villa/willow-peak", region: "/areas/lonavala", image: "/assets/villas/willow-peak/graded-v1/wp-01.webp", detail: "Three A-frame cottages with private Jacuzzis, each for up to four guests. Base rates start at ₹4,999 per night per cottage; ask for a separate quote to book all three cottages." },
   { name: "Casa De Reva", location: "Kaswand, Panchgani", href: "/villa/casa-de-reva", region: "/areas/panchgani", image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg", detail: "A 4 BHK private pool villa for a Panchgani getaway. Stays start at ₹16,000 per night. Check dates, guest limits and the final quote on the listing." },
 ];
 

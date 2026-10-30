@@ -53,7 +53,7 @@ export default function PropertyEditorialGallery({
               src={photo.src}
               alt={photo.alt}
               fill
-              quality={80}
+              quality={75}
               loading={index === 0 ? "eager" : "lazy"}
               fetchPriority={index === 0 ? "high" : "auto"}
               sizes={

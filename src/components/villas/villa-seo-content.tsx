@@ -16,8 +16,8 @@ const facts: Record<string, { title: string; description: string; planning: stri
     linkText: "Explore all Luxury Villas in Khopoli with Private Pool →",
   },
   "willow-peak": {
-    title: "Choose one Willow Peak cottage or the full estate",
-    description: "Willow Peak in Kurwande, Lonavala has three A-frame cottages with private Jacuzzis. Each accommodates up to four guests. Base rates start at ₹4,999 per night per cottage; the full three-cottage estate for up to 12 guests requires a separate quote.",
+    title: "Choose one Willow Peak cottage or all three together",
+    description: "Willow Peak in Kurwande, Lonavala has three A-frame cottages with private Jacuzzis. Each accommodates up to four guests. Base rates start at ₹4,999 per night per cottage; booking all three cottages for up to 12 guests requires a separate quote.",
     planning: "Compare Breeze, Crest and Heaven before choosing your cottage. Confirm the specific room and view, shared outdoor areas, meal options and any decoration charges. Review the final rate for your dates before payment.",
     href: "/areas/lonavala",
     linkText: "Explore all Luxury Villas in Lonavala with Private Pool →",

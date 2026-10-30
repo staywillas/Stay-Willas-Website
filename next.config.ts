@@ -10,11 +10,12 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   images: {
-    formats: ['image/avif', 'image/webp'],
-    qualities: [75, 80, 85, 90],
+    formats: ['image/webp'],
+    // Keep the existing blog carousel quality working while reducing variants.
+    qualities: [75, 78],
     minimumCacheTTL: 31536000, // 1 year cache for immutable villa images
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    deviceSizes: [640, 828, 1080, 1920],
+    imageSizes: [32, 64, 128, 256, 384],
     remotePatterns: [
       {
         protocol: 'https',
@@ -291,6 +292,10 @@ const nextConfig: NextConfig = {
     },
     {
       source: '/care/:path*',
+      headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+    },
+    {
+      source: '/ads/:path*',
       headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
     },
     {

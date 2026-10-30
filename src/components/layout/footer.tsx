@@ -38,14 +38,14 @@ const Footer = () => {
           
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
-              <span className="text-[#DAA520] font-black tracking-[0.3em] uppercase text-[10px] mb-3 block">Ready to Escape?</span>
+              <span className="text-[#DAA520] font-black tracking-[0.3em] uppercase text-[10px] mb-3 block">Ready to plan your stay?</span>
               <h3 className="text-3xl md:text-4xl font-heading text-white leading-tight">
                 Plan Your <span className="italic text-[#DAA520]">Perfect Stay</span>
               </h3>
               <p className="text-white/60 text-sm mt-3 max-w-md font-light">Tell us your dates and preferences. Our villa concierge will curate the perfect villa for you.</p>
             </div>
             <a
-              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hello Stay Willas Concierge! 🏡 I am ready to plan our luxury escape. Could you help us check availability for our next vacation?")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hello Stay Willas Concierge! 🏡 I am ready to plan our next getaway. Could you help us check dates for our next stay?")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#DAA520] hover:bg-[#C4941A] text-[#1B3564] rounded-full px-10 py-4 text-xs font-black tracking-[0.25em] uppercase transition-all duration-300 shadow-lg shadow-[#DAA520]/20 hover:shadow-xl hover:scale-105 active:scale-95 flex items-center gap-3 whitespace-nowrap shrink-0"
@@ -108,7 +108,7 @@ const Footer = () => {
               </div>
             </Link>
             <p className="text-white/70 mb-8 max-w-xs leading-relaxed text-sm">
-              Discover luxury redefined. We curate extraordinary homes for unforgettable escapes across Maharashtra.
+                Discover luxury redefined. We curate extraordinary homes for unforgettable getaways across Maharashtra.
             </p>
             <div className="flex gap-4">
               <a
@@ -152,6 +152,7 @@ const Footer = () => {
               {[
                 { name: "The Angle House (Lonavala)", href: "/villa/the-angle-house" },
                 { name: "Canopy Crest (Khopoli)", href: "/villa/canopy-crest" },
+                { name: "Nieevant by Stay Willas (Khopoli)", href: "/villa/nieevant-by-stay-willas" },
                 { name: "Willow Peak (Kurvande)", href: "/villa/willow-peak" },
                 { name: "Casa De Reva (Panchgani)", href: "/villa/casa-de-reva" },
                 { name: "Group Stays & Celebrations", href: "/escape" },
@@ -201,7 +202,7 @@ const Footer = () => {
               <div className="flex items-start gap-3.5 group">
                 <MapPin className="text-[#DAA520] shrink-0 mt-1 group-hover:scale-110 transition-transform" size={18} />
                 <p className="text-white/70 text-sm leading-relaxed">
-                  Kim cottage, 14, PR Kadam Marg,<br /> Maneklal Estate, Ghatkopar West,<br /> Mumbai, Maharashtra 400084
+                  Kim Cottage, 14, PR Kadam Marg,<br /> Maneklal, Ghatkopar West,<br /> Mumbai, Maharashtra 400084
                 </p>
               </div>
               <div className="flex items-center gap-3.5 group">
@@ -287,7 +288,7 @@ const Footer = () => {
                 <ArrowRight size={14} className="text-[#DAA520] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
               </div>
               <p className="text-xs text-white/50 font-light">
-                Elderly-friendly ground floor suites, private chefs & multi-generation estates.
+                Elderly-friendly ground floor suites, private chefs & multi-generation stays.
               </p>
             </Link>
 
@@ -302,7 +303,7 @@ const Footer = () => {
                 <ArrowRight size={14} className="text-[#DAA520] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
               </div>
               <p className="text-xs text-white/50 font-light">
-                Gated private pools, BBQ lawns & zero-traffic weekend escapes near Pune.
+                Gated private pools, BBQ lawns & zero-traffic weekend getaways near Pune.
               </p>
             </Link>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import { trackWebsiteWhatsAppClick } from "@/lib/angle-house-measurement";
 import React, { useState } from "react";
 import { Phone, ArrowRight, CheckCircle2, ShieldCheck, Loader2, CloudRain } from "lucide-react";
 import { captureBookingLead } from "@/app/actions/inquiry";
@@ -21,7 +22,7 @@ export default function QuickMobileLeadForm({
   defaultCoupon = "Stayw26",
   discountPercent = 26,
   className = "",
-  offerTitle = "Monsoon Escape",
+  offerTitle = "Monsoon Getaway",
   highlightText = "Stay 2 Nights & Save More (Weekdays Only)",
 }: QuickMobileLeadFormProps) {
   const [mobileNumber, setMobileNumber] = useState("");
@@ -32,7 +33,7 @@ export default function QuickMobileLeadForm({
     e.preventDefault();
     const cleanNumber = mobileNumber.replace(/\D/g, "");
     if (cleanNumber.length < 10) {
-      alert("Please enter a valid 10-digit mobile number to claim your Monsoon Escape discount.");
+      alert("Please enter a valid 10-digit mobile number to claim your Monsoon Getaway discount.");
       return;
     }
 
@@ -53,6 +54,7 @@ export default function QuickMobileLeadForm({
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
+      trackWebsiteWhatsAppClick("quick_mobile_lead_form");
       window.open(whatsappUrl, "_blank");
     }, 400);
   };

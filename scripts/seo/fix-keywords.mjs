@@ -1,5 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function findFiles(dir, filter, fileList = []) {
   const files = fs.readdirSync(dir);
@@ -14,7 +17,8 @@ function findFiles(dir, filter, fileList = []) {
   return fileList;
 }
 
-const files = findFiles('c:/work/WEBSITE-STAY BELLISIMO/src', /\.(tsx|ts)$/);
+const projectRoot = path.resolve(__dirname, '..', '..');
+const files = findFiles(path.join(projectRoot, 'src'), /\.(tsx|ts)$/);
 
 for (const file of files) {
   let content = fs.readFileSync(file, 'utf8');

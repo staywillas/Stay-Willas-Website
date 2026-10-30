@@ -8,6 +8,9 @@ import Link from "next/link";
 import ThreeDHoverCard from "@/components/ui/three-d-hover-card";
 import { prisma } from "@/lib/db";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPhotos } from "@/data/nieevant-images";
+import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
 
 export const metadata: Metadata = {
   title: "Villa Destinations in Maharashtra | Stay Willas",
@@ -61,20 +64,26 @@ export default async function DestinationsPage() {
     {
       name: "Lonavala (The Angle House)",
       tagline: "The Mountain Villa",
-      desc: "Cool mountain breeze, misty green valleys, and spacious pool estates perched on lush hills.",
+      desc: "Cool mountain breeze, misty green valleys, and spacious pool villas perched on lush hills.",
       image: "/assets/villas/the-angle-house/gallery-11.webp",
       count: lonavalaCount,
       isLaunchingSoon: lonavalaCount === 0,
-      link: "/villa/the-angle-house"
+      link: "/villa/the-angle-house",
+      featuredStay: null,
     },
     {
       name: "Khopoli (Canopy Crest)",
-      tagline: "The Nature Escape",
+      tagline: "The Nature Getaway",
       desc: "Beautiful seasonal waterfalls, green Sahyadri hills, and quiet pool retreats.",
-      image: "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg",
+      image: canopyCrestPhotos.hero.src,
       count: khopoliCount,
       isLaunchingSoon: khopoliCount === 0,
-      link: "/villa/canopy-crest"
+      link: "/villa/canopy-crest",
+      featuredStay: {
+        name: "Nieevant by Stay Willas",
+        link: `/villa/${NIEEVANT_SLUG}`,
+        image: nieevantPhotos.hero.src,
+      },
     },
     {
       name: "Panchgani (Casa De Reva)",
@@ -83,7 +92,8 @@ export default async function DestinationsPage() {
       image: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
       count: panchganiCount,
       isLaunchingSoon: panchganiCount === 0,
-      link: "/villa/casa-de-reva"
+      link: "/villa/casa-de-reva",
+      featuredStay: null,
     }
   ];
 
@@ -142,7 +152,7 @@ export default async function DestinationsPage() {
         </div>
         
         <p className="text-text-primary/70 text-xs sm:text-base leading-relaxed max-w-2xl font-light">
-          We select each location with great care. Every luxury escape we offer is crafted to give you an unforgettable holiday experience.
+          We select each location with great care. Every luxury getaway we offer is crafted to give you an unforgettable holiday experience.
         </p>
       </section>
 
@@ -199,7 +209,7 @@ export default async function DestinationsPage() {
                     <span className="uppercase tracking-[0.2em] text-[10px] font-bold">View Details & Book</span>
                   </Link>
                   <a
-                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hey Stay Willas team! 🏔️ I am exploring your getaways in *${dest.name}* and would love to check availability for an upcoming escape. Could you share some suggestions?`)}`}
+                    href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hey Stay Willas team! 🏔️ I am exploring your getaways in *${dest.name}* and would love to check availability for an upcoming getaway. Could you share some suggestions?`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-[#1B3564] hover:bg-[#152A50] text-white rounded-full px-4.5 py-2.5 text-[10px] font-black tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 w-fit"
@@ -224,6 +234,23 @@ export default async function DestinationsPage() {
                   </a>
                 </div>
               )}
+              {dest.featuredStay && !dest.isLaunchingSoon && (
+                <Link
+                  href={dest.featuredStay.link}
+                  className="inline-flex items-center gap-3 text-sm font-semibold text-[#1B3564] hover:text-accent-secondary transition-colors"
+                >
+                  <span className="relative h-10 w-10 overflow-hidden rounded-full border border-[#1B3564]/15">
+                    <PhotoFrame
+                      src={dest.featuredStay.image}
+                      alt=""
+                      fill
+                      sizes="40px"
+                    />
+                  </span>
+                  Explore {dest.featuredStay.name}
+                  <ArrowUpRight size={16} />
+                </Link>
+              )}
             </div>
           </div>
         ))}
@@ -238,7 +265,7 @@ export default async function DestinationsPage() {
               Exploring Premier Villa Destinations in Maharashtra for Unforgettable Holiday Stays
             </h2>
             <p className="text-sm md:text-base text-text-primary/75 leading-relaxed font-light">
-              Finding the ideal holiday escape requires a balance of scenic natural surroundings, exclusive solitude, and world-class hospitality. Across the Western Ghats and coastal stretches, villa destinations in maharashtra have emerged as the leading choice for discerning travelers seeking luxury holiday rentals. Whether you are planning a weekend getaway with family, celebrating a milestone anniversary, or organizing a peaceful corporate retreat, Stay Willas offers handpicked luxury villas across top regional locations. From mountain villas perched high in hill stations to tranquil coastal retreats near the Arabian Sea, our curated collection provides an unmatched hospitality experience tailored to your precise desires.
+              Finding the ideal holiday getaway requires a balance of scenic natural surroundings, exclusive solitude, and world-class hospitality. Across the Western Ghats and coastal stretches, villa destinations in maharashtra have emerged as the leading choice for discerning travelers seeking luxury holiday rentals. Whether you are planning a weekend getaway with family, celebrating a milestone anniversary, or organizing a peaceful corporate retreat, Stay Willas offers handpicked luxury villas across top regional locations. From mountain villas perched high in hill stations to tranquil coastal retreats near the Arabian Sea, our curated collection provides an unmatched hospitality experience tailored to your precise desires.
             </p>
           </div>
 
@@ -296,7 +323,7 @@ export default async function DestinationsPage() {
               Essential Amenities Included in Every Luxury Villa
             </h3>
             <p className="text-xs sm:text-sm text-text-primary/75 leading-relaxed font-light">
-              When you book an exclusive estate through Stay Willas, you enjoy top-tier amenities designed for comfort, safety, and convenience:
+              When you book an exclusive villa through Stay Willas, you enjoy top-tier amenities designed for comfort, safety, and convenience:
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2">
               <div className="p-5 rounded-2xl bg-bg-primary border border-border-subtle">
@@ -316,7 +343,7 @@ export default async function DestinationsPage() {
 
           <div className="bg-[#1B3564] text-white p-8 md:p-10 rounded-3xl space-y-4 shadow-xl">
             <h3 className="text-xl md:text-2xl font-heading font-bold">
-              Plan Your Escape Across Top Regional Holiday Spots
+              Plan Your Getaway Across Top Regional Holiday Spots
             </h3>
             <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-light">
               Whether you are seeking a weekend retreat surrounded by monsoon waterfalls or a sun-drenched beach home, our platform makes finding your dream vacation simple and transparent. Browse through verified listings, view detailed photo galleries, check available dates, and speak directly with our concierge team to reserve your stay. Every stay is managed with extreme care to guarantee safety, privacy, and seamless comfort for you and your guests. Selecting from curated villa destinations in maharashtra ensures that every getaway feels unique, refreshing, and deeply memorable.
@@ -338,7 +365,7 @@ export default async function DestinationsPage() {
               <div className="p-6 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-2">
                 <h4 className="font-bold text-sm text-[#1B3564]">Q: Are pool properties suitable for large family gatherings and events?</h4>
                 <p className="text-xs text-text-primary/70 font-light leading-relaxed">
-                  A: Yes! Our luxury properties range from cozy 3 BHK retreats to expansive 5+ BHK estates capable of hosting intimate celebrations, pre-wedding gatherings, and corporate team outings comfortably.
+                  A: Yes! Our luxury properties range from cozy 3 BHK retreats to spacious 5+ BHK villas for celebrations, pre-wedding gatherings, and corporate team outings.
                 </p>
               </div>
               <div className="p-6 bg-white rounded-2xl border border-border-subtle shadow-sm space-y-2">

@@ -200,7 +200,7 @@ export default function MonthlyReport({
       guestName,
       guestEmail,
       guestPhone,
-      villaName: b.villa?.name || "Stay Willas Estate",
+      villaName: b.villa?.name || "Stay Willas Villa",
       villaLocation: b.villa?.location || "Maharashtra",
       checkIn: cin,
       checkOut: cout,
@@ -344,7 +344,7 @@ export default function MonthlyReport({
         doc.setFontSize(7.5);
         doc.setFont("Helvetica", "bold");
         doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-        doc.text("LUXURY Private Estates — FINANCIAL AUDIT & REVENUE STATEMENT", margin + emblemSize + 3, currentY + 8);
+        doc.text("LUXURY PRIVATE VILLAS — FINANCIAL AUDIT & REVENUE STATEMENT", margin + emblemSize + 3, currentY + 8);
 
         // Month Title (Right Aligned)
         doc.setFontSize(14);

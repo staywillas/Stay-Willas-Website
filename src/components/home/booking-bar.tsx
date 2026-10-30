@@ -1,6 +1,7 @@
 "use client";
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import { trackWebsiteWhatsAppClick } from "@/lib/angle-house-measurement";
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
@@ -43,6 +44,7 @@ import {
   parseISO 
 } from "date-fns";
 import { getDestinationAvailability, checkAvailableVillasForDates, getVillaBookingDetails } from "@/app/actions/booking";
+import { publicVillaName } from "@/lib/public-copy";
 import { submitInquiry } from "@/app/actions/inquiry";
 import dynamic from "next/dynamic";
 const BookingCard = dynamic(() => import("@/components/villa/booking-card"), {
@@ -108,6 +110,7 @@ const BookingBar: React.FC<BookingBarProps> = ({ className }) => {
     { slug: "all", name: "All Properties", location: "Maharashtra" },
     { slug: "the-angle-house", name: "The Angle House", location: "Lonavala" },
     { slug: "canopy-crest", name: "Canopy Crest", location: "Khopoli" },
+    { slug: "nieevant-by-stay-willas", name: "Nieevant by Stay Willas", location: "Khopoli" },
     { slug: "casa-de-reva", name: "Casa De Reva", location: "Panchgani" },
     { slug: "willow-peak", name: "Willow Peak (All 3 Cottages)", location: "Lonavala" },
     { slug: "willow-peak-cottage-a", name: "1. Breeze (Cottage A)", location: "Lonavala" },
@@ -360,6 +363,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
 
     const encodedMsg = encodeWhatsAppMessage(msg);
     const whatsappUrl = `https://wa.me/919619042310?text=${encodedMsg}`;
+    trackWebsiteWhatsAppClick("home_booking_bar");
     window.open(whatsappUrl, "_blank");
   };
 
@@ -406,7 +410,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
     ? Math.max(1, Math.round((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)))
     : 1;
   const instantBookingTitle = instantBookingVilla?.slug === "willow-peak"
-    ? `${String(instantBookingVilla.name).replace(/\s*\(Entire Estate.*\)$/i, "")} · ${instantCottageSelection === "ALL" ? "Entire estate" : instantCottageSelection === "TWO" ? "2 cottages" : `Cottage ${instantCottageSelection}`}`
+    ? `${publicVillaName(instantBookingVilla.slug, String(instantBookingVilla.name))} · ${instantCottageSelection === "ALL" ? "All 3 cottages" : instantCottageSelection === "TWO" ? "2 cottages" : `Cottage ${instantCottageSelection}`}`
     : instantBookingVilla?.name ?? "";
 
   return (
@@ -1072,8 +1076,8 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                       {filteredModalVillas.map((villa) => {
                         const cityName = villa.location.split(",")[0].trim();
                         const stayName = villa.slug === "willow-peak" && villa.cottagesCount === 2
-                          ? `${villa.name} · 2 cottages`
-                          : villa.slug === "willow-peak" ? `${villa.name} · Entire estate` : villa.name;
+                          ? `${publicVillaName(villa.slug, villa.name)} · 2 cottages`
+                          : villa.slug === "willow-peak" ? `${publicVillaName(villa.slug, villa.name)} · All 3 cottages` : publicVillaName(villa.slug, villa.name);
                         const stayCapacity = villa.slug === "willow-peak" && villa.cottagesCount
                           ? villa.cottagesCount * 4
                           : villa.guests;
@@ -1087,7 +1091,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                             <div className="relative w-full md:w-60 h-44 md:h-36 rounded-2xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 shadow-inner">
                               <PhotoFrame
                                 src={villa.image || "/images/hero-villa.webp"}
-                                alt={villa.name}
+                                alt={publicVillaName(villa.slug, villa.name)}
                                 fill
                                 sizes="(max-width: 768px) 100vw, 240px"
                                 quality={75}
@@ -1175,7 +1179,7 @@ Could you please share the available luxury villas and packages? Thank you! ✨`
                                   {/* Direct WhatsApp button for this specific property */}
                                   <button
                                     type="button"
-                                    onClick={(e) => handleWhatsAppInquiry(e, villa.name)}
+                                    onClick={(e) => handleWhatsAppInquiry(e, publicVillaName(villa.slug, villa.name))}
                                     className="px-3.5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
                                     title="Inquire on WhatsApp"
                                   >

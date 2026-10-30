@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { PhotoFrame } from "@/components/ui/site-image";
 import { Compass, ArrowUpRight } from "lucide-react";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 export interface SitelinkItem {
   id: string;
@@ -28,16 +29,16 @@ export const homeSitelinksData: SitelinkItem[] = [
     id: "luxury-villas-khopoli",
     title: "Luxury Villas in Khopoli",
     line1: "Canopy Crest • Sahyadri nature villa",
-    line2: "Escape to a stunning nature villa with mountain views & hospitality...",
+    line2: "Stay at a stunning nature villa with mountain views & hospitality...",
     href: "/areas/khopoli",
-    badge: "Nature Escape",
-    image: "/images/sitelinks/khopoli-canopy.webp",
+    badge: "Nature Getaway",
+    image: canopyCrestPhotos.valley.src,
   },
   {
     id: "luxury-villas-mumbai",
     title: "Luxury Villas Near Mumbai",
     line1: "Browse our handpicked collection for rent",
-    line2: "Curated private estates across Lonavala & Khopoli with private pools...",
+    line2: "Curated private villas across Lonavala & Khopoli with private pools...",
     href: "/villas",
     badge: "All Villas",
     image: "/assets/villas/willow-peak/graded-v1/chalets-night.webp",
@@ -64,7 +65,7 @@ export const homeSitelinksData: SitelinkItem[] = [
     id: "luxury-experiences",
     title: "Luxury Villa Experiences",
     line1: "Carefully planned wonderful experiences for your stay",
-    line2: "Curated dining, celebrations, and serene weekend escapes...",
+    line2: "Curated dining, celebrations, and serene weekend getaways...",
     href: "/experiences",
     badge: "Experiences",
     image: "/images/sitelinks/luxury-experiences.webp",

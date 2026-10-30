@@ -37,6 +37,28 @@ const clerkHandler = clerkMiddleware(async (auth, req) => {
 });
 
 export async function proxy(request: NextRequest, event: NextFetchEvent) {
+  const host = request.headers.get("host") || "";
+  const { pathname } = request.nextUrl;
+
+  // Keep the care subdomain rewrite, but don't invoke Clerk for its public pages.
+  if (
+    (host.startsWith("care.") || host.includes("carestaywillas")) &&
+    !pathname.startsWith("/care") &&
+    !pathname.startsWith("/_next") &&
+    !pathname.startsWith("/api")
+  ) {
+    return NextResponse.rewrite(
+      new URL(`/care${pathname === "/" ? "" : pathname}`, request.url)
+    );
+  }
+
+  // Public pages do not use Clerk auth. Avoid its middleware work on the common
+  // browse path; protected routes still get the same auth check as before.
+  const staywillasSession = request.cookies.get("staywillas_session")?.value;
+  if (!isProtectedRoute(request) || staywillasSession) {
+    return NextResponse.next();
+  }
+
   const res = await clerkHandler(request, event);
 
   // Next.js 16 compatibility: Clerk's decorateRequest sets x-middleware-rewrite to req.url

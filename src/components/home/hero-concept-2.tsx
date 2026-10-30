@@ -22,6 +22,7 @@ import {
 import BookingBar from "@/components/home/booking-bar";
 import { cn } from "@/lib/utils";
 import { ANGLE_LOCATION } from "@/data/stay-facts";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 // Rotating Hero Carousel Data (Simple details: Cost & Max Guests, Heaven for Willow Peak)
 const HERO_SLIDES = [
@@ -30,9 +31,9 @@ const HERO_SLIDES = [
     location: "Khopoli, Maharashtra",
     cost: "₹15,000/night",
     capacity: "Max 16 Guests",
-    image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
+    image: canopyCrestPhotos.hero.src,
     slug: "canopy-crest",
-    badge: "Hilltop Estate",
+    badge: "Hilltop Villa",
     objectPosition: "object-[center_82%]"
   },
   {
@@ -90,9 +91,9 @@ const VILLAS = [
     rateNote: "Weekday tariff • Weekend ₹22,000",
     capacity: "16 Guests",
     bedrooms: "4 Bedrooms",
-    image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
+    image: canopyCrestPhotos.hero.src,
     slug: "canopy-crest",
-    badge: "Hilltop Estate",
+    badge: "Hilltop Villa",
     highlight: "Multi-Acre Heated Pool",
     features: ["Heated Swimming Pool", "360° Valley Views", "Billiards & Turf", "Expansive Lawns"],
     objectPosition: "object-[center_82%]"
@@ -115,7 +116,7 @@ const VILLAS = [
     name: "Willow Peak",
     location: "Kurwande, Lonavala",
     startingRate: "₹4,999",
-    rateNote: "From ₹4,999/night per cottage • Ask for a full-estate quote",
+    rateNote: "From ₹4,999/night per cottage • Ask for a quote to book all three cottages",
     capacity: "Up to 12 Guests",
     bedrooms: "3 A-Frame Chalets",
     image: "/assets/villas/willow-peak/graded-v1/wp-01.webp",
@@ -261,7 +262,7 @@ export default function HeroConcept2() {
                       loading="eager"
                       fetchPriority={idx === 0 ? "high" : "auto"}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 55vw"
-                      quality={80}
+                      quality={75}
                       className={cn(
                         "object-cover transition-transform duration-1000",
                         slide.objectPosition,
@@ -442,7 +443,7 @@ export default function HeroConcept2() {
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1B3564]/10 text-[#1B3564] text-xs font-bold tracking-wider uppercase mb-2">
                 <Building2 size={12} className="text-[#DAA520]" />
-                <span>Featured Private Estates</span>
+                <span>Featured Private Villas</span>
               </div>
               <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
                 Our Signature Villas & Chalets
@@ -475,7 +476,7 @@ export default function HeroConcept2() {
                     alt={villa.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    quality={85}
+                    quality={75}
                     className={cn(
                       "object-cover group-hover:scale-105 transition-transform duration-700",
                       villa.objectPosition || "object-center"

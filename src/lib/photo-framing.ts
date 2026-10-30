@@ -1,4 +1,5 @@
 import { resolvePropertyImage } from "./property-images";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 // Crop positions were reviewed against the villa, pool, room or people in each photo.
 const positions: Record<string, string> = {
@@ -13,6 +14,18 @@ const positions: Record<string, string> = {
   "/assets/villas/canopy-crest/IMG-20260607-WA0015.jpg": "58% 60%",
   "/assets/villas/canopy-crest/IMG-20260607-WA0018.jpg": "62% 64%",
   "/assets/villas/canopy-crest/canopy-crest-sunset-guests.jpg": "62% 54%",
+  [canopyCrestPhotos.hero.src]: "50% 54%",
+  [canopyCrestPhotos.valley.src]: "50% 58%",
+  [canopyCrestPhotos.poolAerial.src]: "50% 55%",
+  [canopyCrestPhotos.overhead.src]: "50% 54%",
+  [canopyCrestPhotos.exterior.src]: "50% 55%",
+  [canopyCrestPhotos.poolDay.src]: "50% 58%",
+  [canopyCrestPhotos.lawnEvening.src]: "50% 55%",
+  [canopyCrestPhotos.livingDining.src]: "50% 56%",
+  [canopyCrestPhotos.bedroom.src]: "50% 52%",
+  [canopyCrestPhotos.bathroom.src]: "50% 55%",
+  [canopyCrestPhotos.kitchen.src]: "50% 54%",
+  [canopyCrestPhotos.gazebo.src]: "50% 54%",
   "/assets/villas/the-angle-house/angle-house-pool-balcony-guests.jpg": "55% 52%",
   "/assets/villas/the-angle-house/gallery-1.webp": "55% 57%",
   "/assets/villas/the-angle-house/gallery-3.webp": "50% 57%",

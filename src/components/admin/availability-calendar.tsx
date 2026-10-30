@@ -350,10 +350,10 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     };
 
     if (isWillowEntire) {
-      // Find bookings for Entire Estate OR any individual cottage
+      // Find bookings for Entire Villa OR any individual cottage
       const entireEstateBookings = bookings.filter(b => b.villaId === villaId && isDateOverlapping(b));
       if (entireEstateBookings.length > 0) {
-        return { status: entireEstateBookings[0].status, data: entireEstateBookings[0], bookedCottages: 3, totalCottages: 3, label: "Full Estate Booked" };
+        return { status: entireEstateBookings[0].status, data: entireEstateBookings[0], bookedCottages: 3, totalCottages: 3, label: "All Cottages Booked" };
       }
 
       const allCottageVillaIds = villas.filter(v => v.slug?.startsWith("willow-peak-cottage")).map(v => v.id);
@@ -373,12 +373,12 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     }
 
     if (isWillowCottage) {
-      // 1. Check if Entire Estate is booked on this date
+      // 1. Check if Entire Villa is booked on this date
       const entireEstateVilla = villas.find(v => v.slug === "willow-peak");
       if (entireEstateVilla) {
         const entireBooking = bookings.find(b => b.villaId === entireEstateVilla.id && isDateOverlapping(b));
         if (entireBooking) {
-          return { status: "CONFIRMED", data: entireBooking, bookedCottages: 1, totalCottages: 1, label: "Booked (Full Estate)" };
+          return { status: "CONFIRMED", data: entireBooking, bookedCottages: 1, totalCottages: 1, label: "Booked (All Cottages)" };
         }
       }
 
@@ -598,7 +598,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(7.5);
       doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-      doc.text("LUXURY ESTATES & VILLAS", marginX + emblemSize + 3, currentY + 10.5);
+      doc.text("LUXURY VILLAS", marginX + emblemSize + 3, currentY + 10.5);
 
       // Invoice Header metadata
       doc.setFontSize(14);
@@ -1037,7 +1037,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   // WhatsApp Quote Share
   const handleShareWhatsApp = (specificBookingData?: any) => {
     const targetVilla = specificBookingData?.villa || villas.find((v) => v.id === selectedVillaId);
-    const villaName = targetVilla ? targetVilla.name : "Stay Willas Estate";
+    const villaName = targetVilla ? targetVilla.name : "Stay Willas Villa";
     const name = specificBookingData?.name || guestName || "Valued Guest";
     const phone = specificBookingData?.phone || guestPhone || "";
     const cin = specificBookingData?.checkIn || checkInStr;
@@ -2105,7 +2105,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
             {/* Inspector Content */}
             <div className="space-y-4 text-xs">
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-widest block mb-0.5 font-bold">Villa Estate</span>
+                <span className="text-[9px] text-slate-400 uppercase tracking-widest block mb-0.5 font-bold">Property Details</span>
                 <span className="font-heading text-lg text-slate-900 font-bold">{villas.find(v => v.id === selectedBooking.villaId)?.name}</span>
               </div>
 

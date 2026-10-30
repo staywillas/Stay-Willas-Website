@@ -6,14 +6,15 @@ import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Copy } from "lucide-react";
 import styles from "./home.module.css";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 const stays = [
   {
     name: "Canopy Crest",
     slug: "canopy-crest",
     location: "Khopoli",
-    image: "/assets/villas/canopy-crest/canopy-crest-sunset-guests.jpg",
-    alt: "Guests enjoying the golden hour sunset on the lawn at Canopy Crest in Khopoli",
+    image: canopyCrestPhotos.lawnEvening.src,
+    alt: canopyCrestPhotos.lawnEvening.alt,
     feature: "Golden hour on the lawn",
   },
   {

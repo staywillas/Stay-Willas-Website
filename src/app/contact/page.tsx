@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Contact Stay Willas | Book Lonavala Villa with Pool",
-    description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or Khopoli staycation estate. 24/7 WhatsApp customer support available.",
+    description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or plan a Khopoli stay. 24/7 WhatsApp support is available.",
     url: "https://www.staywillas.com/contact",
     images: [
       {
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Contact Stay Willas | Book Lonavala Villa with Pool",
-    description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or Khopoli staycation estate. 24/7 WhatsApp customer support available.",
+    description: "Contact Stay Willas concierge to book the best villa in Lonavala with pool or plan a Khopoli stay. 24/7 WhatsApp support is available.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -143,7 +143,7 @@ export default function ContactPage() {
                     <p className="text-[10px] text-text-primary/40 uppercase tracking-widest mb-1">Visit Us</p>
                     <p className="text-xl leading-snug">
                       Kim cottage, 14, PR Kadam Marg, <br />
-                      Maneklal Estate, Ghatkopar West, <br />
+                      Maneklal, Ghatkopar West, <br />
                       Mumbai, Maharashtra 400084
                     </p>
                   </div>
@@ -185,7 +185,7 @@ export default function ContactPage() {
 
             <div className="p-10 rounded-[32px] bg-gradient-to-br from-[#1B3564]/10 via-[#559C24]/10 to-transparent border border-[#559C24]/30 shadow-sm">
               <span className="text-[#559C24] font-black uppercase text-[10px] tracking-[0.2em] block mb-2">Homeowner Network</span>
-              <h2 className="text-xl font-heading mb-3 text-[#1B3564] font-bold">Villa &amp; Estate Owners</h2>
+              <h2 className="text-xl font-heading mb-3 text-[#1B3564] font-bold">Villa Owners</h2>
               <p className="text-text-primary/70 text-sm leading-relaxed mb-6 font-light">
                 Own a private pool villa or holiday retreat in Maharashtra? Partner with Stay Willas for turnkey management, verified HNI guests, and maximum net yields.
               </p>
@@ -216,7 +216,7 @@ export default function ContactPage() {
               Planning Your Next <span className="italic text-accent-primary font-serif font-light">Luxury Staycation?</span>
             </h2>
             <p className="text-text-primary/75 text-sm md:text-base leading-relaxed font-light">
-              Our reservation concierge is standing by to help you choose the perfect private pool villa in Lonavala or sprawling group estate in Khopoli.
+              Our reservation concierge is standing by to help you choose the perfect private pool villa in Lonavala or a spacious villa for your group in Khopoli.
             </p>
           </div>
 

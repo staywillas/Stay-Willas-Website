@@ -15,16 +15,16 @@ export default function VillasClient(props: VillasBrowserProps) {
               The Ultimate Guide to Finding Villas for Rent in Lonavala
             </h2>
             <p className="text-sm text-charcoal/70 leading-relaxed font-light">
-              Planning a weekend getaway from the city has never been easier. When searching for <strong className="font-semibold text-[#1B3564]">villas for rent in Lonavala</strong>, holidaymakers look for properties that combine seclusion, modern comfort, and premium hospitality. Instead of staying at commercial hotels with crowded common areas, booking private holiday residences gives your group exclusive access to swimming pools, manicured lawns, and customized dining. Stay Willas provides a verified portfolio of handpicked estates designed to deliver a slow luxury experience.
+              Planning a weekend getaway from the city has never been easier. When searching for <strong className="font-semibold text-[#1B3564]">villas for rent in Lonavala</strong>, holidaymakers look for properties that combine seclusion, modern comfort, and premium hospitality. Instead of staying at commercial hotels with crowded common areas, booking a private villa gives your group exclusive access to swimming pools, manicured lawns, and customized dining. Stay Willas offers handpicked villas for a relaxed, comfortable stay.
             </p>
           </div>
 
           <div className="space-y-4">
             <h2 className="text-xl md:text-2xl font-heading text-[#1B3564] font-bold">
-              Why Booking Luxury Villas Near Mumbai is the Perfect Weekend Escape
+              Why Booking Luxury Villas Near Mumbai is the Perfect Weekend Getaway
             </h2>
             <p className="text-sm text-charcoal/70 leading-relaxed font-light">
-              For travelers residing in the Mumbai metropolitan area, finding accessible getaway destinations is essential. Reserving <strong className="font-semibold text-[#1B3564]">luxury villas near Mumbai</strong> allows you to bypass airport delays and long train journeys. Situated within a smooth 2-hour drive via the Mumbai-Pune Expressway, these estates let you transition quickly from city traffic into tranquil green valleys.
+              For travelers residing in the Mumbai metropolitan area, finding nearby getaway destinations is essential. Reserving <strong className="font-semibold text-[#1B3564]">luxury villas near Mumbai</strong> lets you skip airport delays and long train journeys. These villas are around a two-hour drive via the Mumbai-Pune Expressway, taking you from city traffic to quiet green valleys.
             </p>
             <p className="text-sm text-charcoal/70 leading-relaxed font-light">
               Whether you are planning a family reunion, a couple&apos;s retreat, or a group staycation, staying at our <strong className="font-semibold text-[#1B3564]">luxury villas near Mumbai</strong> offers a choice of private pool villas and Jacuzzi cottages; check the facilities of your selected property.
@@ -100,7 +100,7 @@ export default function VillasClient(props: VillasBrowserProps) {
                 For Luxury Homeowners
               </span>
               <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white">
-                Own a Luxury Villa or Estate in Maharashtra?
+                Own a Luxury Villa or Villa in Maharashtra?
               </h3>
               <p className="text-white/75 text-xs sm:text-sm font-light max-w-xl leading-relaxed">
                 Partner with Stay Willas for hassle-free villa property management, verified HNI guests, dynamic revenue optimization, and zero operational headaches.

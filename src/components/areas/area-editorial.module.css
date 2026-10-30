@@ -52,31 +52,19 @@
 }
 .hero {
   position: relative;
-  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   gap: clamp(24px, 4.5vw, 68px);
   align-items: center;
   padding: clamp(36px, 5vw, 68px) 0 clamp(32px, 4.5vw, 58px);
-  color: #fffdf8;
-}
-.hero::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset-block: 0;
-  left: calc(50% - 50vw);
-  right: calc(50% - 50vw);
-  background:
-    radial-gradient(ellipse at 74% 44%, rgb(44 77 119 / 55%), transparent 43%),
-    linear-gradient(112deg, #102239 0%, #173354 56%, #102239 100%);
+  color: var(--ink);
 }
 .heroCopy {
   min-width: 0;
   padding: 6px 0 12px;
 }
 .heroEyebrow {
-  color: #dfc67e;
+  color: var(--accent);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.17em;
@@ -88,45 +76,53 @@
   gap: 13px;
   margin-bottom: 18px;
   padding: 9px 13px;
-  background: rgb(255 255 255 / 7%);
-  border: 1px solid rgb(218 194 126 / 55%);
-  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 9px;
 }
 .heroOffer strong {
-  color: #e4c875;
+  color: var(--accent);
   font-size: 20px;
   font-weight: 600;
   line-height: 1.1;
 }
 .heroOffer span {
   font-size: 11px;
-  color: #f5f1e8;
+  color: var(--muted);
 }
 .hero h1 {
-  color: #fffdf8;
-  font-size: clamp(58px, 6.1vw, 88px);
-  line-height: 0.98;
+  color: var(--ink);
+  font-size: clamp(52px, 5.8vw, 78px);
+  line-height: 1.02;
 }
 .hero h1 span {
   display: block;
-  color: #dfc67e;
+  color: var(--accent);
   padding-bottom: 0.12em;
+}
+.hero h1 .heroTitleLead {
+  color: var(--ink);
 }
 .heroCopy > .heroOfferNote {
   font-size: 11px;
   margin-top: 14px;
   max-width: 45ch;
   line-height: 1.7;
-  color: #d6deea;
+  color: var(--muted);
 }
 .heroOfferNote b {
-  color: #fffdf8;
+  color: var(--ink);
   font-weight: 500;
+}
+.heroOfferNote a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .heroCopy > p {
   font-size: 17px;
   line-height: 1.75;
-  color: #e1e7ef;
+  color: var(--muted);
   max-width: 36ch;
   margin-top: 18px;
 }
@@ -138,15 +134,15 @@
   margin-top: 32px;
 }
 .hero .primaryButton {
-  background: #dfc67e;
-  color: #172c48;
-  box-shadow: 0 10px 28px rgb(0 0 0 / 16%);
+  background: var(--ink);
+  color: var(--panel);
+  box-shadow: 0 10px 28px rgb(27 53 100 / 12%);
 }
 .hero .primaryButton:hover {
-  background: #f0d994;
+  background: #294b7e;
 }
 .hero .textLink {
-  color: #f8f4ea;
+  color: var(--ink);
 }
 .primaryButton {
   display: inline-flex;
@@ -180,48 +176,6 @@
 .cover {
   object-fit: cover;
   transition: transform 0.35s ease;
-}
-.heroFigure {
-  min-width: 0;
-  margin: 0;
-}
-.carouselStage {
-  position: relative;
-  height: clamp(420px, 43vw, 600px);
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 13%);
-  border-radius: 22px;
-  background:
-    radial-gradient(ellipse at center, rgb(255 255 255 / 7%), transparent 63%),
-    rgb(8 20 36 / 24%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), 0 24px 55px rgb(0 0 0 / 19%);
-}
-.carousel {
-  width: 100%;
-  height: 100%;
-}
-.heroFigure figcaption {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 11px;
-  color: #e1e7ef;
-  margin-top: 14px;
-}
-.heroFigure figcaption > span {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-.heroFigure figcaption svg {
-  color: #dfc67e;
-  flex: 0 0 auto;
-}
-.carouselHint {
-  color: #b8c4d2;
-  font-size: 10px;
 }
 .stayNotes {
   display: grid;
@@ -823,9 +777,6 @@
   .hero h1 {
     font-size: 60px;
   }
-  .carouselStage {
-    height: clamp(300px, 45vw, 440px);
-  }
   .singleHome .home {
     gap: 28px;
   }
@@ -876,8 +827,8 @@
     line-height: 1.02;
   }
   .hero h1 span {
-    display: inline;
-    padding: 0;
+    display: block;
+    padding-bottom: 0.08em;
   }
   .heroCopy > p {
     font-size: 13px;
@@ -914,17 +865,6 @@
   .textLink {
     font-size: 11px;
     gap: 6px;
-  }
-  .carouselStage {
-    height: clamp(280px, 77vw, 360px);
-    border-radius: 17px;
-  }
-  .heroFigure figcaption {
-    font-size: 9px;
-    margin-top: 10px;
-  }
-  .carouselHint {
-    font-size: 9px;
   }
   .stayNotes {
     grid-template-columns: 1fr 1fr;

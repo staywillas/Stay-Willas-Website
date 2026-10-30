@@ -12,7 +12,7 @@ import { createAwaitingVerificationBooking } from "@/app/actions/booking";
 import { captureBookingLead } from "@/app/actions/inquiry";
 import { useUser } from "@clerk/nextjs";
 import { categorizeNight, checkLongWeekend } from "@/lib/calendar-holidays";
-import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement, trackCanopyCrestBookingEnquiry } from "@/lib/angle-house-measurement";
+import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement, trackCanopyCrestBookingEnquiry, trackCanopyCrestInteraction, trackWebsiteWhatsAppClick } from "@/lib/angle-house-measurement";
 import { checkAvailableVillasForDates } from "@/app/actions/booking";
 
 interface DailyPriceProp {
@@ -563,7 +563,7 @@ const BookingCard = ({
       const formattedCheckIn = format(checkIn, "dd MMM yyyy");
       const formattedCheckOut = format(checkOut, "dd MMM yyyy");
       const cottageInfoSection = isWillowPeak
-        ? `\n🏡 *Stay:* ${cottageSelection === "ALL" ? "All 3 cottages (entire estate)" : cottageSelection === "TWO" ? "2 cottages (pair confirmed by concierge)" : `Cottage ${cottageSelection}`}`
+        ? `\n🏡 *Stay:* ${cottageSelection === "ALL" ? "All 3 cottages together" : cottageSelection === "TWO" ? "2 cottages (pair confirmed by concierge)" : `Cottage ${cottageSelection}`}`
         : "";
       const addOnsSection = bookingAddOns.length > 0
         ? `\n• *Add-ons:* ${bookingAddOns.join(", ")}`
@@ -613,6 +613,7 @@ Please confirm availability and the final amount before confirming my booking.`;
       }).catch(err => console.error("Failed to capture WhatsApp booking request:", err));
 
       if (isAngleHouse) trackAngleHouseEngagement("whatsapp_click");
+      trackWebsiteWhatsAppClick("villa_booking_whatsapp");
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     } catch (error) {
       console.error("WhatsApp booking request failed:", error);
@@ -716,6 +717,7 @@ Please confirm availability and the final amount before confirming my booking.`;
             type="button"
             onClick={() => {
               const msg = `Hi Stay Willas, I submitted a booking request for *${villaName}* (Reference: ${submittedBookingId}) from ${format(checkIn, "dd MMM yyyy")} to ${format(checkOut, "dd MMM yyyy")}. Guests: ${guests}. Live total at request time: ₹${(submittedTotal ?? total).toLocaleString("en-IN")}. Name: ${clientName}. WhatsApp: ${clientPhone}. Please confirm availability and final pricing.`;
+              trackWebsiteWhatsAppClick("booking_confirmation_whatsapp");
               window.open(`https://wa.me/919619042310?text=${encodeWhatsAppMessage(msg)}`, "_blank");
             }}
             className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 px-4 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
@@ -789,7 +791,7 @@ Please confirm availability and the final amount before confirming my booking.`;
               </span>
               <span className="text-[10px] font-bold text-[#DAA520] bg-[#1B3564] px-2 py-0.5 rounded-md">
                 {cottageSelection === "ALL"
-                  ? "Full Estate (Breeze, Crest & Heaven)"
+                  ? "All 3 Cottages (Breeze, Crest & Heaven)"
                   : cottageSelection === "TWO"
                     ? "2 Cottages · up to 8 guests"
                     : `${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (1 Cottage)`}
@@ -1049,6 +1051,9 @@ Please confirm availability and the final amount before confirming my booking.`;
         <button
           type="button"
           onClick={() => {
+            if (!showCalendar && propertySlug === "canopy-crest") {
+              trackCanopyCrestInteraction("canopy_crest_check_dates_click", "booking_card_availability_button");
+            }
             setShowCalendar(!showCalendar);
             if (!showCalendar) {
               setCalendarTarget("checkIn");
@@ -1243,7 +1248,7 @@ Please confirm availability and the final amount before confirming my booking.`;
             </div>
             <p className="text-xs text-slate-700 leading-relaxed font-medium">
               {cottageSelection === "ALL"
-                ? `Full Estate: All 3 A-frame chalets (Breeze, Crest, and Heaven) reserved for your group of ${guests} guests (Max 12).`
+                ? `All 3 A-frame chalets (Breeze, Crest, and Heaven) are included for your group of ${guests} guests (Max 12).`
                 : cottageSelection === "TWO"
                   ? `Two private A-frame cottages are requested for your group of ${guests} guests (Max 8). The concierge will confirm the available pair.`
                   : `Private Chalet: ${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (Cottage ${cottageSelection}) allocated for ${guests} guest(s) (Max 4). Features private en-suite jacuzzi and balcony.`
@@ -1253,7 +1258,7 @@ Please confirm availability and the final amount before confirming my booking.`;
               <span>✓</span>
               <span>
                 {cottageSelection === "ALL"
-                  ? "Entire estate selected — all three cottages are included in this request."
+                  ? "All three cottages are selected for this request."
                   : cottageSelection === "TWO"
                     ? "Two cottages are included; the booking team will confirm which pair is available."
                     : "This request is for one cottage; the other two may be booked separately."

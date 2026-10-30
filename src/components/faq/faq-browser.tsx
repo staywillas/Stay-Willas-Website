@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { 
   Search, 
@@ -32,6 +32,13 @@ export default function FaqBrowser({
   const [category, setCategory] = useState<string>(initialCategory);
   const [query, setQuery] = useState<string>("");
   const [openIds, setOpenIds] = useState<Set<string>>(() => new Set(["willow-peak-explanation"]));
+
+  useEffect(() => {
+    const requestedCategory = new URLSearchParams(window.location.search).get("category");
+    if (requestedCategory && categories.some((item) => item.id === requestedCategory)) {
+      setCategory(requestedCategory);
+    }
+  }, [categories]);
 
   // Filter items based on active category and search query
   const matches = useMemo(() => {
@@ -189,16 +196,16 @@ export default function FaqBrowser({
 
       {/* Willow Peak Modular Clarification Spotlight Box */}
       {showWillowSpotlight && !query && (
-        <aside className={styles.spotlightCard} aria-label="Willow Peak Estate Configuration Guide">
+        <aside className={styles.spotlightCard} aria-label="Willow Peak Stay Options">
           <div className={styles.spotlightHeader}>
             <span className={styles.spotlightBadge}>
               <HelpCircle size={12} /> Clarification Spotlight
             </span>
             <h2 className={styles.spotlightTitle}>
-              Understanding Willow Peak: 3 Private Cottages &amp; 1 Entire Estate
+              Willow Peak: Three Cottages, Booked One or All Together
             </h2>
             <p className={styles.spotlightDesc}>
-              A frequent guest question is: <em>&ldquo;Are there 4 separate properties at Willow Peak? How does booking work?&rdquo;</em> Here is the exact estate breakdown:
+              A frequent guest question is: <em>&ldquo;Are there 4 separate properties at Willow Peak? How does booking work?&rdquo;</em> Here is the exact villa breakdown:
             </p>
           </div>
 
@@ -220,7 +227,7 @@ export default function FaqBrowser({
             </div>
             <div className={`${styles.spotlightCol} ${styles.spotlightEstate}`}>
               <span>Listing 4 (Exclusive)</span>
-              <strong>Willow Peak Entire Estate</strong>
+              <strong>Willow Peak: All Three Cottages</strong>
               <p>Book all 3 cottages together exclusively for large families/groups (up to 16 guests) with private lawns &amp; gazebo.</p>
             </div>
           </div>

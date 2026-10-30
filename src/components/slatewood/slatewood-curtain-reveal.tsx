@@ -202,7 +202,7 @@ export default function SlatewoodCurtainReveal() {
           <div className={styles.showcaseContent}>
             <div className={styles.showcaseHeader}>
               <div>
-                <span className={styles.subEyebrow}>ESTATE BLUEPRINT &amp; SPECS</span>
+                <span className={styles.subEyebrow}>VILLA BLUEPRINT &amp; SPECS</span>
                 <h2>Crafted for Togetherness. Finished in Slate &amp; Teak.</h2>
               </div>
               <span className={styles.exclusiveBadge}>
@@ -340,7 +340,7 @@ export default function SlatewoodCurtainReveal() {
               </div>
               <h3>Private Chef &amp; Butler Hospitality</h3>
               <p>
-                Enjoy freshly cooked home-style Maharashtrian specialties, barbecue grills by the poolside, and warm attentive service from our dedicated on-site estate staff.
+                Enjoy freshly cooked home-style Maharashtrian specialties, barbecue grills by the poolside, and warm attentive service from our dedicated on-site villa staff.
               </p>
               <ul className={styles.cardBulletList}>
                 <li><Check size={14} className="text-[#daa520]" /> Custom multi-course breakfast, lunch &amp; dinner</li>

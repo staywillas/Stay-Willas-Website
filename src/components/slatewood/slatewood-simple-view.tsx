@@ -44,7 +44,7 @@ export default function SlatewoodSimpleView() {
             <p className={styles.heroDescription}>
               Slatewood brings a private pool, a floodlit sports turf and the
               easy care of Stay Willas hosting together for your next group
-              escape.
+              stay.
             </p>
             <div className={styles.heroActions}>
               <a className={styles.primaryButton} href={whatsappUrl} target="_blank" rel="noopener noreferrer">

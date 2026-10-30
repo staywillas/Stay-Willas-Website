@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/db";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 interface ConciergeRecommendationParams {
   location: string;
@@ -101,7 +102,7 @@ export async function getConciergeRecommendation(params: ConciergeRecommendation
       id: villa.slug, // Slug used as dynamic route identifier
       name: villa.name,
       location: villa.location.split(",")[0], // e.g. "Lonavala"
-      image: villa.images[0] || "/images/hero-villa.webp",
+      image: villa.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : villa.images[0] || "/images/hero-villa.webp",
       price: villa.price.toLocaleString("en-IN"),
       guests: villa.guests,
       bedrooms: villa.bedrooms,

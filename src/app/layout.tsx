@@ -6,6 +6,7 @@ import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
 import FloatingWidgets from "@/components/layout/floating-widgets";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav";
 import PublicNavbar from "@/components/layout/public-navbar";
+import SiteConversionTracker from "@/components/analytics/site-conversion-tracker";
 import Script from "next/script";
 import { ORGANIZATION_SCHEMA, WEBSITE_SCHEMA, HOMEPAGE_SITELINKS_SCHEMA } from "@/lib/schema";
 
@@ -164,6 +165,7 @@ export default function RootLayout({
         <ClerkProvider>
           <SmoothScrollProvider>
             <PublicNavbar />
+            <SiteConversionTracker />
             <div className="overflow-x-clip w-full max-w-full relative">
               {children}
             </div>

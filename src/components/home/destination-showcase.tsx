@@ -5,6 +5,7 @@ import { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import { ArrowUpRight, MapPin, Compass, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 export interface DestinationLocation {
   id: string;
@@ -30,7 +31,7 @@ const locations: DestinationLocation[] = [
   {
     id: "khopoli",
     name: "Khopoli",
-    image: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
+    image: canopyCrestPhotos.hero.src,
     link: "/areas/khopoli",
     villaCountText: "1 Luxury Villa",
     villasText: "Canopy Crest",
@@ -225,7 +226,7 @@ const DestinationShowcase = () => {
                       fill
                       sizes="(max-width: 768px) 80vw, 360px"
                       priority={isCenter}
-                      quality={85}
+                      quality={75}
                       className={`object-cover ${loc.objectPosition || "object-center"} transition-transform duration-500 ease-out ${
                         isCenter ? "scale-105" : "scale-100"
                       }`}

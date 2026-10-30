@@ -1,0 +1,1046 @@
+.page {
+  --surface: #f5f2ea;
+  --panel: #fffdf8;
+  --soft: #ece7db;
+  --ink: #1b3564;
+  --muted: #586574;
+  --accent: #8b6815;
+  --line: #dedacf;
+  min-height: 100vh;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-outfit), sans-serif;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
+.page :is(a, button, input):focus-visible {
+  outline: 3px solid #daa520;
+  outline-offset: 4px;
+}
+
+.shell {
+  width: min(1160px, 90%);
+  margin: 0 auto;
+  padding: 88px 0 42px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  align-items: start;
+  gap: clamp(32px, 6vw, 82px);
+}
+
+.heroCopy {
+  min-width: 0;
+  padding: clamp(8px, 3vw, 38px) 0 5px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.hero h1,
+.sectionIntro h2,
+.stepTitle,
+.successCard h2 {
+  margin: 0;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.hero h1 {
+  max-width: none;
+  margin-top: 15px;
+  font-size: clamp(52px, 6vw, 78px);
+  line-height: 0.98;
+}
+
+.heroDescription {
+  max-width: 43ch;
+  margin: 19px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.heroFacts {
+  display: grid;
+  gap: 11px;
+  margin-top: 24px;
+}
+
+.heroFacts span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+}
+
+.heroFacts svg {
+  color: var(--accent);
+}
+
+.propertyPhotos {
+  margin-top: clamp(63px, 9vw, 112px);
+}
+
+.propertyPhotos .sectionIntro h2 {
+  max-width: 15ch;
+  margin-top: 10px;
+  font-size: clamp(36px, 4vw, 49px);
+  line-height: 1.03;
+}
+
+.galleryTrack {
+  display: flex;
+  gap: 14px;
+  min-width: 0;
+  margin-top: 24px;
+  padding: 3px 2px 13px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: #b59a5c var(--soft);
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.galleryCard {
+  flex: 0 0 min(80vw, 430px);
+  min-width: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--ink);
+  text-align: left;
+  overflow: hidden;
+  scroll-snap-align: start;
+  box-shadow: 0 12px 30px rgb(27 53 100 / 8%);
+}
+
+.galleryImageFrame {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.25;
+  overflow: hidden;
+  background: var(--soft);
+}
+
+.photo {
+  object-fit: cover;
+  object-position: center 58%;
+  transition: transform 220ms ease;
+}
+
+.galleryCard:hover .photo {
+  transform: scale(1.035);
+}
+
+.photoCaption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  width: fit-content;
+  max-width: calc(100% - 28px);
+  padding: 9px 12px;
+  border: 1px solid rgb(255 253 248 / 70%);
+  border-radius: 7px;
+  background: rgb(255 253 248 / 94%);
+  color: var(--ink);
+  font-size: 10px;
+}
+
+.zoomHint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 11px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.zoomHint svg {
+  color: var(--accent);
+}
+
+.galleryHint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.mainGalleryTrack {
+  margin-top: 23px;
+}
+
+.stepPhotoTrack {
+  width: 100%;
+  margin: 0;
+  gap: 10px;
+  padding: 2px 1px 9px;
+}
+
+.stepPhotoTrack .galleryCard {
+  flex-basis: min(76vw, 330px);
+  border-radius: 10px;
+}
+
+.stepPhotoTrack .galleryImageFrame {
+  aspect-ratio: 1.35;
+}
+
+.lightboxBackdrop {
+  position: fixed;
+  z-index: 100005;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgb(10 17 30 / 84%);
+  backdrop-filter: blur(8px);
+}
+
+.lightboxDialog {
+  position: relative;
+  width: min(100%, 1050px);
+  padding: clamp(12px, 2.5vw, 22px);
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 16px;
+  background: #101a2d;
+  box-shadow: 0 25px 90px rgb(0 0 0 / 45%);
+}
+
+.lightboxClose {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgb(255 255 255 / 28%);
+  border-radius: 50%;
+  background: rgb(16 26 45 / 85%);
+  color: #fff;
+}
+
+.lightboxImageFrame {
+  position: relative;
+  width: 100%;
+  height: min(70vh, 720px);
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #08101d;
+}
+
+.lightboxImage {
+  object-fit: contain;
+}
+
+.lightboxFooter {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 11px;
+  color: #f8f5ec;
+  font-size: 11px;
+}
+
+.lightboxFooter p {
+  flex: 1;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lightboxFooter > span {
+  color: rgb(248 245 236 / 68%);
+  font-variant-numeric: tabular-nums;
+}
+
+.lightboxControls {
+  display: flex;
+  gap: 7px;
+}
+
+.lightboxControls button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(255 255 255 / 28%);
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+}
+
+.amenities {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  align-items: center;
+  gap: clamp(30px, 7vw, 95px);
+  margin-top: clamp(52px, 8vw, 94px);
+  padding: 33px 0;
+  border-block: 1px solid var(--line);
+}
+
+.sectionIntro h2 {
+  max-width: 13ch;
+  margin-top: 10px;
+  font-size: clamp(36px, 4vw, 49px);
+  line-height: 1.03;
+}
+
+.amenityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 21px 25px;
+}
+
+.amenity {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.amenityIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--accent);
+}
+
+.amenity strong,
+.amenity small {
+  display: block;
+}
+
+.amenity strong {
+  padding-top: 2px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.amenity small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.planner {
+  min-width: 0;
+  scroll-margin-top: 76px;
+}
+
+.finalStep {
+  display: grid;
+  gap: 19px;
+}
+
+.finalSummary {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #f8f5ec;
+}
+
+.finalSummaryChoices {
+  margin: 8px 0 10px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.finalSummaryDetails {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.stepDescription {
+  margin: -5px 0 13px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.interestGrid {
+  gap: 9px;
+}
+
+.interestChoice {
+  min-height: 66px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+.interestIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--accent);
+}
+
+.interestCopy,
+.interestCopy strong,
+.interestCopy small {
+  display: block;
+}
+
+.interestCopy strong {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.interestCopy small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.photoStep {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.skipPhotos {
+  min-height: 26px;
+  padding: 3px 8px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 10px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.stepCard,
+.successCard {
+  min-width: 0;
+  padding: clamp(23px, 4vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 15px 40px rgb(27 53 100 / 6%);
+}
+
+.stepTop {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.progressTrack {
+  height: 4px;
+  margin-top: 11px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--soft);
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 180ms ease;
+}
+
+.stepTitle {
+  margin: 26px 0 19px;
+  font-size: clamp(32px, 3.6vw, 42px);
+  line-height: 1.05;
+}
+
+.stepTitle:focus {
+  outline: none;
+}
+
+.choiceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 54px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.choice:hover {
+  border-color: #b59a5c;
+}
+
+.choiceSelected {
+  border-color: var(--accent);
+  background: #f4efdf;
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.dateStep {
+  display: grid;
+  gap: 15px;
+}
+
+.dateFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.dateFields label,
+.field {
+  display: grid;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.dateFields input,
+.field input,
+.phoneField {
+  width: 100%;
+  min-height: 47px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+}
+
+.helperText {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.contactForm {
+  display: grid;
+  gap: 15px;
+}
+
+.field span small {
+  margin-left: 5px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.phoneField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+}
+
+.phoneField > span {
+  padding-right: 10px;
+  border-right: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.phoneField input {
+  min-width: 0;
+  min-height: 43px;
+  padding: 9px 0;
+  border: 0;
+  outline: 0;
+}
+
+.phoneField input:focus-visible {
+  outline: none;
+}
+
+.contactChoice {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.contactChoice legend {
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.consent input {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.error {
+  margin: 0;
+  color: #9a382c;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-top: 21px;
+}
+
+.backButton,
+.submitButton {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.backButton {
+  padding: 0 9px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.submitButton {
+  padding: 0 20px;
+  background: var(--ink);
+  color: var(--panel);
+  transition: background-color 150ms ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #294b7e;
+}
+
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.successCard {
+  align-self: center;
+  padding-block: 45px;
+}
+
+.successIcon {
+  display: grid;
+  place-items: center;
+  width: 45px;
+  height: 45px;
+  margin-bottom: 21px;
+  border-radius: 50%;
+  background: #e9efe5;
+  color: #42613c;
+}
+
+.successCard h2 {
+  margin-top: 9px;
+  font-size: clamp(33px, 4vw, 45px);
+}
+
+.successCard > p:last-child {
+  max-width: 45ch;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.footerNote {
+  margin: 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+@keyframes photo-in {
+  from { opacity: 0.8; }
+  to { opacity: 1; }
+}
+
+@media (min-width: 761px) {
+  .mainGalleryTrack .galleryCard {
+    flex-basis: calc((100% - 28px) / 3);
+  }
+
+  .stepPhotoTrack .galleryCard {
+    flex-basis: calc((100% - 10px) / 2);
+  }
+}
+
+@media (max-width: 760px) {
+  .shell {
+    width: min(680px, 92%);
+    padding-top: 88px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .heroCopy {
+    padding: 0;
+  }
+
+  .hero .eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.13em;
+  }
+
+  .hero h1 {
+    max-width: none;
+    margin-top: 6px;
+    font-size: clamp(34px, 8vw, 42px);
+    line-height: 1;
+  }
+
+  .heroDescription,
+  .heroFacts {
+    display: none;
+  }
+
+  .amenities {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .propertyPhotos {
+    margin-top: 56px;
+  }
+
+  .lightboxImageFrame {
+    height: min(66svh, 560px);
+    min-height: 220px;
+  }
+
+  .amenities {
+    margin-top: 54px;
+    padding: 27px 0;
+  }
+
+  .sectionIntro h2 {
+    max-width: 15ch;
+    font-size: 39px;
+  }
+
+}
+
+@media (max-width: 460px) {
+  .amenityGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .stepCard,
+  .successCard {
+    padding: 15px 14px;
+  }
+
+  .lightboxBackdrop {
+    padding: 10px;
+  }
+
+  .lightboxDialog {
+    padding: 9px;
+    border-radius: 12px;
+  }
+
+  .lightboxImageFrame {
+    height: min(62svh, 520px);
+    min-height: 200px;
+  }
+
+  .lightboxFooter {
+    gap: 8px;
+    padding-top: 8px;
+  }
+
+  .lightboxFooter p {
+    font-size: 10px;
+  }
+
+  .lightboxControls button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .choiceGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dateFields {
+    grid-template-columns: 1fr;
+  }
+
+  .choice {
+    min-height: 49px;
+  }
+
+  .stepTitle {
+    margin: 13px 0 10px;
+    font-size: clamp(26px, 6.5vw, 32px);
+    line-height: 0.98;
+  }
+
+  .stepTop {
+    font-size: 8px;
+  }
+
+  .progressTrack {
+    margin-top: 7px;
+  }
+
+  .planner {
+    scroll-margin-top: 76px;
+  }
+
+  .stepDescription {
+    margin: -3px 0 8px;
+    font-size: 9px;
+  }
+
+  .interestGrid {
+    gap: 7px;
+  }
+
+  .interestChoice {
+    min-height: 55px;
+    gap: 8px;
+    padding: 8px 9px;
+  }
+
+  .interestIcon {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .interestIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .interestCopy strong {
+    font-size: 10px;
+  }
+
+  .interestCopy small {
+    margin-top: 2px;
+    font-size: 8px;
+  }
+
+  .photoStep {
+    gap: 6px;
+  }
+
+  .skipPhotos {
+    min-height: 22px;
+    font-size: 9px;
+  }
+
+  .finalStep,
+  .contactForm {
+    gap: 8px;
+  }
+
+  .finalSummary {
+    padding: 9px 10px;
+  }
+
+  .finalSummary .eyebrow {
+    font-size: 8px;
+  }
+
+  .finalSummaryChoices {
+    margin: 5px 0;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .finalSummaryDetails {
+    font-size: 9px;
+    line-height: 1.35;
+  }
+
+  .field {
+    gap: 4px;
+    font-size: 10px;
+  }
+
+  .field input,
+  .phoneField {
+    min-height: 38px;
+    padding-block: 7px;
+  }
+
+  .phoneField input {
+    min-height: 34px;
+  }
+
+  .contactChoice legend {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  .contactChoice .choice {
+    min-height: 36px;
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+
+  .consent {
+    gap: 6px;
+    font-size: 9px;
+    line-height: 1.35;
+  }
+
+  .consent input {
+    width: 14px;
+    height: 14px;
+  }
+
+  .formActions {
+    margin-top: 7px;
+  }
+
+  .backButton,
+  .submitButton {
+    min-height: 41px;
+    font-size: 10px;
+  }
+
+  .successCard {
+    padding-block: 22px;
+  }
+
+  .successIcon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 10px;
+  }
+
+  .successCard h2 {
+    font-size: 30px;
+  }
+
+  .successCard > p:last-child {
+    margin-top: 8px;
+    font-size: 11px;
+  }
+
+  .submitButton {
+    padding-inline: 14px;
+  }
+}
+
+@media (max-width: 460px) and (max-height: 760px) {
+  .shell {
+    padding-top: 76px;
+  }
+
+  .hero .eyebrow {
+    display: none;
+  }
+
+  .hero h1 {
+    margin-top: 0;
+    font-size: 32px;
+  }
+
+  .stepCard,
+  .successCard {
+    padding: 12px;
+  }
+
+  .stepTitle {
+    margin: 10px 0 8px;
+    font-size: 25px;
+  }
+
+  .formActions {
+    margin-top: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo,
+  .galleryCard,
+  .lightboxControls button,
+  .progressTrack span,
+  .submitButton {
+    animation: none;
+    transition: none;
+  }
+}

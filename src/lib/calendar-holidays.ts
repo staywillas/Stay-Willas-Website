@@ -145,7 +145,7 @@ export type NightCategory = "NORMAL_WEEKDAY" | "WEEKEND" | "LONG_WEEKEND";
  * Categorizes a stay night into one of three pricing/offer buckets:
  * - "LONG_WEEKEND": Falls inside a peak holiday window (26% offer removed; eligible for 5% discount)
  * - "WEEKEND": Normal Friday, Saturday, Sunday (eligible for 5% discount)
- * - "NORMAL_WEEKDAY": Normal Mon-Thu night (eligible for 26% discount on villas/full estates)
+ * - "NORMAL_WEEKDAY": Normal Mon-Thu night (eligible for 26% discount on villas)
  */
 export function categorizeNight(date: Date, overrideType?: string): {
   category: NightCategory;

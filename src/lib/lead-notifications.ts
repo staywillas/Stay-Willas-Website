@@ -5,7 +5,7 @@ import { format } from "date-fns";
 export const ADMIN_NOTIFICATION_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || "staywillas@gmail.com";
 
 interface LeadNotificationData {
-  type: "BOOKING_GATE_LEAD" | "BOOKING_REQUEST" | "CONFIRMED_BOOKING" | "CALLBACK_REQUEST" | "PARTNER_APPLICATION" | "GENERAL_INQUIRY";
+  type: "BOOKING_GATE_LEAD" | "ADS_LANDING_PAGE_LEAD" | "BOOKING_REQUEST" | "CONFIRMED_BOOKING" | "CALLBACK_REQUEST" | "PARTNER_APPLICATION" | "GENERAL_INQUIRY";
   name: string;
   phone: string;
   email?: string;
@@ -57,6 +57,12 @@ export async function sendAdminLeadNotification(data: LeadNotificationData) {
   let heading = "New Inquiry Received";
 
   switch (type) {
+    case "ADS_LANDING_PAGE_LEAD":
+      badgeText = "📣 ADS / KHOPOLI LEAD";
+      badgeBg = "#6D4C41";
+      subject = `📣 New Ads/khopoli lead for ${villaName || "Canopy Crest"}: ${name} (${phone})`;
+      heading = `New Ads/khopoli enquiry for ${villaName || "Canopy Crest"}`;
+      break;
     case "BOOKING_GATE_LEAD":
       badgeText = "🎯 DIRECT BOOKING LEAD";
       badgeBg = "#B8860B";

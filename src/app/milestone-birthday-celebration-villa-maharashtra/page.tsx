@@ -1,4 +1,5 @@
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 import React from "react";
 import { Metadata } from "next";
 import Image, { PhotoFrame } from "@/components/ui/site-image";
@@ -15,7 +16,7 @@ export const revalidate = 86400; // 24 hours edge cache
 
 export const metadata: Metadata = {
   title: "Milestone Birthday Celebration Villa Maharashtra | Stay Willas",
-  description: "Celebrate milestone 30th, 40th, 50th & 60th birthdays at luxury private pool estates in Maharashtra. Expansive lawns, senior-friendly suites, in-house catering & private pools.",
+  description: "Celebrate milestone 30th, 40th, 50th & 60th birthdays at luxury private pool villas in Maharashtra. Expansive lawns, senior-friendly suites, in-house catering & private pools.",
   keywords: [
     "milestone birthday celebration villa maharashtra",
     "50th birthday celebration villa near mumbai",
@@ -28,11 +29,11 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Milestone Birthday Celebration Villa Maharashtra | Stay Willas",
-    description: "Celebrate milestone 30th, 40th, 50th & 60th birthdays at luxury private pool estates in Maharashtra. Multi-generational comfort, chef catering & private lawns.",
+    description: "Celebrate milestone 30th, 40th, 50th & 60th birthdays at luxury private pool villas in Maharashtra. Multi-generational comfort, chef catering & private lawns.",
     url: "https://www.staywillas.com/milestone-birthday-celebration-villa-maharashtra",
     images: [
       {
-        url: "https://www.staywillas.com/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg",
+        url: `https://www.staywillas.com${canopyCrestPhotos.valley.src}`,
         width: 1200,
         height: 630,
         alt: "Milestone Birthday Celebration Villa in Maharashtra - Stay Willas",
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
 
 const faqs = [
   {
-    question: "Which milestone birthdays are best hosted at your private estates?",
+    question: "Which milestone birthdays are best hosted at your private villas?",
     answer: "Our properties regularly host 30th, 40th, 50th, 60th (Shashtipoorthi), and 75th milestone birthdays! The blend of expansive outdoor lawns, large air-conditioned living salons, and private pool decks allows the entire multi-generational family to celebrate together under one roof."
   },
   {
@@ -74,7 +75,7 @@ export default async function MilestoneBirthdayPage() {
         "@id": "https://www.staywillas.com/milestone-birthday-celebration-villa-maharashtra#webpage",
         url: "https://www.staywillas.com/milestone-birthday-celebration-villa-maharashtra",
         name: "Milestone Birthday Celebration Villa Maharashtra | Stay Willas",
-        description: "Celebrate landmark 30th, 40th, 50th & 60th birthdays at luxury private pool estates in Maharashtra.",
+        description: "Celebrate landmark 30th, 40th, 50th & 60th birthdays at luxury private pool villas in Maharashtra.",
         breadcrumb: {
           "@type": "BreadcrumbList",
           itemListElement: [
@@ -106,7 +107,7 @@ export default async function MilestoneBirthdayPage() {
         {/* Subtle Backdrop Image with Deep Vignette */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg"
+            src={canopyCrestPhotos.valley.src}
             alt="Milestone Birthday Celebration Villa in Maharashtra"
             fill
             className="object-cover opacity-25 filter brightness-90 contrast-125"
@@ -131,7 +132,7 @@ export default async function MilestoneBirthdayPage() {
 
           {/* Subtitle */}
           <p className="text-white/90 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light mb-10 drop-shadow-sm">
-            Honor life&apos;s landmark moments—30th, 40th, 50th, and 60th birthdays—in absolute luxury. Bring generations together at private pool estates featuring expansive lawns, senior-friendly suites, and bespoke chef catering.
+            Honor life&apos;s landmark moments—30th, 40th, 50th, and 60th birthdays—in absolute luxury. Bring generations together at private pool villas with expansive lawns, senior-friendly suites, and bespoke chef catering.
           </p>
 
           {/* Action Buttons */}
@@ -140,11 +141,11 @@ export default async function MilestoneBirthdayPage() {
               href="#villas"
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#DAA520] hover:bg-[#C4941A] text-[#0B1528] font-black text-xs sm:text-sm uppercase tracking-widest transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 text-center flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>EXPLORE GRAND ESTATES</span>
+              <span>EXPLORE GROUP VILLAS</span>
               <ChevronRight size={16} />
             </a>
             <a
-              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a milestone birthday celebration in Maharashtra for our family. Could you share estate options, catering and direct rates?")}`}
+              href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a milestone birthday celebration in Maharashtra for our family. Could you share villa options, catering and direct rates?")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer border border-white/20"
@@ -178,11 +179,11 @@ export default async function MilestoneBirthdayPage() {
         </div>
       </section>
 
-      {/* Featured Milestone Estates */}
+      {/* Featured milestone villas */}
       <section id="villas" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-[#B8860B] font-black tracking-widest text-xs uppercase block mb-2">Grand Family Capacity</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0B1528]">Estates Engineered for Milestone Gatherings</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0B1528]">Villas for Milestone Gatherings</h2>
           <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto mt-3">
             Spacious layouts ensuring elderly grandparents enjoy tranquility while kids splash in the pool and cousins catch up on the lawns.
           </p>
@@ -194,13 +195,13 @@ export default async function MilestoneBirthdayPage() {
             <div>
               <div className="relative aspect-[16/10] w-full">
                 <PhotoFrame
-                  src="/assets/villas/Canopy crest photos/IMG-20260607-WA0015.jpg"
-                  alt="Canopy Crest Khopoli - 4-Acre Estate for Milestone Celebrations"
+                  src={canopyCrestPhotos.poolDay.src}
+                  alt="Canopy Crest Khopoli - 4-Acre Villa for Milestone Celebrations"
                   fill
                   className="object-cover"
                 />
                 <div className="absolute top-4 left-4 bg-[#0B1528]/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-white text-xs font-bold shadow-sm">
-                  Khopoli Foothills • 4 BHK Estate
+                  Khopoli Foothills • 4 BHK Villa
                 </div>
                 <div className="absolute top-4 right-4 bg-[#DAA520] text-[#0B1528] px-3.5 py-1.5 rounded-full text-xs font-black shadow-sm">
                   4-Acre Grounds • Sleeps up to 16
@@ -208,7 +209,7 @@ export default async function MilestoneBirthdayPage() {
               </div>
               <div className="p-6 sm:p-8">
                 <h3 className="text-2xl font-heading font-bold text-[#0B1528] mb-3">
-                  Canopy Crest — The 4-Acre Foothills Estate
+                  Canopy Crest — The 4-Acre Foothills Villa
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
                   The quintessential venue for grand family celebrations. Expansive manicured lawns accommodate day gathering rituals, live cooking stations, and sunset tea circles. Features 4 spacious air-conditioned suites with ground-floor accessibility.
@@ -245,14 +246,14 @@ export default async function MilestoneBirthdayPage() {
 
             <div className="p-6 sm:p-8 pt-0 flex items-center justify-between border-t border-slate-100">
               <div>
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Direct Estate Rate</span>
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Direct Villa Rate</span>
                 <span className="text-2xl sm:text-3xl font-black text-[#0B1528]">₹15,000<span className="text-xs font-normal text-slate-500"> / night</span></span>
               </div>
               <Link
                 href="/villa/canopy-crest"
                 className="px-6 py-3.5 rounded-full bg-[#0B1528] hover:bg-[#DAA520] hover:text-[#0B1528] text-white font-black text-xs uppercase tracking-wider transition-all shadow-md"
               >
-                View Estate Details →
+                View Villa Details →
               </Link>
             </div>
           </div>
@@ -313,14 +314,14 @@ export default async function MilestoneBirthdayPage() {
 
             <div className="p-6 sm:p-8 pt-0 flex items-center justify-between border-t border-slate-100">
               <div>
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Direct Estate Rate</span>
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Direct Villa Rate</span>
                 <span className="text-2xl sm:text-3xl font-black text-[#0B1528]">₹13,000<span className="text-xs font-normal text-slate-500"> / night</span></span>
               </div>
               <Link
                 href="/villa/the-angle-house"
                 className="px-6 py-3.5 rounded-full bg-[#0B1528] hover:bg-[#DAA520] hover:text-[#0B1528] text-white font-black text-xs uppercase tracking-wider transition-all shadow-md"
               >
-                View Estate Details →
+                View Villa Details →
               </Link>
             </div>
           </div>
@@ -412,7 +413,7 @@ export default async function MilestoneBirthdayPage() {
             </p>
           </div>
           <a
-            href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a milestone family celebration in Maharashtra. Please assist me with estate options.")}`}
+            href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hi Stay Willas! 🌟 I'm planning a milestone family celebration in Maharashtra. Please assist me with villa options.")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap shrink-0 border border-white/20 cursor-pointer"

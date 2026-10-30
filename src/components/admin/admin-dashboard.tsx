@@ -41,6 +41,7 @@ import {
   Calculator
 } from "lucide-react";
 import Image, { PhotoFrame } from "@/components/ui/site-image";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 import AvailabilityCalendar from "@/components/admin/availability-calendar";
 import DailyPricingCalendar from "@/components/admin/daily-pricing-calendar";
 import BillCalculator from "@/components/admin/bill-calculator";
@@ -1226,6 +1227,7 @@ const AdminDashboard = ({
                       .map((lead: any) => {
                         const cleanPhone = (lead.phone || "").replace(/[^0-9]/g, "");
                         const isBookingLead = lead.type === "BOOKING_LEAD";
+                        const isKhopoliAdsLead = isBookingLead && (lead.message || "").includes("Lead source: Ads/khopoli.");
                         const isOwner = lead.type === "OWNER";
 
                         return (
@@ -1257,13 +1259,15 @@ const AdminDashboard = ({
                             {/* Type Badge */}
                             <td className="py-4">
                               <span className={`inline-block px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
-                                isBookingLead
+                                isKhopoliAdsLead
+                                  ? "bg-violet-100 text-violet-900 border border-violet-300"
+                                  : isBookingLead
                                   ? "bg-amber-100 text-amber-900 border border-amber-300"
                                   : isOwner
                                   ? "bg-blue-100 text-[#1B3564] border border-blue-300"
                                   : "bg-emerald-100 text-emerald-900 border border-emerald-300"
                               }`}>
-                                {isBookingLead ? "🎯 Booking Attempt" : isOwner ? "🤝 Owner Partner" : "💬 Guest Inquiry"}
+                                {isKhopoliAdsLead ? "📣 Ads/khopoli" : isBookingLead ? "🎯 Booking Attempt" : isOwner ? "🤝 Owner Partner" : "💬 Guest Inquiry"}
                               </span>
                             </td>
 
@@ -1446,8 +1450,8 @@ const AdminDashboard = ({
                       <div className="flex items-center gap-4">
                         <div className="relative w-16 h-12 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0">
                           <PhotoFrame
-                            src={booking.villa.images[0] || "/images/hero-villa.webp"} 
-                            alt={booking.villa.name} 
+                            src={booking.villa.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : booking.villa.images[0] || "/images/hero-villa.webp"}
+                            alt={booking.villa.name}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
@@ -1492,8 +1496,8 @@ const AdminDashboard = ({
             <div key={villa.id} className="glass border border-slate-200 rounded-[32px] overflow-hidden hover:border-blue-500/30 transition-all duration-300 group flex flex-col h-full">
               <div className="relative h-48 bg-slate-50 border border-slate-100">
                 <PhotoFrame
-                  src={villa.images[0] || "/images/hero-villa.webp"} 
-                  alt={villa.name} 
+                  src={villa.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : villa.images[0] || "/images/hero-villa.webp"}
+                  alt={villa.name}
                   fill
                   className="object-cover group-hover:scale-105 transition-all duration-500"
                 />
@@ -2910,7 +2914,7 @@ const AdminDashboard = ({
                     <div className="min-w-0 flex-1">
                       <h4 className="font-cormorant font-bold text-base text-[#1B3564] truncate leading-tight">{b.villa?.name}</h4>
                       <p className="text-[11px] text-slate-500 truncate mt-0.5">
-                        {b.villa?.location || "Luxury Estate"} • {b.villa?.bedrooms || 4} BHK
+                        {b.villa?.location || "Luxury Villa"} • {b.villa?.bedrooms || 4} BHK
                       </p>
                       <p className="text-[11px] text-slate-600 font-medium">
                         Base: <span className="font-bold text-slate-900">₹{(b.villa?.price || computedNightly).toLocaleString("en-IN")}</span>/night

@@ -20,6 +20,7 @@ import {
   Check
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 interface EstateSlide {
   id: string;
@@ -68,7 +69,7 @@ const ESTATES: EstateSlide[] = [
     location: "Kurwande, Lonavala",
     tag: "Valley Retreat",
     price: "₹4,999",
-    priceNote: "Per cottage / night (Estate: ₹17,997)",
+    priceNote: "Per cottage / night (All 3 cottages: ₹17,997)",
     weekdayRate: "₹4,999 (Cottage) / ₹17,997 (Full)",
     weekendRate: "₹6,999 (Cottage) / ₹23,997 (Full)",
     capacityText: "Up to 12 Guests",
@@ -81,7 +82,7 @@ const ESTATES: EstateSlide[] = [
     id: "canopy-crest",
     slug: "canopy-crest",
     boldTitle: "Canopy Crest",
-    thinSubtitle: "hilltop estate",
+    thinSubtitle: "hilltop villa",
     category: "4 BHK Multi-Acre Horizon Villa",
     location: "Khopoli, Maharashtra",
     tag: "Hilltop Seclusion",
@@ -91,7 +92,7 @@ const ESTATES: EstateSlide[] = [
     weekendRate: "₹22,000",
     capacityText: "16 Guests",
     bedroomsText: "4 Luxury Beds",
-    image: "/images/destinations/canopy-crest-clean.jpg",
+    image: canopyCrestPhotos.hero.src,
     rating: "4.97",
     features: ["Private Swimming Pool", "Sprawling Verdant Lawns", "Senior Citizen Friendly"],
   },
@@ -328,7 +329,7 @@ export default function HeroConcept1() {
                   <span className="text-white text-xs font-bold ml-1">{current.rating}</span>
                 </div>
                 <span className="text-white/30">•</span>
-                <span className="text-stone-300 font-light text-[11px]">100% Verified Private Estate</span>
+                <span className="text-stone-300 font-light text-[11px]">100% Verified Private Villa</span>
               </div>
             </motion.div>
           </AnimatePresence>
@@ -400,7 +401,7 @@ export default function HeroConcept1() {
           
           {/* Slide Indicator Label */}
           <div className="text-white/60 uppercase text-[10px] tracking-widest hidden xs:inline">
-            Private Estates:
+            Private Villas:
           </div>
 
           {/* Property Slide Switcher Tabs */}

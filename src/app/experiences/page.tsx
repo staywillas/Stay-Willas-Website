@@ -5,6 +5,7 @@ import Image, { PhotoFrame } from "@/components/ui/site-image";
 import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import { Sun, Calendar, Heart, Shield, ArrowRight, Cake, PartyPopper, Users2 } from "lucide-react";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 export const metadata: Metadata = {
   title: "Luxury Villa Experiences | Stay Willas",
@@ -178,7 +179,7 @@ export default function ExperiencesPage() {
             <div className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
               <div className="relative h-64 overflow-hidden">
                 <PhotoFrame
-                  src="/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg"
+                  src={canopyCrestPhotos.poolDay.src}
                   alt="Anniversary Celebration Villa with Private Pool"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -193,7 +194,7 @@ export default function ExperiencesPage() {
                   <h3 className="text-2xl font-heading text-white font-bold">
                     Anniversary Celebration Villa with Private Pool
                   </h3>
-                  <p className="text-white/80 text-xs mt-1">Lonavala, Khopoli & Panchgani • Secluded Estates</p>
+                  <p className="text-white/80 text-xs mt-1">Lonavala, Khopoli & Panchgani • Private Stays</p>
                 </div>
               </div>
               <div className="p-6 md:p-8 flex flex-col flex-grow justify-between">
@@ -264,7 +265,7 @@ export default function ExperiencesPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute top-4 left-4">
                   <span className="bg-[#DAA520] text-[#1B3564] text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full">
-                    Pune Family Escapes
+                    Pune Family Getaways
                   </span>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">

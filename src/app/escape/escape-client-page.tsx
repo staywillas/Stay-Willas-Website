@@ -14,6 +14,7 @@ import WarpLines from "@/components/ui/WarpLines";
 import Footer from "@/components/layout/footer";
 import MegaDiscountAdBanner from "@/components/common/mega-discount-ad-banner";
 import Image from "@/components/ui/site-image";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 interface VillaData {
   id: string;
@@ -703,7 +704,7 @@ export default function EscapeClientPage({ angleHouse, canopyCrest }: EscapeClie
           <div className="bg-[#0D0A14]/75 backdrop-blur-xl rounded-3xl overflow-hidden border border-[#DAA520]/20 shadow-2xl flex flex-col hover:border-[#DAA520]/45 transition-all duration-500 group">
             <div className="relative aspect-[16/10] overflow-hidden border-b border-[#DAA520]/15">
               <Image 
-                src={canopyCrest.images[0] || "/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg"} 
+                src={canopyCrestPhotos.hero.src}
                 alt={canopyCrest.name} 
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105" 

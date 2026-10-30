@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { verifySessionToken } from "@/lib/session";
 import AdminDashboard from "@/components/admin/admin-dashboard";
 import LoginForm from "@/components/auth/login-form";
+import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard & Booking Operations | Stay Willas",
@@ -23,7 +24,7 @@ export default async function AdminPage() {
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("staywillas_session");
-    
+
     if (sessionCookie?.value) {
       const session = verifySessionToken(sessionCookie.value);
       if (session && session.role === "admin") {
@@ -72,8 +73,12 @@ export default async function AdminPage() {
     // 2nd Priority
     if (a.slug === "canopy-crest" && b.slug !== "canopy-crest") return -1;
     if (b.slug === "canopy-crest" && a.slug !== "canopy-crest") return 1;
-    
+
     // 3rd Priority
+    if (a.slug === NIEEVANT_SLUG && b.slug !== NIEEVANT_SLUG) return -1;
+    if (b.slug === NIEEVANT_SLUG && a.slug !== NIEEVANT_SLUG) return 1;
+
+    // 4th Priority
     if (a.slug === "willow-peak" && b.slug !== "willow-peak") return -1;
     if (b.slug === "willow-peak" && a.slug !== "willow-peak") return 1;
     

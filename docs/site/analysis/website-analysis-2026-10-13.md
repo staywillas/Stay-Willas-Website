@@ -368,8 +368,8 @@ The following appendix inventories source files structurally. It records exports
 | `prisma/seed.ts` | Property and demo-data bootstrap; not executed |
 | `scripts/verify-property-images.mjs` | Asset/alias/graded-pixel checks |
 | Other `scripts/` files | Logo updates, Willow image processing/grading and cottage naming; inquiry-clearing utility |
-| `fix_keywords.js` | Content keyword maintenance |
-| `generate-case-study-pdf.js` | Case-study PDF generation utility |
+| `scripts/seo/fix-keywords.mjs` | Content keyword maintenance |
+| `scripts/reports/generate-case-study-pdf.mjs` | Internal case-study PDF generation utility |
 | `docs/admin-layout-proposal.md` | Proposed operational dashboard layout, not implemented by this review |
 | `docs/image-framing-and-willow-grading.md` | Current crop/grading decisions and earlier verification notes |
 | `public/` | Photos, video, meal-menu PDFs, icons, crawler information and verification files |

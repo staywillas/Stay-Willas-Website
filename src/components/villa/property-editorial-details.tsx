@@ -35,7 +35,9 @@ import SaveButton from "./save-button";
 import PropertyEditorialGallery from "./property-editorial-gallery";
 import PropertySectionNav from "./property-section-nav";
 import PropertyEditorialExtras from "./property-editorial-extras";
+import CanopyHeroBookingForm from "./canopy-hero-booking-form";
 import { resolvePropertyImage } from "@/lib/property-images";
+import { NIEEVANT_PREVIEW_ID } from "@/data/nieevant-villa";
 import {
   generateBreadcrumbSchema,
   generatePropertySchema,
@@ -48,6 +50,7 @@ import {
   getPropertyEditorial,
   type Highlight,
 } from "@/data/property-editorial";
+import { canopyCrestGallery, canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 type EditorialVilla = Prisma.VillaGetPayload<{
   include: { dailyPrices: true; seasonalPrices: true };
@@ -85,26 +88,20 @@ export default function PropertyEditorialDetails({
 }) {
   const property = getPropertyEditorial(villa);
   const isCanopyCrest = villa.slug === "canopy-crest";
+  const isNieevantPreview = villa.id === NIEEVANT_PREVIEW_ID;
   const selectedCottageSelection = property.isWillow && !property.cottage
     ? initialCottageSelection ?? (initialGuests ? initialGuests > 8 ? "ALL" : initialGuests > 4 ? "TWO" : "A" : property.initialCottageSelection)
     : property.initialCottageSelection;
   const { faqs, spaces } = property;
-  const images = villa.images
-    .map(resolvePropertyImage)
-    .map((src) =>
-      villa.slug === "canopy-crest"
-        ? src.replace(
-            "/assets/villas/Canopy crest photos/",
-            "/assets/villas/canopy-crest/",
-          )
-        : src,
-    );
+  const images = villa.slug === "canopy-crest"
+    ? canopyCrestGallery.map((photo) => photo.src)
+    : villa.images.map(resolvePropertyImage);
   const amenities = getEssentialAmenities(villa.amenities);
   const initialPrice =
     property.isWillow && !property.cottage
       ? Math.min(villa.price, 15000)
       : villa.price;
-  // The legacy Willow booking calculator consumes estate-level rates and divides
+  // The legacy Willow booking calculator consumes villa-level rates and divides
   // by three for one cottage. Adapt cottage data at the boundary without changing it.
   const rateFactor = property.cottage ? 3 : 1;
   const rate = (value: number | null) =>
@@ -118,6 +115,11 @@ export default function PropertyEditorialDetails({
       )
     : null;
   const formattedPrice = initialPrice.toLocaleString("en-IN");
+  const nieevantWhatsAppUrl =
+    "https://wa.me/919619042310?text=" +
+    encodeURIComponent(
+      "Hi Stay Willas, I would like to check availability and the final quote for Nieevant by Stay Willas in Khopoli.",
+    );
   const guides = getPropertyGuides(villa.slug)
     .map((slug) => blogsData.find((guide) => guide.slug === slug))
     .filter((guide) => guide !== undefined);
@@ -167,10 +169,10 @@ export default function PropertyEditorialDetails({
           >
             <div className={styles.weekdayHeroMedia}>
               <Image
-                src="/assets/villas/canopy-crest/IMG-20260607-WA0015.jpg"
+                src={canopyCrestPhotos.hero.src}
                 alt="Canopy Crest villa, private swimming pool and landscaped lawn in the Khopoli hills"
                 fill
-                quality={85}
+                quality={75}
                 loading="eager"
                 fetchPriority="high"
                 sizes="(max-width: 700px) 90vw, (max-width: 1200px) 52vw, 660px"
@@ -192,16 +194,14 @@ export default function PropertyEditorialDetails({
                 )}
               </p>
               <h2 id="weekday-offer-title" className={styles.weekdayOfferTitle}>
-                Weekday escape near Imagica — <em>save up to 26%</em> on eligible
+                Weekday getaway near Imagica — <em>save up to 26%</em> on eligible
                 dates.
               </h2>
               <p className={styles.weekdayHeroDescription}>
                 Choose Monday–Thursday dates to see Canopy Crest’s live nightly
                 rates and any eligible savings for your stay.
               </p>
-              <a href="#booking-card-section" className={styles.weekdayHeroCta}>
-                Check dates &amp; live rates <ArrowRight size={17} />
-              </a>
+              <CanopyHeroBookingForm />
               <p className={styles.weekdayHeroTerms}>
                 Offer eligibility depends on your selected dates. Your quote shows
                 the rates and savings before you book.
@@ -231,7 +231,11 @@ export default function PropertyEditorialDetails({
             </div>
             <div className={styles.headerNote}>
               <p>{property.summary}</p>
-              <a href="#booking-card-section">
+              <a
+                href="#booking-card-section"
+                data-conversion-event={isCanopyCrest ? "canopy_crest_check_dates_click" : undefined}
+                data-conversion-surface={isCanopyCrest ? "property_header_link" : undefined}
+              >
                 {villa.slug === "the-angle-house"
                   ? "Check dates & pricing"
                   : "Plan your stay"} <ArrowDownIcon />
@@ -459,7 +463,7 @@ export default function PropertyEditorialDetails({
                         src={space.src}
                         alt={space.alt}
                         fill
-                        quality={80}
+                        quality={75}
                         sizes="(max-width: 700px) 92vw, (max-width: 1050px) 44vw, 355px"
                         className={styles.cover}
                       />
@@ -521,6 +525,17 @@ export default function PropertyEditorialDetails({
                   </a>
                 </div>
               </div>
+              {property.mapEmbedUrl && (
+                <div className={styles.mapEmbed}>
+                  <iframe
+                    title={`Map showing ${property.name} in ${property.locationName}`}
+                    src={property.mapEmbedUrl}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+              )}
               <p className={styles.smallNote}>
                 Check your arrival instructions, route and current traffic
                 before travelling.
@@ -568,12 +583,14 @@ export default function PropertyEditorialDetails({
               ) : (
                 <p>Guest reviews will appear here after a stay.</p>
               )}
-              <PropertyEditorialExtras
-                key={villa.id}
-                kind="reviews"
-                villaId={villa.id}
-                reviews={reviews}
-              />
+              {!isNieevantPreview && (
+                <PropertyEditorialExtras
+                  key={villa.id}
+                  kind="reviews"
+                  villaId={villa.id}
+                  reviews={reviews}
+                />
+              )}
             </section>
 
             <section id="know" className={styles.section} aria-labelledby="know-title">
@@ -583,11 +600,11 @@ export default function PropertyEditorialDetails({
               <div className={styles.checkTimes}>
                 <span>
                   <Clock3 size={19} />
-                  <strong>Check-in</strong> From 2:00 PM
+                  <strong>Check-in</strong> From {property.checkInTime ?? "2:00 PM"}
                 </span>
                 <span>
                   <Clock3 size={19} />
-                  <strong>Check-out</strong> By 11:00 AM
+                  <strong>Check-out</strong> By {property.checkOutTime ?? "11:00 AM"}
                 </span>
               </div>
               <div className={styles.faqs}>
@@ -602,7 +619,9 @@ export default function PropertyEditorialDetails({
                 ))}
               </div>
               <p className={styles.smallNote}>
-                No smoking indoors. Keep music low after 10:00 PM. Review the{" "}
+                {property.houseRulesNote ??
+                  "No smoking indoors. Keep music low after 10:00 PM."}{" "}
+                Review the{" "}
                 <Link href="/cancellation-policy">cancellation policy</Link>{" "}
                 before booking.
               </p>
@@ -631,13 +650,19 @@ export default function PropertyEditorialDetails({
                 <br />
                 <em>Your kind of weekend.</em>
               </h2>
-              <a href="#booking-card-section" className={styles.primaryButton}>
+              <a
+                href="#booking-card-section"
+                className={styles.primaryButton}
+                data-conversion-event={isCanopyCrest ? "canopy_crest_check_dates_click" : undefined}
+                data-conversion-surface={isCanopyCrest ? "property_closing_cta" : undefined}
+              >
                 Check dates & plan your stay <ArrowRight size={17} />
               </a>
               <p>
                 {initialCheckIn && initialCheckOut
                   ? "Your dates are loaded. Open the booking panel to review live nightly rates and your stay total."
-                  : `From ₹${formattedPrice} per night. Final rates depend on your dates and group.`}
+                  : property.priceNote ??
+                    `From ₹${formattedPrice} per night. Final rates depend on your dates and group.`}
               </p>
             </div>
           </div>
@@ -648,39 +673,66 @@ export default function PropertyEditorialDetails({
             id="booking-card-section"
             aria-label={`Plan your ${property.name} stay`}
           >
-            <BookingModalFlow
-              key={villa.id}
-              presentation="editorial"
-              villaId={villa.id}
-              villaName={
-                property.cottage ? `${property.name} (Willow Peak)` : villa.name
-              }
-              price={villa.price}
-              basePrice={villa.price * rateFactor}
-              initialCottageSelection={selectedCottageSelection}
-              propertySlug={villa.slug}
-              initialCheckIn={initialCheckIn}
-              initialCheckOut={initialCheckOut}
-              initialGuests={initialGuests}
-              weekendPrice={rate(villa.weekendPrice)}
-              fridayPrice={rate(villa.fridayPrice)}
-              saturdayPrice={rate(villa.saturdayPrice)}
-              sundayPrice={rate(villa.sundayPrice)}
-              dailyPrices={villa.dailyPrices.map((day) => ({
-                ...day,
-                price: day.price * rateFactor,
-              }))}
-              seasonalPrices={villa.seasonalPrices.map((season) => ({
-                ...season,
-                price: season.price * rateFactor,
-              }))}
-              maxGuests={villa.guests}
-              baseGuests={villa.baseGuests}
-              extraGuestFee={villa.extraGuestFee}
-              bookings={bookings}
-              location={villa.location}
-              isAngleHouse={villa.slug === "the-angle-house"}
-            />
+            {isNieevantPreview ? (
+              <div className={styles.previewBooking}>
+                <p className={styles.previewPrice}>
+                  <span>Listed from</span>
+                  <strong>₹{formattedPrice}</strong>
+                  <small>per night + taxes</small>
+                </p>
+                <h3>Check your dates with us.</h3>
+                <p>
+                  Share your dates and group size. Our team will confirm
+                  availability and the final quote.
+                </p>
+                <a
+                  href={nieevantWhatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.primaryButton}
+                >
+                  Ask about dates <ArrowRight size={16} />
+                </a>
+                <small>
+                  Check-in from {property.checkInTime}; check-out by{" "}
+                  {property.checkOutTime}.
+                </small>
+              </div>
+            ) : (
+              <BookingModalFlow
+                key={villa.id}
+                presentation="editorial"
+                villaId={villa.id}
+                villaName={
+                  property.cottage ? `${property.name} (Willow Peak)` : villa.name
+                }
+                price={villa.price}
+                basePrice={villa.price * rateFactor}
+                initialCottageSelection={selectedCottageSelection}
+                propertySlug={villa.slug}
+                initialCheckIn={initialCheckIn}
+                initialCheckOut={initialCheckOut}
+                initialGuests={initialGuests}
+                weekendPrice={rate(villa.weekendPrice)}
+                fridayPrice={rate(villa.fridayPrice)}
+                saturdayPrice={rate(villa.saturdayPrice)}
+                sundayPrice={rate(villa.sundayPrice)}
+                dailyPrices={villa.dailyPrices.map((day) => ({
+                  ...day,
+                  price: day.price * rateFactor,
+                }))}
+                seasonalPrices={villa.seasonalPrices.map((season) => ({
+                  ...season,
+                  price: season.price * rateFactor,
+                }))}
+                maxGuests={villa.guests}
+                baseGuests={villa.baseGuests}
+                extraGuestFee={villa.extraGuestFee}
+                bookings={bookings}
+                location={villa.location}
+                isAngleHouse={villa.slug === "the-angle-house"}
+              />
+            )}
             <div className={styles.concierge}>
               <Phone size={17} />
               <span>

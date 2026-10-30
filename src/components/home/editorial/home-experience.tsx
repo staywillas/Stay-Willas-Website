@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ArrowDown, ArrowUpRight, BedDouble, Check, Leaf, LoaderCircle, Search, Users } from "lucide-react";
 import { checkAvailableVillasForDates } from "@/app/actions/booking";
 import WeekdayCarousel from "./weekday-carousel";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPhotos } from "@/data/nieevant-images";
 import styles from "./home.module.css";
 
 type Villa = {
@@ -29,7 +31,8 @@ type Villa = {
 };
 const photos: Record<string, string> = {
   "the-angle-house": "/images/angle-house-hero-clean.webp",
-  "canopy-crest": "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
+  "canopy-crest": canopyCrestPhotos.hero.src,
+  "nieevant-by-stay-willas": nieevantPhotos.hero.src,
   "casa-de-reva": "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
 };
 const whatsapp = "https://wa.me/919619042310";
@@ -74,13 +77,13 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
 
     <section className={styles.hero} aria-label="Find your next villa escape">
       <div className={styles.heroVisual}>
-        <PhotoFrame src="/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg" alt="Canopy Crest villa and its private pool at twilight in Khopoli" fill sizes="100vw" preload className={styles.heroImage} />
+        <PhotoFrame src={canopyCrestPhotos.hero.src} alt={canopyCrestPhotos.hero.alt} fill sizes="100vw" preload className={styles.heroImage} />
       </div>
       <div className={styles.heroShade} />
       <div className={styles.heroContent}>
         <span className={styles.eyebrow}>PRIVATE HOMES. PERSONAL MOMENTS.</span>
-        <h1><span className={styles.heroTitleLine}>A slower kind</span>{" "}<span className={styles.heroTitleLine}>of <em>escape.</em></span></h1>
-        <p>Beautiful villas. Your favourite people. Nothing else on the agenda.</p>
+        <h1><span className={styles.heroTitleLine}>Private pool villas</span>{" "}<span className={styles.heroTitleLine}>near Mumbai</span></h1>
+        <p>Handpicked homes for time together across Lonavala, Khopoli and Panchgani.</p>
         <form className={styles.searchBar} data-home-search-form onSubmit={search}>
           <label className={styles.locationField}><span>Where to?</span><select name="destination" aria-label="Destination" value={location} onChange={e => setLocation(e.target.value)}><option value="all">All destinations</option><option>Lonavala</option><option>Khopoli</option><option>Panchgani</option></select></label>
           <label><span>Check in</span><input name="checkIn" aria-label="Check in" type="date" min={today} value={checkIn} onChange={e => {setCheckIn(e.target.value); if(checkOut && checkOut <= e.target.value) setCheckOut("");}} /></label>
@@ -135,7 +138,7 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
         const bookingAnchor = searchedWithDates ? "#booking-card-section" : "";
         const stayName = villa.slug === "willow-peak" && villa.cottagesCount === 2
           ? "Willow Peak · 2 cottages"
-          : villa.slug === "willow-peak" ? "Willow Peak · Entire estate" : villa.name;
+          : villa.slug === "willow-peak" ? "Willow Peak · All 3 cottages" : villa.name;
         const stayCapacity = villa.slug === "willow-peak" && villa.cottagesCount
           ? villa.cottagesCount * 4
           : villa.guests;
@@ -156,7 +159,7 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
           </div>
         </Link>;
       })}</div>
-      {results?.length === 0 && <div className={styles.emptyState}><h3>Let’s find another little escape.</h3><p>Try different dates, a smaller group or another destination.</p><a href={whatsapp} target="_blank" rel="noopener noreferrer">Ask our concierge <ArrowUpRight size={15} /></a></div>}
+      {results?.length === 0 && <div className={styles.emptyState}><h3>Let’s find another stay.</h3><p>Try different dates, a smaller group or another destination.</p><a href={whatsapp} target="_blank" rel="noopener noreferrer">Ask our concierge <ArrowUpRight size={15} /></a></div>}
     </section>
 
     {children}

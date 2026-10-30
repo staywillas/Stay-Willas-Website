@@ -44,7 +44,7 @@ const highlightsData = [
     {
       icon: "BellRing",
       title: "Dedicated Concierge",
-      desc: "We're here to curate your perfect escape",
+      desc: "We're here to curate your perfect getaway",
     },
     {
       icon: "ChefHat",
@@ -67,11 +67,11 @@ const highlightsData = [
     {
       icon: "BellRing",
       title: "Dedicated Concierge",
-      desc: "We're here to curate your perfect escape",
+      desc: "We're here to curate your perfect getaway",
     },
     {
       icon: "Compass",
-      title: "Scenic Escape",
+      title: "Scenic Getaway",
       desc: "Stunning valley views in the heart of Lonavala",
     },
   ],
@@ -80,7 +80,7 @@ const highlightsData = [
     {
       icon: "Sun",
       title: "Valley Villas",
-      desc: "Sprawling private estates surrounded by nature",
+      desc: "Spacious private villas surrounded by nature",
     },
     {
       icon: "Palmtree",
@@ -90,7 +90,7 @@ const highlightsData = [
     {
       icon: "BellRing",
       title: "Dedicated Concierge",
-      desc: "We're here to curate your perfect escape",
+      desc: "We're here to curate your perfect getaway",
     },
     {
       icon: "Compass",

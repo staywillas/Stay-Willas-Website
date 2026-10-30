@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import ownerConfig from "@/data/owner-config.json";
 import { requirePartnerSession } from "@/lib/session";
+import { canopyCrestGallery } from "@/data/canopy-crest-images";
 
 // Typed helper for retrieving owner mapped villa IDs
 export async function getOwnerVillaIds(email: string): Promise<string[]> {
@@ -105,7 +106,7 @@ export async function getPartnerDashboardData(ownerEmail?: string) {
         name: v.name,
         location: v.location,
         price: v.price,
-        images: v.images,
+        images: v.slug === "canopy-crest" ? canopyCrestGallery.map((photo) => photo.src) : v.images,
         bedrooms: v.bedrooms,
         reviewsCount: v._count.reviews
       })),

@@ -15,7 +15,7 @@ const categories = [
   { name: "Mountain View", icon: Mountain },
   { name: "Beachfront", icon: Palmtree },
   { name: "Vineyards", icon: Wine },
-  { name: "Private Estates", icon: Home },
+  { name: "Private Villas", icon: Home },
   { name: "Forest Cabins", icon: Trees },
   { name: "Sun-Kissed", icon: Sun },
   { name: "Resort Style", icon: Umbrella },

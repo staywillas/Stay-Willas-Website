@@ -1,4 +1,7 @@
 import type { Villa } from "@prisma/client";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPhotos } from "@/data/nieevant-images";
+import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
 
 export type PropertyPhoto = { src: string; alt: string };
 export type PropertySpace = PropertyPhoto & { title: string; text: string };
@@ -15,24 +18,29 @@ type PropertyCopy = {
   locationName: string;
   directions: string;
   mapUrl: string;
+  mapEmbedUrl?: string;
   featured: PropertyPhoto[];
   spaces: PropertySpace[];
   highlights: Highlight[];
+  checkInTime?: string;
+  checkOutTime?: string;
+  priceNote?: string;
+  photoNote?: string;
+  houseRulesNote?: string;
 };
 
 const angleBase = "/assets/villas/the-angle-house/";
 const willowBase = "/assets/villas/willow-peak/graded-v1/";
-const canopyBase = "/assets/villas/canopy-crest/";
 const casaBase = "/assets/villas/terra-cotta-villa/";
 
 const angle: PropertyCopy = {
-  eyebrow: "A PRIVATE VILLA ESCAPE FOR YOUR FAVOURITE PEOPLE",
+  eyebrow: "3 BEDROOM PRIVATE POOL VILLA · KAMSHET NEAR LONAVALA",
   summary:
-    "Three bedrooms, room for up to 12 guests, a waterfall pool and Jacuzzi—made for a memorable stay together.",
+    "A 3-bedroom private pool villa in Kamshet near Lonavala for up to 12 guests, with a waterfall pool and Jacuzzi in the master suite.",
   intro:
-    "A glass-fronted home in Kamshet, made for poolside afternoons, long conversations and a slower weekend with your people.",
+    "The Angle House is a private pool villa in Kamshet, near Lonavala. It has three bedrooms for up to 12 guests.",
   detail:
-    "Three bedrooms, a private waterfall pool and a Jacuzzi in the master suite. Gather in the living lounge, open the doors to the garden, and settle into your own pace.",
+    "Gather beside the private waterfall pool, relax in the master-suite Jacuzzi, or spend time in the living lounge and garden. Check your dates for a full stay quote.",
   locationName: "Kamshet",
   directions:
     "Use the exact property pin to plan your drive via Kamshet and the Old Mumbai-Pune Highway.",
@@ -192,7 +200,7 @@ const willow: PropertyCopy = {
 };
 
 const canopy: PropertyCopy = {
-  eyebrow: "A PRIVATE ESCAPE IN KHOPOLI",
+  eyebrow: "A PRIVATE GETAWAY IN KHOPOLI",
   summary: "A poolside home with four bedrooms and space for the whole group.",
   intro:
     "A four-bedroom villa in Khopoli for pool days, family catch-ups and an unhurried break with up to 16 guests.",
@@ -205,54 +213,54 @@ const canopy: PropertyCopy = {
     "https://www.google.com/maps/place/StayWillas+Canopy+Crest+Khopoli+%7C+Premium+Villa+with+Swimming+Pool/@18.7101381,73.3318344,17z/data=!3m1!4b1!4m6!3m5!1s0x3be80541e66fe4dd:0xf311fa62a65e318f!8m2!3d18.7101381!4d73.3344093!16s%2Fg%2F11zcgpz6w2",
   featured: [
     {
-      src: `${canopyBase}IMG-20260607-WA0007.jpg`,
-      alt: "Canopy Crest villa and private swimming pool at dusk",
+      src: canopyCrestPhotos.hero.src,
+      alt: canopyCrestPhotos.hero.alt,
     },
     {
-      src: `${canopyBase}IMG-20260607-WA0012.jpg`,
-      alt: "Open lawn and outdoor games area at Canopy Crest",
+      src: canopyCrestPhotos.poolDay.src,
+      alt: canopyCrestPhotos.poolDay.alt,
     },
     {
-      src: `${canopyBase}IMG-20260607-WA0013.jpg`,
-      alt: "Canopy Crest living room with sofas and a wall-mounted TV",
+      src: canopyCrestPhotos.livingDining.src,
+      alt: canopyCrestPhotos.livingDining.alt,
     },
   ],
   spaces: [
     {
       title: "Pool-facing bedrooms",
-      src: `${canopyBase}IMG-20260607-WA0009.jpg`,
-      alt: "Double bed, wardrobe and pool-facing windows at Canopy Crest",
-      text: "A restful bedroom with pool-facing windows.",
+      src: canopyCrestPhotos.bedroom.src,
+      alt: canopyCrestPhotos.bedroom.alt,
+      text: "A bright bedroom with large garden-facing windows.",
     },
     {
-      title: "Room to gather",
-      src: `${canopyBase}IMG-20260607-WA0013.jpg`,
-      alt: "Canopy Crest living room with sofas and a wall-mounted TV",
-      text: "Sofa seating and a living room for your group.",
+      title: "The kitchen",
+      src: canopyCrestPhotos.kitchen.src,
+      alt: canopyCrestPhotos.kitchen.alt,
+      text: "Counter space and built-in cabinets for everyday convenience.",
     },
     {
-      title: "Your own poolside",
-      src: `${canopyBase}IMG-20260607-WA0007.jpg`,
-      alt: "Canopy Crest's private swimming pool at dusk",
-      text: "A private swimming pool right beside the villa.",
+      title: "The bathroom",
+      src: canopyCrestPhotos.bathroom.src,
+      alt: canopyCrestPhotos.bathroom.alt,
+      text: "A glass shower and bathtub for a comfortable stay.",
     },
     {
-      title: "A table for everyone",
-      src: `${canopyBase}IMG-20260607-WA0014.jpg`,
-      alt: "Indoor dining table and chairs at Canopy Crest",
-      text: "An indoor dining space beside the living area.",
+      title: "Outdoor games and seating",
+      src: canopyCrestPhotos.gazebo.src,
+      alt: canopyCrestPhotos.gazebo.alt,
+      text: "An open-sided gazebo with outdoor seating and games.",
     },
     {
-      title: "Time on the lawn",
-      src: `${canopyBase}IMG-20260607-WA0015.jpg`,
-      alt: "Canopy Crest lawn, paved path and outdoor seating",
-      text: "Outdoor seating, a lawn and a little fresh air.",
+      title: "The villa and grounds",
+      src: canopyCrestPhotos.overhead.src,
+      alt: canopyCrestPhotos.overhead.alt,
+      text: "See how the villa, lawn and pool sit within the green hillside setting.",
     },
     {
-      title: "The daily comforts",
-      src: `${canopyBase}IMG-20260607-WA0008.jpg`,
-      alt: "Canopy Crest bathroom with glass shower enclosure",
-      text: "Bathrooms with a washbasin and shower facilities.",
+      title: "A quieter evening",
+      src: canopyCrestPhotos.lawnEvening.src,
+      alt: canopyCrestPhotos.lawnEvening.alt,
+      text: "Outdoor seating on the lawn as the day winds down.",
     },
   ],
   highlights: [
@@ -277,6 +285,78 @@ const canopy: PropertyCopy = {
       text: "Meal options are available on request.",
     },
   ],
+};
+
+const nieevant: PropertyCopy = {
+  eyebrow: "A HILLTOP VILLA IN KHOPOLI",
+  summary:
+    "A private pool, hillside views and room for up to 15 guests at Nieevant by Stay Willas.",
+  intro:
+    "Nieevant by Stay Willas is a 3-bedroom villa at Hatond Village, Khopoli. With 3 bathrooms and room for up to 15 guests, it is set on a green hilltop with open outdoor space.",
+  detail:
+    "Spend time by the private swimming pool, take in the valley from the balcony or terrace, and gather in the living and dining spaces. Air conditioning, Wi-Fi and private parking are listed amenities. Barbecue service is available for an additional charge; kitchen access is not included.",
+  locationName: "Hatond Village",
+  directions:
+    "The villa is at Plot No. 8, Nalavade Farms, Hatond Village, Khopoli, Maharashtra 410205. Open the map pin for your route and confirm arrival instructions with the team.",
+  mapUrl:
+    "https://www.google.com/maps/search/?api=1&query=Plot%20No.%208%2C%20Nalavade%20Farms%2C%20Hatond%20Village%2C%20Khopoli%2C%20Maharashtra%2C%20India%2C%20410205",
+  mapEmbedUrl:
+    "https://maps.google.com/maps?q=Plot%20No.%208%2C%20Nalavade%20Farms%2C%20Hatond%20Village%2C%20Khopoli%2C%20Maharashtra%2C%20India%2C%20410205&z=13&output=embed",
+  featured: [
+    { src: nieevantPhotos.hero.src, alt: nieevantPhotos.hero.alt },
+    { src: nieevantPhotos.hillside.src, alt: nieevantPhotos.hillside.alt },
+    { src: nieevantPhotos.grounds.src, alt: nieevantPhotos.grounds.alt },
+  ],
+  spaces: [
+    {
+      title: "Pool and hilltop setting",
+      src: nieevantPhotos.hero.src,
+      alt: nieevantPhotos.hero.alt,
+      text: "An aerial look at the villa, pool and green hills around it.",
+    },
+    {
+      title: "A hillside view",
+      src: nieevantPhotos.hillside.src,
+      alt: nieevantPhotos.hillside.alt,
+      text: "The villa sits above the surrounding green landscape in Khopoli.",
+    },
+    {
+      title: "The surrounding grounds",
+      src: nieevantPhotos.grounds.src,
+      alt: nieevantPhotos.grounds.alt,
+      text: "A wide view of the property and its open surroundings.",
+    },
+  ],
+  highlights: [
+    {
+      icon: "pool",
+      title: "A private pool",
+      text: "A swimming pool reserved for your stay.",
+    },
+    {
+      icon: "view",
+      title: "Above the valley",
+      text: "A hilltop setting with open green views.",
+    },
+    {
+      icon: "garden",
+      title: "Outdoor breathing room",
+      text: "A balcony, terrace and space to spend time outside.",
+    },
+    {
+      icon: "meals",
+      title: "Barbecue on request",
+      text: "BBQ service is available for an additional charge.",
+    },
+  ],
+  checkInTime: "1:00 PM",
+  checkOutTime: "11:00 AM",
+  priceNote:
+    "Listed from ₹19,999 per night plus taxes. Check with our team for the final rate and availability on your dates.",
+  photoNote:
+    "Original property photographs supplied for Nieevant. They show the actual villa and are not AI-generated; we have applied a light colour grade and Stay Willas watermark.",
+  houseRulesNote:
+    "Pets and events are allowed according to the current listing. Kitchen access is not included. Please confirm event arrangements, any additional charges and designated smoking areas with the team before arrival.",
 };
 
 const casa: PropertyCopy = {
@@ -388,7 +468,7 @@ export const willowUnits = [
   {
     selection: "ALL",
     slug: "willow-peak",
-    name: "Entire estate",
+    name: "All three cottages",
     capacity: "All 3 cottages · up to 12",
   },
 ] as const;
@@ -404,6 +484,8 @@ export function getPropertyEditorial(villa: Villa) {
         ? willow
         : villa.slug === "canopy-crest"
           ? canopy
+          : villa.slug === NIEEVANT_SLUG
+            ? nieevant
           : ["casa-de-reva", "terra-cotta-villa"].includes(villa.slug)
             ? casa
             : null;
@@ -440,6 +522,8 @@ export function getPropertyEditorial(villa: Villa) {
     })),
     highlights: [],
   };
+  const checkInTime = resolved.checkInTime ?? "2:00 PM";
+  const checkOutTime = resolved.checkOutTime ?? "11:00 AM";
   const faqs = [
     {
       question: hasPool
@@ -455,10 +539,58 @@ export function getPropertyEditorial(villa: Villa) {
       question: "How many people can stay?",
       answer: `${name} accommodates up to ${villa.guests} guests, with ${villa.bedrooms} ${villa.bedrooms === 1 ? "bedroom" : "bedrooms"} and ${villa.bathrooms} ${villa.bathrooms === 1 ? "bathroom" : "bathrooms"}. Confirm any extra-person charges in your final quote.`,
     },
+    ...(villa.slug === NIEEVANT_SLUG
+      ? [
+          {
+            question: "Is there parking at Nieevant?",
+            answer:
+              "Yes. Private parking is listed at the property, with free and secure parking available on the premises.",
+          },
+          {
+            question: "Is Nieevant suitable for families?",
+            answer:
+              "Yes. The listing describes the villa as suitable for families with children and older guests.",
+          },
+          {
+            question: "Can we book a day visit or picnic?",
+            answer:
+              "Day visits can be arranged with advance booking. Contact the team to confirm group size, timings, facilities and any applicable charges.",
+          },
+          {
+            question: "Can we host an event or celebration?",
+            answer:
+              "Events are allowed according to the current listing. Please share your plan and guest count in advance; approval and additional charges may apply.",
+          },
+          {
+            question: "Are photo and video shoots allowed?",
+            answer:
+              "Commercial photography and filming are allowed with advance permission. Tell the team about your shoot so arrangements can be confirmed.",
+          },
+          {
+            question: "Can guests use the kitchen?",
+            answer:
+              "Kitchen access is not included. The listing includes a refrigerator and barbecue service for an additional charge; ask the team about meal arrangements.",
+          },
+        ]
+      : []),
+    ...(villa.slug === "the-angle-house"
+      ? [
+          {
+            question: "Where is The Angle House?",
+            answer:
+              "The Angle House is in Kamshet, near Lonavala. Use the exact map pin on this page to plan your drive and arrival.",
+          },
+          {
+            question: "How do I check dates and rates?",
+            answer:
+              "Choose your check-in and check-out dates and guest count in the booking panel. You can review the live date-based rates and full stay quote before confirming.",
+          },
+        ]
+      : []),
     ...(isWillow
       ? [
           {
-            question: "Can I book one cottage or the whole estate?",
+            question: "Can I book one cottage or all three together?",
             answer:
               "Book Breeze, Crest or Heaven individually for up to four guests, or all three cottages together for up to 12. With an individual cottage booking, other cottages and shared outdoor areas may be used by other guests.",
           },
@@ -466,29 +598,30 @@ export function getPropertyEditorial(villa: Villa) {
       : []),
     {
       question: "Can we arrange meals?",
-      answer:
-        "Ask our team about meal packages and chef services, including vegetarian and Jain options. Menus, dietary requests and charges are confirmed separately.",
+      answer: villa.slug === NIEEVANT_SLUG
+        ? "Meal or cook service is not confirmed in the listing. Contact our team to ask what can be arranged and whether additional charges apply."
+        : "Ask our team about meal packages and chef services, including vegetarian and Jain options. Menus, dietary requests and charges are confirmed separately.",
     },
     {
       question: "Are pets welcome?",
-      answer:
-        villa.slug === "the-angle-house"
-          ? "Pets are welcome. Please tell the booking team about your pet before arrival and confirm the house rules for your stay."
-          : "Please confirm the pet policy and any house rules for your selected property with the booking team before reserving.",
+      answer: villa.slug === NIEEVANT_SLUG || villa.slug === "the-angle-house"
+        ? "Pets are allowed according to the current listing. Let the booking team know before arrival and confirm any requirements for your stay."
+        : "Please confirm the pet policy and any house rules for your selected property with the booking team before reserving.",
     },
     ...(!cottage
       ? [
           {
             question: "How does the weekday offer work?",
             answer:
-              "Use Stayw26 for 26% off eligible Monday-Thursday stays on full villa estates. Review rates, inclusions and your final quote before reserving.",
+              "Use Stayw26 for 26% off eligible Monday-Thursday stays on qualifying villas. Review rates, inclusions and your final quote before reserving.",
           },
         ]
       : []),
     {
       question: "What are the check-in and check-out times?",
-      answer:
-        "Check-in starts at 2:00 PM and check-out is by 11:00 AM. Early arrival or late departure needs to be arranged with the team and is subject to availability.",
+      answer: villa.slug === NIEEVANT_SLUG
+        ? `Check-in is from ${checkInTime} and check-out is by ${checkOutTime}. Early check-in or late check-out is subject to availability and may have an additional charge.`
+        : `Check-in is from ${checkInTime} and check-out is by ${checkOutTime}. Early arrival or late departure needs advance confirmation and is subject to availability.`,
     },
   ];
   return {
@@ -506,13 +639,13 @@ export function getPropertyEditorial(villa: Villa) {
       ? `WILLOW PEAK · COTTAGE ${unit?.selection}`
       : resolved.eyebrow,
     intro: cottage
-      ? `${name} is a private one-bedroom A-frame cottage at Willow Peak, for a quiet Lonavala escape with up to ${villa.guests} guests.`
+      ? `${name} is a private one-bedroom A-frame cottage at Willow Peak, for a quiet Lonavala getaway with up to ${villa.guests} guests.`
       : resolved.intro,
     detail: cottage
       ? "An air-conditioned bedroom, an attached bathroom, your own Jacuzzi and a private sit-out. Enjoy the cottage at your own pace, with outdoor dining and garden areas shared across Willow Peak."
       : resolved.detail,
     photoNote: cottage
       ? "Photos show spaces across Willow Peak. Ask our team to confirm the exact photos of your selected cottage."
-      : "",
+      : resolved.photoNote ?? "",
   };
 }

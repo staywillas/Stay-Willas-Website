@@ -6,6 +6,8 @@ import { prisma } from "@/lib/db";
 import { verifySessionToken } from "@/lib/session";
 import Footer from "@/components/layout/footer";
 import DashboardClient from "@/components/dashboard/dashboard-client";
+import { publicVillaName } from "@/lib/public-copy";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 export const metadata: Metadata = {
   title: "Guest Dashboard & Booking Management | Stay Willas",
@@ -77,9 +79,9 @@ export default async function DashboardPage() {
   const serializedStays = dbBookings.map((b) => ({
     id: b.id,
     villaId: b.villaId,
-    villaName: b.villa.name,
+    villaName: publicVillaName(b.villa.slug, b.villa.name),
     villaLocation: b.villa.location,
-    villaImage: b.villa.images[0] || "/images/hero-villa.webp",
+    villaImage: b.villa.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : b.villa.images[0] || "/images/hero-villa.webp",
     checkIn: b.checkIn.toISOString(),
     checkOut: b.checkOut.toISOString(),
     totalPrice: b.totalPrice,

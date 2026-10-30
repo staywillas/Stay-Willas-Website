@@ -1,69 +1,79 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import CircularCarousel, {
-  type CircularCarouselItem,
-} from "@/components/CircularCarousel";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import Image from "@/components/ui/site-image";
+import styles from "./area-hero-carousel.module.css";
+
+type AreaHeroImage = {
+  src: string;
+  alt: string;
+  title: string;
+  subtitle: string;
+};
 
 export default function AreaHeroCarousel({
   items,
-  className,
+  locationCaption,
 }: {
-  items: CircularCarouselItem[];
-  className?: string;
+  items: AreaHeroImage[];
+  locationCaption: string;
 }) {
-  const [cardWidth, setCardWidth] = useState(220);
+  const [activeIndex, setActiveIndex] = useState(0);
+  if (!items.length) return null;
 
-  useEffect(() => {
-    const largeDesktop = window.matchMedia("(min-width: 1650px)");
-    const desktop = window.matchMedia("(min-width: 1200px)");
-    const tablet = window.matchMedia("(min-width: 701px)");
-    const updateCardWidth = () => {
-      setCardWidth(
-        largeDesktop.matches ? 390 : desktop.matches ? 360 : tablet.matches ? 280 : 220,
-      );
-    };
-
-    updateCardWidth();
-    largeDesktop.addEventListener("change", updateCardWidth);
-    desktop.addEventListener("change", updateCardWidth);
-    tablet.addEventListener("change", updateCardWidth);
-
-    return () => {
-      largeDesktop.removeEventListener("change", updateCardWidth);
-      desktop.removeEventListener("change", updateCardWidth);
-      tablet.removeEventListener("change", updateCardWidth);
-    };
-  }, []);
+  const activeItem = items[activeIndex];
+  const previousIndex = (activeIndex - 1 + items.length) % items.length;
+  const nextIndex = (activeIndex + 1) % items.length;
 
   return (
-    <CircularCarousel
-      items={items}
-      preset="cylinder"
-      intro="rise"
-      cardWidth={cardWidth}
-      aspectRatio={1}
-      speed={14}
-      captions={false}
-      gap={25}
-      tilt={-5}
-      curve={1}
-      perspective={2500}
-      autoplay="drift"
-      interval={3}
-      direction="left"
-      momentum={0.6}
-      snap
-      pauseOnHover
-      focusOnClick
-      draggable
-      parallax={0.3}
-      stretch={0.5}
-      fadeColor="#102239"
-      depthFade={0.55}
-      innerShade={0.6}
-      cornerRadius={12}
-      className={className}
-    />
+    <figure className={styles.carousel} aria-label="Villa photos">
+      <div className={styles.frame}>
+        <Image
+          key={activeItem.src}
+          src={activeItem.src}
+          alt={activeItem.alt}
+          fill
+          sizes="(max-width: 700px) 92vw, (max-width: 1000px) 88vw, 54vw"
+          quality={75}
+          loading="eager"
+          fetchPriority={activeIndex === 0 ? "high" : "auto"}
+          className={styles.image}
+        />
+      </div>
+
+      <figcaption className={styles.captionBar}>
+        <span className={styles.caption}>
+          <strong>{activeItem.title}</strong>
+          <span>{activeItem.subtitle}</span>
+        </span>
+        <span className={styles.location}>
+          <MapPin size={14} aria-hidden="true" />
+          {locationCaption}
+        </span>
+        {items.length > 1 && (
+          <div className={styles.controls} aria-label="Photo controls">
+            <span className={styles.counter} aria-live="polite">
+              {activeIndex + 1}
+              <span aria-hidden="true"> / {items.length}</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => setActiveIndex(previousIndex)}
+              aria-label={`Previous photo: ${items[previousIndex].title}`}
+            >
+              <ChevronLeft size={19} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveIndex(nextIndex)}
+              aria-label={`Next photo: ${items[nextIndex].title}`}
+            >
+              <ChevronRight size={19} aria-hidden="true" />
+            </button>
+          </div>
+        )}
+      </figcaption>
+    </figure>
   );
 }

@@ -1,0 +1,75 @@
+.bookingForm {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 2px;
+}
+
+.dateField {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  color: #e2e7ef;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.dateField input {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  padding: 0 9px;
+  border: 1px solid rgb(255 255 255 / 26%);
+  border-radius: 6px;
+  background: #fffdf8;
+  color: #1b3564;
+  font: 500 12px/1 var(--font-outfit), sans-serif;
+  color-scheme: light;
+}
+
+.dateField input:focus-visible {
+  outline: 2px solid #e6bc55;
+  outline-offset: 2px;
+}
+
+.submit {
+  display: inline-flex;
+  grid-column: 1 / -1;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 18px;
+  border: 1px solid #e6bc55;
+  border-radius: 6px;
+  background: #e6bc55;
+  color: #1b3564;
+  font: 700 12px/1 var(--font-outfit), sans-serif;
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.submit:hover {
+  background: #f1cd74;
+  transform: translateY(-1px);
+}
+
+.submit:focus-visible {
+  outline: 2px solid #fffdf8;
+  outline-offset: 3px;
+}
+
+.error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #ffd5c8;
+  font-size: 11px;
+}
+
+@media (max-width: 380px) {
+  .dateField input {
+    font-size: 11px;
+  }
+}

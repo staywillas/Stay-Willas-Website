@@ -1,0 +1,157 @@
+.carousel {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  height: clamp(330px, 39vw, 520px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--soft);
+  box-shadow: 0 18px 45px rgb(27 53 100 / 10%);
+}
+
+.image {
+  object-fit: cover;
+  object-position: center 54%;
+  animation: photo-in 220ms ease-out both;
+}
+
+.captionBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 18px;
+  padding-top: 15px;
+}
+
+.caption,
+.location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.caption {
+  display: grid;
+  gap: 3px;
+}
+
+.caption strong {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.caption > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.location {
+  justify-self: end;
+}
+
+.location svg {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+}
+
+.counter {
+  min-width: 38px;
+  margin-right: 2px;
+  color: var(--ink);
+  font-size: 11px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.controls button {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--ink);
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.controls button:hover {
+  border-color: var(--accent);
+  background: var(--soft);
+}
+
+.controls button:focus-visible {
+  outline: 3px solid #daa520;
+  outline-offset: 3px;
+}
+
+@keyframes photo-in {
+  from { opacity: 0.78; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 1000px) {
+  .frame {
+    height: clamp(300px, 45vw, 440px);
+  }
+}
+
+@media (max-width: 700px) {
+  .frame {
+    height: clamp(260px, 70vw, 360px);
+    border-radius: 14px;
+  }
+
+  .captionBar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    padding-top: 11px;
+  }
+
+  .caption {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .location {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    font-size: 10px;
+  }
+
+  .controls {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .controls button {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image,
+  .controls button {
+    animation: none;
+    transition: none;
+  }
+}

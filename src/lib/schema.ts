@@ -21,7 +21,7 @@ export const ORGANIZATION_SCHEMA = {
   priceRange: "₹₹₹",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Kim Cottage, 14, PR Kadam Marg, Maneklal Estate, Ghatkopar West",
+    streetAddress: "Kim Cottage, 14, PR Kadam Marg, Maneklal, Ghatkopar West",
     addressLocality: "Mumbai",
     addressRegion: "Maharashtra",
     postalCode: "400084",
@@ -449,7 +449,7 @@ export const HOMEPAGE_SITELINKS_SCHEMA = {
       "@type": "SiteNavigationElement",
       position: 2,
       name: "Luxury Villas in Khopoli",
-      description: "Canopy Crest. Escape to a stunning nature villa with mountain views and five-star hospitality.",
+      description: "Canopy Crest. Enjoy a stay at a stunning nature villa with mountain views and five-star hospitality.",
       url: `${BASE_URL}/areas/khopoli`,
     },
     {

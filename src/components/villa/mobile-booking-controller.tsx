@@ -62,7 +62,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
   const [selectedCheckIn, setSelectedCheckIn] = useState<Date | null>(new Date());
   const [selectedCheckOut, setSelectedCheckOut] = useState<Date | null>(addDays(new Date(), 2));
 
-  // Willow Peak single cottage vs full estate selection
+  // Willow Peak single cottage vs full villa selection
   const isWillowPeak = props.villaId.includes("willow") || props.villaName.toLowerCase().includes("willow");
   const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "ALL">("A");
 
@@ -101,7 +101,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
 
   const activeCottageSubtitle = isWillowPeak
     ? (cottageSelection === "ALL" 
-        ? "All 3 Cottages (Full Estate, Up to 12 Guests)" 
+        ? "All 3 Cottages (Up to 12 Guests)"
         : `Cottage ${cottageSelection} (Max 4 Guests, Private Jacuzzi)`)
     : "";
 
@@ -120,7 +120,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
       // Booked range check
       if (check >= start && check < end) {
         if (isWillowPeak && cottageSelection !== "ALL" && (b.cottagesCount ?? 1) < 3) {
-          // partially booked estate still has cottages open
+          // partially booked villa still has cottages open
           continue;
         }
         return true;
@@ -389,7 +389,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
             className="w-full bg-gradient-to-r from-[#DAA520] to-[#E5B842] hover:from-[#c9951b] hover:to-[#DAA520] text-[#1B3564] py-3.5 px-3 rounded-2xl text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-lg cursor-pointer"
           >
             <Zap size={15} className="shrink-0" />
-            <span className="truncate">Book {isWillowPeak ? (cottageSelection === "ALL" ? "Estate" : `Cottage ${cottageSelection}`) : "Villa"}</span>
+            <span className="truncate">Book {isWillowPeak ? (cottageSelection === "ALL" ? "All 3 Cottages" : `Cottage ${cottageSelection}`) : "Villa"}</span>
           </button>
         </div>
       </div>
@@ -399,7 +399,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
         <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
           <div className="flex flex-col text-left shrink-0">
             <span className="text-[8px] text-[#DAA520] block uppercase tracking-widest font-black">
-              {isWillowPeak ? (cottageSelection === "ALL" ? "Full Estate (3 Cottages)" : `Cottage ${cottageSelection} (Jacuzzi)`) : "Direct Best Rate"}
+              {isWillowPeak ? (cottageSelection === "ALL" ? "All 3 Cottages" : `Cottage ${cottageSelection} (Jacuzzi)`) : "Direct Best Rate"}
             </span>
             <span className="text-[#1B3564] font-black text-base leading-tight">₹{activeDisplayPrice} <span className="text-[9px] font-normal text-slate-500 font-sans">/ night</span></span>
             <div className="flex items-center gap-1.5 flex-wrap">
@@ -424,7 +424,7 @@ export default function MobileBookingController(props: MobileBookingControllerPr
               className="bg-gradient-to-r from-[#1B3564] to-[#254680] hover:from-[#152A50] hover:to-[#1B3564] text-[#DAA520] border border-[#DAA520]/30 font-black px-4 py-2.5 rounded-xl text-[10px] tracking-wider uppercase transition-all duration-200 shadow-md flex items-center justify-center gap-1.5 active:scale-95 whitespace-nowrap cursor-pointer"
             >
               <Zap size={12} />
-              <span>Book {isWillowPeak ? (cottageSelection === "ALL" ? "Estate" : `Cottage ${cottageSelection}`) : "Villa"}</span>
+              <span>Book {isWillowPeak ? (cottageSelection === "ALL" ? "All 3 Cottages" : `Cottage ${cottageSelection}`) : "Villa"}</span>
             </button>
           </div>
         </div>

@@ -6,7 +6,7 @@ const WhatsAppSticky = () => {
   return (
     <div className="group fixed bottom-20 left-4 sm:bottom-8 sm:left-8 z-[8000] flex items-center gap-3">
       <a
-        href="https://wa.me/919619042310?text=Hi%20Stay%20Willas!%20I'm%20browsing%20your%20beautiful%20collection%20of%20private%20estates%20and%20would%20love%20to%20chat%20about%20planning%20our%20perfect%20staycation."
+        href="https://wa.me/919619042310?text=Hi%20Stay%20Willas!%20I'm%20browsing%20your%20collection%20of%20private%20villas%20and%20would%20love%20help%20planning%20my%20stay."
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center w-12 h-12 sm:w-13 sm:h-13 bg-[#25D366] hover:bg-[#20BA5A] text-white rounded-full shadow-[0_8px_24px_rgba(37,211,102,0.35)] hover:shadow-[0_12px_30px_rgba(32,186,90,0.45)] hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-[#20BA5A]/30 hover:border-[#20BA5A] relative"

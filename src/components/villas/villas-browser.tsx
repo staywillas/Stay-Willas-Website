@@ -43,8 +43,17 @@ export default function VillasBrowser({ initialVillas, initialRegion = "", initi
   const [sort, setSort] = useState("featured");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const categories = [...new Set([...initialVillas.map(villa => villa.category), ...(initialCategory ? [initialCategory] : [])])].sort();
+  const categories = [...new Set([...initialVillas.map(villa => villa.category), ...(initialCategory ? [initialCategory] : []), ...(filters.category ? [filters.category] : [])])].sort();
   const maxGuests = Math.max(1, ...initialVillas.map(villa => villa.guests));
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const region = params.get("region")?.trim() ?? "";
+    const category = params.get("category")?.trim() ?? "";
+    if (region || category) {
+      setFilters((current) => ({ ...current, region, category }));
+    }
+  }, []);
   const activeFilters = [
     ...(filters.region ? [{ label: filters.region, clear: () => setFilters({ ...filters, region: "" }) }] : []),
     ...(filters.category ? [{ label: filters.category, clear: () => setFilters({ ...filters, category: "" }) }] : []),
@@ -87,15 +96,15 @@ export default function VillasBrowser({ initialVillas, initialRegion = "", initi
   const controls = (prefix: string) => <FilterControls filters={filters} setFilters={setFilters} categories={categories} maxGuests={maxGuests} prefix={prefix} />;
 
   return <div className={styles.browser}>
-    <header className={styles.heading}><span>FIND YOUR LITTLE ESCAPE</span><h1>Our villa collection</h1><p>Private pool villas and Jacuzzi cottages in Lonavala, Khopoli and Panchgani. Choose the stay that fits your people.</p></header>
+    <header className={styles.heading}><span>FIND YOUR LITTLE GETAWAY</span><h1>Our villa collection</h1><p>Private pool villas and Jacuzzi cottages in Lonavala, Khopoli and Panchgani. Choose the stay that fits your people.</p></header>
     <div className={styles.layout}>
       <aside className={styles.sidebar} aria-label="Filter villas"><div className={styles.sidebarHeading}><h2><SlidersHorizontal size={19} /> Filters</h2><button type="button" onClick={reset} disabled={!activeFilters.length}>Reset all</button></div>{controls("sidebar")}</aside>
       <section className={styles.results} aria-label="Villa results">
         <div className={styles.toolbar}><p role="status" aria-live="polite" aria-atomic="true"><strong>{filteredVillas.length}</strong> of {initialVillas.length} stays</p><div className={styles.toolbarActions}><button type="button" className={styles.filterButton} onClick={() => setIsFilterOpen(true)} aria-haspopup="dialog"><SlidersHorizontal size={17} /> Filters{activeFilters.length > 0 && <span>{activeFilters.length}</span>}</button><label className={styles.sort}><span>Sort</span><select aria-label="Sort villas" value={sort} onChange={e => setSort(e.target.value)}><option value="featured">Featured</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select></label></div></div>
         {activeFilters.length > 0 && <div className={styles.activeFilters} aria-label="Active filters">{activeFilters.map(filter => <button key={filter.label} type="button" onClick={filter.clear} aria-label={`Remove ${filter.label} filter`}>{filter.label}<X size={14} /></button>)}<button className={styles.clearAll} type="button" onClick={reset}>Clear all</button></div>}
         <div className={styles.grid}>{filteredVillas.map(villa => <div key={villa.id} data-villa-slug={villa.slug}><VillaCard id={villa.slug} name={villa.name} location={villa.location} image={villa.image} price={villa.priceFormatted} guests={villa.guests} bedrooms={villa.bedrooms} bathrooms={villa.bathrooms} className="h-full" /></div>)}</div>
-        {filteredVillas.length === 0 && <div className={styles.empty}><Waves size={32} /><h2>Let’s find another little escape.</h2><p>No stays match this combination. Try another budget, group size or feature.</p><button type="button" onClick={reset}>Clear filters & see all stays</button></div>}
-        <p className={styles.rateNote}>Rates shown are starting prices. Dates, taxes and extras may change your final quote. Willow Peak cottage listings are priced per cottage; the full-estate listing has its own rate.</p>
+        {filteredVillas.length === 0 && <div className={styles.empty}><Waves size={32} /><h2>Let’s find another little getaway.</h2><p>No stays match this combination. Try another budget, group size or feature.</p><button type="button" onClick={reset}>Clear filters & see all stays</button></div>}
+        <p className={styles.rateNote}>Rates shown are starting prices. Dates, taxes and extras may change your final quote. Willow Peak listings are priced per cottage; booking all three cottages has a separate rate.</p>
       </section>
     </div>
     <dialog ref={dialogRef} className={styles.filterDialog} data-lenis-prevent aria-labelledby="mobile-filter-title" onCancel={() => setIsFilterOpen(false)} onClick={event => { if (event.target === event.currentTarget) setIsFilterOpen(false); }}>

@@ -77,7 +77,7 @@ export async function createManualBooking(formData: {
     }
 
     if (isWillowEntire) {
-      // If booking Entire Estate, verify that NO booking exists on ANY cottage or the entire estate
+      // If booking Entire Villa, verify that NO booking exists on ANY cottage or the entire villa
       const overlapping = await prisma.booking.findFirst({
         where: {
           villaId: { in: relevantVillaIds },
@@ -93,11 +93,11 @@ export async function createManualBooking(formData: {
       if (overlapping) {
         return {
           success: false,
-          error: `Cannot block Willow Peak (Entire Estate): ${overlapping.villa?.name || "a cottage"} is already booked/blocked from ${new Date(overlapping.checkIn).toLocaleDateString("en-IN")} to ${new Date(overlapping.checkOut).toLocaleDateString("en-IN")}.`
+          error: `Cannot block all three Willow Peak cottages: ${overlapping.villa?.name || "a cottage"} is already booked/blocked from ${new Date(overlapping.checkIn).toLocaleDateString("en-IN")} to ${new Date(overlapping.checkOut).toLocaleDateString("en-IN")}.`
         };
       }
     } else if (isWillowCottage) {
-      // If booking a specific cottage, verify that NEITHER the Entire Estate nor this specific cottage is booked
+      // If booking a specific cottage, verify that NEITHER the Entire Villa nor this specific cottage is booked
       const overlapping = await prisma.booking.findFirst({
         where: {
           villaId: { in: relevantVillaIds },
@@ -904,7 +904,7 @@ export async function sendInvoiceEmailAction(data: {
           <tr>
             <td style="background-color: #1B3564; padding: 24px; text-align: center;">
               <h1 style="color: #DAA520; margin: 0; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; font-weight: bold;">STAY WILLAS</h1>
-              <p style="color: #ffffff; margin: 4px 0 0 0; font-size: 11px; tracking: 1px; text-transform: uppercase;">Luxury Estates & Private Villa</p>
+              <p style="color: #ffffff; margin: 4px 0 0 0; font-size: 11px; tracking: 1px; text-transform: uppercase;">Luxury Villas & Private Stays</p>
             </td>
           </tr>
 
@@ -1057,7 +1057,7 @@ export async function sendInvoiceEmailAction(data: {
           <!-- Footer -->
           <tr>
             <td style="background-color: #F1F5F9; padding: 16px; text-align: center; font-size: 11px; color: #94A3B8;">
-              Stay Willas Luxury Estates  |  www.staywillas.com  |  Automated Reservation Billing
+              Stay Willas Luxury Villas  |  www.staywillas.com  |  Automated Reservation Billing
             </td>
           </tr>
         </table>
@@ -1217,7 +1217,7 @@ export async function approveVerificationBooking(bookingId: string) {
                 </a>
               </div>
               <div class="footer">
-                Stay Willas Luxury Escapes • contact@staywillas.com • +91 96190 42310<br>
+                Stay Willas Luxury Getaways • contact@staywillas.com • +91 96190 42310<br>
                 Thank you for choosing Stay Willas for your getaway.
               </div>
             </div>

@@ -130,8 +130,10 @@ export async function captureBookingLead(data: {
           .map(([key, value]) => `${key}=${String(value).replace(/[\r\n|]/g, " ").slice(0, 200)}`)
           .join(" | ")
       : "";
+    const isKhopoliAdsLead = attribution?.landingPath === "/ads/khopoli";
+    const sourceLabel = isKhopoliAdsLead ? "Lead source: Ads/khopoli. " : "";
     const baseMessage = data.message || `Direct Booking Lead for ${villaName}.${datesDetail}${guestsDetail}${priceDetail}`;
-    const storedMessage = `${baseMessage}${sourceDetail ? ` | Attribution: ${sourceDetail}` : ""}`.slice(0, 2000);
+    const storedMessage = `${sourceLabel}${baseMessage}${sourceDetail ? ` | Attribution: ${sourceDetail}` : ""}`.slice(0, 2000);
 
     const inquiry = await prisma.inquiry.create({
       data: {
@@ -145,8 +147,8 @@ export async function captureBookingLead(data: {
     });
 
     // Trigger instant high-intent email notification to staywillas@gmail.com
-    sendAdminLeadNotification({
-      type: "BOOKING_GATE_LEAD",
+    const notification = sendAdminLeadNotification({
+      type: isKhopoliAdsLead ? "ADS_LANDING_PAGE_LEAD" : "BOOKING_GATE_LEAD",
       name,
       phone,
       email: email !== "N/A" ? email : undefined,
@@ -158,7 +160,20 @@ export async function captureBookingLead(data: {
       couponCode: data.couponCode,
       addOns: data.addOns,
       message: storedMessage,
-    }).catch(err => console.error("❌ Failed to dispatch booking gate lead email:", err));
+    });
+
+    if (isKhopoliAdsLead) {
+      try {
+        const emailResult = await notification;
+        if (!emailResult.success) {
+          console.error("Failed to send Ads/khopoli lead email to Stay Willas.");
+        }
+      } catch (err) {
+        console.error("Failed to dispatch Ads/khopoli lead email:", err);
+      }
+    } else {
+      notification.catch(err => console.error("❌ Failed to dispatch booking gate lead email:", err));
+    }
 
     try {
       revalidatePath("/admin");

@@ -65,7 +65,7 @@ export default function FloatingWidgets() {
     };
   }, [pathname]);
 
-  if (pathname?.startsWith("/care")) return null;
+  if (pathname?.startsWith("/care") || pathname?.startsWith("/ads/")) return null;
 
   return (
     <>

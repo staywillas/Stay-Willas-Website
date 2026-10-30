@@ -597,6 +597,7 @@ a, button, input, select, textarea, [role="button"] {
 /* Property photos fill their frames; subject positions are set per image. */
 .photo-frame { position:absolute; inset:0; display:block; overflow:hidden; isolation:isolate; }
 .photo-frame .photo-frame__image { object-fit:cover !important; transform:none !important; filter:none !important; }
+.photo-frame .photo-frame__image[data-canopy-image="true"] { filter:saturate(1.07) contrast(1.02) !important; }
 
 
 

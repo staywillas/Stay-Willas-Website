@@ -14,6 +14,7 @@ export default function MobileBottomNav() {
 
   const isVillaDetailPage = pathname?.startsWith("/villa/");
   const isCarePage = pathname?.startsWith("/care");
+  const isAdsLandingPage = pathname?.startsWith("/ads/");
 
   useEffect(() => {
     const handleMenuState = (e: any) => {
@@ -54,7 +55,7 @@ export default function MobileBottomNav() {
     }
   }, []);
 
-  if (isVillaDetailPage || isMenuOpen || isCarePage || isCareDomain || pathname === "/") return null;
+  if (isVillaDetailPage || isMenuOpen || isCarePage || isCareDomain || isAdsLandingPage || pathname === "/") return null;
 
   const handleMenuClick = () => {
     window.dispatchEvent(new CustomEvent("toggle-mobile-menu"));

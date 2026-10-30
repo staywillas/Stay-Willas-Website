@@ -118,7 +118,7 @@ export default async function AnniversaryCelebrationPage() {
         <div className="max-w-5xl mx-auto relative z-10 text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#E0A899]/20 border border-[#E0A899]/60 text-[#FFD4C8] text-xs sm:text-sm font-bold uppercase tracking-wider mb-8 shadow-sm">
-            <Heart size={16} className="fill-[#FFD4C8]" /> Romantic Escapes & Anniversaries
+            <Heart size={16} className="fill-[#FFD4C8]" /> Romantic Getaways & Anniversaries
           </div>
 
           {/* Heading - Explicit text-white to avoid any inheritance bug */}
@@ -184,7 +184,7 @@ export default async function AnniversaryCelebrationPage() {
           <span className="text-[#B8860B] font-black tracking-widest text-xs uppercase block mb-2">Curated Exclusively for Two</span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0B1528]">Romantic Couple Chalets at Willow Peak</h2>
           <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto mt-3">
-            Escape to intimate Swiss-inspired timber chalets with en-suite heated hydrotherapy jacuzzis, clifftop mountain views, and candlelit balcony dining.
+            Enjoy an intimate stay in Swiss-inspired timber chalets with en-suite heated hydrotherapy jacuzzis, clifftop mountain views, and candlelit balcony dining.
           </p>
         </div>
 
@@ -336,7 +336,7 @@ export default async function AnniversaryCelebrationPage() {
               Celebrating a Silver or Golden Jubilee with Extended Family?
             </h3>
             <p className="text-white/80 text-sm mt-2 max-w-2xl leading-relaxed font-light">
-              Willow Peak offers cottages for couples and small groups. If you are celebrating a parent&apos;s 25th or 50th milestone anniversary with up to 16 family members, explore our grand private group estates: <Link href="/villa/the-angle-house" className="underline font-bold text-[#F5C542] hover:text-white">The Angle House (3 BHK Glass Villa with waterfall pool for up to 12 guests)</Link> and <Link href="/villa/canopy-crest" className="underline font-bold text-[#F5C542] hover:text-white">Canopy Crest (4 BHK Estate on 4-acre grounds for up to 16 guests)</Link>.
+              Willow Peak offers cottages for couples and small groups. If you are celebrating a parent&apos;s 25th or 50th milestone anniversary with up to 16 family members, explore our private group villas: <Link href="/villa/the-angle-house" className="underline font-bold text-[#F5C542] hover:text-white">The Angle House (3 BHK glass villa with waterfall pool for up to 12 guests)</Link> and <Link href="/villa/canopy-crest" className="underline font-bold text-[#F5C542] hover:text-white">Canopy Crest (4 BHK villa on 4-acre grounds for up to 16 guests)</Link>.
             </p>
           </div>
           <div className="shrink-0">
@@ -344,7 +344,7 @@ export default async function AnniversaryCelebrationPage() {
               href="/milestone-birthday-celebration-villa-maharashtra"
               className="px-8 py-4 rounded-full bg-[#DAA520] hover:bg-[#C4941A] text-[#0B1528] font-black text-xs sm:text-sm uppercase tracking-wider transition-all shadow-lg hover:scale-105 inline-block whitespace-nowrap"
             >
-              Explore Group Estates →
+              Explore Group Villas →
             </Link>
           </div>
         </div>

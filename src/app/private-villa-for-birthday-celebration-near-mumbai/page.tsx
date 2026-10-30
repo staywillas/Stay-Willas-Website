@@ -1,4 +1,5 @@
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 import React from "react";
 import { Metadata } from "next";
 import Image, { PhotoFrame } from "@/components/ui/site-image";
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     question: "Can we play music and host a midnight cake cutting at the villa?",
-    answer: "Yes, absolutely! Unlike restrictive hotels, our private villas feature indoor and outdoor sound systems. You can play your favorite music, set up midnight cake cutting on the pool deck or living hall, and celebrate in total privacy. We simply ask that outdoor volume is moderated after 10:00 PM to respect neighboring estates."
+    answer: "Yes, absolutely! Unlike restrictive hotels, our private villas feature indoor and outdoor sound systems. You can play your favorite music, set up midnight cake cutting on the pool deck or living hall, and celebrate in total privacy. We simply ask that outdoor volume is moderated after 10:00 PM to respect nearby homes."
   },
   {
     question: "Can Stay Willas arrange birthday decorations and a customized cake?",
@@ -266,8 +267,8 @@ export default async function BirthdayCelebrationPage() {
             <div>
               <div className="relative aspect-[16/10] w-full">
                 <PhotoFrame
-                  src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg"
-                  alt="Canopy Crest Khopoli - Large Group Private Pool Estate for Birthday Celebration"
+                  src={canopyCrestPhotos.exterior.src}
+                  alt="Canopy Crest Khopoli - Large Group Private Pool Villa for Birthday Celebration"
                   fill
                   className="object-cover"
                 />
@@ -280,10 +281,10 @@ export default async function BirthdayCelebrationPage() {
               </div>
               <div className="p-6 sm:p-8">
                 <h3 className="text-2xl font-heading font-bold text-[#0B1528] mb-3">
-                  Canopy Crest — Sprawling Hillside Estate
+                  Canopy Crest — Sprawling Hillside Villa
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                  Expansive private estate at the foothills of the Western Ghats. Features a sparkling 22x12ft swimming pool, traditional charpai lawns, outdoor bonfire circle, and capacity for up to 16 guests. Perfect for big birthday gatherings.
+                  Expansive private villa at the foothills of the Western Ghats. Features a sparkling 22x12ft swimming pool, traditional charpai lawns, outdoor bonfire circle, and capacity for up to 16 guests. Perfect for big birthday gatherings.
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 text-xs text-slate-800 font-semibold mb-6">
@@ -394,7 +395,7 @@ export default async function BirthdayCelebrationPage() {
               <div className="w-12 h-12 rounded-2xl bg-[#0B1528] flex items-center justify-center text-[#F5C542] mb-5 shadow-sm">
                 <ShieldCheck size={22} />
               </div>
-              <h4 className="font-heading font-black text-[#0B1528] text-lg mb-2">Gated Estate Security</h4>
+              <h4 className="font-heading font-black text-[#0B1528] text-lg mb-2">Gated Villa Security</h4>
               <p className="text-slate-600 text-sm leading-relaxed">
                 Private gates, secure parking, and dedicated 24/7 on-site caretakers to assist with luggage and service.
               </p>

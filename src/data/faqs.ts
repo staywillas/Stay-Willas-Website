@@ -25,14 +25,14 @@ export const FAQ_CATEGORIES: FAQCategory[] = [
 ];
 
 export const FAQS_DATA: FAQItem[] = [
-  // ── Willow Peak & Estate Configurations ──
+  // ── Willow Peak & Villa Configurations ──
   {
     id: "willow-peak-explanation",
     question: "What is Willow Peak? Is it 1 single villa or 4 different properties?",
-    answer: "Willow Peak is a private scenic highland estate in Panchgani designed with a modular luxury concept. On the website you will see 4 listings, which represent:\n\n1. **Breeze (Cottage A):** An independent private 1-bedroom duplex A-frame cottage with an in-room Jacuzzi, loft bedroom, and valley balcony (ideal for couples or up to 4 guests).\n2. **Crest (Cottage B):** An independent private 1-bedroom duplex A-frame cottage with an in-room Jacuzzi, loft bedroom, and valley balcony (up to 4 guests).\n3. **Heaven (Cottage C):** An independent private 1-bedroom duplex A-frame cottage with an in-room Jacuzzi, loft bedroom, and valley balcony (up to 4 guests).\n4. **Willow Peak (Entire Estate):** Booking all three cottages (Breeze, Crest & Heaven) together exclusively for your group. When booked as the Entire Estate, your party gets private, exclusive use of all 3 cottages, private manicured lawns, the panoramic valley gazebo, outdoor dining deck, and bonfire area with zero other guests on the property (accommodating 12 to 16+ guests).\n\nIn short: You can book an individual cottage privately if you are a smaller group, or book the entire 4-listing estate exclusively if you are hosting a larger family reunion or group holiday.",
+    answer: "Willow Peak in Kurwande, Lonavala has three private A-frame cottages: Breeze, Crest and Heaven. Each cottage has an in-room Jacuzzi and sleeps up to four guests. You can book one cottage for a small group or book all three together for up to twelve guests. A booking of all three gives your group private use of the lawns, valley gazebo, dining deck and bonfire area. The website shows each cottage and the all-three-cottage stay as separate booking options; check the calendar for availability.",
     category: "willow-peak",
     categoryLabel: "Willow Peak & Properties",
-    tags: ["willow peak", "cottage", "4 properties", "breeze", "crest", "heaven", "entire estate", "panchgani", "jacuzzi"],
+    tags: ["willow peak", "cottage", "4 listings", "breeze", "crest", "heaven", "all three cottages", "lonavala", "jacuzzi"],
   },
   {
     id: "willow-peak-pool-or-jacuzzi",
@@ -45,7 +45,7 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "portfolio-differences",
     question: "What is the difference between The Angle House, Canopy Crest, and Casa De Reva?",
-    answer: "Each Stay Willas villa has its own distinct character, architecture, and geographic advantage:\n\n• **The Angle House (Kamshet, Lonavala):** 3-BHK architectural masterwork featuring angular geometry, a private swimming pool, master suite Jacuzzi, double-height glass living lounge, senior-friendly ground-floor bedroom, and fully fenced pet-friendly lawns. Accommodates up to 12 guests.\n• **Canopy Crest (Khopoli):** 4-BHK grand private estate with an expansive 22x12 ft private swimming pool, lush greenery, and scenic mountain views. It is just 75 minutes from Mumbai and conveniently bypasses the Khandala ghat traffic. Accommodates up to 16 guests.\n• **Casa De Reva (Kaswand, Panchgani):** 4-BHK colonial-inspired luxury estate with a 100% private swimming pool, sun deck, gazebo, and crisp mountain breeze, situated just 10 minutes from Mapro Garden and Table Land. Accommodates up to 14 guests.",
+    answer: "Each Stay Willas villa has its own distinct character, architecture, and geographic advantage:\n\n• **The Angle House (Kamshet, Lonavala):** 3-BHK architectural masterwork featuring angular geometry, a private swimming pool, master suite Jacuzzi, double-height glass living lounge, senior-friendly ground-floor bedroom, and fully fenced pet-friendly lawns. Accommodates up to 12 guests.\n• **Canopy Crest (Khopoli):** 4-BHK grand private villa with an expansive 22x12 ft private swimming pool, lush greenery, and scenic mountain views. It is just 75 minutes from Mumbai and conveniently bypasses the Khandala ghat traffic. Accommodates up to 16 guests.\n• **Casa De Reva (Kaswand, Panchgani):** 4-BHK colonial-inspired luxury villa with a 100% private swimming pool, sun deck, gazebo, and crisp mountain breeze, situated just 10 minutes from Mapro Garden and Table Land. Accommodates up to 14 guests.",
     category: "willow-peak",
     categoryLabel: "Willow Peak & Properties",
     tags: ["angle house", "canopy crest", "casa de reva", "difference", "lonavala", "khopoli", "panchgani", "capacity"],
@@ -53,7 +53,7 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "entire-villa-vs-rooms",
     question: "Can we rent just one room in a villa, or do we have to book the entire villa?",
-    answer: "For our luxury villas (**The Angle House**, **Canopy Crest**, and **Casa De Reva**), you book the entire property exclusively for your group. We never rent rooms to strangers or separate parties simultaneously, guaranteeing 100% privacy and private pool access.\n\nAt **Willow Peak**, however, individual A-frame cottages (Breeze, Crest, or Heaven) can be booked independently for up to 4 guests each, or all 3 cottages together as the full private estate.",
+    answer: "For our luxury villas (**The Angle House**, **Canopy Crest**, and **Casa De Reva**), you book the whole villa for your group. We never rent rooms to strangers or separate parties at the same time, so you have private use of the villa and pool.\n\nAt **Willow Peak**, you can book Breeze, Crest or Heaven separately for up to four guests, or book all three cottages together for up to twelve guests.",
     category: "willow-peak",
     categoryLabel: "Willow Peak & Properties",
     tags: ["entire villa", "rooms", "privacy", "exclusive", "sharing"],
@@ -181,7 +181,7 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "checkin-checkout-times",
     question: "What are the standard Check-in and Check-out timings? Can we request early check-in?",
-    answer: "Our standard timings are:\n\n• **Check-in:** 2:00 PM\n• **Check-out:** 11:00 AM\n\nThis 3-hour buffer between 11:00 AM and 2:00 PM is essential for our housekeeping staff to sanitize the swimming pool, change all bed linens and towels, and deep-clean the estate. Early check-in or late check-out is subject to calendar availability and can be arranged with our concierge (nominal hourly fees may apply if another guest is checking out or checking in on the same day).",
+    answer: "Our standard timings are:\n\n• **Check-in:** 2:00 PM\n• **Check-out:** 11:00 AM\n\nThis 3-hour buffer between 11:00 AM and 2:00 PM is essential for our housekeeping staff to sanitize the swimming pool, change all bed linens and towels, and deep-clean the villa. Early check-in or late check-out is subject to calendar availability and can be arranged with our concierge (nominal hourly fees may apply if another guest is checking out or checking in on the same day).",
     category: "policies",
     categoryLabel: "Policies, KYC & House Rules",
     tags: ["check in", "check out", "timings", "early check in", "late check out"],
@@ -231,7 +231,7 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "cancellation-slabs",
     question: "What is the cancellation and refund policy if our plans change?",
-    answer: "We offer transparent, structured cancellation slabs:\n\n• **7 Days or More prior to check-in:** 90% Refund of the total booking value (or full credit for future stay upon mutual agreement).\n• **2 to 7 Days prior to check-in:** 70% Refund of the total booking value.\n• **Less than 48 Hours (2 Days) prior to check-in:** Non-refundable (0% refund), as the estate has been held exclusively for you and cannot be re-booked on short notice.\n\nApproved refunds are credited back to your original payment method within 7 to 10 working days. View our full [Cancellation & Refund Policy](/cancellation-policy) for complete details.",
+    answer: "We offer transparent, structured cancellation slabs:\n\n• **7 Days or More prior to check-in:** 90% Refund of the total booking value (or full credit for future stay upon mutual agreement).\n• **2 to 7 Days prior to check-in:** 70% Refund of the total booking value.\n• **Less than 48 Hours (2 Days) prior to check-in:** Non-refundable (0% refund), as the villa has been held exclusively for you and cannot be re-booked on short notice.\n\nApproved refunds are credited back to your original payment method within 7 to 10 working days. View our full [Cancellation & Refund Policy](/cancellation-policy) for complete details.",
     category: "cancellations",
     categoryLabel: "Cancellations & Refunds",
     tags: ["cancellation", "refund", "cancel booking", "refund slabs", "rescheduling"],

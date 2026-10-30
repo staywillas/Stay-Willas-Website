@@ -202,6 +202,14 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
                             <span>Canopy Crest (Khopoli)</span>
                           </Link>
                           <Link
+                            href="/villa/nieevant-by-stay-willas"
+                            className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
+                            onClick={() => onClose()}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#DAA520]/50" />
+                            <span>Nieevant by Stay Willas (Khopoli)</span>
+                          </Link>
+                          <Link
                             href="/villa/willow-peak"
                             className="py-1.5 px-2 text-[12px] font-medium text-[#FAF8F5]/75 hover:text-[#DAA520] rounded-lg transition-colors flex items-center gap-1.5"
                             onClick={() => onClose()}
@@ -478,7 +486,7 @@ export default function MobileMenu({ onClose, wishlistCount }: MobileMenuProps) 
             {/* Panel Footer — CTA + Contact */}
             <div className="px-6 pb-6 pt-3 border-t border-[#DAA520]/15 flex flex-col gap-4 shrink-0">
               <a
-                href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hello Stay Willas Concierge! ✨ I am browsing your mobile app and would love to book a luxury staycation. Could you help us find the perfect private estate?")}`}
+                href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage("Hello Stay Willas Concierge! ✨ I am browsing your mobile app and would love to book a luxury staycation. Could you help us find the right private villa?")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => onClose()}

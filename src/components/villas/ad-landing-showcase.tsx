@@ -42,7 +42,7 @@ export default function AdLandingShowcase({
   couponCode,
   images,
   reviews,
-  offerTitle = "Monsoon Escape",
+  offerTitle = "Monsoon Getaway",
   highlightText = "Stay 2 Nights & Save More",
 }: AdLandingShowcaseProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -66,7 +66,7 @@ export default function AdLandingShowcase({
     <div className="w-full space-y-12 sm:space-y-16">
       
       {/* ========================================================================= */}
-      {/* 1. MONSOON ESCAPE 2-NIGHT SAVER PROMO HERO BANNER */}
+      {/* 1. MONSOON GETAWAY 2-NIGHT SAVER PROMO HERO BANNER */}
       {/* ========================================================================= */}
       <section className="max-w-5xl mx-auto px-4">
         <div className="bg-gradient-to-r from-[#1B3564] via-[#0E244D] to-[#1B3564] text-white rounded-3xl p-6 sm:p-8 md:p-10 border-2 border-[#DAA520] shadow-[0_15px_45px_rgba(27,53,100,0.35)] relative overflow-hidden">
@@ -83,7 +83,7 @@ export default function AdLandingShowcase({
                 Stay for 2 Nights & Save More
               </h3>
               <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-light">
-                Escape the city rush with our exclusive <strong className="text-[#DAA520] font-semibold">{offerTitle}</strong> package. Stay 2 nights between <strong className="text-emerald-300 font-semibold">Monday to Thursday</strong> to unlock the highest discounts, private waterfall pool access, master jacuzzi & dedicated in-house chef dining.
+                Leave the city behind with our exclusive <strong className="text-[#DAA520] font-semibold">{offerTitle}</strong> package. Stay 2 nights between <strong className="text-emerald-300 font-semibold">Monday to Thursday</strong> to unlock the highest discounts, private waterfall pool access, master jacuzzi & dedicated in-house chef dining.
               </p>
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-1 text-[11px] text-amber-200 font-bold">
                 <span className="bg-white/10 px-2.5 py-1 rounded-lg border border-white/15 flex items-center gap-1">
@@ -120,7 +120,7 @@ export default function AdLandingShowcase({
                 className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer mt-3 hover:scale-102"
               >
                 <PhoneCall size={14} className="stroke-[2.5]" />
-                <span>CLAIM 2-NIGHT ESCAPE</span>
+                <span>CLAIM 2-NIGHT GETAWAY</span>
               </a>
               <span className="text-[9px] text-slate-300 block mt-2">
                 Instant confirmation on WhatsApp • 0% Middleman Fees
@@ -180,7 +180,7 @@ export default function AdLandingShowcase({
               <ul className="space-y-2.5 my-6 text-xs text-slate-200">
                 <li className="flex items-center gap-2">
                   <Check size={16} className="text-emerald-400 shrink-0 stroke-[3]" />
-                  <span><strong>Monsoon Escape: Stay 2 Nights & Save More</strong> (Weekdays Mon–Thu)</span>
+                  <span><strong>Monsoon Getaway: Stay 2 Nights & Save More</strong> (Weekdays Mon–Thu)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check size={16} className="text-emerald-400 shrink-0 stroke-[3]" />
@@ -209,7 +209,7 @@ export default function AdLandingShowcase({
                 className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer hover:scale-102"
               >
                 <PhoneCall size={16} />
-                <span>BOOK MONSOON ESCAPE DEAL ON WHATSAPP</span>
+                <span>BOOK MONSOON GETAWAY DEAL ON WHATSAPP</span>
               </a>
               <Link
                 href={`/villa/${villaSlug}`}
@@ -240,7 +240,7 @@ export default function AdLandingShowcase({
               <ul className="space-y-2.5 my-6 text-xs text-slate-500">
                 <li className="flex items-center gap-2 text-slate-400">
                   <span className="text-red-400 font-black">✕</span>
-                  <span>No Monsoon Escape 2-night weekday saver discount</span>
+                  <span>No Monsoon Getaway 2-night weekday saver discount</span>
                 </li>
                 <li className="flex items-center gap-2 text-slate-400">
                   <span className="text-red-400 font-black">✕</span>
@@ -310,7 +310,7 @@ export default function AdLandingShowcase({
                   {img.title}
                 </span>
                 <a
-                  href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hi Stay Willas! 🌧️ I'm viewing photos of *${villaName}* (${img.title}) on the Monsoon Escape 2-night weekday offer page. Could you confirm availability?`)}`}
+                  href={`https://wa.me/919619042310?text=${encodeWhatsAppMessage(`Hi Stay Willas! 🌧️ I'm viewing photos of *${villaName}* (${img.title}) on the Monsoon Getaway 2-night weekday offer page. Could you confirm availability?`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-[#25D366] hover:bg-emerald-600 text-white p-1.5 rounded-full shrink-0 shadow-lg transition-transform active:scale-90"
@@ -382,7 +382,7 @@ export default function AdLandingShowcase({
               className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs uppercase tracking-wider py-4 px-8 rounded-2xl shadow-md transition-all active:scale-95 cursor-pointer hover:scale-102"
             >
               <PhoneCall size={14} className="stroke-[2.5]" />
-              <span>Claim Monsoon Escape 2-Night Offer</span>
+              <span>Claim Monsoon Getaway 2-Night Offer</span>
             </a>
             <a
               href="tel:+919619042310"
@@ -401,7 +401,7 @@ export default function AdLandingShowcase({
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1B3564]/98 backdrop-blur-md border-t-2 border-[#DAA520] px-3.5 py-2.5 shadow-[0_-8px_30px_rgba(0,0,0,0.4)] flex items-center justify-between gap-2">
         <div className="min-w-0 flex-1">
           <span className="text-[9px] text-[#DAA520] font-black uppercase tracking-wider block leading-none truncate">
-            🌧️ MONSOON ESCAPE • 2-NIGHT SPECIAL
+            🌧️ MONSOON GETAWAY • 2-NIGHT SPECIAL
           </span>
           <div className="flex items-baseline gap-1 mt-0.5">
             <span className="text-base font-heading font-black text-white leading-none">

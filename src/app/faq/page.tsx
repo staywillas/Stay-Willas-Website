@@ -10,7 +10,7 @@ export const revalidate = 86400; // 24 hours edge cache
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions (FAQ) | Stay Willas Luxury Villas",
-  description: "Find clear, genuine answers about Stay Willas luxury villas, Willow Peak estate configurations, private pool hygiene, food & chef services, check-in timings, and 0% booking fees.",
+  description: "Find clear, genuine answers about Stay Willas luxury villas, Willow Peak villa configurations, private pool hygiene, food & chef services, check-in timings, and 0% booking fees.",
   keywords: [
     "stay willas faq",
     "willow peak properties explained",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Frequently Asked Questions (FAQ) | Stay Willas Luxury Villas",
-    description: "Find clear, genuine answers about Stay Willas luxury villas, Willow Peak estate configurations, private pool hygiene, food & chef services, check-in timings, and 0% booking fees.",
+    description: "Find clear, genuine answers about Stay Willas luxury villas, Willow Peak villa configurations, private pool hygiene, food & chef services, check-in timings, and 0% booking fees.",
     url: "https://www.staywillas.com/faq",
     images: [
       {
@@ -40,21 +40,12 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Frequently Asked Questions (FAQ) | Stay Willas Luxury Villas",
-    description: "Find clear, genuine answers about Stay Willas luxury villas, Willow Peak estate configurations, private pool hygiene, food & chef services, check-in timings, and 0% booking fees.",
+    description: "Find clear, genuine answers about Stay Willas luxury villas, Willow Peak villa configurations, private pool hygiene, food & chef services, check-in timings, and 0% booking fees.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
 
-export default async function FaqPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ category?: string }>;
-}) {
-  const query = await searchParams;
-  const initialCategory = FAQ_CATEGORIES.some((c) => c.id === query.category)
-    ? query.category
-    : "all";
-
+export default async function FaqPage() {
   // Schema.org FAQPage Structured Data
   const faqPageSchema = {
     "@type": "FAQPage",
@@ -101,7 +92,7 @@ export default async function FaqPage({
           </span>
         </h1>
         <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl mx-auto">
-          Clear, genuine answers about our villa layouts, Willow Peak estate options, private pool care, chef menus, and booking policies.
+          Clear, genuine answers about our villa layouts, Willow Peak villa options, private pool care, chef menus, and booking policies.
         </p>
       </header>
 
@@ -131,10 +122,8 @@ export default async function FaqPage({
 
       {/* Interactive FAQ Browser */}
       <FaqBrowser
-        key={initialCategory || "all"}
         items={FAQS_DATA}
         categories={FAQ_CATEGORIES}
-        initialCategory={initialCategory}
       />
 
       {/* Global Footer */}

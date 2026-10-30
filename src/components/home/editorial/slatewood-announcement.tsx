@@ -184,7 +184,7 @@ export default function SlatewoodAnnouncement() {
               Chef &amp; Butler Service
             </h3>
             <p className="text-xs text-[#a3b3c6] leading-relaxed mb-4">
-              Home-cooked regional Maharashtrian dishes, poolside barbecue evenings, and dedicated on-site estate staff.
+              Home-cooked regional Maharashtrian dishes, poolside barbecue evenings, and dedicated on-site villa staff.
             </p>
             <ul className="space-y-1.5 text-xs text-[#dce5f0]">
               <li className="flex items-center gap-2"><Check size={13} className="text-[#daa520]" /> Custom group meal plans</li>

@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 export type AreaSlug = "lonavala" | "panchgani" | "khopoli";
 type AreaCopy = {
   name: string;
   title: string;
   description: string;
+  heroTitleLead: string;
+  heroTitleLocation: string;
   summary: string;
   hero: {
     src: string;
@@ -24,11 +27,13 @@ type AreaCopy = {
 export const areaEditorial: Record<AreaSlug, AreaCopy> = {
   lonavala: {
     name: "Lonavala",
-    title: "Villas in Lonavala with Private Pool & Jacuzzi | Stay Willas",
+    title: "Private Pool Villas in Lonavala | Stay Willas",
     description:
-      "Explore Lonavala private pool villas and Jacuzzi cottages. Save 26% on eligible Monday–Thursday stays with Stayw26. Check dates and book direct.",
+      "Find The Angle House, a 3-bedroom private pool villa in Kamshet near Lonavala for up to 12 guests, plus private-Jacuzzi cottages. Check dates and direct rates.",
+    heroTitleLead: "Private pool villas",
+    heroTitleLocation: "in Lonavala",
     summary:
-      "Private pool villas and Jacuzzi cottages in the hills, for weekends at your own pace.",
+      "The Angle House is a 3-bedroom private pool villa in Kamshet near Lonavala for groups of up to 12.",
     hero: {
       src: "/assets/villas/the-angle-house/gallery-11.webp",
       alt: "Glass-fronted exterior of The Angle House in Kamshet, Lonavala",
@@ -67,13 +72,13 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
       ],
     },
     featuredSlug: "the-angle-house",
-    collectionTitle: "Poolside weekends. Cottage escapes.",
+    collectionTitle: "Poolside weekends. Cottage getaways.",
     collectionIntro:
       "Choose a private pool villa in Lonavala for your group, or an A-frame cottage with a Jacuzzi for a smaller getaway.",
     introTitle: "Find your own corner of the hills.",
     intro: [
       "A Lonavala villa stay can be a weekend with friends, a family gathering or a quiet trip for two. The right home depends on who is coming and how you want to spend your time.",
-      "The Angle House is a three-bedroom private pool villa in Kamshet. Willow Peak in Kurwande offers Breeze, Crest and Heaven: three A-frame cottages with an in-room Jacuzzi each. Book a cottage for up to four guests or the entire estate for up to twelve. Willow Peak has Jacuzzis rather than a swimming pool.",
+      "The Angle House is a three-bedroom private pool villa in Kamshet. Willow Peak in Kurwande offers Breeze, Crest and Heaven: three A-frame cottages with an in-room Jacuzzi each. Book a cottage for up to four guests or all three cottages together for up to twelve. Willow Peak has Jacuzzis rather than a swimming pool.",
     ],
     planning: [
       {
@@ -103,7 +108,7 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
       {
         question: "Can we book all three Willow Peak cottages together?",
         answer:
-          "Yes. The entire estate option includes Breeze, Crest and Heaven for a group of up to twelve guests. Individual and whole-estate bookings share availability, so use the property calendar to check your dates.",
+          "Yes. The all-three-cottage option includes Breeze, Crest and Heaven for up to twelve guests. Cottage bookings and bookings for all three share availability, so use the property calendar to check your dates.",
       },
       {
         question: "Are pets allowed at these Lonavala stays?",
@@ -114,11 +119,13 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
   },
   panchgani: {
     name: "Panchgani",
-    title: "Villas in Panchgani with Private Pool | Stay Willas",
+    title: "Private Pool Villa in Panchgani | Casa De Reva",
     description:
-      "Book Casa De Reva, a private pool villa in Panchgani. Save 26% on eligible Monday–Thursday stays with Stayw26. Check dates and group rates.",
+      "Stay at Casa De Reva in Kaswand, a private pool villa in Panchgani for groups of up to 16. View bedrooms, location, available dates and a date-based quote.",
+    heroTitleLead: "Private pool villa",
+    heroTitleLocation: "in Panchgani",
     summary:
-      "A private pool, hillside views and room for your favourite people in Kaswand, Panchgani.",
+      "Casa De Reva is a private pool villa in Kaswand, Panchgani, with room for up to 16 guests.",
     hero: {
       src: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg",
       alt: "Casa De Reva villa and its hillside setting in Kaswand, Panchgani",
@@ -204,43 +211,45 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
   },
   khopoli: {
     name: "Khopoli",
-    title: "Villas in Khopoli | Luxury Private Pool Villas in Khopoli - Stay Willas",
+    title: "Private Pool Villa in Khopoli near Imagica | Stay Willas",
     description:
-      "Explore the finest luxury villas in Khopoli with private pool, sprawling lawns and mountain views. Book Canopy Crest in Khopoli with 0% platform fee.",
+      "Book Canopy Crest, a private pool villa in Khopoli for up to 16 guests, with an open lawn and poolside gazebo near Imagica. Check dates and direct rates.",
+    heroTitleLead: "Private pool villa",
+    heroTitleLocation: "in Khopoli",
     summary:
-      "Luxury private pool villas in Khopoli with mountain backdrops, expansive lawns, and private pools for group escapes and family weekends.",
+      "Canopy Crest is a private pool villa in Khopoli for up to 16 guests, with an open lawn and poolside gazebo.",
     hero: {
-      src: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
-      alt: "Canopy Crest luxury private pool villa in Khopoli with illuminated swimming pool",
+      src: canopyCrestPhotos.hero.src,
+      alt: canopyCrestPhotos.hero.alt,
       caption: "Canopy Crest · Luxury Villa in Khopoli",
       items: [
         {
-          src: "/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
-          alt: "Canopy Crest and its illuminated private pool at dusk",
+          src: canopyCrestPhotos.hero.src,
+          alt: canopyCrestPhotos.hero.alt,
           title: "Canopy Crest",
-          subtitle: "Khopoli · Private estate",
+          subtitle: "Khopoli · Private villa",
         },
         {
-          src: "/assets/villas/canopy-crest/IMG-20260607-WA0015.jpg",
-          alt: "Canopy Crest's sunlit villa and landscaped lawn",
+          src: canopyCrestPhotos.poolDay.src,
+          alt: canopyCrestPhotos.poolDay.alt,
           title: "Space to gather",
           subtitle: "Private pool and lawn",
         },
         {
-          src: "/assets/villas/canopy-crest/canopy-crest-sunset-guests.jpg",
-          alt: "Guests enjoying the garden at Canopy Crest at sunset",
-          title: "Made for togetherness",
-          subtitle: "A private group stay",
+          src: canopyCrestPhotos.valley.src,
+          alt: canopyCrestPhotos.valley.alt,
+          title: "A green valley setting",
+          subtitle: "Canopy Crest · Khopoli",
         },
         {
-          src: "/assets/villas/canopy-crest/IMG-20260607-WA0012.jpg",
-          alt: "Open lawn and outdoor games area at Canopy Crest",
+          src: canopyCrestPhotos.gazebo.src,
+          alt: canopyCrestPhotos.gazebo.alt,
           title: "Room to play",
-          subtitle: "Open lawn",
+          subtitle: "Gazebo and games",
         },
         {
-          src: "/assets/villas/canopy-crest/IMG-20260607-WA0013.jpg",
-          alt: "Canopy Crest's spacious living room with poolside views",
+          src: canopyCrestPhotos.livingDining.src,
+          alt: canopyCrestPhotos.livingDining.alt,
           title: "Gather indoors",
           subtitle: "Living and dining space",
         },
@@ -252,8 +261,8 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
       "Discover the best villas in Khopoli featuring private swimming pools, 4 spacious bedrooms, landscaped lawns, and home-cooked culinary care.",
     introTitle: "Experience the Best Luxury Villas in Khopoli.",
     intro: [
-      "Nestled along the scenic foothills of the Western Ghats just 90 minutes from Mumbai and Pune, our villas in Khopoli offer the quintessential luxury escape. Whether you are coordinating a large family reunion, celebrating a birthday, or planning an executive offsite near Imagicaa, choosing a private villa gives your group unmatched comfort, freedom, and seclusion.",
-      "Canopy Crest is our premier signature estate among villas in Khopoli, combining 4 master bedrooms, 5 bathrooms, a private swimming pool, outdoor gazebo lounge, and barbecue lawns for up to 16 guests. Unlike crowded hotels, booking villas in Khopoli directly through Stay Willas provides exclusive 100% private estate access, zero platform commission fees, and customizable home-cooked meal services.",
+      "Nestled along the scenic foothills of the Western Ghats just 90 minutes from Mumbai and Pune, our villas in Khopoli offer the quintessential luxury getaway. Whether you are coordinating a large family reunion, celebrating a birthday, or planning an executive offsite near Imagicaa, choosing a private villa gives your group unmatched comfort, freedom, and seclusion.",
+      "Canopy Crest is our premier signature villa among villas in Khopoli, combining 4 master bedrooms, 5 bathrooms, a private swimming pool, outdoor gazebo lounge, and barbecue lawns for up to 16 guests. Unlike crowded hotels, booking villas in Khopoli directly through Stay Willas provides exclusive 100% private villa access, zero platform commission fees, and customizable home-cooked meal services.",
     ],
     planning: [
       {
@@ -273,7 +282,7 @@ export const areaEditorial: Record<AreaSlug, AreaCopy> = {
       {
         question: "Why should I choose villas in Khopoli for a weekend getaway?",
         answer:
-          "Villas in Khopoli offer convenient expressway access from Mumbai and Pune (under 90 minutes), expansive private pools, scenic Sahyadri mountain backdrops, and 100% private estate living for large groups without sharing amenities with strangers.",
+          "Villas in Khopoli offer convenient expressway access from Mumbai and Pune (under 90 minutes), expansive private pools, scenic Sahyadri mountain backdrops, and 100% private villa living for large groups without sharing amenities with strangers.",
       },
       {
         question: "Which is the best private pool villa in Khopoli for large groups?",

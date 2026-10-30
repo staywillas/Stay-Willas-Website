@@ -9,6 +9,7 @@ import { categorizeNight } from "@/lib/calendar-holidays";
 import type { LeadAttribution } from "@/lib/angle-house-measurement";
 import { getTemporaryAvailabilityBlocks, hasTemporaryAvailabilityConflict } from "@/lib/temporary-availability-blocks";
 import { getGuestPricing } from "@/lib/guest-pricing";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 function calculateCouponDiscount(couponCode: string | undefined, weekdayTotal: number, weekendTotal: number) {
   const code = couponCode?.trim().toUpperCase();
@@ -213,11 +214,11 @@ export async function createCheckoutSession(formData: {
 
     let relevantVillaIds = [formData.villaId];
     if (isWillowCottage) {
-      // If booking an individual cottage, also check if the entire estate is booked
+      // If booking an individual cottage, also check if all three cottages are booked.
       const entireEstate = await prisma.villa.findFirst({ where: { slug: "willow-peak" } });
       if (entireEstate) relevantVillaIds.push(entireEstate.id);
     } else if (isWillowEntire) {
-      // If booking entire estate, check all 3 cottages and entire estate
+      // If booking all three cottages, check all related cottage listings.
       const allWillow = await prisma.villa.findMany({
         where: {
           OR: [
@@ -250,11 +251,11 @@ export async function createCheckoutSession(formData: {
 
     if (isWillowEntire) {
       if (overlappingBookings.length > 0) {
-        throw new Error("Cannot book Willow Peak (Entire Estate): one or more cottages or the entire estate is already reserved on these dates. Please select different dates.");
+        throw new Error("Cannot book all three Willow Peak cottages: one or more is already reserved on these dates. Please select different dates.");
       }
     } else if (isWillowCottage) {
       if (overlappingBookings.length > 0) {
-        throw new Error("This cottage is unavailable on the selected dates (either already booked or the Entire Estate is reserved). Please select different dates.");
+        throw new Error("This cottage is unavailable on the selected dates because one or more Willow Peak cottages are already reserved. Please select different dates.");
       }
     } else {
       if (overlappingBookings.length > 0) {
@@ -631,7 +632,7 @@ export async function checkAvailableVillasForDates(data: {
           location: v.location,
           category: v.category,
           amenities: v.amenities,
-          image: v.images[0] || "/images/hero-villa.webp"
+          image: v.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : v.images[0] || "/images/hero-villa.webp"
         }))
       };
     }
@@ -794,7 +795,7 @@ export async function checkAvailableVillasForDates(data: {
           location: v.location,
           category: v.category,
           amenities: v.amenities,
-          image: v.images[0] || "/images/hero-villa.webp",
+          image: v.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : v.images[0] || "/images/hero-villa.webp",
         };
       }),
     };
@@ -891,8 +892,8 @@ export async function createAwaitingVerificationBooking(data: {
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
     let relevantVillaIds = [villa.id];
     if (villa.slug.startsWith("willow-peak-cottage")) {
-      const estate = await prisma.villa.findFirst({ where: { slug: "willow-peak" }, select: { id: true } });
-      if (estate) relevantVillaIds.push(estate.id);
+      const willowPeakVilla = await prisma.villa.findFirst({ where: { slug: "willow-peak" }, select: { id: true } });
+      if (willowPeakVilla) relevantVillaIds.push(willowPeakVilla.id);
     } else if (villa.slug === "willow-peak") {
       const willowVillas = await prisma.villa.findMany({
         where: { OR: [{ slug: "willow-peak" }, { slug: { startsWith: "willow-peak-cottage" } }] },
@@ -1031,7 +1032,7 @@ export async function createAwaitingVerificationBooking(data: {
     });
 
     const unitDetail = villa.slug === "willow-peak"
-      ? (data.cottageSelection === "ALL" ? "Entire estate" : `Cottage ${data.cottageSelection}`)
+      ? (data.cottageSelection === "ALL" ? "All three cottages" : `Cottage ${data.cottageSelection}`)
       : undefined;
     const requestMessage = [
       "Direct booking request awaiting concierge verification.",

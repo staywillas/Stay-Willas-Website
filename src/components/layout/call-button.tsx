@@ -65,7 +65,7 @@ export default function CallButton() {
               Speak to Villa Concierge
             </h4>
             <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Instant date availability, custom meal plans & direct booking quotes for Lonavala & Khopoli estates.
+              Instant date availability, custom meal plans & direct booking quotes for Lonavala & Khopoli villas.
             </p>
 
             {/* Quick Benefits */}

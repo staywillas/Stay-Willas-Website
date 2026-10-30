@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import Footer from "@/components/layout/footer";
 import WishlistClient from "@/components/wishlist/wishlist-client";
 import { prisma } from "@/lib/db";
+import { publicVillaName } from "@/lib/public-copy";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 export const metadata: Metadata = {
   title: "My Wishlist of Premium Luxury Retreats | Stay Willas",
@@ -66,10 +68,10 @@ export default async function WishlistPage() {
     allVillas = dbVillas.map((villa) => ({
       id: villa.id,
       slug: villa.slug,
-      name: villa.name,
+      name: publicVillaName(villa.slug, villa.name),
       location: villa.location,
       price: villa.price.toLocaleString("en-IN"),
-      image: villa.images[0] || "/images/hero-villa.webp",
+      image: villa.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : villa.images[0] || "/images/hero-villa.webp",
       guests: villa.guests,
       bedrooms: villa.bedrooms,
       bathrooms: villa.bathrooms,
@@ -90,7 +92,7 @@ export default async function WishlistPage() {
           My <span className="italic text-accent-primary pr-4 font-heading font-medium">Wishlist of Premium Luxury Retreats</span>
         </h1>
         <p className="text-text-primary/55 text-lg max-w-2xl mx-auto leading-relaxed">
-          Your private collection of premium getaways and modern architecture estates across Maharashtra.
+          Your private collection of premium getaways and modern villas across Maharashtra.
         </p>
       </section>
 

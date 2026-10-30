@@ -4,16 +4,27 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getReviews } from "@/app/actions/review";
 import { resolvePropertyImage } from "@/lib/property-images";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPreviewVilla } from "@/data/nieevant-villa";
+import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
 import PropertyEditorialDetails from "@/components/villa/property-editorial-details";
 import { getTemporaryAvailabilityBlocks } from "@/lib/temporary-availability-blocks";
+import {
+  normalizePublicCopy,
+  publicVillaAmenities,
+  publicVillaCategory,
+  publicVillaName,
+} from "@/lib/public-copy";
 
-export const revalidate = 3600; // 1 hour edge cache (on-demand revalidated on admin updates)
+export const revalidate = 3600; // Refresh hourly; admin changes also trigger on-demand revalidation.
 
 export async function generateStaticParams() {
   const villas = await prisma.villa.findMany({
     select: { slug: true },
   });
-  return villas.map((v) => ({ slug: v.slug }));
+  return Array.from(new Set([...villas.map((villa) => villa.slug), NIEEVANT_SLUG])).map(
+    (slug) => ({ slug }),
+  );
 }
 
 // Fetch only pricing rules that can affect a guest's upcoming stay. This also
@@ -33,10 +44,23 @@ async function fetchVillaWithUpcomingPricing(slug: string) {
     },
   };
 
-  return (
+  const savedVilla = (
     (await prisma.villa.findUnique({ where: { slug }, include })) ??
     (await prisma.villa.findUnique({ where: { id: slug }, include }))
   );
+  const villa = savedVilla ??
+    (slug === NIEEVANT_SLUG
+      ? { ...nieevantPreviewVilla, dailyPrices: [], seasonalPrices: [] }
+      : null);
+  if (!villa) return null;
+
+  return {
+    ...villa,
+    name: publicVillaName(villa.slug, villa.name),
+    description: normalizePublicCopy(villa.description, villa.slug),
+    category: publicVillaCategory(villa.category),
+    amenities: publicVillaAmenities(villa.amenities, villa.slug),
+  };
 }
 
 // Avoid duplicate database roundtrips between generateMetadata and the page.
@@ -54,7 +78,6 @@ const getCachedReviews = React.cache
 
 interface PageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({
@@ -82,9 +105,9 @@ export async function generateMetadata({
   ];
 
   if (villa.slug === "the-angle-house") {
-    titleText = "The Angle House Kamshet, Lonavala | Private Pool & Jacuzzi";
+    titleText = "Private Pool Villa near Lonavala | The Angle House";
     descText =
-      "Book The Angle House in Kamshet, Lonavala: a 3 BHK villa for up to 12 guests with a private waterfall pool and Jacuzzi. Stays from ₹13,000/night.";
+      "The Angle House is a 3 BHK private pool villa in Kamshet, near Lonavala, for up to 12 guests. View rates and check dates for the waterfall pool and Jacuzzi.";
     keywordsList = [
       "staywillas the angle house",
       "staywillas the angle house with jacuzzi lonavala",
@@ -92,6 +115,9 @@ export async function generateMetadata({
       "staywillas the angle house reviews",
       "the angle house with jacuzzi lonavala reviews",
       "the angle house 3 bhk private pool villa",
+      "private pool villa near lonavala for 12 guests",
+      "3 bhk villa with private pool in kamshet",
+      "private pool villa near pune",
       "angel house lonavala",
       "glass house villa lonavala",
       "villa with waterfall pool in lonavala",
@@ -113,10 +139,22 @@ export async function generateMetadata({
       "chavani private villa with pool",
       "staywillas canopy crest reviews",
     ];
+  } else if (villa.slug === NIEEVANT_SLUG) {
+    titleText = "Nieevant by Stay Willas | 3 BHK Pool Villa in Khopoli";
+    descText =
+      "Nieevant by Stay Willas is a 3-bedroom hilltop villa in Khopoli for up to 15 guests, with a private pool, terrace and valley views. Listed from ₹19,999 per night plus taxes.";
+    keywordsList = [
+      "nieevant by stay willas",
+      "nieevant khopoli villa",
+      "3 bedroom private pool villa in khopoli",
+      "hilltop villa in khopoli",
+      "private villa in khopoli for 15 guests",
+      "khopoli villa with private pool",
+    ];
   } else if (villa.slug === "willow-peak") {
     titleText = "Willow Peak Lonavala | Jacuzzi Cottages | Stay Willas";
     descText =
-      "Willow Peak in Kurwande, Lonavala offers A-frame cottages with private Jacuzzis. Base rates start at ₹4,999/night per cottage; full-estate pricing is separate.";
+      "Willow Peak in Kurwande, Lonavala offers A-frame cottages with private Jacuzzis. Base rates start at ₹4,999/night per cottage; full-villa pricing is separate.";
     keywordsList = [
       "willow peak resort kurvande",
       "willow peak lonavala",
@@ -162,9 +200,11 @@ export async function generateMetadata({
     ];
   }
 
-  const coverImage = villa.images[0]
-    ? resolvePropertyImage(villa.images[0])
-    : "";
+  const coverImage = villa.slug === "canopy-crest"
+    ? canopyCrestPhotos.hero.src
+    : villa.images[0]
+      ? resolvePropertyImage(villa.images[0])
+      : "";
   const ogImageUrl = coverImage
     ? coverImage.startsWith("http")
       ? coverImage
@@ -214,20 +254,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function VillaDetailPage({ params, searchParams }: PageProps) {
+export default async function VillaDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
-  const query = await searchParams;
   const slug = resolvedParams.slug;
-  const validDate = (value: string | string[] | undefined) =>
-    typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : undefined;
-  const initialCheckIn = validDate(query.checkIn);
-  const initialCheckOut = validDate(query.checkOut);
-  const parsedGuests = typeof query.guests === "string" ? Number.parseInt(query.guests, 10) : NaN;
-  const initialGuests = Number.isInteger(parsedGuests) && parsedGuests > 0 && parsedGuests <= 16 ? parsedGuests : undefined;
-  const initialCottageSelection = typeof query.cottageSelection === "string"
-    && ["A", "B", "C", "TWO", "ALL"].includes(query.cottageSelection)
-    ? query.cottageSelection as "A" | "B" | "C" | "TWO" | "ALL"
-    : undefined;
 
   const villa = await getCachedVilla(slug);
 
@@ -236,7 +265,10 @@ export default async function VillaDetailPage({ params, searchParams }: PageProp
   }
 
   const dbReviews = await getCachedReviews(villa.id);
-  const reviews = dbReviews;
+  const reviews = dbReviews.map((review) => ({
+    ...review,
+    comment: normalizePublicCopy(review.comment, villa.slug),
+  }));
   const isWillowCottage = villa.slug.startsWith("willow-peak-cottage");
   const isWillowEntire = villa.slug === "willow-peak";
 
@@ -286,14 +318,10 @@ export default async function VillaDetailPage({ params, searchParams }: PageProp
 
   return (
     <PropertyEditorialDetails
-      key={`${villa.id}:${initialCheckIn ?? ""}:${initialCheckOut ?? ""}:${initialGuests ?? ""}:${initialCottageSelection ?? ""}`}
+      key={villa.id}
       villa={villa}
       reviews={reviews}
       bookings={serializedBookings}
-      initialCheckIn={initialCheckIn}
-      initialCheckOut={initialCheckOut}
-      initialGuests={initialGuests}
-      initialCottageSelection={initialCottageSelection}
     />
   );
 }

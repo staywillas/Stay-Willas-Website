@@ -22,7 +22,7 @@ export default function MegaDiscountAdBanner({
   couponCode = "Stayw26",
   discountPercent = 26,
   villaLink,
-  offerTitle = "Monsoon Escape",
+  offerTitle = "Monsoon Stay Offer",
   highlightText = "Stay 2 Nights & Save More",
 }: MegaDiscountAdBannerProps) {
   const [copied, setCopied] = useState(false);
@@ -144,7 +144,7 @@ export default function MegaDiscountAdBanner({
       {/* 2. LEFT SIDE FLOATING SKYSCRAPER AD CARD (DESKTOP / LAPTOP - VISIBLE ON XL) */}
       {/* ========================================================================= */}
       <aside 
-        aria-label="Monsoon Escape Weekday Discount"
+        aria-label="Monsoon weekday offer"
         className="hidden xl:flex fixed left-2 2xl:left-5 top-1/2 -translate-y-1/2 z-[90] flex-col items-center w-48 2xl:w-52 bg-gradient-to-b from-[#1B3564]/98 via-[#0F2142]/98 to-[#081326]/98 text-white rounded-3xl p-4 border-2 border-[#DAA520] shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl animate-fade-in text-center"
       >
         {/* Glowing Top Pill */}
@@ -278,7 +278,7 @@ export default function MegaDiscountAdBanner({
           </span>
           <div className="text-left">
             <span className="text-[9px] font-black text-[#DAA520] uppercase block leading-none">
-              MONSOON ESCAPE • 2-NIGHT DEAL
+              MONSOON STAY • 2-NIGHT DEAL
             </span>
             <span className="text-[8px] text-emerald-300 font-bold leading-none">
               Weekdays (Mon–Thu) • Code: {couponCode}

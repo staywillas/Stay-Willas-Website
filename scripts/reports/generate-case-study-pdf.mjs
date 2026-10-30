@@ -1,6 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const { jsPDF } = require('jspdf');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { jsPDF } from 'jspdf';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function generateCaseStudyPDF() {
   const doc = new jsPDF({
@@ -17,21 +20,10 @@ function generateCaseStudyPDF() {
   // Colors
   const navy = [15, 23, 42];      // #0f172a
   const gold = [217, 119, 6];     // #d97706
-  const emerald = [16, 185, 129]; // #10b981
   const darkGray = [51, 65, 85];  // #334155
-  const lightGray = [241, 245, 249]; // #f1f5f9
   const borderGray = [226, 232, 240]; // #e2e8f0
 
   let y = margin;
-
-  function checkPageBreak(spaceNeeded) {
-    if (y + spaceNeeded > pageHeight - 20) {
-      addFooter();
-      doc.addPage();
-      y = margin;
-      drawHeader();
-    }
-  }
 
   function drawHeader() {
     doc.setFont('helvetica', 'bold');
@@ -537,8 +529,11 @@ function generateCaseStudyPDF() {
 
   addFooter();
 
-  // Save to public/downloads/
-  const outputPath = path.join(__dirname, 'public', 'downloads', 'Ekostay_vs_StayVista_Booking_Case_Study.pdf');
+  // Keep internal reports out of the public website's asset folders.
+  const projectRoot = path.resolve(__dirname, '..', '..');
+  const outputDirectory = path.join(projectRoot, 'output', 'reports');
+  fs.mkdirSync(outputDirectory, { recursive: true });
+  const outputPath = path.join(outputDirectory, 'Ekostay_vs_StayVista_Booking_Case_Study.pdf');
   const pdfBytes = doc.output();
   fs.writeFileSync(outputPath, Buffer.from(pdfBytes, 'binary'));
   console.log(`PDF generated successfully at: ${outputPath} (${pdfBytes.length} bytes)`);

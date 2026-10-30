@@ -5,17 +5,18 @@ import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import { generateBreadcrumbSchema, BASE_URL } from "@/lib/schema";
 import { Award, ShieldCheck, Heart } from "lucide-react";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 export const metadata: Metadata = {
   title: "About Stay Willas | Private Villa Rentals in Maharashtra",
-  description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
+  description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked villas in Lonavala and Khopoli with warm hospitality.",
   keywords: ["about Stay Willas", "stay willas story", "luxury hospitality brand maharashtra", "verified vacation home network", "premium villa management maharashtra"],
   alternates: {
     canonical: "https://www.staywillas.com/about",
   },
   openGraph: {
     title: "About Stay Willas | Private Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked villas in Lonavala and Khopoli with warm hospitality.",
     url: "https://www.staywillas.com/about",
     images: [
       {
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "About Stay Willas | Private Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked villas in Lonavala and Khopoli with warm hospitality.",
     images: ["https://www.staywillas.com/images/hero-villa.webp"],
   },
 };
@@ -46,7 +47,7 @@ export default function AboutPage() {
     "@id": `${BASE_URL}/about#webpage`,
     url: `${BASE_URL}/about`,
     name: "About Stay Willas | Private Villa Rentals in Maharashtra",
-    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked estates in Lonavala and Khopoli with warm hospitality.",
+    description: "Learn about Stay Willas and our private pool villa rentals in Maharashtra. Handpicked villas in Lonavala and Khopoli with warm hospitality.",
     isPartOf: {
       "@id": `${BASE_URL}/#website`,
     },
@@ -88,7 +89,7 @@ export default function AboutPage() {
           </div>
           <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
             <Image 
-              src="/assets/villas/Canopy crest photos/IMG-20260607-WA0007.jpg" 
+              src={canopyCrestPhotos.hero.src}
               alt="Canopy Crest Khopoli - Luxury Private Pool Villa by Stay Willas" 
               fill 
               priority
@@ -193,7 +194,7 @@ export default function AboutPage() {
                 Plan a memorable <strong className="font-semibold text-[#1B3564]">weekend getaway villa in Khopoli</strong> with sprawling multi-acre grounds like <a href="/villa/canopy-crest" className="underline font-semibold text-accent-primary hover:text-[#1B3564]">Canopy Crest</a>. Ideal for large group gatherings up to 16+ guests, corporate offsites, charpai green lawns, and dedicated in-house chef services.
               </p>
               <a href="/areas/khopoli" className="text-xs font-bold uppercase tracking-wider text-accent-primary hover:underline block pt-2">
-                Explore Khopoli Estates &rarr;
+                Explore Khopoli Villas &rarr;
               </a>
             </div>
 
@@ -222,7 +223,7 @@ export default function AboutPage() {
                 <li><strong className="font-semibold text-[#1B3564]">Pet-Friendly Havens:</strong> Securely fenced private gardens allowing your furry companions to run freely.</li>
               </ul>
               <ul className="space-y-3 list-disc pl-5">
-                <li><strong className="font-semibold text-[#1B3564]">Corporate Offsites & Events:</strong> Spacious multi-acre estates equipped with high-speed Wi-Fi, audio setups, and outdoor gazebos.</li>
+                <li><strong className="font-semibold text-[#1B3564]">Corporate Offsites & Events:</strong> Spacious villas on multi-acre grounds with high-speed Wi-Fi, audio setups, and outdoor gazebos.</li>
                 <li><strong className="font-semibold text-[#1B3564]">Direct WhatsApp Concierge:</strong> Instant booking assistance with zero hidden reservation fees or surprise charges.</li>
                 <li><strong className="font-semibold text-[#1B3564]">Prime Western Ghats Locations:</strong> Conveniently located within 2 hours of drive time from Mumbai and Pune.</li>
               </ul>

@@ -252,7 +252,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
   // Property Display Name (No prices included)
   const getSelectedVillaName = () => {
     if (selectedVillaSlug === "custom") {
-      return customPropertyName.trim() || "Private Villa Estate";
+      return customPropertyName.trim() || "Private Villa";
     }
     const found = villas.find((v) => v.slug === selectedVillaSlug);
     return found ? found.name : "Luxury Villa";
@@ -591,7 +591,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(7.5);
       doc.setTextColor(goldColor[0], goldColor[1], goldColor[2]);
-      doc.text("LUXURY ESTATES & VILLAS", marginX + emblemSize + 3, currentY + 10.5);
+      doc.text("LUXURY VILLAS", marginX + emblemSize + 3, currentY + 10.5);
 
       // Invoice Header metadata (Right Aligned)
       doc.setFontSize(14);
@@ -663,7 +663,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       doc.setFont("Helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(darkCharcoal[0], darkCharcoal[1], darkCharcoal[2]);
-      doc.text("Stay Willas Luxury Estates", rightCardX + 4, currentY + 10);
+      doc.text("Stay Willas Luxury Villas", rightCardX + 4, currentY + 10);
 
       doc.setFont("Helvetica", "normal");
       doc.setFontSize(8);
@@ -1000,7 +1000,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   <Building2 className="w-4 h-4 text-[#DAA520]" />
                   <span>Villa Property & Stay Dates</span>
                 </div>
-                <span className="text-[11px] text-slate-400">Select estate & schedule</span>
+                <span className="text-[11px] text-slate-400">Select a villa & schedule</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1017,7 +1017,7 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                         {v.name} ({v.location})
                       </option>
                     ))}
-                    <option value="custom">✨ Custom Property / Other Estate</option>
+                    <option value="custom">✨ Custom property / Other</option>
                   </select>
                 </div>
 

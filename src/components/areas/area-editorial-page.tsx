@@ -14,6 +14,7 @@ import {
   Waves,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { publicVillaName } from "@/lib/public-copy";
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
 import {
   generateBreadcrumbSchema,
@@ -23,6 +24,9 @@ import {
 import { areaEditorial, type AreaSlug } from "@/data/area-editorial";
 import { blogsData } from "@/data/blogs";
 import { destinationGuides } from "@/data/guide-navigation";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPhotos } from "@/data/nieevant-images";
+import { withNieevantFallback } from "@/data/nieevant-villa";
 import styles from "./area-editorial.module.css";
 
 const propertyPhotos: Record<
@@ -44,11 +48,18 @@ const propertyPhotos: Record<
     text: "Breeze, Crest and Heaven together, with an in-room Jacuzzi in each A-frame cottage.",
   },
   "canopy-crest": {
-    src: "/assets/villas/canopy-crest/IMG-20260607-WA0015.jpg",
-    alt: "Canopy Crest's lawn and outdoor seating in Khopoli",
+    src: canopyCrestPhotos.hero.src,
+    alt: canopyCrestPhotos.hero.alt,
     name: "Canopy Crest",
     type: "Private pool villa",
     text: "A poolside home with room to gather, four bedrooms and outdoor lawn space.",
+  },
+  "nieevant-by-stay-willas": {
+    src: nieevantPhotos.hero.src,
+    alt: nieevantPhotos.hero.alt,
+    name: "Nieevant by Stay Willas",
+    type: "Hilltop pool villa",
+    text: "A 3-bedroom Khopoli villa for up to 15 guests, with a private pool and hillside views.",
   },
   "casa-de-reva": {
     src: "/assets/villas/terra-cotta-villa/IMG-20260901-WA0031.jpg",
@@ -82,8 +93,9 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
     },
     orderBy: { createdAt: "desc" },
   });
-  // Match the whole-estate starting rate displayed on Willow Peak's property page.
-  const villas = dbVillas.map((villa) => ({
+  const listedVillas = slug === "khopoli" ? withNieevantFallback(dbVillas) : dbVillas;
+  // Match the whole-villa starting rate displayed on Willow Peak's property page.
+  const villas = listedVillas.map((villa) => ({
     ...villa,
     price:
       villa.slug === "willow-peak" ? Math.min(villa.price, 15000) : villa.price,
@@ -116,8 +128,9 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
     },
     {
       question: "What are the check-in and check-out times?",
-      answer:
-        "Check-in is from 2:00 PM and check-out is by 11:00 AM for all properties. Early arrival or late departure needs advance confirmation and is subject to availability.",
+      answer: slug === "khopoli"
+        ? "Nieevant check-in is from 1:00 PM and check-out is by 11:00 AM. Canopy Crest's times may differ; check the selected villa page and confirm any early arrival or late departure with the team."
+        : "Check-in is from 2:00 PM and check-out is by 11:00 AM. Early arrival or late departure needs advance confirmation and is subject to availability.",
     },
     {
       question: `Can I get 26% off weekday stays in ${area.name}?`,
@@ -180,33 +193,30 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
               <span>Monday–Thursday stays</span>
             </div>
             <h1 id="area-title">
-              Villas in <span>{area.name}.</span>
+              <span className={styles.heroTitleLead}>{area.heroTitleLead}</span>
+              <span>{area.heroTitleLocation}</span>
             </h1>
             <p>{area.summary}</p>
             <div className={styles.heroActions}>
-              <a className={styles.primaryButton} href={`#${collectionId}`}>
-                Check 26% off dates <ArrowRight size={18} aria-hidden="true" />
+              <a
+                className={styles.primaryButton}
+                href={`/villa/${area.featuredSlug}#booking-card-section`}
+              >
+                {slug === "lonavala" ? "Check Angle House dates" : "Check dates and rates"}
+                <ArrowRight size={18} aria-hidden="true" />
               </a>
-              <a className={styles.textLink} href="tel:+919619042310">
-                <Phone size={16} aria-hidden="true" /> Call to book
+              <a className={styles.textLink} href={`#${collectionId}`}>
+                Explore all stays
               </a>
             </div>
             <p className={styles.heroOfferNote}>
-              Book direct with code <b>Stayw26</b> on eligible weekday dates.
+              Call <a href="tel:+919619042310">+91 96190 42310</a> or use code <b>Stayw26</b> for eligible weekday dates.
             </p>
           </div>
-          <figure className={styles.heroFigure}>
-            <div className={styles.carouselStage}>
-              <AreaHeroCarousel
-                items={area.hero.items}
-                className={styles.carousel}
-              />
-            </div>
-            <figcaption>
-              <span><MapPin size={14} aria-hidden="true" />{area.hero.caption}</span>
-              <span className={styles.carouselHint}>Drag or swipe to explore</span>
-            </figcaption>
-          </figure>
+          <AreaHeroCarousel
+            items={area.hero.items}
+            locationCaption={area.hero.caption}
+          />
         </section>
         <div className={styles.stayNotes} aria-label="Booking information">
           <span>
@@ -240,8 +250,8 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
               {area.name} weekday stays.
             </h2>
             <p>
-              More room to unwind. A little less to spend. Book your
-              Monday–Thursday escape directly with Stay Willas.
+              More room to unwind for less. Book a Monday–Thursday stay
+              directly with Stay Willas.
             </p>
           </div>
           <div className={styles.offerCode}>
@@ -289,7 +299,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
             >
               {homes.map((villa) => {
                 const copy = propertyPhotos[villa.slug];
-                const name = copy?.name || villa.name;
+                const name = copy?.name || publicVillaName(villa.slug, villa.name);
                 return (
                   <article
                     className={styles.home}
@@ -392,7 +402,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
             <div className={styles.cottageSection}>
               <h3>Just the two of you? Choose a cottage.</h3>
               <p>
-                Each Willow Peak cottage has a private Jacuzzi. Estate photos
+                Each Willow Peak cottage has a private Jacuzzi. Villa photos
                 show the shared setting; confirm your selected unit with the
                 team.
               </p>
@@ -406,7 +416,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
                     <span className={styles.cottageLetter}>0{index + 1}</span>
                     <span>
                       <strong>
-                        {["Breeze", "Crest", "Heaven"][index] || villa.name}
+                        {["Breeze", "Crest", "Heaven"][index] || publicVillaName(villa.slug, villa.name)}
                       </strong>
                       <small>
                         Up to {villa.guests} guests · Private Jacuzzi

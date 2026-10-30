@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Project folders
+
+- `src/` — website pages, components, and application data.
+- `public/assets/` — public website images and documents. Menu PDFs are kept in `public/assets/menus/`.
+- `docs/` — internal site notes, SEO plans, research exports, drafts, and visual previews. Start with [the docs index](docs/README.md).
+- `scripts/` — maintenance utilities grouped by purpose.
+- `output/` — generated reports that should not be served as website downloads.
+
 ## Getting Started
 
 First, run the development server:

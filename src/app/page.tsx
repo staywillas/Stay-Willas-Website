@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 import Footer from "@/components/layout/footer";
 import HomeExperience from "@/components/home/editorial/home-experience";
 import HomeContent from "@/components/home/editorial/home-content";
+import { publicVillaName } from "@/lib/public-copy";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { NIEEVANT_SLUG, nieevantPreviewVilla, withNieevantFallback } from "@/data/nieevant-villa";
 
 export const metadata: Metadata = {
   title: "Private Pool Villas Near Mumbai | Stay Willas",
@@ -23,10 +26,10 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com",
     images: [
       {
-        url: "https://www.staywillas.com/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg",
-        width: 1254,
-        height: 1254,
-        alt: "Canopy Crest villa and private pool in Khopoli",
+        url: `https://www.staywillas.com${canopyCrestPhotos.hero.src}`,
+        width: 1800,
+        height: 1350,
+        alt: canopyCrestPhotos.hero.alt,
       }
     ],
     type: "website",
@@ -35,18 +38,20 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
     description: "Book beautiful private pool villas near Mumbai with delicious home-cooked meals & chef services in Lonavala and Khopoli.",
-    images: ["https://www.staywillas.com/assets/villas/canopy-crest/IMG-20260607-WA0007.jpg"],
+    images: [`https://www.staywillas.com${canopyCrestPhotos.hero.src}`],
   },
 };
 
-export const revalidate = 3600; // 1 hour edge cache
+export const revalidate = 86400; // Refresh daily; admin updates trigger on-demand revalidation.
 
 export default async function Home() {
-  const order = ["the-angle-house", "canopy-crest", "casa-de-reva", "willow-peak-cottage-c"];
-  const villas = await prisma.villa.findMany({
+  const order = ["the-angle-house", "canopy-crest", NIEEVANT_SLUG, "casa-de-reva", "willow-peak-cottage-c"];
+  const dbVillas = await prisma.villa.findMany({
     where: { slug: { in: order } },
     select: { id: true, slug: true, name: true, location: true, price: true, guests: true, bedrooms: true },
   });
+  const villas = withNieevantFallback(dbVillas.length ? dbVillas : [nieevantPreviewVilla])
+    .map((villa) => ({ ...villa, name: publicVillaName(villa.slug, villa.name) }));
   villas.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
   return (
     <>

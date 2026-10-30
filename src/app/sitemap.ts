@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
+import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
 import { blogsData } from "@/data/blogs";
 
 const BASE_URL = "https://www.staywillas.com";
@@ -112,8 +113,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: highPriorityBlogs.has(blog.slug) ? 0.92 : 0.75,
   }));
 
-  // 4. Dynamic Villa Estate Sitelinks from Database
-  const topVillaSlugs = new Set(["the-angle-house", "canopy-crest", "willow-peak"]);
+  // 4. Villa links from the database
+  const topVillaSlugs = new Set(["the-angle-house", "canopy-crest", NIEEVANT_SLUG, "willow-peak"]);
   let villaRoutes: MetadataRoute.Sitemap = [];
   try {
     const villas = await prisma.villa.findMany({
@@ -125,6 +126,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: topVillaSlugs.has(villa.slug) ? 0.98 : 0.9,
     }));
+    if (!villas.some((villa) => villa.slug === NIEEVANT_SLUG)) {
+      villaRoutes.push({
+        url: `${BASE_URL}/villa/${NIEEVANT_SLUG}`,
+        changeFrequency: "daily" as const,
+        priority: 0.98,
+      });
+    }
   } catch {
     // If DB is unavailable during build, fallback to known core villas
     villaRoutes = [
@@ -135,6 +143,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       {
         url: `${BASE_URL}/villa/canopy-crest`,
+        changeFrequency: "daily" as const,
+        priority: 0.98,
+      },
+      {
+        url: `${BASE_URL}/villa/${NIEEVANT_SLUG}`,
         changeFrequency: "daily" as const,
         priority: 0.98,
       },
