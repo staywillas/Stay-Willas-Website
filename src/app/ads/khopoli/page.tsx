@@ -5,9 +5,9 @@ import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Villas in Khopoli | Canopy Crest by Stay Willas",
+  title: "Khopoli Villa Stays | Canopy Crest and Nieevant | Stay Willas",
   description:
-    "See Canopy Crest photos, amenities and spaces. Tell us about your Khopoli stay and our team will contact you.",
+    "Share your Khopoli stay plans with Stay Willas. Our team will help you compare Canopy Crest and Nieevant.",
   robots: {
     index: false,
     follow: false,
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
     canonical: "https://www.staywillas.com/ads/khopoli",
   },
   openGraph: {
-    title: "Villas in Khopoli | Canopy Crest by Stay Willas",
+    title: "Khopoli Villa Stays | Canopy Crest and Nieevant | Stay Willas",
     description:
-      "See Canopy Crest photos, amenities and spaces. Tell us about your Khopoli stay and our team will contact you.",
+      "Share your Khopoli stay plans with Stay Willas. Our team will help you compare Canopy Crest and Nieevant.",
     url: "https://www.staywillas.com/ads/khopoli",
     siteName: "Stay Willas",
     locale: "en_IN",

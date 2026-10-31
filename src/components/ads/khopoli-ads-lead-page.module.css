@@ -92,15 +92,147 @@
   color: var(--accent);
 }
 
-.propertyPhotos {
-  margin-top: clamp(63px, 9vw, 112px);
+.amenitiesMarquee {
+  margin-top: 22px;
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  background: rgb(255 253 248 / 52%);
 }
 
-.propertyPhotos .sectionIntro h2 {
+.amenitiesMarqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: amenities-marquee 38s linear infinite;
+}
+
+.amenitiesMarqueeGroup {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: clamp(24px, 4vw, 48px);
+  margin: 0;
+  padding: 13px 24px;
+  list-style: none;
+}
+
+.amenitiesMarqueeItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.amenitiesMarqueeItem svg {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+.amenitiesMarquee:hover .amenitiesMarqueeTrack {
+  animation-play-state: paused;
+}
+
+@keyframes amenities-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.propertyOptions {
+  margin-top: clamp(50px, 8vw, 92px);
+  padding-top: clamp(28px, 4vw, 46px);
+  border-top: 1px solid var(--line);
+}
+
+.propertyOptions .sectionIntro h2 {
   max-width: 15ch;
   margin-top: 10px;
   font-size: clamp(36px, 4vw, 49px);
   line-height: 1.03;
+}
+
+.propertyOptionsDescription {
+  max-width: 52ch;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.propertyOptionList {
+  display: grid;
+  gap: 24px;
+  margin-top: 27px;
+}
+
+.propertyOption {
+  min-width: 0;
+  padding: clamp(18px, 3vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 14px 36px rgb(27 53 100 / 5%);
+}
+
+.propertyOption:nth-child(2) {
+  background: #f8f5ec;
+}
+
+.propertyOptionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 22px;
+}
+
+.propertyOptionCopy {
+  min-width: 0;
+  max-width: 58ch;
+}
+
+.propertyLocation {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.propertyOption h3 {
+  margin: 0;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(30px, 3.4vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.propertyDescription {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.propertyFacts {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 14px;
+  margin: 0;
+  padding: 0;
+  color: var(--ink);
+  font-size: 10px;
+  list-style: none;
+}
+
+.propertyFacts li::before {
+  margin-right: 6px;
+  color: var(--accent);
+  content: "✓";
 }
 
 .galleryTrack {
@@ -179,31 +311,12 @@
   color: var(--accent);
 }
 
-.galleryHint {
-  margin: 0;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.5;
+.propertyGalleryTrack {
+  margin-top: 21px;
 }
 
-.mainGalleryTrack {
-  margin-top: 23px;
-}
-
-.stepPhotoTrack {
-  width: 100%;
-  margin: 0;
-  gap: 10px;
-  padding: 2px 1px 9px;
-}
-
-.stepPhotoTrack .galleryCard {
-  flex-basis: min(76vw, 330px);
-  border-radius: 10px;
-}
-
-.stepPhotoTrack .galleryImageFrame {
-  aspect-ratio: 1.35;
+.propertyGalleryTrack .galleryCard {
+  flex-basis: min(82vw, 430px);
 }
 
 .lightboxBackdrop {
@@ -293,64 +406,11 @@
   color: #fff;
 }
 
-.amenities {
-  display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  align-items: center;
-  gap: clamp(30px, 7vw, 95px);
-  margin-top: clamp(52px, 8vw, 94px);
-  padding: 33px 0;
-  border-block: 1px solid var(--line);
-}
-
 .sectionIntro h2 {
   max-width: 13ch;
   margin-top: 10px;
   font-size: clamp(36px, 4vw, 49px);
   line-height: 1.03;
-}
-
-.amenityGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 21px 25px;
-}
-
-.amenity {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  min-width: 0;
-}
-
-.amenityIcon {
-  display: grid;
-  place-items: center;
-  flex: 0 0 38px;
-  width: 38px;
-  height: 38px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--panel);
-  color: var(--accent);
-}
-
-.amenity strong,
-.amenity small {
-  display: block;
-}
-
-.amenity strong {
-  padding-top: 2px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.amenity small {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.5;
 }
 
 .planner {
@@ -429,23 +489,6 @@
   color: var(--muted);
   font-size: 9px;
   line-height: 1.35;
-}
-
-.photoStep {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-}
-
-.skipPhotos {
-  min-height: 26px;
-  padding: 3px 8px;
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  font-size: 10px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .stepCard,
@@ -706,7 +749,7 @@
   font-size: clamp(33px, 4vw, 45px);
 }
 
-.successCard > p:last-child {
+.successCard > p:not(.eyebrow) {
   max-width: 45ch;
   margin: 12px 0 0;
   color: var(--muted);
@@ -714,14 +757,24 @@
   line-height: 1.8;
 }
 
-.footerNote {
-  margin: 0;
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-align: center;
+.successLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  margin-top: 18px;
+  padding: 0 14px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: var(--panel);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 150ms ease;
+}
+
+.successLink:hover {
+  background: #294b7e;
 }
 
 @keyframes photo-in {
@@ -730,12 +783,8 @@
 }
 
 @media (min-width: 761px) {
-  .mainGalleryTrack .galleryCard {
-    flex-basis: calc((100% - 28px) / 3);
-  }
-
-  .stepPhotoTrack .galleryCard {
-    flex-basis: calc((100% - 10px) / 2);
+  .propertyGalleryTrack .galleryCard {
+    flex-basis: min(38vw, 410px);
   }
 }
 
@@ -771,23 +820,14 @@
     display: none;
   }
 
-  .amenities {
-    grid-template-columns: 1fr;
-    gap: 25px;
-  }
-
-  .propertyPhotos {
-    margin-top: 56px;
-  }
-
   .lightboxImageFrame {
     height: min(66svh, 560px);
     min-height: 220px;
   }
 
-  .amenities {
-    margin-top: 54px;
-    padding: 27px 0;
+  .propertyOptions {
+    margin-top: 56px;
+    padding-top: 28px;
   }
 
   .sectionIntro h2 {
@@ -798,9 +838,27 @@
 }
 
 @media (max-width: 460px) {
-  .amenityGrid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  .propertyOption {
+    padding: 15px 13px;
+  }
+
+  .propertyOptionHeader {
+    display: grid;
+    gap: 12px;
+  }
+
+  .propertyOption h3 {
+    font-size: 30px;
+  }
+
+  .propertyFacts {
+    justify-content: flex-start;
+    gap: 7px 11px;
+    font-size: 9px;
+  }
+
+  .propertyGalleryTrack .galleryCard {
+    flex-basis: 82vw;
   }
 
   .stepCard,
@@ -899,15 +957,6 @@
   .interestCopy small {
     margin-top: 2px;
     font-size: 8px;
-  }
-
-  .photoStep {
-    gap: 6px;
-  }
-
-  .skipPhotos {
-    min-height: 22px;
-    font-size: 9px;
   }
 
   .finalStep,
@@ -1035,6 +1084,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .amenitiesMarquee {
+    overflow-x: auto;
+  }
+
+  .amenitiesMarqueeTrack {
+    width: max-content;
+    animation: none;
+  }
+
   .photo,
   .galleryCard,
   .lightboxControls button,

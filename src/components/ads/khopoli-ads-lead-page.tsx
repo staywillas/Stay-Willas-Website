@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
   ArrowRight,
-  BedDouble,
   Check,
   Heart,
   Trees,
@@ -19,17 +18,46 @@ import Image from "@/components/ui/site-image";
 import { captureBookingLead } from "@/app/actions/inquiry";
 import { trackCanopyCrestAdsLandingLead } from "@/lib/angle-house-measurement";
 import type { LeadAttribution } from "@/lib/angle-house-measurement";
-import { canopyCrestGallery } from "@/data/canopy-crest-images";
+import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPhotos } from "@/data/nieevant-images";
 import styles from "./khopoli-ads-lead-page.module.css";
 
-const photos = canopyCrestGallery;
+type VillaPhoto = { src: string; alt: string; caption: string };
+type VillaOption = {
+  slug: string;
+  name: string;
+  locationLabel: string;
+  description: string;
+  facts: string[];
+  photos: VillaPhoto[];
+};
 
-const amenities: { icon: LucideIcon; title: string; detail: string }[] = [
-  { icon: Waves, title: "Private swimming pool", detail: "For your group" },
-  { icon: BedDouble, title: "Four bedrooms", detail: "Room to settle in" },
-  { icon: Users, title: "Up to 16 guests", detail: "A stay for a larger group" },
-  { icon: Trees, title: "Open lawn and gazebo", detail: "Time outside together" },
-  { icon: UtensilsCrossed, title: "Meal options", detail: "Ask our team what is available" },
+const propertyOptions: VillaOption[] = [
+  {
+    slug: "canopy-crest",
+    name: "Canopy Crest",
+    locationLabel: "KHOPOLI · PRIVATE POOL VILLA",
+    description: "A group-friendly stay with a private pool, open lawn and room to gather.",
+    facts: ["4 bedrooms", "Up to 16 guests", "Private pool"],
+    photos: [canopyCrestPhotos.hero, canopyCrestPhotos.poolDay, canopyCrestPhotos.livingDining],
+  },
+  {
+    slug: "nieevant-by-stay-willas",
+    name: "Nieevant by Stay Willas",
+    locationLabel: "KHOPOLI · HILLTOP VILLA",
+    description: "A hilltop setting with open valley views, a private pool and outdoor space.",
+    facts: ["3 bedrooms", "Up to 15 guests", "Private pool"],
+    photos: [nieevantPhotos.hero, nieevantPhotos.hillside, nieevantPhotos.grounds],
+  },
+];
+
+const khopoliAmenities = [
+  "Private swimming pools",
+  "Three and four bedroom villas",
+  "Space for up to 16 guests",
+  "Outdoor spaces to unwind",
+  "Hilltop and valley views",
+  "Wi-Fi and private parking",
 ];
 
 const groupSizes = ["1–4 guests", "5–8 guests", "9–12 guests", "13–16 guests"];
@@ -46,7 +74,7 @@ const stayInterests: { icon: LucideIcon; title: string; detail: string }[] = [
   { icon: UtensilsCrossed, title: "Meal options", detail: "Ask what is available" },
   { icon: Users, title: "Help me decide", detail: "Talk it through with our team" },
 ];
-const enquiryStepCount = 6;
+const enquiryStepCount = 5;
 
 type DatePlan = "specific" | "flexible" | "";
 type ContactPreference = "call" | "whatsapp" | "";
@@ -66,16 +94,22 @@ function getAdAttribution(): LeadAttribution {
 }
 
 function PhotoStrip({
-  compact = false,
+  propertyName,
+  propertySlug,
+  photos,
   onOpen,
 }: {
-  compact?: boolean;
-  onOpen: (index: number) => void;
+  propertyName: string;
+  propertySlug: string;
+  photos: VillaPhoto[];
+  onOpen: (propertySlug: string, index: number) => void;
 }) {
   return (
     <div
-      className={`${styles.galleryTrack} ${compact ? styles.stepPhotoTrack : styles.mainGalleryTrack}`}
-      aria-label="Canopy Crest villa photos. Scroll horizontally to see more."
+      className={`${styles.galleryTrack} ${styles.propertyGalleryTrack}`}
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={`${propertyName} photos. Scroll horizontally to see more.`}
     >
       {photos.map((item, index) => (
         <button
@@ -83,16 +117,14 @@ function PhotoStrip({
           className={styles.galleryCard}
           key={item.src}
           aria-label={`Enlarge photo: ${item.caption}`}
-          onClick={() => onOpen(index)}
+          onClick={() => onOpen(propertySlug, index)}
         >
           <span className={styles.galleryImageFrame}>
             <Image
               src={item.src}
               alt={item.alt}
               fill
-              sizes={compact
-                ? "(max-width: 760px) 68vw, 340px"
-                : "(max-width: 760px) 80vw, (max-width: 1100px) 45vw, 360px"}
+              sizes="(max-width: 760px) 82vw, 410px"
               unoptimized
               loading="lazy"
               className={styles.photo}
@@ -107,7 +139,7 @@ function PhotoStrip({
 }
 
 export default function KhopoliAdsLeadPage() {
-  const [enlargedPhotoIndex, setEnlargedPhotoIndex] = useState<number | null>(null);
+  const [enlargedPhoto, setEnlargedPhoto] = useState<{ propertySlug: string; index: number } | null>(null);
   const [step, setStep] = useState(0);
   const [groupSize, setGroupSize] = useState("");
   const [tripType, setTripType] = useState("");
@@ -127,6 +159,11 @@ export default function KhopoliAdsLeadPage() {
   const plannerRef = useRef<HTMLElement>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
 
+  const enlargedProperty = enlargedPhoto
+    ? propertyOptions.find((property) => property.slug === enlargedPhoto.propertySlug)
+    : undefined;
+  const activePhoto = enlargedProperty?.photos[enlargedPhoto?.index ?? 0];
+
   useEffect(() => {
     if (step === 0 || submitted) return;
     const reduceMotion = window.matchMedia(
@@ -140,19 +177,24 @@ export default function KhopoliAdsLeadPage() {
   }, [step, submitted]);
 
   useEffect(() => {
-    if (enlargedPhotoIndex === null) return;
+    if (!enlargedPhoto || !enlargedProperty) return;
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     lightboxCloseRef.current?.focus();
+    const photoCount = enlargedProperty.photos.length;
 
     function handleLightboxKeys(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setEnlargedPhotoIndex(null);
+        setEnlargedPhoto(null);
       } else if (event.key === "ArrowRight") {
-        setEnlargedPhotoIndex((current) => current === null ? current : (current + 1) % photos.length);
+        setEnlargedPhoto((current) => current === null
+          ? current
+          : { ...current, index: (current.index + 1) % photoCount });
       } else if (event.key === "ArrowLeft") {
-        setEnlargedPhotoIndex((current) => current === null ? current : (current - 1 + photos.length) % photos.length);
+        setEnlargedPhoto((current) => current === null
+          ? current
+          : { ...current, index: (current.index - 1 + photoCount) % photoCount });
       }
     }
 
@@ -161,7 +203,7 @@ export default function KhopoliAdsLeadPage() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleLightboxKeys);
     };
-  }, [enlargedPhotoIndex]);
+  }, [enlargedPhoto, enlargedProperty]);
 
   function continueToNextStep() {
     setError("");
@@ -218,7 +260,8 @@ export default function KhopoliAdsLeadPage() {
         ? `${checkIn} to ${checkOut}`
         : "Flexible dates";
     const message = [
-      "Standalone Khopoli ads page enquiry for Canopy Crest.",
+      "Standalone Khopoli ads page enquiry for Canopy Crest and Nieevant.",
+      "Please help compare the two Khopoli villas.",
       `Group size: ${groupSize}.`,
       `Plan: ${tripType}.`,
       `Dates: ${dateSummary}.`,
@@ -230,7 +273,7 @@ export default function KhopoliAdsLeadPage() {
       const result = await captureBookingLead({
         name: name.trim(),
         phone: `+91 ${phoneDigits}`,
-        villaName: "Canopy Crest",
+        villaName: "Khopoli villas (Canopy Crest and Nieevant)",
         checkIn: datePlan === "specific" ? checkIn : undefined,
         checkOut: datePlan === "specific" ? checkOut : undefined,
         guests: groupSize,
@@ -256,7 +299,6 @@ export default function KhopoliAdsLeadPage() {
     "What brings you to Khopoli?",
     "When would you like to stay?",
     "What would make it a great stay?",
-    "See Canopy Crest",
     "Where can our team reach you?",
   ];
 
@@ -265,14 +307,14 @@ export default function KhopoliAdsLeadPage() {
       <div className={styles.shell}>
         <section className={styles.hero} aria-labelledby="khopoli-title">
           <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}>A PRIVATE VILLA FOR YOUR GROUP</p>
+            <p className={styles.eyebrow}>TWO PRIVATE VILLAS IN KHOPOLI</p>
             <h1 id="khopoli-title">Villas in Khopoli</h1>
             <p className={styles.heroDescription}>
-              Tell us a little about your group. Our team will help you plan a stay at Canopy Crest.
+              Share a few details. Our team will help you choose between Canopy Crest and Nieevant.
             </p>
             <div className={styles.heroFacts}>
-              <span><Check size={15} aria-hidden="true" /> Private pool</span>
-              <span><Check size={15} aria-hidden="true" /> Four bedrooms</span>
+              <span><Check size={15} aria-hidden="true" /> Private pools</span>
+              <span><Check size={15} aria-hidden="true" /> Three or four bedrooms</span>
               <span><Check size={15} aria-hidden="true" /> Up to 16 guests</span>
             </div>
 
@@ -308,8 +350,7 @@ export default function KhopoliAdsLeadPage() {
                 {stepTitles[step]}
               </h2>
               {step === 3 && <p className={styles.stepDescription}>Choose any that sound good. You can pick more than one.</p>}
-              {step === 4 && <p className={styles.stepDescription}>Take a quick look through the villa photos. You can skip this step.</p>}
-              {step === 5 && <p className={styles.stepDescription}>Leave your name and mobile number and our team will contact you.</p>}
+              {step === 4 && <p className={styles.stepDescription}>Leave your details first. We will show both villa options after your request is sent.</p>}
 
               {step === 0 && (
                 <div className={styles.choiceGrid} role="group" aria-label="Choose a group size">
@@ -404,23 +445,14 @@ export default function KhopoliAdsLeadPage() {
               )}
 
               {step === 4 && (
-                <div className={styles.photoStep}>
-                  <PhotoStrip compact onOpen={setEnlargedPhotoIndex} />
-                  <button className={styles.skipPhotos} type="button" onClick={() => { setError(""); setStep(5); }}>
-                    Skip photos and share my details
-                  </button>
-                </div>
-              )}
-
-              {step === 5 && (
                 <div className={styles.finalStep}>
                   <div className={styles.finalSummary}>
-                    <p className={styles.eyebrow}>YOUR CANOPY CREST STAY</p>
+                    <p className={styles.eyebrow}>YOUR KHOPOLI ENQUIRY</p>
                     <p className={styles.finalSummaryChoices}>
                       {groupSize} · {tripType} · {selectedStayInterests.join(", ")} · {datePlan === "specific" ? checkIn + " to " + checkOut : "Flexible dates"}
                     </p>
                     <p className={styles.finalSummaryDetails}>
-                      {amenities.map(({ title }) => title).join(" · ")}
+                      We will help you compare Canopy Crest and Nieevant after your request is sent.
                     </p>
                   </div>
                   <form className={styles.contactForm} onSubmit={submitLead}>
@@ -468,7 +500,7 @@ export default function KhopoliAdsLeadPage() {
 
                     <label className={styles.consent}>
                       <input type="checkbox" checked={agreedToContact} onChange={(event) => setAgreedToContact(event.target.checked)} />
-                      <span>Our team may contact me about this Canopy Crest enquiry.</span>
+                      <span>Our team may contact me about my Khopoli villa enquiry.</span>
                     </label>
                     {error && <p className={styles.error} role="alert">{error}</p>}
                     <div className={styles.formActions}>
@@ -484,7 +516,7 @@ export default function KhopoliAdsLeadPage() {
                 </div>
               )}
 
-              {step < 5 && (
+              {step < 4 && (
                 <>
                   {error && <p className={styles.error} role="alert">{error}</p>}
                   <div className={styles.formActions}>
@@ -505,46 +537,70 @@ export default function KhopoliAdsLeadPage() {
               <span className={styles.successIcon}><Check size={24} aria-hidden="true" /></span>
               <p className={styles.eyebrow}>REQUEST RECEIVED</p>
               <h2 id="planner-title" ref={headingRef} tabIndex={-1}>Thanks, {name || "we have your request"}.</h2>
-              <p>Our team will contact you about Canopy Crest in Khopoli using your preferred method.</p>
+              <p>Our team will contact you about the Khopoli villa options using your preferred method.</p>
+              <a className={styles.successLink} href="#khopoli-villas">Compare both stays <ArrowRight size={16} aria-hidden="true" /></a>
             </div>
           )}
         </section>
         </section>
 
-        <section className={styles.propertyPhotos} aria-labelledby="photos-title">
-          <div className={styles.sectionIntro}>
-            <p className={styles.eyebrow}>CANOPY CREST · KHOPOLI</p>
-            <h2 id="photos-title">Take a look around</h2>
-          </div>
-          <PhotoStrip onOpen={setEnlargedPhotoIndex} />
-          <p className={styles.galleryHint}>Swipe sideways to explore. Tap any photo to see it larger.</p>
-        </section>
-
-        <section className={styles.amenities} aria-labelledby="amenities-title">
-          <div className={styles.sectionIntro}>
-            <p className={styles.eyebrow}>FIRST, TAKE A LOOK AROUND</p>
-            <h2 id="amenities-title">Space for everyone to settle in</h2>
-          </div>
-          <div className={styles.amenityGrid}>
-            {amenities.map(({ icon: Icon, title, detail }) => (
-              <article className={styles.amenity} key={title}>
-                <span className={styles.amenityIcon}><Icon size={19} aria-hidden="true" /></span>
-                <span><strong>{title}</strong><small>{detail}</small></span>
-              </article>
+        <section className={styles.amenitiesMarquee} aria-label="Amenities across our Khopoli villas">
+          <div className={styles.amenitiesMarqueeTrack}>
+            {[0, 1].map((copy) => (
+              <ul
+                className={styles.amenitiesMarqueeGroup}
+                key={copy}
+                aria-hidden={copy === 1 ? true : undefined}
+              >
+                {khopoliAmenities.map((amenity) => (
+                  <li className={styles.amenitiesMarqueeItem} key={amenity}>
+                    <Check size={14} aria-hidden="true" />
+                    <span>{amenity}</span>
+                  </li>
+                ))}
+              </ul>
             ))}
           </div>
         </section>
 
-        <p className={styles.footerNote}>Canopy Crest · Khopoli, Maharashtra</p>
+        {submitted && <section className={styles.propertyOptions} id="khopoli-villas" aria-labelledby="property-options-title">
+          <div className={styles.sectionIntro}>
+            <p className={styles.eyebrow}>YOUR KHOPOLI OPTIONS</p>
+            <h2 id="property-options-title">Two different stays to explore</h2>
+            <p className={styles.propertyOptionsDescription}>Browse the real villa photos below. Tap any photo to view it larger.</p>
+          </div>
+          <div className={styles.propertyOptionList}>
+            {propertyOptions.map((property) => (
+              <article className={styles.propertyOption} key={property.slug} aria-labelledby={`${property.slug}-title`}>
+                <div className={styles.propertyOptionHeader}>
+                  <div className={styles.propertyOptionCopy}>
+                    <p className={styles.propertyLocation}>{property.locationLabel}</p>
+                    <h3 id={`${property.slug}-title`}>{property.name}</h3>
+                    <p className={styles.propertyDescription}>{property.description}</p>
+                  </div>
+                  <ul className={styles.propertyFacts} aria-label={`${property.name} highlights`}>
+                    {property.facts.map((fact) => <li key={fact}>{fact}</li>)}
+                  </ul>
+                </div>
+                <PhotoStrip
+                  propertyName={property.name}
+                  propertySlug={property.slug}
+                  photos={property.photos}
+                  onOpen={(propertySlug, index) => setEnlargedPhoto({ propertySlug, index })}
+                />
+              </article>
+            ))}
+          </div>
+        </section>}
       </div>
 
-      {enlargedPhotoIndex !== null && (
-        <div className={styles.lightboxBackdrop} onClick={() => setEnlargedPhotoIndex(null)}>
+      {enlargedPhoto && enlargedProperty && activePhoto && (
+        <div className={styles.lightboxBackdrop} onClick={() => setEnlargedPhoto(null)}>
           <section
             className={styles.lightboxDialog}
             role="dialog"
             aria-modal="true"
-            aria-label={`Enlarged photo: ${photos[enlargedPhotoIndex].caption}`}
+            aria-label={`Enlarged photo: ${activePhoto.caption} from ${enlargedProperty.name}`}
             onClick={(event) => event.stopPropagation()}
           >
             <button
@@ -552,14 +608,14 @@ export default function KhopoliAdsLeadPage() {
               className={styles.lightboxClose}
               type="button"
               aria-label="Close enlarged photo"
-              onClick={() => setEnlargedPhotoIndex(null)}
+              onClick={() => setEnlargedPhoto(null)}
             >
               <X size={20} aria-hidden="true" />
             </button>
             <div className={styles.lightboxImageFrame}>
               <Image
-                src={photos[enlargedPhotoIndex].src}
-                alt={photos[enlargedPhotoIndex].alt}
+                src={activePhoto.src}
+                alt={activePhoto.alt}
                 fill
                 sizes="(max-width: 760px) 94vw, 90vw"
                 unoptimized
@@ -568,20 +624,24 @@ export default function KhopoliAdsLeadPage() {
               />
             </div>
             <div className={styles.lightboxFooter}>
-              <p>{photos[enlargedPhotoIndex].caption}</p>
-              <span>{enlargedPhotoIndex + 1} / {photos.length}</span>
+              <p>{activePhoto.caption}</p>
+              <span>{enlargedPhoto.index + 1} / {enlargedProperty.photos.length}</span>
               <div className={styles.lightboxControls}>
                 <button
                   type="button"
                   aria-label="Previous enlarged photo"
-                  onClick={() => setEnlargedPhotoIndex((current) => current === null ? current : (current - 1 + photos.length) % photos.length)}
+                  onClick={() => setEnlargedPhoto((current) => current === null
+                    ? current
+                    : { ...current, index: (current.index - 1 + enlargedProperty.photos.length) % enlargedProperty.photos.length })}
                 >
                   <ArrowLeft size={17} aria-hidden="true" />
                 </button>
                 <button
                   type="button"
                   aria-label="Next enlarged photo"
-                  onClick={() => setEnlargedPhotoIndex((current) => current === null ? current : (current + 1) % photos.length)}
+                  onClick={() => setEnlargedPhoto((current) => current === null
+                    ? current
+                    : { ...current, index: (current.index + 1) % enlargedProperty.photos.length })}
                 >
                   <ArrowRight size={17} aria-hidden="true" />
                 </button>
