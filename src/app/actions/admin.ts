@@ -6,12 +6,17 @@ import fs from "fs";
 import path from "path";
 import { sendEmail } from "@/lib/mail";
 import { requireAdminSession } from "@/lib/session";
+import { getGuestMinimum } from "@/lib/guest-pricing";
+
+function getVillaPublicPath(slug: string) {
+  return slug === "slatewood" ? `/villas/${slug}` : `/villa/${slug}`;
+}
 
 async function revalidateVillaPricingPages(villaId: string) {
   const villa = await prisma.villa.findUnique({ where: { id: villaId }, select: { slug: true } });
   revalidatePath("/admin");
   revalidatePath("/");
-  if (villa?.slug) revalidatePath(`/villa/${villa.slug}`);
+  if (villa?.slug) revalidatePath(getVillaPublicPath(villa.slug));
 }
 
 // -------------------------------------------------------------------------
@@ -55,6 +60,17 @@ export async function createManualBooking(formData: {
     const targetVilla = await prisma.villa.findUnique({
       where: { id: formData.villaId }
     });
+
+    if (targetVilla && (!formData.type || formData.type === "GUEST")) {
+      const minimumGuests = getGuestMinimum(targetVilla.slug);
+      const guestCount = formData.guests ?? 1;
+      if (guestCount < minimumGuests) {
+        return { success: false, error: `${targetVilla.name} requires at least ${minimumGuests} guests.` };
+      }
+      if (guestCount > targetVilla.guests) {
+        return { success: false, error: `${targetVilla.name} allows up to ${targetVilla.guests} guests.` };
+      }
+    }
 
     const isWillowEntire = targetVilla?.slug === "willow-peak";
     const isWillowCottage = targetVilla?.slug?.startsWith("willow-peak-cottage");
@@ -197,7 +213,7 @@ export async function createManualBooking(formData: {
       },
     });
 
-    revalidatePath("/admin");
+    await revalidateVillaPricingPages(formData.villaId);
     return { success: true, booking };
   } catch (error: any) {
     console.error("Failed to create manual booking:", error);
@@ -209,10 +225,18 @@ export async function deleteBooking(bookingId: string) {
   try {
     await requireAdminSession();
 
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      select: { villaId: true },
+    });
     await prisma.booking.delete({
       where: { id: bookingId },
     });
-    revalidatePath("/admin");
+    if (booking) {
+      await revalidateVillaPricingPages(booking.villaId);
+    } else {
+      revalidatePath("/admin");
+    }
     return { success: true };
   } catch (error: any) {
     console.error("Failed to cancel/delete booking:", error);
@@ -310,7 +334,7 @@ export async function updateVillaDetails(data: {
     revalidatePath("/admin");
     revalidatePath("/");
     revalidatePath("/villas");
-    revalidatePath(`/villa/${updated.slug}`);
+    revalidatePath(getVillaPublicPath(updated.slug));
     return { success: true, villa: updated };
   } catch (error: any) {
     console.error("PMS update failed:", error);
@@ -969,7 +993,7 @@ export async function sendInvoiceEmailAction(data: {
                 ${
                   data.totalExtrasCost > 0
                     ? `<tr style="border-bottom: 1px solid #E2E8F0;">
-                        <td style="color: #334155;">Custom Add-ons & Extra Services</td>
+                        <td style="color: #334155;">Additional guest charges, add-ons & extras</td>
                         <td align="right" style="font-weight: bold; color: #0F172A;">₹${data.totalExtrasCost.toLocaleString("en-IN")}</td>
                        </tr>`
                     : ""
@@ -1244,7 +1268,7 @@ export async function approveVerificationBooking(bookingId: string) {
     }
 
     revalidatePath("/admin");
-    revalidatePath(`/villa/${booking.villa.slug}`);
+    revalidatePath(getVillaPublicPath(booking.villa.slug));
     return { success: true, booking, emailSent, emailStatus, guestEmail };
   } catch (error: any) {
     console.error("approveVerificationBooking error:", error);
@@ -1267,7 +1291,7 @@ export async function rejectVerificationBooking(bookingId: string) {
     });
 
     revalidatePath("/admin");
-    revalidatePath(`/villa/${booking.villa.slug}`);
+    revalidatePath(getVillaPublicPath(booking.villa.slug));
     return { success: true };
   } catch (error: any) {
     console.error("rejectVerificationBooking error:", error);

@@ -139,6 +139,7 @@ export function generateFAQSchema(faqs: FAQItem[]) {
 // 5. Villa / VacationRental Property Schema Generator
 export interface PropertySchemaInput {
   slug: string;
+  publicUrl?: string;
   name: string;
   description: string;
   images: string[];
@@ -209,13 +210,19 @@ const VILLA_COORDINATES: Record<string, { lat: number; lng: number; street: stri
 };
 
 export function generatePropertySchema(villa: PropertySchemaInput) {
-  const propertyUrl = `${BASE_URL}/villa/${villa.slug}`;
-  const coords = VILLA_COORDINATES[villa.slug] || {
-    lat: 18.7557,
-    lng: 73.4091,
-    street: villa.location,
-    locality: villa.location.split(",")[0].trim(),
-  };
+  const propertyUrl = villa.publicUrl
+    ? villa.publicUrl.startsWith("http")
+      ? villa.publicUrl
+      : `${BASE_URL}${villa.publicUrl}`
+    : `${BASE_URL}/villa/${villa.slug}`;
+  const coords = villa.slug === "slatewood"
+    ? null
+    : VILLA_COORDINATES[villa.slug] || {
+        lat: 18.7557,
+        lng: 73.4091,
+        street: villa.location,
+        locality: villa.location.split(",")[0].trim(),
+      };
 
   const formattedImages = (villa.images || []).map((img) =>
     img.startsWith("http") ? img : `${BASE_URL}${img}`
@@ -265,18 +272,29 @@ export function generatePropertySchema(villa: PropertySchemaInput) {
     checkinTime: "14:00",
     checkoutTime: "11:00",
     petsAllowed: isPetFriendly,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: coords.street,
-      addressLocality: coords.locality,
-      addressRegion: "Maharashtra",
-      addressCountry: "IN",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: coords.lat,
-      longitude: coords.lng,
-    },
+    address: coords
+      ? {
+          "@type": "PostalAddress",
+          streetAddress: coords.street,
+          addressLocality: coords.locality,
+          addressRegion: "Maharashtra",
+          addressCountry: "IN",
+        }
+      : {
+          "@type": "PostalAddress",
+          streetAddress: villa.location,
+          addressRegion: "Maharashtra",
+          addressCountry: "IN",
+        },
+    ...(coords
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: coords.lat,
+            longitude: coords.lng,
+          },
+        }
+      : {}),
     numberOfRooms: villa.bedrooms,
     numberOfBedrooms: villa.bedrooms,
     numberOfBathroomsTotal: villa.bathrooms,

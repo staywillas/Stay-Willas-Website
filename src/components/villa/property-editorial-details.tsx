@@ -38,6 +38,7 @@ import PropertyEditorialExtras from "./property-editorial-extras";
 import CanopyHeroBookingForm from "./canopy-hero-booking-form";
 import { resolvePropertyImage } from "@/lib/property-images";
 import { NIEEVANT_PREVIEW_ID } from "@/data/nieevant-villa";
+import { SLATEWOOD_PREVIEW_ID } from "@/data/slatewood-villa";
 import {
   generateBreadcrumbSchema,
   generatePropertySchema,
@@ -77,6 +78,7 @@ export default function PropertyEditorialDetails({
   initialCheckOut,
   initialGuests,
   initialCottageSelection,
+  publicPath,
 }: {
   villa: EditorialVilla;
   reviews: GuestReview[];
@@ -85,10 +87,16 @@ export default function PropertyEditorialDetails({
   initialCheckOut?: string;
   initialGuests?: number;
   initialCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
+  publicPath?: string;
 }) {
   const property = getPropertyEditorial(villa);
   const isCanopyCrest = villa.slug === "canopy-crest";
   const isNieevantPreview = villa.id === NIEEVANT_PREVIEW_ID;
+  const isSlatewoodPreview = villa.id === SLATEWOOD_PREVIEW_ID;
+  const isSlatewoodLocationOnRequest =
+    villa.slug === "slatewood" &&
+    property.locationName === "Location shared by concierge";
+  const propertyPath = publicPath ?? `/villa/${villa.slug}`;
   const selectedCottageSelection = property.isWillow && !property.cottage
     ? initialCottageSelection ?? (initialGuests ? initialGuests > 8 ? "ALL" : initialGuests > 4 ? "TWO" : "A" : property.initialCottageSelection)
     : property.initialCottageSelection;
@@ -126,15 +134,18 @@ export default function PropertyEditorialDetails({
   const schemas = [
     generateBreadcrumbSchema([
       { name: "Home", url: "/" },
-      { name: property.areaName, url: property.areaUrl },
-      { name: villa.name, url: `/villa/${villa.slug}` },
+      { name: isSlatewoodPreview ? "All villas" : property.areaName, url: property.areaUrl },
+      { name: villa.name, url: propertyPath },
     ]),
-    generatePropertySchema({
-      ...villa,
-      images,
-      amenities: villa.amenities.map((name) => ({ name })),
-      reviews,
-    }),
+    ...(!isSlatewoodPreview
+      ? [generatePropertySchema({
+          ...villa,
+          images,
+          amenities: villa.amenities.map((name) => ({ name })),
+          reviews,
+          publicUrl: propertyPath,
+        })]
+      : []),
     generateFAQSchema(faqs),
   ];
 
@@ -293,17 +304,19 @@ export default function PropertyEditorialDetails({
 
         {!isCanopyCrest && (
           <div
-            className={styles.facts}
+            className={`${styles.facts} ${isSlatewoodPreview && villa.guests <= 0 ? styles.factsWithoutGuests : ""}`}
             role="group"
             aria-label="Villa at a glance"
           >
-            <div>
-              <Users size={23} />
-              <span>
-                <strong>Up to {villa.guests}</strong>
-                <small>guests</small>
-              </span>
-            </div>
+            {villa.guests > 0 && (
+              <div>
+                <Users size={23} />
+                <span>
+                  <strong>Up to {villa.guests}</strong>
+                  <small>guests</small>
+                </span>
+              </div>
+            )}
             <div>
               <BedDouble size={23} />
               <span>
@@ -504,13 +517,21 @@ export default function PropertyEditorialDetails({
             >
               <div className={styles.sectionHeading}>
                 <h2 id="location-title">A change of scenery.</h2>
-                <p>{villa.location}.</p>
+                <p>
+                  {isSlatewoodLocationOnRequest
+                    ? "Ask our concierge for the exact location and arrival details."
+                    : `${villa.location}.`}
+                </p>
               </div>
               <div className={styles.locationPanel}>
                 <div className={styles.locationIllustration}>
                   <MapPin size={35} strokeWidth={1.3} />
                   <span>{property.locationName}</span>
-                  <small>{property.areaName}, Maharashtra</small>
+                  <small>
+                    {isSlatewoodLocationOnRequest
+                      ? "Exact address shared by the concierge"
+                      : `${property.areaName}, Maharashtra`}
+                  </small>
                 </div>
                 <div>
                   <h3>Find your way to {property.name}.</h3>
@@ -521,7 +542,9 @@ export default function PropertyEditorialDetails({
                     rel="noopener noreferrer"
                     className={styles.textLink}
                   >
-                    Open in Google Maps <ArrowUpRight size={17} />
+                    {isSlatewoodLocationOnRequest
+                      ? "Ask concierge for directions"
+                      : "Open in Google Maps"} <ArrowUpRight size={17} />
                   </a>
                 </div>
               </div>
@@ -598,14 +621,23 @@ export default function PropertyEditorialDetails({
                 <h2 id="know-title">Good to know before you go.</h2>
               </div>
               <div className={styles.checkTimes}>
-                <span>
-                  <Clock3 size={19} />
-                  <strong>Check-in</strong> From {property.checkInTime ?? "2:00 PM"}
-                </span>
-                <span>
-                  <Clock3 size={19} />
-                  <strong>Check-out</strong> By {property.checkOutTime ?? "11:00 AM"}
-                </span>
+                {villa.slug === "slatewood" ? (
+                  <span>
+                    <Clock3 size={19} />
+                    <strong>Arrival times</strong> Confirm with the concierge
+                  </span>
+                ) : (
+                  <>
+                    <span>
+                      <Clock3 size={19} />
+                      <strong>Check-in</strong> From {property.checkInTime ?? "2:00 PM"}
+                    </span>
+                    <span>
+                      <Clock3 size={19} />
+                      <strong>Check-out</strong> By {property.checkOutTime ?? "11:00 AM"}
+                    </span>
+                  </>
+                )}
               </div>
               <div className={styles.faqs}>
                 {faqs.map((faq) => (
@@ -637,9 +669,11 @@ export default function PropertyEditorialDetails({
                   </Link>
                 ))}
               </div>
-              <Link className={styles.textLink} href={property.areaUrl}>
-                Explore {property.areaName} stays <ArrowRight size={16} />
-              </Link>
+              {!isSlatewoodPreview && (
+                <Link className={styles.textLink} href={property.areaUrl}>
+                  Explore {property.areaName} stays <ArrowRight size={16} />
+                </Link>
+              )}
             </section>
             <div className={styles.closing}>
               <span>
@@ -656,13 +690,15 @@ export default function PropertyEditorialDetails({
                 data-conversion-event={isCanopyCrest ? "canopy_crest_check_dates_click" : undefined}
                 data-conversion-surface={isCanopyCrest ? "property_closing_cta" : undefined}
               >
-                Check dates & plan your stay <ArrowRight size={17} />
+                {isSlatewoodPreview ? "Ask about dates" : "Check dates & plan your stay"} <ArrowRight size={17} />
               </a>
               <p>
                 {initialCheckIn && initialCheckOut
                   ? "Your dates are loaded. Open the booking panel to review live nightly rates and your stay total."
-                  : property.priceNote ??
-                    `From ₹${formattedPrice} per night. Final rates depend on your dates and group.`}
+                  : villa.slug === "slatewood"
+                    ? `Base rate ₹${formattedPrice} per night includes up to ${villa.baseGuests} guests; each additional guest is ₹${villa.extraGuestFee.toLocaleString("en-IN")} per night, plus taxes.`
+                    : property.priceNote ??
+                      `From ₹${formattedPrice} per night. Final rates depend on your dates and group.`}
               </p>
             </div>
           </div>
@@ -697,6 +733,27 @@ export default function PropertyEditorialDetails({
                   Check-in from {property.checkInTime}; check-out by{" "}
                   {property.checkOutTime}.
                 </small>
+              </div>
+            ) : isSlatewoodPreview ? (
+              <div className={styles.previewBooking}>
+                <p className={styles.previewPrice}>
+                  <span>Base rate</span>
+                  <strong>₹{formattedPrice}</strong>
+                  <small>per night + taxes</small>
+                </p>
+                <h3>Plan your Slatewood stay.</h3>
+                <p>
+                  Share your dates and group size. Our team will confirm the
+                  availability and applicable taxes.
+                </p>
+                <a
+                  href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%2C%20I%27d%20like%20to%20check%20Slatewood%20dates%20and%20availability."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.primaryButton}
+                >
+                  Ask about dates <ArrowRight size={16} />
+                </a>
               </div>
             ) : (
               <BookingModalFlow

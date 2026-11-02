@@ -8,7 +8,7 @@ import { sendAdminLeadNotification } from "@/lib/lead-notifications";
 import { categorizeNight } from "@/lib/calendar-holidays";
 import type { LeadAttribution } from "@/lib/angle-house-measurement";
 import { getTemporaryAvailabilityBlocks, hasTemporaryAvailabilityConflict } from "@/lib/temporary-availability-blocks";
-import { getGuestPricing } from "@/lib/guest-pricing";
+import { getGuestMinimum, getGuestPricing } from "@/lib/guest-pricing";
 import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 
 function calculateCouponDiscount(couponCode: string | undefined, weekdayTotal: number, weekendTotal: number) {
@@ -54,6 +54,13 @@ export async function calculateStayPrice(
   });
   
   if (!villa) throw new Error("Villa not found");
+  const minimumGuests = getGuestMinimum(villa.slug);
+  if (guests < minimumGuests) {
+    throw new Error(`${villa.name} requires at least ${minimumGuests} guests.`);
+  }
+  if (guests > villa.guests) {
+    throw new Error(`${villa.name} allows up to ${villa.guests} guests.`);
+  }
 
   const rawNightlyRates: Array<{ date: string; label: string; price: number; category: string }> = [];
   let currentDate = new Date(checkIn);
@@ -531,6 +538,10 @@ export async function checkAvailableVillasForDates(data: {
   try {
     const region = data.destination && data.destination !== "all" && data.destination !== "All Locations" ? data.destination.trim() : "";
     const specificSlug = data.villaSlug && data.villaSlug !== "all" ? data.villaSlug.trim() : "";
+    const guestCount = Math.max(1, Math.min(data.guests ?? 2, 16));
+    if (specificSlug === "slatewood" && guestCount < getGuestMinimum(specificSlug)) {
+      return { success: false, error: "Slatewood bookings require at least 6 guests." };
+    }
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 
     // Helper: extract UTC date-only stamp (ignoring time/timezone)
@@ -620,7 +631,9 @@ export async function checkAvailableVillasForDates(data: {
     if (!data.checkIn || !data.checkOut) {
       return {
         success: true,
-        villas: villas.map(v => ({
+        villas: villas
+          .filter(v => guestCount >= getGuestMinimum(v.slug) && guestCount <= v.guests)
+          .map(v => ({
           id: v.id,
           name: v.name,
           slug: v.slug,
@@ -633,7 +646,7 @@ export async function checkAvailableVillasForDates(data: {
           category: v.category,
           amenities: v.amenities,
           image: v.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : v.images[0] || "/images/hero-villa.webp"
-        }))
+          })),
       };
     }
 
@@ -645,6 +658,7 @@ export async function checkAvailableVillasForDates(data: {
 
     // 4. Filter: keep villas that have NO overlapping active bookings
     const availableVillas = villas.filter(v => {
+      const guestFits = guestCount >= getGuestMinimum(v.slug) && guestCount <= v.guests;
       const hasOverlap = v.bookings.some(b => {
         const bCinDay = toUTCDay(new Date(b.checkIn));
         const bCoutDay = toUTCDay(new Date(b.checkOut));
@@ -652,7 +666,7 @@ export async function checkAvailableVillasForDates(data: {
         return overlaps;
       });
       const hasTemporaryBlock = hasTemporaryAvailabilityConflict(v.slug, userCheckIn, userCheckOut);
-      return !hasOverlap && !hasTemporaryBlock;
+      return guestFits && !hasOverlap && !hasTemporaryBlock;
     });
 
     console.log("[Availability] Available villas after date filter:", availableVillas.length, "/", villas.length);
@@ -726,8 +740,6 @@ export async function checkAvailableVillasForDates(data: {
 
       return { nightlyRates, averageNightlyRate: nightsCount > 0 ? Math.round(total / nightsCount) : v.price };
     };
-
-    const guestCount = Math.max(1, Math.min(data.guests ?? 2, 16));
 
     const availableVillaIds = new Set(availableVillas.map(villa => villa.id));
     const pricedVillas = specificSlug ? villas : availableVillas;
@@ -874,6 +886,10 @@ export async function createAwaitingVerificationBooking(data: {
     }
     if (data.guests > villa.guests) {
       return { success: false, error: `This stay allows up to ${villa.guests} guests.` };
+    }
+    const minimumGuests = getGuestMinimum(villa.slug);
+    if (data.guests < minimumGuests) {
+      return { success: false, error: `${villa.name} requires at least ${minimumGuests} guests.` };
     }
     if (villa.slug === "willow-peak") {
       if (!data.cottageSelection) {

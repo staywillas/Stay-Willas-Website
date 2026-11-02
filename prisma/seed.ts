@@ -2,6 +2,7 @@ import "dotenv/config";
 import { prisma } from "../src/lib/db";
 import { canopyCrestGallery } from "../src/data/canopy-crest-images";
 import { nieevantVillaData } from "../src/data/nieevant-villa";
+import { slatewoodVillaData } from "../src/data/slatewood-villa";
 
 const villasData = [
   {
@@ -345,6 +346,10 @@ Located near Kaswand in Panchgani, Casa De Reva is just minutes away from Mapro 
   {
     id: "nieevant-by-stay-willas",
     ...nieevantVillaData,
+  },
+  {
+    id: "slatewood-by-stay-willas",
+    ...slatewoodVillaData,
   }
 ];
 

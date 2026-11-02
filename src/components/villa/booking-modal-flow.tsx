@@ -19,6 +19,7 @@ import editorialStyles from "./property-editorial.module.css";
 import { willowUnits } from "@/data/property-editorial";
 import BorderGlow from "@/components/ui/border-glow";
 import { trackCanopyCrestInteraction } from "@/lib/angle-house-measurement";
+import { getGuestMinimum } from "@/lib/guest-pricing";
 
 interface BookingModalFlowProps {
   villaId: string;
@@ -76,7 +77,9 @@ export default function BookingModalFlow({
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(Boolean(initialCheckIn && initialCheckOut));
   const [quickCheckIn, setQuickCheckIn] = useState(initialCheckIn ?? "");
   const [quickCheckOut, setQuickCheckOut] = useState(initialCheckOut ?? "");
-  const [quickGuests, setQuickGuests] = useState(initialGuests ?? 2);
+  const [quickGuests, setQuickGuests] = useState(
+    initialGuests ?? (propertySlug === "slatewood" ? 6 : 2),
+  );
   const [quickBookingError, setQuickBookingError] = useState("");
 
   // Cottage selection for Willow Peak
@@ -184,7 +187,9 @@ export default function BookingModalFlow({
   const quickGuestLimit = isWillowPeak
     ? cottageSelection === "ALL" ? 12 : cottageSelection === "TWO" ? 8 : 4
     : maxGuests;
-  const quickGuestMinimum = isWillowPeak && cottageSelection === "TWO" ? 5 : 1;
+  const quickGuestMinimum = isWillowPeak && cottageSelection === "TWO"
+    ? 5
+    : getGuestMinimum(propertySlug ?? "");
   const bookingTitle = propertySlug === "willow-peak"
     ? `${villaName} · ${cottageSelection === "ALL" ? "All 3 cottages" : cottageSelection === "TWO" ? "2 cottages" : `Cottage ${cottageSelection}`}`
     : villaName;
@@ -232,7 +237,11 @@ export default function BookingModalFlow({
       <div className={editorialStyles.bookingSummary}>
         <span className={editorialStyles.bookingLabel}>YOUR STAY, DIRECT WITH US</span>
         <h2>Make it your weekend.</h2>
-        <p className={editorialStyles.quickBookingIntro}>Choose your dates and group size to see the live rate.</p>
+        <p className={editorialStyles.quickBookingIntro}>
+          {propertySlug === "slatewood"
+            ? `Base rate ₹${(basePrice ?? price).toLocaleString("en-IN")} per night includes up to ${baseGuests} guests; each additional guest is ₹${extraGuestFee.toLocaleString("en-IN")} per night, up to ${maxGuests} guests. Taxes extra.`
+            : "Choose your dates and group size to see the live rate."}
+        </p>
         {isWillowPeak && (
           <div className={editorialStyles.unitPicker}>
             <p>{cottageSelection === "ALL" ? "All 3 cottages · up to 12 guests" : cottageSelection === "TWO" ? "2 cottages · up to 8 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p>

@@ -1,20 +1,16 @@
 import React from "react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getReviews } from "@/app/actions/review";
 import { resolvePropertyImage } from "@/lib/property-images";
 import { canopyCrestPhotos } from "@/data/canopy-crest-images";
-import { nieevantPreviewVilla } from "@/data/nieevant-villa";
 import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
+import { SLATEWOOD_SLUG } from "@/data/slatewood-villa";
+import { getCachedPublicVilla } from "@/lib/public-villa-data";
 import PropertyEditorialDetails from "@/components/villa/property-editorial-details";
 import { getTemporaryAvailabilityBlocks } from "@/lib/temporary-availability-blocks";
-import {
-  normalizePublicCopy,
-  publicVillaAmenities,
-  publicVillaCategory,
-  publicVillaName,
-} from "@/lib/public-copy";
+import { normalizePublicCopy } from "@/lib/public-copy";
 
 export const revalidate = 3600; // Refresh hourly; admin changes also trigger on-demand revalidation.
 
@@ -22,52 +18,12 @@ export async function generateStaticParams() {
   const villas = await prisma.villa.findMany({
     select: { slug: true },
   });
-  return Array.from(new Set([...villas.map((villa) => villa.slug), NIEEVANT_SLUG])).map(
-    (slug) => ({ slug }),
-  );
-}
-
-// Fetch only pricing rules that can affect a guest's upcoming stay. This also
-// keeps stale historical overrides out of the client-side booking payload.
-async function fetchVillaWithUpcomingPricing(slug: string) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const include = {
-    dailyPrices: {
-      where: { date: { gte: today } },
-      orderBy: { date: "asc" as const },
-    },
-    seasonalPrices: {
-      where: { endDate: { gte: today } },
-      orderBy: { startDate: "asc" as const },
-    },
-  };
-
-  const savedVilla = (
-    (await prisma.villa.findUnique({ where: { slug }, include })) ??
-    (await prisma.villa.findUnique({ where: { id: slug }, include }))
-  );
-  const villa = savedVilla ??
-    (slug === NIEEVANT_SLUG
-      ? { ...nieevantPreviewVilla, dailyPrices: [], seasonalPrices: [] }
-      : null);
-  if (!villa) return null;
-
-  return {
-    ...villa,
-    name: publicVillaName(villa.slug, villa.name),
-    description: normalizePublicCopy(villa.description, villa.slug),
-    category: publicVillaCategory(villa.category),
-    amenities: publicVillaAmenities(villa.amenities, villa.slug),
-  };
+  return Array.from(
+    new Set([...villas.map((villa) => villa.slug), NIEEVANT_SLUG, SLATEWOOD_SLUG]),
+  ).map((slug) => ({ slug }));
 }
 
 // Avoid duplicate database roundtrips between generateMetadata and the page.
-const getCachedVilla = React.cache
-  ? React.cache(fetchVillaWithUpcomingPricing)
-  : fetchVillaWithUpcomingPricing;
-
 const getCachedReviews = React.cache
   ? React.cache(async (villaId: string) => {
       return await getReviews(villaId);
@@ -86,7 +42,7 @@ export async function generateMetadata({
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
 
-  const villa = await getCachedVilla(slug);
+  const villa = await getCachedPublicVilla(slug);
 
   if (!villa) {
     return {
@@ -104,7 +60,17 @@ export async function generateMetadata({
     `private pool villa ${city.toLowerCase()}`,
   ];
 
-  if (villa.slug === "the-angle-house") {
+  if (villa.slug === SLATEWOOD_SLUG) {
+    titleText = "Slatewood by Stay Willas | 3BHK Infinity Pool Villa";
+    descText =
+      "Explore Slatewood by Stay Willas, a 3-bedroom private infinity pool villa on a landscaped 1.5-acre estate, with a garden, lawn, gazebo and dedicated turf.";
+    keywordsList = [
+      "Slatewood by Stay Willas",
+      "3 bedroom private infinity pool villa",
+      "private pool villa with garden and gazebo",
+      "villa with dedicated turf",
+    ];
+  } else if (villa.slug === "the-angle-house") {
     titleText = "Private Pool Villa near Lonavala | The Angle House";
     descText =
       "The Angle House is a 3 BHK private pool villa in Kamshet, near Lonavala, for up to 12 guests. View rates and check dates for the waterfall pool and Jacuzzi.";
@@ -210,6 +176,10 @@ export async function generateMetadata({
       ? coverImage
       : `https://www.staywillas.com${coverImage}`
     : "https://www.staywillas.com/images/hero-villa.webp";
+  const publicPath =
+    villa.slug === SLATEWOOD_SLUG
+      ? `/villas/${villa.slug}`
+      : `/villa/${villa.slug}`;
 
   return {
     title: titleText,
@@ -227,12 +197,12 @@ export async function generateMetadata({
       },
     },
     alternates: {
-      canonical: `https://www.staywillas.com/villa/${villa.slug}`,
+      canonical: `https://www.staywillas.com${publicPath}`,
     },
     openGraph: {
       title: titleText,
       description: descText,
-      url: `https://www.staywillas.com/villa/${villa.slug}`,
+      url: `https://www.staywillas.com${publicPath}`,
       siteName: "Stay Willas",
       locale: "en_IN",
       images: [
@@ -258,7 +228,11 @@ export default async function VillaDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
 
-  const villa = await getCachedVilla(slug);
+  if (slug === SLATEWOOD_SLUG) {
+    permanentRedirect(`/villas/${SLATEWOOD_SLUG}`);
+  }
+
+  const villa = await getCachedPublicVilla(slug);
 
   if (!villa) {
     notFound();

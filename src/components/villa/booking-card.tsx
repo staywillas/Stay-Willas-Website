@@ -14,6 +14,7 @@ import { useUser } from "@clerk/nextjs";
 import { categorizeNight, checkLongWeekend } from "@/lib/calendar-holidays";
 import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement, trackCanopyCrestBookingEnquiry, trackCanopyCrestInteraction, trackWebsiteWhatsAppClick } from "@/lib/angle-house-measurement";
 import { checkAvailableVillasForDates } from "@/app/actions/booking";
+import { getGuestMinimum } from "@/lib/guest-pricing";
 
 interface DailyPriceProp {
   id: string;
@@ -199,8 +200,12 @@ const BookingCard = ({
     d.setHours(0, 0, 0, 0);
     return d;
   });
-  const [guests, setGuests] = useState(initialGuests || 2);
-  const [guestInput, setGuestInput] = useState(String(initialGuests || 2));
+  const initialGuestCount = Math.max(
+    getGuestMinimum(propertySlug ?? ""),
+    initialGuests || (propertySlug === "slatewood" ? 6 : 2),
+  );
+  const [guests, setGuests] = useState(initialGuestCount);
+  const [guestInput, setGuestInput] = useState(String(initialGuestCount));
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
@@ -215,7 +220,7 @@ const BookingCard = ({
   const [submittedTotal, setSubmittedTotal] = useState<number | null>(null);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [selectedFoodPackage, setSelectedFoodPackage] = useState<FoodPackage | null>(null);
-  const [foodGuests, setFoodGuests] = useState(initialGuests || 2);
+  const [foodGuests, setFoodGuests] = useState(initialGuestCount);
   const [weekdayOfferSelected, setWeekdayOfferSelected] = useState(false);
   const [weekendOfferSelected, setWeekendOfferSelected] = useState(false);
   const [showAddOns, setShowAddOns] = useState(false);
@@ -253,7 +258,9 @@ const BookingCard = ({
   const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : cottageSelection === "TWO" ? 2 : 1) : 1;
   const isSingleWillowCottage = isWillowPeak && cottageSelection !== "ALL";
   const currentMaxGuests = isWillowPeak ? cottagesCount * 4 : actualMaxGuests;
-  const currentMinGuests = isWillowPeak && cottageSelection === "TWO" ? 5 : 1;
+  const currentMinGuests = isWillowPeak && cottageSelection === "TWO"
+    ? 5
+    : getGuestMinimum(propertySlug ?? "");
 
   useEffect(() => {
     setFoodGuests(count => Math.max(1, Math.min(guests, count)));

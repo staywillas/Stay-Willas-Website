@@ -31,6 +31,9 @@ const VillaCard = ({
   bathrooms,
   className,
 }: VillaCardProps) => {
+  const propertyPath = id === "slatewood" ? "/villas/slatewood" : `/villa/${id}`;
+  const rateOnRequest = id === "slatewood" && !price;
+
   return (
     <ThreeDHoverCard
       maxTilt={4}
@@ -42,7 +45,7 @@ const VillaCard = ({
         
         {/* Top Link Wrap */}
         <Link 
-          href={`/villa/${id}`} 
+          href={propertyPath}
           className="block relative w-full"
           title={id === "willow-peak" ? "Willow Peak Resort Kurvande, Lonavala" : id === "canopy-crest" ? "StayWillas Canopy Crest Khopoli - 4 BHK Villa with Swimming Pool Chavani" : id === "the-angle-house" ? "The Angle House Lonavala - Glass Villa with Waterfall Pool & Jacuzzi" : name}
         >
@@ -92,7 +95,7 @@ const VillaCard = ({
             <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[#1B3564] text-[9px] sm:text-[10px]">
               <span className="flex items-center gap-1 font-bold bg-[#1B3564]/5 px-2 py-0.5 rounded-md">
                 <Users size={10} className="text-[#DAA520]" />
-                {guests} Pax
+                {guests > 0 ? `${guests} Pax` : "Group size on request"}
               </span>
               <span className="flex items-center gap-1 font-bold bg-[#1B3564]/5 px-2 py-0.5 rounded-md">
                 <Bed size={10} className="text-[#DAA520]" />
@@ -112,19 +115,32 @@ const VillaCard = ({
         <div className="mt-3 pt-2.5 border-t border-[#D1C7B3]/40 px-1">
           <div className="flex items-center justify-between gap-2 mb-2.5">
             <div className="flex flex-col text-left">
-              <span className="text-[7.5px] sm:text-[8px] text-[#1B3564]/60 uppercase tracking-widest font-extrabold">Starting at</span>
+              <span className="text-[7.5px] sm:text-[8px] text-[#1B3564]/60 uppercase tracking-widest font-extrabold">
+                {rateOnRequest ? "Rates" : "Starting at"}
+              </span>
               <span className="text-[#1B3564] text-xs sm:text-base font-black whitespace-nowrap">
-                ₹{id === "casa-de-reva" || id.includes("reva") || id.includes("terra")
-                  ? "16,000"
-                  : id === "lonavala-willow-peak" || id === "willow-peak" 
-                  ? "17,997" 
-                  : id.includes("cottage") 
-                  ? "4,999" 
-                  : price} <span className="text-[8px] sm:text-[10px] font-normal text-slate-500 font-sans">/ night {id.includes("cottage") ? "/ cottage" : ""}</span>
+                {rateOnRequest ? (
+                  "On request"
+                ) : (
+                  <>
+                    ₹{id === "casa-de-reva" || id.includes("reva") || id.includes("terra")
+                      ? "16,000"
+                      : id === "lonavala-willow-peak" || id === "willow-peak"
+                        ? "17,997"
+                        : id.includes("cottage")
+                          ? "4,999"
+                          : price}
+                    <span className="text-[8px] sm:text-[10px] font-normal text-slate-500 font-sans">
+                      / night {id.includes("cottage") ? "/ cottage" : ""}
+                    </span>
+                  </>
+                )}
               </span>
-              <span className="text-[7.5px] sm:text-[8px] text-amber-800/80 font-medium italic mt-0.5 block">
-                *Prices may vary due to demand
-              </span>
+              {!rateOnRequest && (
+                <span className="text-[7.5px] sm:text-[8px] text-amber-800/80 font-medium italic mt-0.5 block">
+                  *Prices may vary due to demand
+                </span>
+              )}
             </div>
             <span className="text-[8px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
               0% Fee
@@ -134,10 +150,10 @@ const VillaCard = ({
           {/* Action Button */}
           <div className="w-full">
             <Link
-              href={`/villa/${id}#booking-card-section`}
+              href={`${propertyPath}#booking-card-section`}
               className="w-full bg-gradient-to-r from-[#E0534C] via-[#E7625A] to-[#D9413A] hover:from-[#D9413A] hover:to-[#C9332C] text-white py-2.5 px-3 rounded-xl text-[11px] sm:text-xs font-black tracking-wider uppercase transition-all duration-200 flex items-center justify-center text-center shadow-[0_4px_15px_rgba(224,83,76,0.3)] hover:shadow-[0_6px_20px_rgba(224,83,76,0.45)] cursor-pointer active:scale-95 border border-white/20"
             >
-              Dates &amp; Rates
+              {rateOnRequest ? "Ask about Slatewood" : "Dates & Rates"}
             </Link>
           </div>
         </div>

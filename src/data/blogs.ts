@@ -3532,16 +3532,17 @@ export const blogsData: BlogPost[] = [
       }
     },
     {
-      "heading": "Coming Soon: Slatewood Estate with Private Sports Turf & Pool",
+      "heading": "Slatewood: A 3BHK Villa with Infinity Pool and Garden",
       "paragraphs": [
-        "Elevating the farmhouse concept even further, Stay Willas has recently announced <a href=\"/slatewood\" class=\"underline font-bold text-accent-primary\">Slatewood</a> — a brand-new architectural estate currently in its final stages of preparation in Maharashtra.",
-        "Slatewood redefines country leisure by pairing a massive private swimming pool with an exclusive floodlit sports turf designed for box cricket, futsal, and morning workouts. Stay tuned and register for launch privileges to be among the first through its doors."
+        "<a href=\"/villas/slatewood\" class=\"underline font-bold text-accent-primary\">Slatewood by Stay Willas</a> is a 3-bedroom private infinity pool villa set across a landscaped 1.5-acre estate, with a garden, lawn, gazebo and dedicated turf.",
+        "Its 14 × 22 ft infinity-edge pool has a depth of 4.5 ft. Inside, three air-conditioned bedrooms each have an attached bathroom, while the living hall has two air conditioners and a kitchenette."
       ],
       "list": [
-        "Private Olympic-proportioned swimming pool with sunken sun deck.",
-        "Enclosed all-weather sports turf with evening floodlighting for competitive matches.",
-        "Monolithic dark slate architecture complemented by warm teak timber accents.",
-        "Dedicated butler service and custom multi-course live grill dining."
+        "Three air-conditioned bedrooms, each with an attached bathroom.",
+        "A spacious living hall with two air conditioners and a kitchenette.",
+        "A 14 × 22 ft infinity-edge swimming pool, 4.5 ft deep.",
+        "A landscaped garden, lawn, gazebo and 6 × 35 ft turf.",
+        "Dedicated parking for 3–4 cars on the upper level."
       ]
     },
     {
@@ -3737,16 +3738,17 @@ export const blogsData: BlogPost[] = [
       ]
     },
     {
-      "heading": "Unveiling Slatewood: The Premier Villa with Private Sports Turf & Pool",
+      "heading": "Slatewood: A 3BHK Infinity Pool Villa with Garden and Turf",
       "paragraphs": [
-        "Leading this exciting new category of active luxury getaways is <a href=\"/slatewood\" class=\"underline font-bold text-accent-primary\">Slatewood</a> — the newest property announcement from Stay Willas. Purpose-built from the ground up for groups who love both high-energy competition and restorative poolside comfort, Slatewood introduces a first-of-its-kind amenity: an exclusive, championship-grade sports turf.",
-        "The private enclosed turf is fully equipped with high-perimeter safety netting and bright night floodlights, allowing you to host intense box cricket matches, five-a-side football, pickleball, and morning yoga sessions. Adjacent to the turf lies an Olympic-proportioned private swimming pool with sunken sun decks, allowing you to plunge straight into cool water after an exhilarating game."
+        "<a href=\"/villas/slatewood\" class=\"underline font-bold text-accent-primary\">Slatewood by Stay Willas</a> pairs three air-conditioned bedrooms and a spacious shared hall with a landscaped 1.5-acre estate. Outdoors, guests can enjoy the garden, lawn, gazebo and a dedicated 6 × 35 ft turf.",
+        "The private infinity-edge pool measures 14 × 22 ft and is 4.5 ft deep. The living hall has two air conditioners and a kitchenette; each bedroom has an attached bathroom."
       ],
       "list": [
-        "Private Enclosed Sports Turf: All-weather shock-absorbent synthetic turf for box cricket, futsal, and sports tournaments.",
-        "Full Night Floodlights: Play evening and late-night cricket matches under brilliant stadium-style illumination.",
-        "Large Private Swimming Pool: Deep swimming zone, shallow lounging ledge, and sunken wooden deck chairs.",
-        "Modern Slate & Timber Architecture: Sprawling open-plan living pavilions that open directly onto the turf and poolside lawns."
+        "Three air-conditioned bedrooms, each with an attached bathroom.",
+        "A large living hall with two air conditioners and a kitchenette.",
+        "A 14 × 22 ft private infinity-edge pool with a depth of 4.5 ft.",
+        "A landscaped garden and lawn, gazebo, butterfly-attracting plants and 6 × 35 ft turf.",
+        "Parking for 3–4 cars beside the villa on the upper level."
       ]
     },
     {
@@ -3791,11 +3793,11 @@ export const blogsData: BlogPost[] = [
         ],
         "rows": [
           [
-            "Slatewood (Coming Soon)",
-            "Maharashtra Hill Belt",
-            "Private floodlit sports turf (Box cricket/Futsal) + lawn",
-            "Olympic-proportioned private pool & sunken deck",
-            "16 to 20 Guests"
+            "Slatewood",
+            "Ask concierge",
+            "6 × 35 ft turf, garden & lawn",
+            "14 × 22 ft infinity-edge pool, 4.5 ft deep",
+            "Ask concierge"
           ],
           [
             "Canopy Crest",
@@ -3839,14 +3841,14 @@ export const blogsData: BlogPost[] = [
         "Common questions answered for planners of large family and group getaways:"
       ],
       "list": [
-        "What sports can we play on a private villa sports turf? The enclosed synthetic sports turf at Slatewood is designed for box cricket, mini-football (futsal), pickleball, dodgeball, and morning group fitness or yoga.",
-        "Are these big lawn villas suitable for corporate team offsites? Yes! Both Canopy Crest and Slatewood offer large indoor meeting spaces, high-speed Wi-Fi, and outdoor lawn space for team-building activities.",
+        "What outdoor spaces does Slatewood have? The 1.5-acre estate includes a landscaped garden and lawn, a gazebo, plants that attract butterflies, and a dedicated 6 × 35 ft turf.",
+        "What does the Slatewood pool offer? It is a private infinity-edge pool measuring 14 × 22 ft, with a depth of 4.5 ft.",
         "Can our pets play on the lawns? The Angle House is 100% pet-friendly with secure boundary walls, making it a paradise for four-legged family members.",
-        "How can I reserve a villa with big lawn or sports turf directly? Visit https://www.staywillas.com/slatewood or contact our group concierge on WhatsApp at +91 96190 42310 for dates and custom group quotes."
+        "How can I reserve a villa with big lawn or sports turf directly? Visit https://www.staywillas.com/villas/slatewood or contact our group concierge on WhatsApp at +91 96190 42310 for dates and custom group quotes."
       ]
     }
   ],
-  "conclusion": "From intense final-over box cricket matches on a floodlit private turf to slow afternoon conversations on a lush green lawn beside a private swimming pool, Stay Willas properties provide the ultimate backdrop for large groups. Discover your group's next big escape today.",
+  "conclusion": "From time together in a spacious villa to unhurried afternoons beside a private pool and garden, Stay Willas properties offer room for groups to slow down and enjoy a change of scene. Discover your group's next escape today.",
   "relatedVillaSlug": "canopy-crest",
   "featuredVillaSlugs": [
     "canopy-crest",

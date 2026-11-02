@@ -6,7 +6,14 @@ import { prisma } from "@/lib/db";
 import { verifySessionToken } from "@/lib/session";
 import AdminDashboard from "@/components/admin/admin-dashboard";
 import LoginForm from "@/components/auth/login-form";
-import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
+import {
+  NIEEVANT_SLUG,
+  nieevantVillaData,
+} from "@/data/nieevant-villa";
+import {
+  SLATEWOOD_SLUG,
+  slatewoodVillaData,
+} from "@/data/slatewood-villa";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard & Booking Operations | Stay Willas",
@@ -64,8 +71,19 @@ export default async function AdminPage() {
     }),
   ]);
 
+  const currentPropertyImages: Record<string, string[]> = {
+    [NIEEVANT_SLUG]: nieevantVillaData.images,
+    [SLATEWOOD_SLUG]: slatewoodVillaData.images,
+  };
+  const useCurrentPropertyPhotos = <T extends { slug: string; images: string[] }>(
+    villa: T,
+  ): T => ({
+    ...villa,
+    images: currentPropertyImages[villa.slug] ?? villa.images,
+  });
+
   // Sort dbVillas in memory to ensure priorities are at the top
-  const sortedVillas = [...dbVillas].sort((a, b) => {
+  const sortedVillas = dbVillas.map(useCurrentPropertyPhotos).sort((a, b) => {
     // 1st Priority
     if (a.slug === "the-angle-house" && b.slug !== "the-angle-house") return -1;
     if (b.slug === "the-angle-house" && a.slug !== "the-angle-house") return 1;
@@ -81,16 +99,24 @@ export default async function AdminPage() {
     // 4th Priority
     if (a.slug === "willow-peak" && b.slug !== "willow-peak") return -1;
     if (b.slug === "willow-peak" && a.slug !== "willow-peak") return 1;
+
+    // 5th Priority
+    if (a.slug === "slatewood" && b.slug !== "slatewood") return -1;
+    if (b.slug === "slatewood" && a.slug !== "slatewood") return 1;
     
     return 0;
   });
+  const bookingsWithCurrentPhotos = dbBookings.map((booking) => ({
+    ...booking,
+    villa: useCurrentPropertyPhotos(booking.villa),
+  }));
 
   // 3. Render the interactive, stunning administration panel
   return (
     <main className="min-h-screen bg-[#FDFBF7] text-slate-900 pt-24 pb-12 font-montserrat">
       <AdminDashboard 
         initialVillas={sortedVillas as any} 
-        initialBookings={dbBookings as any} 
+        initialBookings={bookingsWithCurrentPhotos as any}
         initialInquiries={dbInquiries as any}
         userEmail={userEmail}
       />

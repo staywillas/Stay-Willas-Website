@@ -2,6 +2,7 @@ import type { Villa } from "@prisma/client";
 import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 import { nieevantPhotos } from "@/data/nieevant-images";
 import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
+import { SLATEWOOD_PREVIEW_ID } from "@/data/slatewood-villa";
 
 export type PropertyPhoto = { src: string; alt: string };
 export type PropertySpace = PropertyPhoto & { title: string; text: string };
@@ -32,6 +33,7 @@ type PropertyCopy = {
 const angleBase = "/assets/villas/the-angle-house/";
 const willowBase = "/assets/villas/willow-peak/graded-v1/";
 const casaBase = "/assets/villas/terra-cotta-villa/";
+const slatewoodBase = "/assets/villas/slatewood/";
 
 const angle: PropertyCopy = {
   eyebrow: "3 BEDROOM PRIVATE POOL VILLA · KAMSHET NEAR LONAVALA",
@@ -309,22 +311,34 @@ const nieevant: PropertyCopy = {
   ],
   spaces: [
     {
-      title: "Pool and hilltop setting",
+      title: "A hilltop home",
       src: nieevantPhotos.hero.src,
       alt: nieevantPhotos.hero.alt,
-      text: "An aerial look at the villa, pool and green hills around it.",
+      text: "Aerial views of the villa and the green hills around it.",
     },
     {
-      title: "A hillside view",
+      title: "Open valley views",
       src: nieevantPhotos.hillside.src,
       alt: nieevantPhotos.hillside.alt,
-      text: "The villa sits above the surrounding green landscape in Khopoli.",
+      text: "The Khopoli landscape stretches out beyond the villa.",
     },
     {
-      title: "The surrounding grounds",
+      title: "Room to breathe outdoors",
       src: nieevantPhotos.grounds.src,
       alt: nieevantPhotos.grounds.alt,
-      text: "A wide view of the property and its open surroundings.",
+      text: "A closer look at the villa and the open space around it.",
+    },
+    {
+      title: "A home among the hills",
+      src: nieevantPhotos.villaView.src,
+      alt: nieevantPhotos.villaView.alt,
+      text: "See the villa from above, with wooded hills on every side.",
+    },
+    {
+      title: "Evening light over Nieevant",
+      src: nieevantPhotos.sunset.src,
+      alt: nieevantPhotos.sunset.alt,
+      text: "The villa takes on a warm glow as the sun sets over the hillside.",
     },
   ],
   highlights: [
@@ -354,7 +368,7 @@ const nieevant: PropertyCopy = {
   priceNote:
     "Listed from ₹19,999 per night plus taxes. Check with our team for the final rate and availability on your dates.",
   photoNote:
-    "Original property photographs supplied for Nieevant. They show the actual villa and are not AI-generated; we have applied a light colour grade and Stay Willas watermark.",
+    "Current aerial photographs of Nieevant and its surroundings, marked with the Stay Willas logo.",
   houseRulesNote:
     "Pets and events are allowed according to the current listing. Kitchen access is not included. Please confirm event arrangements, any additional charges and designated smoking areas with the team before arrival.",
 };
@@ -446,6 +460,99 @@ const casa: PropertyCopy = {
   ],
 };
 
+const slatewood: PropertyCopy = {
+  eyebrow: "3 BEDROOM PRIVATE INFINITY POOL VILLA",
+  summary:
+    "A private 3-bedroom villa on a landscaped 1.5-acre estate, with an infinity-edge pool, garden, lawn and gazebo.",
+  intro:
+    "Slatewood by Stay Willas is a private 3-bedroom villa set across a landscaped 1.5-acre estate. Each air-conditioned bedroom has an attached bathroom, and the shared living hall has two air conditioners and a kitchenette.",
+  detail:
+    "Spend time by the 14 × 22 ft infinity-edge pool, take a quiet break in the gazebo, or enjoy the garden, lawn and dedicated 6 × 35 ft turf. The pool is 4.5 ft deep, and parking for 3–4 cars is available on the upper level.",
+  locationName: "Location shared by concierge",
+  directions:
+    "Ask the concierge for the exact address and arrival pin when planning your stay.",
+  mapUrl:
+    "https://wa.me/919619042310?text=Hi%20Stay%20Willas%2C%20please%20share%20Slatewood%27s%20location%20and%20arrival%20details.",
+  featured: [
+    {
+      src: `${slatewoodBase}slatewood-exterior-evening.webp`,
+      alt: "Slatewood's red-roofed villa and covered outdoor area in evening light",
+    },
+    {
+      src: `${slatewoodBase}slatewood-estate-aerial.webp`,
+      alt: "Aerial view of Slatewood, its infinity pool and outdoor grounds",
+    },
+    {
+      src: `${slatewoodBase}slatewood-living-room.webp`,
+      alt: "The wide living room at Slatewood, arranged for time together",
+    },
+  ],
+  spaces: [
+    {
+      title: "A generous living hall",
+      src: `${slatewoodBase}slatewood-living-room.webp`,
+      alt: "The spacious shared living hall at Slatewood",
+      text: "A comfortable place to gather, with two air conditioners and a kitchenette.",
+    },
+    {
+      title: "Three private bedrooms",
+      src: `${slatewoodBase}slatewood-bedroom-window.webp`,
+      alt: "A Slatewood bedroom with a broad window looking out to greenery",
+      text: "Each air-conditioned bedroom has its own attached bathroom.",
+    },
+    {
+      title: "The infinity-edge pool",
+      src: `${slatewoodBase}slatewood-infinity-pool.webp`,
+      alt: "The private infinity-edge pool at Slatewood",
+      text: "A 14 × 22 ft pool with a depth of 4.5 ft.",
+    },
+    {
+      title: "A garden gazebo",
+      src: `${slatewoodBase}slatewood-garden-gazebo.webp`,
+      alt: "Garden gazebo and landscaped outdoor space at Slatewood",
+      text: "Enjoy the garden, lawn and gazebo among plants that attract butterflies.",
+    },
+    {
+      title: "A relaxed dining area",
+      src: `${slatewoodBase}slatewood-dining.webp`,
+      alt: "The dining space inside Slatewood",
+      text: "A comfortable shared space for meals and unhurried conversations.",
+    },
+    {
+      title: "A convenient kitchenette",
+      src: `${slatewoodBase}slatewood-kitchenette.webp`,
+      alt: "Slatewood's kitchenette with counter space and a gas stove",
+      text: "A compact kitchenette sits just off the living area.",
+    },
+  ],
+  photoNote:
+    "Updated photographs of Slatewood's rooms and grounds, each marked with the Stay Willas logo.",
+  highlights: [
+    {
+      icon: "pool",
+      title: "An infinity-edge pool",
+      text: "14 × 22 ft, with a depth of 4.5 ft.",
+    },
+    {
+      icon: "garden",
+      title: "Garden, lawn and gazebo",
+      text: "Green spaces across a gently sloping 1.5-acre estate.",
+    },
+    {
+      icon: "access",
+      title: "A dedicated turf",
+      text: "A 6 × 35 ft outdoor turf area.",
+    },
+    {
+      icon: "view",
+      title: "Private parking",
+      text: "Space for 3–4 cars beside the villa on the upper level.",
+    },
+  ],
+  houseRulesNote:
+    "Ask the concierge to confirm any property-specific house rules before arrival.",
+};
+
 export const willowUnits = [
   {
     selection: "A",
@@ -486,14 +593,26 @@ export function getPropertyEditorial(villa: Villa) {
           ? canopy
           : villa.slug === NIEEVANT_SLUG
             ? nieevant
-          : ["casa-de-reva", "terra-cotta-villa"].includes(villa.slug)
-            ? casa
-            : null;
-  const areaName = villa.location.includes("Khopoli")
-    ? "Khopoli"
-    : villa.location.includes("Panchgani")
-      ? "Panchgani"
-      : "Lonavala";
+            : villa.slug === "slatewood"
+              ? slatewood
+              : ["casa-de-reva", "terra-cotta-villa"].includes(villa.slug)
+                ? casa
+                : null;
+  const isSlatewoodPreview = villa.id === SLATEWOOD_PREVIEW_ID;
+  const isSlatewoodLocationOnRequest =
+    villa.slug === "slatewood" &&
+    /^(location shared by (the )?concierge|location on request)$/i.test(villa.location.trim());
+  const areaName = isSlatewoodPreview
+    ? "All villas"
+    : villa.slug === "slatewood"
+      ? isSlatewoodLocationOnRequest
+        ? "All villas"
+        : villa.location.split(",").slice(-2, -1)[0]?.trim() || "All villas"
+      : villa.location.includes("Khopoli")
+        ? "Khopoli"
+        : villa.location.includes("Panchgani")
+          ? "Panchgani"
+          : "Lonavala";
   const hasPool = villa.amenities.some((amenity) => /pool/i.test(amenity));
   const hasJacuzzi = villa.amenities.some((amenity) =>
     /jacuzzi/i.test(amenity),
@@ -537,7 +656,7 @@ export function getPropertyEditorial(villa: Villa) {
     },
     {
       question: "How many people can stay?",
-      answer: `${name} accommodates up to ${villa.guests} guests, with ${villa.bedrooms} ${villa.bedrooms === 1 ? "bedroom" : "bedrooms"} and ${villa.bathrooms} ${villa.bathrooms === 1 ? "bathroom" : "bathrooms"}. Confirm any extra-person charges in your final quote.`,
+      answer: `${name} accommodates up to ${villa.guests} guests, with ${villa.bedrooms} ${villa.bedrooms === 1 ? "bedroom" : "bedrooms"} and ${villa.bathrooms} ${villa.bathrooms === 1 ? "bathroom" : "bathrooms"}. The base rate includes up to ${villa.baseGuests} guests; each additional guest is ₹${villa.extraGuestFee.toLocaleString("en-IN")} per night.`,
     },
     ...(villa.slug === NIEEVANT_SLUG
       ? [
@@ -608,7 +727,7 @@ export function getPropertyEditorial(villa: Villa) {
         ? "Pets are allowed according to the current listing. Let the booking team know before arrival and confirm any requirements for your stay."
         : "Please confirm the pet policy and any house rules for your selected property with the booking team before reserving.",
     },
-    ...(!cottage
+    ...(!cottage && villa.slug !== "slatewood"
       ? [
           {
             question: "How does the weekday offer work?",
@@ -619,7 +738,9 @@ export function getPropertyEditorial(villa: Villa) {
       : []),
     {
       question: "What are the check-in and check-out times?",
-      answer: villa.slug === NIEEVANT_SLUG
+      answer: villa.slug === "slatewood"
+        ? "Ask the concierge to confirm the check-in and check-out times for your reservation."
+        : villa.slug === NIEEVANT_SLUG
         ? `Check-in is from ${checkInTime} and check-out is by ${checkOutTime}. Early check-in or late check-out is subject to availability and may have an additional charge.`
         : `Check-in is from ${checkInTime} and check-out is by ${checkOutTime}. Early arrival or late departure needs advance confirmation and is subject to availability.`,
     },
@@ -627,8 +748,20 @@ export function getPropertyEditorial(villa: Villa) {
   return {
     ...resolved,
     name,
+    locationName:
+      villa.slug === "slatewood"
+        ? isSlatewoodLocationOnRequest
+          ? "Location shared by concierge"
+          : villa.location.split(",")[0].trim()
+        : resolved.locationName,
+    mapUrl:
+      villa.slug === "slatewood" && !isSlatewoodLocationOnRequest
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${villa.name} ${villa.location}`)}`
+        : resolved.mapUrl,
     areaName,
-    areaUrl: `/areas/${areaName.toLowerCase()}`,
+    areaUrl: isSlatewoodPreview || villa.slug === "slatewood"
+      ? "/villas"
+      : `/areas/${areaName.toLowerCase()}`,
     isWillow,
     cottage,
     hasPool,

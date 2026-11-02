@@ -339,7 +339,11 @@ const AdminDashboard = ({
       const selectedVilla = villas.find(v => v.id === newBookingVillaId);
       if (selectedVilla) {
         setNewBookingNightlyRate(selectedVilla.price);
-        setNewBookingGuests(selectedVilla.guests || 1);
+        setNewBookingGuests(
+          selectedVilla.slug === "slatewood"
+            ? selectedVilla.baseGuests || 6
+            : selectedVilla.guests || 1,
+        );
       }
     }
   }, [newBookingVillaId, villas]);
@@ -1982,9 +1986,14 @@ const AdminDashboard = ({
                       <input
                         type="number"
                         value={newBookingGuests || ""}
-                        onChange={(e) => setNewBookingGuests(parseInt(e.target.value) || 1)}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value) || 1;
+                          const isSlatewoodGuestBooking = newBookingType === "GUEST" && villas.find(v => v.id === newBookingVillaId)?.slug === "slatewood";
+                          setNewBookingGuests(isSlatewoodGuestBooking ? Math.min(12, Math.max(6, value)) : value);
+                        }}
                         required
-                        min="1"
+                        min={newBookingType === "GUEST" && villas.find(v => v.id === newBookingVillaId)?.slug === "slatewood" ? 6 : 1}
+                        max={villas.find(v => v.id === newBookingVillaId)?.slug === "slatewood" ? 12 : undefined}
                         placeholder="e.g. 4"
                         className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold outline-none focus:border-slate-800"
                       />

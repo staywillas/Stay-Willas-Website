@@ -3,6 +3,10 @@ export type GuestPricing = {
   extraGuestFee: number;
 };
 
+export function getGuestMinimum(slug: string): number {
+  return slug === "slatewood" ? 6 : 1;
+}
+
 /**
  * Keep the two signed-off property policies compatible with existing seeded
  * data while allowing an intentional admin edit to remain the source of truth.

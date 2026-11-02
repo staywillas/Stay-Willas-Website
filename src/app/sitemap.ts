@@ -76,7 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
     },
     {
-      url: `${BASE_URL}/slatewood`,
+      url: `${BASE_URL}/villas/slatewood`,
       changeFrequency: "weekly",
       priority: 0.85,
     },

@@ -79,7 +79,7 @@ export default function VillasBrowser({ initialVillas, initialRegion = "", initi
       if (filters.region && !villa.location.toLowerCase().includes(filters.region.toLowerCase())) return false;
       if (filters.category && villa.category.toLowerCase() !== filters.category.toLowerCase()) return false;
       if (filters.minPrice !== "" && villa.priceRaw < Number(filters.minPrice)) return false;
-      if (filters.maxPrice !== "" && villa.priceRaw > Number(filters.maxPrice)) return false;
+      if (filters.maxPrice !== "" && (villa.priceRaw <= 0 || villa.priceRaw > Number(filters.maxPrice))) return false;
       if (filters.guests && villa.guests < Number(filters.guests)) return false;
       if (filters.bedrooms === "5" ? villa.bedrooms < 5 : filters.bedrooms !== "" && villa.bedrooms !== Number(filters.bedrooms)) return false;
       return filters.amenities.every(selected => {
@@ -87,8 +87,16 @@ export default function VillasBrowser({ initialVillas, initialRegion = "", initi
         return option && villa.amenities.some(amenity => option.keywords.some(keyword => amenity.toLowerCase().includes(keyword)));
       });
     });
-    if (sort === "price-low") matches.sort((a, b) => a.priceRaw - b.priceRaw);
-    if (sort === "price-high") matches.sort((a, b) => b.priceRaw - a.priceRaw);
+    if (sort === "price-low") matches.sort((a, b) => {
+      if (a.priceRaw <= 0) return b.priceRaw <= 0 ? 0 : 1;
+      if (b.priceRaw <= 0) return -1;
+      return a.priceRaw - b.priceRaw;
+    });
+    if (sort === "price-high") matches.sort((a, b) => {
+      if (a.priceRaw <= 0) return b.priceRaw <= 0 ? 0 : 1;
+      if (b.priceRaw <= 0) return -1;
+      return b.priceRaw - a.priceRaw;
+    });
     return matches;
   }, [initialVillas, filters, sort]);
 

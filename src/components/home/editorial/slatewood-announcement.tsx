@@ -220,7 +220,7 @@ export default function SlatewoodAnnouncement() {
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Link
-              href="/slatewood"
+              href="/villas/slatewood"
               className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-xs tracking-wider uppercase transition-all shadow-md text-center w-full sm:w-auto"
               style={{
                 background: "#daa520",

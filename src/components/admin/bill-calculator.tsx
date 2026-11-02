@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { sendInvoiceEmailAction } from "@/app/actions/admin";
 import { STAY_WILLAS_EMBLEM_PNG_DATA_URL } from "@/lib/pdf-logo";
+import { getGuestMinimum, getGuestPricing } from "@/lib/guest-pricing";
 
 interface Villa {
   id: string;
@@ -35,6 +36,7 @@ interface Villa {
   name: string;
   location: string;
   price: number;
+  guests: number;
   baseGuests?: number | null;
   extraGuestFee?: number | null;
   bedrooms: number;
@@ -135,6 +137,12 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
   const [foodGstPercent, setFoodGstPercent] = useState<number>(0);
   const [foodAppliedToInvoice, setFoodAppliedToInvoice] = useState(false);
   const [copiedFood, setCopiedFood] = useState(false);
+
+  const selectedVilla = villas.find((villa) => villa.slug === selectedVillaSlug);
+  const guestMinimum = selectedVilla ? getGuestMinimum(selectedVilla.slug) : 1;
+  const guestPricing = selectedVilla
+    ? getGuestPricing(selectedVilla.slug, selectedVilla.baseGuests, selectedVilla.extraGuestFee, selectedVilla.guests)
+    : null;
 
   // Helper to format date label for a given night (0-indexed)
   const getNightDateLabel = (index: number) => {
@@ -301,14 +309,20 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
   const numNights = nights > 0 ? nights : 1;
   const numGuestsCount = typeof guestsCount === "number" ? guestsCount : 0;
 
-  // Total Stay Tariff: sum of each night's rate entered by user (No extra guest fee per request)
+  // Total Stay Tariff: sum of each night's rate entered by user
   const totalStayCost = nightRates.reduce<number>((sum, r) => sum + (typeof r === "number" ? r : 0), 0);
+  const extraGuestCount = guestPricing ? Math.max(0, numGuestsCount - guestPricing.includedGuests) : 0;
+  const totalExtraGuestsCost = selectedVilla?.slug === "slatewood"
+    ? extraGuestCount * (guestPricing?.extraGuestFee || 0) * numNights
+    : 0;
 
   // Total Food Tariff in Invoice
   const totalInvoiceFoodCost = typeof invoiceFoodCost === "number" ? invoiceFoodCost : 0;
 
   // Total Extras
-  const totalExtrasCost = extraCharges.reduce((acc, curr) => acc + curr.amount, 0);
+  const manualInvoiceExtraCharges = extraCharges.filter((charge) => charge.id !== "additional-guest-surcharge");
+  const manualExtrasCost = manualInvoiceExtraCharges.reduce((acc, curr) => acc + curr.amount, 0);
+  const totalExtrasCost = manualExtrasCost + totalExtraGuestsCost;
 
   // Subtotal before discount
   const subtotalBeforeDiscount = totalStayCost + totalInvoiceFoodCost + totalExtrasCost;
@@ -426,8 +440,9 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
       `🏠 *Stay Tariff (${numNights} Night${numNights > 1 ? "s" : ""}):*\n` +
       nightRates.map((r, i) => `   • ${getNightDateLabel(i)}: Rs. ${typeof r === "number" ? r.toLocaleString("en-IN") : "0"}`).join("\n") +
       `\n   *Total Stay Tariff:* Rs. ${totalStayCost.toLocaleString("en-IN")}\n` +
+      (totalExtraGuestsCost > 0 ? `👥 *Additional Guest Charges (${extraGuestCount} × Rs. ${guestPricing?.extraGuestFee.toLocaleString("en-IN")} × ${numNights} nights):* Rs. ${totalExtraGuestsCost.toLocaleString("en-IN")}\n` : "") +
       (totalInvoiceFoodCost > 0 ? `🍽️ *Food / Catering:* Rs. ${totalInvoiceFoodCost.toLocaleString("en-IN")}${invoiceFoodNote ? ` (${invoiceFoodNote})` : ""}\n` : "") +
-      (totalExtrasCost > 0 ? `✨ *Add-ons & Extras:* Rs. ${totalExtrasCost.toLocaleString("en-IN")}\n` : "") +
+      (manualExtrasCost > 0 ? `✨ *Add-ons & Extras:* Rs. ${manualExtrasCost.toLocaleString("en-IN")}\n` : "") +
       `• *Gross Subtotal:* Rs. ${subtotalBeforeDiscount.toLocaleString("en-IN")}\n` +
       (totalDiscount > 0 ? `🎁 *Discount:* - Rs. ${totalDiscount.toLocaleString("en-IN")}\n` : "") +
       (activeGstPercent > 0 ? `🏛️ *GST (${activeGstPercent}%):* Rs. ${gstAmount.toLocaleString("en-IN")}\n` : "") +
@@ -762,7 +777,16 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
         );
       }
 
-      extraCharges.forEach((c) => {
+      if (totalExtraGuestsCost > 0) {
+        drawTableRow(
+          `Additional guests (${extraGuestCount} x ${numNights} nights)`,
+          `${extraGuestCount} Pax`,
+          `Rs. ${guestPricing?.extraGuestFee.toLocaleString("en-IN")} / night`,
+          `Rs. ${totalExtraGuestsCost.toLocaleString("en-IN")}`
+        );
+      }
+
+      manualInvoiceExtraCharges.forEach((c) => {
         drawTableRow(c.description, `Add-on`, `Rs. ${c.amount.toLocaleString("en-IN")}`, `Rs. ${c.amount.toLocaleString("en-IN")}`);
       });
 
@@ -1008,7 +1032,13 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   <label className="text-xs font-semibold text-slate-700 block mb-1.5">Select Villa Property</label>
                   <select
                     value={selectedVillaSlug}
-                    onChange={(e) => setSelectedVillaSlug(e.target.value)}
+                    onChange={(e) => {
+                      const slug = e.target.value;
+                      setSelectedVillaSlug(slug);
+                      if (slug === "slatewood") {
+                        setGuestsCount((current) => typeof current === "number" && current >= 6 ? Math.min(12, current) : 6);
+                      }
+                    }}
                     className="w-full text-xs border border-slate-200 rounded-xl px-4 py-3 bg-[#FAF8F5] focus:bg-white focus:outline-none focus:border-[#1B3564] font-medium text-slate-900"
                   >
                     <option value="">-- Choose Villa Property --</option>
@@ -1101,12 +1131,25 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   <label className="text-[11px] font-semibold text-slate-700 block mb-1">Total Guests (Pax Count)</label>
                   <input
                     type="number"
-                    min={1}
+                    min={selectedVilla?.slug === "slatewood" ? guestMinimum : 1}
+                    max={selectedVilla?.slug === "slatewood" ? selectedVilla.guests : undefined}
                     placeholder="e.g. 12"
                     value={guestsCount}
-                    onChange={(e) => setGuestsCount(e.target.value === "" ? "" : Math.max(1, Number(e.target.value)))}
+                    onChange={(e) => {
+                      if (e.target.value === "") {
+                        setGuestsCount("");
+                        return;
+                      }
+                      const nextCount = Number(e.target.value);
+                      setGuestsCount(selectedVilla?.slug === "slatewood"
+                        ? Math.min(selectedVilla.guests, Math.max(guestMinimum, nextCount))
+                        : Math.max(1, nextCount));
+                    }}
                     className="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-[#FAF8F5] focus:bg-white focus:outline-none font-bold"
                   />
+                  {selectedVilla?.slug === "slatewood" && guestPricing && (
+                    <p className="text-[11px] text-slate-500 mt-1">6 guest minimum; base rate includes 6. Additional guests are ₹{guestPricing.extraGuestFee.toLocaleString("en-IN")} each per night, up to 12.</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -1192,6 +1235,9 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   ₹{totalStayCost.toLocaleString("en-IN")}
                 </span>
               </div>
+              {selectedVilla?.slug === "slatewood" && guestPricing && (
+                <p className="text-[11px] text-slate-500">Base rate includes {guestPricing.includedGuests} guests. Additional guests: ₹{guestPricing.extraGuestFee.toLocaleString("en-IN")} per person, per night.</p>
+              )}
             </div>
 
             {/* 4. Food & Catering Options */}
@@ -1445,10 +1491,17 @@ export default function BillCalculator({ villas, prefillData }: BillCalculatorPr
                   </div>
                 )}
 
-                {totalExtrasCost > 0 && (
+                {totalExtraGuestsCost > 0 && (
+                  <div className="flex justify-between text-slate-600">
+                    <span>Additional guest charges:</span>
+                    <span className="font-bold text-slate-900">₹{totalExtraGuestsCost.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
+
+                {manualExtrasCost > 0 && (
                   <div className="flex justify-between text-slate-600">
                     <span>Add-ons & Extras:</span>
-                    <span className="font-bold text-slate-900">₹{totalExtrasCost.toLocaleString("en-IN")}</span>
+                    <span className="font-bold text-slate-900">₹{manualExtrasCost.toLocaleString("en-IN")}</span>
                   </div>
                 )}
 

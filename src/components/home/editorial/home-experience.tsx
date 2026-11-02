@@ -77,7 +77,7 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
 
     <section className={styles.hero} aria-label="Find your next villa escape">
       <div className={styles.heroVisual}>
-        <PhotoFrame src={canopyCrestPhotos.hero.src} alt={canopyCrestPhotos.hero.alt} fill sizes="100vw" preload className={styles.heroImage} />
+        <PhotoFrame src={nieevantPhotos.hero.src} alt={nieevantPhotos.hero.alt} fill sizes="100vw" preload className={styles.heroImage} />
       </div>
       <div className={styles.heroShade} />
       <div className={styles.heroContent}>
@@ -94,14 +94,14 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
         {error && <p role="alert" className={styles.searchError}>{error}</p>}
         <div className={styles.heroNote}><span><Check size={13} /> Book direct, with no platform fee</span><span><Leaf size={13} /> Handpicked homes in Maharashtra</span></div>
         <Link
-          href="/slatewood"
+          href="/villas/slatewood"
           className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-[#f5df9e] border border-amber-300/30 text-xs font-medium backdrop-blur-md transition-all shadow-lg hover:scale-105"
         >
           <span className="w-2 h-2 rounded-full bg-[#daa520] shrink-0 animate-pulse" />
-          <span>New Property Announcement: <strong>Slatewood</strong> with Pool &amp; Turf — Coming Soon &rarr;</span>
+          <span>Meet <strong>Slatewood by Stay Willas</strong> · 3BHK infinity pool villa on a 1.5-acre estate &rarr;</span>
         </Link>
       </div>
-      <div className={styles.heroBottom}><a href="#slow-days">A little inspiration <ArrowDown size={15} /></a><Link href="/villa/canopy-crest">Canopy Crest · Khopoli <ArrowUpRight size={14} /></Link></div>
+      <div className={styles.heroBottom}><a href="#slow-days">A little inspiration <ArrowDown size={15} /></a><Link href="/villa/nieevant-by-stay-willas">Nieevant · Khopoli <ArrowUpRight size={14} /></Link></div>
     </section>
 
     <WeekdayCarousel />
@@ -112,10 +112,10 @@ export default function HomeExperience({ villas, children }: { villas: Villa[]; 
       <p>Discover handpicked pool villas and Jacuzzi cottages near Mumbai and Pune. From Lonavala and Khopoli to the hills of Panchgani, find a little more space for the people you love.</p>
       <nav className={styles.quickLinks} aria-label="Explore this page">
         <Link
-          href="/slatewood"
+          href="/villas/slatewood"
           style={{ borderColor: "#daa520", background: "#fffdf5", fontWeight: 600, color: "#1b3564" }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#daa520] inline-block mr-1.5" /> Slatewood (Coming Soon)
+          <span className="w-1.5 h-1.5 rounded-full bg-[#daa520] inline-block mr-1.5" /> Slatewood by Stay Willas · 3BHK villa
         </Link>
         <a href="#jacuzzi-villas">Jacuzzi stays <ArrowDown size={14} /></a>
         <a href="#pool-villas">Private pool villas <ArrowDown size={14} /></a>

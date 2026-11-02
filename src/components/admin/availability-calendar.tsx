@@ -1,7 +1,7 @@
 "use client";
 
 import { encodeWhatsAppMessage } from "@/lib/whatsapp";
-import { getGuestPricing } from "@/lib/guest-pricing";
+import { getGuestMinimum, getGuestPricing } from "@/lib/guest-pricing";
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { 
@@ -219,7 +219,13 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     const villa = villas.find((v) => v.id === selectedVillaId);
     if (villa) {
       const isWillow = villa.slug === "willow-peak";
-      if (guestCount < 1) {
+      const minimumGuests = getGuestMinimum(villa.slug);
+      const maximumGuests = villa.slug === "slatewood" ? villa.guests || 12 : 60;
+      if (villa.slug === "slatewood" && (guestCount < minimumGuests || guestCount > maximumGuests)) {
+        const defaultGuests = Math.min(maximumGuests, Math.max(minimumGuests, villa.baseGuests || minimumGuests));
+        setGuestCount(defaultGuests);
+        setFoodGuestsCount(defaultGuests);
+      } else if (guestCount < 1) {
         setGuestCount(villa.guests || 2);
         setFoodGuestsCount(villa.guests || 2);
       }
@@ -277,16 +283,24 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
   };
 
   // Financial Calculations
-  const isWillowSelected = villas.find((v) => v.id === selectedVillaId)?.slug === "willow-peak";
+  const selectedVilla = villas.find((v) => v.id === selectedVillaId);
+  const isWillowSelected = selectedVilla?.slug === "willow-peak";
+  const isSlatewoodSelected = selectedVilla?.slug === "slatewood";
+  const guestMinimum = selectedVilla && modalMode === "GUEST_BOOKING" ? getGuestMinimum(selectedVilla.slug) : 1;
+  const guestMaximum = isSlatewoodSelected || isWillowSelected ? selectedVilla?.guests || 12 : 60;
+  const guestPricing = selectedVilla
+    ? getGuestPricing(selectedVilla.slug, selectedVilla.baseGuests, selectedVilla.extraGuestFee, selectedVilla.guests)
+    : null;
 
-  // Total Stay Tariff (Sum of each night rate, no extra guest fee per request)
+  // Total Stay Tariff (Sum of each night rate)
   const totalStayCost = modalMode === "GUEST_BOOKING"
     ? nightRates.reduce<number>((sum, r) => sum + (typeof r === "number" ? r : 0), 0)
     : 0;
 
-  // No separate guest fee
-  const totalExtraGuestsCost = 0;
-  const extraGuestsCost = 0;
+  const extraGuestCount = guestPricing ? Math.max(0, guestCount - guestPricing.includedGuests) : 0;
+  const totalExtraGuestsCost = modalMode === "GUEST_BOOKING" && isSlatewoodSelected && guestPricing
+    ? extraGuestCount * guestPricing.extraGuestFee * nights
+    : 0;
 
   // Total Food Cost
   const totalFoodCost = modalMode === "GUEST_BOOKING" && foodPlan !== "none" 
@@ -294,9 +308,20 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
     : 0;
 
   // Total Extras
-  const totalExtrasCost = modalMode === "GUEST_BOOKING" 
-    ? extraCharges.reduce((acc, curr) => acc + curr.amount, 0) 
+  const manualExtrasCost = modalMode === "GUEST_BOOKING"
+    ? extraCharges.reduce((acc, curr) => acc + curr.amount, 0)
     : 0;
+  const totalExtrasCost = manualExtrasCost + totalExtraGuestsCost;
+  const bookingExtraCharges: ExtraCharge[] = modalMode === "GUEST_BOOKING" && totalExtraGuestsCost > 0
+    ? [
+        ...extraCharges,
+        {
+          id: "additional-guest-surcharge",
+          description: `Additional guests (${extraGuestCount} × ₹${guestPricing?.extraGuestFee.toLocaleString("en-IN")} × ${nights} nights)`,
+          amount: totalExtraGuestsCost,
+        },
+      ]
+    : extraCharges;
 
   // Subtotal before discount
   const subtotalBeforeDiscount = totalStayCost + totalFoodCost + totalExtrasCost;
@@ -407,8 +432,12 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
     const villa = villas.find((v) => v.id === targetVillaId);
     if (villa) {
-      setGuestCount(villa.guests || 2);
-      setFoodGuestsCount(villa.guests || 2);
+      const minimumGuests = getGuestMinimum(villa.slug);
+      const defaultGuests = villa.slug === "slatewood"
+        ? Math.min(villa.guests || 12, Math.max(minimumGuests, villa.baseGuests || minimumGuests))
+        : villa.guests || 2;
+      setGuestCount(defaultGuests);
+      setFoodGuestsCount(defaultGuests);
     }
     setNightRates([""]);
 
@@ -553,7 +582,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
       const targetFoodRate = customBookingData?.foodRate || foodRatePerPersonPerDay;
       const targetFoodGuests = customBookingData?.foodGuests || foodGuestsCount;
       const targetTotalFoodCost = customBookingData?.totalFoodCost !== undefined ? customBookingData.totalFoodCost : totalFoodCost;
-      const targetExtras: ExtraCharge[] = customBookingData?.extraCharges || extraCharges;
+      const targetExtras: ExtraCharge[] = customBookingData?.extraCharges || bookingExtraCharges;
       const targetSubtotalBeforeDiscount = customBookingData?.subtotalBeforeDiscount !== undefined ? customBookingData.subtotalBeforeDiscount : subtotalBeforeDiscount;
       const targetTotalDiscount = customBookingData?.totalDiscount !== undefined ? customBookingData.totalDiscount : totalDiscount;
       const targetSubtotal = customBookingData?.subtotal !== undefined ? customBookingData.subtotal : subtotal;
@@ -943,7 +972,7 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
         foodRatePerPersonPerDay,
         foodGuestsCount,
         foodTotal: totalFoodCost,
-        extraCharges,
+        extraCharges: bookingExtraCharges,
         discountFlat,
         discountPercent,
         discountTotal: totalDiscount,
@@ -1536,15 +1565,18 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
 
                       <div>
                         <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 font-bold">
-                          Guest Count (Pax) {isWillowSelected ? "(Max 12)" : "*"}
+                          Guest Count (Pax) {isSlatewoodSelected ? "(6–12 guests)" : isWillowSelected ? "(Max 12)" : "*"}
                         </label>
                         <input
                           type="number"
-                          min="1"
-                          max={isWillowSelected ? 12 : 60}
+                          min={guestMinimum}
+                          max={guestMaximum}
                           value={guestCount}
                           onChange={(e) => {
-                            const val = Number(e.target.value) || 1;
+                            const rawValue = Number(e.target.value) || guestMinimum;
+                            const val = isSlatewoodSelected || isWillowSelected
+                              ? Math.min(guestMaximum, Math.max(guestMinimum, rawValue))
+                              : rawValue;
                             setGuestCount(val);
                             setFoodGuestsCount(val);
                             if (isWillowSelected) {
@@ -1695,6 +1727,11 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       <span className="text-slate-600 font-medium">Total Stay Accommodation Tariff:</span>
                       <span className="text-base font-black text-[#1B3564]">₹{totalStayCost.toLocaleString("en-IN")}</span>
                     </div>
+                    {isSlatewoodSelected && guestPricing && (
+                      <p className="text-[11px] text-slate-500">
+                        Includes {guestPricing.includedGuests} guests. Additional guests: ₹{guestPricing.extraGuestFee.toLocaleString("en-IN")} per guest, per night.
+                      </p>
+                    )}
                   </div>
 
                   {/* Section 4: Dining & Catering Packages */}
@@ -1937,10 +1974,17 @@ export default function AvailabilityCalendar({ villas, bookings, onBookingsChang
                       </div>
                     )}
 
-                    {totalExtrasCost > 0 && (
+                    {totalExtraGuestsCost > 0 && (
+                      <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
+                        <span>Additional Guests ({extraGuestCount} × {nights} nights):</span>
+                        <span className="font-bold text-white">₹{totalExtraGuestsCost.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+
+                    {manualExtrasCost > 0 && (
                       <div className="flex justify-between items-center text-xs text-slate-300 border-b border-white/10 pb-2">
                         <span>Add-ons & Extras:</span>
-                        <span className="font-bold text-white">₹{totalExtrasCost.toLocaleString("en-IN")}</span>
+                        <span className="font-bold text-white">₹{manualExtrasCost.toLocaleString("en-IN")}</span>
                       </div>
                     )}
 

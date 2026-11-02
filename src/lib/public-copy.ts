@@ -30,6 +30,7 @@ export function normalizePublicCopy(value: string, slug?: string): string {
 
 export function publicVillaName(slug: string, name: string): string {
   if (slug === "willow-peak") return "Willow Peak";
+  if (slug === "slatewood") return "Slatewood by Stay Willas";
   return normalizePublicCopy(name, slug);
 }
 

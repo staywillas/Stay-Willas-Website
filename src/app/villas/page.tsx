@@ -12,6 +12,11 @@ import {
 import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 import { nieevantPhotos } from "@/data/nieevant-images";
 import { NIEEVANT_SLUG, withNieevantFallback } from "@/data/nieevant-villa";
+import {
+  SLATEWOOD_PREVIEW_ID,
+  slatewoodVillaData,
+  withSlatewoodFallback,
+} from "@/data/slatewood-villa";
 
 export const revalidate = 86400; // Refresh daily; admin updates trigger on-demand revalidation.
 
@@ -54,13 +59,13 @@ export default async function VillasPage() {
   const savedVillas = await prisma.villa.findMany({
     orderBy: { createdAt: "desc" },
   });
-  const allVillas = withNieevantFallback(savedVillas);
+  const allVillas = withSlatewoodFallback(withNieevantFallback(savedVillas));
 
   // All properties are live
   const hiddenSlugs: string[] = [];
 
   // Prioritize signature properties
-  const prioritySlugs = ["the-angle-house", "canopy-crest", NIEEVANT_SLUG, "casa-de-reva", "willow-peak"];
+  const prioritySlugs = ["the-angle-house", "canopy-crest", NIEEVANT_SLUG, "casa-de-reva", "willow-peak", "slatewood"];
   const prioritized = allVillas
     .filter((v) => prioritySlugs.includes(v.slug))
     .sort((a, b) => prioritySlugs.indexOf(a.slug) - prioritySlugs.indexOf(b.slug));
@@ -72,10 +77,10 @@ export default async function VillasPage() {
     id: villa.id,
     slug: villa.slug,
     name: publicVillaName(villa.slug, villa.name),
-    location: villa.location,
+    location: villa.id === SLATEWOOD_PREVIEW_ID ? "Location on request" : villa.location,
     priceRaw: villa.price,
-    priceFormatted: villa.price.toLocaleString("en-IN"),
-    image: villa.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : villa.slug === NIEEVANT_SLUG ? nieevantPhotos.hero.src : villa.images[0] || (
+    priceFormatted: villa.price > 0 ? villa.price.toLocaleString("en-IN") : "",
+    image: villa.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : villa.slug === NIEEVANT_SLUG ? nieevantPhotos.hero.src : villa.slug === "slatewood" ? slatewoodVillaData.images[0] : villa.images[0] || (
       villa.slug === "the-angle-house" ? "/assets/villas/the-angle-house/gallery-11.webp" :
       villa.slug === "casa-de-reva" || villa.slug === "terra-cotta-villa" ? "/assets/villas/terra-cotta-villa/IMG-20260901-WA0061.jpg" :
       villa.slug.includes("willow-peak") ? "/assets/villas/willow-peak/graded-v1/wp-01.webp" :
@@ -113,7 +118,9 @@ export default async function VillasPage() {
       "@type": "ListItem",
       position: idx + 1,
       name: villa.name,
-      url: `${BASE_URL}/villa/${villa.slug}`,
+      url: villa.slug === "slatewood"
+        ? `${BASE_URL}/villas/slatewood`
+        : `${BASE_URL}/villa/${villa.slug}`,
       image: villa.image.startsWith("http") ? villa.image : `${BASE_URL}${villa.image}`,
     })),
   };

@@ -4,7 +4,7 @@ import Footer from "@/components/layout/footer";
 import HomeExperience from "@/components/home/editorial/home-experience";
 import HomeContent from "@/components/home/editorial/home-content";
 import { publicVillaName } from "@/lib/public-copy";
-import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { nieevantPhotos } from "@/data/nieevant-images";
 import { NIEEVANT_SLUG, nieevantPreviewVilla, withNieevantFallback } from "@/data/nieevant-villa";
 
 export const metadata: Metadata = {
@@ -26,10 +26,10 @@ export const metadata: Metadata = {
     url: "https://www.staywillas.com",
     images: [
       {
-        url: `https://www.staywillas.com${canopyCrestPhotos.hero.src}`,
-        width: 1800,
-        height: 1350,
-        alt: canopyCrestPhotos.hero.alt,
+        url: `https://www.staywillas.com${nieevantPhotos.hero.src}`,
+        width: 2560,
+        height: 1440,
+        alt: nieevantPhotos.hero.alt,
       }
     ],
     type: "website",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Private Pool Villas Near Mumbai | Exclusive Weekend Stays | Stay Willas",
     description: "Book beautiful private pool villas near Mumbai with delicious home-cooked meals & chef services in Lonavala and Khopoli.",
-    images: [`https://www.staywillas.com${canopyCrestPhotos.hero.src}`],
+    images: [`https://www.staywillas.com${nieevantPhotos.hero.src}`],
   },
 };
 
