@@ -59,4 +59,22 @@ export const nieevantPhotos = {
   },
 } satisfies Record<string, NieevantPhoto>;
 
-export const nieevantGallery: NieevantPhoto[] = Object.values(nieevantPhotos);
+const transferredPhotos = [
+  "slatewood-exterior-evening.webp",
+  "slatewood-estate-aerial.webp",
+  "slatewood-infinity-pool.webp",
+  "slatewood-living-room.webp",
+  "slatewood-bedroom-window.webp",
+  "slatewood-dining.webp",
+  "slatewood-kitchenette.webp",
+  "slatewood-bedroom.webp",
+  "slatewood-living-area.webp",
+  "slatewood-exterior-day.webp",
+  "slatewood-garden-gazebo.webp",
+].map((filename, index) => ({
+  src: `${base}previous-${filename}`,
+  alt: `Nieevant villa photograph ${index + 1}`,
+  caption: "Another view of Nieevant",
+}));
+
+export const nieevantGallery: NieevantPhoto[] = [...Object.values(nieevantPhotos), ...transferredPhotos];

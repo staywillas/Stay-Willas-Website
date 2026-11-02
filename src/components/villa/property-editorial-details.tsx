@@ -1,3 +1,4 @@
+import type { WillowSelection } from "@/lib/willow-selection";
 import type { Prisma } from "@prisma/client";
 import Link from "next/link";
 import {
@@ -86,7 +87,7 @@ export default function PropertyEditorialDetails({
   initialCheckIn?: string;
   initialCheckOut?: string;
   initialGuests?: number;
-  initialCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
+  initialCottageSelection?: WillowSelection;
   publicPath?: string;
 }) {
   const property = getPropertyEditorial(villa);
@@ -105,10 +106,7 @@ export default function PropertyEditorialDetails({
     ? canopyCrestGallery.map((photo) => photo.src)
     : villa.images.map(resolvePropertyImage);
   const amenities = getEssentialAmenities(villa.amenities);
-  const initialPrice =
-    property.isWillow && !property.cottage
-      ? Math.min(villa.price, 15000)
-      : villa.price;
+  const initialPrice = villa.price;
   // The legacy Willow booking calculator consumes villa-level rates and divides
   // by three for one cottage. Adapt cottage data at the boundary without changing it.
   const rateFactor = property.cottage ? 3 : 1;
@@ -696,7 +694,7 @@ export default function PropertyEditorialDetails({
                 {initialCheckIn && initialCheckOut
                   ? "Your dates are loaded. Open the booking panel to review live nightly rates and your stay total."
                   : villa.slug === "slatewood"
-                    ? `Base rate ₹${formattedPrice} per night includes up to ${villa.baseGuests} guests; each additional guest is ₹${villa.extraGuestFee.toLocaleString("en-IN")} per night, plus taxes.`
+                    ? `Base rate ₹${formattedPrice} per night includes up to ${villa.baseGuests} guests; each additional guest is ₹${villa.extraGuestFee.toLocaleString("en-IN")} per night. Confirm the final quote with our team.`
                     : property.priceNote ??
                       `From ₹${formattedPrice} per night. Final rates depend on your dates and group.`}
               </p>
@@ -714,7 +712,7 @@ export default function PropertyEditorialDetails({
                 <p className={styles.previewPrice}>
                   <span>Listed from</span>
                   <strong>₹{formattedPrice}</strong>
-                  <small>per night + taxes</small>
+                  <small>per night · confirm your quote</small>
                 </p>
                 <h3>Check your dates with us.</h3>
                 <p>
@@ -739,12 +737,12 @@ export default function PropertyEditorialDetails({
                 <p className={styles.previewPrice}>
                   <span>Base rate</span>
                   <strong>₹{formattedPrice}</strong>
-                  <small>per night + taxes</small>
+                  <small>per night · confirm your quote</small>
                 </p>
                 <h3>Plan your Slatewood stay.</h3>
                 <p>
                   Share your dates and group size. Our team will confirm the
-                  availability and applicable taxes.
+                  availability and the final quote.
                 </p>
                 <a
                   href="https://wa.me/919619042310?text=Hi%20Stay%20Willas%2C%20I%27d%20like%20to%20check%20Slatewood%20dates%20and%20availability."

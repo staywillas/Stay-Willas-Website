@@ -366,7 +366,7 @@ const nieevant: PropertyCopy = {
   checkInTime: "1:00 PM",
   checkOutTime: "11:00 AM",
   priceNote:
-    "Listed from ₹19,999 per night plus taxes. Check with our team for the final rate and availability on your dates.",
+    "Listed from ₹19,999 per night. Check with our team for the final rate and availability on your dates.",
   photoNote:
     "Current aerial photographs of Nieevant and its surroundings, marked with the Stay Willas logo.",
   houseRulesNote:
@@ -475,53 +475,53 @@ const slatewood: PropertyCopy = {
     "https://wa.me/919619042310?text=Hi%20Stay%20Willas%2C%20please%20share%20Slatewood%27s%20location%20and%20arrival%20details.",
   featured: [
     {
-      src: `${slatewoodBase}slatewood-exterior-evening.webp`,
-      alt: "Slatewood's red-roofed villa and covered outdoor area in evening light",
+      src: `${slatewoodBase}drive-slatewood-exterior-evening.webp`,
+      alt: "Slatewood's pool and villa in evening light",
     },
     {
-      src: `${slatewoodBase}slatewood-estate-aerial.webp`,
+      src: `${slatewoodBase}drive-slatewood-estate-aerial.webp`,
       alt: "Aerial view of Slatewood, its infinity pool and outdoor grounds",
     },
     {
-      src: `${slatewoodBase}slatewood-living-room.webp`,
+      src: `${slatewoodBase}drive-slatewood-living-room.webp`,
       alt: "The wide living room at Slatewood, arranged for time together",
     },
   ],
   spaces: [
     {
       title: "A generous living hall",
-      src: `${slatewoodBase}slatewood-living-room.webp`,
+      src: `${slatewoodBase}drive-slatewood-living-room.webp`,
       alt: "The spacious shared living hall at Slatewood",
       text: "A comfortable place to gather, with two air conditioners and a kitchenette.",
     },
     {
       title: "Three private bedrooms",
-      src: `${slatewoodBase}slatewood-bedroom-window.webp`,
-      alt: "A Slatewood bedroom with a broad window looking out to greenery",
+      src: `${slatewoodBase}drive-slatewood-bedroom-window.webp`,
+      alt: "A Slatewood bedroom with a window and double bed",
       text: "Each air-conditioned bedroom has its own attached bathroom.",
     },
     {
       title: "The infinity-edge pool",
-      src: `${slatewoodBase}slatewood-infinity-pool.webp`,
+      src: `${slatewoodBase}drive-slatewood-infinity-pool.webp`,
       alt: "The private infinity-edge pool at Slatewood",
       text: "A 14 × 22 ft pool with a depth of 4.5 ft.",
     },
     {
       title: "A garden gazebo",
-      src: `${slatewoodBase}slatewood-garden-gazebo.webp`,
-      alt: "Garden gazebo and landscaped outdoor space at Slatewood",
+      src: `${slatewoodBase}drive-slatewood-garden-gazebo.webp`,
+      alt: "Covered outdoor seating beside Slatewood's pool",
       text: "Enjoy the garden, lawn and gazebo among plants that attract butterflies.",
     },
     {
       title: "A relaxed dining area",
-      src: `${slatewoodBase}slatewood-dining.webp`,
+      src: `${slatewoodBase}drive-slatewood-dining.webp`,
       alt: "The dining space inside Slatewood",
       text: "A comfortable shared space for meals and unhurried conversations.",
     },
     {
       title: "A convenient kitchenette",
-      src: `${slatewoodBase}slatewood-kitchenette.webp`,
-      alt: "Slatewood's kitchenette with counter space and a gas stove",
+      src: `${slatewoodBase}drive-slatewood-kitchenette.webp`,
+      alt: "Slatewood's kitchenette and counter space",
       text: "A compact kitchenette sits just off the living area.",
     },
   ],

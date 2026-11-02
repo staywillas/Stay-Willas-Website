@@ -16,6 +16,10 @@ async function revalidateVillaPricingPages(villaId: string) {
   const villa = await prisma.villa.findUnique({ where: { id: villaId }, select: { slug: true } });
   revalidatePath("/admin");
   revalidatePath("/");
+  revalidatePath("/villas");
+  revalidatePath("/areas/lonavala");
+  revalidatePath("/areas/khopoli");
+  revalidatePath("/areas/panchgani");
   if (villa?.slug) revalidatePath(getVillaPublicPath(villa.slug));
 }
 
@@ -334,6 +338,9 @@ export async function updateVillaDetails(data: {
     revalidatePath("/admin");
     revalidatePath("/");
     revalidatePath("/villas");
+    revalidatePath("/areas/lonavala");
+    revalidatePath("/areas/khopoli");
+    revalidatePath("/areas/panchgani");
     revalidatePath(getVillaPublicPath(updated.slug));
     return { success: true, villa: updated };
   } catch (error: any) {

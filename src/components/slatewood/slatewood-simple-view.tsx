@@ -20,43 +20,43 @@ const whatsappUrl =
 
 const photos = [
   {
-    src: "/assets/villas/slatewood/slatewood-exterior-day.webp",
+    src: "/assets/villas/slatewood/drive-slatewood-exterior-day.webp",
     alt: "Daylight view of Slatewood's villa and open grounds",
     caption: "A private estate surrounded by greenery",
     className: styles.galleryLead,
   },
   {
-    src: "/assets/villas/slatewood/slatewood-infinity-pool.webp",
+    src: "/assets/villas/slatewood/drive-slatewood-infinity-pool.webp",
     alt: "Slatewood's infinity-edge swimming pool",
     caption: "A 14 × 22 ft infinity-edge pool",
     className: "",
   },
   {
-    src: "/assets/villas/slatewood/slatewood-living-room.webp",
+    src: "/assets/villas/slatewood/drive-slatewood-living-room.webp",
     alt: "The spacious living hall at Slatewood",
     caption: "Room to spend time together",
     className: "",
   },
   {
-    src: "/assets/villas/slatewood/slatewood-bedroom-window.webp",
+    src: "/assets/villas/slatewood/drive-slatewood-bedroom-window.webp",
     alt: "One of Slatewood's three air-conditioned bedrooms",
     caption: "Three bedrooms, each with an attached bathroom",
     className: "",
   },
   {
-    src: "/assets/villas/slatewood/slatewood-garden-gazebo.webp",
+    src: "/assets/villas/slatewood/drive-slatewood-garden-gazebo.webp",
     alt: "The garden, lawn and gazebo at Slatewood",
     caption: "A garden, lawn and gazebo to enjoy outdoors",
     className: "",
   },
   {
-    src: "/assets/villas/slatewood/slatewood-dining.webp",
+    src: "/assets/villas/slatewood/drive-slatewood-dining.webp",
     alt: "Slatewood's shared dining area",
     caption: "Space to share a meal",
     className: "",
   },
   {
-    src: "/assets/villas/slatewood/slatewood-kitchenette.webp",
+    src: "/assets/villas/slatewood/drive-slatewood-kitchenette.webp",
     alt: "The kitchenette at Slatewood",
     caption: "A handy kitchenette in the hall",
     className: "",
@@ -107,7 +107,7 @@ export default function SlatewoodSimpleView() {
       <main className={styles.page}>
         <section className={styles.hero} aria-labelledby="slatewood-title">
           <Image
-            src="/assets/villas/slatewood/slatewood-exterior-evening.webp"
+            src="/assets/villas/slatewood/drive-slatewood-exterior-evening.webp"
             alt="Stay Willas Slatewood set within its landscaped estate"
             fill
             sizes="100vw"
@@ -187,7 +187,7 @@ export default function SlatewoodSimpleView() {
           </div>
           <figure className={styles.introPhoto}>
             <Image
-              src="/assets/villas/slatewood/slatewood-infinity-pool.webp"
+              src="/assets/villas/slatewood/drive-slatewood-infinity-pool.webp"
               alt="The private infinity-edge pool at Slatewood"
               fill
               sizes="(max-width: 760px) 100vw, 46vw"

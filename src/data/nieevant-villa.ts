@@ -9,7 +9,7 @@ export const nieevantVillaData: Omit<Villa, "id" | "createdAt" | "updatedAt"> = 
   name: "Nieevant by Stay Willas",
   location: "Plot No. 8, Nalavade Farms, Hatond Village, Khopoli, Maharashtra 410205",
   description:
-    "A 3-bedroom hilltop villa in Hatond Village, Khopoli, with a private swimming pool and room for up to 15 guests. Enjoy open valley views, a terrace and balcony, air conditioning, Wi-Fi, private parking and comfortable shared living spaces. Barbecue service is available for an additional charge. The listed rate starts at ₹19,999 per night plus taxes; confirm your dates and final quote with our team.",
+    "A 3-bedroom hilltop villa in Hatond Village, Khopoli, with a private swimming pool and room for up to 15 guests. Enjoy open valley views, a terrace and balcony, air conditioning, Wi-Fi, private parking and comfortable shared living spaces. Barbecue service is available for an additional charge. The listed rate starts at ₹19,999 per night; confirm your dates and final quote with our team.",
   price: 19999,
   guests: 15,
   baseGuests: 15,

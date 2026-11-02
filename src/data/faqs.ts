@@ -37,10 +37,10 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "willow-peak-pool-or-jacuzzi",
     question: "Does Willow Peak have a swimming pool?",
-    answer: "No. Willow Peak is our signature **Jacuzzi Cottage Collection** nestled on the scenic Panchgani ridge. Each cottage features its own private indoor temperature-ready Jacuzzi overlooking the hills. If your group specifically requires a private outdoor swimming pool, we recommend booking **The Angle House** (Kamshet/Lonavala), **Canopy Crest** (Khopoli), or **Casa De Reva** (Panchgani).",
+    answer: "No. Willow Peak is a collection of three A-frame cottages in Kurwande, Lonavala. Each cottage has its own private Jacuzzi. For a private swimming pool, explore **The Angle House** in Kamshet, **Canopy Crest** in Khopoli, or **Casa De Reva** in Panchgani.",
     category: "willow-peak",
     categoryLabel: "Willow Peak & Properties",
-    tags: ["willow peak", "swimming pool", "jacuzzi", "panchgani", "pool"],
+    tags: ["willow peak", "swimming pool", "jacuzzi", "lonavala", "pool"],
   },
   {
     id: "portfolio-differences",
@@ -71,7 +71,7 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "starting-price-breakdown",
     question: "What does the starting price shown on property cards include?",
-    answer: "The price shown on property cards is the base accommodation rate per night for the villa's base guest capacity. It includes exclusive private access to the entire villa, private pool or Jacuzzi, private lawns, Wi-Fi, power backup, and dedicated on-site caretaker assistance.\n\nTaxes, extra guest charges (if your group exceeds the base guest limit), and meal/chef packages are calculated transparently during the date selection and checkout flow.",
+    answer: "The price shown on property cards is the base accommodation rate per night for the villa's base guest capacity. It includes exclusive private access to the entire villa, private pool or Jacuzzi, private lawns, Wi-Fi, power backup, and dedicated on-site caretaker assistance.\n\nExtra guests and optional meals may affect the quote. Discuss the full price and any applicable charges with the team before confirming.",
     category: "booking",
     categoryLabel: "Booking, Pricing & 0% Fees",
     tags: ["price", "starting price", "breakdown", "hidden charges", "taxes", "cost"],
@@ -231,7 +231,7 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "cancellation-slabs",
     question: "What is the cancellation and refund policy if our plans change?",
-    answer: "We offer transparent, structured cancellation slabs:\n\n• **7 Days or More prior to check-in:** 90% Refund of the total booking value (or full credit for future stay upon mutual agreement).\n• **2 to 7 Days prior to check-in:** 70% Refund of the total booking value.\n• **Less than 48 Hours (2 Days) prior to check-in:** Non-refundable (0% refund), as the villa has been held exclusively for you and cannot be re-booked on short notice.\n\nApproved refunds are credited back to your original payment method within 7 to 10 working days. View our full [Cancellation & Refund Policy](/cancellation-policy) for complete details.",
+    answer: "Please call the Stay Willas team to discuss cancellation, refund or rescheduling arrangements for your booking. Ask for the applicable terms before confirming your stay.",
     category: "cancellations",
     categoryLabel: "Cancellations & Refunds",
     tags: ["cancellation", "refund", "cancel booking", "refund slabs", "rescheduling"],
@@ -239,7 +239,7 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "rescheduling-booking",
     question: "Can we reschedule our stay to different dates instead of cancelling?",
-    answer: "Yes, rescheduling requests are considered on a case-by-case basis when requested at least 7 days before your check-in date, subject to property availability and homeowner agreement. If transferring from a weekday slot to a weekend or peak holiday slot, standard seasonal rate differentials apply.",
+    answer: "Please call the Stay Willas team to discuss changing your dates, availability and any change in the price.",
     category: "cancellations",
     categoryLabel: "Cancellations & Refunds",
     tags: ["reschedule", "change dates", "postpone", "modify booking"],
@@ -249,7 +249,7 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "driving-distances-times",
     question: "How far are the properties from Mumbai and Pune?",
-    answer: "Our villas are strategically situated along convenient highway corridors:\n\n• **Canopy Crest (Khopoli):** ~75 km from Mumbai (approx. 75–90 min drive via the Mumbai-Pune Expressway, completely bypassing the Khandala ghat) and ~85 km from Pune.\n• **The Angle House (Kamshet / Lonavala):** ~95 km from Mumbai (approx. 100 min) and ~65 km from Pune (approx. 70–80 min via the Expressway and Old Mumbai-Pune Highway).\n• **Casa De Reva & Willow Peak (Panchgani):** ~100 km from Pune (approx. 2.5 hours via NH48 / Pasarni Ghat) and ~240 km from Mumbai (approx. 4.5 to 5 hours).",
+    answer: "Our stays are in several destinations:\n\n• **Canopy Crest:** Khopoli.\n• **The Angle House:** Kamshet, near Lonavala.\n• **Willow Peak:** Kurwande, Lonavala.\n• **Casa De Reva:** Kaswand, Panchgani.\n\nDriving times vary with your starting point, traffic and weather; check a current map before leaving.",
     category: "travel",
     categoryLabel: "Locations & Driving Times",
     tags: ["distance", "driving time", "mumbai to lonavala", "pune to lonavala", "khopoli", "panchgani", "directions"],

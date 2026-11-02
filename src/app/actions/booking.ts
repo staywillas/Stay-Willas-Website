@@ -10,6 +10,7 @@ import type { LeadAttribution } from "@/lib/angle-house-measurement";
 import { getTemporaryAvailabilityBlocks, hasTemporaryAvailabilityConflict } from "@/lib/temporary-availability-blocks";
 import { getGuestMinimum, getGuestPricing } from "@/lib/guest-pricing";
 import { canopyCrestPhotos } from "@/data/canopy-crest-images";
+import { willowCottages, willowSelectionLabel, type WillowSelection } from "@/lib/willow-selection";
 
 function calculateCouponDiscount(couponCode: string | undefined, weekdayTotal: number, weekendTotal: number) {
   const code = couponCode?.trim().toUpperCase();
@@ -46,8 +47,14 @@ export async function calculateStayPrice(
   checkIn: Date,
   checkOut: Date,
   guests: number,
-  cottageCountOverride?: number,
-) {
+  cottageSelection?: WillowSelection,
+): Promise<{
+  totalRoomPrice: number; totalExtraGuestsCost: number;
+  normalWeekdayEligibleTotal: number; normalWeekdayNights: number;
+  weekendAndHolidayEligibleTotal: number; weekendAndHolidayNights: number;
+  nightlyRates: Array<{ date: string; label: string; price: number }>;
+  weekdayEligibleTotal: number; baseRate: number; extraGuestsCostPerNight: number; cottagesCount: number;
+}> {
   const villa = await prisma.villa.findUnique({
     where: { id: villaId },
     include: { seasonalPrices: true, dailyPrices: true }
@@ -62,8 +69,46 @@ export async function calculateStayPrice(
     throw new Error(`${villa.name} allows up to ${villa.guests} guests.`);
   }
 
+  const isWillowPeak = villa.slug === "willow-peak";
+  if (isWillowPeak && cottageSelection === "TWO") {
+    throw new Error("Choose the two cottages you would like to book.");
+  }
+  const chosenCottages = isWillowPeak ? willowCottages(cottageSelection) : [];
+  const cottagesCount = isWillowPeak ? chosenCottages.length : 1;
+  if (isWillowPeak && guests > cottagesCount * 4) {
+    throw new Error(`This Willow Peak selection allows up to ${cottagesCount * 4} guests.`);
+  }
+  if (isWillowPeak && cottagesCount === 2) {
+    const rates = await Promise.all(chosenCottages.map(letter => calculateStayPrice(villaId, checkIn, checkOut, 4, letter)));
+    const nightlyRates = rates[0].nightlyRates.map((night, index) => ({
+      date: night.date,
+      label: "Two cottage rates",
+      price: night.price + rates[1].nightlyRates[index].price,
+    }));
+    return {
+      totalRoomPrice: rates[0].totalRoomPrice + rates[1].totalRoomPrice,
+      totalExtraGuestsCost: 0,
+      normalWeekdayEligibleTotal: rates[0].normalWeekdayEligibleTotal + rates[1].normalWeekdayEligibleTotal,
+      normalWeekdayNights: rates[0].normalWeekdayNights,
+      weekendAndHolidayEligibleTotal: rates[0].weekendAndHolidayEligibleTotal + rates[1].weekendAndHolidayEligibleTotal,
+      weekendAndHolidayNights: rates[0].weekendAndHolidayNights,
+      nightlyRates,
+      weekdayEligibleTotal: rates[0].weekdayEligibleTotal + rates[1].weekdayEligibleTotal,
+      baseRate: rates[0].baseRate + rates[1].baseRate,
+      extraGuestsCostPerNight: 0,
+      cottagesCount: 2,
+    };
+  }
+  const pricingVilla = isWillowPeak && cottageSelection && cottageSelection !== "ALL"
+    ? await prisma.villa.findUnique({
+        where: { slug: `willow-peak-cottage-${cottageSelection.toLowerCase()}` },
+        include: { seasonalPrices: true, dailyPrices: true },
+      })
+    : villa;
+  if (!pricingVilla) throw new Error("This cottage is not available for pricing.");
+
   const rawNightlyRates: Array<{ date: string; label: string; price: number; category: string }> = [];
-  let currentDate = new Date(checkIn);
+  const currentDate = new Date(checkIn);
   currentDate.setHours(0, 0, 0, 0);
   const end = new Date(checkOut);
   end.setHours(0, 0, 0, 0);
@@ -77,7 +122,7 @@ export async function calculateStayPrice(
     const checkD = currentDate.getDate();
     const checkIso = `${checkY}-${String(checkM + 1).padStart(2, "0")}-${String(checkD).padStart(2, "0")}`;
 
-    const dailyOverride = villa.dailyPrices.find(dp => {
+    const dailyOverride = pricingVilla.dailyPrices.find(dp => {
       if (!dp?.date) return false;
       const dDate = new Date(dp.date);
       const matchLocal = dDate.getFullYear() === checkY && dDate.getMonth() === checkM && dDate.getDate() === checkD;
@@ -91,7 +136,7 @@ export async function calculateStayPrice(
       rateLabel = "Date-specific rate";
     } else {
       // 1. Check seasonal pricing table overrides
-      const seasonalOverride = villa.seasonalPrices.find(sp => {
+      const seasonalOverride = pricingVilla.seasonalPrices.find(sp => {
         const start = new Date(sp.startDate);
         const endSp = new Date(sp.endDate);
         return dateKey(currentDate) >= dateKey(start) && dateKey(currentDate) <= dateKey(endSp);
@@ -104,24 +149,24 @@ export async function calculateStayPrice(
         // 2. Check specific day-of-week pricing overrides
         const dayOfWeek = currentDate.getDay();
         
-        if (dayOfWeek === 5 && villa.fridayPrice != null) {
-          nightPrice = villa.fridayPrice;
+        if (dayOfWeek === 5 && pricingVilla.fridayPrice != null) {
+          nightPrice = pricingVilla.fridayPrice;
           rateLabel = "Friday rate";
-        } else if (dayOfWeek === 6 && villa.saturdayPrice != null) {
-          nightPrice = villa.saturdayPrice;
+        } else if (dayOfWeek === 6 && pricingVilla.saturdayPrice != null) {
+          nightPrice = pricingVilla.saturdayPrice;
           rateLabel = "Saturday rate";
-        } else if (dayOfWeek === 0 && villa.sundayPrice != null) {
-          nightPrice = villa.sundayPrice;
+        } else if (dayOfWeek === 0 && pricingVilla.sundayPrice != null) {
+          nightPrice = pricingVilla.sundayPrice;
           rateLabel = "Sunday rate";
         } else {
           // 3. Check legacy weekend pricing
           const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
-          if (isWeekend && villa.weekendPrice) {
-            nightPrice = villa.weekendPrice;
+          if (isWeekend && pricingVilla.weekendPrice) {
+            nightPrice = pricingVilla.weekendPrice;
             rateLabel = "Weekend rate";
           } else {
             // 4. Fallback to base pricing
-            nightPrice = villa.price;
+            nightPrice = pricingVilla.price;
           }
         }
       }
@@ -133,15 +178,10 @@ export async function calculateStayPrice(
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  const isWillowPeak = villa.slug === "willow-peak";
-  const cottagesCount = isWillowPeak
-    ? Math.max(1, Math.min(3, cottageCountOverride ?? Math.ceil(guests / 4)))
-    : 1;
-  const cottageRateFactor = isWillowPeak ? cottagesCount / 3 : 1;
   const nightlyRates = rawNightlyRates.map((night) => ({
     date: night.date,
     label: night.label,
-    price: Math.round(night.price * cottageRateFactor),
+    price: night.price,
     category: night.category,
   }));
   const totalStayPrice = nightlyRates.reduce((sum, night) => sum + night.price, 0);
@@ -172,7 +212,7 @@ export async function calculateStayPrice(
     weekendAndHolidayNights,
     nightlyRates: nightlyRates.map(({ date, label, price }) => ({ date, label, price })),
     weekdayEligibleTotal: normalWeekdayEligibleTotal,
-    baseRate: villa.price,
+    baseRate: pricingVilla.price,
     extraGuestsCostPerNight,
     cottagesCount
   };
@@ -190,7 +230,7 @@ export async function createCheckoutSession(formData: {
   selectedAddOns?: string[];
   userId?: string;
   couponCode?: string;
-  cottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
+  cottageSelection?: WillowSelection;
 }) {
   const checkInDate = new Date(formData.checkIn);
   const checkOutDate = new Date(formData.checkOut);
@@ -200,12 +240,9 @@ export async function createCheckoutSession(formData: {
     const targetVilla = await prisma.villa.findUnique({
       where: { id: formData.villaId }
     });
-    const isWillowPeak = targetVilla?.slug === "willow-peak" || formData.villaName.toLowerCase().includes("willow");
+    const isWillowPeak = targetVilla?.slug === "willow-peak";
     const requiredCottages = isWillowPeak
-      ? formData.cottageSelection === "ALL" ? 3
-        : formData.cottageSelection === "TWO" ? 2
-          : formData.cottageSelection ? 1
-            : Math.max(1, Math.min(3, Math.ceil(formData.guests / 4)))
+      ? formData.cottageSelection ? willowCottages(formData.cottageSelection).length : 3
       : 1;
     if (isWillowPeak && formData.cottageSelection) {
       const maxGuests = requiredCottages * 4;
@@ -225,13 +262,11 @@ export async function createCheckoutSession(formData: {
       const entireEstate = await prisma.villa.findFirst({ where: { slug: "willow-peak" } });
       if (entireEstate) relevantVillaIds.push(entireEstate.id);
     } else if (isWillowEntire) {
-      // If booking all three cottages, check all related cottage listings.
+      // Check the estate and the selected cottages; other cottages remain eligible.
+      const selectedSlugs = willowCottages(formData.cottageSelection).map(letter => `willow-peak-cottage-${letter.toLowerCase()}`);
       const allWillow = await prisma.villa.findMany({
         where: {
-          OR: [
-            { slug: "willow-peak" },
-            { slug: { startsWith: "willow-peak-cottage" } }
-          ]
+          slug: { in: ["willow-peak", ...selectedSlugs] },
         },
         select: { id: true }
       });
@@ -276,7 +311,7 @@ export async function createCheckoutSession(formData: {
       totalExtraGuestsCost, 
       normalWeekdayEligibleTotal,
       weekendAndHolidayEligibleTotal
-    } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate, formData.guests, requiredCottages);
+    } = await calculateStayPrice(formData.villaId, checkInDate, checkOutDate, formData.guests, formData.cottageSelection);
 
     // 3. STAGE C: Add-Ons Aggregate Costs
     let addOnsPrice = 0;
@@ -533,7 +568,7 @@ export async function checkAvailableVillasForDates(data: {
   checkOut?: string;
   guests?: number;
   couponCode?: string;
-  cottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
+  cottageSelection?: WillowSelection;
 }) {
   try {
     const region = data.destination && data.destination !== "all" && data.destination !== "All Locations" ? data.destination.trim() : "";
@@ -673,7 +708,7 @@ export async function checkAvailableVillasForDates(data: {
 
     // Helper to calculate dynamic rate for dates
     const calculateDynamicRate = (v: typeof villas[0]) => {
-      let cur = new Date(userCheckIn);
+      const cur = new Date(userCheckIn);
       const end = new Date(userCheckOut);
       let total = 0;
       let nightsCount = 0;
@@ -744,21 +779,42 @@ export async function checkAvailableVillasForDates(data: {
     const availableVillaIds = new Set(availableVillas.map(villa => villa.id));
     const pricedVillas = specificSlug ? villas : availableVillas;
 
+    // A Willow booking can also conflict with its linked estate or cottage listings.
+    // Keep this check as conservative as the final reservation check.
+    const willowConflict = specificSlug.startsWith("willow-peak")
+      ? await prisma.booking.findFirst({
+          where: {
+            villa: specificSlug === "willow-peak"
+              ? { slug: { in: ["willow-peak", ...willowCottages(data.cottageSelection).map(letter => `willow-peak-cottage-${letter.toLowerCase()}`)] } }
+              : { slug: { in: [specificSlug, "willow-peak"] } },
+            OR: [
+              { status: { in: ["CONFIRMED", "PENDING", "BLOCKED"] } },
+              { status: "HELD", createdAt: { gte: tenMinutesAgo } },
+            ],
+            checkIn: { lt: userCheckOut },
+            checkOut: { gt: userCheckIn },
+          },
+          select: { id: true },
+        })
+      : null;
+
+    if (specificSlug === "willow-peak" && data.cottageSelection === "TWO") {
+      return { success: false, error: "Choose the two cottages you would like to book." };
+    }
+
     return {
       success: true,
-      villas: pricedVillas.map(v => {
+      villas: await Promise.all(pricedVillas.map(async v => {
         const rawRates = calculateDynamicRate(v);
         const isWillowEstate = v.slug === "willow-peak";
         const selectedCottages = isWillowEstate
           ? data.cottageSelection
-            ? data.cottageSelection === "ALL" ? 3 : data.cottageSelection === "TWO" ? 2 : 1
-            : Math.max(1, Math.min(3, Math.ceil(guestCount / 4)))
+            ? willowCottages(data.cottageSelection).length
+            : 3
           : 1;
-        const rateFactor = isWillowEstate ? selectedCottages / 3 : 1;
-        const nightlyRates = rawRates.nightlyRates.map(night => ({
-          ...night,
-          price: Math.round(night.price * rateFactor),
-        }));
+        const nightlyRates = isWillowEstate
+          ? (await calculateStayPrice(v.id, userCheckIn, userCheckOut, guestCount, data.cottageSelection)).nightlyRates
+          : rawRates.nightlyRates;
         const averageNightlyRate = nightlyRates.length > 0
           ? Math.round(nightlyRates.reduce((sum, night) => sum + night.price, 0) / nightlyRates.length)
           : v.price;
@@ -790,7 +846,7 @@ export async function checkAvailableVillasForDates(data: {
           id: v.id,
           name: v.name,
           slug: v.slug,
-          isAvailable: availableVillaIds.has(v.id),
+          isAvailable: availableVillaIds.has(v.id) && !willowConflict,
           price: averageNightlyRate,
           bedrooms: v.bedrooms,
           bathrooms: v.bathrooms,
@@ -809,7 +865,7 @@ export async function checkAvailableVillasForDates(data: {
           amenities: v.amenities,
           image: v.slug === "canopy-crest" ? canopyCrestPhotos.hero.src : v.images[0] || "/images/hero-villa.webp",
         };
-      }),
+      })),
     };
   } catch (error: any) {
     console.error("[Availability] Error:", error);
@@ -832,7 +888,7 @@ export async function createAwaitingVerificationBooking(data: {
   foodPackage?: "STANDARD" | "DELUXE" | "STANDARD_VEG" | "STANDARD_NON_VEG" | "DELUXE_VEG" | "DELUXE_NON_VEG";
   foodGuests?: number;
   couponCode?: string;
-  cottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
+  cottageSelection?: WillowSelection;
   expectedTotal: number;
   expectedNightlyRates: Array<{ date: string; label: string; price: number }>;
   specialRequest?: string;
@@ -895,11 +951,12 @@ export async function createAwaitingVerificationBooking(data: {
       if (!data.cottageSelection) {
         return { success: false, error: "Choose a Willow Peak cottage option." };
       }
-      const maxGuestsForSelection = data.cottageSelection === "ALL" ? 12 : data.cottageSelection === "TWO" ? 8 : 4;
+      if (data.cottageSelection === "TWO") return { success: false, error: "Choose the two cottages you would like to book." };
+      const maxGuestsForSelection = willowCottages(data.cottageSelection).length * 4;
       if (data.guests > maxGuestsForSelection) {
         return { success: false, error: `This cottage selection allows up to ${maxGuestsForSelection} guests.` };
       }
-      if (data.cottageSelection === "TWO" && data.guests < 5) {
+      if (willowCottages(data.cottageSelection).length === 2 && data.guests < 5) {
         return { success: false, error: "Choose at least 5 guests for a two-cottage stay." };
       }
     }
@@ -911,8 +968,9 @@ export async function createAwaitingVerificationBooking(data: {
       const willowPeakVilla = await prisma.villa.findFirst({ where: { slug: "willow-peak" }, select: { id: true } });
       if (willowPeakVilla) relevantVillaIds.push(willowPeakVilla.id);
     } else if (villa.slug === "willow-peak") {
+      const selectedSlugs = willowCottages(data.cottageSelection).map(letter => `willow-peak-cottage-${letter.toLowerCase()}`);
       const willowVillas = await prisma.villa.findMany({
-        where: { OR: [{ slug: "willow-peak" }, { slug: { startsWith: "willow-peak-cottage" } }] },
+        where: { slug: { in: ["willow-peak", ...selectedSlugs] } },
         select: { id: true },
       });
       relevantVillaIds = willowVillas.map((item) => item.id);
@@ -964,10 +1022,7 @@ export async function createAwaitingVerificationBooking(data: {
       return { success: false, error: "Choose a valid number of guests for the food package." };
     }
 
-    const selectedCottages = villa.slug === "willow-peak"
-      ? data.cottageSelection === "ALL" ? 3 : data.cottageSelection === "TWO" ? 2 : 1
-      : undefined;
-    const pricing = await calculateStayPrice(villa.id, checkInDate, checkOutDate, data.guests, selectedCottages);
+    const pricing = await calculateStayPrice(villa.id, checkInDate, checkOutDate, data.guests, data.cottageSelection);
     const addOnsTotal = selectedAddOns.reduce((sum, item) => {
       if (item === "Gourmet Chef Experience") return sum + addOnRates[item] * nights;
       if (item === "Curated Vineyard Tour") return sum + addOnRates[item] * data.guests;
@@ -1048,7 +1103,7 @@ export async function createAwaitingVerificationBooking(data: {
     });
 
     const unitDetail = villa.slug === "willow-peak"
-      ? (data.cottageSelection === "ALL" ? "All three cottages" : `Cottage ${data.cottageSelection}`)
+      ? (data.cottageSelection ? willowSelectionLabel(data.cottageSelection) : "Willow Peak")
       : undefined;
     const requestMessage = [
       "Direct booking request awaiting concierge verification.",

@@ -24,6 +24,45 @@
 .page :is(h1, h2, h3, p, figure) {
   margin: 0;
 }
+.stayComparison {
+  margin-top: clamp(36px, 5vw, 64px);
+  padding: clamp(22px, 3vw, 38px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--panel);
+}
+.comparisonHeading h3 {
+  margin: 10px 0 8px;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.1;
+}
+.comparisonHeading p, .comparisonNote {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.comparisonGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+.comparisonCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface);
+}
+.comparisonCard h4 { margin: 0; font-size: 17px; }
+.comparisonCard p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.comparisonCard strong { font-size: 14px; }
+.comparisonCard a { display: inline-flex; align-items: center; gap: 7px; margin-top: auto; color: var(--accent); font-size: 13px; font-weight: 700; }
+.comparisonNote { margin-top: 16px !important; font-size: 12px; }
+@media (max-width: 640px) { .comparisonGrid { grid-template-columns: 1fr; } }
 .page :is(h1, h2, h3) {
   text-wrap: balance;
 }

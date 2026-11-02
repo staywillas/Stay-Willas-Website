@@ -20,6 +20,7 @@ import { willowUnits } from "@/data/property-editorial";
 import BorderGlow from "@/components/ui/border-glow";
 import { trackCanopyCrestInteraction } from "@/lib/angle-house-measurement";
 import { getGuestMinimum } from "@/lib/guest-pricing";
+import { willowCottages, willowSelectionLabel, type WillowSelection } from "@/lib/willow-selection";
 
 interface BookingModalFlowProps {
   villaId: string;
@@ -39,7 +40,7 @@ interface BookingModalFlowProps {
   location?: string;
   isAngleHouse?: boolean;
   presentation?: "default" | "editorial";
-  initialCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
+  initialCottageSelection?: WillowSelection;
   propertySlug?: string;
   initialCheckIn?: string;
   initialCheckOut?: string;
@@ -84,7 +85,7 @@ export default function BookingModalFlow({
 
   // Cottage selection for Willow Peak
   const isWillowPeak = villaId.includes("willow") || villaName.toLowerCase().includes("willow");
-  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "TWO" | "ALL">(initialCottageSelection);
+  const [cottageSelection, setCottageSelection] = useState<WillowSelection>(initialCottageSelection);
 
   useEffect(() => {
     setMounted(true);
@@ -111,8 +112,8 @@ export default function BookingModalFlow({
     }
 
     const selection = params.get("cottageSelection");
-    if (selection && ["A", "B", "C", "TWO", "ALL"].includes(selection)) {
-      setCottageSelection(selection as "A" | "B" | "C" | "TWO" | "ALL");
+    if (selection && ["A", "B", "C", "AB", "AC", "BC", "TWO", "ALL"].includes(selection)) {
+      setCottageSelection(selection as WillowSelection);
     }
   }, []);
 
@@ -185,13 +186,13 @@ export default function BookingModalFlow({
   }, [isBookingModalOpen, lenis]);
 
   const quickGuestLimit = isWillowPeak
-    ? cottageSelection === "ALL" ? 12 : cottageSelection === "TWO" ? 8 : 4
+    ? cottageSelection === "TWO" ? 8 : willowCottages(cottageSelection).length * 4
     : maxGuests;
-  const quickGuestMinimum = isWillowPeak && cottageSelection === "TWO"
+  const quickGuestMinimum = isWillowPeak && (cottageSelection === "TWO" || willowCottages(cottageSelection).length === 2)
     ? 5
     : getGuestMinimum(propertySlug ?? "");
   const bookingTitle = propertySlug === "willow-peak"
-    ? `${villaName} · ${cottageSelection === "ALL" ? "All 3 cottages" : cottageSelection === "TWO" ? "2 cottages" : `Cottage ${cottageSelection}`}`
+    ? `${villaName} · ${willowSelectionLabel(cottageSelection)}`
     : villaName;
 
   const handleOpenBooking = () => {
@@ -239,12 +240,12 @@ export default function BookingModalFlow({
         <h2>Make it your weekend.</h2>
         <p className={editorialStyles.quickBookingIntro}>
           {propertySlug === "slatewood"
-            ? `Base rate ₹${(basePrice ?? price).toLocaleString("en-IN")} per night includes up to ${baseGuests} guests; each additional guest is ₹${extraGuestFee.toLocaleString("en-IN")} per night, up to ${maxGuests} guests. Taxes extra.`
+            ? `Base rate ₹${(basePrice ?? price).toLocaleString("en-IN")} per night includes up to ${baseGuests} guests; each additional guest is ₹${extraGuestFee.toLocaleString("en-IN")} per night, up to ${maxGuests} guests. Confirm the final quote with our team.`
             : "Choose your dates and group size to see the live rate."}
         </p>
         {isWillowPeak && (
           <div className={editorialStyles.unitPicker}>
-            <p>{cottageSelection === "ALL" ? "All 3 cottages · up to 12 guests" : cottageSelection === "TWO" ? "2 cottages · up to 8 guests" : `${willowUnits.find(unit => unit.selection === cottageSelection)?.name} · up to 4 guests`}</p>
+            <p>{`${willowSelectionLabel(cottageSelection)} · up to ${quickGuestLimit} guests`}</p>
             <nav className={editorialStyles.unitLinks} aria-label="Choose your Willow Peak stay">
               {willowUnits.map(unit => <Link key={unit.slug} href={`/villa/${unit.slug}`} aria-current={unit.slug === propertySlug ? "page" : undefined}><strong>{unit.name}</strong><small>{unit.capacity} guests</small></Link>)}
             </nav>

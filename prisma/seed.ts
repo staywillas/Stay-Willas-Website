@@ -235,7 +235,7 @@ To elevate your stay, the villa is fully pet-friendly, welcoming your furry comp
     location: "Kurwande, Lonavala, Maharashtra",
     category: "Mountain View",
     description: `Reserve all three Willow Peak cottages in Kurwande, Lonavala — three private standalone A-frame cottages (Breeze, Crest, and Heaven) for groups of up to 12 guests. Perched in the serene hills of Kurwande near Lonavala, the property has 3 air-conditioned bedrooms, 3 attached modern bathrooms, private jacuzzi baths in each cottage, expansive manicured gardens, an outdoor dining deck, and BBQ facilities. Complete with carrom board entertainment, well-lit outdoor evening spaces, secure parking, televisions, and high-speed Wi-Fi. Ideal for multi-family gatherings, milestone celebrations, and group stays.`,
-    price: 17997,
+    price: 15000,
     weekendPrice: 23997,
     fridayPrice: 20997,
     saturdayPrice: 23997,

@@ -15,6 +15,7 @@ import { categorizeNight, checkLongWeekend } from "@/lib/calendar-holidays";
 import { getAngleHouseAttribution, trackAngleHouseBookingEnquiry, trackAngleHouseEngagement, trackCanopyCrestBookingEnquiry, trackCanopyCrestInteraction, trackWebsiteWhatsAppClick } from "@/lib/angle-house-measurement";
 import { checkAvailableVillasForDates } from "@/app/actions/booking";
 import { getGuestMinimum } from "@/lib/guest-pricing";
+import { willowCottages, willowSelectionLabel, type WillowSelection } from "@/lib/willow-selection";
 
 interface DailyPriceProp {
   id: string;
@@ -112,7 +113,7 @@ interface BookingCardProps {
   extraGuestFee?: number;
   propertySlug?: string;
   bookings?: BookingProp[];
-  initialCottageSelection?: "A" | "B" | "C" | "TWO" | "ALL";
+  initialCottageSelection?: WillowSelection;
   lockCottageSelection?: boolean;
   initialCheckIn?: Date | null;
   initialCheckOut?: Date | null;
@@ -246,7 +247,7 @@ const BookingCard = ({
   }, [initialCheckOut]);
 
   // Specific Cottage Selection for Willow Peak: "A" | "B" | "C" | "ALL"
-  const [cottageSelection, setCottageSelection] = useState<"A" | "B" | "C" | "TWO" | "ALL">(initialCottageSelection || "A");
+  const [cottageSelection, setCottageSelection] = useState<WillowSelection>(initialCottageSelection || "A");
 
   useEffect(() => {
     if (initialCottageSelection) {
@@ -255,10 +256,10 @@ const BookingCard = ({
   }, [initialCottageSelection]);
 
   // Cottages required for Willow Peak (1 for Cottage A/B/C, 3 for ALL)
-  const cottagesCount = isWillowPeak ? (cottageSelection === "ALL" ? 3 : cottageSelection === "TWO" ? 2 : 1) : 1;
+  const cottagesCount = isWillowPeak ? (cottageSelection === "TWO" ? 2 : willowCottages(cottageSelection).length) : 1;
   const isSingleWillowCottage = isWillowPeak && cottageSelection !== "ALL";
   const currentMaxGuests = isWillowPeak ? cottagesCount * 4 : actualMaxGuests;
-  const currentMinGuests = isWillowPeak && cottageSelection === "TWO"
+  const currentMinGuests = isWillowPeak && cottagesCount === 2
     ? 5
     : getGuestMinimum(propertySlug ?? "");
 
@@ -570,7 +571,7 @@ const BookingCard = ({
       const formattedCheckIn = format(checkIn, "dd MMM yyyy");
       const formattedCheckOut = format(checkOut, "dd MMM yyyy");
       const cottageInfoSection = isWillowPeak
-        ? `\n🏡 *Stay:* ${cottageSelection === "ALL" ? "All 3 cottages together" : cottageSelection === "TWO" ? "2 cottages (pair confirmed by concierge)" : `Cottage ${cottageSelection}`}`
+        ? `\n🏡 *Stay:* ${willowSelectionLabel(cottageSelection)}`
         : "";
       const addOnsSection = bookingAddOns.length > 0
         ? `\n• *Add-ons:* ${bookingAddOns.join(", ")}`
@@ -797,11 +798,7 @@ Please confirm availability and the final amount before confirming my booking.`;
                 <span>🏡</span> Select Cottage Allocation:
               </span>
               <span className="text-[10px] font-bold text-[#DAA520] bg-[#1B3564] px-2 py-0.5 rounded-md">
-                {cottageSelection === "ALL"
-                  ? "All 3 Cottages (Breeze, Crest & Heaven)"
-                  : cottageSelection === "TWO"
-                    ? "2 Cottages · up to 8 guests"
-                    : `${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (1 Cottage)`}
+                {willowSelectionLabel(cottageSelection)}
               </span>
             </div>
             
@@ -810,7 +807,9 @@ Please confirm availability and the final amount before confirming my booking.`;
                 { id: "A", label: "Breeze", sub: "Max 4 Guests" },
                 { id: "B", label: "Crest", sub: "Max 4 Guests" },
                 { id: "C", label: "Heaven", sub: "Max 4 Guests" },
-                { id: "TWO", label: "2 Cottages", sub: "5–8 Guests" },
+                { id: "AB", label: "Breeze + Crest", sub: "5–8 Guests" },
+                { id: "AC", label: "Breeze + Heaven", sub: "5–8 Guests" },
+                { id: "BC", label: "Crest + Heaven", sub: "5–8 Guests" },
                 { id: "ALL", label: "All 3 Cottages", sub: "Breeze, Crest, Heaven" },
               ].map((item) => {
                 const isSelected = cottageSelection === item.id;
@@ -819,10 +818,10 @@ Please confirm availability and the final amount before confirming my booking.`;
                     key={item.id}
                     type="button"
                     onClick={() => {
-                      const newSel = item.id as "A" | "B" | "C" | "TWO" | "ALL";
+                      const newSel = item.id as WillowSelection;
                       setCottageSelection(newSel);
-                      const selectionMax = newSel === "ALL" ? 12 : newSel === "TWO" ? 8 : 4;
-                      const selectionMin = newSel === "TWO" ? 5 : 1;
+                      const selectionMax = willowCottages(newSel).length * 4;
+                      const selectionMin = willowCottages(newSel).length === 2 ? 5 : 1;
                       const nextGuests = Math.max(selectionMin, Math.min(selectionMax, guests));
                       setGuests(nextGuests);
                       setGuestInput(String(nextGuests));
@@ -841,6 +840,9 @@ Please confirm availability and the final amount before confirming my booking.`;
                 );
               })}
             </div>
+            {cottageSelection === "TWO" && (
+              <p className="text-xs text-slate-700">Choose a specific pair above to see its availability and price.</p>
+            )}
           </div>
         )}
         {/* Date picker pair */}
@@ -1206,7 +1208,7 @@ Please confirm availability and the final amount before confirming my booking.`;
         <div className={`w-full bg-white ${isModal ? "p-3 sm:p-4" : "p-4"} text-left border border-border-subtle rounded-2xl flex items-center justify-between gap-4`}>
           <div className="flex-1 min-w-0">
             <span className="text-[10px] text-text-primary/40 uppercase tracking-widest block mb-1">
-              Guests (Max {currentMaxGuests}{isWillowPeak ? cottageSelection === "ALL" ? " · 3 cottages" : cottageSelection === "TWO" ? " · 2 cottages" : " · 1 cottage" : ""})
+              Guests (Max {currentMaxGuests}{isWillowPeak ? ` · ${cottagesCount} cottage${cottagesCount === 1 ? "" : "s"}` : ""})
             </span>
             <div className="flex items-center gap-2 mt-1">
               <input
@@ -1247,17 +1249,19 @@ Please confirm availability and the final amount before confirming my booking.`;
           <div className={`w-full bg-gradient-to-br from-amber-50/90 to-orange-50/50 border border-amber-200/90 rounded-2xl ${isModal ? "p-3 sm:p-4" : "p-4"} text-left shadow-xs space-y-1.5 animate-fade-in`}>
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
-                <span>🏡</span> Selected: {cottageSelection === "ALL" ? "All 3 Cottages (A, B, C)" : cottageSelection === "TWO" ? "2 Cottages (pair confirmed by concierge)" : `Cottage ${cottageSelection}`}
+                <span>🏡</span> Selected: {willowSelectionLabel(cottageSelection)}
               </span>
               <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-[#1B3564] text-[#DAA520]">
-                {cottageSelection === "ALL" ? "3 of 3 Cottages" : cottageSelection === "TWO" ? "2 of 3 Cottages" : "1 of 3 Cottages"}
+                {`${cottagesCount} of 3 Cottages`}
               </span>
             </div>
             <p className="text-xs text-slate-700 leading-relaxed font-medium">
               {cottageSelection === "ALL"
                 ? `All 3 A-frame chalets (Breeze, Crest, and Heaven) are included for your group of ${guests} guests (Max 12).`
                 : cottageSelection === "TWO"
-                  ? `Two private A-frame cottages are requested for your group of ${guests} guests (Max 8). The concierge will confirm the available pair.`
+                  ? "Choose the exact pair above to check your dates and price."
+                : cottagesCount === 2
+                  ? `${willowSelectionLabel(cottageSelection)} are requested for your group of ${guests} guests (Max 8).`
                   : `Private Chalet: ${cottageSelection === "A" ? "Breeze" : cottageSelection === "B" ? "Crest" : "Heaven"} (Cottage ${cottageSelection}) allocated for ${guests} guest(s) (Max 4). Features private en-suite jacuzzi and balcony.`
               }
             </p>
@@ -1267,8 +1271,10 @@ Please confirm availability and the final amount before confirming my booking.`;
                 {cottageSelection === "ALL"
                   ? "All three cottages are selected for this request."
                   : cottageSelection === "TWO"
-                    ? "Two cottages are included; the booking team will confirm which pair is available."
-                    : "This request is for one cottage; the other two may be booked separately."
+                    ? "Select a pair to continue."
+                  : cottagesCount === 2
+                    ? "The selected pair is included; the booking team will confirm your request."
+                    : "This request is for the selected cottage; the team will confirm availability."
                 }
               </span>
             </div>

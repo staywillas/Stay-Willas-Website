@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const villa = await getCachedPublicVilla(SLATEWOOD_SLUG);
   const image = villa?.images[0]
     ? resolvePropertyImage(villa.images[0])
-    : "/assets/villas/slatewood/slatewood-exterior-evening.webp";
+    : "/assets/villas/slatewood/drive-slatewood-exterior-evening.webp";
   const title = "Slatewood by Stay Willas | 3BHK Infinity Pool Villa";
   const description =
     "Explore Slatewood by Stay Willas, a 3-bedroom private infinity pool villa on a landscaped 1.5-acre estate, with a garden, lawn, gazebo and dedicated turf.";

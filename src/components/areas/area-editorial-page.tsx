@@ -94,12 +94,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
     orderBy: { createdAt: "desc" },
   });
   const listedVillas = slug === "khopoli" ? withNieevantFallback(dbVillas) : dbVillas;
-  // Match the whole-villa starting rate displayed on Willow Peak's property page.
-  const villas = listedVillas.map((villa) => ({
-    ...villa,
-    price:
-      villa.slug === "willow-peak" ? Math.min(villa.price, 15000) : villa.price,
-  }));
+  const villas = [...listedVillas];
   villas.sort(
     (a, b) =>
       Number(b.slug === area.featuredSlug) -
@@ -111,6 +106,8 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
   const cottages = villas
     .filter((villa) => villa.slug.startsWith("willow-peak-cottage"))
     .sort((a, b) => a.slug.localeCompare(b.slug));
+  const angleHouse = villas.find((villa) => villa.slug === "the-angle-house");
+  const willowEstate = villas.find((villa) => villa.slug === "willow-peak");
   const lowestRate = villas.length
     ? Math.min(...villas.map((villa) => villa.price))
     : null;
@@ -118,7 +115,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
     ...area.faqs,
     {
       question: `How much does a stay in ${area.name} cost?`,
-      answer: `${lowestRate !== null ? `Listed base accommodation starts from ₹${lowestRate.toLocaleString("en-IN")} per night${slug === "lonavala" ? " for an individual Willow Peak cottage" : " for the villa"}. ` : "Ask the booking team for current rates. "}Your dates, group size, meals, taxes and selected extras determine the final quote. Check the property calendar for date-specific pricing.`,
+      answer: `${lowestRate !== null ? `Listed base accommodation starts from ₹${lowestRate.toLocaleString("en-IN")} per night${slug === "lonavala" ? " for an individual Willow Peak cottage" : " for the villa"}. ` : "Ask the booking team for current rates. "}Your dates, group size, meals and selected extras affect the final quote. Discuss the complete price with our team. Check the property calendar for date-specific pricing.`,
     },
     {
       question:
@@ -135,7 +132,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
     {
       question: `Can I get 26% off weekday stays in ${area.name}?`,
       answer:
-        "Eligible Monday–Thursday stays receive 26% off with code Stayw26 when booking directly. Confirm eligibility and the final quote for your property and dates; weekend and holiday rates may differ.",
+        "Eligible Monday–Thursday stays receive 26% off with code Stayw26 when booking directly. Individual and two-cottage Willow Peak bookings are excluded. Confirm eligibility and the final quote for your property and dates; weekend and holiday rates may differ.",
     },
   ];
   const guides = (destinationGuides[slug] || [])
@@ -280,7 +277,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
           <p className={styles.offerTerms}>
             26% off eligible Monday–Thursday stays with code Stayw26. Subject to
             availability and offer eligibility; confirm your date-specific
-            quote. Meals, taxes and extras are quoted separately.
+            quote. Meals and extras are discussed with our team.
           </p>
         </section>
 
@@ -365,7 +362,7 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
                       </p>
                       <div className={styles.homeBottom}>
                         <p>
-                          From{" "}
+                          Base rate{" "}
                           <strong>
                             ₹{villa.price.toLocaleString("en-IN")}
                           </strong>
@@ -430,6 +427,32 @@ export default async function AreaEditorialPage({ slug }: { slug: AreaSlug }) {
                 ))}
               </div>
             </div>
+          )}
+          {slug === "lonavala" && angleHouse && willowEstate && (
+            <section className={styles.stayComparison} aria-labelledby="lonavala-compare-title">
+              <div className={styles.comparisonHeading}>
+                <span className={styles.eyebrow}>CHOOSE YOUR KIND OF STAY</span>
+                <h3 id="lonavala-compare-title">A pool for your group, or a cottage for two?</h3>
+                <p>Compare the booking unit, water amenities and base rate before choosing your dates.</p>
+              </div>
+              <div className={styles.comparisonGrid}>
+                <article className={styles.comparisonCard}>
+                  <h4>The Angle House</h4>
+                  <p>Kamshet · Entire 3-bedroom villa · Up to {angleHouse.guests} guests</p>
+                  <p>Private swimming pool and a Jacuzzi in the master suite.</p>
+                  <strong>Base rate ₹{angleHouse.price.toLocaleString("en-IN")} / night</strong>
+                  <Link href="/villa/the-angle-house#booking-card-section">Check villa dates <ArrowRight size={15} aria-hidden="true" /></Link>
+                </article>
+                <article className={styles.comparisonCard}>
+                  <h4>Willow Peak</h4>
+                  <p>Kurwande · Book an individual cottage or all three · Up to {willowEstate.guests} guests across all three</p>
+                  <p>Each cottage has a private in-room Jacuzzi. There is no swimming pool.</p>
+                  <strong>All three: base rate ₹{willowEstate.price.toLocaleString("en-IN")} / night</strong>
+                  <Link href="/villa/willow-peak#booking-card-section">Compare cottage options <ArrowRight size={15} aria-hidden="true" /></Link>
+                </article>
+              </div>
+              <p className={styles.comparisonNote}>Rates vary by date and booking unit. Discuss meals, requested extras and your final quote with our team.</p>
+            </section>
           )}
           <p className={styles.rateNote}>
             Listed base rates are a starting point. Your dates, guest count and

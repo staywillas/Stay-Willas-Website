@@ -116,7 +116,7 @@ const VillaCard = ({
           <div className="flex items-center justify-between gap-2 mb-2.5">
             <div className="flex flex-col text-left">
               <span className="text-[7.5px] sm:text-[8px] text-[#1B3564]/60 uppercase tracking-widest font-extrabold">
-                {rateOnRequest ? "Rates" : "Starting at"}
+                {rateOnRequest ? "Rates" : "Base rate"}
               </span>
               <span className="text-[#1B3564] text-xs sm:text-base font-black whitespace-nowrap">
                 {rateOnRequest ? (
@@ -125,9 +125,7 @@ const VillaCard = ({
                   <>
                     ₹{id === "casa-de-reva" || id.includes("reva") || id.includes("terra")
                       ? "16,000"
-                      : id === "lonavala-willow-peak" || id === "willow-peak"
-                        ? "17,997"
-                        : id.includes("cottage")
+                      : id.includes("cottage")
                           ? "4,999"
                           : price}
                     <span className="text-[8px] sm:text-[10px] font-normal text-slate-500 font-sans">

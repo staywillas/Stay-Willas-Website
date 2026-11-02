@@ -3,6 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 
+// These records were inserted by the demo seed and have not been verified.
+// Keep them in the database for review, but exclude them from public reviews and schema.
+const UNVERIFIED_SEED_REVIEW_USERS = [
+  "guest_rohan_mehta", "guest_vikram_singhania", "guest_aditi_deshmukh",
+  "guest_sameer_kulkarni", "guest_anand_joshi", "guest_rahul_verma",
+  "guest_deepak_sharma", "guest_pooja_hegde", "guest_kunal_patel",
+  "guest_siddharth_rao", "guest_tanvi_kapoor", "guest_harsh_patil",
+  "guest_neelam_shah",
+];
+
 export async function submitReview(formData: {
   villaId: string;
   userId: string;
@@ -32,7 +42,7 @@ export async function submitReview(formData: {
 export async function getReviews(villaId: string) {
   try {
     const reviews = await prisma.review.findMany({
-      where: { villaId },
+      where: { villaId, userId: { notIn: UNVERIFIED_SEED_REVIEW_USERS } },
       orderBy: { createdAt: "desc" },
     });
     return reviews;

@@ -27,13 +27,13 @@ type AreaCopy = {
 export const areaEditorial: Record<AreaSlug, AreaCopy> = {
   lonavala: {
     name: "Lonavala",
-    title: "Private Pool Villas in Lonavala | Stay Willas",
+    title: "Villas in Lonavala | Private Pool & Jacuzzi Stays | Stay Willas",
     description:
       "Find The Angle House, a 3-bedroom private pool villa in Kamshet near Lonavala for up to 12 guests, plus private-Jacuzzi cottages. Check dates and direct rates.",
-    heroTitleLead: "Private pool villas",
+    heroTitleLead: "Villas",
     heroTitleLocation: "in Lonavala",
     summary:
-      "The Angle House is a 3-bedroom private pool villa in Kamshet near Lonavala for groups of up to 12.",
+      "Compare The Angle House, a 3-bedroom private pool villa in Kamshet, with Willow Peak's private-Jacuzzi cottages in Kurwande, Lonavala.",
     hero: {
       src: "/assets/villas/the-angle-house/gallery-11.webp",
       alt: "Glass-fronted exterior of The Angle House in Kamshet, Lonavala",
