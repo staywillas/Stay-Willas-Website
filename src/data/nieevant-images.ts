@@ -12,10 +12,20 @@ export const nieevantPhotos = {
     alt: "Drone view of Nieevant by Stay Willas on its Khopoli hillside",
     caption: "A hilltop home above the valley",
   },
-  hillside: {
-    src: `${base}nieevant-hillside.webp`,
-    alt: "Nieevant and its open grounds framed by the surrounding hills",
-    caption: "Open views across the hills",
+  bedroomOne: {
+    src: `${base}nieevant-bedroom-one.webp`,
+    alt: "A bedroom at Nieevant with a double bed beside a large hillside window",
+    caption: "A comfortable bedroom with hillside views",
+  },
+  bedroomTwo: {
+    src: `${base}nieevant-bedroom-two.webp`,
+    alt: "A bedroom at Nieevant with a double bed, window and seating",
+    caption: "A quiet room for restful nights",
+  },
+  bedroomThree: {
+    src: `${base}nieevant-bedroom-three.webp`,
+    alt: "A bedroom at Nieevant with a double bed and wardrobe",
+    caption: "Thoughtful spaces to settle in",
   },
   grounds: {
     src: `${base}nieevant-grounds.webp`,
@@ -26,26 +36,6 @@ export const nieevantPhotos = {
     src: `${base}nieevant-sunset.webp`,
     alt: "Nieevant by Stay Willas and the hillside at sunset",
     caption: "Evening light over the villa",
-  },
-  villaView: {
-    src: `${base}nieevant-villa-view.webp`,
-    alt: "A wider drone view of Nieevant surrounded by wooded hills",
-    caption: "A home among the hills",
-  },
-  valley: {
-    src: `${base}nieevant-valley.webp`,
-    alt: "The Khopoli valley and open landscape around Nieevant",
-    caption: "The valley around Nieevant",
-  },
-  estate: {
-    src: `${base}nieevant-estate.webp`,
-    alt: "Aerial view of Nieevant and the surrounding estate",
-    caption: "A little room to breathe",
-  },
-  close: {
-    src: `${base}nieevant-close.webp`,
-    alt: "Closer aerial view of the Nieevant villa and its upper level",
-    caption: "A closer look at the villa",
   },
 } satisfies Record<string, NieevantPhoto>;
 
