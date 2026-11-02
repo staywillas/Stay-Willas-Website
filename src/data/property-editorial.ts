@@ -306,7 +306,7 @@ const nieevant: PropertyCopy = {
     "https://maps.google.com/maps?q=Plot%20No.%208%2C%20Nalavade%20Farms%2C%20Hatond%20Village%2C%20Khopoli%2C%20Maharashtra%2C%20India%2C%20410205&z=13&output=embed",
   featured: [
     { src: nieevantPhotos.hero.src, alt: nieevantPhotos.hero.alt },
-    { src: nieevantPhotos.hillside.src, alt: nieevantPhotos.hillside.alt },
+    { src: nieevantPhotos.bedroomOne.src, alt: nieevantPhotos.bedroomOne.alt },
     { src: nieevantPhotos.grounds.src, alt: nieevantPhotos.grounds.alt },
   ],
   spaces: [
@@ -317,10 +317,10 @@ const nieevant: PropertyCopy = {
       text: "Aerial views of the villa and the green hills around it.",
     },
     {
-      title: "Open valley views",
-      src: nieevantPhotos.hillside.src,
-      alt: nieevantPhotos.hillside.alt,
-      text: "The Khopoli landscape stretches out beyond the villa.",
+      title: "A bedroom with hillside views",
+      src: nieevantPhotos.bedroomOne.src,
+      alt: nieevantPhotos.bedroomOne.alt,
+      text: "Wake up beside a wide window looking out toward the hills.",
     },
     {
       title: "Room to breathe outdoors",
@@ -329,16 +329,16 @@ const nieevant: PropertyCopy = {
       text: "A closer look at the villa and the open space around it.",
     },
     {
-      title: "A home among the hills",
-      src: nieevantPhotos.villaView.src,
-      alt: nieevantPhotos.villaView.alt,
-      text: "See the villa from above, with wooded hills on every side.",
+      title: "A quiet second bedroom",
+      src: nieevantPhotos.bedroomTwo.src,
+      alt: nieevantPhotos.bedroomTwo.alt,
+      text: "A comfortable place to unwind after a day by the pool.",
     },
     {
-      title: "Evening light over Nieevant",
-      src: nieevantPhotos.sunset.src,
-      alt: nieevantPhotos.sunset.alt,
-      text: "The villa takes on a warm glow as the sun sets over the hillside.",
+      title: "A third comfortable bedroom",
+      src: nieevantPhotos.bedroomThree.src,
+      alt: nieevantPhotos.bedroomThree.alt,
+      text: "Settle into a restful room with space to make yourself at home.",
     },
   ],
   highlights: [

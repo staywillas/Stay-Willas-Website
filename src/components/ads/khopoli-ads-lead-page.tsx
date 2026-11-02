@@ -47,7 +47,7 @@ const propertyOptions: VillaOption[] = [
     locationLabel: "KHOPOLI · HILLTOP VILLA",
     description: "A hilltop setting with open valley views, a private pool and outdoor space.",
     facts: ["3 bedrooms", "Up to 15 guests", "Private pool"],
-    photos: [nieevantPhotos.hero, nieevantPhotos.hillside, nieevantPhotos.grounds],
+    photos: [nieevantPhotos.hero, nieevantPhotos.bedroomOne, nieevantPhotos.grounds],
   },
 ];
 
