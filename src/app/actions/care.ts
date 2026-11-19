@@ -5,10 +5,7 @@ import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { dispatchTelegramCareAlert } from "@/lib/telegram";
 import crypto from "crypto";
-
-const CARE_SESSION_SECRET =
-  process.env.SESSION_SECRET ||
-  "staywillas-care-operations-secret-2026";
+import { getSessionSecret } from "@/lib/session";
 
 export interface CareSession {
   role: "caretaker" | "chef" | "admin";
@@ -37,7 +34,7 @@ function signCareToken(session: CareSession): string {
     exp: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
   };
   const encoded = Buffer.from(JSON.stringify(payload), "utf-8").toString("base64url");
-  const signature = crypto.createHmac("sha256", CARE_SESSION_SECRET).update(encoded).digest("base64url");
+  const signature = crypto.createHmac("sha256", getSessionSecret()).update(encoded).digest("base64url");
   return `${encoded}.${signature}`;
 }
 
@@ -49,7 +46,12 @@ function verifyCareToken(token: string | undefined): CareSession | null {
   const parts = token.split(".");
   if (parts.length !== 2) return null;
   const [encoded, sig] = parts;
-  const expectedSig = crypto.createHmac("sha256", CARE_SESSION_SECRET).update(encoded).digest("base64url");
+  let expectedSig: string;
+  try {
+    expectedSig = crypto.createHmac("sha256", getSessionSecret()).update(encoded).digest("base64url");
+  } catch {
+    return null;
+  }
 
   const b1 = Buffer.from(sig, "utf-8");
   const b2 = Buffer.from(expectedSig, "utf-8");
@@ -70,7 +72,7 @@ function verifyCareToken(token: string | undefined): CareSession | null {
       villaSlug: parsed.villaSlug,
       villaName: parsed.villaName,
     };
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -111,20 +113,27 @@ export async function verifyCarePin(pin: string) {
     };
   }
 
-  const CARETAKER_PIN = process.env.CARETAKER_PIN || "1122";
-  const CHEF_PIN = process.env.CHEF_PIN || "3344";
-  const ADMIN_PIN = process.env.CARE_ADMIN_PIN || "9900";
+  const caretakerPin = process.env.CARETAKER_PIN?.trim();
+  const chefPin = process.env.CHEF_PIN?.trim();
+  const adminPin = process.env.CARE_ADMIN_PIN?.trim();
+
+  if (!caretakerPin || !chefPin || !adminPin) {
+    return {
+      success: false,
+      error: "Care portal sign-in is not configured.",
+    };
+  }
 
   let role: "caretaker" | "chef" | "admin" | null = null;
   let staffName = "";
 
-  if (cleanPin === CARETAKER_PIN) {
+  if (cleanPin === caretakerPin) {
     role = "caretaker";
     staffName = "Caretaker (The Angle House)";
-  } else if (cleanPin === CHEF_PIN) {
+  } else if (cleanPin === chefPin) {
     role = "chef";
     staffName = "Chef (The Angle House)";
-  } else if (cleanPin === ADMIN_PIN) {
+  } else if (cleanPin === adminPin) {
     role = "admin";
     staffName = "Admin / Operations Head";
   }
@@ -318,9 +327,9 @@ export async function submitCareLog(data: {
 
     revalidatePath("/care");
     return { success: true, log };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to submit care log:", error);
-    return { success: false, error: error.message || "Failed to submit operations log." };
+    return { success: false, error: "Failed to submit operations log." };
   }
 }
 
@@ -341,7 +350,7 @@ export async function getTodayCareLogs(villaSlug = "the-angle-house") {
     });
 
     return { success: true, logs };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to fetch today's logs:", error);
     return { success: false, logs: [] };
   }
@@ -366,7 +375,7 @@ export async function getCareLogsHistory(villaSlug = "the-angle-house", days = 7
     });
 
     return { success: true, logs };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to fetch logs history:", error);
     return { success: false, logs: [] };
   }

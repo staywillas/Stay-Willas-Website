@@ -1,8 +1,12 @@
-const sharp = require('sharp');
-const fs = require('fs');
-const path = require('path');
+import sharp from 'sharp';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const baseOutDir = path.join(__dirname, '..', 'Canopy_Crest_PNG_Images');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const projectRoot = path.resolve(__dirname, '../..');
+const baseOutDir = path.join(projectRoot, 'assets', 'marketing', 'canopy-crest', 'png-exports');
 const dirs = {
   original: path.join(baseOutDir, '01_Original_HighRes_PNG'),
   landscape: path.join(baseOutDir, '02_Google_Ads_Landscape_1200x628'),
@@ -17,23 +21,23 @@ Object.values(dirs).forEach(d => {
 const items = [
   {
     name: '01_Canopy_Crest_Exterior_Estate',
-    src: 'StayWillas_Unsplash_HQ_Images/Canopy_Crest/01_Canopy_Crest_Exterior_Estate_Elevation.jpg'
+    src: 'assets/source/local-only/unsplash-hq/Canopy_Crest/01_Canopy_Crest_Exterior_Estate_Elevation.jpg'
   },
   {
     name: '02_Canopy_Crest_22ft_Private_Pool',
-    src: 'StayWillas_Unsplash_HQ_Images/Canopy_Crest/02_Canopy_Crest_22ft_Private_Swimming_Pool.jpg'
+    src: 'assets/source/local-only/unsplash-hq/Canopy_Crest/02_Canopy_Crest_22ft_Private_Swimming_Pool.jpg'
   },
   {
     name: '03_Canopy_Crest_Expansive_Green_Lawn',
-    src: 'StayWillas_Unsplash_HQ_Images/Canopy_Crest/03_Canopy_Crest_Expansive_Green_Lawn.jpg'
+    src: 'assets/source/local-only/unsplash-hq/Canopy_Crest/03_Canopy_Crest_Expansive_Green_Lawn.jpg'
   },
   {
     name: '04_Canopy_Crest_Spacious_Living_Hall',
-    src: 'StayWillas_Unsplash_HQ_Images/Canopy_Crest/04_Canopy_Crest_Spacious_Living_Hall.jpg'
+    src: 'assets/source/local-only/unsplash-hq/Canopy_Crest/04_Canopy_Crest_Spacious_Living_Hall.jpg'
   },
   {
     name: '05_Canopy_Crest_Master_Bedroom_Suite',
-    src: 'StayWillas_Unsplash_HQ_Images/Canopy_Crest/05_Canopy_Crest_Master_Bedroom_Suite.jpg'
+    src: 'assets/source/local-only/unsplash-hq/Canopy_Crest/05_Canopy_Crest_Master_Bedroom_Suite.jpg'
   },
   {
     name: '06_Canopy_Crest_Pool_Dusk_View',
@@ -65,7 +69,7 @@ async function run() {
   console.log('Generating Canopy Crest PNG images in variations...');
 
   for (const item of items) {
-    const srcPath = path.join(__dirname, '..', item.src);
+    const srcPath = path.join(projectRoot, item.src);
     if (!fs.existsSync(srcPath)) {
       console.log('Skipping missing file:', srcPath);
       continue;

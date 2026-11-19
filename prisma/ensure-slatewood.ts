@@ -1,8 +1,10 @@
 import "dotenv/config";
 import { prisma } from "../src/lib/db";
 import { SLATEWOOD_SLUG, slatewoodVillaData } from "../src/data/slatewood-villa";
+import { requireExplicitDatabaseWrite } from "../scripts/database/require-explicit-write.mjs";
 
 async function main() {
+  requireExplicitDatabaseWrite({ operation: "Upsert Slatewood villa" });
   const { iCalUrl, ...propertyData } = slatewoodVillaData;
   const createData =
     iCalUrl === null ? propertyData : { ...propertyData, iCalUrl };

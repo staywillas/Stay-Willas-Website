@@ -1,10 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
-import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
-import { sendEmail } from "@/lib/mail";
 import { signSessionPayload, SessionPayload } from "@/lib/session";
 import ownerConfig from "@/data/owner-config.json";
 
@@ -90,9 +88,9 @@ export async function verifyAndSetupPasswordAction(
     cookieStore.set("staywillas_user", JSON.stringify(payload), getUserCookieOptions());
 
     return { success: true, redirectTo: redirectUrl || "/dashboard" };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to verify and set up password:", error);
-    return { success: false, error: error.message || "Activation failed." };
+    return { success: false, error: "Activation failed." };
   }
 }
 
@@ -100,7 +98,7 @@ export async function verifyAndSetupPasswordAction(
  * Handles security checks, admin/partner credentials, and dynamic verified guest registrations.
  */
 export async function loginAction(
-  prevState: any,
+  prevState: unknown,
   formData: FormData
 ): Promise<LoginResponse> {
   const role = formData.get("role") as string;
@@ -112,10 +110,14 @@ export async function loginAction(
   }
 
   // 1. Validate Admin Portal Access
-  const configuredAdminUser = (process.env.ADMIN_USERNAME || "admin").trim().toLowerCase();
-  const configuredAdminPass = process.env.ADMIN_PASSWORD || "staywillas2026";
-
   if (role === "admin") {
+    const configuredAdminUser = process.env.ADMIN_USERNAME?.trim().toLowerCase();
+    const configuredAdminPass = process.env.ADMIN_PASSWORD;
+
+    if (!configuredAdminUser || !configuredAdminPass) {
+      return { success: false, error: "Admin sign-in is not configured." };
+    }
+
     if (username.trim().toLowerCase() === configuredAdminUser && password === configuredAdminPass) {
       const cookieStore = await cookies();
       const payload: SessionPayload = {
@@ -135,9 +137,12 @@ export async function loginAction(
   }
 
   // 2. Validate Partner/Homeowner Portal Access
-  const configuredPartnerPass = process.env.PARTNER_PASSWORD || "partner2026";
-
   if (role === "partner") {
+    const configuredPartnerPass = process.env.PARTNER_PASSWORD;
+    if (!configuredPartnerPass) {
+      return { success: false, error: "Partner sign-in is not configured." };
+    }
+
     const config = ownerConfig as Record<string, string[]>;
     const partnerEmail = username.trim().toLowerCase();
 
@@ -197,7 +202,7 @@ export async function loginAction(
             passwordHash: hash
           }
         });
-      } catch (e: any) {
+      } catch (e: unknown) {
         console.error("Failed to create guest user:", e);
         return { success: false, error: "Unable to create account. Please try again." };
       }

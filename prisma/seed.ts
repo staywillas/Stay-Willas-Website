@@ -3,6 +3,7 @@ import { prisma } from "../src/lib/db";
 import { canopyCrestGallery } from "../src/data/canopy-crest-images";
 import { nieevantVillaData } from "../src/data/nieevant-villa";
 import { slatewoodVillaData } from "../src/data/slatewood-villa";
+import { requireExplicitDatabaseWrite } from "../scripts/database/require-explicit-write.mjs";
 
 const villasData = [
   {
@@ -354,6 +355,11 @@ Located near Kaswand in Panchgani, Casa De Reva is just minutes away from Mapro 
 ];
 
 async function main() {
+  requireExplicitDatabaseWrite({
+    operation: "Reset and seed development data",
+    approvalVariable: "ALLOW_DESTRUCTIVE_SEED",
+  });
+
   console.log("Cleaning old database records...");
   await prisma.review.deleteMany({});
   await prisma.booking.deleteMany({});

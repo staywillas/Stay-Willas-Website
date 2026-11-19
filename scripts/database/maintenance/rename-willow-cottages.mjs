@@ -1,11 +1,17 @@
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { requireExplicitDatabaseWrite } from '../require-explicit-write.mjs';
+
+const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+dotenv.config({ path: path.join(PROJECT_ROOT, '.env') });
 import pg from 'pg';
 const { Pool } = pg;
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 async function main() {
+  requireExplicitDatabaseWrite({ operation: 'Rename Willow Peak villas' });
   console.log("Fetching current Willow Peak villas from DB...");
   const res = await pool.query('SELECT id, slug, name FROM "Villa" WHERE slug LIKE \'%willow%\'');
   console.log("Current Willow Peak villas in DB:", res.rows);

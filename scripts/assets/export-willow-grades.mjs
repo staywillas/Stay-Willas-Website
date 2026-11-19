@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const manifest = JSON.parse(fs.readFileSync(path.resolve(root,process.argv[2] || 'scratch/willow-ai-references.json'),'utf8'));
 const destination = path.join(root,'public/assets/villas/willow-peak/graded-v1');
 fs.mkdirSync(destination,{recursive:true});

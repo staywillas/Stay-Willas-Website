@@ -188,14 +188,9 @@ export default function LoginForm({ role, redirectUrl, showHeader = true }: Logi
           </button>
         </form>
 
-        {role === "admin" && (
+        {(role === "admin" || role === "partner") && (
           <p className="text-center text-[#1B3564]/40 font-montserrat text-[10px] mt-4">
-            Default credentials: ID: <code className="text-[#1B3564]/70 font-semibold">admin</code> • Pass: <code className="text-[#1B3564]/70 font-semibold">staywillas2026</code>
-          </p>
-        )}
-        {role === "partner" && (
-          <p className="text-center text-[#1B3564]/40 font-montserrat text-[10px] mt-4">
-            Partner access: <code className="text-[#1B3564]/70 font-semibold">owner@staywillas.com</code> • Pass: <code className="text-[#1B3564]/70 font-semibold">partner2026</code>
+            Authorized users should use the credentials supplied by Stay Willas.
           </p>
         )}
       </div>

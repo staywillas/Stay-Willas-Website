@@ -1,44 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stay Willas Website
 
-## Project folders
+Stay Willas is a villa discovery and booking website for homes in Maharashtra. The application uses Next.js 16 App Router, React 19, TypeScript, Prisma 7, PostgreSQL, Clerk, and Stripe.
 
-- `src/` — website pages, components, and application data.
-- `public/assets/` — public website images and documents. Menu PDFs are kept in `public/assets/menus/`.
-- `docs/` — internal site notes, SEO plans, research exports, drafts, and visual previews. Start with [the docs index](docs/README.md).
-- `scripts/` — maintenance utilities grouped by purpose.
-- `output/` — generated reports that should not be served as website downloads.
+## Start locally
 
-## Getting Started
+### Requirements
 
-First, run the development server:
+- Node.js 20.9 or newer
+- npm
+- Access to a **development** PostgreSQL database, plus the service keys needed for the feature being worked on
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Setup
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Install dependencies with `npm ci`.
+2. Copy `.env.example` to `.env` if you do not already have a local environment file. Never overwrite an existing `.env`.
+3. Fill in the required values using a development database and test service keys. Do not connect local development to production data.
+4. Start the website with `npm run dev` and open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The public catalogue and booking routes read the configured database. Starting the local server does not create an isolated database. Do not run a seed or maintenance script against production.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project map
 
-## Learn More
+| Path | Purpose |
+| --- | --- |
+| `src/app/` | Next.js routes, layouts, route handlers, and server actions. Route folder names define public URLs. |
+| `src/components/` | Reusable UI grouped by product area, such as `villa/`, `areas/`, `booking/`, and `layout/`. |
+| `src/data/` | Reviewed editorial copy, static guide/FAQ content, and fallback presentation data. It is not the source of truth for live prices or availability. |
+| `src/lib/` | Shared server utilities, authentication/session helpers, database access, pricing, notifications, and schema helpers. |
+| `prisma/` | Database schema, seed script, and one-off database setup utilities. Read the data guide before changing this area. |
+| `public/assets/` | Files served by the website. Their public URLs are part of the site, so keep existing paths stable. |
+| `assets/` | Brand and campaign source assets that are not served directly by Next.js. Some source collections are intentionally local-only. |
+| `scripts/` | Explicitly invoked asset, SEO, report, and database maintenance scripts. Database writes have safeguards; see `scripts/README.md`. |
+| `docs/` | Internal project notes, developer guidance, business facts, research, plans, and visual previews. |
+| `.github/` | GitHub pull request guidance. |
 
-To learn more about Next.js, take a look at the following resources:
+For the current code map and operating cautions, see [`docs/agent/project-map.md`](docs/agent/project-map.md). Start with [`docs/development/architecture.md`](docs/development/architecture.md) and [`docs/development/data-management.md`](docs/development/data-management.md) when onboarding.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Common commands
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the local development server. |
+| `npm run build` | Generate the Prisma client and build the production app. |
+| `npm run start` | Serve a previously built production app. |
+| `npm run lint` | Run ESLint. |
+| `npx tsc --noEmit` | Check TypeScript types. |
 
-## Deploy on Vercel
+Database migrations, seeds, and maintenance scripts are not routine setup commands. Review their documented safeguards and target database before using them.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Data and security rules
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Use a dedicated local or development database branch. Never paste real guest data into issues, examples, logs, or screenshots.
+- Keep credentials in an ignored local environment file or an approved secret manager. `.env.example` contains names only, never credentials.
+- Do not store raw identity documents or image payloads in public assets. See the data guide for the current schema and the migration work still needed.
+- Verify live prices, availability, reviews, and property claims from their current source before editing public copy.
+- Preserve existing uncommitted changes. Review `git status` and the diff before committing or opening a pull request.

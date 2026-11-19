@@ -158,7 +158,7 @@ Homepage is explicitly dynamic and depends on a database query per request. Seve
 
 - **Passed:** `npx tsc --noEmit --incremental false`.
 - **Failed baseline:** `npm run lint -- --quiet` reports **393 errors**. These include production source errors plus scratch/root scripts, because ESLint does not exclude the ignored scratch directory. Common categories include explicit `any`, React effect-state rules, unescaped entities and CommonJS imports.
-- **Passed:** `node scripts/verify-property-images.mjs`: 44 article cover assets, 22 image aliases and 11 graded photos. Dimensions and pixel-position grading checks passed.
+- **Passed:** `node scripts/assets/verify-property-images.mjs`: 44 article cover assets, 22 image aliases and 11 graded photos. Dimensions and pixel-position grading checks passed.
 - **Browser:** homepage, collection and Canopy Crest detail page rendered against this repository on port 3001. Collection displayed seven listings; choosing Khopoli produced one result. The property page displayed its gallery, facilities, menus, booking controls and reviews. At a 390px viewport, document width and scroll width both measured 385px, so no horizontal document overflow was observed on that listing state.
 - The pre-existing service on port 3000 was unrelated; it was left untouched.
 - Local Next.js warned that Clerk uses development keys and that the homepage hero could use eager loading. These are local observations, not a production configuration audit or Core Web Vitals measurement.
@@ -366,7 +366,7 @@ The following appendix inventories source files structurally. It records exports
 | `postcss.config.mjs`, `components.json` | Tailwind/PostCSS and component tooling |
 | `prisma.config.ts`, `prisma/schema.prisma` | Database connection configuration and eight database models |
 | `prisma/seed.ts` | Property and demo-data bootstrap; not executed |
-| `scripts/verify-property-images.mjs` | Asset/alias/graded-pixel checks |
+| `scripts/assets/verify-property-images.mjs` | Asset/alias/graded-pixel checks |
 | Other `scripts/` files | Logo updates, Willow image processing/grading and cottage naming; inquiry-clearing utility |
 | `scripts/seo/fix-keywords.mjs` | Content keyword maintenance |
 | `scripts/reports/generate-case-study-pdf.mjs` | Internal case-study PDF generation utility |

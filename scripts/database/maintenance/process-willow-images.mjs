@@ -2,12 +2,16 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 import dotenv from 'dotenv';
-dotenv.config();
+import { fileURLToPath } from 'node:url';
+import { requireExplicitDatabaseWrite } from '../require-explicit-write.mjs';
+
+const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+dotenv.config({ path: path.join(PROJECT_ROOT, '.env') });
 import pg from 'pg';
 const { Pool } = pg;
 
-const SOURCE_DIR = path.join(process.cwd(), 'public', 'assets', 'villas', 'WILLOW PEAK IMAGES');
-const TARGET_DIR = path.join(process.cwd(), 'public', 'assets', 'villas', 'willow-peak');
+const SOURCE_DIR = path.join(PROJECT_ROOT, 'public', 'assets', 'villas', 'WILLOW PEAK IMAGES');
+const TARGET_DIR = path.join(PROJECT_ROOT, 'public', 'assets', 'villas', 'willow-peak');
 
 const imageList = [
   { src: 'Untitled design - 1.png', id: 'wp-01.webp', title: 'Cottage Front & Private Sit-out' },
@@ -23,6 +27,7 @@ const imageList = [
 ];
 
 async function run() {
+  requireExplicitDatabaseWrite({ operation: 'Update Willow Peak images' });
   console.log('--- 1. PROCESSING WEBP IMAGES WITH CACHE-BUSTING NAMES ---');
   if (!fs.existsSync(TARGET_DIR)) {
     fs.mkdirSync(TARGET_DIR, { recursive: true });

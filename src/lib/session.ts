@@ -9,11 +9,18 @@ export interface SessionPayload {
   timestamp?: number;
 }
 
-// Session secret key from env or cryptographically secure fallback for local dev
-const SESSION_SECRET =
-  process.env.SESSION_SECRET ||
-  process.env.NEXTAUTH_SECRET ||
-  "staywillas-ultra-secure-hmac-sha256-secret-key-2026";
+/** Resolve the shared session-signing secret only when a session is used. */
+export function getSessionSecret(): string {
+  const secret = process.env.SESSION_SECRET || process.env.NEXTAUTH_SECRET;
+
+  if (!secret || secret.length < 32) {
+    throw new Error(
+      "Configure SESSION_SECRET (at least 32 characters) before enabling sign-in."
+    );
+  }
+
+  return secret;
+}
 
 /**
  * Signs a payload with HMAC-SHA256 and returns a URL-safe signed token string:
@@ -26,7 +33,7 @@ export function signSessionPayload(payload: SessionPayload): string {
   });
   const encodedData = Buffer.from(data, "utf-8").toString("base64url");
   const signature = crypto
-    .createHmac("sha256", SESSION_SECRET)
+    .createHmac("sha256", getSessionSecret())
     .update(encodedData)
     .digest("base64url");
   return `${encodedData}.${signature}`;
@@ -48,7 +55,7 @@ export function verifySessionToken(token: string | undefined | null): SessionPay
 
   try {
     const expectedSignature = crypto
-      .createHmac("sha256", SESSION_SECRET)
+      .createHmac("sha256", getSessionSecret())
       .update(encodedData)
       .digest("base64url");
 
@@ -70,7 +77,7 @@ export function verifySessionToken(token: string | undefined | null): SessionPay
     }
 
     return payload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -85,7 +92,7 @@ export async function getSessionUser(): Promise<SessionPayload | null> {
     if (!sessionCookie?.value) return null;
 
     return verifySessionToken(sessionCookie.value);
-  } catch (error) {
+  } catch {
     return null;
   }
 }

@@ -1,6 +1,9 @@
-const sharp = require('sharp');
-const fs = require('fs');
-const path = require('path');
+import sharp from 'sharp';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function createIco(pngBuffer) {
   const sizes = [16, 32, 48];
@@ -35,8 +38,8 @@ async function createIco(pngBuffer) {
 }
 
 async function main() {
-  const rootDir = path.resolve(__dirname, '..');
-  const sourceLogo = path.join(rootDir, 'logo transparent.png');
+  const rootDir = path.resolve(__dirname, '../..');
+  const sourceLogo = path.join(rootDir, 'assets', 'brand', 'logo-master.png');
   const fullLogoSource = path.join(rootDir, 'public', 'images', 'STAY WILLAS logo transparent.png');
 
   console.log('Processing circular emblem from:', sourceLogo);

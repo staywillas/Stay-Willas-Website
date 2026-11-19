@@ -37,6 +37,6 @@ Use case: lighting-weather. The supplied image is the EDIT TARGET: an existing d
 - TypeScript, targeted ESLint and git diff whitespace checks pass.
 - The separate Willow Peak pixel checks confirm that grading preserves the original image geometry.
 
-Run the asset checks with `node scripts/verify-property-images.mjs`. To reproduce the grading exports from existing AI references, pass the local reference manifest to `node scripts/export-willow-grades.mjs <manifest.json>`.
+Run the asset checks with `node scripts/assets/verify-property-images.mjs`. To reproduce the grading exports from existing AI references, pass the local reference manifest to `node scripts/assets/export-willow-grades.mjs <manifest.json>`.
 
 The before/after contact sheet and responsive screenshots are saved under the ignored `scratch/` directory for review.
