@@ -1,6 +1,7 @@
 import type { Villa } from "@prisma/client";
 import { canopyCrestPhotos } from "@/data/canopy-crest-images";
 import { nieevantPhotos } from "@/data/nieevant-images";
+import { azureBlissPhotos } from "@/data/azure-bliss-images";
 import { NIEEVANT_SLUG } from "@/data/nieevant-villa";
 import { SLATEWOOD_PREVIEW_ID } from "@/data/slatewood-villa";
 
@@ -460,6 +461,74 @@ const casa: PropertyCopy = {
   ],
 };
 
+const azureBliss: PropertyCopy = {
+  eyebrow: "A PRIVATE MOUNTAIN RETREAT IN IGATPURI",
+  summary:
+    "A private 3-bedroom villa in Igatpuri for up to 15 guests, with a swimming pool, mountain views and spacious outdoor spaces.",
+  intro:
+    "Azure Bliss is a private 3 BHK villa in Igatpuri, Maharashtra, offering space for up to 15 guests. Enjoy a relaxed getaway surrounded by mountain views.",
+  detail:
+    "Spend your days by the private swimming pool, unwind in the gazebo, or enjoy the spacious lawn and pool loungers. As evening sets in, gather around the bonfire.",
+  locationName: "Igatpuri",
+  directions:
+    "Use the Azure Bliss location pin in Igatpuri to plan your journey. Confirm the exact arrival location with the Stay Willas team before travelling.",
+  mapUrl:
+    "https://www.google.com/maps/search/?api=1&query=Azure+Bliss+Igatpuri+Maharashtra",
+  featured: [
+    { src: azureBlissPhotos.hero.src, alt: azureBlissPhotos.hero.alt },
+    { src: azureBlissPhotos.photoFive.src, alt: azureBlissPhotos.photoFive.alt },
+    { src: azureBlissPhotos.photoEight.src, alt: azureBlissPhotos.photoEight.alt },
+  ],
+  spaces: [
+    {
+      title: "Your private pool",
+      src: azureBlissPhotos.photoFive.src,
+      alt: azureBlissPhotos.photoFive.alt,
+      text: "Enjoy relaxed poolside moments with your own private swimming pool.",
+    },
+    {
+      title: "A gazebo to unwind",
+      src: azureBlissPhotos.photoSeven.src,
+      alt: azureBlissPhotos.photoSeven.alt,
+      text: "A dedicated outdoor space to sit back and enjoy your getaway.",
+    },
+    {
+      title: "Room to enjoy the outdoors",
+      src: azureBlissPhotos.photoSix.src,
+      alt: azureBlissPhotos.photoSix.alt,
+      text: "A spacious lawn for time outdoors with family and friends.",
+    },
+    {
+      title: "Mountain views",
+      src: azureBlissPhotos.photoEight.src,
+      alt: azureBlissPhotos.photoEight.alt,
+      text: "Take in the mountain views surrounding Igatpuri.",
+    },
+  ],
+  highlights: [
+    {
+      icon: "pool",
+      title: "Your own swimming pool",
+      text: "A private pool reserved for your group.",
+    },
+    {
+      icon: "view",
+      title: "Mountain surroundings",
+      text: "Enjoy the mountain views from the property.",
+    },
+    {
+      icon: "garden",
+      title: "Spacious outdoor spaces",
+      text: "A lawn, gazebo and pool loungers.",
+    },
+    {
+      icon: "meals",
+      title: "Evenings around the bonfire",
+      text: "Make time for a relaxed bonfire evening.",
+    },
+  ],
+};
+
 const slatewood: PropertyCopy = {
   eyebrow: "3 BEDROOM PRIVATE INFINITY POOL VILLA",
   summary:
@@ -592,9 +661,11 @@ export function getPropertyEditorial(villa: Villa) {
         : villa.slug === "canopy-crest"
           ? canopy
           : villa.slug === NIEEVANT_SLUG
-            ? nieevant
-            : villa.slug === "slatewood"
-              ? slatewood
+  ? nieevant
+  : villa.slug === "azure-bliss"
+    ? azureBliss
+    : villa.slug === "slatewood"
+      ? slatewood
               : ["casa-de-reva", "terra-cotta-villa"].includes(villa.slug)
                 ? casa
                 : null;
@@ -609,10 +680,12 @@ export function getPropertyEditorial(villa: Villa) {
         ? "All villas"
         : villa.location.split(",").slice(-2, -1)[0]?.trim() || "All villas"
       : villa.location.includes("Khopoli")
-        ? "Khopoli"
-        : villa.location.includes("Panchgani")
-          ? "Panchgani"
-          : "Lonavala";
+  ? "Khopoli"
+  : villa.location.includes("Panchgani")
+    ? "Panchgani"
+    : villa.location.includes("Igatpuri")
+      ? "Igatpuri"
+      : "Lonavala";
   const hasPool = villa.amenities.some((amenity) => /pool/i.test(amenity));
   const hasJacuzzi = villa.amenities.some((amenity) =>
     /jacuzzi/i.test(amenity),
