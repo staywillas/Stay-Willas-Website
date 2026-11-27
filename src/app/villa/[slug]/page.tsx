@@ -13,7 +13,7 @@ import { getTemporaryAvailabilityBlocks } from "@/lib/temporary-availability-blo
 import { normalizePublicCopy } from "@/lib/public-copy";
 
 export const revalidate = 3600; // Refresh hourly; admin changes also trigger on-demand revalidation.
-
+export const dynamicParams = true;
 export async function generateStaticParams() {
   const villas = await prisma.villa.findMany({
     select: { slug: true },
